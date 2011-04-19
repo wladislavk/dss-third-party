@@ -1,0 +1,178 @@
+<a name="form"></a>
+<table width="98%" bgcolor="#999999" cellpadding="3" cellspacing="1" border="0" align="center">
+	<tr>
+    	<td valign="middle" width="50%">
+        	<b>
+            Patient
+            &nbsp;&nbsp;&nbsp;
+            <?=$name;?>
+            </b>
+        </td>
+        <td valign="middle" width="10%">
+        	<? 
+            if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1) 
+            {?>
+                <!--<button onclick="Javascript: window.location = 'ex_page4.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>';"> -->
+				<button onclick="Javascript: change_page('ex_page4');">
+                    Exam
+                </button>
+            <? }
+            else
+            {?>
+            	<!--<button onclick="Javascript: window.location = 'q_page1.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>';"> -->
+				<button onclick="Javascript: change_page('q_page1');">
+                    Questionnaire
+                </button>
+            <? }?>
+        </td>
+        <td valign="middle" width="25%">
+        	<b>
+            Exam Date
+            &nbsp;&nbsp;&nbsp;
+            <?=date('m/d/y', strtotime(st($form_myarray['adddate'])));?>
+            </b>
+        </td>
+        <td valign="middle" width="15%" align="right">
+        	<b>
+            Form ID
+            &nbsp;&nbsp;&nbsp;
+            <?=st($form_myarray['formid'])?>
+            </b>
+        </td>
+    </tr>
+</table>
+<?
+$lastdot = strrpos($_SERVER['PHP_SELF'],".");
+$page_path = substr($_SERVER['PHP_SELF'],0,$lastdot);
+
+$lastslash = strrpos($page_path,"/")+1;
+$cur_page = substr($page_path,$lastslash);
+?>
+
+<br />
+<script type="text/javascript">
+	function change_page(goto_p)
+	{
+		fa = document.<?=$cur_page?>frm;
+		fa.goto_p.value = goto_p;
+		fa.submit();
+	}
+	
+	function change_page1(goto_p)
+	{
+		if(confirm("Do you want to Save the Changes ?"))
+		{		
+			fa = document.<?=$cur_page?>frm;
+			fa.goto_p.value = goto_p;
+			fa.submit();
+		}
+		else
+		{
+			window.location = goto_p+'.php';
+		}
+	}
+</script>
+<? 
+if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1) 
+{?>
+    <table width="98%" bgcolor="#abcdef" cellpadding="5" cellspacing="1" border="0" align="center">
+        <tr>
+            <td width="120" valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page1.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="q_page1.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('q_page1');">
+                <? }?>
+                BMI/Symptoms</a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_sleep.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="q_sleep.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('q_sleep');">
+                <? }?>
+                    Sleep Test</a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                   <!-- <a href="q_page2.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+				   <a href="Javascript:;" onclick="Javascript: change_page('q_page2');">
+                <? }?>
+                    <b>Sleep Study/CPAP</b></a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page3.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                   <!-- <a href="q_page3.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+				   <a href="Javascript:;" onclick="Javascript: change_page('q_page3');">
+                <? }?>
+                    <b>Medical Hx.</b></a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page4.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                   <!-- <a href="q_page4.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+				   <a href="Javascript:;" onclick="Javascript: change_page('q_page4');">
+                <? }?>
+                    <b>Family/Social Hx.</b></a>
+            </td>
+            
+        </tr>
+    </table>
+<?
+}
+else
+{?>
+	<table width="98%" bgcolor="#abcdef" cellpadding="5" cellspacing="1" border="0" align="center">
+        <tr>
+			 <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page4.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                   <!-- <a href="ex_page4.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+				   <a href="Javascript:;" onclick="Javascript: change_page('ex_page4');">
+                <? }?>
+                Dental Exam</a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page1.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page1.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page1');">
+                <? }?>
+                Vital Data/Tongue </a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page2.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page2');">
+                <? }?>
+                Mallampati/Tonsils </a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page3.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page3.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page3');">
+                <? }?>
+                Airway Evaluation </a>
+            </td>
+           
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page5.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page5.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page5');">
+                <? }?>
+                TMJ/ROM </a>
+            </td>
+            
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page7.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page7.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page7');">
+                <? }?>
+                Diagnosis</a>
+            </td>
+            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page8.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
+                <? if($cur_f == 0) {?>
+                    <!--<a href="ex_page8.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
+					<a href="Javascript:;" onclick="Javascript: change_page('ex_page8');">
+                <? }?>
+                Plan</a>
+            </td>
+        </tr>
+    </table>
+<?
+}?>

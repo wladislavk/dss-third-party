@@ -1,0 +1,379 @@
+<?php 
+session_start();
+require_once('admin/includes/config.php');
+include("includes/sescheck.php");
+
+if($_POST["ledgerub"] == 1)
+{
+	$service_date = $_POST['service_date'];
+	$entry_date = $_POST['entry_date'];
+	$description = $_POST['description'];
+	$amount = $_POST['amount'];
+	$paid_amount = $_POST['paid_amount'];
+	$transaction_type = $_POST['transaction_type'];
+	$transaction_code = $_POST['transaction_code'];
+	
+	if(strpos($service_date,'-') === false)
+	{
+		$s_arr = explode('/',$service_date);
+		$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
+	}
+	else
+	{
+		$s_arr = explode('-',$service_date);
+		$service_date = $s_arr[2]."-".$s_arr[0]."-".$s_arr[1];
+	}
+	
+	if(strpos($entry_date,'-') === false)
+	{
+		$e_arr = explode('/',$entry_date);
+		$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
+	}
+	else
+	{
+		$e_arr = explode('-',$entry_date);
+		$entry_date = $e_arr[2]."-".$e_arr[0]."-".$e_arr[1];
+	}
+	
+	if($transaction_type == 'Entry')
+	{
+		$paid_amount = 0;
+	}
+	else
+	{
+	}
+	
+	if($_POST['ed'] == '')
+	{
+		$ins_sql = " insert into dental_ledger set 
+		patientid = '".s_for($_GET['pid'])."',
+		service_date = '".s_for($service_date)."',
+		entry_date = '".s_for($entry_date)."',
+		description = '".s_for($description)."',
+		amount = '".s_for($amount)."',
+		paid_amount = '".s_for($paid_amount)."',
+		transaction_type = '".s_for($transaction_type)."',
+		userid = '".s_for($_SESSION['userid'])."',
+		docid = '".s_for($_SESSION['docid'])."',
+		transaction_code = '".s_for($transaction_code)."',
+		adddate = now(),
+		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+		
+		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+		
+		
+		$ins_sql_rec = " insert into dental_ledger_rec set 
+		userid = '".s_for($_SESSION['userid'])."',
+    patientid = '".s_for($_GET['pid'])."',
+		service_date = '".s_for($service_date)."',
+		description = '".s_for($description)."',
+		amount = '".s_for($amount)."',
+		paid_amount = '".s_for($paid_amount)."',
+		transaction_code = '".s_for($transaction_code)."',
+		transaction_type = '".s_for($transaction_type)."',
+		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+		
+		mysql_query($ins_sql_rec) or die($ins_sql." | ".mysql_error());
+		
+		$msg = "Added Successfully";
+		?>
+		<script type="text/javascript">
+			//alert("<?=$msg;?>");
+			parent.window.location='manage_ledger.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
+		</script>
+		<?
+		die();
+	}
+	else
+	{
+		
+		$pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+    $pat_my2 = mysql_query($pat_sql2);
+    while($pat_myarray2 = mysql_fetch_array($pat_my2)){ 
+    
+    $pat_sql3 = mysql_query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
+    if(!$pat_sql3){
+     echo "There was an error updating the ledger record.  Please contact your system administrator.";
+    }
+    
+    $up_sql = "update dental_ledger set
+    service_date = '".s_for($service_date)."',
+		entry_date = '".s_for($entry_date)."',
+		description = '".s_for($description)."',
+		amount = '".s_for($amount)."',
+		paid_amount = '".s_for($paid_amount)."',
+		transaction_code = '".s_for($transaction_code)."',
+		userid = '".s_for($_SESSION['userid'])."'
+	 	where ledgerid='".$_POST["ed"]."'";
+		
+		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
+		
+		$msg = "Edited Successfully";
+		?>
+		<script type="text/javascript">
+			//alert("<?=$msg;?>");
+			parent.window.location='manage_ledger.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
+		</script>
+		<?
+		die();
+	}
+}
+}
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_my = mysql_query($pat_sql);
+$pat_myarray = mysql_fetch_array($pat_my);
+
+$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+
+if($pat_myarray['patientid'] == '')
+{
+	?>
+	<script type="text/javascript">
+		window.location = 'manage_patient.php';
+	</script>
+	<?
+	die();
+}
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+
+<link rel="stylesheet" href="css/form.css" type="text/css" />
+<script type="text/javascript" src="script/wufoo.js"></script>
+</head>
+<body>
+
+    <?
+	$sql = "select sum(amount) as amt, sum(paid_amount) as p_amt from dental_ledger where patientid='".$_REQUEST["pid"]."'";
+	$my = mysql_query($sql);
+	$myarray = mysql_fetch_array($my);
+	$cur_balance = $myarray['amt'] - $myarray['p_amt'];
+	
+  $thesql = "select * from dental_ledger where ledgerid='".$_REQUEST["ed"]."'";
+	$themy = mysql_query($thesql);
+	$themyarray = mysql_fetch_array($themy);
+	
+	$service_date = st($themyarray['service_date']);
+	$entry_date = st($themyarray['entry_date']);
+	$description = st($themyarray['description']);
+	$amount = st($themyarray['amount']);
+	$paid_amount = st($themyarray['paid_amount']);
+	$transaction_type = st($themyarray['transaction_type']);
+	$transaction_code = st($themyarray['transaction_code']);
+	
+	$but_text = "Add ";
+	
+	if($service_date == '')
+	{
+		$service_date = date('m-d-Y');
+	}
+	else
+	{
+		$service_date = date('m-d-Y',strtotime($service_date));
+	}
+	
+	if($entry_date == '')
+	{
+		$entry_date = date('m-d-Y');
+	}
+	else
+	{
+		$entry_date = date('m-d-Y',strtotime($entry_date));
+	}
+	
+	if($transaction_type == '')
+	{
+		$transaction_type = 'Entry';
+	}
+	
+	if($transaction_type == 'Credit')
+	{
+		$amount = $themyarray['paid_amount'];
+	}
+	else
+	{
+		$amount = $themyarray['amount'];
+	}
+	
+	if($themyarray["userid"] != '')
+	{
+		$but_text = "Edit ";
+	}
+	else
+	{
+		$but_text = "Add ";
+	}
+	?>
+	
+	<br /><br />
+	
+	<? if($msg != '') {?>
+    <div align="center" class="red">
+        <? echo $msg;?>
+    </div>
+    <? }?>
+	<script type="text/javascript">
+		function change_t()
+		{
+			fa = document.ledgerfrm;
+			
+			if(fa.transaction_type.value == "Payment")
+			{
+				document.getElementById("tr_paid_amount").style.display = '';
+				
+			}
+			else
+			{
+				document.getElementById("tr_paid_amount").style.display = 'none';
+				
+			}
+		}
+		
+		function change_t_code()
+		{
+			fa = document.ledgerfrm;
+			
+			<? 
+			$tcode_sql = "select * from dental_transaction_code where status=1 order by sortby";
+			$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
+			
+			while($tcode_myarray = mysql_fetch_array($tcode_my))
+			{
+			?>
+			if(fa.transaction_code.value == '<?=st($tcode_myarray['transaction_codeid'])?>')
+			{
+				fa.description.value = '<?=st($tcode_myarray['description'])?>';
+			}
+			<?
+			}
+			?>
+		}
+	</script>
+    <form name="ledgerfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return ledgerabc(this)">
+    <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+        <tr>
+            <td colspan="2" class="cat_head">
+               <?=$but_text?> Transaction
+			   -
+    			Patient <i><?=$name;?></i>
+            </td>
+        </tr>
+		<tr>
+        	<td valign="top" class="frmdata" colspan="2" style="text-align:right;">
+				<span class="red">
+					Current Balance: 
+					<b>$<?=number_format($cur_balance,2);?></b>
+				</span>
+            </td>
+        </tr>
+        <tr>
+        	<td valign="top" class="frmhead" width="30%">
+				Service Date
+            </td>
+        	<td valign="top" class="frmdata">
+				<input id="service_date" name="service_date" type="text" class="tbox" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+				<span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+        	<td valign="top" class="frmhead">
+				Entry Date
+            </td>
+        	<td valign="top" class="frmdata">
+				<input id="entry_date" name="entry_date" type="text" class="tbox" value="<?=$entry_date;?>" style="width:100px;" maxlength="255" readonly="readonly"/> (mm/dd/yyyy)
+				<span class="red">*</span>
+            </td>
+        </tr>
+		<tr>
+        	<td valign="top" class="frmhead">
+				Transaction Type
+            </td>
+        	<td valign="top" class="frmdata">
+				<select name="transaction_type" class="tbox" onChange="change_t();">
+					<option value="Credit" <? if($transaction_type == 'Credit') echo " selected";?>>Credit</option>
+					<option value="Charge" <? if($transaction_type == 'Charge') echo " selected";?>>Charge</option>
+					<option value="None" <? if($transaction_type == 'None') echo " selected";?>>None</option>
+					<option value="Debit-Prod Adj" <? if($transaction_type == 'Debit-Prod Adj') echo " selected";?>>Debit-Prod Adj</option>
+					<option value="Credit-Coll Adj" <? if($transaction_type == 'Credit-Coll Adj') echo " selected";?>>Credit-Coll Adj</option>
+				</select>
+				<span class="red">*</span>
+            </td>
+        </tr>
+
+		<tr>
+        	<td valign="top" class="frmhead">
+				Procedure Code
+            </td>
+        	<td valign="top" class="frmdata"> 
+				<select name="transaction_code" class="tbox" onChange="change_t_code();">
+					<option value=""></option> 
+					<?
+					$tcode_sql = "select * from dental_transaction_code where status=1 order by sortby";
+					$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
+	
+					while($tcode_myarray = mysql_fetch_array($tcode_my))
+					{?>
+						<option value="<?=st($tcode_myarray['transaction_code']);?>" <? if($transaction_code == st($tcode_myarray['transaction_code'])) echo " selected";?>>
+							<?=st($tcode_myarray['transaction_code']);?>
+						</option>
+					<?
+					}?>
+				</select>
+				
+				
+				<span class="red">*</span>
+            </td>
+        </tr>
+		<tr>
+        	<td valign="top" class="frmhead">
+				Description
+            </td>
+        	<td valign="top" class="frmdata">
+				<input id="description" name="description" type="text" class="tbox" value="<?=$description;?>" maxlength="255" readonly="readonly" />
+				<span class="red">*</span>
+            </td>
+        </tr>
+		<tr id="tr_amount">
+        	<td valign="top" class="frmhead">
+				Amount
+            </td>
+        	<td valign="top" class="frmdata">
+				<input name="amount" type="text" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/>
+				<span class="red">*</span>
+            </td>
+        </tr>
+		<tr id="tr_paid_amount">
+        	<td valign="top" class="frmhead">
+				Paid Amount
+            </td>
+        	<td valign="top" class="frmdata">
+				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){number_format($paid_amount,2);};?>"  maxlength="255"/>
+				<span class="red">*</span>
+            </td>
+        </tr>
+		
+        <tr>
+            <td  colspan="2" align="center">
+                <span class="red">
+                    * Required Fields					
+                </span><br />
+                <input type="hidden" name="ledgerub" value="1" />
+                <input type="hidden" name="ed" value="<?php echo $_GET["ed"]?>" />
+                <input type="submit" value=" <?=$but_text?> Transaction" class="button" />
+            </td>
+        </tr>
+    </table>
+    </form>
+	<script type="text/javascript">
+		change_t()
+	</script> 
+	
+	
+	
+</body>
+</html>

@@ -1,0 +1,50 @@
+<? 
+session_start();
+require_once('includes/config.php');
+include("includes/sescheck.php");
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Admin </title>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+</head>
+<body>
+<table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
+  <tr bgcolor="#FFFFFF">
+    <td colspan="2" class="header_bg"> 
+		<?=$site_name;?>
+	</td>
+  </tr>
+  <tr bgcolor="#FFFFFF">
+    <td width="20%" height="261" valign="top">
+    	<table width="98%" border="0" align="right" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+					<a href="changepassword.php" class="<? if(strpos($_SERVER['PHP_SELF'],'changepassword.php') === false) echo "leftnav"; else echo "left_active"; ?>">Change Password</a>
+					
+					<a href="manage_homepage.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_homepage.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Homepage</a>
+					
+                	<a href="manage_pages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_pages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pages</a>
+					
+					<a href="manage_p_pages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_p_pages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Popup Pages</a>
+					
+					<a href="manage_sleep_apnea.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_sleep_apnea.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage About Sleep Apnea</a>
+                    
+					<a href="manage_banner.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_banner.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Banner</a>
+					
+					<a href="manage_video.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_video.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Video</a>
+					
+                    <a href="logout.php" class="leftnav">Logout</a>
+                </td>
+            </tr>
+        </table>
+    	
+	</td>
+	<td bgcolor='#FFFFFF' valign='top' height="400" width="80%">
+
+
+ 
+ 

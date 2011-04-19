@@ -1,0 +1,846 @@
+body {
+	background-image:url(../images/tall.jpg);
+	background-repeat: repeat-x ;
+	background-color: #ffffff;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#000000;
+	margin-left: 0px;
+	margin-top: 3px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+td {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #000000;
+	text-decoration: none;
+}
+
+.t_head {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	font-weight:bold;
+	background-color:#00457C;
+	text-decoration: none;
+	padding-left:10px;
+	width:150px;
+	color:#FFFFFF;
+}
+
+.t_data {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12px;
+	text-decoration: none;
+	padding-left:5px;
+}
+
+ul, ol {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.leftnav:link {
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:12px;
+	color: #005FAB;
+	padding-left:5px;
+}
+
+.leftnav:visited {
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:12px;
+	color: #005FAB;
+	padding-left:5px;
+}
+
+.leftnav:active {
+	color: #005FAB;
+	font-weight:bold;
+	padding-left:5px;
+}
+
+.leftnav:hover {
+	color: #00457C;
+	font-weight:bold;
+	padding-left:5px;
+}
+
+
+.editlink{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#000000;
+}
+.editlink:link{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#000000;
+}
+.editlink:visited{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#000000;
+}
+
+.editlink:active{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#000000;
+}
+
+.editlink:hover{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#0E4B8B;
+}
+
+.dellink{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FF0000;
+}
+.dellink:link{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FF0000;
+}
+.dellink:visited{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FF0000;
+}
+.dellink:hover{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FF0000;
+}
+.dellink:active{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FF0000;
+}
+
+
+A:link , A:visited{
+font:Arial, Helvetica, sans-serif;
+text-decoration:none;
+}
+
+A:hover, A:active{
+color:#9900FF;
+text-decoration:underline
+}
+
+.addButton {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#FFFFFF;
+	font-weight:bold;
+	border: 1px solid #395D7D;
+	background-color:#5C8DB8;
+}
+
+.button{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#FFFFFF;
+	font-weight:bold;
+	border: 1px solid #385E7E;
+	background-color:#5C8DB7;
+}
+
+.red{
+	color:#FF0000;
+}
+
+.tr_bg_h {
+	background-color:#00457C;
+}
+.tr_bg {
+	background-color:#E2ECF8;
+}
+.tr_bg1 {
+	background-color: #FF0000;
+}
+.tr_bg2 {
+	background-color: #FFCC99;
+}
+
+.cat_head{
+	background-color:#00457C;
+	font-family:Arial, Helvetica, sans-serif;
+	color: #fff;
+	padding: 4px;
+	line-height:20px;
+	text-align: left;
+	border-bottom: 1px #fff solid;
+	font-size: 12px;
+	font-weight: bold;
+	}
+	
+.frmhead{
+	background-color:#E2ECF8;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 12px;
+	color:#333333;
+	text-align: left;
+	}
+	
+.frmdata{
+	background-color:#E2E2E2;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 11px;
+	color: #000;
+	text-align: left;
+	}
+.admin_head {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #00457C;
+/*	font-weight:bold;*/
+	padding-left:10px;
+}
+.col_head{
+font-family:Arial, Helvetica, sans-serif;
+color:#FFFFFF;
+font-size:13px;
+font-weight:bold;
+/*padding:8px;*/
+border-bottom: 2px #fff solid;
+}
+
+.display_data{
+	background-color:#E7E8D0;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 11px;
+	color: #000;
+	padding-left:10px;
+	}
+	 
+.breadcrumb {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#993300;
+	height: 44px;
+	
+}
+
+.breadcrumb:link{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#993300;
+}
+
+.breadcrumb:hover{
+font-family: Arial, Helvetica, sans-serif;
+font-size:11px;
+color: #333300;
+}
+
+.tbox{
+width:250px;
+}
+
+.welcome{
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:12px;
+	color: #00457C;
+	padding-left:5px;
+}
+
+.tr_active {
+	background-color:#E2ECF8;
+	font-weight:bold;
+}
+.tr_inactive {
+	background-color:#b7b7b7;
+}
+
+.top_m_active {
+	background-color:#FFFFFF;
+	font-weight:bold;
+}
+
+.top_m A:link , .top_m A:visited{
+font:Arial, Helvetica, sans-serif;
+text-decoration:none;
+color:#00457C;
+display:block;
+font-weight:bold;
+}
+
+.top_m A:hover, .top_m A:active{
+color:#00457C;
+text-decoration:underline;
+display:block;
+font-weight:bold;
+}
+
+.sub_head{
+	background-color:#00457C;
+	font-family:Arial, Helvetica, sans-serif;
+	color: #fff;
+	padding: 4px;
+	line-height:20px;
+	text-align: left;
+	border-bottom: 2px #fff solid;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.form_info {
+	font-style:italic;
+	color:#0033FF;
+}
+
+.ex_p5_0 {
+	color:#000000;
+	font-weight:bold;
+}
+
+.ex_p5_1 {
+	color:#FF6633;
+	font-weight:bold;
+}
+
+.ex_p5_2 {
+	color:#009966;
+	font-weight:bold;
+}
+
+.ex_p5_3 {
+	color:#FF0000;
+	font-weight:bold;
+}
+
+.ex_p5_4 {
+	color:#FF0000;
+	font-weight:bold;
+}
+
+.ex_p5_5 {
+	color:#FF0000;
+	font-weight:bold;
+}
+
+/* ######### Drop Down ULs CSS ######### */
+
+
+.ddsubmenustyle, .ddsubmenustyle ul{ /*topmost and sub ULs, respectively*/
+font: normal 13px Arial, Helvetica, sans-serif; 
+margin: 0;
+padding: 0;
+position: absolute;
+left: 0;
+top: 0;
+list-style-type: none;
+background: white;
+border: 1px solid #636531;
+border-bottom-width: 0;
+visibility: hidden;
+z-index: 100;
+text-decoration:none;
+}
+
+.ddsubmenustyle li a{
+display: block;
+width: 120px; /*width of menu (not including side paddings)*/
+color: black;
+background-color: #BABFA2 ;
+text-decoration: none;
+padding: 4px 5px;
+border-bottom: 1px solid #636531;
+text-decoration:none;
+}
+
+* html .ddsubmenustyle li{ /*IE6 CSS hack*/
+display: inline-block;
+width: 170px; /*width of menu (include side paddings of LI A*/
+text-decoration:none;
+}
+
+.ddsubmenustyle li a:hover{
+background-color: #E2E5D5;
+color: #636531;
+text-decoration:none;
+}
+
+.ddsubmenustyle li a:visited{
+color: #636531;
+text-decoration:none;
+}
+
+/* ######### Neutral CSS  ######### */
+
+.downarrowpointer{ /*CSS for "down" arrow image added to top menu items*/
+padding-left: 4px;
+border: 0;
+text-decoration:none;
+}
+
+.rightarrowpointer{ /*CSS for "right" arrow image added to drop down menu items*/
+position: absolute;
+padding-top: 3px;
+left: 100px;
+border: 0;
+text-decoration:none;
+}
+
+.ddiframeshim{
+position: absolute;
+z-index: 500;
+background: transparent;
+border-width: 0;
+width: 0;
+height: 0;
+display: block;
+text-decoration:none;
+}
+
+/* ######### Matt Black Strip Main Menu Bar CSS ######### */
+
+.mattblackmenu ul{
+margin: 0;
+padding: 0;
+font: 15px Arial, Helvetica, sans-serif;
+list-style-type: none;
+/*border-bottom: 1px solid gray;*/
+/*background: #414141;*/
+overflow: hidden;
+width: 100%;
+text-decoration:none;
+}
+
+.mattblackmenu li{
+display: inline;
+margin: 0;
+text-decoration:none;
+}
+
+.mattblackmenu li a{
+float: left;
+display: block;
+text-decoration: none;
+margin: 0;
+padding: 6px 10px; /*padding inside each tab*/
+border-right: 1px  solid #BDC5CD; /*right divider between tabs*/
+color: #153D7D;
+/*background: #FF0000;*/
+
+}
+
+.mattblackmenu li a:visited{
+color: #636531;
+text-decoration:none;
+}
+
+.mattblackmenu li a:active{
+color: #636531;
+text-decoration:none;
+}
+
+
+.mattblackmenu li a:hover{
+/*background-image:url(../images/tabbg.gif);
+background-repeat:repeat-x;
+background-position:top;
+width:auto;*/
+color:#636531;
+text-decoration:none;
+/*height:40px;*/
+/*background: #0000FF; *//*background of tabs for hover state */
+}
+
+.mattblackmenu a.selected{
+/*background-image:url(../images/tabbg.gif);
+background-repeat:repeat-x;
+background-position:top;
+width:auto;*/
+color:#636531;
+text-decoration:none;
+/*background: black;*/ /*background of tab with "selected" class assigned to its LI */
+}
+
+.mattblackmenu .p7MBmark {
+	color: #ffffff;
+	cursor: hand;
+	background-position: 12px 0px !important;
+	font-weight: bold;
+	background-color: #275E77;
+}
+
+/*_______________________________________________________*/
+
+.bg_line{ background-color:#0F5696; }
+
+.bg_box1{ background-color:#EAF2F5; }
+
+
+.doc_top_head {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:20px;
+	color:#00457C;
+
+}
+
+.doc_top_ragester {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:15px;
+	color:#00457C;
+}
+
+/*__________TOP Menu_______________________________*/
+
+/*.slidetabsmenu{
+float:left;
+width:100%;
+font-size: 12px;
+line-height:normal;
+border-bottom: 1px solid #0F5696;
+}*/
+
+* html .slidetabsmenu{ /*IE only. Add 1em spacing between menu and rest of content*/
+margin-bottom: 1em;
+}
+
+.slidetabsmenu ul{
+list-style-type: none;
+margin:0;
+padding:0;
+}
+
+.slidetabsmenu li{
+display:inline;
+margin:0;
+padding:0;
+}
+
+.slidetabsmenu a{
+float:left;
+background:url(../images/slide-left_1.gif) no-repeat left top ;
+margin:0;
+margin-right: 0px;
+margin-left: 6px;
+padding:0 0 0 9px;
+text-decoration:none;
+}
+
+.slidetabsmenu a span {
+float:left;
+display:block;
+background:url(../images/slide-right_1.gif)no-repeat right top ;
+padding:5px 31px 6px 15px;
+font-weight:bold;
+/*line-height:10px;*/
+color:#ffffff;
+}
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+.slidetabsmenu a span {float:none;}
+/* End IE5-Mac hack */
+
+.slidetabsmenu a:hover span, .slidetabsmenu li.selected a span{
+color: white;
+}
+
+/*.slidetabsmenu a:hover, .slidetabsmenu li.selected a{
+background-position:0% -125px;
+}
+
+.slidetabsmenu a:hover span, .slidetabsmenu li.selected a span{
+background-position:100% -125px;
+}*/
+
+html>/**/body .IEonlybr{ /*None IE browsers hack*/
+display: none; /*Hide BR tag in non IE browsers, since it's not needed*/
+}
+
+
+/* ######### Style for Drop Down Menu ######### */
+
+.dropmenudiv_c{
+position:absolute;
+top: 0;
+border: 1px solid #0F5696; /*THEME CHANGE HERE*/
+border-width: 0 1px;
+font:normal 12px Arial, Helvetica, sans-serif;
+line-height:18px;
+z-index:100;
+background-color: #D9E6F3;
+width: 200px;
+visibility: hidden;
+}
+
+
+.dropmenudiv_c a{
+width: auto;
+display: block;
+text-indent: 5px;
+border: 0 solid #0F5696; /*THEME CHANGE HERE*/
+border-bottom-width: 1px;
+padding: 2px 0;
+text-decoration: none;
+/*font-weight: bold;*/
+color: black;
+}
+
+* html .dropmenudiv_c a{ /*IE only hack*/
+width: 100%;
+}
+
+.dropmenudiv_c a:hover{ /*THEME CHANGE HERE*/
+background-color: #4F88D2;
+color:#FFFFFF;
+}
+/*______________________tab menu end______________*/
+
+.sample {
+	border-width: 1px;
+	border-spacing:1px;
+	border-style: solid;
+	border-color: #00457C;
+	border-spacing:1px;
+	border-collapse: separate;
+	background-color: white;
+}
+
+/*.sample td {
+	border-width:0px;
+	padding: 1px;
+	border-style: solid;
+	border-spacing:1px;
+	border-color: #FFFFFF;
+	background-color: #0099FF;
+	-moz-border-radius: ;
+}*/
+
+.em_box {
+color: #fff;
+background-color: #666;
+border: 0px;
+border-collapse: collapse;   
+border-spacing: 0px;
+border: 1px #0A416E solid;
+
+}
+.em_box td 
+{
+background-color: #E1EBF8;
+color: #000;
+padding: 4px;
+border: 1px #fff solid;
+}
+
+.em_box td.em_boxhead
+{ background-color: #00457C;
+color: #fff;
+padding:4px;
+border-bottom: 3px #fff solid;
+font-size:18px;
+/*font-weight: bold;*/
+} 
+
+.em_title
+{ background-color: #00457C;
+color: #fff;
+padding:4px;
+font-size:18px;
+/*font-weight: bold;*/
+}
+
+/*_________________________________________*/
+
+.titlesub{
+		font-family:Arial, Helvetica, sans-serif;
+		font-size:17px;
+		color: #000000;	
+}
+
+.viewtable{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#000000;
+	padding: 2px 6px;
+}
+.viewtable:link{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#000000;
+	padding: 2px 6px;
+}
+.viewtable:visited{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#000000;
+	padding: 2px 6px;
+}
+.viewtable:active{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	color:#000000;
+	padding: 2px 6px;
+}
+.viewtable:hover{
+		font-family:Arial, Helvetica, sans-serif;
+		font-size:14px;
+		background-color: #00457C;
+		color: #ffffff;
+		background-image: none;
+		border: 1px solid #fff;
+		padding: 2px 6px;
+		text-decoration:none;
+		
+}
+
+.view_red{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #FF0000;
+}
+
+.view_red:link{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #FF0000;
+}
+.view_red:visited{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #FF0000;
+}
+.view_red:active{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #FF0000;
+}
+.view_red:hover{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color: #FF0000;
+	text-decoration:underline;
+}
+
+
+.click:link {
+	font-size:18px;
+	text-align:center;
+	text-decoration:underline;
+	color: #FF0000;
+	}
+.click:visited {
+	font-size:18px;
+	text-align:center;
+	text-decoration:underline;
+	color:#FF0000;	
+	}
+.click:active{
+	font-size:18px;
+	text-align:center;
+	text-decoration:underline;
+	color:#FF0000;
+
+	}
+.click:hover {
+	font-size:18px;
+	text-align:center;
+	text-decoration:none;
+	color:#00457c;
+
+	}
+	
+/*________________________________________*/
+
+
+
+/*______________BOTTOM __________________________*/
+
+.bottom_bg {
+	background-image:url(../images/bottm_bg.jpg);
+	background-position:top left;
+	background-repeat:repeat-x;
+	width:980px;
+	height:82px;
+	}
+
+.copy:link {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#062525;
+	line-height:15px;
+	}
+.copy:visited {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#062525;
+	line-height:15px;	
+	}
+.copy:active{
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#062525;
+	line-height:15px;	
+	}
+.copy:hover {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#0f5656;
+	line-height:15px;
+	}	
+.submenu:link {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#515151;
+	line-height:15px;
+	}
+.submenu:visited {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#515151;
+	line-height:15px;	
+	}
+.submenu:active{
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#515151;
+	line-height:15px;	
+	}
+.submenu:hover {
+	font-size:12px;
+	text-align:center;
+	text-decoration:none;
+	color:#00457c;
+	line-height:15px;
+	}
+.bottom_txt {
+	font-size:12px;
+	color:#515151;
+	line-height:35px;
+	}
+	
+body.pop {
+	background-image:url(../images/blank.gif);
+	background-repeat: repeat-x ;
+	background-color: #ffffff;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#000000;
+	margin-left: 0px;
+	margin-top: 3px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}

@@ -1,0 +1,83 @@
+br.both{
+clear:both;
+}
+#backgroundPopup,#backgroundPopup2{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:100%;
+width:100%;
+top:0;
+left:0;
+background:#000000;
+border:1px solid #cecece;
+z-index:1;
+}
+#popupContact,#popupContact2{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:400px;
+width:600px;
+background:#FFFFFF;
+border:2px solid #cecece;
+z-index:2;
+padding:12px;
+font-size:13px;
+}
+#popupContactClose{
+font-size:14px;
+line-height:14px;
+/*right:6px;*/
+left:6px;
+top:4px;
+position:absolute;
+color:#6fa5fd;
+font-weight:700;
+display:block;
+}
+#button{
+text-align:center;
+margin:100px;
+}
+
+/*Added by US*/
+#backgroundPopup1{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:100%;
+width:100%;
+top:0;
+left:0;
+background:#000000;
+border:1px solid #cecece;
+z-index:1;
+}
+#popupContact1{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:400px;
+width:600px;
+background:#FFFFFF;
+border:2px solid #cecece;
+z-index:2;
+padding:12px;
+font-size:13px;
+}
+#popupContactClose1{
+font-size:14px;
+line-height:14px;
+/*right:6px;*/
+left:6px;
+top:4px;
+position:absolute;
+color:#6fa5fd;
+font-weight:700;
+display:block;
+}
+#button1{
+text-align:center;
+margin:100px;
+}

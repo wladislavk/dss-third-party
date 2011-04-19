@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	margin: 5px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+	text-transform:uppercase;
+	color:#333333;
+}
+.main_tab {
+	border:1px solid #333333;
+	padding:4px;
+	}
+		
+.inbox_line1 {
+	border:1px solid #383735;
+	background-color:#FFFFFF;
+	width:10px;
+	height:15px;
+	}
+.inbox_line2 {
+	border:1px solid #383735;
+	background-color:#FFFFFF;
+	width:15px;
+	height:15px;
+	}	
+.heading1 {
+	font-size:21px;
+	font-weight:bold;
+	text-transform:uppercase;
+	line-height:33px;
+	}
+.box_bg {
+	background-image:url(box.gif);
+	background-position:top left;
+	background-repeat:no-repeat;
+	width:88px;
+	height:32px;
+	font-size:25px;
+	font-weight:bold;
+	padding-left:13px;
+	}
+.small_cap {
+	font-size:11px;
+	text-transform:none;
+	}
+.inbox_line3 {
+	border:1px solid #383735;
+	background-color:#FFFFFF;
+	}
+.num {
+	font-size:13px;
+	font-weight:bold;
+	padding-right:5px;
+	}
+.num_a{
+	font-size:13px;
+	font-weight:bold;
+	padding-right:5px;
+	text-transform:none;
+	}
+.dot_line {
+	background-image:url(dotedline.gif);
+	background-position:top left;
+	background-repeat:repeat-y;
+	width:1px;
+	height:auto;
+	}
+.b_line {
+	background-image:url(b_line.gif);
+	background-position:top left;
+	background-repeat:repeat-y;
+	width:2px;
+	height:auto;
+	}				
+			
+

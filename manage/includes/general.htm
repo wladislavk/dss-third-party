@@ -1,0 +1,25 @@
+<?
+//This Function is used for Paging
+function paging($no_pages,$index_val,$vid)
+{
+	for($p_count=0;$p_count<$no_pages;$p_count++)
+	{
+		if($index_val == $p_count)
+		{
+		?>
+			<strong><?=$p_count+1;?></strong>
+		<?
+		}
+		else
+		{
+			
+		?>
+			<a href="<?=$_SERVER['PHP_SELF']?>?page=<?=$p_count?>&<?=$vid?>" class="fp">
+			<?=$p_count+1;?></a>
+		<?
+		}
+	}
+		
+}
+
+?>

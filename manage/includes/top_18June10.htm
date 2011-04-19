@@ -1,0 +1,148 @@
+<? 
+session_start();
+require_once('admin/includes/config.php');
+
+$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
+$page_my = mysql_query($page_sql);
+$page_myarray = mysql_fetch_array($page_my);
+
+if($_SESSION['loginid'] <> '')
+{
+$cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
+$cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";
+mysql_query($cur_ins_sql);
+}
+
+if($_GET['pid'] <> '' && $_GET['fid'] == '')
+{
+	$p_form_sql = "select * from dental_forms where patientid='".s_for($_GET['pid'])."'";
+	$p_form_my = mysql_query($p_form_sql);
+	$p_form_myarray = mysql_fetch_array($p_form_my);
+	
+	$_GET['fid'] = $p_form_myarray['formid'];
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
+<title><?=$sitename;?></title>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/ddlevelsmenu.js">
+
+/***********************************************
+* All Levels Navigational Menu- (c) Dynamic Drive DHTML code library (http://www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+
+</script>
+
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+</head>
+<body>
+<table width="780" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
+
+	
+  <tr bgcolor="#FFFFFF">
+    <td colspan="2" align="right" > 
+	<div id="ddtopmenubar" class="mattblackmenu">
+    	<br />
+        <span class="welcome">
+        <?
+        if($_SESSION['userid'] != '')
+        {?>
+        	Hello <?=$_SESSION['name'];?>
+            -
+            <? 
+            if($_SESSION['user_access'] == 1)
+            {
+            	echo "Staff Login";
+            }
+            if($_SESSION['user_access'] == 2)
+            {
+            	echo "Doctor's Login";
+            }
+            ?>
+            [<a href="logout.php" class="leftnav">LOGOUT</a>]
+            &nbsp;&nbsp;
+            <?
+            echo '<br><br>';
+        }
+        ?>
+        </span>
+		<a href="index.php" class="leftnav">Home</a>
+        &nbsp;&nbsp;
+        <?
+        if($_SESSION['userid'] == '')
+        {
+        ?>
+        	<a href="login.php" class="leftnav">Login</a>
+	        &nbsp;&nbsp;
+        <?
+        }
+        else
+        {
+        ?>
+        	<!--<a href="myaccount.php" class="leftnav">My Page</a>
+	        &nbsp;&nbsp; -->
+            
+            <? if($_SESSION['user_access'] >1)
+            {?>
+                <a href="manage_staff.php" class="leftnav">Staff</a>
+                &nbsp;&nbsp;
+            <? }?>
+            
+             <a href="manage_contact.php" class="leftnav">Contacts</a>
+             &nbsp;&nbsp;
+			 
+			 <a href="manage_sleeplab.php" class="leftnav">Sleep Lab</a>
+             &nbsp;&nbsp;
+			 
+			 <a href="manage_referredby.php" class="leftnav">Referred By</a>
+             &nbsp;&nbsp;
+             
+             <a href="manage_custom.php" class="leftnav">Custom Text</a>
+             &nbsp;&nbsp;
+             
+             <a href="manage_patient.php" class="leftnav" <? if($_GET['pid'] <> '') {?> rel="ddsubmenu3" <? }?>>Patient</a>
+             &nbsp;&nbsp;
+			 
+			 <a href="ledger.php" class="leftnav">Ledger</a>
+             &nbsp;&nbsp;
+        <?
+        }?>
+	</div>
+	<script type="text/javascript">
+ddlevelsmenu.setup("ddtopmenubar", "topbar") //ddlevelsmenu.setup("mainmenuid", "topbar|sidebar")
+</script>
+
+
+
+
+<!--HTML for the Drop Down Menus associated with Top Menu Bar-->
+<!--They should be inserted OUTSIDE any element other than the BODY tag itself-->
+<!--A good location would be the end of the page (right above "</BODY>")-->
+
+<!--Top Drop Down Menu 3 HTML-->
+
+<ul id="ddsubmenu3" class="ddsubmenustyle">
+	<li><a href="q_page1.php?pid=<?=$_GET["pid"];?>">Questionnaire</a></li>
+	<li><a href="ex_page4.php?pid=<?=$_GET["pid"];?>">Clinical Exam</a></li>
+	<li><a href="dss_summary.php?pid=<?=$_GET['pid'];?>">Summary Sheet</a></li>
+	<li><a href="manage_ledger.php?pid=<?=$_GET["pid"];?>">Ledger</a></li>
+	<li><a href="manage_progress_notes.php?pid=<?=$_GET["pid"];?>">Progress Notes</a></li>
+	<li><a href="manage_insurance.php?pid=<?=$_GET["pid"];?>">Insurance</a></li>
+	<li><a href="dss_letters.php?fid=<?=$_GET["fid"];?>&pid=<?=$_GET['pid'];?>">Letters</a></li>
+	<li><a href="manage_flowsheet.php?pid=<?=$_GET["pid"];?>">Flow Sheet</a></li>
+</ul> 
+	
+	</td>
+  </tr>
+  <tr bgcolor="#FFFFFF">
+	<td bgcolor='#FFFFFF' valign='top' height="400" width="750">
+
+
+ 
+ 

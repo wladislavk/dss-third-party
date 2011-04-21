@@ -41,6 +41,11 @@ else
 	$unload = 1 ;
 }
 
+// Count letters
+$dental_letters_query = "SELECT COUNT(*) FROM `dental_letters` WHERE `status` = '0';";
+$dental_letters_res = mysql_query($dental_letters_query);
+$pending_letters = mysql_result($dental_letters_res, 0);
+
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -385,9 +390,8 @@ return false;
       }		
 		</style>
 	
-	<?php }else{ ?>
+	<?php }else{ ?> 
 	
-	}
 	</script>
 	<?php } ?>	
     <script type="text/javascript">	    	
@@ -561,6 +565,15 @@ display:none;
 
 
 </li>
+
+<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"pending_letters.php\");'";}else{echo "href='pending_letters.php'";} ?>>LETTERS (<?php echo $pending_letters; ?>)</a>
+  <ul>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"pending_letters.php\");'";}else{echo "href='pending_letters.php'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"sent_letters.php\");'";}else{echo "href='sent_letters.php'";} ?>>Sent Letters</a></li>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"new_letter.php\");'";}else{echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
+  </ul>
+</li>
+
 <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"directory.php\");'";}else{echo "href='directory.php'";} ?>>DIRECTORY</a>
   <ul>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_contact.php\");'";}else{echo "href='manage_contact.php'";} ?>>Contacts</a></li>
@@ -570,6 +583,7 @@ display:none;
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_transaction_code.php\");'";}else{echo "href='manage_transaction_code.php'";} ?>>Transaction Codes</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_sleeplab.php\");'";}else{echo "href='manage_sleeplab.php'";} ?>>Sleep Labs</a></li>
   </ul>
+</li>
 
 <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"tools.php\");'";}else{echo "href='tools.php'";} ?>>TOOLS</a>
   <ul>

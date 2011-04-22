@@ -10,6 +10,24 @@ if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_GET['pid'] == '')
 	die();
 }
 
+
+if($_POST['dailysub']){
+  $start_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd'], $_POST['d_yy'])); 
+  $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd'], $_POST['d_yy']));
+}elseif($_POST['weeklysub']){
+  $start_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd'], $_POST['d_yy']));
+  $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd']+7, $_POST['d_yy']));
+}elseif($_POST['monthlysub']){
+  $start_date = date('Y-m-01', mktime(0, 0, 0, $_POST['d_mm'], 1, $_POST['d_yy']));
+  $end_date = date('Y-m-t', mktime(0, 0, 0, $_POST['d_mm'], 1, $_POST['d_yy']));
+}elseif($_POST['rangesub']){
+  $start_date = date('Y-m-d', mktime(0, 0, 0, $_POST['s_d_mm'], $_POST['s_d_dd'], $_POST['s_d_yy']));
+  $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['e_d_mm'], $_POST['e_d_dd'], $_POST['e_d_yy']));
+}else{
+  $start_date = false;
+  $end_date = false;
+}
+
 $rec_disp = 200;
 
 if($_REQUEST["page"] != "")
@@ -48,6 +66,11 @@ $num_users=mysql_num_rows($my);
 	{?>
 	    (<i><?=$_POST['d_mm']?>-<?=$_POST['d_dd']?>-<?=$_POST['d_yy']?></i>)
 	<? }
+        
+        if($_POST['weeklysub'] == 1)
+        {?>
+            (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
+        <? }
 	
 	if($_POST['monthlysub'] == 1)
 	{?>
@@ -124,8 +147,8 @@ background:#999999;
 		</td>
 	</tr>
 	</table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
+	<div style="overflow:auto; ">
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -144,7 +167,12 @@ background:#999999;
 		}else{
     $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }
-		$runquery = mysql_query($newquery);
+                if($_POST['dailysub'] || $_POST['weeklysub'] || $_POST['monthlysub'] || $_POST['rangesub'])
+                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		
+
+
+                $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";

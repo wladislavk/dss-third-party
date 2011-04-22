@@ -69,6 +69,31 @@ if(isset($_POST['flowsubmit'])){
       }else{
         $message = "Successfully updated flowsheet!2";
       }  
+
+	
+      // Generate Initital Contact Letter
+      $stepid = '1';
+      $segmentid = '1';
+      $gen_date = date('Y-m-d H:i:s');
+      $status = '0';
+      $delivered = '0';
+      $deleted = '0';
+      $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
+      $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$gen_date."');";
+      $letter_query = "INSERT INTO dental_letters (`patientid`, `stepid`, `generated_date`, `status`, `delivered`, `deleted`) VALUES ('".$pid."', '".$stepid."', '".$gen_date."', '".$status."', '".$delivered."', '".$deleted."');";
+      $steparray_insert = mysql_query($steparray_query);
+      if(!$steparray_insert) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact to Flowsheet Page 2";
+      }
+      $flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
+      if(!$flow_pg2_info_insert) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
+      }
+      $letter_insert = mysql_query($letter_query); 
+      if(!$letter_insert) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Welcome Letter to Database";
+      }
+
     }else{
       $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
@@ -179,8 +204,8 @@ height:35px;
 <form action="#" method="post">
 <div style="margin:0 auto; width:500px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;"><?php echo $message; ?></div>
 <div style="width:200px; float:right;">
-<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';document.getElementById('flowsheet_page2btm').style.display='none';" value="Page 1" />
-<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page2btm').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Page 2" />
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';" value="Page 1" />
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Page 2" />
 </div>
 <div style="clear:both;height:10px;width:100%;"></div>
 
@@ -1275,15 +1300,29 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
   
   //print_r($order);
   
+  
+  $flow_pg2_info_query = "SELECT `stepid`, UNIX_TIMESTAMP(`date_scheduled`) as `date_scheduled`, UNIX_TIMESTAMP(`date_completed`) as `date_completed`, `delay_reason`, `study_type` FROM `dental_flow_pg2_info` WHERE `patientid` = '".$_GET['pid']."' ORDER BY `stepid` ASC;";
+  $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
+  while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
+    $flow_pg2_info[$row['stepid']] = $row;
+  }
+
+  $dental_letters_query = "SELECT `stepid`, `letterid`, UNIX_TIMESTAMP(`generated_date`) as `generated_date`, `status` FROM `dental_letters` WHERE `patientid` = '".$_GET['pid']."' ORDER BY `stepid` ASC;";
+  $dental_letters_res = mysql_query($dental_letters_query);
+  while ($row = mysql_fetch_assoc($dental_letters_res)) {
+    $dental_letters[$row['stepid']] = $row;
+  }
+
+
+  //print_r($flow_pg2_info);
   $i = 0;
   while($section = $order && $i < count($order)){
-  $getsectiontitle_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$order[$i].";";
-  //echo $getsectiontitle_query;
-  $getsectiontitle_res = mysql_query($getsectiontitle_query);
-  if($getsectiontitle_res){
-  $getsectiontitle = mysql_fetch_array($getsectiontitle_res);
+  $segment_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$order[$i].";";
+  $segment_res = mysql_query($segment_query);
+  if($segment_res){
+    $segment = mysql_fetch_array($segment_res);
   }else{
-  echo "Click 'Start Consult' above to create your first step";
+    echo "Click 'Start Consult' above to create your first step";
   }
 
   $getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
@@ -1293,11 +1332,13 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
   $stepcount = count($steparray);
   $steparray_last = end($steparray);
 
+  $step = count($order) - $i;
+  $datecomp = date('m/d/Y', $flow_pg2_info[$step]['date_completed']);
+ 
+  $lid = $dental_letters[$step]['letterid'];
+  $gendate = date('m/d/Y', $dental_letters[$step]['generated_date']);
 
-  $selectsectionqry = "SELECT * FROM `flowsheet_segments` WHERE `section` ='".$getsectiontitle['section']."';";
-  $selectsectionarray = mysql_query($selectsectionqry);
-  $selectsection = mysql_fetch_array($selectsectionarray);
-  eval('?>' . $selectsection['content'] . '<?');
+  eval('?>' . $segment['content'] . '<?');
   
   //echo "<br />".$i."<br />";
   $i++; 
@@ -1332,88 +1373,6 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
     
 
 ?>
-<tr style="background: url(&quot;images/dss_03.jpg&quot;) repeat-y scroll left top rgb(255, 255, 255);">
-<td> 
-<table style="margin-left:20px; width:932px;" name="flowsheet_page2btm" id="flowsheet_page2btm">
-<tr>
-<td width="109">
-Initial Contact
-</td>
-
-
-<td width="117">
-<input type="text" readonly="readonly" value="Complete Pg. 1" style="width:100px;">
-</td>
-
-
-<td width="119">
-<a href="#">Welcome Letter</a>
-</td>
-
-
-<td width="115">
-<input type="text" readonly="readonly" value="Gen Date" style="width:100px;">
-</td>
-
-
-<td width="26">
-<input type="checkbox">
-</td>
-
-
-<td width="102">
-<select>
-<option>Emailed</option>
-<option>Faxed</option>
-<option>Mailed</option>
-</select>
-</td>
-
-
-
-
-
-
-
-
-
-<td width="250">
-
-<?php
-
-$getstepqrysql = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$_GET['pid']."' LIMIT 1;";
-$getstepqry = mysql_query($getstepqrysql);
-$stepquery = mysql_fetch_array($getstepqry);
-
-if(count(explode(",",$stepquery['steparray'])) != '1'){
-
-}else{
-?>
-<form action="#" name="initialcontactform" method="POST" style="width: 200px;">
-
-<select name="stepselectedsubmit" onChange="document.initialcontactform.submit();">
-<option>Next Step</option>
-<option value="4">Impressions</option>
-<option value="5">Delaying Treatment / Waiting</option>
-<option value="6">Refused Treatment</option>
-<option value="3">Sleep Study</option>
-<option value="8">Follow-Up / Check-Up</option>
-<option value="9">Patient Non-Compliant</option>
-<option value="2">Consult</option>
-<option value="10">Home Sleep Test</option>
-<option value="11">Treatment Complete</option>
-<option value="12">Annual Recall</option>
-<option value="13">Termination</option>
-</select>
-<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>" />
-
-<?php } ?>
-</form> 
-</td>
-</tr>
-</table>
-</td>
-</tr>
 </table>
 
 

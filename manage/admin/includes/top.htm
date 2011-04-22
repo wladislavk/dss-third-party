@@ -37,6 +37,17 @@ include("includes/sescheck.php");
 					
                     
                     <hr size="1" />
+
+                    <a href="manage_letters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_letters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Letters</a>
+
+                    <a href="manage_insurance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_insurance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance</a>
+
+                    <a href="manage_new_patient_calls.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_new_patient_calls.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage New Patient Calls</a>
+
+                    <a href="manage_franchisee_analysis.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_franchisee_analysis.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Franchisee Analysis</a>
+
+                    <hr size="1" />
+                    
                     <a href="manage_complaint.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_complaint.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Chief Complaint</a>
                     
                     <a href="manage_epworth.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_epworth.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Epworth</a>

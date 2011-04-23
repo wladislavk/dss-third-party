@@ -6,7 +6,7 @@
 <br />
 <br />
 <button class="addButton" onclick="window.location.href='ledger_reportfull.php'" style="float:right;">All Patients</button>
-<form name="dailyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return dailyabc(this)">
+<form name="dailyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="post" onSubmit="return dailyabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -67,7 +67,7 @@
 </table>
 </form>
 
-<form name="dailyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return dailyabc(this)">
+<form name="weeklyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="post" >
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr>
                 <td colspan="2" class="cat_head">
@@ -130,7 +130,7 @@
 
 <br />
 
-<form name="monthlyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return monthlyabc(this)">
+<form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="post" onSubmit="return monthlyabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -179,7 +179,7 @@
 </table>
 </form>
 <br />
-<form name="monthlyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return monthlyabc(this)">
+<form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="post" onSubmit="return monthlyabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr>
                 <td colspan="2" class="cat_head">
@@ -274,6 +274,7 @@
 </form>
 
 <br />
+<!--
 <form name="patfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>" method="get" onSubmit="return patabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
@@ -346,6 +347,7 @@
 		<?
 		}
 	}?>
+-->
 </table>
 <script type="text/javascript">
 	window.location = "#pat_list";

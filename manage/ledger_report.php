@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_GET['pid'] == '')
+if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_POST['weeklysub'] != 1 && $_POST['rangesub'] != 1 && $_GET['pid'] == '')
 {?>
 	<script type="text/javascript">
 		window.location = 'ledger.php';
@@ -16,7 +16,7 @@ if($_POST['dailysub']){
   $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd'], $_POST['d_yy']));
 }elseif($_POST['weeklysub']){
   $start_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd'], $_POST['d_yy']));
-  $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd']+7, $_POST['d_yy']));
+  $end_date = date('Y-m-d', mktime(0, 0, 0, $_POST['d_mm'], $_POST['d_dd']+6, $_POST['d_yy']));
 }elseif($_POST['monthlysub']){
   $start_date = date('Y-m-01', mktime(0, 0, 0, $_POST['d_mm'], 1, $_POST['d_yy']));
   $end_date = date('Y-m-t', mktime(0, 0, 0, $_POST['d_mm'], 1, $_POST['d_yy']));
@@ -164,14 +164,13 @@ background:#999999;
 		$tot_charges = 0;
 		$tot_credit = 0;
 		if(isset($_GET['pid'])){
-		$newquery = "SELECT * FROM dental_ledger WHERE `patientid` = '".$_GET['pid']."'";
+		$newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
 		}else{
     $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }
                 if($_POST['dailysub'] || $_POST['weeklysub'] || $_POST['monthlysub'] || $_POST['rangesub'])
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 		
-
 
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
@@ -211,6 +210,7 @@ background:#999999;
 				<td valign="top" align="right" width="10%">
           <?php
           echo $myarray["amount"];
+          $tot_charge += $myarray["amount"];
           ?>
 
 					&nbsp;
@@ -232,7 +232,6 @@ background:#999999;
              echo "Pend";
             }
 				
-						$tot_credit += st($myarray["paid_amount"]);
 					}?>       	
 				</td>
 			</tr>
@@ -276,13 +275,13 @@ background:#999999;
                     
                     
 				<b>
-				<?php echo "$".number_format($cur_bal,2); ?>
+				<?php echo "$".number_format($tot_charge,2); ?>
 				&nbsp;
 				</b>
 			</td>
 			<td valign="top" align="right">
 				<b>
-				<?php echo "$".number_format($cur_bal2,2);?>
+				<?php echo "$".number_format($tot_credit,2);?>
 				&nbsp;
 				</b>
 			</td>

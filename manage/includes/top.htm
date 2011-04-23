@@ -42,7 +42,8 @@ else
 }
 
 // Count letters
-$dental_letters_query = "SELECT COUNT(*) FROM `dental_letters` WHERE `status` = '0';";
+$docid = $_SESSION['docid'];
+$dental_letters_query = "SELECT COUNT(*) FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_patients.docid = '".$docid."';";
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_result($dental_letters_res, 0);
 
@@ -566,9 +567,9 @@ display:none;
 
 </li>
 
-<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"pending_letters.php\");'";}else{echo "href='pending_letters.php'";} ?>>LETTERS (<?php echo $pending_letters; ?>)</a>
+<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=pending\");'";}else{echo "href='letters.php?status=pending'";} ?>>LETTERS (<?php echo $pending_letters; ?>)</a>
   <ul>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"pending_letters.php\");'";}else{echo "href='pending_letters.php'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=pending\");'";}else{echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"sent_letters.php\");'";}else{echo "href='sent_letters.php'";} ?>>Sent Letters</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"new_letter.php\");'";}else{echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
   </ul>

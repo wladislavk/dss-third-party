@@ -555,7 +555,7 @@ display:none;
 </li>
 <li>
 <?php if($_GET['pid'] != ''){ ?>
-<a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ledger.php\");'";}else{echo "href='ledger.php?pid=".$_GET['pid']."'";} ?>>REPORTS</a>
+<a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ledger.php\");'";}else{echo "href='manage_ledger.php?pid=".$_GET['pid']."'";} ?>>REPORTS</a>
 <?php }else{
 ?>
 <a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ledger.php\");'";}else{echo "href='ledger_reportfull.php'";} ?>>REPORTS</a>
@@ -620,6 +620,7 @@ display:none;
                     $my=mysql_query($sql) or die(mysql_error());
                     while($myarray = mysql_fetch_array($my))
 		                {
+                     $thename= $myarray['firstname']." ".$myarray['lastname'];
                     if($myarray["premedcheck"] == 1){
                     echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PREMED PATIENT";
                     }

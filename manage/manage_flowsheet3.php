@@ -1,5 +1,4 @@
 <?php include "includes/top.htm";
-
 if(is_numeric($_GET['pid'])){
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -72,26 +71,41 @@ if(isset($_POST['flowsubmit'])){
 
 	
       // Generate Initital Contact Letter
+      $letter1id = '5';
+      $letter2id = '6';
       $stepid = '1';
       $segmentid = '1';
       $gen_date = date('Y-m-d H:i:s');
-      $status = '0';
-      $delivered = '0';
-      $deleted = '0';
       $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
       $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$gen_date."');";
-      $letter_query = "INSERT INTO dental_letters (`patientid`, `stepid`, `generated_date`, `status`, `delivered`, `deleted`) VALUES ('".$pid."', '".$stepid."', '".$gen_date."', '".$status."', '".$delivered."', '".$deleted."');";
       $steparray_insert = mysql_query($steparray_query);
-      if(!$steparray_insert) {
+      if (!$steparray_insert) {
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact to Flowsheet Page 2";
       }
       $flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
-      if(!$flow_pg2_info_insert) {
+      if (!$flow_pg2_info_insert) {
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
       }
-      $letter_insert = mysql_query($letter_query); 
-      if(!$letter_insert) {
-        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Welcome Letter to Database";
+      $letter_result = create_letter($letter1id, $pid, $stepid, '', '', '', 'email');
+      if ($letter_result !== true) {
+        $message = $letter_result;
+      }
+      // Get letterid of last letter to associate with next letter
+      $letter_query = "SELECT letterid FROM dental_letters where patientid = '".$pid."' AND stepid = '".$stepid."';";
+      $result = mysql_query($letter_query);
+      $parentid = array();
+      if (!$result) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from database";
+      } else {
+        while ($row = mysql_fetch_array($result)) {
+          $parentid[] = $row;
+        }
+      }
+      if (count($parentid) == '1') {
+        $letter_result = create_letter($letter2id, $pid, '', '', $parentid[0], '', 'mail');
+        if ($letter_result !== true) {
+          $message = $letter_result;
+        }
       }
 
     }else{
@@ -1100,13 +1114,13 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
 		$getposqry = mysql_query($posqry);   
 		
 		if(mysql_num_rows($getstepqry) < 1){
-			$insertstepqry = "INSERT INTO `dentalsl_main`.`dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
+			$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
 			if(!mysql_query($insertstepqry)){
 			$error = "MySQL error ".mysql_errno().": ".mysql_error();
 			echo $error."1";
 			echo "error inserting";
 			}
-			$insertorderqry = "INSERT INTO `dentalsl_main`.`segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`, `terminationrow`) VALUES ('".$patientid."','2','3','4','5','6','7','8','9','10','11','12','13')";
+			$insertorderqry = "INSERT INTO `segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`, `terminationrow`) VALUES ('".$patientid."','2','3','4','5','6','7','8','9','10','11','12','13')";
 			if(!mysql_query($insertorderqry)){
 			echo "error updating order";
 			$error = "MySQL error ".mysql_errno().": ".mysql_error();
@@ -1121,7 +1135,7 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
          if(in_array($_POST['stepselectedsubmit'], $whatsinarray)){
           echo "Item in db";
          }else{
-          $updatestepqry = "UPDATE `dentalsl_main`.`dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
+          $updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
 			    mysql_query($updatestepqry);
 			
     			if(!mysql_query($updatestepqry)){
@@ -1184,7 +1198,7 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
            	 }
           }
           			
-    			$updatesegments = "UPDATE `dentalsl_main`.`dental_flow_pg2` SET `".$_POST['formsegment']."` = 2";
+    			$updatesegments = "UPDATE `dental_flow_pg2` SET `".$_POST['formsegment']."` = 2";
     			if(!mysql_query($updatesegments)){
     			echo "error updating order";
     			$error = "MySQL error ".mysql_errno().": ".mysql_error();
@@ -1309,6 +1323,7 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
 
   $dental_letters_query = "SELECT `stepid`, `letterid`, UNIX_TIMESTAMP(`generated_date`) as `generated_date`, `status` FROM `dental_letters` WHERE `patientid` = '".$_GET['pid']."' ORDER BY `stepid` ASC;";
   $dental_letters_res = mysql_query($dental_letters_query);
+  $dental_letters = array();
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
     $dental_letters[$row['stepid']] = $row;
   }

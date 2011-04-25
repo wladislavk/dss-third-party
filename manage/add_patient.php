@@ -1,6 +1,40 @@
 <?php
 include "includes/top.htm";
-
+  // Trigger Letter 1 and 2 if New MD was added
+  function trigger_letter1and2($pid) {
+    $letter1id = "1";
+    $letter2id = "2";
+    $mdcontacts = array();
+    $mdcontacts[] = $_POST['docsleep'];
+    $mdcontacts[] = $_POST['docpcp'];
+    $mdcontacts[] = $_POST['docmdother'];
+    $recipients	= array();
+    foreach ($mdcontacts as $contact) {
+      $letter_query = "SELECT recipientids FROM dental_letters WHERE recipientids IS NOT NULL AND CONCAT(',', recipientids, ',') LIKE CONCAT('%,', ".$contact.", ',%') AND templateid IN(".$letter1id.",".$letter2id.");";
+      $letter_result = mysql_query($letter_query);
+      $num_rows = mysql_num_rows($letter_result);
+      if(!$letter_result) {
+        print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
+	die();
+      }
+      if ($num_rows == 0) {
+	$recipients[] = $contact;
+      }
+    } 
+    if (count($recipients) > 0) {
+      $recipients_list = implode(',', $recipients);
+      $letter1 = create_letter($letter1id, $pid, '', $recipients_list);
+      $letter2 = create_letter($letter2id, $pid, '', $recipients_list);
+      if ($letter1 !== true) {
+        print $letter1;
+        die();
+      }
+      if ($letter2 !== true) {
+        print $letter2;
+        die();
+      }
+    }
+  }
 
 if($_POST["patientsub"] == 1)
 {
@@ -105,6 +139,8 @@ if($_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
+		trigger_letter1and2($_POST['ed']);
+
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
 		?>
@@ -217,6 +253,9 @@ if($_POST["patientsub"] == 1)
 		ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
+                $pid = mysql_insert_id();
+   		trigger_letter1and2($pid);
+
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -226,6 +265,7 @@ if($_POST["patientsub"] == 1)
 		<?
 		die();
 	}
+
 }
 
 ?>

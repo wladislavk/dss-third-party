@@ -43,9 +43,13 @@ else
 
 // Count letters
 $docid = $_SESSION['docid'];
-$dental_letters_query = "SELECT COUNT(*) FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_patients.docid = '".$docid."';";
+// $dental_letters_query = "SELECT COUNT(*) FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_patients.docid = '".$docid."';";
+$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_patients.docid = '".$docid."' ORDER BY generated_date ASC;";
 $dental_letters_res = mysql_query($dental_letters_query);
-$pending_letters = mysql_result($dental_letters_res, 0);
+$pending_letters = mysql_num_rows($dental_letters_res);
+$generated_date = mysql_fetch_array($dental_letters_res);
+$seconds_per_day = 86400;
+$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
 
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

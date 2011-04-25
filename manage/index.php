@@ -78,7 +78,18 @@ echo $memo_array['memo'] . "<br /><hr />";
     
   </tr>
   </table>
-  <br /> <br /><br />
+  <br /> 
+
+  <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
+  <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>
+  <tr>
+    <td style="border:1px solid;"><p><strong>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</strong></p>
+      <p><strong>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old</span>.</strong></p> 
+    </td></tr>
+  </table>
+
+
+  <br /><br />
 
  <?
 

@@ -34,4 +34,57 @@ function paging($no_pages,$index_val,$vid)
 		
 }
 
+// Function to Create Letters
+function create_letter ($templateid, $pid = "", $stepid = "", $recipientids = "", $parentid = "", $template = "", $send_method = "") {
+  $gen_date = date('Y-m-d H:i:s');
+  $status = '0';
+  $delivered = '0';
+  $deleted = '0';
+  $columns = "templateid";
+  if (!isset($templateid)) {
+    return "Error: Letter Template not specified";
+  } else {
+    $values = "'".mysql_real_escape_string($templateid)."'";
+  }
+  if (isset($pid)) {
+    $columns .= ", patientid";
+    $values .= ", '".mysql_real_escape_string($pid)."'";
+  }
+  if (isset($stepid)) {
+    $columns .= ", stepid";
+    $values .= ", '".mysql_real_escape_string($stepid)."'";
+  }
+  if (isset($parentid)) {
+    $columns .= ", parentid";
+    $values .= ", '".mysql_real_escape_string($parentid)."'";
+  }
+  if (isset($recipientids)) {
+    $columns .= ", recipientids";
+    $values .= ", '".mysql_real_escape_string($recipientids)."'";
+  }
+  if (isset($template)) {
+    $columns .= ",template ";
+    $values .= ", '".mysql_real_escape_string($template)."'";
+  }
+  if (isset($send_method)) {
+    $columns .= ", send_method";
+    $values .= ", '".mysql_real_escape_string($send_method)."'";
+  }
+  if (!isset($recipientids)) { // find the recipients using templateid
+    // Todo build logic to choose which column to select ids from based on template
+  }
+
+  $columns .= ", generated_date, status, delivered, deleted";
+  $values .= ", '$gen_date', '$status', '$delivered', '$deleted'";
+  $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
+  $letter_insert = mysql_query($letter_query);
+  if(!$letter_insert) {
+    return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
+  }
+
+  // If parent and recipient ids are set, clear the recipient id from the parent
+
+  return true;
+}
+
 ?>

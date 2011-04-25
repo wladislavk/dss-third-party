@@ -1,4 +1,4 @@
-<?
+<?php
 //This Function is used for Paging
 function paging($no_pages,$index_val,$vid)
 {
@@ -8,7 +8,7 @@ function paging($no_pages,$index_val,$vid)
 		{
 		?>
 			<strong><?=$p_count+1;?></strong>
-		<?
+		<?php
 		}
 		else
 		{
@@ -16,7 +16,7 @@ function paging($no_pages,$index_val,$vid)
 		?>
 			<a href="<?=$_SERVER['PHP_SELF']?>?page=<?=$p_count?>&<?=$vid?>" class="fp">
 			<?=$p_count+1;?></a>
-		<?
+		<?php
 		}
 	}
 		

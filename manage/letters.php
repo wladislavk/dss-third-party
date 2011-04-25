@@ -5,7 +5,7 @@ $page = '0';
 $page_limit = '10';
 $sort = 'asc';
 $column = 'letterid';
-if (isset($_GET['page'])) { $sort = mysql_real_escape_string($_GET['page']); }
+if (isset($_GET['page'])) { $sort = $_GET['page']; }
 if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
 if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
 
@@ -14,7 +14,7 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' ORDER BY ".$column." ".$sort.";";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.recipientids, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' ORDER BY ".$column." ".$sort.";";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -25,13 +25,13 @@ if ($status == 'pending') {
   }
 }
 
+/* Calculate oldest letter age
 foreach ($dental_letters as $key => $row) {
   $generated_date[$key] = $row['generated_date'];
 }
-
 arsort($generated_date);
 $seconds_per_day = 86400;
-$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
+$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);*/
 
 // Calculate numer of pages
 $num_pages = floor(count($dental_letters) / $page_limit);
@@ -68,7 +68,26 @@ if ($dental_letters % $page_limit) {
   while ($i < count($dental_letters) && $i < $page_limit) {
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
-    print "<tr><td>$name</td><td>$correspondance</td><td>$sentto</td><td>$generated</td></tr>";
+    // Get Correspondance Column
+    $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$dental_letters[$i]['templateid']."';";
+    $template_res = mysql_query($template_sql);
+    $correspondance = array();
+    $correspondance = mysql_fetch_assoc($template_res);
+    $subject = $correspondance['name'];
+    $url = $correspondance['template'] . "?fid=" . $dental_letters[$i]['patientid'] . "&pid=" . $dental_letters[$i]['patientid'];
+    // Get Recipients
+    $recipients = array();
+    $recipients = explode(',', $dental_letters[$i]['recipientids']);
+    if (count($recipients) > 1) {
+      $sentto = count($recipients) . " Contacts";
+    } else {
+      $contact_sql = "SELECT dental_contact.contactid, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid = '".$recipients[0]."';";
+      $contact_res = mysql_query($contact_sql);
+      $contact = mysql_fetch_assoc($contact_res);
+      $sendto = (($contact['salutation']) ? $contact['salutation'] . " " : "") . $contact['firstname'] . " " . $contact['lastname'] . (($contact['contacttype']) ? " - " . $contact['contacttype'] : "");
+    }
+    
+    print "<tr><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";
     $i++;
   }
 ?>

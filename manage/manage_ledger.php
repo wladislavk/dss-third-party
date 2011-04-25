@@ -118,6 +118,11 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 		Add New Transaction
 	</button>
 	&nbsp;&nbsp;
+        <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
+               Reports 
+        </button>
+        &nbsp;&nbsp;
+
 </div>
 
 <br />

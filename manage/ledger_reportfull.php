@@ -69,6 +69,10 @@ background:#999999;
 		Print Ledger Report
 	</button>
 	&nbsp;&nbsp;
+<button onclick="Javascript:window.location='ledger.php';" class="addButton"> 
+                Reporting
+        </button>
+        &nbsp;&nbsp;
 </div>
 
 <br />

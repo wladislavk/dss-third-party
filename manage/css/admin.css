@@ -2,6 +2,10 @@ a, a:hover{
   color:#095D81;
 }
 
+table.ledger a{
+  color:#fff;
+}
+
 body {
 	background:url(../images/tall.jpg) #BFCFDC ;
 	background-repeat: repeat-x ;

@@ -5,8 +5,10 @@
 </span>
 <br />
 <br />
-<button class="addButton" onclick="window.location.href='ledger_reportfull.php'" style="float:right;">All Patients</button>
-<form name="dailyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return dailyabc(this)">
+<?php if(isset($_GET['pid'])){ ?>
+<button class="addButton" onclick="window.location.href='ledger.php'" style="float:right;">All Patients</button>
+<?php } ?>
+<form name="dailyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return dailyabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -67,9 +69,70 @@
 </table>
 </form>
 
+<form name="weeklyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" >
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr>
+                <td colspan="2" class="cat_head">
+                        Weekly Ledger Report
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead" width="30%">
+                        Select Date
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="d_mm" class="tbox" style="width:70px;">
+                                <option value="">MM</option>
+                                <? for($i=1 ; $i<=12 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('m') == $i) echo " selected";?> >
+                                                <?=$i?>
+                                        </option>
+                                <?
+                            }?>
+                        </select>
+
+                        &nbsp;&nbsp;
+                        <select name="d_dd" class="tbox" style="width:70px;">
+                                <option value="">DD</option>
+                                <? for($i=1 ; $i<=31 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('d') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+
+                        &nbsp;&nbsp;
+                        <select name="d_yy" class="tbox" style="width:70px;">
+                                <option value="">YYYY</option>
+                                <? for($i=2010 ; $i<=date('Y') ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('Y') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+                        <span class="red">*</span>
+                </td>
+        </tr>
+         <tr>
+                <td  colspan="2" align="center">
+                        <span class="red">
+                                * Required Fields
+                        </span><br />
+                        <input type="hidden" name="weeklysub" value="1" />
+                        <input type="submit" value=" Run Report" class="button" />
+                </td>
+        </tr>
+</table>
+</form>
+
 <br />
 
-<form name="monthlyfrm" action="ledger_report.php?pid=<?php echo $_GET['pid']; ?>" method="post" onSubmit="return monthlyabc(this)">
+<form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return monthlyabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -117,8 +180,103 @@
 	</tr>
 </table>
 </form>
+<br />
+<form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return monthlyabc(this)">
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr>
+                <td colspan="2" class="cat_head">
+                        Date Range Ledger Report
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead" width="30%">
+                        Select Date
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="s_d_mm" class="tbox" style="width:70px;">
+                                <option value="">MM</option>
+                                <? for($i=1 ; $i<=12 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('m')-1 == $i) echo " selected";?> >
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+                        &nbsp;&nbsp;
+                        <select name="s_d_dd" class="tbox" style="width:70px;">
+                                <option value="">DD</option>
+                                <? for($i=1 ; $i<=31 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('d') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+
+                        &nbsp;&nbsp;
+                        <select name="s_d_yy" class="tbox" style="width:70px;">
+                                <option value="">YYYY</option>
+                                <? for($i=2010 ; $i<=date('Y') ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('Y') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+                        <br />
+                        <select name="e_d_mm" class="tbox" style="width:70px;">
+                                <option value="">MM</option>
+                                <? for($i=1 ; $i<=12 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('m') == $i) echo " selected";?> >
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+                        &nbsp;&nbsp;
+                        <select name="e_d_dd" class="tbox" style="width:70px;">
+                                <option value="">DD</option>
+                                <? for($i=1 ; $i<=31 ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('d') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+
+                        &nbsp;&nbsp;
+                        <select name="e_d_yy" class="tbox" style="width:70px;">
+                                <option value="">YYYY</option>
+                                <? for($i=2010 ; $i<=date('Y') ; $i++)
+                                {?>
+                                        <option value="<?=$i;?>" <? if(date('Y') == $i) echo " selected";?>>
+                                                <?=$i?>
+                                        </option>
+                                <?
+                                }?>
+                        </select>
+                        <span class="red">*</span>
+                </td>
+        </tr>
+         <tr>
+                <td  colspan="2" align="center">
+                        <span class="red">
+                                * Required Fields
+                        </span><br />
+                        <input type="hidden" name="rangesub" value="1" />
+                        <input type="submit" value=" Run Report" class="button" />
+                </td>
+        </tr>
+</table>
+</form>
 
 <br />
+<!--
 <form name="patfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>" method="get" onSubmit="return patabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
@@ -191,6 +349,7 @@
 		<?
 		}
 	}?>
+-->
 </table>
 <script type="text/javascript">
 	window.location = "#pat_list";

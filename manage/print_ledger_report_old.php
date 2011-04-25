@@ -1,11 +1,7 @@
 <? 
-//include "includes/top.htm";
+include "admin/includes/config.php";
 
-session_start();
-require_once('admin/includes/config.php');
-include("includes/sescheck.php");
-
-if($_GET['dailysub'] != 1 && $_GET['monthlysub'] != 1 && $_GET['weeklysub'] != 1 && $_GET['rangesub'] != 1 && $_GET['pid'] == '')
+if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_POST['weeklysub'] != 1 && $_POST['rangesub'] != 1 && $_GET['pid'] == '')
 {?>
 	<script type="text/javascript">
 		window.location = 'ledger.php';
@@ -13,10 +9,6 @@ if($_GET['dailysub'] != 1 && $_GET['monthlysub'] != 1 && $_GET['weeklysub'] != 1
 	<?
 	die();
 }
-
-
-  $start_date = $_GET['start_date'];
-  $end_date = $_GET['end_date']; 
 
 $rec_disp = 200;
 
@@ -26,46 +18,66 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-
-if(isset($_GET['pid'])){
-$sql = "select * from dental_ledger where patientid='".$_GET['pid']."' "; 
-}else{
 $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' ";
+if($_GET['dailysub'] == 1)
+{
+	$src_date = $_GET['d_yy']."-".$_GET['d_mm']."-".$_GET['d_dd'];
+	$sql .= " and service_date='".s_for($src_date)."' ";
 }
 
+if($_GET['monthlysub'] == 1)
+{
+	$sql .= " and month(service_date)='".s_for($_GET['d_mm'])."' and year(service_date)='".s_for($_GET['d_yy'])."' ";
+}
+
+if($_GET['pid'] <> '')
+{
+	$sql .= " and patientid='".s_for($_GET['pid'])."' ";
+	
+	$thepat_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
+	$thepat_my = mysql_query($thepat_sql);
+	$thepat_myarray = mysql_fetch_array($thepat_my);
+	
+	$thename = st($thepat_myarray['lastname'])." ".st($thepat_myarray['middlename'])." ".st($thepat_myarray['firstname']);
+}
 
 $sql .= " order by service_date";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp.";";
+$sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
-//echo $sql; 
 ?>
-
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<script src="admin/popup/popup.js" type="text/javascript"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
+<title><?=$sitename;?> | <?=$name;?> - Ledger Card</title>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+</head>
+<body onLoad="window.print(); parent.disablePopup1();">
+<table width="780" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
+  <tr bgcolor="#FFFFFF">
+    <td colspan="2" > 
 
 <span class="admin_head">
 	Ledger Report
-	<? if($_POST['dailysub'] == 1)
+	<? if($_GET['dailysub'] == 1)
 	{?>
-	    (<i><?=$_POST['d_mm']?>-<?=$_POST['d_dd']?>-<?=$_POST['d_yy']?></i>)
-	<? }
-        
-        if($_POST['weeklysub'] == 1)
-        {?>
-            (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
-        <? }
+	    (<i><?=$_GET['d_mm']?>-<?=$_GET['d_dd']?>-<?=$_GET['d_yy']?></i>)
+	<? 
+	}
 	
-	if($_POST['monthlysub'] == 1)
+	if($_GET['monthysub'] == 1)
 	{?>
-		(<i><?=$_POST['d_mm']?>-<?=$_POST['d_yy']?></i>)
-	<? }
+		(<i><?=$_GET['d_mm']?>-<?=$_GET['d_yy']?></i>)
+	<? 
+	}
 	
 	if($_GET['pid'] <> '')
 	{?>
@@ -73,7 +85,14 @@ $num_users=mysql_num_rows($my);
 	<? }?>
 </span>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<br />
+
+<br />
+<div align="center" class="red">
+	<b><? echo $_GET['msg'];?></b>
+</div>
+
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" border="1" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -110,9 +129,6 @@ $num_users=mysql_num_rows($my);
 			Ins
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; ">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -126,14 +142,8 @@ $num_users=mysql_num_rows($my);
 	{
 		$tot_charges = 0;
 		$tot_credit = 0;
-		if(isset($_GET['pid'])){
-		$newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
-		}else{
-    $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
-    }
-                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
-
-                $runquery = mysql_query($newquery);
+		$newquery = "SELECT * FROM dental_ledger WHERE `patientid` = '".$_GET['pid']."'";
+		$runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
@@ -153,30 +163,31 @@ $num_users=mysql_num_rows($my);
 			$tr_class = "tr_active";
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="10%">
+				<td valign="top">
                 	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top">
                 	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top">
                 	<?=st($name);?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top">
                 	<?=st($myarray["producer"]);?>
 				</td>
-				<td valign="top" width="30%">
+				<td valign="top">
                 	<?=st($myarray["description"]);?>
 				</td>
-				<td valign="top" align="right" width="10%">
-          <?php
+				<td valign="top" align="right">
+					<?php
           echo $myarray["amount"];
-          $tot_charge += $myarray["amount"];
           ?>
-
+					<? 
+						$tot_charges += st($myarray["amount"]);
+					}?>
 					&nbsp;
 				</td>
-				<td valign="top" align="right" width="10%">
+				<td valign="top" align="right">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
@@ -184,40 +195,30 @@ $num_users=mysql_num_rows($my);
 					}?>
 					&nbsp;
 				</td>
-				<td valign="top" width="5%">&nbsp;
-         <? if($myarray["status"] == 1){
+				<td valign="top">&nbsp;
+          <? if($myarray["status"] == 1){
 	           echo "Sent";
 	          }elseif($myarray["status"] == 2){
              echo "Filed";
             }else{
              echo "Pend";
             }
-				
-					}?>       	
+            ?>       	
 				</td>
 			</tr>
 	<? 	}
-	?> 
-	  
+	?>
 		<tr>
 			<td valign="top" colspan="5" align="right">
 				<b>Total</b>
 			</td>
 			<td valign="top" align="right">
-			
+				
 			<?php
-			            if(isset($_GET['pid'])){
-                  $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." AND `transaction_type` = 'Charge'";
-                  }else{
-                  $ledgerquery = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." AND `transaction_type` = 'Charge'";
-                  }
+                  $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =16 AND `transaction_type` = 'Charge'";
                   $ledgerres = mysql_query($ledgerquery);
                   $myarray = mysql_fetch_array($ledgerres);
-                  if(isset($_GET['pid'])){
-                  $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." and `transaction_type`='Credit'";
-                  }else{
-                  $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." and `transaction_type`='Credit'";
-                  }
+                  $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =16 and `transaction_type`='Credit'";
                   $ledgerres2 = mysql_query($ledgerquery2);
                   $myarray2 = mysql_fetch_array($ledgerres2);
                   if(st($myarray["amount"]) <> 0) {
@@ -236,13 +237,13 @@ $num_users=mysql_num_rows($my);
                     
                     
 				<b>
-				<?php echo "$".number_format($tot_charge,2); ?>
+				<?php echo "$".number_format($cur_bal,2); ?>
 				&nbsp;
 				</b>
 			</td>
 			<td valign="top" align="right">
 				<b>
-				<?php echo "$".number_format($tot_credit,2);?>
+				<?php echo "$".number_format($cur_bal2,2);?>
 				&nbsp;
 				</b>
 			</td>
@@ -252,12 +253,11 @@ $num_users=mysql_num_rows($my);
 		</tr>
 
 </table>
- </div>
-
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
 
 <br /><br />	
+
+</td>
+</tr>
+</table>
+</body>
+</html>

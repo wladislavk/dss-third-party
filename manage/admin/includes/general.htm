@@ -34,8 +34,70 @@ function paging($no_pages,$index_val,$vid)
 		
 }
 
+// Function to Get Contacts
+// Returns comma delimited list of contactids
+function get_mdcontactids ($pid) {
+  $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother FROM dental_patients where patientid = '".s_for($pid)."';";
+  $contact_res = mysql_query($contact_sql);
+  $contactids = array();
+  $row = mysql_fetch_array($contact_res, MYSQL_NUM);
+  foreach ($row as $field) {
+    if ($field != "Not Set") {
+      $contacts = explode(",", $field);
+      foreach ($contacts as $contact) {
+        $contactids[] = $contact;
+      }
+    }
+  }
+  $contactid_list = implode(",", $contactids);
+
+  return $contactid_list;
+}
+
+function get_mdreferralids ($pid) {
+  $contact_sql = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_patients ON  dental_patients.referred_by=dental_referredby.referredbyid WHERE dental_patients.patientid IN('".s_for($pid)."');";
+  $contact_res = mysql_query($contact_sql);
+  $contactids = array();
+  while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
+    $contactids[] = $row[0];
+  }
+  $contactid_list = implode(",", $contactids);
+
+  return $contactid_list;
+
+}
+
+// Retrieve Names Salutation and more from Database
+// Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
+function get_contact_info ($patient, $md_list, $md_referral_list) {
+  $contact_info = array();
+  if (isset($patient)) {
+    $sql = "SELECT patientid, salutation, firstname, lastname FROM dental_patients WHERE patientid IN('".$patient."');";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_assoc($result)) {
+      $contact_info['patient'][] = $row;
+    }
+  }
+  if (isset($md_list)) {
+    $sql = "SELECT dental_contact.contactid, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN('".$md_list."');";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_assoc($result)) {
+      $contact_info['mds'][] = $row;
+    }
+  }
+  if (isset($md_referral_list)) {
+    $sql = "SELECT dental_referredby.referredbyid, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN('".$md_referral_list."');";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_assoc($result)) {
+      $contact_info['md_referrals'][] = $row;
+    }
+  }
+
+  return $contact_info;
+}
+
 // Function to Create Letters
-function create_letter ($templateid, $pid = "", $stepid = "", $recipientids = "", $parentid = "", $template = "", $send_method = "") {
+function create_letter ($templateid, $pid = "", $stepid = "", $topatient = "", $md_list = "", $md_referral_list = "", $parentid = "", $template = "", $send_method = "") {
   $gen_date = date('Y-m-d H:i:s');
   $status = '0';
   $delivered = '0';
@@ -58,9 +120,17 @@ function create_letter ($templateid, $pid = "", $stepid = "", $recipientids = ""
     $columns .= ", parentid";
     $values .= ", '".mysql_real_escape_string($parentid)."'";
   }
+  if (isset($topatient)) {
+    $columns .= ", topatient";
+    $values .= ", '".mysql_real_escape_string($topatient)."'";
+  }
   if (isset($recipientids)) {
-    $columns .= ", recipientids";
-    $values .= ", '".mysql_real_escape_string($recipientids)."'";
+    $columns .= ", md_list";
+    $values .= ", '".mysql_real_escape_string($md_list)."'";
+  }
+  if (isset($md_referral_list)) {
+    $columns .= ", md_referral_list";
+    $values .= ", '".mysql_real_escape_string($md_referral_list)."'";
   }
   if (isset($template)) {
     $columns .= ",template ";

@@ -5,7 +5,7 @@ $page = '0';
 $page_limit = '10';
 $sort = 'asc';
 $column = 'letterid';
-if (isset($_GET['page'])) { $sort = $_GET['page']; }
+if (isset($_GET['page'])) { $page = $_GET['page']; }
 if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
 if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
 
@@ -14,7 +14,7 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.recipientids, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' ORDER BY ".$column." ".$sort.";";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' ORDER BY ".$column." ".$sort.";";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -35,7 +35,7 @@ $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day)
 
 // Calculate numer of pages
 $num_pages = floor(count($dental_letters) / $page_limit);
-if ($dental_letters % $page_limit) {
+if (count($dental_letters) % $page_limit) {
   $num_pages++;
 }
 
@@ -54,7 +54,7 @@ if ($dental_letters % $page_limit) {
 <div class="letters-tryptych3">
   [Sent Letters] [Create New]
 </div>
-<div class="letters-pager">Page(s): <?php paging($num_pages,$page,""); ?></div>
+<div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status"); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
@@ -65,7 +65,8 @@ if ($dental_letters % $page_limit) {
   </tr>
 <?php
   $i = $page_limit * $page;
-  while ($i < count($dental_letters) && $i < $page_limit) {
+  $end = $i + $page_limit;
+  while ($i < count($dental_letters) && $i < $end) {
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
     // Get Correspondance Column
@@ -75,16 +76,18 @@ if ($dental_letters % $page_limit) {
     $correspondance = mysql_fetch_assoc($template_res);
     $subject = $correspondance['name'];
     $url = $correspondance['template'] . "?fid=" . $dental_letters[$i]['patientid'] . "&pid=" . $dental_letters[$i]['patientid'];
-    // Get Recipients
-    $recipients = array();
-    $recipients = explode(',', $dental_letters[$i]['recipientids']);
-    if (count($recipients) > 1) {
-      $sentto = count($recipients) . " Contacts";
+    // Get Recipients for Sent to Column
+    $contacts = get_contact_info((isset($dental_letters[$i]['topatient']) ? $dental_letters[$i]['patientid'] : ''), $dental_letters[$i]['md_list'], $dental_letters[$i]['md_referral_list']);
+    $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
+    if ($total_contacts > 1) {
+      $sentto = $total_contacts . " Contacts";
     } else {
-      $contact_sql = "SELECT dental_contact.contactid, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid = '".$recipients[0]."';";
-      $contact_res = mysql_query($contact_sql);
-      $contact = mysql_fetch_assoc($contact_res);
-      $sendto = (($contact['salutation']) ? $contact['salutation'] . " " : "") . $contact['firstname'] . " " . $contact['lastname'] . (($contact['contacttype']) ? " - " . $contact['contacttype'] : "");
+      // Patient: Salutation Lastname, Firstname
+      $sentto .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']) : ("");
+      // MD: Salutation Lastname, Firstname - Contact Type
+      $sentto .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['firstname'] (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
+      // MD Referral: Salutation Lastname, Firstname - Contact Type
+      $sentto .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
     }
     
     print "<tr><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";

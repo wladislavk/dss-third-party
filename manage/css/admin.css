@@ -1063,3 +1063,15 @@ float:left;
   margin-right: 15px;
   clear: both;
 }
+
+.arrow_asc{
+  background-image: url(../images/arrow-white-up.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+.arrow_desc{
+  background-image: url(../images/arrow-white-down.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+

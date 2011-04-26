@@ -9,6 +9,10 @@
 <button class="addButton" onclick="window.location.href='ledger.php'" style="float:right;">All Patients</button>
 <?php } ?>
 <form name="dailyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return dailyabc(this)">
+<?php if(isset($_GET['pid'])){ ?>
+<input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
+<?php } ?>
+
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -70,6 +74,9 @@
 </form>
 
 <form name="weeklyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" >
+<?php if(isset($_GET['pid'])){ ?>
+<input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
+<?php } ?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr>
                 <td colspan="2" class="cat_head">
@@ -133,6 +140,10 @@
 <br />
 
 <form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return monthlyabc(this)">
+<?php if(isset($_GET['pid'])){ ?>
+<input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
+<?php } ?>
+
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td colspan="2" class="cat_head">
@@ -182,6 +193,10 @@
 </form>
 <br />
 <form name="monthlyfrm" action="ledger_report.php<?php echo (isset($_GET['pid']))?"?pid=".$_GET['pid']:''; ?>" method="get" onSubmit="return monthlyabc(this)">
+<?php if(isset($_GET['pid'])){ ?>
+<input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
+<?php } ?>
+
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr>
                 <td colspan="2" class="cat_head">
@@ -276,7 +291,7 @@
 </form>
 
 <br />
-<!--
+
 <form name="patfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']; ?>" method="get" onSubmit="return patabc(this)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
@@ -349,7 +364,7 @@
 		<?
 		}
 	}?>
--->
+
 </table>
 <script type="text/javascript">
 	window.location = "#pat_list";

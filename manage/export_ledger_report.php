@@ -1,7 +1,22 @@
 <? 
 //include "includes/top.htm";
+
+
+if($_GET['dailysub']){
+$file = 'Ledger_Report_'.date('m-d-Y', strtotime($_GET['start_date']));
+}elseif($_GET['monthlysub']){
+$file = 'Ledger_Report_'.date('m-Y', strtotime($_GET['start_date']));
+}elseif($_GET['weeklysub'] || $_GET['weeklysub']){
+$file = 'Ledger_Report_'.date('m-d-Y', strtotime($_GET['start_date'])).'_TO_'.date('m-d-Y', strtotime($_GET['end_date']));
+}else{
+$file= 'Ledger_Report';
+}
+
+
+
+
 header("Content-type: application/csv");
-header("Content-Disposition: attachment; filename=file.csv");
+header("Content-Disposition: attachment; filename=".$file.".csv");
 header("Pragma: no-cache");
 header("Expires: 0");
 session_start();
@@ -47,6 +62,7 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
 		}else{
     $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }
+                if($start_date)
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 
                 $runquery = mysql_query($newquery);
@@ -77,9 +93,5 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
             }
 				
 	 	}
-	?> 
-	  
-				,,,Total,
-			
-				<?php echo "$".number_format($tot_charge,2); ?>,
-				<?php echo "$".number_format($tot_credit,2);?>
+			?>,,,,Total,<?php echo "$".number_format($tot_charge,2); ?>,<?php echo "$".number_format($tot_credit,2);?>
+

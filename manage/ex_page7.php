@@ -1,6 +1,32 @@
 <? 
 include "includes/top.htm";
 
+function trigger_letter7($pid) {
+  $letterid = '7';
+  $md_referral_list = get_mdreferralids($pid); 
+  $contacts = explode(",", $md_referral_list);
+  foreach ($contacts as $contact) {
+    $letter_query = "SELECT md_referral_list FROM dental_letters WHERE md_referral_list IS NOT NULL AND CONCAT(',', md_referral_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.");";
+    $letter_result = mysql_query($letter_query);
+    $num_rows = mysql_num_rows($letter_result);
+    if(!$letter_result) {
+      print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
+      die();
+    }
+    if ($num_rows == 0) {
+      $recipients[] = $contact;
+    }
+  }
+  $recipients_list = implode(",", $recipients);
+  if ($recipients_list != "") {
+    $letter = create_letter($letterid, $pid, '', '', '', $recipients_list);
+    if ($letter !== true) {
+      print $letter;
+      die();
+    }
+  }
+}
+
 if($_POST['ex_page7sub'] == 1)
 {
 	$sleep_study_on = $_POST['sleep_study_on'];
@@ -108,7 +134,11 @@ if($_POST['ex_page7sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+	        
+                if ($assessment_chk) {
+                  trigger_letter7($_GET['pid']);
+                }
+	
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -136,6 +166,10 @@ if($_POST['ex_page7sub'] == 1)
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
+		if ($assessment_chk) {
+                  trigger_letter7($_GET['pid']);
+                }
+
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">

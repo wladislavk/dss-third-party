@@ -7,24 +7,28 @@ include "includes/top.htm";
     $mdcontacts = array();
     $mdcontacts[] = $_POST['docsleep'];
     $mdcontacts[] = $_POST['docpcp'];
+    $mdcontacts[] = $_POST['docdentist'];
+    $mdcontacts[] = $_POST['docent'];
     $mdcontacts[] = $_POST['docmdother'];
     $recipients	= array();
     foreach ($mdcontacts as $contact) {
-      $letter_query = "SELECT recipientids FROM dental_letters WHERE recipientids IS NOT NULL AND CONCAT(',', recipientids, ',') LIKE CONCAT('%,', ".$contact.", ',%') AND templateid IN(".$letter1id.",".$letter2id.");";
-      $letter_result = mysql_query($letter_query);
-      $num_rows = mysql_num_rows($letter_result);
-      if(!$letter_result) {
-        print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
-	die();
-      }
-      if ($num_rows == 0) {
-	$recipients[] = $contact;
+      if ($contact != "Not Set") {
+        $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letter1id.",".$letter2id.");";
+        $letter_result = mysql_query($letter_query);
+        $num_rows = mysql_num_rows($letter_result);
+        if(!$letter_result) {
+          print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
+	  die();
+        }
+        if ($num_rows == 0) {
+  	  $recipients[] = $contact;
+        }
       }
     } 
     if (count($recipients) > 0) {
       $recipients_list = implode(',', $recipients);
-      $letter1 = create_letter($letter1id, $pid, '', $recipients_list);
-      $letter2 = create_letter($letter2id, $pid, '', $recipients_list);
+      $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
+      $letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
       if ($letter1 !== true) {
         print $letter1;
         die();

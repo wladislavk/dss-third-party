@@ -1,4 +1,25 @@
 <?php include "includes/top.htm";
+
+function trigger_letter8($pid) {
+  $letterid = '8';
+  $topatient = '1';
+  $letter = create_letter($letterid, $pid, '', $topatient);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter9($pid) {
+  $letterid = '9';
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
 if(is_numeric($_GET['pid'])){
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -70,10 +91,11 @@ if(isset($_POST['flowsubmit'])){
       }  
 
 	
-      // Generate Initital Contact Letter
+      // Generate Initital Contact Letters
       $letter1id = '5';
       $letter2id = '6';
       $stepid = '1';
+      $topatient = '1';
       $segmentid = '1';
       $gen_date = date('Y-m-d H:i:s');
       $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
@@ -86,7 +108,7 @@ if(isset($_POST['flowsubmit'])){
       if (!$flow_pg2_info_insert) {
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
       }
-      $letter_result = create_letter($letter1id, $pid, $stepid, '', '', '', 'email');
+      $letter_result = create_letter($letter1id, $pid, $stepid, $topatient, '', '', '', '', 'email');
       if ($letter_result !== true) {
         $message = $letter_result;
       }
@@ -102,7 +124,7 @@ if(isset($_POST['flowsubmit'])){
         }
       }
       if (count($parentid) == '1') {
-        $letter_result = create_letter($letter2id, $pid, '', '', $parentid[0], '', 'mail');
+        $letter_result = create_letter($letter2id, $pid, '', $topatient, '', '', $parentid[0], '', 'mail');
         if ($letter_result !== true) {
           $message = $letter_result;
         }
@@ -1106,6 +1128,12 @@ Next Appointment
 
 <?php
 if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
+        if ($_POST['stepselectedsubmit'] == "6") { // Refused Treatment
+	  trigger_letter8($_GET['pid']);
+  	}
+        if ($_POST['stepselectedsubmit'] == "4") { // Impressions
+          trigger_letter9($_GET['pid']);
+        }
 	function updateflowsheet2($patientid, $value){
 		$getstepqrysql = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$patientid."' LIMIT 1;";
 		$getstepqry = mysql_query($getstepqrysql);

@@ -83,6 +83,7 @@ if (count($dental_letters) % $page_limit) {
       $sentto = $total_contacts . " Contacts";
     } else {
       // Patient: Salutation Lastname, Firstname
+      $sentto = '';
       $sentto .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']) : ("");
       // MD: Salutation Lastname, Firstname - Contact Type
       $sentto .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['firstname'] (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");

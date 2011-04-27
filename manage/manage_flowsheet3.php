@@ -1,5 +1,7 @@
 <?php include "includes/top.htm";
 
+// Todo add $stepid to each segment so that it can be passed to the letter triggers
+
 function trigger_letter8($pid) {
   $letterid = '8';
   $topatient = '1';
@@ -14,6 +16,67 @@ function trigger_letter9($pid) {
   $letterid = '9';
   $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter10($pid) {
+  $letterid = '10';
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter11($pid) {
+  $letterid = '11';
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter13($pid) {
+  $letterid = '13';
+  $md_list = get_mdcontactids($pid);
+  $letter = create_letter($letterid, $pid, '', '', $md_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter17($pid) {
+  $letterid = '17';
+  $topatient = '1';
+  $md_list = get_mdcontactids($pid);
+  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter24($pid) {
+  $letterid = '24';
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  if ($letter !== true) {
+    print $letter;
+    die();
+  }
+}
+
+function trigger_letter25($pid) {
+  $letterid = '25';
+  $topatient = '1';
+  $letter = create_letter($letterid, $pid, '', $topatient);
   if ($letter !== true) {
     print $letter;
     die();
@@ -97,9 +160,10 @@ if(isset($_POST['flowsubmit'])){
       $stepid = '1';
       $topatient = '1';
       $segmentid = '1';
+      $scheduled = strtotime($copyreqdate);
       $gen_date = date('Y-m-d H:i:s');
       $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
-      $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$gen_date."');";
+      $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
       $steparray_insert = mysql_query($steparray_query);
       if (!$steparray_insert) {
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact to Flowsheet Page 2";
@@ -138,6 +202,15 @@ if(isset($_POST['flowsubmit'])){
       }else{
         $message = "Successfully updated flowsheet!4";
       } 
+    }
+
+    // Trigger Letter 24
+    $referral_query = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_contacttype ON dental_referredby.referredbyid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_referredby.referredbyid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
+    $referral_result = mysql_query($referral_query);
+    $numrows = mysql_num_rows($referral_result);
+    print $numrows;
+    if ($numrows == 1) {
+      trigger_letter24($_GET['pid']);
     }
 }
 
@@ -1130,10 +1203,23 @@ Next Appointment
 if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
         if ($_POST['stepselectedsubmit'] == "6") { // Refused Treatment
 	  trigger_letter8($_GET['pid']);
+          trigger_letter11($_GET['pid']);
   	}
         if ($_POST['stepselectedsubmit'] == "4") { // Impressions
           trigger_letter9($_GET['pid']);
+ 	  trigger_letter13($_GET['pid']);
         }
+        if ($_POST['stepselectedsubmit'] == "5") { // Delaying Treatment / Waiting
+          trigger_letter10($_GET['pid']);
+        }
+	if ($_POST['stepselectedsubmit'] == "9") { // Patient Non Compliant
+          trigger_letter17($_GET['pid']);
+        }
+        if ($_POST['stepselectedsubmit'] == "13") { // Termination
+          trigger_letter25($_GET['pid']);
+        }
+	
+
 	function updateflowsheet2($patientid, $value){
 		$getstepqrysql = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$patientid."' LIMIT 1;";
 		$getstepqry = mysql_query($getstepqrysql);

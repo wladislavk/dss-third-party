@@ -109,9 +109,9 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 <br />
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('print_ledger.php?pid=<?=$_GET['pid'];?>');" class="addButton">
-		Print Ledger
-	</button>
+<button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
+                Print Ledger
+        </button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	
 	<button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?=$_GET['pid'];?>');" class="addButton">

@@ -1,9 +1,20 @@
+<html>
+<body>
 <? 
 //include "includes/top.htm";
 
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+
+if(isset($_GET['pid'])){
+                    $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
+                    $my=mysql_query($sql) or die(mysql_error());
+                    while($myarray = mysql_fetch_array($my))
+                                {
+                     $thename= $myarray['firstname']." ".$myarray['lastname'];
+                    }
+                    }
 
 if($_GET['dailysub'] != 1 && $_GET['monthlysub'] != 1 && $_GET['weeklysub'] != 1 && $_GET['rangesub'] != 1 && $_GET['pid'] == '')
 {?>
@@ -49,28 +60,30 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+</head>
+<body onload="window.print()">
 <span class="admin_head">
 	Ledger Report
-	<? if($_POST['dailysub'] == 1)
-	{?>
-	    (<i><?=$_POST['d_mm']?>-<?=$_POST['d_dd']?>-<?=$_POST['d_yy']?></i>)
-	<? }
-        
-        if($_POST['weeklysub'] == 1)
+<? if($_REQUEST['dailysub'] == 1)
+        {?>
+            (<i><?= date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
+        <? }
+
+        if($_REQUEST['weeklysub'] == 1)
         {?>
             (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
         <? }
-	
-	if($_POST['monthlysub'] == 1)
-	{?>
-		(<i><?=$_POST['d_mm']?>-<?=$_POST['d_yy']?></i>)
-	<? }
-	
-	if($_GET['pid'] <> '')
-	{?>
-		(<i><?=$thename;?></i>)
-	<? }?>
+
+        if($_REQUEST['monthlysub'] == 1)
+        {?>
+                (<i><?= date('m-Y', strtotime($_REQUEST['start_date'])) ?></i>)
+        <? }
+
+        if($_GET['pid'] <> '')
+        {?>
+                (<i><?=$thename;?></i>)
+        <? }?>
+
 </span>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -131,6 +144,7 @@ $num_users=mysql_num_rows($my);
 		}else{
     $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }
+                if($start_date)
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 
                 $runquery = mysql_query($newquery);
@@ -261,3 +275,5 @@ $num_users=mysql_num_rows($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+</body>
+</html>

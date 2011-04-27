@@ -64,25 +64,26 @@ $num_users=mysql_num_rows($my);
 
 <span class="admin_head">
 	Ledger Report
-	<? if($_REQUEST['dailysub'] == 1)
-	{?>
-	    (<i><?=$_REQUEST['d_mm']?>-<?=$_REQUEST['d_dd']?>-<?=$_REQUEST['d_yy']?></i>)
-	<? }
-        
+        <? if($_REQUEST['dailysub'] == 1)
+        {?>
+            (<i><?= date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
+        <? }
+
         if($_REQUEST['weeklysub'] == 1)
         {?>
             (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
         <? }
+
+        if($_REQUEST['monthlysub'] == 1)
+        {?>
+                (<i><?= date('m-Y', strtotime($start_date)) ?></i>)
+        <? }
+
+        if($_GET['pid'] <> '')
+        {?>
+                (<i><?=$thename;?></i>)
+        <? }?>
 	
-	if($_REQUEST['monthlysub'] == 1)
-	{?>
-		(<i><?=$_REQUEST['d_mm']?>-<?=$_REQUEST['d_yy']?></i>)
-	<? }
-	
-	if($_GET['pid'] <> '')
-	{?>
-		(<i><?=$thename;?></i>)
-	<? }?>
 </span>
 <div>
 &nbsp;&nbsp;
@@ -126,31 +127,32 @@ background:#999999;
 			?>
 		</TD>        
 	</TR>
-	<? }?>
+	<? }
+        ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=service_date">Svc Date</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=entry_date">Entry Date</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=patient">Patient</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=producer">Producer</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=description">Description</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=amount">Charges</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount">Credits</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
 		</td>
-		<td valign="top" class="col_head" width="5%">
-			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status">Ins</a>
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
+			<a href="ledger_report.php?dailysub=<?=$_REQUEST['dailysub'];?>&monthlysub=<?=$_REQUEST['monthlysub'];?>&start_date=<?=$start_date;?>&end_date=<?=$end_date;?>&rangesub=<?=$_REQUEST['rangesub'];?>&weeklysub=<?=$_REQUEST['weeklysub'];?><?= (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
 	</tr>
 	</table>
@@ -170,7 +172,7 @@ background:#999999;
 		$tot_charges = 0;
 		$tot_credit = 0;
 		if(isset($_GET['pid'])){
-		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid WHERE  dl.docid='".$_SESSION['docid']."' AND `dl.patientid` = '".$_GET['pid']."'";
+		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid WHERE  dl.docid='".$_SESSION['docid']."' AND dl.patientid = '".$_GET['pid']."'";
 		}else{
     $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid WHERE  dl.docid='".$_SESSION['docid']."'";
     }
@@ -179,9 +181,9 @@ background:#999999;
 	
                 if(isset($_REQUEST['sort'])){
                   if($_REQUEST['sort']=='patient'){
-                    $newquery .= " ORDER BY dp.lastname ASC, dp.firstname ASC";
+                    $newquery .= " ORDER BY dp.lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];
                   }else{
-                    $newquery .= " ORDER BY ".$_REQUEST['sort']." ASC";	
+                    $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
                   }
                   }
                 $runquery = mysql_query($newquery);
@@ -203,7 +205,7 @@ background:#999999;
 			}
 			$tr_class = "tr_active";
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr onclick="window.location = 'manage_ledger.php?pid=<?= $myarray['patientid']; ?>'" class="<?=$tr_class;?>">
 				<td valign="top" width="10%">
                 	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
 				</td>

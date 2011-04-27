@@ -93,5 +93,7 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
             }
 				
 	 	}
-			?>,,,,Total,<?php echo "$".number_format($tot_charge,2); ?>,<?php echo "$".number_format($tot_credit,2);?>
+			?>
+
+,,,,Total,<?php echo "$".number_format($tot_charge,2); ?>,<?php echo "$".number_format($tot_credit,2);?>
 

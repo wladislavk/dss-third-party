@@ -29,11 +29,11 @@ include "includes/top.htm";
       $recipients_list = implode(',', $recipients);
       $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
       $letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
-      if ($letter1 !== true) {
+      if (!is_numeric($letter1)) {
         print $letter1;
         die();
       }
-      if ($letter2 !== true) {
+      if (!is_numeric($letter22) {
         print $letter2;
         die();
       }

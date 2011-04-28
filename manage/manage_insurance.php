@@ -1,5 +1,6 @@
 <? 
 include "includes/top.htm";
+include_once "includes/constants.inc";
 
 if($_REQUEST["delid"] != "")
 {
@@ -111,8 +112,11 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="80%">
+		<td valign="top" class="col_head" width="60%">
 			Date
+		</td>
+		<td valign="top" class="col_head" width="20%">
+			Status
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -144,6 +148,9 @@ $num_users=mysql_num_rows($my);
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
                 	<?=date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+				</td>
+				<td valign="top">
+				    <?=$dss_claim_status_labels[$myarray['status']];?>
 				</td>
 				<td valign="top">
 					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">

@@ -13,7 +13,7 @@ if (!$result) {
     $stepid = $row['stepid'];
     $topatient = '1';
     $letter = create_letter($letterid, $patientid, $stepid, $topatient);
-    if ($letter !== true) {
+    if (!is_numeric($letter)) {
       print $letter . "<br />";
     }
   }
@@ -43,7 +43,7 @@ if (!$result) {
     $stepid = $letter['stepid'];
     $topatient = '1';
     $letter = create_letter($letterid, $patientid, $stepid, $topatient);
-    if ($letter !== true) {
+    if (!is_numeric($letter)) {
       print $letter . "<br />";
     }
     print $patientid;

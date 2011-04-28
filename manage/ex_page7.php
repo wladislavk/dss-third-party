@@ -20,7 +20,7 @@ function trigger_letter7($pid) {
   $recipients_list = implode(",", $recipients);
   if ($recipients_list != "") {
     $letter = create_letter($letterid, $pid, '', '', '', $recipients_list);
-    if ($letter !== true) {
+    if (!is_numeric($letter)) {
       print $letter;
       die();
     }

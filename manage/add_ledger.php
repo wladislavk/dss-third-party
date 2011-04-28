@@ -12,7 +12,8 @@ if($_POST["ledgerub"] == 1)
 	$paid_amount = $_POST['paid_amount'];
 	$transaction_type = $_POST['transaction_type'];
 	$transaction_code = $_POST['transaction_code'];
-	
+        $status = (isset($_POST['status']))?1:0;	
+
 	if(strpos($service_date,'-') === false)
 	{
 		$s_arr = explode('/',$service_date);
@@ -95,15 +96,30 @@ if($_POST["ledgerub"] == 1)
     if(!$pat_sql3){
      echo "There was an error updating the ledger record.  Please contact your system administrator.";
     }
-    
+   
+        $service_date = date('Y-m-d', strtotime($_POST['service_date']));
+        $entry_date = date('Y-m-d', strtotime($_POST['entry_date']));
+        $transaction_type = $_POST['transaction_type'];
+        $transaction_code = $_POST['proccode'];
+        $tsql = "SELECT transaction_code, description from dental_transaction_code where transaction_codeid=".$transaction_code;
+        $tmy = mysql_query($tsql);
+        $trow = mysql_fetch_row($tmy);
+        $transaction_code = $trow[0];
+        $description = $trow[1];
+        $status = (isset($_POST['status']))?1:0;
+        $amount = $_POST['amount'];
+        $paid_amount = $_POST['paid_amount'];
+ 
     $up_sql = "update dental_ledger set
     service_date = '".s_for($service_date)."',
 		entry_date = '".s_for($entry_date)."',
 		description = '".s_for($description)."',
 		amount = '".s_for($amount)."',
 		paid_amount = '".s_for($paid_amount)."',
+                transaction_type = '".s_for($transaction_type)."',
 		transaction_code = '".s_for($transaction_code)."',
-		userid = '".s_for($_SESSION['userid'])."'
+		userid = '".s_for($_SESSION['userid'])."',
+                status = ". s_for($status)."
 	 	where ledgerid='".$_POST["ed"]."'";
 		
 		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
@@ -135,7 +151,70 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 ?>
+<script type="text/javascript">
+function getTransCodes(str,name)
+{
+if (str=="")
+  {
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("proccode_div").innerHTML=xmlhttp.responseText;
+    }
+  }
+  var pco = name.substr(5,1);
+  xmlhttp.open("GET","add_ledger_entry_process_edit.php?q="+str+"&pco="+pco,true);
+  xmlhttp.send();
+  if (str==2||str==3){
+  document.getElementById("tr_amount").style.display = "none";
+  document.getElementById("tr_paid_amount").style.display = "table-row";
 
+  }else{
+    document.getElementById("tr_amount").style.display = "table-row";
+    document.getElementById("tr_paid_amount").style.display = "none";
+  }
+}
+
+function getTransCodesAmount(str,name,type)
+{
+if (str=="")
+  {
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("amount_span").innerHTML=xmlhttp.responseText;
+    }
+  }
+  var pco = name.substr(5,1);
+  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?t="+type+"&q="+str+"&pco="+pco,true);
+  xmlhttp.send();
+}
+
+</script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -163,9 +242,12 @@ if($pat_myarray['patientid'] == '')
 	$description = st($themyarray['description']);
 	$amount = st($themyarray['amount']);
 	$paid_amount = st($themyarray['paid_amount']);
-	$transaction_type = st($themyarray['transaction_type']);
-	$transaction_code = st($themyarray['transaction_code']);
-	
+        $transaction_code = st($themyarray['transaction_code']);
+        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code=".$transaction_code; 
+        $tmy = mysql_query($tsql);
+        $trow = mysql_fetch_row($tmy);
+        $transaction_type = $trow[0];
+        $status = st($themyarray['status']);	
 	$but_text = "Add ";
 	
 	if($service_date == '')
@@ -188,7 +270,7 @@ if($pat_myarray['patientid'] == '')
 	
 	if($transaction_type == '')
 	{
-		$transaction_type = 'Entry';
+		//$transaction_type = 'Entry';
 	}
 	
 	if($transaction_type == 'Credit')
@@ -239,7 +321,7 @@ if($pat_myarray['patientid'] == '')
 			fa = document.ledgerfrm;
 			
 			<? 
-			$tcode_sql = "select * from dental_transaction_code where status=1 order by sortby";
+			$tcode_sql = "select * from dental_transaction_code where status=1 AND docid=".$_SESSION['docid']." order by sortby";
 			$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
 			
 			while($tcode_myarray = mysql_fetch_array($tcode_my))
@@ -294,47 +376,66 @@ if($pat_myarray['patientid'] == '')
 				Transaction Type
             </td>
         	<td valign="top" class="frmdata">
-				<select name="transaction_type" class="tbox" onChange="change_t();">
+                                <select name="procedure_code" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)">
+					<option value="0" <?= ($transaction_type=='0')?'selected="selected"':''; ?>>Select Type</option>
+					<option value="1" <?= ($transaction_type=='1')?'selected="selected"':''; ?>>Medical Code</option>
+					<option value="2" <?= ($transaction_type=='2')?'selected="selected"':''; ?>>Patient Payment Code</option>
+					<option value="3" <?= ($transaction_type=='3')?'selected="selected"':''; ?>>Insurance Payment Code</option>
+					<option value="4" <?= ($transaction_type=='4')?'selected="selected"':''; ?>>Diagnostic Code</option>
+					<option value="6" <?= ($transaction_type=='6')?'selected="selected"':''; ?>>Adjustment Code</option>
+ 				</select>
+				<!-- <select name="transaction_type" class="tbox" onChange="change_t();">
 					<option value="Credit" <? if($transaction_type == 'Credit') echo " selected";?>>Credit</option>
 					<option value="Charge" <? if($transaction_type == 'Charge') echo " selected";?>>Charge</option>
 					<option value="None" <? if($transaction_type == 'None') echo " selected";?>>None</option>
 					<option value="Debit-Prod Adj" <? if($transaction_type == 'Debit-Prod Adj') echo " selected";?>>Debit-Prod Adj</option>
 					<option value="Credit-Coll Adj" <? if($transaction_type == 'Credit-Coll Adj') echo " selected";?>>Credit-Coll Adj</option>
-				</select>
+				</select> --> 
 				<span class="red">*</span>
             </td>
         </tr>
 
 		<tr>
         	<td valign="top" class="frmhead">
-				Procedure Code
+				Procedure Code<?= $transaction_code; ?>
             </td>
         	<td valign="top" class="frmdata"> 
-				<select name="transaction_code" class="tbox" onChange="change_t_code();">
+				<div id="proccode_div">
+<?php
+$sql="SELECT * FROM dental_transaction_code WHERE type = '".$transaction_type."' and docid=".$_SESSION['docid'];
+
+$result = mysql_query($sql);
+
+
+echo "<select onchange='getTransCodesAmount(this.value,this.name,".$transaction_type.")' id='proccode' name='proccode'><option>Select TX Code</option>";
+while($row = mysql_fetch_array($result))
+  {
+  $r = ($row['transaction_code']==$transaction_code)?'selected="selected"':'';
+  echo "<option ".$r." value='".$row['transaction_codeid']."'>".$row['transaction_code']." - ".$row['description']."</option>";
+  }
+
+echo "</select>";
+?>
+
+
+</div>
+                                  <!--
+                                  <select name="transaction_code" class="tbox" onChange="change_t_code();">
 					<option value=""></option> 
 					<?
-					$tcode_sql = "select * from dental_transaction_code where status=1 order by sortby";
+					$tcode_sql = "select * from dental_transaction_code where status=1 AND docid=".$_SESSION['docid']." order by sortby";
 					$tcode_my = mysql_query($tcode_sql) or die($tcode_sql ." | ".mysql_error());
 	
 					while($tcode_myarray = mysql_fetch_array($tcode_my))
 					{?>
 						<option value="<?=st($tcode_myarray['transaction_code']);?>" <? if($transaction_code == st($tcode_myarray['transaction_code'])) echo " selected";?>>
-							<?=st($tcode_myarray['transaction_code']);?>
+							<?=st($tcode_myarray['transaction_code'])." - ".$tcode_myarray['description'];?>
 						</option>
 					<?
 					}?>
 				</select>
+				-->
 				
-				
-				<span class="red">*</span>
-            </td>
-        </tr>
-		<tr>
-        	<td valign="top" class="frmhead">
-				Description
-            </td>
-        	<td valign="top" class="frmdata">
-				<input id="description" name="description" type="text" class="tbox" value="<?=$description;?>" maxlength="255" readonly="readonly" />
 				<span class="red">*</span>
             </td>
         </tr>
@@ -343,7 +444,7 @@ if($pat_myarray['patientid'] == '')
 				Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input name="amount" type="text" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/>
+				<span id="amount_span"><input readonly="readonly" name="amount" type="text" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -356,7 +457,19 @@ if($pat_myarray['patientid'] == '')
 				<span class="red">*</span>
             </td>
         </tr>
-		
+          <tr>
+             <td valign="top" class="frmhead">
+                              File
+             </td>
+                <td valign="top" class="frmdata">
+                   <?php if($status){ ?>
+                       SENT
+                       <input type="hidden" name="status" value=1 />
+                   <?php }else{ ?>
+		<input type="checkbox" name="status" value=1 />
+                   <?php } ?>
+                </td>
+          </tr>		
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

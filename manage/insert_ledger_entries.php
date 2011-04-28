@@ -52,7 +52,7 @@ function ledgerconfirmation(){
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
 
-$sqlinsertqry .= "INSERT INTO `dentalsl_main`.`dental_ledger` (
+$sqlinsertqry = "INSERT INTO `dental_ledger` (
 `ledgerid` ,
 `formid` ,
 `patientid` ,
@@ -77,7 +77,6 @@ echo $form[status];
 $descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form[proccode]."' LIMIT 1;";
 $descquery = mysql_query($descsql);
 $txcode = mysql_fetch_array($descquery);
-
 if($form[procedure_code] == '1' && $form[service_date] != '' && $form['amount'] != ''){
 $sqlinsertqry .= "( NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, '".$form['amount']."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."'),";
                                                                              
@@ -158,6 +157,7 @@ if(!$insqry){
 alert('Could not add ledger entries, please close this window and contact your system administrator');
 eraseCookie('tempforledgerentry');
 </script>                               
+<?= $sqlinsertqry; ?>
 <?php
 }else{
 ?>

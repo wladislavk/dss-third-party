@@ -10,13 +10,13 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&docid=<?= $_GET['docid']; ?>";
 	</script>
 	<?
 	die();
 }
 
-$rec_disp = 20;
+$rec_disp = 50;
 
 if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];
@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_transaction_code where default_code=1 order by sortby";
+$sql = "select * from dental_transaction_code where docid=".$_GET['docid']." order by sortby";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -70,7 +70,7 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_transaction_code.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>');" class="addButton">
 		Add New Transaction Code
 	</button>
 	&nbsp;&nbsp;
@@ -99,7 +99,7 @@ if($_POST['sortsub'] == 1)
 		<td valign="top" class="col_head" width="10%">
 			TX Code		
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="30%">
 			Description		
 		</td>
 		<td valign="top" class="col_head" width="30%">
@@ -108,6 +108,9 @@ if($_POST['sortsub'] == 1)
 		<td valign="top" class="col_head" width="10%">
 			Sort By 
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        Amount
+                </td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -165,13 +168,15 @@ if($_POST['sortsub'] == 1)
 				<td valign="top" align="center">
 					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
 				</td>	
-						
+		                <td valign="top" align="center">
+                                       <?=st($myarray['amount'])?>
+                                </td>				
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>&ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["transaction_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["transaction_codeid"];?>&docid=<?= $_GET['docid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
 					</a>
 				</td>

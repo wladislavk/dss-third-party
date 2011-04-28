@@ -10,6 +10,11 @@ if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['week
 	die();
 }
 
+if(!isset($_REQUEST['sort'])){
+  $_REQUEST['sort'] = 'entry_date';
+  $_REQUEST['sortdir'] = 'asc';
+}
+
 if(isset($_REQUEST['start_date']) && isset($_REQUEST['end_date'])){
   $start_date = $_REQUEST['start_date'];
   $end_date = $_REQUEST['end_date'];
@@ -205,7 +210,7 @@ background:#999999;
 			}
 			$tr_class = "tr_active";
 		?>
-			<tr onclick="window.location = 'manage_ledger.php?pid=<?= $myarray['patientid']; ?>'" class="<?=$tr_class;?>">
+			<tr onclick="window.location = 'manage_ledger.php?pid=<?= $myarray['patientid']; ?>'" class="clickable_row <?=$tr_class;?>">
 				<td valign="top" width="10%">
                 	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
 				</td>

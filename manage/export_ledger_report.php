@@ -79,10 +79,10 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
                 	 echo st($name).',';
                 	 echo st($myarray["producer"]).',';
                 	 echo st($myarray["description"]).',';
-                         echo $myarray["amount"].',';
+                         echo number_format($myarray["amount"],2,'.','').',';
           $tot_charge += $myarray["amount"];
 
-	                	echo number_format(st($myarray["paid_amount"]),2).',';
+	                	echo number_format(st($myarray["paid_amount"]),2,'.','').',';
 						$tot_credit += st($myarray["paid_amount"]);
           if($myarray["status"] == 1){
 	           echo "Sent\r\n";
@@ -93,5 +93,7 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
             }
 				
 	 	}
-			?>,,,,Total,<?php echo "$".number_format($tot_charge,2); ?>,<?php echo "$".number_format($tot_credit,2);?>
+			?>
+
+,,,,Total,<?php echo "$".number_format($tot_charge,2,'.',''); ?>,<?php echo "$".number_format($tot_credit,2,'.',''); ?>,
 

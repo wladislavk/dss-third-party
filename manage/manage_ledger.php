@@ -1,5 +1,9 @@
 <? 
 include "includes/top.htm";
+if(!isset($_REQUEST['sort'])){
+  $_REQUEST['sort'] = 'entry_date';
+  $_REQUEST['sortdir'] = 'asc';
+}
 
 if($_REQUEST["delid"] != "")
 {
@@ -51,7 +55,11 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by service_date";
+$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
+if(isset($_REQUEST['sort'])){
+  $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+}
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -130,7 +138,7 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -142,27 +150,27 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
-			Svc Date
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Entry Date
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
 		</td>
 
-		<td valign="top" class="col_head" width="30%">
-			Description
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Charges
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Credits
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=paid_amount&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Balance
 		</td>
-		<td valign="top" class="col_head" width="5%">
-			Ins
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
+			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action

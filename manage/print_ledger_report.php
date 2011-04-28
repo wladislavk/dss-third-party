@@ -12,18 +12,10 @@ if(isset($_GET['pid'])){
                     $my=mysql_query($sql) or die(mysql_error());
                     while($myarray = mysql_fetch_array($my))
                                 {
-                     $thename= $myarray['firstname']." ".$myarray['lastname'];
+                     $thename= $myarray['lastname'].", ".$myarray['firstname'];
                     }
                     }
 
-if($_GET['dailysub'] != 1 && $_GET['monthlysub'] != 1 && $_GET['weeklysub'] != 1 && $_GET['rangesub'] != 1 && $_GET['pid'] == '')
-{?>
-	<script type="text/javascript">
-		window.location = 'ledger.php';
-	</script>
-	<?
-	die();
-}
 
 
   $start_date = $_GET['start_date'];

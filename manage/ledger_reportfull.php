@@ -69,6 +69,10 @@ background:#999999;
 		Print Ledger Report
 	</button>
 	&nbsp;&nbsp;
+<button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
+                Print Ledger
+        </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
 <button onclick="Javascript:window.location='ledger.php';" class="addButton"> 
                 Reporting
         </button>

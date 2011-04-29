@@ -187,7 +187,7 @@ xmlhttp.onreadystatechange=function()
   }
 }
 
-function getTransCodesAmount(str,name,type)
+function getTransCodesAmount(str,name,type,fid)
 {
 if (str=="")
   {
@@ -206,11 +206,11 @@ xmlhttp.onreadystatechange=function()
   {
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
-    document.getElementById("amount_span").innerHTML=xmlhttp.responseText;
+    document.getElementById("amount_span"+fid).innerHTML=xmlhttp.responseText;
     }
   }
   var pco = name.substr(5,1);
-  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?t="+type+"&q="+str+"&pco="+pco,true);
+  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?id="+fid+"&t="+type+"&q="+str+"&pco="+pco,true);
   xmlhttp.send();
 }
 
@@ -252,20 +252,20 @@ xmlhttp.onreadystatechange=function()
 	
 	if($service_date == '')
 	{
-		$service_date = date('m-d-Y');
+		$service_date = date('m/d/Y');
 	}
 	else
 	{
-		$service_date = date('m-d-Y',strtotime($service_date));
+		$service_date = date('m/d/Y',strtotime($service_date));
 	}
 	
 	if($entry_date == '')
 	{
-		$entry_date = date('m-d-Y');
+		$entry_date = date('m/d/Y');
 	}
 	else
 	{
-		$entry_date = date('m-d-Y',strtotime($entry_date));
+		$entry_date = date('m/d/Y',strtotime($entry_date));
 	}
 	
 	if($transaction_type == '')
@@ -273,14 +273,6 @@ xmlhttp.onreadystatechange=function()
 		//$transaction_type = 'Entry';
 	}
 	
-	if($transaction_type == 'Credit')
-	{
-		$amount = $themyarray['paid_amount'];
-	}
-	else
-	{
-		$amount = $themyarray['amount'];
-	}
 	
 	if($themyarray["userid"] != '')
 	{
@@ -439,7 +431,7 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_amount">
+		<tr id="tr_amount" <?= ($transaction_type==2||$transaction_type==3)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Amount
             </td>
@@ -448,12 +440,12 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_paid_amount">
+		<tr id="tr_paid_amount"  <?= ($transaction_type!=2&&$transaction_type!=3)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Paid Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){number_format($paid_amount,2);};?>"  maxlength="255"/>
+				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2);};?>"  maxlength="255"/>
 				<span class="red">*</span>
             </td>
         </tr>

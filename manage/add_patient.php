@@ -20,7 +20,7 @@ include "includes/top.htm";
           print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
 	  die();
         }
-        if ($num_rows == 0) {
+        if ($num_rows == 0 && $contact != "") {
   	  $recipients[] = $contact;
         }
       }
@@ -33,12 +33,24 @@ include "includes/top.htm";
         print $letter1;
         die();
       }
-      if (!is_numeric($letter22) {
+      if (!is_numeric($letter2)) {
         print $letter2;
         die();
       }
     }
   }
+
+function trigger_letter3($pid) {
+  $letterid = '3';
+  $topatient = '1';
+  $letter = create_letter($letterid, $pid, '', $topatient);
+  if (!is_numeric($letter)) {
+    print $letter;
+    die();
+  } else {
+    return $letter;
+  }
+}
 
 if($_POST["patientsub"] == 1)
 {
@@ -144,6 +156,10 @@ if($_POST["patientsub"] == 1)
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		trigger_letter1and2($_POST['ed']);
+
+		if($_POST['introletter'] == 1) {
+		  trigger_letter3($_POST['ed']);
+		}
 
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
@@ -259,6 +275,10 @@ if($_POST["patientsub"] == 1)
 		
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
+
+		if($_POST['introletter'] == 1) {
+		  trigger_letter3($pid);
+		}
 
 		$msg = "Added Successfully";
 		?>
@@ -1519,6 +1539,11 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 <br />&nbsp;
             </td>
         </tr>
+       <tr>
+       <td valign="top">
+         <input id="introletter" name="introletter" tabindex="20" type="checkbox" value="1"> Send Intro Letter to DSS patient
+       </td>
+       </tr>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
@@ -1529,6 +1554,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 <input type="submit" value=" <?=$but_text?> Patient" class="button" />
             </td>
         </tr>
+
     </table>
     </form>
 

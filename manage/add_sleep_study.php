@@ -29,7 +29,7 @@ include("includes/sescheck.php");
   $diagnosis = s_for($_POST['diagnosis']); 
   $notes = s_for($_POST['notes']);
   $patientid = $_GET['pid']; 
-  $q = "INSERT INTO `dentalsl_main`.`dental_summ_sleeplab` (
+  $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
 `date` ,
 `sleeptesttype` ,

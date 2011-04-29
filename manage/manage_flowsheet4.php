@@ -985,13 +985,13 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
 		$getposqry = mysql_query($posqry);   
 		
 		if(mysql_num_rows($getstepqry) < 1){
-			$insertstepqry = "INSERT INTO `dentalsl_main`.`dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
+			$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
 			if(!mysql_query($insertstepqry)){
 			$error = "MySQL error ".mysql_errno().": ".mysql_error();
 			echo $error."1";
 			echo "error inserting";
 			}
-			$insertorderqry = "INSERT INTO `dentalsl_main`.`segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`) VALUES ('".$patientid."','1','2','3','4','5','6','7','8','9','10','11')";
+			$insertorderqry = "INSERT INTO `segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`) VALUES ('".$patientid."','1','2','3','4','5','6','7','8','9','10','11')";
 			if(!mysql_query($insertorderqry)){
 			echo "error updating order";
 			$error = "MySQL error ".mysql_errno().": ".mysql_error();
@@ -1006,7 +1006,7 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
          if(in_array($_POST['stepselectedsubmit'], $whatsinarray)){
           echo "Item in db";
          }else{
-          $updatestepqry = "UPDATE `dentalsl_main`.`dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
+          $updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
 			    mysql_query($updatestepqry);
 			
     			if(!mysql_query($updatestepqry)){
@@ -1034,7 +1034,7 @@ if(isset($_POST['stepselectedsubmit']) || isset($_POST['stepselectedsubmit2'])){
             }
           }
           			
-    			$updatesegments = "UPDATE `dentalsl_main`.`dental_flow_pg2` SET `".$_POST['formsegment']."` = 1";
+    			$updatesegments = "UPDATE `dental_flow_pg2` SET `".$_POST['formsegment']."` = 1";
     			if(!mysql_query($updatesegments)){
     			echo "error updating order";
     			$error = "MySQL error ".mysql_errno().": ".mysql_error();

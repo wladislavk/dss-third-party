@@ -1,0 +1,3 @@
+ALTER TABLE dental_users
+  ADD COLUMN medicare_npi VARCHAR(255) DEFAULT NULL,
+  ADD COLUMN tax_id_or_ssn VARCHAR(255) DEFAULT NULL;

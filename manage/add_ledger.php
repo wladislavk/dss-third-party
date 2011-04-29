@@ -2,6 +2,32 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowresult = mysql_query($flowquery);
+    $flow = mysql_fetch_array($flowresult);
+    $copyreqdate = $flow['copyreqdate'];
+    $referred_by = $flow['referred_by'];
+    $referreddate = $flow['referreddate'];
+    $thxletter = $flow['thxletter'];
+    $queststartdate = $flow['queststartdate'];
+    $questcompdate = $flow['questcompdate'];
+    $insinforec = $flow['insinforec'];
+    $rxreq = $flow['rxreq'];
+    $rxrec = $flow['rxrec'];
+    $lomnreq = $flow['lomnreq'];
+    $lomnrec = $flow['lomnrec'];
+    $clinnotereq = $flow['clinnotereq'];
+    $clinnoterec = $flow['clinnoterec'];
+    $contact_location = $flow['contact_location'];
+    $questsendmeth = $flow['questsendmeth'];
+    $questsender = $flow['questsender'];
+    $refneed = $flow['refneed'];
+    $refneeddate1 = $flow['refneeddate1'];
+    $refneeddate2 = $flow['refneeddate2'];
+    $preauth = $flow['preauth'];
+    $preauth1 = $flow['preauth1'];
+    $preauth2 = $flow['preauth2'];
+    $insverbendate1 = $flow['insverbendate1'];
 
 if($_POST["ledgerub"] == 1)
 {
@@ -221,7 +247,8 @@ xmlhttp.onreadystatechange=function()
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
+<script language="JavaScript" src="calendar1.js"></script>
+<script language="JavaScript" src="calendar2.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
@@ -350,7 +377,10 @@ xmlhttp.onreadystatechange=function()
 				Service Date
             </td>
         	<td valign="top" class="frmdata">
-				<input id="service_date" name="service_date" type="text" class="tbox" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+				<input id="service_date" name="service_date" type="text" class="tbox" onclick="cal.popup()" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+                 <script type="text/javascript">
+                     var cal = new calendar2(document.getElementById('service_date'));
+                 </script>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -458,7 +488,13 @@ echo "</select>";
                        SENT
                        <input type="hidden" name="status" value=1 />
                    <?php }else{ ?>
-		<input type="checkbox" name="status" value=1 />
+<?php
+if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+?>
+		<input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value=1 />
+<?php }else{ ?> 
+          <input type="checkbox" name="status" value=1 />
+<?php } ?>
                    <?php } ?>
                 </td>
           </tr>		

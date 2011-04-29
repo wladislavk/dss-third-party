@@ -3,12 +3,42 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 $ids = $_GET['ids'];
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowresult = mysql_query($flowquery);
+    $flow = mysql_fetch_array($flowresult);
+    $copyreqdate = $flow['copyreqdate'];
+    $referred_by = $flow['referred_by'];
+    $referreddate = $flow['referreddate'];
+    $thxletter = $flow['thxletter'];
+    $queststartdate = $flow['queststartdate'];
+    $questcompdate = $flow['questcompdate'];
+    $insinforec = $flow['insinforec'];
+    $rxreq = $flow['rxreq'];
+    $rxrec = $flow['rxrec'];
+    $lomnreq = $flow['lomnreq'];
+    $lomnrec = $flow['lomnrec'];
+    $clinnotereq = $flow['clinnotereq'];
+    $clinnoterec = $flow['clinnoterec'];
+    $contact_location = $flow['contact_location'];
+    $questsendmeth = $flow['questsendmeth'];
+    $questsender = $flow['questsender'];
+    $refneed = $flow['refneed'];
+    $refneeddate1 = $flow['refneeddate1'];
+    $refneeddate2 = $flow['refneeddate2'];
+    $preauth = $flow['preauth'];
+    $preauth1 = $flow['preauth1'];
+    $preauth2 = $flow['preauth2'];
+    $insverbendate1 = $flow['insverbendate1'];
+    $insverbendate2 = $flow['insverbendate2'];
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" src="calendar1.js"></script>
+<script language="JavaScript" src="calendar2.js"></script>
 
 
 <head>
@@ -42,6 +72,7 @@ function createCookie(name,value,days) {
   function eraseCookie(name) {
               createCookie(name,"",-1);
   }
+
 </script>
 
 
@@ -185,6 +216,9 @@ $ed = ($a['entry_date']!='')?date('m/d/Y', strtotime($a['entry_date'])):'';
 <div>
 <input type="hidden" name="form[<?= $a['ledgerid']; ?>][ledgerid]" value="<?= $a['ledgerid']; ?>" />
 <input type="text" name="form[<?= $a['ledgerid']; ?>][service_date]" id="ledger_entry_service_date" value="<?= $sd; ?>" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal<?= $a['ledgerid']; ?>.popup();">
+<script type="text/javascript">
+   var cal<?= $a['ledgerid']; ?> = new calendar2(document.forms['ledgerentryform'].elements['form[<?= $a['ledgerid']; ?>][service_date]']);
+</script>
 <input type="text" name="form[<?= $a['ledgerid']; ?>][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="<?= $ed; ?>" readonly="readonly">
        <?php $tsql = "SELECT type from dental_transaction_code where transaction_code=".$a['transaction_code']." AND docid=".$_SESSION['docid'];
         $tmy = mysql_query($tsql);
@@ -225,7 +259,14 @@ echo $a['transaction_code'];
 
 <?= $a['amount']; ?>
 </span>
-<input type="checkbox" <?= ($a['status'])?'checked="checked"':''; ?>id="form[<?= $a['ledgerid']; ?>][status]" name="form[<?= $a['ledgerid']; ?>][status]" value="1" style="margin: 0; float: right; width:24px;">
+<?php
+if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+$onc = 'onclick="alert(\'Insurance information needs completed\'); return false;"';
+}else{
+$onc = '';
+}
+?>
+<input type="checkbox" <?= $onc; ?> <?= ($a['status'])?'checked="checked"':''; ?>id="form[<?= $a['ledgerid']; ?>][status]" name="form[<?= $a['ledgerid']; ?>][status]" value="1" style="margin: 0; float: right; width:24px;">
 <font style="font-size:10px;">File</font>
 </div></div>
 <div style="clear: both; height: 10px;"></div>

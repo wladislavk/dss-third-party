@@ -721,7 +721,9 @@ padding-left:20px;
 
                     <a href="manage_letters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_letters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Letters</a>
 
-                    <a href="manage_insurance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_insurance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance</a>
+                    <a href="manage_preauths.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_preauths.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pre-Authorizations</a>
+
+                    <a href="manage_claims.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_claims.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Claims</a>
 
                     <a href="manage_new_patient_calls.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_new_patient_calls.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage New Patient Calls</a>
 

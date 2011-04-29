@@ -115,7 +115,25 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 
 
 <br />
+<script type="text/javascript">
 
+function concat_checked(ids){
+var s = '';
+var first = true;
+for(var i = 0; i < ids.length; i++){
+if(ids[i].checked) {
+if(first){
+first=false;
+}else{
+s+=',';
+}
+s += ids[i].value;
+}
+}
+return s;
+}
+
+</script>
 <div align="right">
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger
@@ -131,6 +149,11 @@ W1: <?=st($pat_myarray['cell_phone']);?>
         </button>
         &nbsp;&nbsp;
 
+        <button onclick="javascript: loadPopup('edit_ledger_entries.php?pid=<?=$_GET['pid'];?>&ids='+concat_checked(document.forms['edit_mult_form'].elements['edit_mult[]']));" class="addButton">
+               Edit Multiple
+        </button>
+        &nbsp;&nbsp;
+
 </div>
 
 <br />
@@ -138,6 +161,7 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
+<form name="edit_mult_form" id="edit_mult_form" />
 <table  class="ledger" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
@@ -249,6 +273,7 @@ W1: <?=st($pat_myarray['cell_phone']);?>
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
+                                  <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
 				</td>
 			</tr>
 	<? 	}
@@ -262,7 +287,7 @@ W1: <?=st($pat_myarray['cell_phone']);?>
       </td>
   </tr> 
 </table>
- 
+</form> 
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

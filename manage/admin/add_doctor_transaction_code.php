@@ -35,9 +35,9 @@ if($_POST["mult_transaction_codesub"] == 1)
 
 if($_POST["transaction_codesub"] == 1)
 {
-	$sel_check = "select * from dental_transaction_code where default_code=1 transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."'";
+	$sel_check = "select * from dental_transaction_code where docid=". $_GET['docid'] ." AND  transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysql_query($sel_check);
-	
+
 	if(mysql_num_rows($query_check)>0)
 	{
 		$msg="Transaction Code already exist. So please give another Transaction Code.";
@@ -61,7 +61,7 @@ if($_POST["transaction_codesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."' where transaction_codeid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -69,21 +69,21 @@ if($_POST["transaction_codesub"] == 1)
 			?>
 			<script type="text/javascript">
 				//alert("<?=$msg;?>");
-				parent.window.location='manage_transaction_code.php?msg=<?=$msg;?>';
+				parent.window.location='manage_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
 			</script>
 			<?
 			die();
 		}
 		else
 		{
-			$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', default_code = 1";
+			$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
 				//alert("<?=$msg;?>");
-				parent.window.location='manage_transaction_code.php?msg=<?=$msg;?>';
+				parent.window.location='manage_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>';
 			</script>
 			<?
 			die();
@@ -112,6 +112,7 @@ if($_POST["transaction_codesub"] == 1)
 		$transaction_code = $_POST['transaction_code'];
     $type = $_POST['type'];		
 		$sortby = $_POST['sortby'];
+                $amount = $_POST['amount'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
 	}
@@ -120,6 +121,7 @@ if($_POST["transaction_codesub"] == 1)
 		$transaction_code = st($themyarray['transaction_code']);
 		$type = st($themyarray['type']);
 		$sortby = st($themyarray['sortby']);
+                $amount = st($themyarray['amount']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
 		$but_text = "Add ";
@@ -142,7 +144,7 @@ if($_POST["transaction_codesub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return transaction_codeabc(this)">
+    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?= $_GET['docid']; ?>" method="post" onSubmit="return transaction_codeabc(this)">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -185,6 +187,15 @@ if($_POST["transaction_codesub"] == 1)
                 <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+               Price 
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" name="amount" value="<?=$amount;?>" class="tbox" style="width:100px"/>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

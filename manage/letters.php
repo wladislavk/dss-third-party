@@ -67,6 +67,7 @@ if (count($dental_letters) % $page_limit) {
   $i = $page_limit * $page;
   $end = $i + $page_limit;
   while ($i < count($dental_letters) && $i < $end) {
+    //print $dental_letters[$i]['templateid']; print "<br />";
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
     // Get Correspondance Column
@@ -75,20 +76,23 @@ if (count($dental_letters) % $page_limit) {
     $correspondance = array();
     $correspondance = mysql_fetch_assoc($template_res);
     $subject = $correspondance['name'];
-    $url = $correspondance['template'] . "?fid=" . $dental_letters[$i]['patientid'] . "&pid=" . $dental_letters[$i]['patientid'];
+    $url = $correspondance['template'] . "?fid=" . $dental_letters[$i]['patientid'] . "&pid=" . $dental_letters[$i]['patientid'] . "&lid=" . $dental_letters[$i]['letterid'];
     // Get Recipients for Sent to Column
-    $contacts = get_contact_info((isset($dental_letters[$i]['topatient']) ? $dental_letters[$i]['patientid'] : ''), $dental_letters[$i]['md_list'], $dental_letters[$i]['md_referral_list']);
+    $contacts = get_contact_info((($dental_letters[$i]['topatient'] == "1") ? $dental_letters[$i]['patientid'] : ''), $dental_letters[$i]['md_list'], $dental_letters[$i]['md_referral_list']);
+    //print_r($contacts); print "<br />";
     $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
     if ($total_contacts > 1) {
       $sentto = $total_contacts . " Contacts";
+    } elseif ($total_contacts == 0) {
+      $sentto = "<span class=\"red\">No Contacts</span>";
     } else {
       // Patient: Salutation Lastname, Firstname
       $sentto = '';
       $sentto .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']) : ("");
       // MD: Salutation Lastname, Firstname - Contact Type
-      $sentto .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['firstname'] (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
+      $sentto .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
       // MD Referral: Salutation Lastname, Firstname - Contact Type
-      $sentto .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
+      $sentto .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
     }
     
     print "<tr><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";

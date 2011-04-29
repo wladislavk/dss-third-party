@@ -150,11 +150,12 @@ function create_letter ($templateid, $pid = "", $stepid = "", $topatient = "", $
   $letter_insert = mysql_query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
-  }
-  $id = mysql_insert_id($letter_insert);
-  // If parent and recipient ids are set, clear the recipient id from the parent
+  } else {
+    $id = mysql_insert_id();
+    // If parent and recipient ids are set, clear the recipient id from the parent
 
-  return $id;
+    return $id;
+  }
 }
 
 ?>

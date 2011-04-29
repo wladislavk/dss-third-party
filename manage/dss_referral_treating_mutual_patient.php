@@ -1,5 +1,5 @@
 <?php include 'includes/top.htm';
-/*
+
 $form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
 $form_my = mysql_query($form_sql);
 $form_myarray = mysql_fetch_array($form_my);
@@ -7,12 +7,12 @@ $form_myarray = mysql_fetch_array($form_my);
 if($form_myarray['formid'] == '')
 {
 	?>
-	<!--<script type="text/javascript">
+	<script type="text/javascript">
 		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>-->
+	</script>
 	<?
 	die();
-}*/
+}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -22,7 +22,7 @@ $name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st(
 
 $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 
-/*if($pat_myarray['patientid'] == '')
+if($pat_myarray['patientid'] == '')
 {
 	?>
 	<script type="text/javascript">
@@ -30,7 +30,7 @@ $name1 = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname']);
 	</script>
 	<?
 	die();
-}*/
+}
 
 $ref_sql = "select * from dental_q_recipients where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
 $ref_my = mysql_query($ref_sql);

@@ -1,7 +1,6 @@
 <?php include "includes/top.htm";
 
 // Todo add $stepid to each segment so that it can be passed to the letter triggers
-
 function trigger_letter8($pid) {
   $letterid = '8';
   $topatient = '1';
@@ -64,6 +63,19 @@ function trigger_letter13($pid) {
 
 function trigger_letter17($pid) {
   $letterid = '17';
+  $topatient = '1';
+  $md_list = get_mdcontactids($pid);
+  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  if (!is_numeric($letter)) {
+    print $letter;
+    die();
+  } else {
+    return $letter;
+  }
+}
+
+function trigger_letter19($pid) {
+  $letterid = '19';
   $topatient = '1';
   $md_list = get_mdcontactids($pid);
   $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
@@ -160,11 +172,13 @@ if(isset($_POST['flowsubmit'])){
     $insverbendate2 = s_for($_POST['insverbendate2']);
     $pid = $_GET['pid'];
     if(mysql_num_rows($flowresult) <= 0){
+      $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
       }else{
+        $referred_result = mysql_query($referredbyqry);
         $message = "Successfully updated flowsheet!2";
       }  
 
@@ -212,11 +226,13 @@ if(isset($_POST['flowsubmit'])){
       }
 
     }else{
+      $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
       $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
       }else{
+        $referredby_result = mysql_query($referredbyqry);
         $message = "Successfully updated flowsheet!4";
       } 
     }
@@ -246,6 +262,9 @@ if(isset($_POST['flowsubmitpgtwo'])){
     if ($_POST['stepselectedsubmit'] == "9") { // Patient Non Compliant
       $letterid = trigger_letter17($_GET['pid']);
     }
+    if ($_POST['stepselectedsubmit'] == "11") { // Treatment Complete
+      $letterid = trigger_letter19($_GET['pid']);
+    }
     if ($_POST['stepselectedsubmit'] == "13") { // Termination
       $letterid = trigger_letter25($_GET['pid']);
     }
@@ -269,6 +288,11 @@ if(isset($_POST['flowsubmitpgtwo'])){
       $columns = "patientid, stepid, segmentid";
       $values = "'$pid', '$i', '$segmentid'";
       $setstring = "stepid='$i', segmentid='$segmentid'";
+      if ($letterid && $i == $numsteps) {
+        $columns .= ", letterid";
+        $values .= ", '".$letterid."'";
+        $setstring .= ", letterid='$letterid'";
+      }
       if(isset($_POST['data'][$i]['datesched'])) {
         $datestring = s_for($_POST['data'][$i]['datesched']);
         if ($datestring != '') {
@@ -345,7 +369,9 @@ $array = mysql_fetch_array($query);
 
 $explode = explode(",", $array['steparray']);
 
-$stepid = array_pop($explode);
+$stepid = count($explode);
+
+array_pop($explode);
 
 $implode = implode(",", $explode);
 echo $implode;
@@ -373,11 +399,13 @@ window.location.href='manage_flowsheet3.php?pid=<?php echo($_GET["pid"]); ?>&pag
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
+if (!$pat_my) {
+  print "MySQL error ".mysql_errno().": ".mysql_error();
+}
 $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-$reffered_by = $pat_myarray['referred_by'];
-
+$referred_by = $pat_myarray['referred_by'];
 $referredby_sql = "select * from dental_referredby where `referredbyid` = ".$reffered_by.";";
 $referredby_my = mysql_query($referredby_sql);
 $referrer_array = mysql_fetch_array($referredby_my);
@@ -432,7 +460,7 @@ height:35px;
     ?>
 </div>
 
-<form>
+<form action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT</div>
 <table width="60%" align="center">

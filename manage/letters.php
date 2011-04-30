@@ -5,17 +5,19 @@ $page = '0';
 $page_limit = '10';
 $sort = 'asc';
 $column = 'letterid';
+$filter = "%";
 if (isset($_GET['status'])) { $status = $_GET['status']; }
 if (isset($_GET['page'])) { $page = $_GET['page']; }
 if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
 if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
+if (isset($_GET['filter'])) { $filter = mysql_real_escape_string($_GET['filter']); }
 
 // Get doctor id
 $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '0' ORDER BY ".$column." ".$sort.";";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY ".$column." ".$sort.";";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -27,7 +29,7 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' ORDER BY ".$column." ".$sort.";";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' AND dental_letters.templateid LIKE '".$filter."' ORDER BY ".$column." ".$sort.";";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -59,7 +61,18 @@ if (count($dental_letters) % $page_limit) {
 
 <div class="letters-tryptych1">
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
-  Filter by type:
+  <form name="filter_letters" action="/manage/letters.php?status=<?php echo $status ?>" method="get">
+  Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
+    <option value="%"></option>
+    <?php
+    $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
+    $result = mysql_query($templates);
+    while ($row = mysql_fetch_assoc($result)) {
+      print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+    }
+    ?>
+    </select>
+  </form>
 </div>
 <div class="letters-tryptych2">
   <h2>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</h1>

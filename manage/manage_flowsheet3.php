@@ -1399,7 +1399,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 				$updatecurrpos = "UPDATE `segments_order` SET `".$key."` = ".$fnew_key." WHERE `".$key."` != 'patientid'";
 	             
 	             /*
-	             "UPDATE `dentalsl_main`.`segments_order` SET `consultrow` = '1',
+	             "UPDATE `segments_order` SET `consultrow` = '1',
 `sleepstudyrow` = '2',
 `delayingtreatmentrow` = '3',
 `refusedtreatmentrow` = '4',

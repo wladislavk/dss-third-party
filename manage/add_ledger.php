@@ -2,6 +2,32 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowresult = mysql_query($flowquery);
+    $flow = mysql_fetch_array($flowresult);
+    $copyreqdate = $flow['copyreqdate'];
+    $referred_by = $flow['referred_by'];
+    $referreddate = $flow['referreddate'];
+    $thxletter = $flow['thxletter'];
+    $queststartdate = $flow['queststartdate'];
+    $questcompdate = $flow['questcompdate'];
+    $insinforec = $flow['insinforec'];
+    $rxreq = $flow['rxreq'];
+    $rxrec = $flow['rxrec'];
+    $lomnreq = $flow['lomnreq'];
+    $lomnrec = $flow['lomnrec'];
+    $clinnotereq = $flow['clinnotereq'];
+    $clinnoterec = $flow['clinnoterec'];
+    $contact_location = $flow['contact_location'];
+    $questsendmeth = $flow['questsendmeth'];
+    $questsender = $flow['questsender'];
+    $refneed = $flow['refneed'];
+    $refneeddate1 = $flow['refneeddate1'];
+    $refneeddate2 = $flow['refneeddate2'];
+    $preauth = $flow['preauth'];
+    $preauth1 = $flow['preauth1'];
+    $preauth2 = $flow['preauth2'];
+    $insverbendate1 = $flow['insverbendate1'];
 
 if($_POST["ledgerub"] == 1)
 {
@@ -187,7 +213,7 @@ xmlhttp.onreadystatechange=function()
   }
 }
 
-function getTransCodesAmount(str,name,type)
+function getTransCodesAmount(str,name,type,fid)
 {
 if (str=="")
   {
@@ -206,11 +232,11 @@ xmlhttp.onreadystatechange=function()
   {
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
-    document.getElementById("amount_span").innerHTML=xmlhttp.responseText;
+    document.getElementById("amount_span"+fid).innerHTML=xmlhttp.responseText;
     }
   }
   var pco = name.substr(5,1);
-  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?t="+type+"&q="+str+"&pco="+pco,true);
+  xmlhttp.open("GET","add_ledger_entry_process_amount_edit.php?id="+fid+"&t="+type+"&q="+str+"&pco="+pco,true);
   xmlhttp.send();
 }
 
@@ -221,7 +247,8 @@ xmlhttp.onreadystatechange=function()
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
+<script language="JavaScript" src="calendar1.js"></script>
+<script language="JavaScript" src="calendar2.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
@@ -252,20 +279,20 @@ xmlhttp.onreadystatechange=function()
 	
 	if($service_date == '')
 	{
-		$service_date = date('m-d-Y');
+		$service_date = date('m/d/Y');
 	}
 	else
 	{
-		$service_date = date('m-d-Y',strtotime($service_date));
+		$service_date = date('m/d/Y',strtotime($service_date));
 	}
 	
 	if($entry_date == '')
 	{
-		$entry_date = date('m-d-Y');
+		$entry_date = date('m/d/Y');
 	}
 	else
 	{
-		$entry_date = date('m-d-Y',strtotime($entry_date));
+		$entry_date = date('m/d/Y',strtotime($entry_date));
 	}
 	
 	if($transaction_type == '')
@@ -273,14 +300,6 @@ xmlhttp.onreadystatechange=function()
 		//$transaction_type = 'Entry';
 	}
 	
-	if($transaction_type == 'Credit')
-	{
-		$amount = $themyarray['paid_amount'];
-	}
-	else
-	{
-		$amount = $themyarray['amount'];
-	}
 	
 	if($themyarray["userid"] != '')
 	{
@@ -358,7 +377,10 @@ xmlhttp.onreadystatechange=function()
 				Service Date
             </td>
         	<td valign="top" class="frmdata">
-				<input id="service_date" name="service_date" type="text" class="tbox" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+				<input id="service_date" name="service_date" type="text" class="tbox" onclick="cal.popup()" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+                 <script type="text/javascript">
+                     var cal = new calendar2(document.getElementById('service_date'));
+                 </script>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -439,7 +461,7 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_amount">
+		<tr id="tr_amount" <?= ($transaction_type==2||$transaction_type==3)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Amount
             </td>
@@ -448,12 +470,12 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_paid_amount">
+		<tr id="tr_paid_amount"  <?= ($transaction_type!=2&&$transaction_type!=3)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Paid Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){number_format($paid_amount,2);};?>"  maxlength="255"/>
+				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2);};?>"  maxlength="255"/>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -466,7 +488,13 @@ echo "</select>";
                        SENT
                        <input type="hidden" name="status" value=1 />
                    <?php }else{ ?>
-		<input type="checkbox" name="status" value=1 />
+<?php
+if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+?>
+		<input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value=1 />
+<?php }else{ ?> 
+          <input type="checkbox" name="status" value=1 />
+<?php } ?>
                    <?php } ?>
                 </td>
           </tr>		

@@ -1,7 +1,8 @@
 <?php	
+include_once('admin/includes/config.php');
 session_start();
-mysql_connect("localhost","dentalsl_main","cr3at1vItYmain") or die('connection failure');	
-mysql_select_db("dentalsl_main");
+mysql_connect($config_db_host,$config_db_user,$config_db_pass) or die('connection failure');	
+mysql_select_db($config_db_name);
 
 function system_extension_mime_types() {
     # Returns the system MIME type mapping of extensions to MIME types, as defined in /etc/mime.types.

@@ -1,7 +1,12 @@
 <?
+	$config_db_name = "dentalsl_main_dev";
+	$config_db_user = "root";
+	$config_db_pass = "t3mp123";
+	$config_db_host = "localhost";
+
 	session_start();
-	$con = mysql_connect("localhost","root","t3mp123") or die('connection failure');	
-	$db = mysql_select_db("dentalsl_main_dev");
+	$con = mysql_connect($config_db_host,$config_db_user,$config_db_pass) or die('connection failure');	
+	$db = mysql_select_db($config_db_name);
 	
 	$base_path = 'http://'.$_SERVER['HTTP_HOST'].'/dental/manage/';
 	$sitename = "Dental";

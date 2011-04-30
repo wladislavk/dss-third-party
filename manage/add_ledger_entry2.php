@@ -52,7 +52,7 @@ function ledgerconfirmation(){
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
 
-$sqlinsertqry .= "INSERT INTO `dentalsl_main`.`dental_ledger` (
+$sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `ledgerid` ,
 `formid` ,
 `patientid` ,

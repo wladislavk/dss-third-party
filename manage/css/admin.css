@@ -1064,6 +1064,10 @@ float:left;
   clear: both;
 }
 
+.col_head a, .col_head a:hover {
+  color: #FFFFFF;
+}
+
 .arrow_asc{
   background-image: url(../images/arrow-white-up.gif);
   background-repeat: no-repeat;

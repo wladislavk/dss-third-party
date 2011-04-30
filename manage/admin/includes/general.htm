@@ -79,14 +79,14 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
     }
   }
   if (isset($md_list)) {
-    $sql = "SELECT dental_contact.contactid, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN('".$md_list."');";
+    $sql = "SELECT dental_contact.contactid, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['mds'][] = $row;
     }
   }
   if (isset($md_referral_list)) {
-    $sql = "SELECT dental_referredby.referredbyid, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN('".$md_referral_list."');";
+    $sql = "SELECT dental_referredby.referredbyid, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN(".$md_referral_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['md_referrals'][] = $row;
@@ -97,7 +97,7 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
 }
 
 // Function to Create Letters
-function create_letter ($templateid, $pid = "", $stepid = "", $topatient = "", $md_list = "", $md_referral_list = "", $parentid = "", $template = "", $send_method = "") {
+function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null) {
   $gen_date = date('Y-m-d H:i:s');
   $status = '0';
   $delivered = '0';
@@ -124,7 +124,7 @@ function create_letter ($templateid, $pid = "", $stepid = "", $topatient = "", $
     $columns .= ", topatient";
     $values .= ", '".mysql_real_escape_string($topatient)."'";
   }
-  if (isset($recipientids)) {
+  if (isset($md_list)) {
     $columns .= ", md_list";
     $values .= ", '".mysql_real_escape_string($md_list)."'";
   }

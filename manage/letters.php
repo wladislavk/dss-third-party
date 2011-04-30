@@ -1,10 +1,11 @@
 <?php include 'includes/top.htm'; 
 
-$status = $_GET['status'];
+$status = 'pending';
 $page = '0';
 $page_limit = '10';
 $sort = 'asc';
 $column = 'letterid';
+if (isset($_GET['status'])) { $status = $_GET['status']; }
 if (isset($_GET['page'])) { $page = $_GET['page']; }
 if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
 if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
@@ -14,7 +15,7 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' ORDER BY ".$column." ".$sort.";";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '0' ORDER BY ".$column." ".$sort.";";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -24,6 +25,19 @@ if ($status == 'pending') {
     }
   }
 }
+
+if ($status == 'sent') {
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' ORDER BY ".$column." ".$sort.";";
+  $letters_res = mysql_query($letters_query);
+  if (!$letters_res) {
+    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+  } else {
+    while ($row = mysql_fetch_assoc($letters_res)) {
+      $dental_letters[] = $row;
+    }
+  }
+}
+
 
 /* Calculate oldest letter age
 foreach ($dental_letters as $key => $row) {
@@ -44,7 +58,7 @@ if (count($dental_letters) % $page_limit) {
 ?>
 
 <div class="letters-tryptych1">
-  <h1 class="blue">Pending Letters (<?php echo $pending_letters; ?>)</h1>
+  <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   Filter by type:
 </div>
 <div class="letters-tryptych2">
@@ -58,10 +72,10 @@ if (count($dental_letters) % $page_limit) {
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <td class="col_head">Patient Name</th>
-    <td class="col_head">Correspondance</th>
-    <td class="col_head">Sent To</th>
-    <td class="col_head">Generated On</th>
+    <td class="col_head <?= ($_REQUEST['sort'] == '')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">Patient Name</th>
+    <td class="col_head <?= ($_REQUEST['sort'] == '')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">Correspondance</th>
+    <td class="col_head <?= ($_REQUEST['sort'] == '')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">Sent To</th>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">Generated On</th>
   </tr>
 <?php
   $i = $page_limit * $page;

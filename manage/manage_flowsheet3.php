@@ -1549,7 +1549,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
     $letters[$row['stepid']] = $row['letterid'];
   }
   $letter_list = implode(",", $letters);
-  $dental_letters_query = "SELECT `stepid`, `letterid`, UNIX_TIMESTAMP(`generated_date`) as `generated_date`, `status`, dental_letter_templates.name, dental_letter_templates.template FROM `dental_letters` LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE `patientid` = '".$_GET['pid']."' AND `letterid` IN('".$letter_list."') ORDER BY `stepid` ASC;";
+  $dental_letters_query = "SELECT `stepid`, `letterid`, UNIX_TIMESTAMP(`generated_date`) as `generated_date`, `status`, dental_letter_templates.name, dental_letter_templates.template FROM `dental_letters` LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE `patientid` = '".$_GET['pid']."' AND `letterid` IN(".$letter_list.") ORDER BY `stepid` ASC;";
   $dental_letters_res = mysql_query($dental_letters_query);
   $dental_letters = array();
   while ($row = mysql_fetch_assoc($dental_letters_res)) {

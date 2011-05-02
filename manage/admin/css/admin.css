@@ -256,7 +256,7 @@ A:hover, A:active{
 	float:right;
 
 }
-.col_head{
+.col_head, .col_head a, .col_head a:hover{
 	font-family:Tahoma, Verdana;
 	color:#FFFFFF;
 	font-weight:bold;
@@ -507,12 +507,12 @@ width:125px;
 }
 
 .arrow_asc{
-  background-image: url(../images/arrow-white-up.gif);
+  background-image: url(../../images/arrow-white-up.gif);
   background-repeat: no-repeat;
   background-position: right 11px;
 }
 .arrow_desc{
-  background-image: url(../images/arrow-white-down.gif);
+  background-image: url(../../images/arrow-white-down.gif);
   background-repeat: no-repeat;
   background-position: right 11px;
 }

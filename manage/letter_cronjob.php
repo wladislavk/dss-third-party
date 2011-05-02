@@ -2,8 +2,23 @@
 
 include('admin/includes/config.php');
 
-// Trigger Letter 18
+// Trigger Letter 12
+$lateconsult_query = "SELECT dental_flow_pg2_info.patientid, dental_patients.docid, dental_patients.salutation, dental_patients.firstname, dental_patients.lastname FROM dental_flow_pg2_info JOIN dental_patients ON dental_flow_pg2_info.patientid=dental_patients.patientid WHERE dental_flow_pg2_info.date_scheduled <= DATE_SUB(NOW(), INTERVAL 30 day) AND dental_flow_pg2_info.segmentid = '2' GROUP BY dental_flow_pg2_info.patientid;";
+$lateconsult_result = mysql_query($lateconsult_query);
+$patients = array();
+while ($row = mysql_fetch_assoc($lateconsult_result)) {
+  $patients[] = $row;
+}
+foreach ($patients as $patient) {
+  $user_id = $patient['docid'];
+  $memo = "Patient, " . $patient['salutation'] . " " . $patient['firstname'] . " " . $patient['lastname'] . ", has not completed their scheduled consultation within 30 days.  Click <a href=\"/manage/letter12.php?pid=" . $patient['patientid'] . "\">Yes</a> to send them a letter, or click <a href=\"/manage/manage_flowsheet3.php?pid=" . $patient['patientid'] . "&page=page2\">No</a> to view the patient's Flow Sheet.";
+  $memo = mysql_real_escape_string($memo); 
+  $memo_query = "INSERT INTO memo VALUES ('$user_id', '$memo', DATE_ADD(NOW(), INTERVAL 1 DAY));";
+  $memo_result = mysql_query($memo_query);
+}
 
+// Trigger Letter 18
+// Select patients where Device Delivery is the last step on their flowsheet
 $dd_query = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%7]';";
 $dd_result = mysql_query($dd_query);
 $patients = array();
@@ -141,7 +156,6 @@ if (!$result) {
     if (!is_numeric($letter)) {
       print $letter . "<br />";
     }
-    print $patientid;
   }
 }
 ?>

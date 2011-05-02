@@ -61,6 +61,20 @@ function trigger_letter13($pid) {
   }
 }
 
+
+function trigger_letter16($pid) {
+  $letterid = '16';
+  $topatient = '1';
+  $md_list = get_mdcontactids($pid);
+  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  if (!is_numeric($letter)) {
+    print $letter;
+    die();
+  } else {
+    return $letter;
+  }
+}
+
 function trigger_letter17($pid) {
   $letterid = '17';
   $topatient = '1';
@@ -247,6 +261,120 @@ if(isset($_POST['flowsubmit'])){
     }
 }
 
+
+if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next Step'){	
+	function updateflowsheet2($patientid, $value){
+		$getstepqrysql = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$patientid."' LIMIT 1;";
+		$getstepqry = mysql_query($getstepqrysql);
+		
+    	$posqry = "SELECT * FROM `segments_order` WHERE `patientid`='".$patientid."' LIMIT 1;";
+		$getposqry = mysql_query($posqry);   
+		
+		if(mysql_num_rows($getstepqry) < 1){
+			$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
+			if(!mysql_query($insertstepqry)){
+			$error = "MySQL error ".mysql_errno().": ".mysql_error();
+			echo $error."1";
+			echo "error inserting";
+			}
+			$insertorderqry = "INSERT INTO `segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`, `terminationrow`) VALUES ('".$patientid."','2','3','4','5','6','7','8','9','10','11','12','13')";
+			if(!mysql_query($insertorderqry)){
+			echo "error updating order";
+			$error = "MySQL error ".mysql_errno().": ".mysql_error();
+			echo $error."2";
+			}
+		}else{
+			$steparray = mysql_fetch_array($getstepqry);
+			$whatsinarray = $steparray['steparray'];
+			$amtinarray = count($whatsinarray);
+      
+      
+         if(in_array($_POST['stepselectedsubmit'], $whatsinarray)){
+          echo "Item in db";
+         }else{
+          $updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
+			    mysql_query($updatestepqry);
+			
+    			if(!mysql_query($updatestepqry)){
+    			echo "error updating record";
+    			$error = "MySQL error ".mysql_errno().": ".mysql_error();
+			echo $error."3";
+    			}
+          $getcurrpos1 = "UPDATE `segments_order` SET `".$_POST['formsegment']."` = '2' WHERE `patientid` ='".$patientid."'";
+          $currpos1 = mysql_query($getcurrpos1);
+          if(!$currpos1){
+            echo "error updating order";
+            $error = "MySQL error ".mysql_errno().": ".mysql_error();
+			echo $error."4";
+          }
+		  
+		  // Get the data from the segments_order table
+          // $pos = mysql_fetch_array($getposqry);
+		 
+		$posqsoResult = array();
+	
+		while ($posResultRow = mysql_fetch_assoc($getposqry))
+		{
+			$posqsoResult []= $posResultRow;
+		}
+		  
+		$posqsoResultFinal = $posqsoResult[0];	  		  
+		  
+		// echo print_r($posqsoResultFinal);
+		// exit();
+		  
+		  foreach($posqsoResultFinal as $key => $value)
+          {
+			if($value < $_POST['stepselectedsubmit'])
+            {
+				$fnew_key = $value++;			
+				
+				$updatecurrpos = "UPDATE `segments_order` SET `".$key."` = ".$fnew_key." WHERE `".$key."` != 'patientid'";
+	             
+	             /*
+	             "UPDATE `segments_order` SET `consultrow` = '1',
+`sleepstudyrow` = '2',
+`delayingtreatmentrow` = '3',
+`refusedtreatmentrow` = '4',
+`devicedeliveryrow` = '5',
+`checkuprow` = '6',
+`patientnoncomprow` = '7',
+`homesleeptestrow` = '8',
+`starttreatmentrow` = '9',
+`annualrecallrow` = '10',
+`impressionrow` = '11' WHERE `segments_order`.`patientid` = '16';"
+	             */
+	             
+	             $currpos = mysql_query($updatecurrpos);
+				 
+	              if(!mysql_query($currpos)){
+		              echo "error updating order";
+		              $error = "MySQL error ".mysql_errno().": ".mysql_error();
+						echo $error."5";
+              		}
+           	 }
+          }
+          			
+    			$updatesegments = "UPDATE `dental_flow_pg2` SET `".$_POST['formsegment']."` = 2";
+    			if(!mysql_query($updatesegments)){
+    			echo "error updating order";
+    			$error = "MySQL error ".mysql_errno().": ".mysql_error();
+			echo $error."6";
+    			}
+         }       
+
+      
+			
+		}
+	}
+	updateflowsheet2($_POST['patientid'], $_POST['stepselectedsubmit']);
+	?>
+	<script type="text/javascript">
+		window.location.href='manage_flowsheet3.php?page=page2&pid='+<?php echo($_GET['pid']); ?>+'&addtopat=1';		
+	</script>	
+	<?php
+}
+
 if(isset($_POST['flowsubmitpgtwo'])){
     if ($_POST['stepselectedsubmit'] == "6") { // Refused Treatment
       $letterid = trigger_letter8($_GET['pid']);
@@ -256,6 +384,14 @@ if(isset($_POST['flowsubmitpgtwo'])){
       $letterid = trigger_letter9($_GET['pid']);
       $letterid = trigger_letter13($_GET['pid']);
     }
+    if ($_POST['stepselectedsubmit'] == "8") { // Follow-Up/Check
+      $trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
+      $trigger_result = mysql_query($trigger_query);
+      $numrows = (mysql_num_rows($trigger_result));
+      if ($numrows > 0) {
+        $letterid = trigger_letter16($_GET['pid']);
+      }
+    }    
     if ($_POST['stepselectedsubmit'] == "5") { // Delaying Treatment / Waiting
       $letterid = trigger_letter10($_GET['pid']);
     }
@@ -268,7 +404,7 @@ if(isset($_POST['flowsubmitpgtwo'])){
     if ($_POST['stepselectedsubmit'] == "13") { // Termination
       $letterid = trigger_letter25($_GET['pid']);
     }
-    
+
     //print_r($_POST);
     $pid = $_GET['pid'];
 
@@ -1329,118 +1465,6 @@ Next Appointment
 
 
 <?php
-if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next Step'){	
-	function updateflowsheet2($patientid, $value){
-		$getstepqrysql = "SELECT * FROM `dental_flow_pg2` WHERE `patientid`='".$patientid."' LIMIT 1;";
-		$getstepqry = mysql_query($getstepqrysql);
-		
-    	$posqry = "SELECT * FROM `segments_order` WHERE `patientid`='".$patientid."' LIMIT 1;";
-		$getposqry = mysql_query($posqry);   
-		
-		if(mysql_num_rows($getstepqry) < 1){
-			$insertstepqry = "INSERT INTO `dental_flow_pg2` (`patientid` , `steparray`) VALUES ('".$patientid."','".$value."')";
-			if(!mysql_query($insertstepqry)){
-			$error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."1";
-			echo "error inserting";
-			}
-			$insertorderqry = "INSERT INTO `segments_order` (`patientid` , `consultrow` , `sleepstudyrow` , `delayingtreatmentrow` , `refusedtreatmentrow` , `devicedeliveryrow` , `impressionrow` , `checkuprow` , `patientnoncomprow` , `homesleeptestrow` , `starttreatmentrow` , `annualrecallrow`, `terminationrow`) VALUES ('".$patientid."','2','3','4','5','6','7','8','9','10','11','12','13')";
-			if(!mysql_query($insertorderqry)){
-			echo "error updating order";
-			$error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."2";
-			}
-		}else{
-			$steparray = mysql_fetch_array($getstepqry);
-			$whatsinarray = $steparray['steparray'];
-			$amtinarray = count($whatsinarray);
-      
-      
-         if(in_array($_POST['stepselectedsubmit'], $whatsinarray)){
-          echo "Item in db";
-         }else{
-          $updatestepqry = "UPDATE `dental_flow_pg2` SET `steparray`='".$steparray['steparray'].",".$value."' WHERE `patientid`='".$patientid."'";
-			    mysql_query($updatestepqry);
-			
-    			if(!mysql_query($updatestepqry)){
-    			echo "error updating record";
-    			$error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."3";
-    			}
-          $getcurrpos1 = "UPDATE `segments_order` SET `".$_POST['formsegment']."` = '2' WHERE `patientid` ='".$patientid."'";
-          $currpos1 = mysql_query($getcurrpos1);
-          if(!$currpos1){
-            echo "error updating order";
-            $error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."4";
-          }
-		  
-		  // Get the data from the segments_order table
-          // $pos = mysql_fetch_array($getposqry);
-		 
-		$posqsoResult = array();
-	
-		while ($posResultRow = mysql_fetch_assoc($getposqry))
-		{
-			$posqsoResult []= $posResultRow;
-		}
-		  
-		$posqsoResultFinal = $posqsoResult[0];	  		  
-		  
-		// echo print_r($posqsoResultFinal);
-		// exit();
-		  
-		  foreach($posqsoResultFinal as $key => $value)
-          {
-			if($value < $_POST['stepselectedsubmit'])
-            {
-				$fnew_key = $value++;			
-				
-				$updatecurrpos = "UPDATE `segments_order` SET `".$key."` = ".$fnew_key." WHERE `".$key."` != 'patientid'";
-	             
-	             /*
-	             "UPDATE `segments_order` SET `consultrow` = '1',
-`sleepstudyrow` = '2',
-`delayingtreatmentrow` = '3',
-`refusedtreatmentrow` = '4',
-`devicedeliveryrow` = '5',
-`checkuprow` = '6',
-`patientnoncomprow` = '7',
-`homesleeptestrow` = '8',
-`starttreatmentrow` = '9',
-`annualrecallrow` = '10',
-`impressionrow` = '11' WHERE `segments_order`.`patientid` = '16';"
-	             */
-	             
-	             $currpos = mysql_query($updatecurrpos);
-				 
-	              if(!mysql_query($currpos)){
-		              echo "error updating order";
-		              $error = "MySQL error ".mysql_errno().": ".mysql_error();
-						echo $error."5";
-              		}
-           	 }
-          }
-          			
-    			$updatesegments = "UPDATE `dental_flow_pg2` SET `".$_POST['formsegment']."` = 2";
-    			if(!mysql_query($updatesegments)){
-    			echo "error updating order";
-    			$error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."6";
-    			}
-         }       
-
-      
-			
-		}
-	}
-	updateflowsheet2($_POST['patientid'], $_POST['stepselectedsubmit']);
-	?>
-	<script type="text/javascript">
-		window.location.href='manage_flowsheet3.php?page=page2&pid='+<?php echo($_GET['pid']); ?>+'&addtopat=1';		
-	</script>	
-	<?php
-}
 
 ?>
 

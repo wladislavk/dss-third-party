@@ -21,7 +21,7 @@
 
 
 
-$adminmemo_check_sql = "SELECT * FROM memo_admin LIMIT 1";
+$adminmemo_check_sql = "SELECT * FROM memo_admin";
 $adminmemo_check_qry = mysql_query($adminmemo_check_sql);
 while($adminmemo_array = mysql_fetch_array($adminmemo_check_qry)){
 if($adminmemo_array['memo'] != NULL || $adminmemo_array['memo'] != ''){
@@ -64,7 +64,7 @@ echo "". $adminmemo_array['memo'] . "<br />";
 <?php 
 
 $memouserid = $_SESSION['userid'];
-$memo_check_sql = "SELECT * FROM memo WHERE user_id={$memouserid} LIMIT 1";
+$memo_check_sql = "SELECT * FROM memo WHERE user_id={$memouserid}";
 $memo_check_qry = mysql_query($memo_check_sql);
 while($memo_array = mysql_fetch_array($memo_check_qry)){
 if($memo_array != NULL || $memo_array != ''){

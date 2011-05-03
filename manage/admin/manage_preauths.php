@@ -6,7 +6,7 @@ function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
   
   $sql = "SELECT "
-       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
        . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
        . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
        . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
@@ -15,9 +15,9 @@ function insert_preauth_row($patient_id) {
        . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
        . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
        . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-       . "  d.userid as 'doc_id'  "
+       . "  d.userid as 'doc_id' "
        . "FROM " 
-       . "  dental_patients p  "
+       . "  dental_patients p "
        . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
        . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
@@ -31,13 +31,14 @@ function insert_preauth_row($patient_id) {
 //  print_r($my_array);exit;
   
   $sql = "INSERT INTO dental_insurance_preauth ("
-       . "  doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
+       . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
        . "  patient_ins_id, patient_firstname, patient_lastname, patient_add1, "
        . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
        . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
        . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
        . "  front_office_request_date, status "
        . ") VALUES ("
+       . "  " . $my_array['patient_id'] . ", "
        . "  " . $my_array['doc_id'] . ", "
        . "  '" . $my_array['ins_co'] . "', "
        . "  '" . $my_array['ins_rank'] . "', "

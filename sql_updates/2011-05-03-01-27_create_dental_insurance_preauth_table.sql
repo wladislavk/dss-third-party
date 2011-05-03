@@ -1,5 +1,6 @@
 CREATE TABLE `dental_insurance_preauth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) NOT NULL,
   `doc_id` int(11) NOT NULL,
   `ins_co` varchar(255) DEFAULT NULL,
   `ins_rank` varchar(255) NOT NULL DEFAULT 'primary',

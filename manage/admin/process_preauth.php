@@ -1,7 +1,6 @@
 <?php 
 session_start();
 require_once('includes/config.php');
-require_once('classes/tc_calendar.php');
 include("includes/sescheck.php");
 
 if (isset($_REQUEST['ed'])) {
@@ -14,7 +13,7 @@ if (isset($_REQUEST['ed'])) {
          . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
          . "  JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
          . "WHERE "
-         . "  id = " . $_REQUEST['ed'];
+         . "  preauth.id = " . $_REQUEST['ed'];
 	$my = mysql_query($sql) or die(mysql_error());
 	$preauth = mysql_fetch_array($my);
 } else {
@@ -45,7 +44,17 @@ if (isset($_REQUEST['ed'])) {
          . "verbal_pre_auth_ref_num = '".s_for($_POST["verbal_pre_auth_ref_num"])."', "
          . "verbal_pre_auth_notes = '".s_for($_POST["verbal_pre_auth_notes"])."', "
          . "written_pre_auth_notes = '".s_for($_POST["written_pre_auth_notes"])."', "
-         . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."' ";
+         . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
+         . "network_benefits = '" . $_POST["network_benefits"] . "', "
+         . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
+         . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
+         . "family_deductible = '" . $_POST["family_deductible"] . "', "
+         . "family_amount_met = '" . $_POST["family_amount_met"] . "', "
+         . "deductible_reset_date = '".s_for($_POST["deductible_reset_date"])."', "
+         . "out_of_pocket_met = '" . $_POST["out_of_pocket_met"] . "', "
+         . "patient_amount_left_to_meet = '" . $_POST["patient_amount_left_to_meet"] . "', "
+         . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
+         . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "' ";
     
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
@@ -120,6 +129,61 @@ $(function() {
     }
   });
   $("input[name='is_pre_auth_required']:checked").click();
+  
+  $("#ins_cal_year_end").bind("focus blur click", function() {
+    $("#deductible_reset_date").val($(this).val());
+  });
+  $("#ins_cal_year_end").click();
+  
+  function calc_amount_left_to_meet() {
+    var deductible = $('#patient_deductible').val();
+    var amountMet  = $('#patient_amount_met').val();
+    if (isNaN(deductible)) { deductible = 0; }
+    if (isNaN(amountMet))  { amountMet = 0; }
+    $('#patient_amount_left_to_meet').val(deductible - amountMet);
+  }
+  
+  $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
+    calc_amount_left_to_meet();
+  });
+  
+  function calc_expected_payments() {
+    var deviceAmount = $('#trxn_code_amount').val();
+    var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
+    var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
+    var isHmo = $("input[name='is_hmo']:checked").val();
+    var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
+    var percentagePaid = 0;
+    
+    if (hasOutOfNetwork == 1) {
+      // percentage from out_of_network_percentage
+      percentagePaid = $('#out_of_network_percentage').val();
+    } else if (isHmo == 0) {
+      // percentage from in_network_percentage
+      percentagePaid = $('#in_network_percentage').val();
+    } else {
+      // no percentage, set to 0
+      percentagePaid = 0;
+    }
+    
+    if (isNaN(deviceAmount))     { deviceAmount = 0; }
+    if (isNaN(percentagePaid))   { percentagePaid = 0; }
+    if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
+    
+    if (outOfPocketMet == 1) {
+      $('#expected_insurance_payment').val(deviceAmount);
+      $('#expected_patient_payment').val('0');
+    } else {
+      var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
+      var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+      $('#expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
+      $('#expected_patient_payment').val(expectedPatientPayment.toFixed(2));
+    }
+  }
+  
+  $("#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #out_of_pocket_met").bind("focus blur click", function() {
+    calc_expected_payments();
+  });
 });
 </script>
 </head>
@@ -402,7 +466,7 @@ $(function() {
 
                 <div id="has_out_of_network_benefits_yes" class="sub-question">
                   What percent do they pay an "out-of-network" provider?
-                  <input type="text" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox" /> enter 0-100
+                  <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox" />% (enter 0-100)
                 </div>
                 
                 <div id="has_out_of_network_benefits_no" class="sub-question">
@@ -443,7 +507,7 @@ $(function() {
 
                   <div id="is_hmo_no" class="sub-question">
                     What percent do they pay an "in-network" provider?
-                    <input type="text" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox" /> enter 0-100
+                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox" />% (enter 0-100)
                     <br/><br/>
                     Appeal for in network benefits needed.
                     <br/><br/>
@@ -474,6 +538,110 @@ $(function() {
                   Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox" /> <br/>
                   Notes<br/><textarea name="written_pre_auth_notes" class="tbox"><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
+            </td>
+        </tr>
+        <tr><td  colspan="2" align="center">&nbsp;</td></tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Benefits
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $yes_checked = ($preauth['network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $no_checked  = ($preauth['network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?>/> Out of network
+                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?>/> In Network
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient Deductible
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient amount met
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient amount left to meet
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Familiy Deductible
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Family amount met
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                When does the deductible reset?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" /> <br/>
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Has patient's out-of-pocket expense been met?
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $yes_checked = ($preauth['out_of_pocket_met'] == '1') ? 'CHECKED' : ''; ?>
+                <?php $no_checked  = ($preauth['out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
+                <input type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?>/> Yes
+                <input type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?>/> No
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Device amount
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" DISABLED/> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Expected insurance payment
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Expected patient payment
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" /> 
+                <span class="red">*</span>				
             </td>
         </tr>
         <tr>

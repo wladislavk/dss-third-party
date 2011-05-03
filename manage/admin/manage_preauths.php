@@ -1,13 +1,77 @@
 <? 
+require_once('../includes/constants.inc');
 include "includes/top.htm";
 
 function insert_preauth_row($patient_id) {
+  if (empty($patient_id)) { return; }
+  
   $sql = "SELECT "
-       . "  "
-       . "FROM "
-       . "  "
-       . "WHERE "
-       . " p.patientid = $patient_id";
+       . "  p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
+       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+       . "  d.userid as 'doc_id' "
+       . "FROM " 
+       . "  dental_patients p "
+       . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  JOIN dental_users d ON p.docid = d.userid "
+       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "WHERE " 
+       . "  p.patientid = $patient_id";
+  
+  $my = mysql_query($sql);
+  $my_array = mysql_fetch_array($my);
+//  print_r($my_array);exit;
+  
+  $sql = "INSERT INTO dental_insurance_preauth ("
+       . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
+       . "  patient_ins_id, patient_firstname, patient_lastname, patient_add1, "
+       . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
+       . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
+       . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
+       . "  front_office_request_date, status "
+       . ") VALUES ("
+       . "  " . $my_array['patient_id'] . ", "
+       . "  " . $my_array['doc_id'] . ", "
+       . "  '" . $my_array['ins_co'] . "', "
+       . "  '" . $my_array['ins_rank'] . "', "
+       . "  '" . $my_array['ins_phone'] . "', "
+       . "  '" . $my_array['patient_ins_group_id'] . "', "
+       . "  '" . $my_array['patient_ins_id'] . "', "
+       . "  '" . $my_array['patient_firstname'] . "', "
+       . "  '" . $my_array['patient_lastname'] . "', "
+       . "  '" . $my_array['patient_add1'] . "', "
+       . "  '" . $my_array['patient_add2'] . "', "
+       . "  '" . $my_array['patient_city'] . "', "
+       . "  '" . $my_array['patient_state'] . "', "
+       . "  '" . $my_array['patient_zip'] . "', "
+       . "  '" . $my_array['patient_dob'] . "', "
+       . "  '" . $my_array['insured_first_name'] . "', "
+       . "  '" . $my_array['insured_last_name'] . "', "
+       . "  '" . $my_array['insured_dob'] . "', "
+       . "  '" . $my_array['doc_npi'] . "', "
+       . "  '" . $my_array['referring_doc_npi'] . "', "
+       . "  " . $my_array['trxn_code_amount'] . ", "
+       . "  '" . $my_array['diagnosis_code'] . "', "
+       . "  '" . $my_array['doc_medicare_npi'] . "', "
+       . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
+       . "  '" . date('Y-m-d H:i:s') . "', "
+       . DSS_PREAUTH_PENDING
+       . ")";
+  //print_r($my_array);
+  //print_r($sql);exit;
+  $my = mysql_query($sql);
+}
+
+if ($_REQUEST['gen_preauth'] == 1) {
+  insert_preauth_row($_REQUEST['patient_id']);
 }
 
 if($_REQUEST["delid"] != "")
@@ -19,7 +83,7 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>?>";
+		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
 	</script>
 	<?
 	die();
@@ -33,7 +97,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.front_office_request_date, users.name as doc_name from dental_insurance_preauth preauth join dental_users users on preauth.user_id = users.userid order by front_office_request_date";
+$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.front_office_request_date, users.name as doc_name from dental_insurance_preauth preauth join dental_users users on preauth.doc_id = users.userid where preauth.status = 0 order by front_office_request_date";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -58,6 +122,21 @@ $my=mysql_query($sql) or die(mysql_error());
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
+
+<div style="border:1px black solid;width:60%;margin:auto;padding:10px">
+<form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+  <div>
+    For dev/testing purposes only. Enter a valid patient id and then submit.
+    A pre-auth request will be generated for them (provided there is valid data in the database).
+    This testing won't be necessary once the pre-auth button is added to the flowsheet pg1.
+    I usually use Suzie Test (pid 16).
+  </div><br/>
+  <input type="text" name="patient_id"/>
+  <input type="hidden" name="page" value="<?=$_REQUEST["page"]?>"/>
+  <input type="hidden" name="gen_preauth" value="1"/>
+  <input type="submit"/>
+</form>
+</div><br/>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >

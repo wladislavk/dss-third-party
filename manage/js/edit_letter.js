@@ -5,7 +5,6 @@ function edit_letter(divid) {
   textarea.attr('name', divid);
   textarea.attr('style','width:940px;height:335px;');
   $("#" + divid).replaceWith(textarea);
-  textarea.focus();
   tinyMCE.init({
     mode : "textareas",
     theme : "advanced",
@@ -16,4 +15,5 @@ function edit_letter(divid) {
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left"
   });
+  textarea.focus();
 }

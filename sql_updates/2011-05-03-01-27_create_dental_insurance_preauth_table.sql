@@ -1,7 +1,7 @@
 CREATE TABLE `dental_insurance_preauth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `patient_id` int(11) NOT NULL,
   `doc_id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL,
   `ins_co` varchar(255) DEFAULT NULL,
   `ins_rank` varchar(255) NOT NULL DEFAULT 'primary',
   `ins_phone` varchar(255) DEFAULT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `dental_insurance_preauth` (
   `in_network_percentage` int(11) DEFAULT NULL,
   `in_network_appeal_date_sent` varchar(255) DEFAULT NULL,
   `in_network_appeal_date_received` varchar(255) DEFAULT NULL,
-  `is_pre_auth_required` int(1) NOT NULL DEFAULT '0',
+  `is_pre_auth_required` int(1) DEFAULT '0',
   `verbal_pre_auth_name` varchar(255) DEFAULT NULL,
   `verbal_pre_auth_ref_num` varchar(255) DEFAULT NULL,
   `verbal_pre_auth_notes` text,
@@ -52,5 +52,15 @@ CREATE TABLE `dental_insurance_preauth` (
   `written_pre_auth_date_received` varchar(255) DEFAULT NULL,
   `front_office_request_date` datetime DEFAULT NULL,
   `status` int(1) DEFAULT '0',
+  `patient_deductible` decimal(11,2) DEFAULT NULL,
+  `patient_amount_met` decimal(11,2) DEFAULT NULL,
+  `family_deductible` decimal(11,2) DEFAULT NULL,
+  `family_amount_met` decimal(11,2) DEFAULT NULL,
+  `deductible_reset_date` varchar(255) DEFAULT NULL,
+  `out_of_pocket_met` int(1) NOT NULL DEFAULT '0',
+  `patient_amount_left_to_meet` decimal(11,2) DEFAULT NULL,
+  `expected_insurance_payment` decimal(11,2) DEFAULT NULL,
+  `expected_patient_payment` decimal(11,2) DEFAULT NULL,
+  `network_benefits` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;

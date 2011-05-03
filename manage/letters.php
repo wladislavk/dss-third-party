@@ -240,7 +240,7 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
     $sentto = $dental_letters[$i]['sentto'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
     if ($dental_letters[$i]['old']) {
-      $alert = " bgcolor=\"#F44E4E\"";
+      $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;
     }

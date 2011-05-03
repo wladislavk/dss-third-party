@@ -213,6 +213,7 @@ foreach ($letter_contacts as $key => $contact) {
 	
  	if ($new_template[$key] != null) {
 	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);
+		$new_template[$key] = htmlentities($new_template[$key]);
 	} else {
 	  $letter[$key] = str_replace($search, $replace, $template);
  	}

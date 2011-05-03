@@ -1,6 +1,6 @@
 <?php include 'includes/top.htm';
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
+/*$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
 $form_my = mysql_query($form_sql);
 $form_myarray = mysql_fetch_array($form_my);
 
@@ -30,7 +30,7 @@ if($pat_myarray['patientid'] == '')
 	</script>
 	<?
 	die();
-}
+}*/
 
 
 ?>

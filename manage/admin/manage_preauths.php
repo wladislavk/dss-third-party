@@ -1,4 +1,5 @@
 <? 
+require_once('../includes/constants.inc');
 include "includes/top.htm";
 
 function insert_preauth_row($patient_id) {
@@ -61,7 +62,7 @@ function insert_preauth_row($patient_id) {
        . "  '" . $my_array['doc_medicare_npi'] . "', "
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
        . "  '" . date('Y-m-d H:i:s') . "', "
-       . "  0 "
+       . DSS_PREAUTH_PENDING
        . ")";
   //print_r($my_array);
   //print_r($sql);exit;

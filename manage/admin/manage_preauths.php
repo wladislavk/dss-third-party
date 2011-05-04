@@ -28,7 +28,6 @@ function insert_preauth_row($patient_id) {
   
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
-//  print_r($my_array);exit;
   
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -65,8 +64,6 @@ function insert_preauth_row($patient_id) {
        . "  '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
-  //print_r($my_array);
-  //print_r($sql);exit;
   $my = mysql_query($sql);
 }
 
@@ -97,14 +94,22 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.front_office_request_date, users.name as doc_name from dental_insurance_preauth preauth join dental_users users on preauth.doc_id = users.userid where preauth.status = 0 order by front_office_request_date";
+$sql = "select "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name "
+     . "from "
+     . "  dental_insurance_preauth preauth "
+     . "  join dental_users users on preauth.doc_id = users.userid "
+     . "where "
+     . "  preauth.status = " . DSS_PREAUTH_PENDING . " "
+     . "order by "
+     . "  preauth.front_office_request_date asc";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

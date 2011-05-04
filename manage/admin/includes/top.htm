@@ -1,17 +1,20 @@
 <? 
 session_start();
-require_once('includes/config.php');
-include("includes/sescheck.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/config.php');
+include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Admin </title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<script language="javascript" src="calendar.js"></script>
-<link href="calendar.css" rel="stylesheet" type="text/css">
+<link href="/manage/admin/css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="/manage/admin/script/validation.js"></script>
+<script language="javascript" src="/manage/admin/calendar.js"></script>
+<!-- You can load the jQuery library from the Google Content Network.
+  Probably better than from your own server. -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<link href="/manage/admin/calendar.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
@@ -25,142 +28,142 @@ include("includes/sescheck.php");
     	<table width="98%" border="0" align="right" cellpadding="0" cellspacing="0">
             <tr>
                 <td>
-                	<a href="changepassword.php" class="<? if(strpos($_SERVER['PHP_SELF'],'changepassword.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Password</a>
+                	<a href="/manage/admin/changepassword.php" class="<? if(strpos($_SERVER['PHP_SELF'],'changepassword.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Password</a>
                     
-                	<a href="manage_users.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_users.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Users</a>
+                	<a href="/manage/admin/manage_users.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_users.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Users</a>
                     
-                    <a href="manage_pages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_pages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pages</a>
+                    <a href="/manage/admin/manage_pages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_pages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pages</a>
                     
-                    <a href="manage_patient.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_patient.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Patient</a>
+                    <a href="/manage/admin/manage_patient.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_patient.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Patient</a>
                     
-                    <!--<a href="manage_login.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_login.php') === false) echo "leftnav"; else echo "left_active"; ?>">Login Detail</a> -->
+                    <!--<a href="/manage/admin/manage_login.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_login.php') === false) echo "leftnav"; else echo "left_active"; ?>">Login Detail</a> -->
 					
                     
                     <hr size="1" />
 
-                    <a href="manage_letters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_letters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Letters</a>
+                    <a href="/manage/admin/manage_letters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_letters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Letters</a>
 
-                    <a href="manage_preauths.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_preauths.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pre-Authorizations</a>
+                    <a href="/manage/admin/manage_preauths.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_preauths.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Pre-Authorizations</a>
 
-                    <a href="manage_claims.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_claims.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Claims</a>
+                    <a href="/manage/admin/manage_claims.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_claims.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Claims</a>
 
-                    <a href="manage_new_patient_calls.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_new_patient_calls.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage New Patient Calls</a>
+                    <a href="/manage/admin/manage_new_patient_calls.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_new_patient_calls.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage New Patient Calls</a>
 
-                    <a href="manage_franchisee_analysis.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_franchisee_analysis.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Franchisee Analysis</a>
+                    <a href="/manage/admin/manage_franchisee_analysis.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_franchisee_analysis.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Franchisee Analysis</a>
 
                     <hr size="1" />
                     
-                    <a href="manage_complaint.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_complaint.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Chief Complaint</a>
+                    <a href="/manage/admin/manage_complaint.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_complaint.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Chief Complaint</a>
                     
-                    <a href="manage_epworth.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_epworth.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Epworth</a>
+                    <a href="/manage/admin/manage_epworth.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_epworth.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Epworth</a>
                     
-                    <a href="manage_intolerance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_intolerance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage CPAP Intolerance</a>
+                    <a href="/manage/admin/manage_intolerance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_intolerance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage CPAP Intolerance</a>
                     
-                    <a href="manage_allergens.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_allergens.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Allergens</a>
+                    <a href="/manage/admin/manage_allergens.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_allergens.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Allergens</a>
                     
-                    <a href="manage_medications.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_medications.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Medications</a>
+                    <a href="/manage/admin/manage_medications.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_medications.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Medications</a>
                     
-                    <a href="manage_history.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_history.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Medical History</a>
+                    <a href="/manage/admin/manage_history.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_history.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Medical History</a>
                     
                     <br />
-                    <a href="manage_tongue.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_tongue.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Tongue Evaluation</a>
+                    <a href="/manage/admin/manage_tongue.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_tongue.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Tongue Evaluation</a>
                     
-                    <a href="manage_uvula.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_uvula.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Uvula</a>
+                    <a href="/manage/admin/manage_uvula.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_uvula.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Uvula</a>
                     
-                    <a href="manage_soft_palate.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_soft_palate.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Soft Palate</a>
+                    <a href="/manage/admin/manage_soft_palate.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_soft_palate.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Soft Palate</a>
                     
-                    <a href="manage_gag_reflex.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_gag_reflex.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Gag Reflex</a>
+                    <a href="/manage/admin/manage_gag_reflex.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_gag_reflex.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Gag Reflex</a>
                     
-                    <a href="manage_nasal_passages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_nasal_passages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Nasal Passages</a>
+                    <a href="/manage/admin/manage_nasal_passages.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_nasal_passages.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Nasal Passages</a>
                     
-                    <a href="manage_maxilla.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_maxilla.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Maxilla</a>
+                    <a href="/manage/admin/manage_maxilla.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_maxilla.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Maxilla</a>
                     
-                    <a href="manage_mandible.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_mandible.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Mandible</a>
+                    <a href="/manage/admin/manage_mandible.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_mandible.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Mandible</a>
                     
-                    <a href="manage_exam_teeth.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_exam_teeth.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Teeth Examination</a>
+                    <a href="/manage/admin/manage_exam_teeth.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_exam_teeth.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Teeth Examination</a>
                     
-                    <a href="manage_palpation.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_palpation.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Palpation</a>
+                    <a href="/manage/admin/manage_palpation.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_palpation.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Palpation</a>
                     
-                    <a href="manage_joint_exam.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_joint_exam.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Joint Examination</a>
+                    <a href="/manage/admin/manage_joint_exam.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_joint_exam.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Joint Examination</a>
                     
-                    <a href="manage_joint.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_joint.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Joint</a>
+                    <a href="/manage/admin/manage_joint.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_joint.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Joint</a>
                     
-                    <!--<a href="manage_range_motion.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_range_motion.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Range Motion</a>
+                    <!--<a href="/manage/admin/manage_range_motion.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_range_motion.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Range Motion</a>
                     
-                    <a href="manage_screening.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_screening.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Screening</a> -->
+                    <a href="/manage/admin/manage_screening.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_screening.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Screening</a> -->
                     
-                    <a href="manage_diagnostic.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_diagnostic.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Diagnostic Test</a>
+                    <a href="/manage/admin/manage_diagnostic.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_diagnostic.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Diagnostic Test</a>
                     
-                    <a href="manage_assessment.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_assessment.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Assessment</a>
+                    <a href="/manage/admin/manage_assessment.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_assessment.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Assessment</a>
                     
-                    <a href="manage_assess_addition.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_assess_addition.php') === false) echo "leftnav"; else echo "left_active"; ?>">Assessment Addition</a>
+                    <a href="/manage/admin/manage_assess_addition.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_assess_addition.php') === false) echo "leftnav"; else echo "left_active"; ?>">Assessment Addition</a>
                     
-                    <a href="manage_consultation.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_consultation.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Consultation</a>
+                    <a href="/manage/admin/manage_consultation.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_consultation.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Consultation</a>
                     
-                    <a href="manage_evaluation_new.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_evaluation_new.php') === false) echo "leftnav"; else echo "left_active"; ?>">Evaluation New</a>
+                    <a href="/manage/admin/manage_evaluation_new.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_evaluation_new.php') === false) echo "leftnav"; else echo "left_active"; ?>">Evaluation New</a>
                     
-                    <a href="manage_evaluation_est.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_evaluation_est.php') === false) echo "leftnav"; else echo "left_active"; ?>">Evaluation Established</a>
+                    <a href="/manage/admin/manage_evaluation_est.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_evaluation_est.php') === false) echo "leftnav"; else echo "left_active"; ?>">Evaluation Established</a>
                     
-                    <a href="manage_device.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_device.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Device</a>
+                    <a href="/manage/admin/manage_device.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_device.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Device</a>
                     
-                    <a href="manage_followup.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_followup.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Follow Up</a>
+                    <a href="/manage/admin/manage_followup.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_followup.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Follow Up</a>
 					
-					<a href="manage_plan_text.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_plan_text.php') === false) echo "leftnav"; else echo "left_active"; ?>">Plan/Progress Text</a>
+					<a href="/manage/admin/manage_plan_text.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_plan_text.php') === false) echo "leftnav"; else echo "left_active"; ?>">Plan/Progress Text</a>
                     
                     <br />
                     <hr size="1" />
                     
-                    <a href="manage_qualifier.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_qualifier.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Qualifier</a>
+                    <a href="/manage/admin/manage_qualifier.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_qualifier.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Qualifier</a>
 					
-					<a href="manage_ins_diagnosis.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_ins_diagnosis.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance Diagnosis</a>
+					<a href="/manage/admin/manage_ins_diagnosis.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_ins_diagnosis.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance Diagnosis</a>
 					
-					<a href="manage_place_service.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_place_service.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Place of Service</a>
+					<a href="/manage/admin/manage_place_service.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_place_service.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Place of Service</a>
 					
-					<a href="manage_type_service.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_type_service.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Type of Service</a>
+					<a href="/manage/admin/manage_type_service.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_type_service.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Type of Service</a>
 					
-					<a href="manage_cpt_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_cpt_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage CPT Code</a>
+					<a href="/manage/admin/manage_cpt_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_cpt_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage CPT Code</a>
 					
-					<a href="manage_modifier_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_modifier_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Modifier Code</a>
+					<a href="/manage/admin/manage_modifier_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_modifier_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Modifier Code</a>
 					
-					<a href="manage_ins_type.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_ins_type.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance Type</a>
+					<a href="/manage/admin/manage_ins_type.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_ins_type.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Insurance Type</a>
                     
-                    <a href="manage_contacttype.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_contacttype.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Contact Type</a>
-                    <a href="manage_fcontact.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_fcontact.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Corporate Contacts</a>
+                    <a href="/manage/admin/manage_contacttype.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_contacttype.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Contact Type</a>
+                    <a href="/manage/admin/manage_fcontact.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_fcontact.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Corporate Contacts</a>
 					
-					<a href="manage_imagetype.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_imagetype.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Image Type</a>
+					<a href="/manage/admin/manage_imagetype.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_imagetype.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Image Type</a>
                     
-                    <a href="manage_log.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_log.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Login Data</a>
+                    <a href="/manage/admin/manage_log.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_log.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Login Data</a>
 					
 					<br />
                     <hr size="1" />
                     
-                    <a href="manage_doc_welcome.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_welcome.php') === false) echo "leftnav"; else echo "left_active"; ?>">Welcome Information</a>
+                    <a href="/manage/admin/manage_doc_welcome.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_welcome.php') === false) echo "leftnav"; else echo "left_active"; ?>">Welcome Information</a>
 					
-					<a href="manage_doc_operationsman.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_operationsman.php') === false) echo "leftnav"; else echo "left_active"; ?>">Operations Manual</a>
+					<a href="/manage/admin/manage_doc_operationsman.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_operationsman.php') === false) echo "leftnav"; else echo "left_active"; ?>">Operations Manual</a>
           
-          <a href="manage_doc_marketing.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_marketing.php') === false) echo "leftnav"; else echo "left_active"; ?>">Marketing Materials</a>
+          <a href="/manage/admin/manage_doc_marketing.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_marketing.php') === false) echo "leftnav"; else echo "left_active"; ?>">Marketing Materials</a>
 					
-					<a href="manage_doc_educational.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_educational.php') === false) echo "leftnav"; else echo "left_active"; ?>">Educational Materials</a>
+					<a href="/manage/admin/manage_doc_educational.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_educational.php') === false) echo "leftnav"; else echo "left_active"; ?>">Educational Materials</a>
 					
-					<a href="manage_doc_newsletters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_newsletters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Newsletters</a>
+					<a href="/manage/admin/manage_doc_newsletters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_newsletters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Newsletters</a>
 					
-					<a href="manage_doc_qna.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_qna.php') === false) echo "leftnav"; else echo "left_active"; ?>">Health Questionnaires</a>
+					<a href="/manage/admin/manage_doc_qna.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_qna.php') === false) echo "leftnav"; else echo "left_active"; ?>">Health Questionnaires</a>
 					
-					<a href="manage_doc_misc.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_misc.php') === false) echo "leftnav"; else echo "left_active"; ?>">Miscellaneous Files</a>
+					<a href="/manage/admin/manage_doc_misc.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_misc.php') === false) echo "leftnav"; else echo "left_active"; ?>">Miscellaneous Files</a>
 					
-					<a href="manage_doc_lab.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_lab.php') === false) echo "leftnav"; else echo "left_active"; ?>">Dental Appliance Lab Info</a>
+					<a href="/manage/admin/manage_doc_lab.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_lab.php') === false) echo "leftnav"; else echo "left_active"; ?>">Dental Appliance Lab Info</a>
 					
-					<a href="manage_doc_insurance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_insurance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Insurance Information</a>
-					
-					<br />
-					<hr size="1" />
-					
-					<a href="manage_transaction_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_transaction_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Default Transaction Codes</a>
-                                        <a href="manage_doctor_transaction_code_list.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_transaction_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Doctor Transaction Codes</a>
+					<a href="/manage/admin/manage_doc_insurance.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_doc_insurance.php') === false) echo "leftnav"; else echo "left_active"; ?>">Insurance Information</a>
 					
 					<br />
 					<hr size="1" />
-                    <a href="logout.php" class="leftnav">Logout</a>
+					
+					<a href="/manage/admin/manage_transaction_code.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_transaction_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Default Transaction Codes</a>
+                                        <a href="/manage/admin/manage_doctor_transaction_code_list.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_transaction_code.php') === false) echo "leftnav"; else echo "left_active"; ?>">Doctor Transaction Codes</a>
+					
+					<br />
+					<hr size="1" />
+                    <a href="/manage/admin/logout.php" class="leftnav">Logout</a>
                 </td>
             </tr>
         </table>

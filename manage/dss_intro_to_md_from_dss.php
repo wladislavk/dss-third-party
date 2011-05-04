@@ -1,4 +1,9 @@
-<?php include 'includes/top.htm';
+<?php 
+if($_GET['backoffice'] == '1') {
+  include 'admin/includes/top.htm';
+} else {
+  include 'includes/top.htm';
+}
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -132,7 +137,7 @@ George \"Gy\" Yatros, DMD
 </p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$_GET['lid']?>" method="post">
+<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$_GET['lid']?>&backoffice=<?=$_GET['backoffice']?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -226,11 +231,15 @@ foreach ($letter_contacts as $key => $contact) {
     $letterid = $_GET['lid'];
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
-    $letterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		if ($_GET['backoffice'] == '1') {
+			deliver_letter($letterid);
+		} else {
+	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		}
 		if ($parent) {
 			?>
 			<script type="text/javascript">
-				window.location = '/manage/letters.php?status=pending';
+				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
 		}
@@ -249,7 +258,7 @@ foreach ($letter_contacts as $key => $contact) {
 		if ($parent) {
 			?>
 			<script type="text/javascript">
-				window.location = '/manage/letters.php?status=pending';
+				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
 		}
@@ -309,4 +318,11 @@ foreach ($letter_contacts as $key => $contact) {
 </table>
 
 
-<? include 'includes/bottom.htm';?>
+<?php
+if($_GET['backoffice'] == '1') {
+  include 'admin/includes/bottom.htm';
+} else {
+	include 'includes/bottom.htm';
+
+} 
+?>

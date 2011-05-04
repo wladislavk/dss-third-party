@@ -95,7 +95,7 @@ $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
 
 // Letters count and Oldest letter
-$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' ORDER BY generated_date ASC;";
+$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' ORDER BY generated_date ASC;";
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
@@ -104,7 +104,7 @@ $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day)
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -116,7 +116,7 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.delivered = '1' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -152,7 +152,7 @@ foreach ($dental_letters as $key => $letter) {
   $template_res = mysql_query($template_sql);
   $correspondance = array();
   $correspondance = mysql_fetch_assoc($template_res);
-  $dental_letters[$key]['url'] = $correspondance['template'] . "?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'];
+  $dental_letters[$key]['url'] = $correspondance['template'] . "?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'] . "&backoffice=1";
   $dental_letters[$key]['subject'] = $correspondance['name'];
   // Get Recipients for Sent to Column
   $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);

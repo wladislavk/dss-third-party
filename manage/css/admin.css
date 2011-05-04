@@ -1081,3 +1081,6 @@ float:left;
 .clickable_row{
   cursor: pointer;
 }
+.unviewed{
+  background:#ccf;
+}

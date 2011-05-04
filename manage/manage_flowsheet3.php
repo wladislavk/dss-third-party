@@ -1,4 +1,242 @@
 <?php include "includes/top.htm";
+require_once('includes/constants.inc');
+
+
+
+function preauth_allowed(){
+
+  $pa_sql = "SELECT * FROM dental_insurance_preauth WHERE patient_id=".$_GET['pid'];
+  $pa = mysql_query($pa_sql);
+  if(mysql_num_rows($pa)>0)
+    return false;
+
+  $sql = "SELECT "
+       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
+       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+       . "  d.userid as 'doc_id'  "
+       . "FROM "
+       . "  dental_patients p  "
+       . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  JOIN dental_users d ON p.docid = d.userid "
+       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "WHERE "
+       . "  p.patientid = ".$_GET['pid'];
+
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    return false;
+  }
+
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowresult = mysql_query($flowquery);
+if(mysql_num_rows($flowresult) <= 0){
+  return false;
+}else{
+    $flow = mysql_fetch_array($flowresult);
+    $copyreqdate = $flow['copyreqdate'];
+    $referred_by = $flow['referred_by'];
+    $referreddate = $flow['referreddate'];
+    $thxletter = $flow['thxletter'];
+    $queststartdate = $flow['queststartdate'];
+    $questcompdate = $flow['questcompdate'];
+    $insinforec = $flow['insinforec'];
+    $rxreq = $flow['rxreq'];
+    $rxrec = $flow['rxrec'];
+    $lomnreq = $flow['lomnreq'];
+    $lomnrec = $flow['lomnrec'];
+    $clinnotereq = $flow['clinnotereq'];
+    $clinnoterec = $flow['clinnoterec'];
+    $contact_location = $flow['contact_location'];
+    $questsendmeth = $flow['questsendmeth'];
+    $questsender = $flow['questsender'];
+    $refneed = $flow['refneed'];
+    $refneeddate1 = $flow['refneeddate1'];
+    $refneeddate2 = $flow['refneeddate2'];
+    $preauth = $flow['preauth'];
+    $preauth1 = $flow['preauth1'];
+    $preauth2 = $flow['preauth2'];
+    $insverbendate1 = $flow['insverbendate1'];
+    $insverbendate2 = $flow['insverbendate2'];
+}
+
+
+
+    if($copyreqdate == '' || $questcompdate == '' || $referreddate =='' || $thxletter == '' || $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+       return false;
+     }
+
+
+
+return true;
+}
+
+
+function preauth_errors(){
+  $errors = array();
+  $pa_sql = "SELECT * FROM dental_insurance_preauth WHERE patient_id=".$_GET['pid'];
+  $pa = mysql_query($pa_sql);
+  if(mysql_num_rows($pa)>0)
+    array_push($errors, "Already has pre-authorization"); 
+
+  $sql = "SELECT "
+       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
+       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+       . "  d.userid as 'doc_id', tc.transaction_code as 'transaction_code'  "
+       . "FROM "
+       . "  dental_patients p  "
+       . "  LEFT JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  LEFT JOIN dental_users d ON p.docid = d.userid "
+       . "  LEFT JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "WHERE "       . "  p.patientid = ".$_GET['pid'];
+
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing data"); 
+  }else{
+    $a = mysql_fetch_array($my);
+    if($a['transaction_code']!='E0486')
+       array_push($errors, "No transaction code E0486");
+    if($a['ins_co']=='')
+       array_push($errors, "No insurance company");
+
+  }
+
+
+$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
+$flowresult = mysql_query($flowquery);
+if(mysql_num_rows($flowresult) <= 0){
+  array_push($errors, "Doesn't have flowsheet.");
+}else{
+    $flow = mysql_fetch_array($flowresult);
+    $copyreqdate = $flow['copyreqdate'];
+    $referred_by = $flow['referred_by'];
+    $referreddate = $flow['referreddate'];
+    $thxletter = $flow['thxletter'];
+    $queststartdate = $flow['queststartdate'];
+    $questcompdate = $flow['questcompdate'];
+    $insinforec = $flow['insinforec'];
+    $rxreq = $flow['rxreq'];
+    $rxrec = $flow['rxrec'];
+    $lomnreq = $flow['lomnreq'];
+    $lomnrec = $flow['lomnrec'];
+    $clinnotereq = $flow['clinnotereq'];
+    $clinnoterec = $flow['clinnoterec'];
+    $contact_location = $flow['contact_location'];
+    $questsendmeth = $flow['questsendmeth'];
+    $questsender = $flow['questsender'];
+    $refneed = $flow['refneed'];
+    $refneeddate1 = $flow['refneeddate1'];
+    $refneeddate2 = $flow['refneeddate2'];
+    $preauth = $flow['preauth'];
+    $preauth1 = $flow['preauth1'];
+    $preauth2 = $flow['preauth2'];
+    $insverbendate1 = $flow['insverbendate1'];
+    $insverbendate2 = $flow['insverbendate2'];
+}
+
+
+
+    if($copyreqdate == '' || $questcompdate == '' || $referreddate =='' || $thxletter == '' || $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+       array_push($errors, "Medical insurance dates are not filled out."); 
+     }
+
+
+
+return $errors;
+}
+
+
+
+if(isset($_GET['pid']) && isset($_GET['preauth'])){
+
+  $sql = "SELECT "
+       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
+       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+       . "  d.userid as 'doc_id'  "
+       . "FROM "
+       . "  dental_patients p  "
+       . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  JOIN dental_users d ON p.docid = d.userid "
+       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "WHERE "
+       . "  p.patientid = ".$_GET['pid'];
+
+  $my = mysql_query($sql);
+  $my_array = mysql_fetch_array($my);
+  //print_r($my_array);exit;
+
+  $sql = "INSERT INTO dental_insurance_preauth ("
+       . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
+       . "  patient_ins_id, patient_firstname, patient_lastname, patient_add1, "
+       . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
+       . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
+       . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
+       . "  front_office_request_date, status "
+       . ") VALUES ("
+       . "  " . $_GET['pid'] . ", "
+       . "  " . $my_array['doc_id'] . ", "
+       . "  '" . $my_array['ins_co'] . "', "
+       . "  '" . $my_array['ins_rank'] . "', "
+       . "  '" . $my_array['ins_phone'] . "', "
+       . "  '" . $my_array['patient_ins_group_id'] . "', "
+       . "  '" . $my_array['patient_ins_id'] . "', "
+       . "  '" . $my_array['patient_firstname'] . "', "
+       . "  '" . $my_array['patient_lastname'] . "', "
+       . "  '" . $my_array['patient_add1'] . "', "
+       . "  '" . $my_array['patient_add2'] . "', "
+       . "  '" . $my_array['patient_city'] . "', "
+       . "  '" . $my_array['patient_state'] . "', "
+       . "  '" . $my_array['patient_zip'] . "', "
+       . "  '" . $my_array['patient_dob'] . "', "
+       . "  '" . $my_array['insured_first_name'] . "', "
+       . "  '" . $my_array['insured_last_name'] . "', "
+       . "  '" . $my_array['insured_dob'] . "', "
+       . "  '" . $my_array['doc_npi'] . "', "
+       . "  '" . $my_array['referring_doc_npi'] . "', "
+       . "  " . $my_array['trxn_code_amount'] . ", "
+       . "  '" . $my_array['diagnosis_code'] . "', "
+       . "  '" . $my_array['doc_medicare_npi'] . "', "
+       . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
+       . "  '" . date('Y-m-d H:i:s') . "', "
+       . DSS_PREAUTH_PENDING
+       . ")";
+  //print_r($my_array);
+  //print_r($sql);exit;
+  $my = mysql_query($sql);
+}
+
+
+
+
 
 // Todo add $stepid to each segment so that it can be passed to the letter triggers
 function trigger_letter8($pid) {
@@ -156,7 +394,6 @@ $message = "There is no started flowsheet for the current patient.";
     $insverbendate1 = $flow['insverbendate1'];
     $insverbendate2 = $flow['insverbendate2'];
 }
-
 
 
 if(isset($_POST['flowsubmit'])){
@@ -1382,6 +1619,22 @@ N/A
 -->
 
 <!-- START MED INS CORP TABLE -->
+
+
+
+<?php 
+$errors = preauth_errors();
+if(count($errors)>0){ 
+$e_text = 'Unable to request pre-authorization:\n';
+foreach($errors as $e){
+$e_text .= '\n'.$e;
+}
+
+?>
+ <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Pre-authorization</a>
+<? }else{ ?>
+ <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Pre-authorization</a>
+<?php } ?>
 <input type="submit" class="addButton" style="float:right;margin-right:20px;" name="flowsubmit" value="Update Flowsheet">
 <br /><br />
 

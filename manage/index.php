@@ -88,6 +88,17 @@ echo $memo_array['memo'] . "<br /><hr />";
     </td></tr>
   </table>
 
+  <br />
+
+  <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
+  <tr><td valign="top"><h2>Pre-authorizations (<?php echo $num_pending_preauth; ?>/<?php echo $num_preauth; ?>)</h2></td></tr>
+  <tr>
+    <td style="border:1px solid;"><p><strong>You have <span class="blue"><?php echo $num_pending_preauth; ?></span> pending insurance pre-authorizations.</strong></p>
+              <p><strong>You have <span class="blue"><?php echo $num_preauth; ?></span> new completed insurance pre-authorizations.</strong></p>
+    </td></tr>
+  </table>
+
+
 
   <br /><br />
 

@@ -217,6 +217,17 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
   }
 }
 
+function deliver_letter($letterid, $message) {
+	if (!isset($letterid)) {
+		return false;
+	} else {
+		// Todo Email, Fax, Print Letter
+		// Create PDF
+		$letter_query = "UPDATE dental_letters SET delivered='1' WHERE letterid='".$letterid."';";
+		$letter_result = mysql_query($letter_query);
+	}
+}
+
 function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
 		return false;

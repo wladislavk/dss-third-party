@@ -17,6 +17,13 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
+
+if(isset($_REQUEST['preauthid'])){
+
+$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status=1",$_REQUEST['preauthid'], $_REQUEST['pid'], $_SESSION['docid']);
+mysql_query($s);
+}
+
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
@@ -166,6 +173,90 @@ $num_users=mysql_num_rows($my);
 	}?>
 </table>
 </insurance>
+
+<br/><br/>
+
+<?php
+$sql = "SELECT "
+     . "  * "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "  AND STATUS = " . DSS_PREAUTH_COMPLETE . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$my = mysql_query($sql) or die(mysql_error());
+?>
+<div style="margin:auto; width:98%">
+  <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" >
+    <tr class="tr_bg_h">
+      <th colspan="2" valign="top" class="col_head">
+        Patient Insurance Pre-Authorization Information
+      </th>
+    </tr>
+	<? if (mysql_num_rows($my) == 0) { ?>
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+          No completed pre-authorizations on record.
+        </td>
+      </tr>
+	<?php } else { ?> 
+      <?php while ($preauth = mysql_fetch_array($my)) { ?>
+        <tr class="tr_bg">
+          <td>Benefits</td>
+          <td>
+            <?php $out_checked = ($preauth['network_benefits'] == '1') ? 'X' : '&nbsp;&nbsp;'; ?>
+            <?php $in_checked  = ($preauth['network_benefits'] != '1') ? 'X' : '&nbsp;&nbsp;'; ?>
+            (<?= $out_checked ?>) Out of network<br/>
+            (<?= $in_checked ?>) In Network
+          </td>
+        </tr>
+        <tr class="tr_bg">
+          <td>What is the patient's annual deductible?</td>
+          <td>$<?= $preauth['patient_deductible'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Amount met?</td>
+          <td>$<?= $preauth['patient_amount_met'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Amount left to meet?</td>
+          <td>$<?= $preauth['patient_amount_left_to_meet'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>What is the family deductible?</td>
+          <td>$<?= $preauth['family_deductible'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Family amount met?</td>
+          <td>$<?= $preauth['family_amount_met'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>When does the deductible reset?</td>
+          <td><?= $preauth['deductible_reset_date'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Has patient's out of pocket expense been met?</td>
+          <td><?= ($preauth['out_of_pocket_met'] == '0') ? 'No' : 'Yes' ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Device amount?</td>
+          <td>$<?= $preauth['trxn_code_amount'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Expected insurance payment?</td>
+          <td>$<?= $preauth['expected_insurance_payment'] ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Expected patient payment?</td>
+          <td>$<?= $preauth['expected_patient_payment'] ?></td>
+        </tr>
+      <?php } ?>
+    <?php } ?>
+  </table>
+</div>
 
 
 <div id="popupContact" style="width:750px;">

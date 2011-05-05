@@ -1,5 +1,6 @@
 <?php 
 session_start();
+require_once('../includes/constants.inc');
 require_once('includes/config.php');
 include("includes/sescheck.php");
 

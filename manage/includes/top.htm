@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+require_once('includes/constants.inc');
 
 if($_SESSION['userid'] == '')
 {
@@ -50,6 +51,16 @@ $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
 $seconds_per_day = 86400;
 $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
+
+
+// Count Preauths
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
+$preauth_res = mysql_query($preauth_query);
+$num_preauth = mysql_num_rows($preauth_res);
+
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_PENDING.";";
+$preauth_res = mysql_query($preauth_query);
+$num_pending_preauth = mysql_num_rows($preauth_res);
 
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -576,6 +587,8 @@ display:none;
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=pending\");'";}else{echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=sent\");'";}else{echo "href='letters.php?status=sent'";} ?>>Sent Letters</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"new_letter.php\");'";}else{echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_preauths.php\");'";}else{echo "href='manage_preauths.php'";} ?>>Pre-authorizations (<?= $num_pending_preauth; ?>/<?= $num_preauth; ?>)</a></li>
+
   </ul>
 </li>
 

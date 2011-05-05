@@ -1,5 +1,5 @@
 <? 
-require_once('../includes/constants.inc');
+require_once('includes/constants.inc');
 include "includes/top.htm";
 
 function insert_preauth_row($patient_id) {
@@ -28,6 +28,7 @@ function insert_preauth_row($patient_id) {
   
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
+//  print_r($my_array);exit;
   
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
@@ -64,27 +65,11 @@ function insert_preauth_row($patient_id) {
        . "  '" . date('Y-m-d H:i:s') . "', "
        . DSS_PREAUTH_PENDING
        . ")";
+  //print_r($my_array);
+  //print_r($sql);exit;
   $my = mysql_query($sql);
 }
 
-if ($_REQUEST['gen_preauth'] == 1) {
-  insert_preauth_row($_REQUEST['patient_id']);
-}
-
-if($_REQUEST["delid"] != "")
-{
-	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
-	</script>
-	<?
-	die();
-}
 
 $rec_disp = 20;
 
@@ -94,22 +79,14 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select "
-     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
-     . "  preauth.front_office_request_date, users.name as doc_name "
-     . "from "
-     . "  dental_insurance_preauth preauth "
-     . "  join dental_users users on preauth.doc_id = users.userid "
-     . "where "
-     . "  preauth.status = " . DSS_PREAUTH_PENDING . " "
-     . "order by "
-     . "  preauth.front_office_request_date asc";
+$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth WHERE preauth.doc_id = ".$_SESSION['docid']." order by front_office_request_date DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
+
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -128,20 +105,6 @@ $my=mysql_query($sql) or die(mysql_error());
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<div style="border:1px black solid;width:60%;margin:auto;padding:10px">
-<form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-  <div>
-    For dev/testing purposes only. Enter a valid patient id and then submit.
-    A pre-auth request will be generated for them (provided there is valid data in the database).
-    This testing won't be necessary once the pre-auth button is added to the flowsheet pg1.
-    I usually use Suzie Test (pid 16).
-  </div><br/>
-  <input type="text" name="patient_id"/>
-  <input type="hidden" name="page" value="<?=$_REQUEST["page"]?>"/>
-  <input type="hidden" name="gen_preauth" value="1"/>
-  <input type="submit"/>
-</form>
-</div><br/>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -163,7 +126,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			Patient Name
 		</td>
 		<td valign="top" class="col_head" width="35%">
-			Franchisee Name
+			Status	
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -183,7 +146,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
 				<td valign="top">
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
@@ -192,14 +155,11 @@ $my=mysql_query($sql) or die(mysql_error());
                     <?=st($myarray["patient_lastname"]);?> 
 				</td>
 				<td valign="top">
-					<?=st($myarray["doc_name"]);?>&nbsp;
+					<?= ($myarray["status"]==1)?'completed':'pending';?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="Javascript:;" onclick="Javascript: loadPopup('process_preauth.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
-						Edit
-					</a>
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
+					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&preauthid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+						View
 					</a>
 				</td>
 			</tr>

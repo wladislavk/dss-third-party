@@ -275,4 +275,24 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
   }
 }
 
+/**
+ * Returns a mysql resultset resource for dental_users table on success,
+ * false otherwise.
+ */
+function get_franchisees() {
+    $sql = "SELECT * FROM dental_users";
+    return mysql_query($sql);
+}
+
+/**
+ * Returns a mysql resultset resource for dental_patients table on success,
+ * false otherwise.
+ *
+ * @param $franchisee_id Required. Limits the patients returned by
+ *                       the franchisee id.
+ */
+function get_patients($franchisee_id = -1) {
+    $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
+    return mysql_query($sql);
+}
 ?>

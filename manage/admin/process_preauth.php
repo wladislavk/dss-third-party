@@ -72,6 +72,9 @@ if (isset($_REQUEST['ed'])) {
     print "</script>";
 }
 
+$is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
+$disabled = ($is_complete) ? 'DISABLED' : '';
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -399,7 +402,7 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <?php if (empty($preauth['date_of_call'])) { $preauth['date_of_call'] = date('d/m/Y'); } ?>
-                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" /> 
+                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -408,7 +411,7 @@ $(function() {
                 Name of Insurance Representative
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insurance_rep" value="<?=$preauth['insurance_rep']?>" class="tbox" /> 
+                <input type="text" name="insurance_rep" value="<?=$preauth['insurance_rep']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -417,7 +420,7 @@ $(function() {
                 Reference # pertaining to call
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" /> 
+                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -426,7 +429,7 @@ $(function() {
                 Insurance Effective Date
             </td>
             <td valign="top" class="frmdata">
-                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onclick="cal2.popup();" onchange="validateDate('ins_effective_date');" class="tbox" /> 
+                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onclick="cal2.popup();" onchange="validateDate('ins_effective_date');" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -435,8 +438,8 @@ $(function() {
                 Insurance Calendar Year
             </td>
             <td valign="top" class="frmdata">
-                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onclick="cal3.popup();" onchange="validateDate('ins_cal_year_start');" class="tbox" style="width:125px" />
-                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onclick="cal4.popup();" onchange="validateDate('ins_cal_year_end');" class="tbox" style="width:125px" />
+                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onclick="cal3.popup();" onchange="validateDate('ins_cal_year_start');" class="tbox" style="width:125px" <?=$disabled?>/>
+                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onclick="cal4.popup();" onchange="validateDate('ins_cal_year_end');" class="tbox" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -447,11 +450,11 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['trxn_code_covered'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['trxn_code_covered'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="trxn_code_covered" value="1" <?= $yes_checked ?>/> Yes
-                <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?>/> No
+                <input type="radio" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                 <br/><br/>
                 Notes:<br/>
-                <textarea name="code_covered_notes" class="tbox"><?=$preauth['code_covered_notes']?></textarea>
+                <textarea name="code_covered_notes" class="tbox" <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -461,21 +464,21 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['has_out_of_network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
                 <?php $no_checked  = ($preauth['has_out_of_network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
-                <input type="radio" name="has_out_of_network_benefits" value="1" <?= $yes_checked ?>/> Yes
-                <input type="radio" name="has_out_of_network_benefits" value="0" <?= $no_checked ?>/> No
+                <input type="radio" name="has_out_of_network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" name="has_out_of_network_benefits" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                 <br/><br/>
 
                 <div id="has_out_of_network_benefits_yes" class="sub-question">
                   What percent do they pay an "out-of-network" provider?
-                  <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox" />% (enter 0-100)
+                  <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox" <?=$disabled?>/>% (enter 0-100)
                 </div>
                 
                 <div id="has_out_of_network_benefits_no" class="sub-question">
                   Is this an HMO?
                   <?php $yes_checked = ($preauth['is_hmo'] == '1') ? 'CHECKED' : ''; ?>
                   <?php $no_checked  = ($preauth['is_hmo'] != '1') ? 'CHECKED' : ''; ?>
-                  <input type="radio" name="is_hmo" value="1" <?= $yes_checked ?>/> Yes
-                  <input type="radio" name="is_hmo" value="0" <?= $no_checked ?>/> No
+                  <input type="radio" name="is_hmo" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                  <input type="radio" name="is_hmo" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                   
                   <div id="is_hmo_yes" class="sub-question">
                     Call primary care physician to obtain referral:<br/>
@@ -485,35 +488,35 @@ $(function() {
                     <?= $preauth['pcp_phone'] ?><br/>
                     <br/>
                     <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('d/m/Y'); } ?>
-                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox" /><br/>
-                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox" /> <br/>
+                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox" <?=$disabled?>/><br/>
+                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox" <?=$disabled?>/> <br/>
                     <br/>
                     
                     Is it necessary to obtain authorization for appropriate appointments and/or codes (not to be confused with a pre-authorization)?<br/>
                     <?php $yes_checked = ($preauth['hmo_needs_auth'] == '1') ? 'CHECKED' : ''; ?>
                     <?php $no_checked  = ($preauth['hmo_needs_auth'] != '1') ? 'CHECKED' : ''; ?>
-                    <input type="radio" name="hmo_needs_auth" value="1" <?= $yes_checked ?>/> Yes
-                    <input type="radio" name="hmo_needs_auth" value="0" <?= $no_checked ?>/> No
+                    <input type="radio" name="hmo_needs_auth" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                    <input type="radio" name="hmo_needs_auth" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                     <br/><br/>
                     
                     <div id="hmo_needs_auth_yes" class="sub-question">
-                      Date Requested <input id="hmo_auth_date_requested" type="text" name="hmo_auth_date_requested" value="<?=$preauth['hmo_auth_date_requested']?>" onclick="cal7.popup();" onchange="validateDate('hmo_auth_date_requested');" class="tbox" /><br/>
-                      Date Received <input id="hmo_auth_date_received" type="text" name="hmo_auth_date_received" value="<?=$preauth['hmo_auth_date_received']?>" onclick="cal8.popup();" onchange="validateDate('hmo_auth_date_received');" class="tbox" /> 
+                      Date Requested <input id="hmo_auth_date_requested" type="text" name="hmo_auth_date_requested" value="<?=$preauth['hmo_auth_date_requested']?>" onclick="cal7.popup();" onchange="validateDate('hmo_auth_date_requested');" class="tbox" <?=$disabled?>/><br/>
+                      Date Received <input id="hmo_auth_date_received" type="text" name="hmo_auth_date_received" value="<?=$preauth['hmo_auth_date_received']?>" onclick="cal8.popup();" onchange="validateDate('hmo_auth_date_received');" class="tbox" <?=$disabled?>/> 
                     </div>
                     <br/>
                     
                     Notes:<br/>
-                    <textarea name="hmo_auth_notes" class="tbox"><?=$preauth['hmo_auth_notes']?></textarea>
+                    <textarea name="hmo_auth_notes" class="tbox" <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
 
                   <div id="is_hmo_no" class="sub-question">
                     What percent do they pay an "in-network" provider?
-                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox" />% (enter 0-100)
+                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox" <?=$disabled?>/>% (enter 0-100)
                     <br/><br/>
                     Appeal for in network benefits needed.
                     <br/><br/>
-                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox" /><br/>
-                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox" /> 
+                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox" <?=$disabled?>/><br/>
+                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox" <?=$disabled?>/> 
                   </div>
                 </div>
             </td>
@@ -525,19 +528,19 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['is_pre_auth_required'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['is_pre_auth_required'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?>/> Yes
-                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?>/> No
+                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                 <br/><br/>
 
                 <div id="is_pre_auth_required_yes" class="sub-question">
                   <h3>Verbal</h3>
-                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox" /><br/>
-                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox" /><br/>
-                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox"><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
+                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox" <?=$disabled?>/><br/>
+                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox" <?=$disabled?>/><br/>
+                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox" <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
                   
                   <h3>Written</h3>
-                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox" /> <br/>
-                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox"><?=$preauth['written_pre_auth_notes']?></textarea><br/>
+                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox" <?=$disabled?>/> <br/>
+                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
             </td>
         </tr>
@@ -549,8 +552,8 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
                 <?php $no_checked  = ($preauth['network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
-                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?>/> Out of network
-                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?>/> In Network
+                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?>/> Out of network
+                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$disabled?>/> In Network
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -558,7 +561,7 @@ $(function() {
                 Patient Deductible
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox" /> 
+                $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -567,7 +570,7 @@ $(function() {
                 Patient amount met
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox" /> 
+                $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -576,7 +579,7 @@ $(function() {
                 Patient amount left to meet
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" /> 
+                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -585,7 +588,7 @@ $(function() {
                 Familiy Deductible
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox" /> 
+                $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -594,7 +597,7 @@ $(function() {
                 Family amount met
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox" /> 
+                $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -603,7 +606,7 @@ $(function() {
                 When does the deductible reset?
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" /> <br/>
+                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" <?=$disabled?>/> <br/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -614,8 +617,8 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['out_of_pocket_met'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?>/> Yes
-                <input type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?>/> No
+                <input type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?> <?=$disabled?>/> No
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -632,7 +635,7 @@ $(function() {
                 Expected insurance payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" /> 
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -641,7 +644,7 @@ $(function() {
                 Expected patient payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" /> 
+                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -651,7 +654,7 @@ $(function() {
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
-                Mark Complete <input type="checkbox" name="complete" value="1"/>
+                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?>/>
                 <input type="submit" value="Save Pre-Authorization" class="button" />
             </td>
         </tr>

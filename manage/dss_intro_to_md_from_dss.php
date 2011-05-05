@@ -41,25 +41,14 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }*/
-?>
 
+$letterid = mysql_real_escape_string($_GET['lid']);
 
-<br />
-<span class="admin_head">
-	DSS intro to MD from DSS
-</span>
-<br />
-&nbsp;&nbsp;
-<a href="dss_letters.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-<br /><br>
-
-<?php
-//print_r ($_POST);
-
-$letter_query = "SELECT patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$_GET['lid'].";";
+// Select Letter
+$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
 while ($row = mysql_fetch_assoc($letter_result)) {
+  $templateid = $row['templateid'];
   $patientid = $row['patientid'];
   $topatient = $row['topatient'];
   $md_list = $row['md_list'];
@@ -67,6 +56,26 @@ while ($row = mysql_fetch_assoc($letter_result)) {
   $mds = explode(",", $md_list);
   $md_referrals = explode(",", $md_referral_list);
 }
+
+// Get Letter Subject
+$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
+$template_result = mysql_query($template_query);
+$title = mysql_result($template_result, 0);
+?>
+
+
+<br />
+<span class="admin_head">
+	<?php print $title; ?>
+</span>
+<br />
+&nbsp;&nbsp;
+<a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+	<b>&lt;&lt;Back</b></a>
+<br /><br>
+
+<?php
+//print_r ($_POST);
 
 if ($topatient) {
   $contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
@@ -87,12 +96,12 @@ foreach ($contact_info['md_referrals'] as $contact) {
 $numletters = count($letter_contacts);
 $todays_date = date('F d, Y');
 
-$template = "%todays_date%
+$template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
 %practice%<br />
 %addr1%<br />
-%addr2%
+%addr2%<br />
 %city%, %state% %zip%<br />
 </p>
 <p>
@@ -137,7 +146,7 @@ George \"Gy\" Yatros, DMD
 </p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$_GET['lid']?>&backoffice=<?=$_GET['backoffice']?>" method="post">
+<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -207,13 +216,13 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
-        $search[] = '%addr2%';
+  $search[] = '%addr2%';
 	$replace[] = ($contact['add2']) ? "<strong>" . $contact['add2'] . "</strong><br />" : "<!--%addr2%-->";
-        $search[] = '%city%';
+  $search[] = '%city%';
 	$replace[] = "<strong>" . $contact['city'] . "</strong>";
-        $search[] = '%state%';
+  $search[] = '%state%';
 	$replace[] = "<strong>" . $contact['state'] . "</strong>";
-        $search[] = '%zip%';
+  $search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	
  	if ($new_template[$key] != null) {
@@ -228,7 +237,7 @@ foreach ($letter_contacts as $key => $contact) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }
-    $letterid = $_GET['lid'];
+    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
@@ -251,7 +260,6 @@ foreach ($letter_contacts as $key => $contact) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }
-    $letterid = $_GET['lid'];
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
     $letterid = delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);

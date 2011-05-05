@@ -247,8 +247,9 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["doc_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
+				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('process_preauth.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
-						Edit
+						<?= $link_label ?>
 					</a>
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete

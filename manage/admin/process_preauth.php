@@ -656,8 +656,10 @@ $(function() {
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
-                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?>/>
-                <input type="submit" value="Save Pre-Authorization" class="button" />
+                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
+                <?php if (!$is_complete) { ?>
+                  <input type="submit" value="Save Pre-Authorization" class="button" />
+                <?php } ?>
             </td>
         </tr>
     </table>

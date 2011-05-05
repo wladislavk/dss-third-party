@@ -220,7 +220,7 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
   	</form>
   </div>
 </div>
-<div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&sort=$sort&sortdir=$sortdir"); ?></div>
+<div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">

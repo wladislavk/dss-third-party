@@ -434,7 +434,7 @@ if(isset($_POST['flowsubmit'])){
       }  
 
 	
-      // Generate Initital Contact Letters
+      // Generate Initital Contact Letters: Letter 5 and Letter 6
       $letter1id = '5';
       $letter2id = '6';
       $stepid = '1';
@@ -559,15 +559,17 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 		  
 		// echo print_r($posqsoResultFinal);
 		// exit();
-		  
+
+/* it doesn't seem like we need to update segments_order for the flowsheet to work		  
 		  foreach($posqsoResultFinal as $key => $value)
           {
 			if($value < $_POST['stepselectedsubmit'])
             {
 				$fnew_key = $value++;			
 				
-				$updatecurrpos = "UPDATE `segments_order` SET `".$key."` = ".$fnew_key." WHERE `".$key."` != 'patientid'";
-	             
+				$updatecurrpos = "UPDATE `segments_order` SET `".$key."` = '".$fnew_key."' WHERE `".$key."` != 'patientid'";
+ 				print "[".$fnew_key."]<br />";
+	      print $updatecurrpos . "<br /><br />";       
 	             /*
 	             "UPDATE `segments_order` SET `consultrow` = '1',
 `sleepstudyrow` = '2',
@@ -580,7 +582,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 `starttreatmentrow` = '9',
 `annualrecallrow` = '10',
 `impressionrow` = '11' WHERE `segments_order`.`patientid` = '16';"
-	             */
+	             //*
 	             
 	             $currpos = mysql_query($updatecurrpos);
 				 
@@ -590,21 +592,19 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 						echo $error."5";
               		}
            	 }
-          }
-          			
+          } */
+          /* //dental_flow_pg2 doesn't contain the column that $_POST['formsegment'] contains			
     			$updatesegments = "UPDATE `dental_flow_pg2` SET `".$_POST['formsegment']."` = 2";
     			if(!mysql_query($updatesegments)){
-    			echo "error updating order";
-    			$error = "MySQL error ".mysql_errno().": ".mysql_error();
-			echo $error."6";
-    			}
-         }       
-
-      
-			
+    				echo "error updating order";
+						print $updatesegments;
+    				$error = "MySQL error ".mysql_errno().": ".mysql_error();
+						echo $error."6";
+    			} */
+         }       	
 		}
 	}
-	updateflowsheet2($_POST['patientid'], $_POST['stepselectedsubmit']);
+	updateflowsheet2($_GET['pid'], $_POST['stepselectedsubmit']);
 	?>
 	<script type="text/javascript">
 		window.location.href='manage_flowsheet3.php?page=page2&pid='+<?php echo($_GET['pid']); ?>+'&addtopat=1';		

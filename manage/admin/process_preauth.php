@@ -26,21 +26,21 @@ if (isset($_REQUEST['ed'])) {
          . "ins_effective_date = '".s_for($_POST["ins_effective_date"])."', "
          . "ins_cal_year_start = '".s_for($_POST["ins_cal_year_start"])."', "
          . "ins_cal_year_end = '".s_for($_POST["ins_cal_year_end"])."', "
-         . "trxn_code_covered = " . $_POST["trxn_code_covered"] . ", "
+         . "trxn_code_covered = '" . $_POST["trxn_code_covered"] . "', "
          . "code_covered_notes = '".s_for($_POST["code_covered_notes"])."', "
-         . "has_out_of_network_benefits = " . $_POST["has_out_of_network_benefits"] . ", "
+         . "has_out_of_network_benefits = '" . $_POST["has_out_of_network_benefits"] . "', "
          . "out_of_network_percentage = '" . $_POST["out_of_network_percentage"] . "', "
-         . "is_hmo = " . $_POST["is_hmo"] . ", "
+         . "is_hmo = '" . $_POST["is_hmo"] . "', "
          . "hmo_date_called = '".s_for($_POST["hmo_date_called"])."', "
          . "hmo_date_received = '".s_for($_POST["hmo_date_received"])."', "
-         . "hmo_needs_auth = " . $_POST["hmo_needs_auth"] . ", "
+         . "hmo_needs_auth = '" . $_POST["hmo_needs_auth"] . "', "
          . "hmo_auth_date_requested = '".s_for($_POST["hmo_auth_date_requested"])."', "
          . "hmo_auth_date_received = '".s_for($_POST["hmo_auth_date_received"])."', "
          . "hmo_auth_notes = '".s_for($_POST["hmo_auth_notes"])."', "
          . "in_network_percentage = '" . $_POST["in_network_percentage"] . "', "
          . "in_network_appeal_date_sent = '".s_for($_POST["in_network_appeal_date_sent"])."', "
          . "in_network_appeal_date_received = '".s_for($_POST["in_network_appeal_date_received"])."', "
-         . "is_pre_auth_required = " . $_POST["is_pre_auth_required"] . ", "
+         . "is_pre_auth_required = '" . $_POST["is_pre_auth_required"] . "', "
          . "verbal_pre_auth_name = '".s_for($_POST["verbal_pre_auth_name"])."', "
          . "verbal_pre_auth_ref_num = '".s_for($_POST["verbal_pre_auth_ref_num"])."', "
          . "verbal_pre_auth_notes = '".s_for($_POST["verbal_pre_auth_notes"])."', "
@@ -59,6 +59,8 @@ if (isset($_REQUEST['ed'])) {
     
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
+    } else {
+        $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
     }
     
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";

@@ -129,7 +129,7 @@ $template = "<p>%todays_date%</p>
 Dr. %franchisee_fullname%</p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {

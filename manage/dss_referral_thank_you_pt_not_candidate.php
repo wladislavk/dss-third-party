@@ -13,6 +13,7 @@ if($form_myarray['formid'] == '')
 	<?
 	die();
 }
+print $form_myarray['patientid'];
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -111,7 +112,7 @@ $rdi = st($q2_myarray['rdi']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 $custom_diagnosis = st($q2_myarray['custom_diagnosis']);
-
+print $sleep_study_on;
 
 $sleeplab_sql = "select * from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."'";
 $sleeplab_my = mysql_query($sleeplab_sql);

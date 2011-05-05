@@ -91,7 +91,7 @@ foreach($history_arr as $val)
 {
 	if(trim($val) <> "")
 	{
-		$his_sql = "select history from dental_history where historyid='".trim($val)."' and status=1 ";
+		$his_sql = "select history from dental_history where historyid='".trim($val)."' and status=1;";
 		$his_my = mysql_query($his_sql);
 		$his_myarray = mysql_fetch_array($his_my);
 		
@@ -117,7 +117,7 @@ foreach($medications_arr as $key => $val)
 {
 	if(trim($val) <> "")
 	{
-		$medications_sql = "select medications from dental_medications where medicationsid='".trim($val)."' and status=1";
+		$medications_sql = "select medications from dental_medications where medicationsid='".trim($val)."' and status=1;";
 		$medications_my = mysql_query($medications_sql);
 		$medications_myarray = mysql_fetch_array($medications_my);
 		
@@ -136,7 +136,7 @@ foreach($medications_arr as $key => $val)
 	}
 }
 
-$q2_sql = "select sleep_center_name, sleep_study_on, confirmed_diagnosis, ahi, type_study from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select sleep_center_name, sleep_study_on, confirmed_diagnosis, custom_diagnosis, ahi, type_study from dental_q_page2 WHERE patientid='".$patientid."';";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $sleep_center_name = st($q2_myarray['sleep_center_name']);
@@ -147,11 +147,16 @@ $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['type_study']);
 
 
-$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."'";
+$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
 $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 
 $sleeplab_name = st($sleeplab_myarray['company']);
+
+// Appointment Date
+$appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
+$appt_result = mysql_query($appt_query);
+$appt_date = date('F d, Y', strtotime(mysql_result($appt_result, 0)));
 
 ?>
 
@@ -208,9 +213,9 @@ $template = "<p>%todays_date%</p>
 
 <p>Dear Dr. %md_lastname%:</p>
 
-<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of [XX]; %he/she% was diagnosed with [Patient's Diagnosis].</p>
+<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %patient_diagnosis%.</p>
 
-<p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  %He/She% is scheduled to begin treatment on [Treatment Start Date].</p>
+<p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  %He/She% is scheduled to begin treatment on %appt_date%.</p>
 
 <p>Thank you again for your confidence and the referral.  We will keep you updated as treatment progresses.</p>
 
@@ -257,6 +262,32 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%patient_dob%";
 		$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
+		$search[] = "%patient_firstname%";
+		$replace[] = "<strong>" . $patient_info['firstname'] . "</strong>";
+		$search[] = "%patient_age%";
+		$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
+		$search[] = "%patient_gender%";
+		$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
+		$search[] = "%His/Her%";
+		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+		$search[] = "%he/she%";
+		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+		$search[] = "%He/She%";
+		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
+		$search[] = "%history%";
+		$replace[] = "<strong>" . $history_disp . "</strong>";
+		$search[] = "%medications%";
+		$replace[] = "<strong>" . $medications_disp . "</strong>";
+		$search[] = "%sleeplab_name%";
+		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+		$search[] = "%type_study%";
+		$replace[] = "<strong>" . $type_study . "</strong>";
+		$search[] = "%ahi%";
+		$replace[] = "<strong>" . $ahi . "</strong>";
+		$search[] = "%patient_diagnosis%";
+		$replace[] = "<strong>" . $confirmed_diagnosis . " " . $custom_diagnosis . "</strong>";
+		$search[] = "%appt_date%";
+		$replace[] = "<strong>" . $appt_date . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -334,6 +365,13 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%type_study%";
 	$replace[] = "<strong>" . $type_study . "</strong>";
+	$search[] = "%ahi%";
+	$replace[] = "<strong>" . $ahi . "</strong>";
+	$search[] = "%patient_diagnosis%";
+	$replace[] = "<strong>" . $confirmed_diagnosis . " " . $custom_diagnosis . "</strong>";
+	$search[] = "%appt_date%";
+	$replace[] = "<strong>" . $appt_date . "</strong>";
+				
 
 
  	if ($new_template[$key] != null) {

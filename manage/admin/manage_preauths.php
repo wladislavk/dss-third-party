@@ -1,6 +1,7 @@
 <? 
-require_once('../includes/constants.inc');
 include "includes/top.htm";
+require_once('../includes/constants.inc');
+require_once "includes/general.htm";
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
@@ -94,16 +95,26 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select "
+$sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
-     . "  preauth.front_office_request_date, users.name as doc_name "
-     . "from "
+     . "  preauth.front_office_request_date, users.name as doc_name, "
+     . "  preauth.status "
+     . "FROM "
      . "  dental_insurance_preauth preauth "
-     . "  join dental_users users on preauth.doc_id = users.userid "
-     . "where "
-     . "  preauth.status = " . DSS_PREAUTH_PENDING . " "
-     . "order by "
-     . "  preauth.front_office_request_date asc";
+     . "  join dental_users users on preauth.doc_id = users.userid ";
+
+if (!empty($_REQUEST['fid'])) {
+    $sql .= "WHERE "
+          . "  users.userid = " . $_REQUEST['fid'] . " ";
+    
+    if (!empty($_REQUEST['pid'])) {
+        $sql .= "AND preauth.patient_id = " . $_REQUEST['pid'] . " ";
+    }
+}
+
+$sql .= "ORDER BY "
+      . "  preauth.status ASC, "
+      . "  preauth.front_office_request_date ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -128,6 +139,8 @@ $my=mysql_query($sql) or die(mysql_error());
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
+
+
 <div style="border:1px black solid;width:60%;margin:auto;padding:10px">
 <form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
   <div>
@@ -143,7 +156,38 @@ $my=mysql_query($sql) or die(mysql_error());
 </form>
 </div><br/>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<div style="width:98%;margin:auto;">
+  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+    Franchisees:
+    <select name="fid">
+      <option value="">Any</option>
+      <?php $franchisees = get_franchisees(); ?>
+      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
+        <?php $selected = ($row['userid'] == $_REQUEST['fid']) ? 'selected' : ''; ?>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
+      <?php } ?>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+
+    <?php if (!empty($_REQUEST['fid'])) { ?>
+      Patients:
+      <select name="pid">
+        <option value="">Any</option>
+        <?php $patients = get_patients($_REQUEST['fid']); ?>
+        <?php while ($row = mysql_fetch_array($patients)) { ?>
+          <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
+          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['firstname'] ?> <?= $row['lastname'] ?></option>
+        <?php } ?>
+      </select>
+      &nbsp;&nbsp;&nbsp;
+    <?php } ?>
+    
+    <input type="submit" value="Filter List"/>
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+  </form>
+</div>
+
+<form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
@@ -159,10 +203,13 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head" width="15%">
 			Requested
 		</td>
-		<td valign="top" class="col_head" width="35%">
+		<td valign="top" class="col_head" width="10%">
+			Status
+		</td>
+		<td valign="top" class="col_head" width="30%">
 			Patient Name
 		</td>
-		<td valign="top" class="col_head" width="35%">
+		<td valign="top" class="col_head" width="30%">
 			Franchisee Name
 		</td>
 		<td valign="top" class="col_head" width="15%">
@@ -172,7 +219,7 @@ $my=mysql_query($sql) or die(mysql_error());
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="4" align="center">
+			<td valign="top" class="col_head" colspan="5" align="center">
 				No Records
 			</td>
 		</tr>
@@ -186,6 +233,11 @@ $my=mysql_query($sql) or die(mysql_error());
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
+				</td>
+				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING) ? "yellow" : "green"; ?>
+				<?php $status_text = ($myarray["status"] == DSS_PREAUTH_PENDING) ? "black" : "white"; ?>
+				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
+					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["patient_firstname"]);?>&nbsp;

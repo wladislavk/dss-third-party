@@ -274,9 +274,9 @@ function popitup(url) {
 function autoselect(selectedOption, updateCompleted)
 {
 if(selectedOption.value=="No")
-updateCompleted[0].checked=true;
+//updateCompleted[0].checked=true;
 else
-updateCompleted[1].checked=true;
+//updateCompleted[1].checked=true;
 }
 </script>
 
@@ -351,7 +351,7 @@ $filename = $_FILES["file"]["name"];
 $random = rand(111111111,999999999);
 $scanext = end(explode('.', $filename));
 $insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."');";
-
+echo $insslquery;
 
 if(!mysql_query($insslquery)){
 echo "Could not add sleep lab, please try again!";

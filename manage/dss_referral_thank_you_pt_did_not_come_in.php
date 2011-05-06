@@ -120,6 +120,7 @@ $todays_date = date('F d, Y');
 $template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
+%practice%<br />
 %addr1%<br />
 %addr2%
 %city%, %state% %zip%</p>

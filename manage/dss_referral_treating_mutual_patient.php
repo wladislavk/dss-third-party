@@ -195,7 +195,7 @@ $template = "<p>%todays_date%</p>
 %md_fullname%<br />
 %practice%<br />
 %addr1%<br />
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </p>
 <table>

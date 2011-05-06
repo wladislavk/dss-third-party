@@ -195,13 +195,13 @@ $template = "<p>%todays_date%</p>
 %md_fullname%<br />
 %practice%<br />
 %addr1%<br />
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </p>
 <table>
   <tr>
 		<td width=\"50px\">Re:</td>
-		<td>%patient_fullname%</td>
+		<td>%patient_fullname% - DENTAL DEVICE TREATMENT RESULTS</td>
 	</tr>
 	<tr>
 		<td width=\"50px\">DOB:</td>
@@ -211,9 +211,63 @@ $template = "<p>%todays_date%</p>
 
 <p>Dear Dr. %md_lastname%:</p>
 
-<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
+<p>We have a mutual patient, %patient_fullname%, a %patient_age% year old %patient_gender% who was diagnosed with %diagnosis% after undergoing %type_study% on [Sleep Test Date] where %he/she% scored an AHI of %ahi% and/or RDI of %rdi%; and spent %O2Sat90%% of the night below 90% O2.</p>
 
-<p>I appreciate your confidence and the referral, but I regret to inform you that %patient_firstname% is not a candidate for dental device therapy.  I have counseled %him/her% to return to your office to discuss other treatment options.</p>
+<p>We delivered [Dental Device Name] device on [Date of Device Delivery], and %he/she% has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study. %patient_firstname%'s results, baseline and post appliance insertion appear below.</p>
+
+<table cellpadding=\"7px\">
+	<tr>
+		<th>OBJECTIVE</th>
+		<th>Before</th>
+		<th>%1ststudy_date%&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		<th>After</th>
+		<th>%2ndstudy_date%</th>
+	</tr>
+	<tr>
+		<td>RDI / AHI</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stRDI/AHI%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndRDI/AHI%</td>
+	</tr>
+	<tr>
+		<td>Low O2</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stLowO2%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndLowO2%</td>
+	</tr>
+	<tr>
+		<td>T O2 &#8804; 90%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stTO290%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndTO290%</td>
+	</tr>
+	<tr>
+		<td>ESS</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stESS%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndESS%</td>
+	</tr>
+	<tr>
+		<th>SUBJECTIVE</th>
+		<td colspan=\"2\" style=\"text-align:center;\"></td>
+		<td colspan=\"2\" style=\"text-align:center;\"></td>
+	</tr>
+	<tr>
+		<td>Snoring</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stSnoring%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndSnoring%</td>
+	</tr>
+	<tr>
+		<td>Energy Level</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stEnergy%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndEnergy%</td>
+	</tr>
+	<tr>
+		<td>Sleep Quality</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%1stQuality%</td>
+		<td colspan=\"2\" style=\"text-align:center;\">%2ndQuality%</td>
+	</tr>
+</table>
+
+<p>%patient_firstname% has been counseled that OSA is a progressive disease and I have stressed the importance of a team healthcare approach and disciplined follow up.   I believe we have reached maximum medical improvement with a dental device, and at this point I plan to refer %patient_firstname% back to your office for further medical care.</p>
+
+<p>Please don’t hesitate to call if you have any questions. I thank you again for the opportunity to participate in this patient’s treatment.</p>
 
 <p>Sincerely,
 <br />
@@ -221,11 +275,11 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  [Patient's Other MD's]</p>";
+cc:  %patient_fullname%</p>";
 
 
 ?>
-<form action="/manage/dss_referral_thank_you_pt_scheduled.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_to_md_pt_treatment_complete.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -268,8 +322,6 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
 		$search[] = "%he/she%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
-		$search[] = "%him/her%";
-		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
 		$search[] = "%He/She%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
 		$search[] = "%history%";
@@ -286,6 +338,18 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$other_mds = "";
+		$count = 1;
+		foreach ($letter_contacts as $index => $md) {
+			if ($key != $index) {
+				$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+				if ($count < $numletters - 1) {
+					$other_mds .= ", ";
+				}	
+				$count++;
+			}
+		}
+		$replace[] = "<strong>" . $other_mds . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -351,12 +415,10 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
 	$search[] = "%His/Her%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
-	$search[] = "%him/her%";
-	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
-	$search[] = "%He/She%";
-	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
 	$search[] = "%he/she%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+	$search[] = "%He/She%";
+	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
   $search[] = "%history%";
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
@@ -371,6 +433,19 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
+	$search[] = "%other_mds%";
+	$other_mds = "";
+  $count = 1;
+	foreach ($letter_contacts as $index => $md) {
+		if ($key != $index) {
+			$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($count < $numletters - 1) {
+				$other_mds .= ", ";
+			}	
+			$count++;
+		}
+	}
+	$replace[] = "<strong>" . $other_mds . "</strong>";
 				
 
 
@@ -394,6 +469,7 @@ foreach ($letter_contacts as $key => $contact) {
 		} else {
 	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
+
 		if ($parent) {
 			?>
 			<script type="text/javascript">

@@ -71,7 +71,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
 
-    if($copyreqdate == '' || $questcompdate == '' || $referreddate =='' || $thxletter == '' || $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if( $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
        return false;
      }
 
@@ -88,44 +88,45 @@ function preauth_errors(){
   if(mysql_num_rows($pa)>0)
     array_push($errors, "Already has pre-authorization"); 
 
-  $sql = "SELECT "
-       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
-       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
-       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
-       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
-       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
-       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
-       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
-       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
-       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-       . "  d.userid as 'doc_id', tc.transaction_code as 'transaction_code'  "
-       . "FROM "
-       . "  dental_patients p  "
-       . "  LEFT JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
-       . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-       . "  LEFT JOIN dental_users d ON p.docid = d.userid "
-       . "  LEFT JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-       . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
-       . "WHERE "       . "  p.patientid = ".$_GET['pid'];
-
+   $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
-    array_push($errors, "Missing data"); 
-  }else{
-    $a = mysql_fetch_array($my);
-    if($a['transaction_code']!='E0486')
-       array_push($errors, "No transaction code E0486");
-    if($a['ins_co']=='')
-       array_push($errors, "No insurance company");
+    array_push($errors, "Missing referral"); 
+  }
+  $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$_GET['pid'];
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing insurance company");
+  }
 
+  $sql = "SELECT * FROM dental_patients p JOIN dental_users d ON p.docid = d.userid WHERE p.patientid=".$_GET['pid'];
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing doctor");
+  }
+
+  $sql = "SELECT * FROM dental_patients p JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' WHERE p.patientid=".$_GET['pid'];
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing transaction code E0486");
+  }
+
+  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing questionnaire page 2");
   }
 
 
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
 if(mysql_num_rows($flowresult) <= 0){
-  array_push($errors, "Doesn't have flowsheet.");
+  array_push($errors, "Doesn\'t have flowsheet.");
 }else{
     $flow = mysql_fetch_array($flowresult);
     $copyreqdate = $flow['copyreqdate'];
@@ -155,8 +156,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-
-    if($copyreqdate == '' || $questcompdate == '' || $referreddate =='' || $thxletter == '' || $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
        array_push($errors, "Medical insurance dates are not filled out."); 
      }
 

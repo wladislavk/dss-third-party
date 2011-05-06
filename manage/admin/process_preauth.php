@@ -146,7 +146,7 @@ $(function() {
     var amountMet  = $('#patient_amount_met').val();
     if (isNaN(deductible)) { deductible = 0; }
     if (isNaN(amountMet))  { amountMet = 0; }
-    $('#patient_amount_left_to_meet').val(deductible - amountMet);
+    $('#patient_amount_left_to_meet').val(parseFloat(deductible - amountMet).toFixed(2));
   }
   
   $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
@@ -154,12 +154,22 @@ $(function() {
   });
   
   function calc_expected_payments() {
+    var debug = false;
+    if (debug) { console.log('calc_expected_payments'); }
+    
     var deviceAmount = $('#trxn_code_amount').val();
     var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
     var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
     var isHmo = $("input[name='is_hmo']:checked").val();
     var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
     var percentagePaid = 0;
+    
+    if (debug) { 
+      console.log('amountLeftToMeet: ' + amountLeftToMeet);
+      console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
+      console.log('isHmo: ' + isHmo);
+      console.log('outOfPocketMet: ' + outOfPocketMet);
+    }
     
     if (hasOutOfNetwork == 1) {
       // percentage from out_of_network_percentage
@@ -172,23 +182,60 @@ $(function() {
       percentagePaid = 0;
     }
     
+    if (debug) { console.log('percentagePaid: ' + percentagePaid); }
+
     if (isNaN(deviceAmount))     { deviceAmount = 0; }
     if (isNaN(percentagePaid))   { percentagePaid = 0; }
     if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
     
     if (outOfPocketMet == 1) {
       $('#expected_insurance_payment').val(deviceAmount);
-      $('#expected_patient_payment').val('0');
+      $('#expected_patient_payment').val('0.00');
+      if (debug) { 
+        console.log('expected_insurance_payment: ' + deviceAmount);
+        console.log('expected_patient_payment: ' + 0.00);
+      }
     } else {
       var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
       var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+      if (debug) { 
+        console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
+        console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
+      }
       $('#expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
       $('#expected_patient_payment').val(expectedPatientPayment.toFixed(2));
     }
+    
+    if (debug) { console.log('-----------------------'); }
   }
   
-  $("#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #out_of_pocket_met").bind("focus blur click", function() {
+  // Fields that should be clear on focus if value is 0
+  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('focus', function() {
+    var value = $(this).val();
+    if (isNaN(value) || (value == 0)) {
+      $(this).val('');
+    }
+  });
+  
+  // Fields that should display two decimal places on blur
+  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('blur', function() {
+    var value = parseFloat($(this).val());
+    if (!isNaN(value)) {
+      $(this).val(value.toFixed(2));
+    }
+  });
+  
+  // Fields that should trigger calculations
+  $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind("mouseup keyup", function() {
     calc_expected_payments();
+  });
+  $("[name='has_out_of_network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
+    calc_expected_payments();
+  });
+  
+  // Fields where the user shouldn't be able to gain focus
+  $('#patient_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
+    $(this).blur();
   });
 });
 </script>
@@ -581,7 +628,7 @@ $(function() {
                 Patient amount left to meet
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" <?=$disabled?>/> 
+                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" style="color:grey" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -608,7 +655,7 @@ $(function() {
                 When does the deductible reset?
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" <?=$disabled?>/> <br/>
+                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" style="color:grey" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -637,7 +684,7 @@ $(function() {
                 Expected insurance payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" <?=$disabled?>/> 
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" style="color:grey" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -646,7 +693,7 @@ $(function() {
                 Expected patient payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" <?=$disabled?>/> 
+                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" style="color:grey" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>

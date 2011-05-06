@@ -136,15 +136,13 @@ foreach($medications_arr as $key => $val)
 	}
 }
 
-$q2_sql = "select sleep_center_name, sleep_study_on, confirmed_diagnosis, custom_diagnosis, ahi, type_study from dental_q_page2 WHERE patientid='".$patientid."';";
+$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
-$sleep_center_name = st($q2_myarray['sleep_center_name']);
-$sleep_study_on = st($q2_myarray['sleep_study_on']);
-$confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
-$custom_diagnosis = st($q2_myarray['custom_diagnosis']);
+$sleep_study_date = st($q2_myarray['date']);
+$diagnosis = st($q2_myarray['diagnosis']);
 $ahi = st($q2_myarray['ahi']);
-$type_study = st($q2_myarray['type_study']);
+$type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
@@ -213,7 +211,7 @@ $template = "<p>%todays_date%</p>
 
 <p>Dear Dr. %md_lastname%:</p>
 
-<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %patient_diagnosis%.</p>
+<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
 
 <p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  %He/She% is scheduled to begin treatment on %appt_date%.</p>
 
@@ -278,14 +276,14 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $history_disp . "</strong>";
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
-		$search[] = "%sleeplab_name%";
-		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+		/*$search[] = "%sleeplab_name%";
+		$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
 		$search[] = "%type_study%";
 		$replace[] = "<strong>" . $type_study . "</strong>";
 		$search[] = "%ahi%";
 		$replace[] = "<strong>" . $ahi . "</strong>";
-		$search[] = "%patient_diagnosis%";
-		$replace[] = "<strong>" . $confirmed_diagnosis . " " . $custom_diagnosis . "</strong>";
+		$search[] = "%diagnosis%";
+		$replace[] = "<strong>" . $diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
@@ -361,14 +359,14 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
-	$search[] = "%sleeplab_name%";
-	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+	/*$search[] = "%sleeplab_name%";
+	$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
 	$search[] = "%type_study%";
 	$replace[] = "<strong>" . $type_study . "</strong>";
 	$search[] = "%ahi%";
 	$replace[] = "<strong>" . $ahi . "</strong>";
-	$search[] = "%patient_diagnosis%";
-	$replace[] = "<strong>" . $confirmed_diagnosis . " " . $custom_diagnosis . "</strong>";
+	$search[] = "%diagnosis%";
+	$replace[] = "<strong>" . $diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
 				

@@ -63,7 +63,7 @@ $template_result = mysql_query($template_query);
 $title = mysql_result($template_result, 0);
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT name, address, city, state, zip FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
+$franchisee_query = "SELECT name, address, city, state, zip, phone FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
@@ -155,7 +155,9 @@ $template = "<p>%todays_date%</p>
 <br />
 <br />
 <br />
-[Treatment Coordinator's Name and contact information.]</p>";
+%franchisee_fullname%<br />
+%franchisee_phone%<br />
+%franchisee_addr%</p>";
 
 ?>
 <form action="/manage/dss_welcome.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
@@ -189,6 +191,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 		$search[] = "%franchisee_addr%";
 		$replace[] = "<strong>" . $franchisee_info['address'] . "<br />" . $franchisee_info['city'] . ", " . $franchisee_info['state'] . " " . $franchisee_info['zip'] . "</strong>";
+		$search[] = "%franchisee_phone%";
+		$replace[] = "<strong>" . $franchisee_info['phone'] . "</strong>";
 		$search[] = "%patient_fullname%";
 		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%patient_dob%";
@@ -258,6 +262,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 	$search[] = "%franchisee_addr%";
 	$replace[] = "<strong>" . $franchisee_info['address'] . "<br />" . $franchisee_info['city'] . ", " . $franchisee_info['state'] . " " . $franchisee_info['zip'] . "</strong>";
+	$search[] = "%franchisee_phone%";
+	$replace[] = "<strong>" . $franchisee_info['phone'] . "</strong>";
 	$search[] = "%patient_fullname%";
 	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%patient_dob%";

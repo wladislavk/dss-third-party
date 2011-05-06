@@ -299,7 +299,6 @@ function trigger_letter13($pid) {
   }
 }
 
-
 function trigger_letter16($pid) {
   $letterid = '16';
   $topatient = '1';

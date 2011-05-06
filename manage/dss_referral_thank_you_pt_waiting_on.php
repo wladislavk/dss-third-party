@@ -268,6 +268,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
 		$search[] = "%His/Her%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+		$search[] = "%his/her%";
+		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
 		$search[] = "%he/she%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
 		$search[] = "%He/She%";
@@ -351,6 +353,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
 	$search[] = "%His/Her%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+	$search[] = "%his/her%";
+	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
 	$search[] = "%he/she%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
 	$search[] = "%He/She%";

@@ -615,121 +615,128 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 }
 
 if(isset($_POST['flowsubmitpgtwo'])){
-    if ($_POST['stepselectedsubmit'] == "6") { // Refused Treatment
-      $letterid = trigger_letter8($_GET['pid']);
-      $letterid = trigger_letter11($_GET['pid']);
-    }
-    if ($_POST['stepselectedsubmit'] == "4") { // Impressions
-      $letterid = trigger_letter9($_GET['pid']);
-      $letterid = trigger_letter13($_GET['pid']);
-    }
-    if ($_POST['stepselectedsubmit'] == "8") { // Follow-Up/Check
-      $trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
-      $trigger_result = mysql_query($trigger_query);
-      $numrows = (mysql_num_rows($trigger_result));
-      if ($numrows > 0) {
-        $letterid = trigger_letter16($_GET['pid']);
-      }
-    }    
-    if ($_POST['stepselectedsubmit'] == "5") { // Delaying Treatment / Waiting
-      $letterid = trigger_letter10($_GET['pid']);
-    }
-    if ($_POST['stepselectedsubmit'] == "9") { // Patient Non Compliant
-      $letterid = trigger_letter17($_GET['pid']);
-    }
-    if ($_POST['stepselectedsubmit'] == "11") { // Treatment Complete
-      $letterid = trigger_letter19($_GET['pid']);
-    }
-    if ($_POST['stepselectedsubmit'] == "13") { // Termination
-      $letterid = trigger_letter25($_GET['pid']);
-    }
+	$segment_query = "SELECT segmentid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
+	$segment_result = mysql_query($segment_query);
+	$laststep = mysql_result($segment_result, 0);
+	$numsteps = count($_POST['data']);
 
-    //print_r($_POST);
-    $pid = $_GET['pid'];
+	$consult_query = "SELECT stepid FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
+	$consult_result = mysql_query($consult_query);
+	$consult_stepid = mysql_result($consult_result, 0);
+	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "6") { // Refused Treatment
+		$letterid = trigger_letter8($_GET['pid']);
+		$letterid = trigger_letter11($_GET['pid']);
+	}
+	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "4") { // Impressions
+		$letterid = trigger_letter9($_GET['pid']);
+		$letterid = trigger_letter13($_GET['pid']);
+	}
+	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "8") { // Follow-Up/Check
+		$trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
+		$trigger_result = mysql_query($trigger_query);
+		$numrows = (mysql_num_rows($trigger_result));
+		if ($numrows > 0) {
+			$letterid = trigger_letter16($_GET['pid']);
+		}
+	}    
+	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "5") { // Delaying Treatment / Waiting
+		$letterid = trigger_letter10($_GET['pid']);
+	}
+	if ($_POST['data'][$numsteps]['datesched'] != "" && $laststep == "9") { // Patient Non Compliant
+		$letterid = trigger_letter17($_GET['pid']);
+	}
+	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "11") { // Treatment Complete
+		$letterid = trigger_letter19($_GET['pid']);
+	}
+	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "13") { // Termination
+		$letterid = trigger_letter25($_GET['pid']);
+	}
 
-    $numsteps = count($_POST['data']);
-    $i = 1; // first step is always 1
-    while ($i <= $numsteps) {
-      $numrows = 0;
-      $select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$pid."' AND stepid = '".$i."';";
-      $select_result = mysql_query($select_query);
-      if(!$select_result) {
-        print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting information from flowsheet during update.";
-        die();
-      }
-      $numrows = mysql_num_rows($select_result);
+	//print_r($_POST);
+	$pid = $_GET['pid'];
 
-      $segmentid = s_for($_POST['data'][$i]['segmentid']);
-      $columns = "patientid, stepid, segmentid";
-      $values = "'$pid', '$i', '$segmentid'";
-      $setstring = "stepid='$i', segmentid='$segmentid'";
-      if ($letterid && $i == $numsteps) {
-        $columns .= ", letterid";
-        $values .= ", '".$letterid."'";
-        $setstring .= ", letterid='$letterid'";
-      }
-      if(isset($_POST['data'][$i]['datesched'])) {
-        $datestring = s_for($_POST['data'][$i]['datesched']);
-        if ($datestring != '') {
-          $dateTime = date_create_from_format("m/d/Y", $datestring);
-          $date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
-        } else {
-          $date = NULL;
-        }
-        $columns .= ", date_scheduled";
-        $values .= ", '$date'";
-        $setstring .= ", date_scheduled='" . $date . "'";
-      }
-      if(isset($_POST['data'][$i]['datecomp'])) {
-        $datestring = s_for($_POST['data'][$i]['datecomp']);
-        if ($datestring != '') {
-          $dateTime = date_create_from_format("m/d/Y", $datestring);
-          $date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
-        } else {
-          $date = NULL;
-        }
-        $columns .= ", date_completed";
-        $values .= ", '$date'";
-        $setstring .= ", date_completed='" . $date . "'";
-      }
+	$i = 1; // first step is always 1
+	while ($i <= $numsteps) {
+		$numrows = 0;
+		$select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$pid."' AND stepid = '".$i."';";
+		$select_result = mysql_query($select_query);
+		if(!$select_result) {
+			print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting information from flowsheet during update.";
+			die();
+		}
+		$numrows = mysql_num_rows($select_result);
 
-      if ($numrows == 0) {
-        $insertquery = "INSERT INTO dental_flow_pg2_info (".$columns.") VALUES (".$values.");";
-        $result = mysql_query($insertquery);
-        if(!$result) {
-          print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting new information into flowsheet during update.";
-          die();
-        }
-      } else {
-        $updatequery = "UPDATE dental_flow_pg2_info SET ".$setstring." WHERE patientid='".$pid."' AND stepid='".$i."';";
-        $result = mysql_query($updatequery);
-        if(!$result) {
-          print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating new information into flowsheet during update.";
-          die();
-        }
-      }
-      $i++;
-    }
-    //die();
-    /*
-    if(mysql_num_rows($flowresult) <= 0){
-      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
-      $flowinsert = mysql_query($flowinsertqry);      
-      if(!$flowinsert){
-        //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
-      }else{
-        $message = "Successfully updated flowsheet!2";
-      }  
-    }else{
-      $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."' WHERE `pid` = '".$_GET['pid']."';";
-      $flowinsert = mysql_query($flowinsertqry);      
-      if(!$flowinsert){
-        //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
-      }else{
-        $message = "Successfully updated flowsheet!4";
-      } 
-    } 
-    */
+		$segmentid = s_for($_POST['data'][$i]['segmentid']);
+		$columns = "patientid, stepid, segmentid";
+		$values = "'$pid', '$i', '$segmentid'";
+		$setstring = "stepid='$i', segmentid='$segmentid'";
+		if ($letterid && $i == $numsteps) {
+			$columns .= ", letterid";
+			$values .= ", '".$letterid."'";
+			$setstring .= ", letterid='$letterid'";
+		}
+		if(isset($_POST['data'][$i]['datesched'])) {
+			$datestring = s_for($_POST['data'][$i]['datesched']);
+			if ($datestring != '') {
+				$dateTime = date_create_from_format("m/d/Y", $datestring);
+				$date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
+			} else {
+				$date = NULL;
+			}
+			$columns .= ", date_scheduled";
+			$values .= ", '$date'";
+			$setstring .= ", date_scheduled='" . $date . "'";
+		}
+		if(isset($_POST['data'][$i]['datecomp'])) {
+			$datestring = s_for($_POST['data'][$i]['datecomp']);
+			if ($datestring != '') {
+				$dateTime = date_create_from_format("m/d/Y", $datestring);
+				$date = date('Y-m-d H:i:s', $dateTime->getTimestamp());
+			} else {
+				$date = NULL;
+			}
+			$columns .= ", date_completed";
+			$values .= ", '$date'";
+			$setstring .= ", date_completed='" . $date . "'";
+		}
+
+		if ($numrows == 0) {
+			$insertquery = "INSERT INTO dental_flow_pg2_info (".$columns.") VALUES (".$values.");";
+			$result = mysql_query($insertquery);
+			if(!$result) {
+				print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting new information into flowsheet during update.";
+				die();
+			}
+		} else {
+			$updatequery = "UPDATE dental_flow_pg2_info SET ".$setstring." WHERE patientid='".$pid."' AND stepid='".$i."';";
+			$result = mysql_query($updatequery);
+			if(!$result) {
+				print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating new information into flowsheet during update.";
+				die();
+			}
+		}
+		$i++;
+	}
+	//die();
+	/*
+	if(mysql_num_rows($flowresult) <= 0){
+		$flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
+		$flowinsert = mysql_query($flowinsertqry);      
+		if(!$flowinsert){
+			//$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
+		}else{
+			$message = "Successfully updated flowsheet!2";
+		}  
+	}else{
+		$flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."' WHERE `pid` = '".$_GET['pid']."';";
+		$flowinsert = mysql_query($flowinsertqry);      
+		if(!$flowinsert){
+			//$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
+		}else{
+			$message = "Successfully updated flowsheet!4";
+		} 
+	} 
+	*/
 }
 
 

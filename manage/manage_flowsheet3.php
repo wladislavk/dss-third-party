@@ -253,8 +253,9 @@ function trigger_letter8($pid) {
 
 function trigger_letter9($pid) {
   $letterid = '9';
+  $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print $letter;
     die();
@@ -265,8 +266,9 @@ function trigger_letter9($pid) {
 
 function trigger_letter10($pid) {
   $letterid = '10';
+  $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print $letter;
     die();
@@ -277,8 +279,9 @@ function trigger_letter10($pid) {
 
 function trigger_letter11($pid) {
   $letterid = '11';
+  $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print $letter;
     die();

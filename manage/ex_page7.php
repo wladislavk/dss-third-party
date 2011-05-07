@@ -3,10 +3,11 @@ include "includes/top.htm";
 
 function trigger_letter7($pid) {
   $letterid = '7';
+	$md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid); 
-  $contacts = explode(",", $md_referral_list);
-  foreach ($contacts as $contact) {
-    $letter_query = "SELECT md_referral_list FROM dental_letters WHERE md_referral_list IS NOT NULL AND CONCAT(',', md_referral_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.");";
+  $contacts['mds'] = explode(",", $md_list);
+  foreach ($contacts['mds'] as $contact) {
+    $letter_query = "SELECT md_list FROM dental_letters WHERE md_list IS NOT NULL AND CONCAT(',', md_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
     $letter_result = mysql_query($letter_query);
     $num_rows = mysql_num_rows($letter_result);
     if(!$letter_result) {
@@ -14,12 +15,26 @@ function trigger_letter7($pid) {
       die();
     }
     if ($num_rows == 0) {
-      $recipients[] = $contact;
+      $recipients['mds'][] = $contact;
     }
   }
-  $recipients_list = implode(",", $recipients);
-  if ($recipients_list != "") {
-    $letter = create_letter($letterid, $pid, '', '', '', $recipients_list);
+  $contacts['md_referrals'] = explode(",", $md_referral_list);
+  foreach ($contacts['md_referrals'] as $contact) {
+    $letter_query = "SELECT md_referral_list FROM dental_letters WHERE md_referral_list IS NOT NULL AND CONCAT(',', md_referral_list, ',') LIKE CONCAT('%,', '".$contact."', ',%') AND templateid IN(".$letterid.") AND patientid = '".$pid."';";
+    $letter_result = mysql_query($letter_query);
+    $num_rows = mysql_num_rows($letter_result);
+    if(!$letter_result) {
+      print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error Selecting Letters from Database";
+      die();
+    }
+    if ($num_rows == 0) {
+      $recipients['md_referrals'][] = $contact;
+    }
+  }
+	$md_list = implode(",", $recipients['mds']);
+  $md_referral_list = implode(",", $recipients['md_referrals']);
+  if ($md_list . $md_referral_list != "") {
+    $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
     if (!is_numeric($letter)) {
       print $letter;
       die();

@@ -623,33 +623,35 @@ if(isset($_POST['flowsubmitpgtwo'])){
 	$consult_query = "SELECT stepid FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
 	$consult_result = mysql_query($consult_query);
 	$consult_stepid = mysql_result($consult_result, 0);
+
+	$letterid = array();
 	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "6") { // Refused Treatment
-		$letterid = trigger_letter8($_GET['pid']);
-		$letterid = trigger_letter11($_GET['pid']);
+		$letterid[] = trigger_letter8($_GET['pid']);
+		$letterid[] = trigger_letter11($_GET['pid']);
 	}
 	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "4") { // Impressions
-		$letterid = trigger_letter9($_GET['pid']);
-		$letterid = trigger_letter13($_GET['pid']);
+		$letterid[] = trigger_letter9($_GET['pid']);
+		$letterid[] = trigger_letter13($_GET['pid']);
 	}
 	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "8") { // Follow-Up/Check
 		$trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
 		$trigger_result = mysql_query($trigger_query);
 		$numrows = (mysql_num_rows($trigger_result));
 		if ($numrows > 0) {
-			$letterid = trigger_letter16($_GET['pid']);
+			$letterid[] = trigger_letter16($_GET['pid']);
 		}
 	}    
 	if ($consult_stepid < $numsteps && $_POST['data'][$numsteps]['datesched'] != "" && $laststep == "5") { // Delaying Treatment / Waiting
-		$letterid = trigger_letter10($_GET['pid']);
+		$letterid[] = trigger_letter10($_GET['pid']);
 	}
 	if ($_POST['data'][$numsteps]['datesched'] != "" && $laststep == "9") { // Patient Non Compliant
-		$letterid = trigger_letter17($_GET['pid']);
+		$letterid[] = trigger_letter17($_GET['pid']);
 	}
 	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "11") { // Treatment Complete
-		$letterid = trigger_letter19($_GET['pid']);
+		$letterid[] = trigger_letter19($_GET['pid']);
 	}
 	if ($_POST['data'][$numsteps]['datecomp'] != "" && $laststep == "13") { // Termination
-		$letterid = trigger_letter25($_GET['pid']);
+		$letterid[] = trigger_letter25($_GET['pid']);
 	}
 
 	//print_r($_POST);

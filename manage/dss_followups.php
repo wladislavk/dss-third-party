@@ -3,13 +3,12 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 
-
-
 if(isset($_POST['submitaddfu'])){
   $patientid = $_POST['patientid'];
-  $ep_dateadd = $_POST['ep_dateadd'];
+  $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
   $devadd = $_POST['devadd'];
   $dsetadd = $_POST['dsetadd'];
+	$nightsperweek = $_POST['nightsperweek'];
   $ep_eadd = $_POST['ep_eadd'];
   $ep_tsadd = $_POST['ep_tsadd'];
   $ep_sadd = $_POST['ep_sadd'];
@@ -20,7 +19,7 @@ if(isset($_POST['submitaddfu'])){
   $ep_wadd = $_POST['ep_wadd'];
   $wapnadd = $_POST['wapnadd'];
   $appt_notesadd = $_POST['appt_notesadd'];
-  $insertquery = "INSERT INTO dentalsummfu (`patientid`,`devadd`,`dsetadd`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_radd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`appt_notesadd`) VALUES (".$patientid.", '".$devadd."','".$dsetadd."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_radd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$appt_notesadd."');";
+  $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_radd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_radd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$appt_notesadd."');";
   $insert = mysql_query($insertquery);
   if(!$insert){
   echo "Could not insert follow up, please try again!";
@@ -40,7 +39,7 @@ if(isset($_POST['submitaddfu'])){
 
   <tr style="height: 25px;">
     <td style="background: #F9FFDF;">
-      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo date('m-d-y'); ?>" READONLY />
+      <input type="text" size="12" style="width:100px;" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" READONLY />
     </td>
   </tr>
   
@@ -70,6 +69,21 @@ if(isset($_POST['submitaddfu'])){
     </td>
   </tr>
   
+  <tr style="height: 25px;">
+  	    <td style="background: #E4FFCF;">
+      <select name="nightsperweek" style="width:150px;">
+        <?php
+								for ($i = 0; $i <= 7; $i++)
+								{	
+                ?>  
+								 <option value="<?=$i?>"><?=$i?></option>
+								 <?php
+								 }
+								?>
+    </select>	
+				</td>
+	</tr>
+
   <tr style="height: 25px;">
   	    <td style="background: #E4FFCF;">
       <input type="text" size="12" name="ep_eadd" />
@@ -160,6 +174,9 @@ $numrows = mysql_num_rows($fuquery_array);
 }
 while($fuquery = mysql_fetch_array($fuquery_array)){
 
+$device_query = "SELECT device FROM dental_device WHERE deviceid = '".$fuquery['devadd']."';";
+$device_result = mysql_query($device_query);
+$device = mysql_result($device_result, 0);
 
  if($numrows){
   ?>
@@ -177,7 +194,7 @@ while($fuquery = mysql_fetch_array($fuquery_array)){
   
   <tr style="height: 25px;">
   	    <td style="background: #E4FFCF;">
-      <input type="text" size="12" name="devadd" style="width:90px;" value="<?php echo $fuquery['devadd'];?>" />
+      <input type="text" size="12" name="devadd" style="width:90px;" value="<?php echo $device;?>" />
       
     </td>
   </tr>
@@ -189,6 +206,20 @@ while($fuquery = mysql_fetch_array($fuquery_array)){
     </td>
   </tr>
   
+  <tr style="height: 25px;">
+  	    <td style="background: #E4FFCF;">
+      <select name="nightsperweek" style="width:150px;">
+        <?php
+								for ($i = 0; $i <= 7; $i++)
+								{	 
+								 print ($i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
+								 
+								 }
+								?>
+    </select>	
+				</td>
+	</tr>
+
   <tr style="height: 25px;">
   	    <td style="background: #E4FFCF;">
       <input type="text" size="12" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" />

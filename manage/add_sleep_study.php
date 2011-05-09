@@ -80,7 +80,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 		<td valign="top" style="background: #F9FFDF;">
 		<select name="place">
 		<?php
-     $lab_place_q = "SELECT * FROM dental_sleeplab WHERE `status` = '1' ORDER BY DESC";
+     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
      while($lab_place = mysql_fetch_array($lab_place_r)){
     ?>
@@ -123,7 +123,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" name="02nadir" />	
+		<input type="text" name="o2nadir" />	
 		</td>
 	</tr>
   <tr>	
@@ -145,7 +145,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 		<td valign="top" style="background: #E4FFCF; height:25px;">
 		<select name="dentaldevice" style="width:150px;">
         <?php
-        $device_sql = "select * from dental_device where status=1 order by sortby";
+        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
 								$device_my = mysql_query($device_sql);
 								
 								while($device_myarray = mysql_fetch_array($device_my))
@@ -194,6 +194,14 @@ $s_lab_result = mysql_query($s_lab_query);
 if($s_lab_result){
 while($s_lab = mysql_fetch_array($s_lab_result)){
 
+$sleeplab_query = "SELECT company FROM dental_sleeplab WHERE sleeplabid = '".$s_lab['place']."';";
+$sleeplab_result = mysql_query($sleeplab_query);
+$place = mysql_result($sleeplab_result, 0);
+
+$device_query = "SELECT device FROM dental_device WHERE deviceid = '".$s_lab['dentaldevice']."';";
+$device_result = mysql_query($device_query);
+$device = mysql_result($device_result, 0);
+
 ?>
 <table id="sleepstudyscrolltable">
 	<tr>
@@ -208,7 +216,7 @@ while($s_lab = mysql_fetch_array($s_lab_result)){
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;"> 
-		<input type="text" value="<?php echo $s_lab['place']; ?>" />	
+		<input type="text" value="<?php echo $place; ?>" />	
 		</td>
 	</tr>
   <tr>	
@@ -243,7 +251,7 @@ while($s_lab = mysql_fetch_array($s_lab_result)){
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['02nadir']; ?>" />	
+		<input type="text" value="<?php echo $s_lab['o2nadir']; ?>" />	
 		</td>
 	</tr>
   <tr>	
@@ -263,7 +271,7 @@ while($s_lab = mysql_fetch_array($s_lab_result)){
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['dentaldevice']; ?>" />	
+		<input type="text" value="<?php echo $device; ?>" />	
 		</td>
   </tr>
   <tr>		

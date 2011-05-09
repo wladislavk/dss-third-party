@@ -4,14 +4,14 @@ require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 if($_REQUEST["delid"] != "") {
-	$del_sql = "delete from dental_insurance where id='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&fid=<?=$_REQUEST['fid']?>&pid=<?=$_REQUEST['pid']?>";
 	</script>
 	<?
 	die();
@@ -42,7 +42,7 @@ if (!empty($_REQUEST['fid'])) {
 }
 
 $sql .= "ORDER BY "
-      . "  claim.status ASC, "
+      . "  claim.status DESC, "
       . "  claim.adddate ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -160,10 +160,10 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_CLAIM_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="Javascript:;" onclick="Javascript: loadPopup('process_preauth.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
-						<?= $link_label ?>
+				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
+						<?= $link_label ?> 
 					</a>
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
 					</a>
 				</td>
@@ -172,13 +172,6 @@ $my=mysql_query($sql) or die(mysql_error());
 	}?>
 </table>
 </form>
-
-
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
 
 <br /><br />	
 <? include "includes/bottom.htm";?>

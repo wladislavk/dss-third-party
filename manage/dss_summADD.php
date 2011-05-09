@@ -55,6 +55,9 @@ $fuquery_array = mysql_query($fuquery_sql);
   </tr>
   
   <tr>
+  	<td style="background: #F9FFDF;"><strong>N/W</strong> - Nights Worn per Week</td>
+  </tr>
+  <tr>
   	<td style="background: #E4FFCF;"><strong>ESS</strong></td>
   </tr>
   

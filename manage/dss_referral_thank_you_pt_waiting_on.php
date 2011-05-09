@@ -136,14 +136,14 @@ foreach($medications_arr as $key => $val)
 	}
 }
 
-$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, place FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $sleep_study_date = st($q2_myarray['date']);
 $diagnosis = st($q2_myarray['diagnosis']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
-
+$sleep_center_name = st($q2_myarray['place']);
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
@@ -223,11 +223,11 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  [Patient's Other MD's]</p>";
+cc:  %other_mds%</p>";
 
 
 ?>
-<form action="/manage/dss_referral_thank_you_pt_scheduled.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_referral_thank_you_pt_waiting_on.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -278,8 +278,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $history_disp . "</strong>";
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
-		/*$search[] = "%sleeplab_name%";
-		$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
+		$search[] = "%sleeplab_name%";
+		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 		$search[] = "%type_study%";
 		$replace[] = "<strong>" . $type_study . "</strong>";
 		$search[] = "%ahi%";
@@ -288,6 +288,19 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$search[] = "%other_mds%";
+		$other_mds = "";
+		$count = 1;
+		foreach ($letter_contacts as $index => $md) {
+			if ($key != $index) {
+				$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+				if ($count < $numletters - 1) {
+					$other_mds .= ", ";
+				}	
+				$count++;
+			}
+		}
+		$replace[] = "<strong>" . $other_mds . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -363,8 +376,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
-	/*$search[] = "%sleeplab_name%";
-	$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
+	$search[] = "%sleeplab_name%";
+	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%type_study%";
 	$replace[] = "<strong>" . $type_study . "</strong>";
 	$search[] = "%ahi%";
@@ -373,7 +386,19 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
-				
+	$search[] = "%other_mds%";
+	$other_mds = "";
+	$count = 1;
+	foreach ($letter_contacts as $index => $md) {
+		if ($key != $index) {
+			$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($count < $numletters - 1) {
+				$other_mds .= ", ";
+			}	
+			$count++;
+		}
+	}
+	$replace[] = "<strong>" . $other_mds . "</strong>";
 
 
  	if ($new_template[$key] != null) {

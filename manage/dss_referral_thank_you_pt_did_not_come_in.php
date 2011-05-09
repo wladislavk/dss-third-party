@@ -149,7 +149,7 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%</p>
 
-<p>cc:  [Patient's Other MD's]</p>";
+<p>cc:  %other_mds%</p>";
 
 ?>
 <form action="/manage/dss_referral_thank_you_pt_did_not_come_in.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
@@ -201,6 +201,19 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $patient_info['email'] . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$search[] = "%other_mds%";
+		$other_mds = "";
+		$count = 1;
+		foreach ($letter_contacts as $index => $md) {
+			if ($key != $index) {
+				$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+				if ($count < $numletters - 1) {
+					$other_mds .= ", ";
+				}	
+				$count++;
+			}
+		}
+		$replace[] = "<strong>" . $other_mds . "</strong>";
 
 
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
@@ -276,6 +289,21 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $patient_info['email'] . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
+	$search[] = "%other_mds%";
+	$other_mds = "";
+	$count = 1;
+	foreach ($letter_contacts as $index => $md) {
+		if ($key != $index) {
+			$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($count < $numletters - 1) {
+				$other_mds .= ", ";
+			}	
+			$count++;
+		}
+	}
+	$replace[] = "<strong>" . $other_mds . "</strong>";
+
+
  	
 	if ($new_template[$key] != null) {
 	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);

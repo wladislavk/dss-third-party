@@ -909,7 +909,6 @@ $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $status = st($myarray['status']);
 
-	
 if($insured_sex == '')
 	$insured_sex = $pat_myarray['gender'];
   $patient_sex = $pat_myarray['gender'];
@@ -990,8 +989,9 @@ $proc_my = mysql_query($proc_sql);
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if($dent_rows <= 0){
 $accept_assignment = $accept_assignmentnew;
-}	
+}
 
+$is_sent = ($status == DSS_CLAIM_SENT) ? true : false;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -1005,13 +1005,6 @@ $accept_assignment = $accept_assignmentnew;
 -->
 </style>
 <script language="javascript" type="text/javascript" src="<?=$manage_path?>script/validation.js"></script>
-<script language="javascript">
- function printpage()
-  {
-   window.print();
-  }
-</script>
-
 </head>
 
 <body>
@@ -1069,6 +1062,14 @@ $accept_assignment = $accept_assignmentnew;
 <link rel="stylesheet" href="<?=$admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script src="<?=$admin_path?>popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
+<?php if ($is_sent) { ?>
+  <script>
+	$(function() {
+	  $('input, select, textarea').attr('disabled', 'true');
+	  $('.print-button').removeAttr('disabled');
+	});
+  </script>
+<?php } ?>
 
 <?php if ($is_front_office) { ?>
   <a href="manage_insurance.php?pid=<?=$_REQUEST['pid']?>">
@@ -1083,11 +1084,15 @@ $accept_assignment = $accept_assignmentnew;
 	<input type="hidden" name="ed" value="<?=$insuranceid;?>" />
 	
 	<div align="right">
-	    <?php if ($is_back_office) { ?>
-		  Sent? <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
+        <?php if ($is_sent) { ?>
+          Claim has been sent
+	    <?php } else if ($is_back_office) { ?>
+          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
 		<?php } ?>
-		<input type="button" onClick="window.print()" value="Print Claim Form"/>
-		<input type="submit" name="ex_pagebtn" value="Save" />
+		<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>
+        <?php if (!$is_sent) { ?>
+          <input type="submit" name="ex_pagebtn" value="Save" />
+        <?php } ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
 	
@@ -2043,13 +2048,15 @@ $accept_assignment = $accept_assignmentnew;
 									<td valign="top" align="center">
 										<span class="num"><?=$p_i?></span>
 										<br />
-										<a href="Javascript:;"  onclick="Javascript: loadPopup('<?=$manage_path?>add_procedure.php?pid=<?=$_GET['pid']?>&insid=<?=$insuranceid?>&ed=<?=$proc_myarray["procedureid"];?>');  getElementById('popupContact').style.top = '1000px';" class="editlink" title="EDIT">
-											Edit 
-										</a>
-										
-										<a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$proc_myarray["procedureid"];?>&insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" onClick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-											 Delete 
-										</a>
+								        <?php if (!$is_sent) { ?>
+										  <a href="Javascript:;"  onclick="Javascript: loadPopup('<?=$manage_path?>add_procedure.php?pid=<?=$_GET['pid']?>&insid=<?=$insuranceid?>&ed=<?=$proc_myarray["procedureid"];?>');  getElementById('popupContact').style.top = '1000px';" class="editlink" title="EDIT">
+										  	Edit 
+										  </a>
+										  
+										  <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$proc_myarray["procedureid"];?>&insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" onClick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+										  	 Delete 
+										  </a>
+								        <?php } ?>
 									</td>
 									<td valign="top">
 										<?=st($proc_myarray['service_date_from']);?>
@@ -2428,11 +2435,15 @@ $accept_assignment = $accept_assignmentnew;
 </table>
 
 <div align="right">
-    <?php if ($is_back_office) { ?>
-      Sent? <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
+    <?php if ($is_sent) { ?>
+      Claim has been sent
+    <?php } else if ($is_back_office) { ?>
+      Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
     <?php } ?>
-    <input type="button" value="Print Claim Form"/>
-    <input type="submit" name="q_pagebtn" value="Save" />
+    <input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>
+    <?php if (!$is_sent) { ?>
+      <input type="submit" name="q_pagebtn" value="Save" />
+    <?php } ?>
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

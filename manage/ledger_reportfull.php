@@ -13,7 +13,7 @@ else
 $i_val = $index_val * $rec_disp;
 
 
-$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date;";
+$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' order by dl.service_date;";
 $my = mysql_query($sql);
 /*
 $sql .= " order by service_date";
@@ -167,7 +167,7 @@ background:#999999;
                 	<?=st($name);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray["producer"]);?>
+                	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
                 	<?=st($myarray["description"]);?>

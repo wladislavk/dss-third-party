@@ -273,6 +273,10 @@ return s;
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Payment 
+                                        </a>
+
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
 				</td>
 			</tr>

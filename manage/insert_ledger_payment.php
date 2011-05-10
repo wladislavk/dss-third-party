@@ -52,120 +52,40 @@ function ledgerconfirmation(){
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
 
-$sqlinsertqry .= "INSERT INTO `dental_ledger` (
+$sqlinsertqry .= "INSERT INTO `dental_ledger_payment` (
 `ledgerid` ,
-`formid` ,
-`patientid` ,
-`service_date` ,
+`payment_date` ,
 `entry_date` ,
-`description` ,
-`producer` ,
 `amount` ,
-`transaction_type` ,
-`paid_amount` ,
-`userid` ,
-`docid` ,
-`status` ,
-`adddate` ,
-`ip_address` ,
-`transaction_code`,
-`producerid`
+`payment_type` ,
+`payer`
 ) VALUES ";
+
 foreach($_POST[form] as $form){
-if($d <= $i){
-echo $form[status];
-print_r($form);
-$descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form[proccode]."' LIMIT 1;";
-$descquery = mysql_query($descsql);
-$txcode = mysql_fetch_array($descquery);
-if($form[procedure_code] == '1' && $form[service_date] != '' && $form['amount'] != ''){
-$sqlinsertqry .= "( NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, '".$form['amount']."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'),";
-                                                                             
-}elseif($form[procedure_code] == '2' && $form[service_date] != '' && $form['amount'] != '' || $form[procedure_code] == '3' && $form[service_date] != '' && $form['amount'] != ''){
 
 $sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Credit', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
+".$_POST['ledgerid'].", '".$form[service_date]."', '".$form[entry_date]."', '".$form['amount']."', '".$form[payment_type]."', '".$form[payer]."'
 ),";
 
-}elseif($form[procedure_code] == '6' && $form[proccode] == '100' && $form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Debit-Prod Adj', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-),";
-
-}elseif($form[procedure_code] == '6' && $form[proccode] != '100' && $form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Credit-Coll Adj', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-),";
-
-}elseif($form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'None', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-),";
-
-}
-}elseif($d == $i){
-echo $form[status];
-$descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_code='".$form[proccode]."' LIMIT 1;";
-$descquery = mysql_query($descsql);
-while($txcode = mysql_fetch_array($descquery)){
-
-if($form[procedure_code] == '1' && $form[service_date] != '' && $form['amount'] != ''){
-$service_date = $form[service_date];
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$service_date."', '".$form[entry_date]."', '".$txcode['description']."', NULL, '".$form['amount']."', 'Charge', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-)";
-
-}elseif($form[procedure_code] == '2' && $form[service_date] != '' && $form['amount'] != '' || $form[procedure_code] == '3' && $form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Credit', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-)";
-
-}elseif($form[procedure_code] == '6' && $form[proccode] == '100' && $form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Debit-Prod Adj', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-)";
-
-}elseif($form[procedure_code] == '6' && $form[proccode] != '100' && $form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'Credit-Coll Adj', '".$form['amount']."', '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-)";
-
-}elseif($form[service_date] != '' && $form['amount'] != ''){
-
-$sqlinsertqry .= "(
-NULL , '0', '".$_POST['patientid']."', '".$form[service_date]."', '".$form[entry_date]."', '".$txcode['description']."', NULL, NULL, 'None', NULL, '".$_SESSION['userid']."', '".$_SESSION['docid']."', '".$form[status]."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$txcode['transaction_code']."', '".$form[producer]."'
-)";
-
-}
-
-$d++;
-}
-}
 
 }
 
 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
+echo $sqlinsertqry;
 $insqry = mysql_query($sqlinsertqry);
 if(!$insqry){
 ?>
 <script type="text/javascript">
-alert('Could not add ledger entries, please close this window and contact your system administrator');
+alert('Could not add ledger payments, please close this window and contact your system administrator');
 eraseCookie('tempforledgerentry');
 </script>                               
 <?= $sqlinsertqry; ?>
 <?php
 }else{
-echo $sqlinsertqry; ?>
 ?>
 <script type="text/javascript">
 eraseCookie('tempforledgerentry');
-alert('Transaction(s) successfully added!');
+alert('Payment(s) successfully added!');
 //history.go(-1);
 </script>
 <?php

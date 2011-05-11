@@ -55,12 +55,40 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select dl.*, p.name from dental_ledger dl LEFT JOIN dental_users p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' ";
+$sql = "select 
+                'ledger',
+		dl.ledgerid,
+		dl.service_date,
+            	dl.entry_date,
+		p.name,
+ 		dl.description,
+		dl.amount,
+		dl.paid_amount,
+		dl.status
+	from dental_ledger dl 
+		LEFT JOIN dental_users p ON dl.producerid=p.userid 
+			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+  UNION
+   	select 
+		'note',
+		n.id,
+		n.service_date,
+		n.entry_date,
+		p.name,
+		n.note,
+		'',
+		'',
+		''
+	from dental_ledger_note n
+		LEFT JOIN dental_users p on n.producerid=p.userid
+			where n.patientid='".s_for($_GET['pid'])."'       
+";
+
 if(isset($_REQUEST['sort'])){
   if($_REQUEST['sort']=='producer'){
-    $sql .= " ORDER BY p.name ".$_REQUEST['sortdir']; 
+    $sql .= " ORDER BY name ".$_REQUEST['sortdir']; 
   }else{
-    $sql .= " ORDER BY dl.".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+    $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
   }
 }
 
@@ -288,6 +316,7 @@ return s;
           ?>       	
 				</td>
 				<td valign="top">
+                                   <?php if($myarray[0]=='ledger'){ ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
@@ -300,6 +329,12 @@ return s;
                                         </a>
 
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
+                                  <?php }elseif($myarray[0]=='note'){ ?>
+ 
+					<a href="Javascript:;" onclick="Javascript: loadPopup('edit_ledger_note.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
+                                                Edit 
+                                        </a>
+                                  <?php } ?>
 				</td>
 			</tr>
 	<? 	}

@@ -489,7 +489,7 @@ echo "</select>";
                        <input type="hidden" name="status" value=1 />
                    <?php }else{ ?>
 <?php
-if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
 ?>
 		<input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value=1 />
 <?php }else{ ?> 

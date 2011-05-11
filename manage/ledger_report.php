@@ -11,7 +11,7 @@ if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['week
 }
 
 if(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'entry_date';
+  $_REQUEST['sort'] = 'service_date';
   $_REQUEST['sortdir'] = 'asc';
 }
 
@@ -177,9 +177,9 @@ background:#999999;
 		$tot_charges = 0;
 		$tot_credit = 0;
 		if(isset($_GET['pid'])){
-		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid WHERE  dl.docid='".$_SESSION['docid']."' AND dl.patientid = '".$_GET['pid']."'";
+		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."' AND dl.patientid = '".$_GET['pid']."'";
 		}else{
-    $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid WHERE  dl.docid='".$_SESSION['docid']."'";
+    $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."'";
     }
                 if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
@@ -187,8 +187,10 @@ background:#999999;
                 if(isset($_REQUEST['sort'])){
                   if($_REQUEST['sort']=='patient'){
                     $newquery .= " ORDER BY dp.lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];
+                  }elseif($_REQUEST['sort']=='producer'){
+		    $newquery .= " ORDER BY p.name ".$_REQUEST['sortdir'];
                   }else{
-                    $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
+                    $newquery .= " ORDER BY dl.".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
                   }
                   }
                 $runquery = mysql_query($newquery);
@@ -221,7 +223,7 @@ background:#999999;
                 	<?=st($name);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray["producer"]);?>
+                	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
                 	<?=st($myarray["description"]);?>

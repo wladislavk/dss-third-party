@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 if(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'entry_date';
+  $_REQUEST['sort'] = 'service_date';
   $_REQUEST['sortdir'] = 'asc';
 }
 
@@ -55,9 +55,13 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
+$sql = "select dl.*, p.name from dental_ledger dl LEFT JOIN dental_users p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' ";
 if(isset($_REQUEST['sort'])){
-  $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+  if($_REQUEST['sort']=='producer'){
+    $sql .= " ORDER BY p.name ".$_REQUEST['sortdir']; 
+  }else{
+    $sql .= " ORDER BY dl.".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+  }
 }
 
 $my = mysql_query($sql);
@@ -180,6 +184,9 @@ return s;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date</a>
 		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+                        <a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer</a>
+                </td>
 
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
@@ -232,6 +239,9 @@ return s;
 				<td valign="top">
                 	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
+                                <td valign="top">
+                        <?=st($myarray["name"]);?>
+                                </td>
 
 				<td valign="top">
                 	<?=st($myarray["description"]);?>
@@ -273,6 +283,10 @@ return s;
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Payment 
+                                        </a>
+
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
 				</td>
 			</tr>

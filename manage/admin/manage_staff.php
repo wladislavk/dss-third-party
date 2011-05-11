@@ -89,9 +89,12 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Username
 		</td>
-		<td valign="top" class="col_head" width="70%">
+		<td valign="top" class="col_head" width="60%">
 			Name
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        Producer
+                </td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -125,7 +128,9 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
-					
+			 	<td valign="top">
+					<?= ($myarray["producer"]==1)?"X":''; ?>
+  				</td>		
 						
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?=$myarray["userid"];?>&docid=<?=$_GET['docid'];?>');" class="editlink" title="EDIT">

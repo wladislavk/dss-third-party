@@ -22,7 +22,8 @@ if($_POST["staffsub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_users set user_access=1, docid='".$_GET['docid']."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."' where userid='".$_POST["ed"]."'";
+                        $p = ($_POST['producer']==1)?1:0;
+			$ed_sql = "update dental_users set user_access=1, docid='".$_GET['docid']."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."', producer=".$p." where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -37,7 +38,8 @@ if($_POST["staffsub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                        $p = ($_POST['producer']==1)?1:0;
+			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', producer=".$p;
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -77,6 +79,7 @@ if($_POST["staffsub"] == 1)
 		$address = $_POST['address'];
 		$phone = $_POST['phone'];
 		$status = $_POST['status'];
+                $producer = $_POST['producer'];
 	}
 	else
 	{
@@ -87,6 +90,7 @@ if($_POST["staffsub"] == 1)
 		$address = st($themyarray['address']);
 		$phone = st($themyarray['phone']);
 		$status = st($themyarray['status']);
+                $producer = st($themyarray['producer']);
 		$but_text = "Add ";
 	}
 	
@@ -177,6 +181,14 @@ if($_POST["staffsub"] == 1)
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
+            </td>
+        </tr>
+        <tr>
+<td valign="top" class="frmhead">
+                Producer 
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($producer==1)?'checked="checked':''; ?> value="1" name="producer" /> 
             </td>
         </tr>
         <tr>

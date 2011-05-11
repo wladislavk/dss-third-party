@@ -14,17 +14,19 @@ Initital Contact
 </td>
 
 
-<td width="119">
+<td width="247">
 <?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
+<?php if ($letterlink != ""): ?>
 <input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 <input type="checkbox">
 </td>
 
@@ -35,7 +37,7 @@ Initital Contact
 <option <?php echo $faxed; ?> value="">Faxed</option>
 <option <?php echo $mailed; ?> value="">Mailed</option>
 </select>
-</td>
+</td>-->
 
 <td width="250">
 
@@ -85,7 +87,7 @@ Consult
 </td>
 
 
-<td width="119">
+<td width="247">
 <?php echo $letterlink; ?>
 </td>
 
@@ -97,7 +99,7 @@ Consult
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 <input type="checkbox">
 </td>
 
@@ -108,7 +110,7 @@ Consult
 <option>Faxed</option>
 <option>Mailed</option>
 </select>
-</td>
+</td>-->
 
 
 <td width="250">
@@ -146,7 +148,7 @@ SET content = '<?php $random = rand(111111111,999999999); ?>
 <table id="sleepstudyrow" width="100%"> 
 <tr id="sleepstudyrow">
 <td width="109">
-Sleep Study<br /><input type="text" style="width:50px;" value="HST" />
+Sleep Study<br /><input id="study_type<?php echo $step; ?>" name="data[<?php echo $step; ?>][study_type]" type="text" style="width:50px;" value="<?=$sleepstudy?>" />
 </td>
 
 
@@ -157,7 +159,7 @@ Sleep Study<br /><input type="text" style="width:50px;" value="HST" />
 </td>
 
 
-<td width="119">
+<td width="247">
 
 </td>
 
@@ -167,14 +169,14 @@ Sleep Study<br /><input type="text" style="width:50px;" value="HST" />
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -224,17 +226,19 @@ Impressions
 <input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  onClick="<?=$caldatesched?>.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span></td>
 
 
-<td width="119">
+<td width="247">
 <?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-<input type="text" readonly="readonly" value="Gen Date" style="width:100px;">
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
@@ -245,7 +249,7 @@ Impressions
 <option>Faxed</option>
 <option>Mailed</option>
 </select>
-</td>
+</td>-->
 
 
 <td width=250>
@@ -287,7 +291,7 @@ SET content = '<?php $random = rand(111111111,999999999); ?>
 <tr>
 <td width="109">
 Delaying Treatment<br />
-<select style="width:94px;">
+<select id="delay_reason<?php echo $step; ?>" name="data[<?php echo $step; ?>][delay_reason]" style="width:94px;">
 <option>Insurance</option>
 <option>Dental Work</option>
 <option>Deciding</option>
@@ -298,31 +302,32 @@ Delaying Treatment<br />
 
 
 <td width="117">
-<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
+<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
 <br />
 <input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 
 
-<td width="119">
-FIX ME
-<a href="/manage/dss_referral_thank_you_pt_waiting_on.php?fid=<?php echo $_GET[''pid'']; ?>&pid=<?php echo $_GET[''pid'']; ?>">Pt Waiting On</a>
+<td width="247">
+<?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -364,34 +369,36 @@ SET content = '<?php $random = rand(111111111,999999999); ?>
 <table id="refusedtreatmentrow" width="100%">
 <tr>
 <td width="109">
-Refuses Treatment
+Refused Treatment
 </td>
 
 
 <td width="117">
-<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span><br />
+<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span><br />
 <input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 
 
-<td width="119">
+<td width="247">
 <?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -441,7 +448,7 @@ Device Delivery
 </td>
 
 
-<td width="119">
+<td width="247">
 
 </td>
 
@@ -451,14 +458,14 @@ Device Delivery
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 
@@ -512,24 +519,26 @@ Check/Follow Up
 </td>
 
 
-<td width="119">
-
+<td width="247">
+<?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -577,27 +586,29 @@ Patient Non Compliant
 
 
 <td width="117">
-<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
+<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
 <input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 
 
-<td width="119">
-<a href="http://dentalsleepsolutions.com/manage/dss_progress_note_to_md_pt_non_compliant.php?fid=<?php echo $_GET[''pid'']; ?>&pid=<?php echo $_GET[''pid'']; ?>">Non Compliant</a>
+<td width="247">
+<?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
+</td>
+
+
+<!--<td width="26">
 
 </td>
 
 
-<td width="26">
-
-</td>
-
-
-<td width="102">
+<td width="102">-->
 
 </td>
 
@@ -649,7 +660,7 @@ Home Sleep Test
 </td>
 
 
-<td width="119">
+<td width="247">
 
 </td>
 
@@ -659,14 +670,14 @@ Home Sleep Test
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -718,24 +729,26 @@ Treatment Complete
 </td>
 
 
-<td width="119">
-
+<td width="247">
+<?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -787,7 +800,7 @@ Annual Recall
 </td>
 
 
-<td width="119">
+<td width="247">
 
 </td>
 
@@ -797,14 +810,14 @@ Annual Recall
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">
@@ -857,28 +870,30 @@ Termination
 
 <td width="117">
 <input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabinde x="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
-<input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
+<input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');"  value="example 11/11/1234" readonly="readonly" /><span id="req_0" class="req">*</span>
 </td>
 
 
-<td width="119">
-
+<td width="247">
+<?php echo $letterlink; ?>
 </td>
 
 
 <td width="115">
-
+<?php if ($letterlink != ""): ?>
+<input type="text" readonly="readonly" value="<?php echo $gendate; ?>" style="width:100px;">
+<?php endif; ?>
 </td>
 
 
-<td width="26">
+<!--<td width="26">
 
 </td>
 
 
 <td width="102">
 
-</td>
+</td>-->
 
 
 <td width="250">

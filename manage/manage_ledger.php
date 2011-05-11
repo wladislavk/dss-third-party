@@ -82,6 +82,19 @@ $sql = "select
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
+  UNION
+	select
+		'claim',
+		i.insuranceid,
+		i.adddate,
+		i.adddate,
+		'',
+		'Claim filed',
+		'',
+		'',
+		i.status
+	from dental_insurance i
+		where i.patientid='".s_for($_GET['pid'])."'
 ";
 
 if(isset($_REQUEST['sort'])){
@@ -334,7 +347,15 @@ return s;
 					<a href="Javascript:;" onclick="Javascript: loadPopup('edit_ledger_note.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
                                                 Edit 
                                         </a>
-                                  <?php } ?>
+                                  <?php }elseif($myarray[0]=='claim'){ ?>
+<a href="insurance.php?insid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                Edit 
+                                        </a>
+
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a>
+  				<?php } ?>
 				</td>
 			</tr>
 	<? 	}

@@ -148,6 +148,10 @@ return s;
 		Add New Transaction
 	</button>
 	&nbsp;&nbsp;
+        <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?=$_GET['pid'];?>');" class="addButton">
+                Add Note 
+        </button>
+        &nbsp;&nbsp;
         <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
                Reports 
         </button>
@@ -220,6 +224,8 @@ return s;
 	else
 	{
 		$cur_bal = 0;
+		$last_sd = '';
+		$last_ed = '';
 		while($myarray = mysql_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
@@ -234,10 +240,16 @@ return s;
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-                	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+					<?php if($myarray["service_date"]!=$last_sd){
+						$last_sd = $myarray["service_date"];
+       					      	echo date('m-d-Y',strtotime(st($myarray["service_date"])));
+                                        } ?>
 				</td>
 				<td valign="top">
-                	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
+					<?php if($myarray["entry_date"]!=$last_ed){
+                                                $last_ed = $myarray["entry_date"];
+                                                echo date('m-d-Y',strtotime(st($myarray["entry_date"])));
+                                        } ?>
 				</td>
                                 <td valign="top">
                         <?=st($myarray["name"]);?>

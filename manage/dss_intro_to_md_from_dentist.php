@@ -105,18 +105,18 @@ $todays_date = date('F d, Y');
 $template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
-%practice%<br />
+%practice%
 %addr1%<br />
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </p>
 
 <p>Dear Dr. %md_lastname%:</p>
 
-<p>Thank you for allowing me a few minutes of your time.  My name is Dr. %franchisee_fullname%, and I am a dentist who has partnered with Dental Sleep Solutions®, a company committed to maximizing successful treatment options for patients who suffer from sleep disordered breathing.    As a Dental Sleep Solutions® Dentist, I have completed a “mini residency” training program put on by nationally known Board Certified dentists; our office adheres to practice protocols that are consistent with the highest levels of patient care.</p>
+<p>Thank you for allowing me a few minutes of your time.  My name is Dr. %franchisee_fullname%, and I am a dentist who has partnered with Dental Sleep Solutions&reg;, a company committed to maximizing successful treatment options for patients who suffer from sleep disordered breathing.    As a Dental Sleep Solutions&reg; Dentist, I have completed a \"mini residency\" training program put on by nationally known Board Certified dentists; our office adheres to practice protocols that are consistent with the highest levels of patient care.</p>
 <p>We welcome your referrals for the treatment of snoring, upper airway resistance syndrome, and obstructive sleep apnea.    We evaluate patients individually and recommend treatment plans based on disease severity and patient preferences, all the while following the guidelines as laid down by the American Academy of Sleep Medicine's (AASM) position paper on the parameters  for use of oral appliances in the treatment of OSA, as appeared  in the February, 2006 issue of Sleep.   It states that oral appliances may be used as a first line of therapy for patients with mild to moderate OSA as well as for patients who are severe and have failed CPAP or who prefer them to CPAP.</p>
 
-<p>We are working closely with physicians such as you who recognize the importance of diagnosing and treating this illness.  As awareness of the ill effects of OSA (hypertension, MI, CHF, stroke, fatigue, impotence, mood swings, and dozing accidents) increases in the public’s eye, all of medicine will begin to see an increasing number of patients asking questions about snoring and sleep apnea and seeking treatment options.  We hope you'll consider referring these patients to us.</p>
+<p>We are working closely with physicians such as you who recognize the importance of diagnosing and treating this illness.  As awareness of the ill effects of OSA (hypertension, MI, CHF, stroke, fatigue, impotence, mood swings, and dozing accidents) increases in the public's eye, all of medicine will begin to see an increasing number of patients asking questions about snoring and sleep apnea and seeking treatment options.  We hope you'll consider referring these patients to us.</p>
 
 <p>I have included an informational brochure as well as a simple referral form, making the referral process easy for you and the patient.</p>
 
@@ -129,7 +129,7 @@ $template = "<p>%todays_date%</p>
 Dr. %franchisee_fullname%</p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_intro_to_md_from_dentist.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -146,6 +146,10 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . " " . $letter_contacts[$key]['firstname'] . " " . $letter_contacts[$key]['lastname'] . "</strong>";
 		$search[] = '%md_lastname%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['lastname'] . "</strong>";
+		$search[] = "%salutation%";
+		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+		$search[] = '%practice%';
+		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['add1'] . "</strong>";
 		$search[] = '%addr2%';
@@ -199,6 +203,10 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
 	$search[] = '%md_lastname%';
 	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+	$search[] = "%salutation%";
+	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+	$search[] = '%practice%';
+	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';

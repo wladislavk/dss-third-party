@@ -193,9 +193,9 @@ $todays_date = date('F d, Y');
 $template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
-%practice%<br />
+%practice%
 %addr1%<br />
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </p>
 <table>
@@ -242,6 +242,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . " " . $letter_contacts[$key]['firstname'] . " " . $letter_contacts[$key]['lastname'] . "</strong>";
 		$search[] = '%md_lastname%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['lastname'] . "</strong>";
+		$search[] = '%practice%';
+		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['add1'] . "</strong>";
 		$search[] = '%addr2%';
@@ -340,6 +342,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
 	$search[] = '%md_lastname%';
 	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+	$search[] = '%practice%';
+	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';

@@ -22,7 +22,7 @@ if($_POST["usersub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_users set user_access=2,password = '".s_for($_POST["password"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."' where userid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_users set user_access=2,password = '".s_for($_POST["password"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', practice = '".s_for($_POST['practice'])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."' where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -37,7 +37,7 @@ if($_POST["usersub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_users set user_access=2,username = '".s_for($_POST["username"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+			$ins_sql = "insert into dental_users set user_access=2,username = '".s_for($_POST["username"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', practice = '".s_for($_POST['practice'])."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, type, sortby, docid) SELECT transaction_code, description, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
@@ -77,6 +77,7 @@ if($_POST["usersub"] == 1)
 		$npi = $_POST['npi'];
 		$medicare_npi = $_POST['medicare_npi'];
 		$tax_id_or_ssn = $_POST['tax_id_or_ssn'];
+		$practice = $_POST['practice'];
 		$password = $_POST['password'];
 		$name = $_POST['name'];
 		$email = $_POST['email'];
@@ -93,6 +94,7 @@ if($_POST["usersub"] == 1)
 		$npi = st($themyarray['npi']);
 		$medicare_npi = st($themyarray['medicare_npi']);
 		$tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
+		$practice = st($themyarray['practice']);
 		$password = st($themyarray['password']);
 		$name = st($themyarray['name']);
 		$email = st($themyarray['email']);
@@ -169,8 +171,17 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Practice
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="practice" value="<?=$practice?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Passsword
+                Password
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="password" value="<?=$password;?>" class="tbox" /> 

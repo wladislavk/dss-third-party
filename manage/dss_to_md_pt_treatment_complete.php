@@ -135,21 +135,52 @@ foreach($medications_arr as $key => $val)
 		}
 	}
 }
+$q1_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id ASC LIMIT 1;";
+$q1_my = mysql_query($q1_sql);
+$q1_myarray = mysql_fetch_array($q1_my);
+$first_study_date = st($q1_myarray['date']);
+$first_diagnosis = st($q1_myarray['diagnosis']);
+$first_ahi = st($q1_myarray['ahi']);
+$first_rdi = st($q1_myarray['rdi']);
+$first_o2sat90 = st($q1_myarray['t9002']);
+$first_o2nadir = st($q1_myarray['o2nadir']);
+$first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 
-$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+$q2_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
-$sleep_study_date = st($q2_myarray['date']);
-$diagnosis = st($q2_myarray['diagnosis']);
-$ahi = st($q2_myarray['ahi']);
-$type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
-
+$second_study_date = st($q2_myarray['date']);
+$second_diagnosis = st($q2_myarray['diagnosis']);
+$second_ahi = st($q2_myarray['ahi']);
+$second_rdi = st($q2_myarray['rdi']);
+$second_o2sat90 = st($q2_myarray['t9002']);
+$second_o2nadir = st($q2_myarray['o2nadir']);
+$second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
+$sleep_center_name = st($q2_myarray['place']);
+$dentaldevice = st($q2_myarray['dentaldevice']);
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
 $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 
 $sleeplab_name = st($sleeplab_myarray['company']);
+
+$subj1_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+$subj1_result = mysql_query($subj1_query);
+while ($row = mysql_fetch_assoc($subj1_result)) {
+	$subj1 = $row;
+}
+
+$subj2_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid DESC LIMIT 1;";
+$subj2_result = mysql_query($subj2_query);
+while ($row = mysql_fetch_assoc($subj2_result)) {
+	$subj2 = $row;
+}
+
+// Device Delivery Date
+$device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
+$device_result = mysql_query($device_query);
+$delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
 
 // Appointment Date
 $appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
@@ -205,7 +236,7 @@ $todays_date = date('F d, Y');
 $template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
-%practice%<br />
+%practice%
 %addr1%<br />
 %addr2%
 %city%, %state% %zip%<br />
@@ -221,11 +252,11 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %md_lastname%:</p>
+<p>Dear %salutation% %md_lastname%:</p>
 
-<p>We have a mutual patient, %patient_fullname%, a %patient_age% year old %patient_gender% who was diagnosed with %diagnosis% after undergoing %type_study% on [Sleep Test Date] where %he/she% scored an AHI of %ahi% and/or RDI of %rdi%; and spent %O2Sat90%% of the night below 90% O2.</p>
+<p>We have a mutual patient, %patient_fullname%, a %patient_age% year old %patient_gender% who was diagnosed with %2nddiagnosis% after undergoing %2ndtype_study% on %2ndstudy_date% where %he/she% scored an AHI of %2ndahi% and/or RDI of %2ndrdi%; and spent %2ndO2Sat90%% of the night below 90% O2.</p>
 
-<p>We delivered [Dental Device Name] device on [Date of Device Delivery], and %he/she% has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study. %patient_firstname%'s results, baseline and post appliance insertion appear below.</p>
+<p>We delivered %dental_device% device on %delivery_date%, and %he/she% has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study. %patient_firstname%'s results, baseline and post appliance insertion appear below.</p>
 
 <table cellpadding=\"7px\">
 	<tr>
@@ -279,7 +310,7 @@ $template = "<p>%todays_date%</p>
 
 <p>%patient_firstname% has been counseled that OSA is a progressive disease and I have stressed the importance of a team healthcare approach and disciplined follow up.   I believe we have reached maximum medical improvement with a dental device, and at this point I plan to refer %patient_firstname% back to your office for further medical care.</p>
 
-<p>Please don’t hesitate to call if you have any questions. I thank you again for the opportunity to participate in this patient’s treatment.</p>
+<p>Please don't hesitate to call if you have any questions. I thank you again for the opportunity to participate in this patient's treatment.</p>
 
 <p>Sincerely,
 <br />
@@ -291,7 +322,7 @@ cc:  %patient_fullname%</p>";
 
 
 ?>
-<form action="/manage/dss_to_md_pt_treatment_complete.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_to_md_pt_treatment_complete.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -308,6 +339,10 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . " " . $letter_contacts[$key]['firstname'] . " " . $letter_contacts[$key]['lastname'] . "</strong>";
 		$search[] = '%md_lastname%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['lastname'] . "</strong>";
+		$search[] = "%salutation%";
+		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+		$search[] = '%practice%';
+		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['add1'] . "</strong>";
 		$search[] = '%addr2%';
@@ -340,16 +375,57 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $history_disp . "</strong>";
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
-		/*$search[] = "%sleeplab_name%";
-		$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
-		$search[] = "%type_study%";
-		$replace[] = "<strong>" . $type_study . "</strong>";
-		$search[] = "%ahi%";
-		$replace[] = "<strong>" . $ahi . "</strong>";
-		$search[] = "%diagnosis%";
-		$replace[] = "<strong>" . $diagnosis . "</strong>";
+		$search[] = "%sleeplab_name%";
+		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+		$search[] = "%1ststudy_date%";
+		$replace[] = "<strong>" . $first_study_date . "</strong>";
+		$search[] = "%1stRDI/AHI%";
+		$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
+		$search[] = "%1stLowO2%";
+		$replace[] = "<strong>" . $first_o2nadir . "</strong>";
+		$search[] = "%1stTO290%";
+		$replace[] = "<strong>" . $first_o2sat90 . "</strong>";
+		$search[] = "%2ndtype_study%";
+		$replace[] = "<strong>" . $second_type_study . "</strong>";
+		$search[] = "%2ndahi%";
+		$replace[] = "<strong>" . $second_ahi . "</strong>";
+		$search[] = "%2ndrdi%";
+		$replace[] = "<strong>" . $second_rdi . "</strong>";
+		$search[] = "%2ndO2Sat90%";
+		$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+		$search[] = "%2ndstudy_date%";
+		$replace[] = "<strong>" . $second_study_date . "</strong>";
+		$search[] = "%2ndRDI/AHI%";
+		$replace[] = "<strong>" . $second_rdi . "/" . $second_ahi . "</strong>";
+		$search[] = "%2ndLowO2%";
+		$replace[] = "<strong>" . $second_o2nadir . "</strong>";
+		$search[] = "%2ndTO290%";
+		$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+		$search[] = "%2nddiagnosis%";
+		$replace[] = "<strong>" . $second_diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$search[] = "%delivery_date%";
+		$replace[] = "<strong>" . $delivery_date . "</strong>";
+		$search[] = "%dental_device%";
+		$replace[] = "<strong>" . $dentaldevice . "</strong>";
+		$search[] = "%1stESS%";
+		$replace[] = "<strong>" . $subj1['ep_eadd'] . "</strong>";
+		$search[] = "%1stSnoring%";
+		$replace[] = "<strong>" . $subj1['ep_sadd'] . "</strong>";
+		$search[] = "%1stEnergy%";
+		$replace[] = "<strong>" . $subj1['ep_eladd'] . "</strong>";
+		$search[] = "%1stQuality%";
+		$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
+		$search[] = "%2ndESS%";
+		$replace[] = "<strong>" . $subj2['ep_eadd'] . "</strong>";
+		$search[] = "%2ndSnoring%";
+		$replace[] = "<strong>" . $subj2['ep_sadd'] . "</strong>";
+		$search[] = "%2ndEnergy%";
+		$replace[] = "<strong>" . $subj2['ep_eladd'] . "</strong>";
+		$search[] = "%2ndQuality%";
+		$replace[] = "<strong>" . $subj2['sleep_qualadd'] . "</strong>";
+		$search[] = "%other_mds%";
 		$other_mds = "";
 		$count = 1;
 		foreach ($letter_contacts as $index => $md) {
@@ -403,6 +479,10 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
 	$search[] = '%md_lastname%';
 	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+	$search[] = "%salutation%";
+	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+	$search[] = '%practice%';
+	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';
@@ -435,16 +515,56 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
-	/*$search[] = "%sleeplab_name%";
-	$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
-	$search[] = "%type_study%";
-	$replace[] = "<strong>" . $type_study . "</strong>";
-	$search[] = "%ahi%";
-	$replace[] = "<strong>" . $ahi . "</strong>";
-	$search[] = "%diagnosis%";
-	$replace[] = "<strong>" . $diagnosis . "</strong>";
+	$search[] = "%sleeplab_name%";
+	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+	$search[] = "%1ststudy_date%";
+	$replace[] = "<strong>" . $first_study_date . "</strong>";
+	$search[] = "%1stRDI/AHI%";
+	$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
+	$search[] = "%1stLowO2%";
+	$replace[] = "<strong>" . $first_o2nadir . "</strong>";
+	$search[] = "%1stTO290%";
+	$replace[] = "<strong>" . $first_o2sat90 . "</strong>";
+	$search[] = "%2ndtype_study%";
+	$replace[] = "<strong>" . $second_type_study . "</strong>";
+	$search[] = "%2ndahi%";
+	$replace[] = "<strong>" . $second_ahi . "</strong>";
+	$search[] = "%2ndrdi%";
+	$replace[] = "<strong>" . $second_rdi . "</strong>";
+	$search[] = "%2ndO2Sat90%";
+	$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+	$search[] = "%2ndstudy_date%";
+	$replace[] = "<strong>" . $second_study_date . "</strong>";
+	$search[] = "%2ndRDI/AHI%";
+	$replace[] = "<strong>" . $second_rdi . "/" . $second_ahi . "</strong>";
+	$search[] = "%2ndLowO2%";
+	$replace[] = "<strong>" . $second_o2nadir . "</strong>";
+	$search[] = "%2ndTO290%";
+	$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+	$search[] = "%2nddiagnosis%";
+	$replace[] = "<strong>" . $second_diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
+	$search[] = "%delivery_date%";
+	$replace[] = "<strong>" . $delivery_date . "</strong>";
+	$search[] = "%dental_device%";
+	$replace[] = "<strong>" . $dentaldevice . "</strong>";
+	$search[] = "%1stESS%";
+	$replace[] = "<strong>" . $subj1['ep_eadd'] . "</strong>";
+	$search[] = "%1stSnoring%";
+	$replace[] = "<strong>" . $subj1['ep_sadd'] . "</strong>";
+	$search[] = "%1stEnergy%";
+	$replace[] = "<strong>" . $subj1['ep_eladd'] . "</strong>";
+	$search[] = "%1stQuality%";
+	$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
+	$search[] = "%2ndESS%";
+	$replace[] = "<strong>" . $subj2['ep_eadd'] . "</strong>";
+	$search[] = "%2ndSnoring%";
+	$replace[] = "<strong>" . $subj2['ep_sadd'] . "</strong>";
+	$search[] = "%2ndEnergy%";
+	$replace[] = "<strong>" . $subj2['ep_eladd'] . "</strong>";
+	$search[] = "%2ndQuality%";
+	$replace[] = "<strong>" . $subj2['sleep_qualadd'] . "</strong>";
 	$search[] = "%other_mds%";
 	$other_mds = "";
   $count = 1;
@@ -482,7 +602,7 @@ foreach ($letter_contacts as $key => $contact) {
 	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
 
-		$letter20id = trigger_letter20($patientid);
+		//$letter20id = trigger_letter20($patientid);
 
 		if ($parent) {
 			?>

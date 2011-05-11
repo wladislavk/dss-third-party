@@ -136,14 +136,14 @@ foreach($medications_arr as $key => $val)
 	}
 }
 
-$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+$q2_sql = "SELECT date, sleeptesttype, ahi, dentaldevice, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $sleep_study_date = st($q2_myarray['date']);
 $diagnosis = st($q2_myarray['diagnosis']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
-
+$dentaldevice = st($q2_myarray['dentaldevice']);
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
@@ -200,7 +200,7 @@ $template = "<p>%todays_date%</p>
 
 <p>Dear %patient_firstname%:</p>
 
-<p>Can you believe it was a year ago that we fabricated your [Dental Device Name] dental sleep device?  We hope that you are continuing to do well.</p>
+<p>Can you believe it was a year ago that we fabricated your %dental_device% dental sleep device?  We hope that you are continuing to do well.</p>
 
 <p>Please take time to contact our office and schedule your yearly follow up.   Since sleep disordered breathing is a progressive disorder it is important that we evaluate your appliance for proper fit and discuss your continued treatment regimen.</p>
 
@@ -275,6 +275,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$search[] = "%dental_device%";
+		$replace[] = "<strong>" . $dentaldevice . "</strong>";
 		$other_mds = "";
 		$count = 1;
 		foreach ($letter_contacts as $index => $md) {
@@ -370,6 +372,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
+	$search[] = "%dental_device%";
+	$replace[] = "<strong>" . $dentaldevice . "</strong>";
 	$search[] = "%other_mds%";
 	$other_mds = "";
   $count = 1;

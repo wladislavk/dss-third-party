@@ -62,10 +62,11 @@ $template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templa
 $template_result = mysql_query($template_query);
 $title = mysql_result($template_result, 0);
 
-// Get Franchisee Name
-$franchisee_query = "SELECT name FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
+// Get Franchisee Name and Practice
+$franchisee_query = "SELECT name, practice FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
 $franchisee_result = mysql_query($franchisee_query);
-$franchisee_name = mysql_result($franchisee_result, 0);
+$franchisee_name = mysql_result($franchisee_result, 0, 0);
+$franchisee_practice = mysql_result($franchisee_result, 0, 1);
 
 ?>
 
@@ -130,7 +131,7 @@ $template = "<p>%todays_date%</p>
 
 <p>The good news is that we can do something about these problems!</p>
 
-<p>[Franchisee Practice Name] has joined with Dental Sleep Solutions&reg; to undergo specific training on how to treat snoring and sleep apnea utilizing state of the art, FDA approved dental sleep devices.</p>
+<p>%franchisee_practice% has joined with Dental Sleep Solutions&reg; to undergo specific training on how to treat snoring and sleep apnea utilizing state of the art, FDA approved dental sleep devices.</p>
 
 <p>If you or someone you know is suffering with snoring or sleep apnea and would like more information about how we can help by using dental sleep therapy please call our office and we will be happy to schedule a complimentary consultation.  We also invite you to visit our website at www.dentalsleepsolutions.com for more information.</p>
 
@@ -143,7 +144,7 @@ $template = "<p>%todays_date%</p>
 <p>Dr. %franchisee_fullname%</p>";
 
 ?>
-<form action="/manage/dss_to_pt_intro.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_to_pt_intro.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -172,8 +173,10 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['state'] . "</strong>";
 		$search[] = '%zip%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['zip'] . "</strong>";
-		$search[] = "%franchisee_fullname%</p>";
+		$search[] = "%franchisee_fullname%";
 		$replace[] = "<strong>" . $franchisee_name . "</strong>";
+		$search[] = "%franchisee_practice%";
+		$replace[] = "<strong>" . $franchisee_practice . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -229,6 +232,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%franchisee_fullname%';
 	$replace[] = "<strong>" . $franchisee_name . "</strong>";
+	$search[] = "%franchisee_practice%";
+	$replace[] = "<strong>" . $franchisee_practice . "</strong>";
 	
  	if ($new_template[$key] != null) {
 	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);

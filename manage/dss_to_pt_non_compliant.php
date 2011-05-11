@@ -136,14 +136,15 @@ foreach($medications_arr as $key => $val)
 	}
 }
 
-$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+$q2_sql = "SELECT date, sleeptesttype, ahi, diagnosis, dentaldevice, place FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $sleep_study_date = st($q2_myarray['date']);
 $diagnosis = st($q2_myarray['diagnosis']);
 $ahi = st($q2_myarray['ahi']);
 $type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
-
+$sleep_center_name = st($q2_myarray['place']);
+$dentaldevice = st($q2_myarray['dentaldevice']);
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
@@ -155,6 +156,11 @@ $sleeplab_name = st($sleeplab_myarray['company']);
 $appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 4 ORDER BY stepid DESC LIMIT 1;";
 $appt_result = mysql_query($appt_query);
 $appt_date = date('F d, Y', strtotime(mysql_result($appt_result, 0)));
+
+// Device Delivery Date
+$device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
+$device_result = mysql_query($device_query);
+$delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
 
 // Get Patient's other mds
 $md_ids = get_mdcontactids($patientid);
@@ -204,7 +210,7 @@ $template = "<p>%todays_date%</p>
 
 <p>Dear %patient_firstname%:</p>
 
-<p>We delivered your [Name of Dental Device] dental device on [Date of Device Delivery].  Our follow up schedule mandates at least one follow up appointment within the first 30 days.  Somehow, you have slipped through the cracks.  We have no record of that visit.</p>
+<p>We delivered your %dental_device% dental device on %delivery_date%.  Our follow up schedule mandates at least one follow up appointment within the first 30 days.  Somehow, you have slipped through the cracks.  We have no record of that visit.</p>
 
 <p>Please contact our office immediately to schedule your follow up appointment.</p>
 
@@ -269,8 +275,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $history_disp . "</strong>";
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
-		/*$search[] = "%sleeplab_name%";
-		$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
+		$search[] = "%sleeplab_name%";
+		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 		$search[] = "%type_study%";
 		$replace[] = "<strong>" . $type_study . "</strong>";
 		$search[] = "%ahi%";
@@ -279,6 +285,10 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $diagnosis . "</strong>";
 		$search[] = "%appt_date%";
 		$replace[] = "<strong>" . $appt_date . "</strong>";
+		$search[] = "%delivery_date%";
+		$replace[] = "<strong>" . $delivery_date . "</strong>";
+		$search[] = "%dental_device%";
+		$replace[] = "<strong>" . $dentaldevice . "</strong>";
 		$other_mds = "";
 		$count = 1;
 		$total_mds = count($patient_mds['mds']);
@@ -363,8 +373,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
-	/*$search[] = "%sleeplab_name%";
-	$replace[] = "<strong>" . $sleeplab_name . "</strong>";*/
+	$search[] = "%sleeplab_name%";
+	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%type_study%";
 	$replace[] = "<strong>" . $type_study . "</strong>";
 	$search[] = "%ahi%";
@@ -373,6 +383,10 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $diagnosis . "</strong>";
 	$search[] = "%appt_date%";
 	$replace[] = "<strong>" . $appt_date . "</strong>";
+	$search[] = "%delivery_date%";
+	$replace[] = "<strong>" . $delivery_date . "</strong>";
+	$search[] = "%dental_device%";
+	$replace[] = "<strong>" . $dentaldevice . "</strong>";
 	$search[] = "%other_mds%";
 	$other_mds = "";
   $count = 1;

@@ -99,13 +99,13 @@ $todays_date = date('F d, Y');
 $template = "<p>%todays_date%</p>
 <p>
 %md_fullname%<br />
-%practice%<br />
+%practice%
 %addr1%<br />
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </p>
 <p>
-Dear Dr. %md_lastname%:
+Dear %salutation% %md_lastname%:
 </p>
 <p>
 Thank you for allowing us a few moments of your time.  We represent Dental Sleep Solutions Franchising, LLC, a franchise entity that recruits, trains, and provides administrative support to dentists in the area of dental sleep medicine.
@@ -146,7 +146,7 @@ George \"Gy\" Yatros, DMD
 </p>";
 
 ?>
-<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_intro_to_md_from_dss.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -163,6 +163,10 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . " " . $letter_contacts[$key]['firstname'] . " " . $letter_contacts[$key]['lastname'] . "</strong>";
 		$search[] = '%md_lastname%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['lastname'] . "</strong>";
+		$search[] = "%salutation%";
+		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+		$search[] = '%practice%';
+		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['add1'] . "</strong>";
 		$search[] = '%addr2%';
@@ -214,6 +218,10 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
 	$search[] = '%md_lastname%';
 	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+	$search[] = "%salutation%";
+	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+	$search[] = '%practice%';
+	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';

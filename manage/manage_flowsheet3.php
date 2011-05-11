@@ -263,10 +263,10 @@ function trigger_letter6($pid, $stepid) {
 	}
 }
 
-function trigger_letter8($pid) {
+function trigger_letter8($pid, $stepid) {
   $letterid = '8';
   $topatient = '1';
-  $letter = create_letter($letterid, $pid, '', $topatient);
+  $letter = create_letter($letterid, $pid, $stepid, $topatient);
   if (!is_numeric($letter)) {
     print "Can't send letter 8: " . $letter;
     die();
@@ -275,11 +275,11 @@ function trigger_letter8($pid) {
   }
 }
 
-function trigger_letter9($pid) {
+function trigger_letter9($pid, $stepid) {
   $letterid = '9';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 9: " . $letter;
     die();
@@ -288,11 +288,11 @@ function trigger_letter9($pid) {
   }
 }
 
-function trigger_letter10($pid) {
+function trigger_letter10($pid, $stepid) {
   $letterid = '10';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 10: " . $letter;
     die();
@@ -301,11 +301,11 @@ function trigger_letter10($pid) {
   }
 }
 
-function trigger_letter11($pid) {
+function trigger_letter11($pid, $stepid) {
   $letterid = '11';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list, $md_referral_list);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 11: " . $letter;
     die();
@@ -314,10 +314,10 @@ function trigger_letter11($pid) {
   }
 }
 
-function trigger_letter13($pid) {
+function trigger_letter13($pid, $stepid) {
   $letterid = '13';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 13: " . $letter;
     die();
@@ -326,11 +326,11 @@ function trigger_letter13($pid) {
   }
 }
 
-function trigger_letter16($pid) {
+function trigger_letter16($pid, $stepid) {
   $letterid = '16';
   $topatient = '1';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 16: " . $letter;
     die();
@@ -339,11 +339,11 @@ function trigger_letter16($pid) {
   }
 }
 
-function trigger_letter17($pid) {
+function trigger_letter17($pid, $stepid) {
   $letterid = '17';
   $topatient = '1';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 17: " . $letter;
     die();
@@ -352,11 +352,11 @@ function trigger_letter17($pid) {
   }
 }
 
-function trigger_letter19($pid) {
+function trigger_letter19($pid, $stepid) {
   $letterid = '19';
   $topatient = '1';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, '', $topatient, $md_list);
+  $letter = create_letter($letterid, $pid, $stepid, $topatient, $md_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 19: " . $letter;
     die();
@@ -365,10 +365,10 @@ function trigger_letter19($pid) {
   }
 }
 
-function trigger_letter24($pid) {
+function trigger_letter24($pid, $stepid) {
   $letterid = '24';
   $md_referral_list = get_mdreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $md_referral_list);
+  $letter = create_letter($letterid, $pid, $stepid, '', '', $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 24: " . $letter;
     die();
@@ -377,10 +377,10 @@ function trigger_letter24($pid) {
   }
 }
 
-function trigger_letter25($pid) {
+function trigger_letter25($pid, $stepid) {
   $letterid = '25';
   $topatient = '1';
-  $letter = create_letter($letterid, $pid, '', $topatient);
+  $letter = create_letter($letterid, $pid, $stepid, $topatient);
   if (!is_numeric($letter)) {
     print "Can't send letter 25: " . $letter;
     die();
@@ -509,7 +509,7 @@ if(isset($_POST['flowsubmit'])){
     $referral_query = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_contacttype ON dental_referredby.referredbyid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_referredby.referredbyid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
     $referral_result = mysql_query($referral_query);
     $numrows = mysql_num_rows($referral_result);
-    print $numrows;
+    //print $numrows;
     if ($numrows == 1) {
       trigger_letter24($_GET['pid']);
     }
@@ -630,6 +630,14 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 }
 
 if(isset($_POST['flowsubmitpgtwo'])){
+	$numsteps = count($_POST['data']);
+
+	$steparray_query = "SELECT steparray FROM dental_flow_pg2 WHERE patientid = '".$_GET['pid']."';";
+	$steparray_result = mysql_query($steparray_query);
+	$result_array = mysql_fetch_array($steparray_result);
+	$flowsheet_segments = explode(",", $result_array['steparray']);
+	$topstep = array_pop($flowsheet_segments); 
+
 	$segment_query = "SELECT segmentid, date_scheduled, date_completed FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
 	$segment_result = mysql_query($segment_query);
 	while ($row = mysql_fetch_assoc($segment_result)) {
@@ -638,47 +646,54 @@ if(isset($_POST['flowsubmitpgtwo'])){
 
 	$consult_query = "SELECT stepid, date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
 	$consult_result = mysql_query($consult_query);
-	$consult_stepid = mysql_result($consult_result, 0);
-	$consult_date = mysql_result($consult_result, 1);
+	$consult_stepid = mysql_result($consult_result, 0, 0);
+	$consult_date = mysql_result($consult_result, 0, 1);
 	if ($consult_date != "0000-00-00" && $consult_stepid < $numsteps) {
 		$consulted = true;
 	}
-	$numsteps = count($_POST['data']);
+
 	$datesched = s_for($_POST['data'][$numsteps]['datesched']);
 	$datecomp = s_for($_POST['data'][$numsteps]['datecomp']);
 
+/*print $topstep . "<br />";
+print ($consulted) ? "true" . "<br />" : "false<br />";
+print $datesched . "<br />";
+print (strtotime($datesched) != strtotime($laststep['date_scheduled'])) ? "Not equal<br />": "equal<br />";
+print $datecomp . "<br />";
+print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<br />": "equal<br />";*/
 	$letterid = array();
-	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $laststep['segmentid'] == "2") { // Refused Treatment
+	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "2") { // Consultation
 		$letterid[] = trigger_letter5($_GET['pid'], $numsteps);
 		$letterid[] = trigger_letter6($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $laststep['segmentid'] == "6") { // Refused Treatment
-		$letterid[] = trigger_letter8($_GET['pid']);
-		$letterid[] = trigger_letter11($_GET['pid']);
+	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "6") { // Refused Treatment
+		$letterid[] = trigger_letter8($_GET['pid'], $numsteps);
+		$letterid[] = trigger_letter11($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $laststep['segmentid'] == "4") { // Impressions
-		$letterid[] = trigger_letter9($_GET['pid']);
-		$letterid[] = trigger_letter13($_GET['pid']);
+	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "4") { // Impressions
+		$letterid[] = trigger_letter9($_GET['pid'], $numsteps);
+		$letterid[] = trigger_letter13($_GET['pid'], $numsteps);
 	}
-	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $laststep['segmentid'] == "8") { // Follow-Up/Check
+	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "8") { // Follow-Up/Check
 		$trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
+print $trigger_query;
 		$trigger_result = mysql_query($trigger_query);
 		$numrows = (mysql_num_rows($trigger_result));
 		if ($numrows > 0) {
-			$letterid[] = trigger_letter16($_GET['pid']);
+			$letterid[] = trigger_letter16($_GET['pid'], $numsteps);
 		}
 	}    
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $laststep['segmentid'] == "5") { // Delaying Treatment / Waiting
-		$letterid[] = trigger_letter10($_GET['pid']);
+	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "5") { // Delaying Treatment / Waiting
+		$letterid[] = trigger_letter10($_GET['pid'], $numsteps);
 	}
-	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $laststep['segmentid'] == "9") { // Patient Non Compliant
-		$letterid[] = trigger_letter17($_GET['pid']);
+	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "9") { // Patient Non Compliant
+		$letterid[] = trigger_letter17($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $laststep['segmentid'] == "11") { // Treatment Complete
-		$letterid[] = trigger_letter19($_GET['pid']);
+	if ($consulted == true && $datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "11") { // Treatment Complete
+		$letterid[] = trigger_letter19($_GET['pid'], $numsteps);
 	}
-	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $laststep['segmentid'] == "13") { // Termination
-		$letterid[] = trigger_letter25($_GET['pid']);
+	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "13") { // Termination
+		$letterid[] = trigger_letter25($_GET['pid'], $numsteps);
 	}
 
 	//print_r($_POST);
@@ -785,7 +800,7 @@ $stepid = count($explode);
 array_pop($explode);
 
 $implode = implode(",", $explode);
-echo $implode;
+//echo $implode;
 
 $updatesteparray = "UPDATE `dental_flow_pg2` SET `steparray` = '".$implode."' WHERE `patientid` = '".$patientid."' LIMIT 1;";
 if ($stepid != 1) {
@@ -1729,7 +1744,7 @@ Date Scheduled<br />
 </td>
 
 
-<td width="119">
+<td width="247">
 Correspondence
 </td>
 
@@ -1739,14 +1754,14 @@ Generated On
 </td>
 
 
-<td width="26" style="text-align:center;">
+<!--<td width="26" style="text-align:center;">
 &#8730;&nbsp;
 </td>
 
 
 <td width="102">
 Sent via
-</td>
+</td>-->
                                               
 
 <td width="250">
@@ -1867,7 +1882,7 @@ Next Appointment
   }
 //print_r($letters);
   $letter_list = implode(",", $letters);
-  $dental_letters_query = "SELECT `stepid`, `letterid`, UNIX_TIMESTAMP(`generated_date`) as `generated_date`, `status`, dental_letter_templates.name, dental_letter_templates.template FROM `dental_letters` LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE `patientid` = '".$_GET['pid']."' AND `letterid` IN(".$letter_list.") ORDER BY `stepid` ASC;";
+  $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND letterid IN(".$letter_list.") ORDER BY stepid ASC;";
   $dental_letters_res = mysql_query($dental_letters_query);
   $dental_letters = array();
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
@@ -1876,6 +1891,7 @@ Next Appointment
 //print $dental_letters_query;
 
   //print_r($flow_pg2_info);
+	$calendar_vars = array();
   $i = 0;
   while($section = $order && $i < count($order)){
   $segment_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$order[$i].";";
@@ -1885,6 +1901,18 @@ Next Appointment
   }else{
     echo "Click 'Start Consult' above to create your first step";
   }
+	if ($order[$i] != 1 && $order[$i] != 13) {
+		$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
+		$calendar_vars[$i]['varsched'] = "cal_sched$i";
+	}
+  if ($order[$i] != 6 && $order[$i] != 5 && $order[$i] != 9) {
+		$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
+		$calendar_vars[$i]['varcomp'] = "cal_comp$i";
+	}
+	$caldatesched = $calendar_vars[$i]['varsched'];
+	$caldatecomp = $calendar_vars[$i]['varcomp'];
+	$schedid = "datesched$i";
+	$compid = "datecomp$i";
 
   $getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
   $steparrayqry = mysql_query($getsteparray);
@@ -1901,12 +1929,41 @@ Next Appointment
   $pid = $_GET['pid'];
   $letterlink = "";
 	foreach ($dental_letters[$step] as $letter) {
+		$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
 		$lid = $letter['letterid'];
-		$name = $letter['name'];
 		$template = $letter['template'];
 		$gendate = date('m/d/Y', $letter['generated_date']);
 		if ($lid != '') {
-			$letterlink .= "<a href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+			foreach ($contacts['patient'] as $contact) {
+				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['status'] == 1) {
+					$letterlink .= "<a href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
+					$letterlink .= "<a class=\"darkblue\" href=\"" . $letter['pdf_path'] . "\">$name</a><br />";
+				}
+			}
+			foreach ($contacts['md_referrals'] as $contact) {
+				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['status'] == 1) {
+					$letterlink .= "<a href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
+					$letterlink .= "<a class=\"darkblue\" href=\"" . $letter['pdf_path'] . "\">$name</a><br />";
+				}
+			}
+			foreach ($contacts['mds'] as $contact) {
+				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['status'] == 1) {
+					$letterlink .= "<a href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
+					$letterlink .= "<a class=\"darkblue\" href=\"" . $letter['pdf_path'] . "\">$name</a><br />";
+				}
+			}
 		}
 	}
   eval('?>' . $segment['content'] . '<?');
@@ -1914,7 +1971,13 @@ Next Appointment
   //echo "<br />".$i."<br />";
   $i++; 
   }
-    
+  
+	print '<script type="text/javascript">';
+	foreach ($calendar_vars as $var) {
+		print (isset($var['datesched'])) ? $var['datesched'] . "\n" : "";
+		print (isset($var['datecomp'])) ? $var['datecomp'] . "\n" : "";
+ 	}
+	print "</script>";
 
 	/*
   	asort($final_fsData_array, SORT_NUMERIC);	

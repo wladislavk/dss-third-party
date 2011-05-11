@@ -16,12 +16,12 @@ Last Updated : July 2, 2009
 }
 form ul{
 	margin:0;
-	/*padding:0;*/
-	/*list-style-type:none;*/
+	padding:0;/**/
+	list-style-type:none;/**/
 	width:100%;
 }
 form li{
-	/*display:block;*/
+	display:block;/**/
 	margin:0;
 	padding:6px 5px 9px 9px;
 	clear:both;

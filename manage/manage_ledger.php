@@ -55,12 +55,53 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select dl.*, p.name from dental_ledger dl LEFT JOIN dental_users p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' ";
+$sql = "select 
+                'ledger',
+		dl.ledgerid,
+		dl.service_date,
+            	dl.entry_date,
+		p.name,
+ 		dl.description,
+		dl.amount,
+		dl.paid_amount,
+		dl.status
+	from dental_ledger dl 
+		LEFT JOIN dental_users p ON dl.producerid=p.userid 
+			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+  UNION
+   	select 
+		'note',
+		n.id,
+		n.service_date,
+		n.entry_date,
+		p.name,
+		n.note,
+		'',
+		'',
+		''
+	from dental_ledger_note n
+		LEFT JOIN dental_users p on n.producerid=p.userid
+			where n.patientid='".s_for($_GET['pid'])."'       
+  UNION
+	select
+		'claim',
+		i.insuranceid,
+		i.adddate,
+		i.adddate,
+		'',
+		'Claim filed',
+		'',
+		'',
+		i.status
+	from dental_insurance i
+		where i.patientid='".s_for($_GET['pid'])."'
+";
+
 if(isset($_REQUEST['sort'])){
   if($_REQUEST['sort']=='producer'){
-    $sql .= " ORDER BY p.name ".$_REQUEST['sortdir']; 
+    $sql .= " ORDER BY name ".$_REQUEST['sortdir']; 
   }else{
-    $sql .= " ORDER BY dl.".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+    $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
   }
 }
 
@@ -148,6 +189,10 @@ return s;
 		Add New Transaction
 	</button>
 	&nbsp;&nbsp;
+        <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?=$_GET['pid'];?>');" class="addButton">
+                Add Note 
+        </button>
+        &nbsp;&nbsp;
         <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
                Reports 
         </button>
@@ -220,6 +265,8 @@ return s;
 	else
 	{
 		$cur_bal = 0;
+		$last_sd = '';
+		$last_ed = '';
 		while($myarray = mysql_fetch_array($my))
 		{
 			if($myarray["status"] == 1)
@@ -234,10 +281,16 @@ return s;
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-                	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+					<?php if($myarray["service_date"]!=$last_sd){
+						$last_sd = $myarray["service_date"];
+       					      	echo date('m-d-Y',strtotime(st($myarray["service_date"])));
+                                        } ?>
 				</td>
 				<td valign="top">
-                	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
+					<?php if($myarray["entry_date"]!=$last_ed){
+                                                $last_ed = $myarray["entry_date"];
+                                                echo date('m-d-Y',strtotime(st($myarray["entry_date"])));
+                                        } ?>
 				</td>
                                 <td valign="top">
                         <?=st($myarray["name"]);?>
@@ -276,6 +329,7 @@ return s;
           ?>       	
 				</td>
 				<td valign="top">
+                                   <?php if($myarray[0]=='ledger'){ ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
@@ -288,6 +342,20 @@ return s;
                                         </a>
 
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
+                                  <?php }elseif($myarray[0]=='note'){ ?>
+ 
+					<a href="Javascript:;" onclick="Javascript: loadPopup('edit_ledger_note.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
+                                                Edit 
+                                        </a>
+                                  <?php }elseif($myarray[0]=='claim'){ ?>
+<a href="insurance.php?insid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                Edit 
+                                        </a>
+
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a>
+  				<?php } ?>
 				</td>
 			</tr>
 	<? 	}

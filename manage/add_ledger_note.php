@@ -79,6 +79,7 @@ echo '<option value="'.$p['userid'].'">'.$p['name'].'</option>';
 
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
+<input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>" />
 </form>
 <script type="text/javascript">
 var cal1 = new calendar2(document.ledgernoteform.elements['entry_date']);

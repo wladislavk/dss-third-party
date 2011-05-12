@@ -8,48 +8,6 @@ if(!isset($_REQUEST['sort'])){
   $_REQUEST['sortdir'] = 'asc';
 }
 
-if($_REQUEST["delid"] != "")
-{
-  $pat_sql2 = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-  $pat_my2 = mysql_query($pat_sql2);
-  while($pat_myarray2 = mysql_fetch_array($pat_my2)){ 
-  
-  $pat_sql3 = mysql_query("INSERT INTO dental_ledger_rec (userid, patientid, service_date, description, amount, paid_amount,transaction_code, ip_address, transaction_type) VALUES ('".$_SESSION['username']."','".$_GET['pid']."','".$pat_myarray2['service_date']."','".$pat_myarray2['description']."','".$pat_myarray2['amount']."','".$pat_myarray2['paid_amount']."','".$pat_myarray2['transaction_code']."','".$pat_myarray2['ip_address']."','".$pat_myarray2['transaction_type']."');");
-  if(!$pat_sql3){
-   echo "There was an error updating the ledger record.  Please contact your system administrator.";
-  }
-  
-  }  
-  
-	$del_sql = "delete from dental_ledger where ledgerid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
-	</script>
-	<?
-	die();
-}
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
-$pat_my = mysql_query($pat_sql);
-$pat_myarray = mysql_fetch_array($pat_my); 
-
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
-
-if($pat_myarray['patientid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?
-	die();
-}
-
 $rec_disp = 200;
 
 if($_REQUEST["page"] != "")
@@ -70,34 +28,7 @@ $sql = "select
 		dl.status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
-			where dl.primary_claim_id IS NULL AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-  UNION
-   	select 
-		'note',
-		n.id,
-		n.service_date,
-		n.entry_date,
-		p.name,
-		n.note,
-		'',
-		'',
-		''
-	from dental_ledger_note n
-		LEFT JOIN dental_users p on n.producerid=p.userid
-			where n.patientid='".s_for($_GET['pid'])."'       
-  UNION
-	select
-		'claim',
-		i.insuranceid,
-		i.adddate,
-		i.adddate,
-		'Claim',
-		'Insurance Claim',
-		'',
-		'',
-		i.status
-	from dental_insurance i
-		where i.patientid='".s_for($_GET['pid'])."'
+			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 ";
 
 if(isset($_REQUEST['sort'])){

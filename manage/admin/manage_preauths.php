@@ -176,7 +176,7 @@ $my=mysql_query($sql) or die(mysql_error());
         <?php $patients = get_patients($_REQUEST['fid']); ?>
         <?php while ($row = mysql_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['firstname'] ?> <?= $row['lastname'] ?></option>
+          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;
@@ -240,8 +240,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_firstname"]);?>&nbsp;
-                    <?=st($myarray["patient_lastname"]);?> 
+					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

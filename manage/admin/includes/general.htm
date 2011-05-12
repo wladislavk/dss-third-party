@@ -282,7 +282,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
  * false otherwise.
  */
 function get_franchisees() {
-    $sql = "SELECT * FROM dental_users";
+    $sql = "SELECT * FROM dental_users ORDER BY name ASC";
     return mysql_query($sql);
 }
 

@@ -103,7 +103,7 @@ $my=mysql_query($sql) or die(mysql_error());
         <?php $patients = get_patients($_REQUEST['fid']); ?>
         <?php while ($row = mysql_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['firstname'] ?> <?= $row['lastname'] ?></option>
+          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;

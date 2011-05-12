@@ -16,11 +16,13 @@ $sqlinsertqry .= "INSERT INTO `dental_ledger_note` (
 `private` ,
 `adddate` ,
 `ip_address` ,
-`producerid`
+`producerid`,
+`patientid`,
+`docid`
 ) VALUES ";
 $private = ($_POST['private'])?1:0;
-$sqlinsertqry .= "( '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".$_POST['note']."', '".$private."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$_POST['producer']."')";
-echo $sqlinsertqry;                                                                             
+$sqlinsertqry .= "( '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".date('Y-m-d', strtotime($_POST['entry_date']))."', '".$_POST['note']."', '".$private."', '".date('m/d/Y')."', '".$_SERVER['REMOTE_ADDR']."', '".$_POST['producer']."', ".$_POST['patientid'].", ".$_POST['docid'].")";
+
 $insqry = mysql_query($sqlinsertqry);
 if(!$insqry){
 ?>

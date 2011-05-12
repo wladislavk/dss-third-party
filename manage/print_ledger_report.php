@@ -132,13 +132,64 @@ $num_users=mysql_num_rows($my);
 		$tot_charges = 0;
 		$tot_credit = 0;
 		if(isset($_GET['pid'])){
-		$newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
+		    $psql = " AND `patientid` = '".$_GET['pid']."'"; 
 		}else{
-    $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
-    }
-                if($start_date)
+		    $psql = "";
+		}
+   
+                if($start_date){
+		   $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		   $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'"; 
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+		}else{
+		  $i_date = $n_date = $l_date = '';
+		}
 
+   $newquery = "select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+		dl.patientid
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                        where dl.docid='".$_SESSION['docid']."' ".$psql." ".$l_date." 
+  UNION
+        select 
+                'note',
+                n.id,
+                n.service_date,
+                n.entry_date,
+                p.name,
+                n.note,
+                '',
+                '',
+                '',
+		n.patientid
+        from dental_ledger_note n
+                LEFT JOIN dental_users p on n.producerid=p.userid
+                        where n.docid='".$_SESSION['docid']."' AND (n.private IS NULL or n.private=0) ".$psql." ".$n_date."       
+  UNION
+        select
+                'claim',
+                i.insuranceid,
+                i.adddate,
+                i.adddate,
+                '',
+                'Claim filed',
+                '',
+                '',
+                i.status,
+		i.patientid
+        from dental_insurance i
+                where i.docid='".$_SESSION['docid']."' ".$psql." ".$i_date."
+";
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{
@@ -169,7 +220,7 @@ $num_users=mysql_num_rows($my);
                 	<?=st($name);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray["producer"]);?>
+                	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
                 	<?=st($myarray["description"]);?>

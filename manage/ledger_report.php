@@ -1,6 +1,6 @@
 <? 
 include "includes/top.htm";
-
+?><link rel="stylesheet" href="css/ledger.css" /><?php
 if($_REQUEST['dailysub'] != 1 && $_REQUEST['monthlysub'] != 1 && $_REQUEST['weeklysub'] != 1 && $_REQUEST['rangesub'] != 1 && $_GET['pid'] == '')
 {?>
 	<script type="text/javascript">
@@ -181,18 +181,83 @@ background:#999999;
 		}else{
     $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."'";
     }
-                if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])
+
+if(isset($_GET['pid'])){
+                    $psql = " AND `patientid` = '".$_GET['pid']."'";
+                }else{
+                    $psql = "";
+                }
+
+                if($start_date){
+                   $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                }else{
+                  $i_date = $n_date = $l_date = '';
+                }
+
+   $newquery = "select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.patientid
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                        where dl.docid='".$_SESSION['docid']."' ".$psql." ".$l_date." 
+  UNION
+        select 
+                'note',
+                n.id,
+                n.service_date,
+                n.entry_date,
+                p.name,
+                n.note,
+                '',
+                '',
+                '',
+                n.patientid
+        from dental_ledger_note n
+                LEFT JOIN dental_users p on n.producerid=p.userid
+                        where n.docid='".$_SESSION['docid']."' AND (n.private IS NULL or n.private=0) ".$psql." ".$n_date."       
+  UNION
+        select
+                'claim',
+                i.insuranceid,
+                i.adddate,
+                i.adddate,
+                'Claim',
+                'Insurance claim',
+                '',
+                '',
+                i.status,
+                i.patientid
+        from dental_insurance i
+                where i.docid='".$_SESSION['docid']."' ".$psql." ".$i_date."
+";
+
+
+
+
+                if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])
+                   //$newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 	
                 if(isset($_REQUEST['sort'])){
                   if($_REQUEST['sort']=='patient'){
-                    $newquery .= " ORDER BY dp.lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];
+                    $newquery .= " ORDER BY lastname ".$_REQUEST['sortdir'].", dp.firstname ".$_REQUEST['sortdir'];
                   }elseif($_REQUEST['sort']=='producer'){
-		    $newquery .= " ORDER BY p.name ".$_REQUEST['sortdir'];
+		    $newquery .= " ORDER BY name ".$_REQUEST['sortdir'];
                   }else{
-                    $newquery .= " ORDER BY dl.".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
+                    $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
                   }
                   }
+
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{
@@ -212,7 +277,7 @@ background:#999999;
 			}
 			$tr_class = "tr_active";
 		?>
-			<tr onclick="window.location = 'manage_ledger.php?pid=<?= $myarray['patientid']; ?>'" class="clickable_row <?=$tr_class;?>">
+			<tr onclick="window.location = 'manage_ledger.php?pid=<?= $myarray['patientid']; ?>'" class="clickable_row <?=$tr_class;?> <?= $myarray[0]; ?>">
 				<td valign="top" width="10%">
                 	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
 				</td>

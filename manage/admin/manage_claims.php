@@ -3,6 +3,21 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+define('SORT_BY_DATE', 0);
+define('SORT_BY_STATUS', 1);
+define('SORT_BY_PATIENT', 2);
+define('SORT_BY_FRANCHISEE', 3);
+
+$sort_by  = (!empty($_REQUEST['sort_by']))  ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_dir = (!empty($_REQUEST['sort_dir'])) ? $_REQUEST['sort_dir'] : 'DESC';
+
+$sort_by_sql = array(
+  SORT_BY_DATE => "claim.adddate $sort_dir",
+  SORT_BY_STATUS => "claim.status $sort_dir",
+  SORT_BY_PATIENT => "claim.patient_lastname $sort_dir, claim.patient_firstname $sort_dir",
+  SORT_BY_FRANCHISEE => "doc_name $sort_dir"
+);
+
 if($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -42,7 +57,7 @@ if (!empty($_REQUEST['fid'])) {
 }
 
 $sql .= "ORDER BY "
-      . "  claim.status DESC, "
+      . "  " . $sort_by_sql[$sort_by] . ", "
       . "  claim.adddate ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -152,8 +167,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_firstname"]);?>&nbsp;
-                    <?=st($myarray["patient_lastname"]);?> 
+					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

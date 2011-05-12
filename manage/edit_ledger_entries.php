@@ -260,7 +260,7 @@ echo $a['transaction_code'];
 <?= $a['amount']; ?>
 </span>
 <?php
-if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
 $onc = 'onclick="alert(\'Insurance information needs completed\'); return false;"';
 }else{
 $onc = '';

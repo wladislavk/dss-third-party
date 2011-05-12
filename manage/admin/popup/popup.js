@@ -76,6 +76,7 @@ function disablePopup(){
 		$("#popupContact").fadeOut("slow");
 		eraseCookie('tempforledgerentry');
 		popupStatus = 0;
+		parent.window.location.reload();
 	}else{
 		parent.window.location.reload();
 	}

@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+require_once('includes/constants.inc');
 $sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
 $p_sql = mysql_query($sql);
 $payments = mysql_fetch_array($p_sql);
@@ -89,7 +90,7 @@ if(document.getElementById("form["+tempforledgerentry+"][service_date]")  == '')
       var divIdName = 'innerdiv'+num;
       var tempforledgerentry = readCookie('tempforledgerentry');
       newdiv.setAttribute('id',divIdName);  
-newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal'+tempforledgerentry+'.popup();"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="0">Select Payer</option><option value="Primary Insurance">Primary Insurance</option><option value="Secondary Insurance">Secondary Insurance</option><option value="Patient">Patient</option></select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="0">Select Payment Type</option><option value="Credit Card">Credit Card</option><option value="Debit">Debit</option><option value="Check">Check</option><option value="Cash">Cash</option></select><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></div><div style="clear: both; height: 10px;"></div>';
+newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal'+tempforledgerentry+'.popup();"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="<?= DSS_TRXN_PYMT_PRIMARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PRIMARY]; ?></option><option value="<?= DSS_TRXN_PYMT_SECONDARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_SECONDARY]; ?><option value="<?= DSS_TRXN_PYMT_PATIENT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PATIENT]; ?><option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_WRITEOFF]; ?><option value="<?= DSS_TRXN_PYMT_DISCOUNT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_DISCOUNT]; ?></select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CREDIT]; ?></option><option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_DEBIT]; ?></option><option value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CHECK]; ?></option><option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CASH]; ?></option></select><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></div><div style="clear: both; height: 10px;"></div>';
       ni.appendChild(newdiv);
       setupCal(tempforledgerentry);
     }else if(readCookie('tempforledgerentry') > 0){
@@ -110,7 +111,8 @@ newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][s
         var day = currentTime.getDate()
         var year = currentTime.getFullYear()
         var todaysdate = month + "/" + day + "/" + year;  
-      newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal'+tempforledgerentry+'.popup();" value="'+month+'/'+day+'/'+year+'"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select id="form['+tempforledgerentry+'][procedure_code]" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="3">Insurance Payment Code</option><option value="4">Diagnostic Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 230px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="form['+tempforledgerentry+'][status]" name="form['+tempforledgerentry+'][status]" onclick="alert(\'Insurance information needs completed\'); return false;"  value="1" style="margin: 0; float: right; width:24px;"><font style="font-size:10px;">File</font></div></div><div style="clear: both; height: 10px;"></div>';
+newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal'+tempforledgerentry+'.popup();"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select id="form['+tempforledgerentry+'][payer]" name="form['+tempforledgerentry+'][payer]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="<?= DSS_TRXN_PYMT_PRIMARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PRIMARY]; ?></option><option value="<?= DSS_TRXN_PYMT_SECONDARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_SECONDARY]; ?><option value="<?= DSS_TRXN_PYMT_PATIENT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PATIENT]; ?><option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_WRITEOFF]; ?><option value="<?= DSS_TRXN_PYMT_DISCOUNT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_DISCOUNT]; ?></select><select id="form['+tempforledgerentry+'][payment_type]" name="form['+tempforledgerentry+'][payment_type]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" ><option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CREDIT]; ?></option><option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_DEBIT]; ?></option><option value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CHECK]; ?></option><option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CASH]; ?></option></select><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></div><div style="clear: both; height: 10px;"></div>';
+ 
       ni.appendChild(newdiv);    
       setupCal(tempforledgerentry);
     }
@@ -150,6 +152,22 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 
 </div>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;"><span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span><span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span><div style="margin: 0pt 10px 0pt 0pt; float: left; width: 327px;">Payment Type</div><div style="float:left;font-weight:bold;">Amount</div></div>
+
+<?php
+$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
+$p_sql = mysql_query($sql);
+while($p = mysql_fetch_array($p_sql)){
+?>
+<div style="margin-left:9px; margin-top: 10px; width:98%;height:16px; color: #fff;">
+<span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:120px;"><?= $dss_trxn_pymt_labels[$p['payer']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:327px;"><?= $dss_trxn_pymt_type_lables[$p['payment_type']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;"><?= $p['amount']; ?></span>
+
+</div>
+<?php } ?>
+
 <div id="FormFields" style="margin: 20px 10px;"></div>
 
 <input type="hidden" name="ledgerid" value="<?php echo $_GET['ed']; ?>">
@@ -159,7 +177,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
-<div style="width:200px;float:left;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Submit New Transactions" /></div>
+<div style="width:200px;float:left;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Submit New Payment" /></div>
 <div style="width:200px;margin-right:10px;float:right;text-align:right;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
 </form>
 <script type="text/javascript">

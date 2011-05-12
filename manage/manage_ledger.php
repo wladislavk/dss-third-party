@@ -64,13 +64,15 @@ $sql = "select
 		dl.service_date,
             	dl.entry_date,
 		p.name,
- 		dl.description,
+ 		concat(dl.description,' (',primary_claim_id,')') as description,
 		dl.amount,
-		dl.paid_amount,
+		sum(pay.amount) as paid_amount,
 		dl.status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
-			where dl.primary_claim_id IS NULL AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+		GROUP BY dl.ledgerid
   UNION
    	select 
 		'note',
@@ -93,11 +95,16 @@ $sql = "select
 		i.adddate,
 		'Claim',
 		'Insurance Claim',
-		'',
-		'',
+		(select sum(dl2.amount) FROM dental_ledger dl2
+				INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
+				where i2.insuranceid=i.insuranceid),
+		sum(pay.amount),
 		i.status
 	from dental_insurance i
+		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
+		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
 		where i.patientid='".s_for($_GET['pid'])."'
+	GROUP BY i.insuranceid
 ";
 
 if(isset($_REQUEST['sort'])){
@@ -283,7 +290,7 @@ return s;
 			$tr_class = "tr_active";
 		?>
 			<tr 
-			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'\'"'; } ?>
+			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; } ?>
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
 				<td valign="top">
 					<?php if($myarray["service_date"]!=$last_sd){
@@ -308,6 +315,7 @@ return s;
 					<? if(st($myarray["amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
+					 	if($myarray[0]!='claim')
 						$cur_bal += st($myarray["amount"]);
 					}?>
 					&nbsp;
@@ -316,20 +324,26 @@ return s;
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
+						if($myarray[0]!='claim')
 						$cur_bal -= st($myarray["paid_amount"]);
 					}?>
 					&nbsp;
 				</td>
 				<td valign="top" align="right">
-					<?=number_format(st($cur_bal),2);?>
+					<?php if($myarray[0]!='claim')
+					 echo number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
 				<td valign="top">
           <?php
-          
-          if($myarray["status"] == '0'){echo "Pend.";}
-          if($myarray["status"] == '1'){echo "Sent ";}
-          if($myarray["status"] == '2'){echo "Filed";}
+		if($myarray[0]=='ledger'){
+	          	echo $dss_trxn_status_labels[$myarray["status"]]; 
+		}elseif($myarray[0]=='claim'){
+			echo $dss_claim_status_labels[$myarray["status"]];
+		}
+          //if($myarray["status"] == '0'){echo "Pend.";}
+          //if($myarray["status"] == '1'){echo "Sent ";}
+          //if($myarray["status"] == '2'){echo "Filed";}
           
           ?>       	
 				</td>

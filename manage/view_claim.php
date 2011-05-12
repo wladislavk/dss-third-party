@@ -28,7 +28,7 @@ $sql = "select
 		dl.status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
-			where dl.claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 ";
 
 if(isset($_REQUEST['sort'])){

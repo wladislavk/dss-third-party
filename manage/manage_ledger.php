@@ -70,7 +70,7 @@ $sql = "select
 		dl.status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
-			where dl.claim_id IS NULL AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			where dl.primary_claim_id IS NULL AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
   UNION
    	select 
 		'note',

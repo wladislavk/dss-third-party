@@ -89,7 +89,11 @@ if (isset($_GET['page'])) { $page = $_GET['page']; }
 if (isset($_GET['filter'])) { $filter = mysql_real_escape_string($_GET['filter']); }
 if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'generated_date';
-  $_REQUEST['sortdir'] = 'asc';
+	if ($status == 'sent') {
+  	$_REQUEST['sortdir'] = 'DESC';
+	} else {
+  	$_REQUEST['sortdir'] = 'ASC';
+	}
 }
 $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
@@ -172,7 +176,7 @@ foreach ($dental_letters as $key => $letter) {
     $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
   }
   // Determine if letter is older than 7 days
-  if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7) {
+  if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && $status == "pending") {
     $dental_letters[$key]['old'] = true;
   }
 }

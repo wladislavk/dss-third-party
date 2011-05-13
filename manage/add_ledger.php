@@ -274,7 +274,7 @@ parent.window.scroll(0, 0);
 	$amount = st($themyarray['amount']);
 	$paid_amount = st($themyarray['paid_amount']);
         $transaction_code = st($themyarray['transaction_code']);
-        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code=".$transaction_code; 
+        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code='".$transaction_code."'"; 
         $tmy = mysql_query($tsql);
         $trow = mysql_fetch_row($tmy);
         $transaction_type = $trow[0];
@@ -423,7 +423,7 @@ parent.window.scroll(0, 0);
 
 		<tr>
         	<td valign="top" class="frmhead">
-				Procedure Code<?= $transaction_code; ?>
+				Procedure Code
             </td>
         	<td valign="top" class="frmdata"> 
 				<div id="proccode_div">

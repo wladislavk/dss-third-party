@@ -24,11 +24,13 @@ $sql = "select
 		p.name,
  		dl.description,
 		dl.amount,
-		dl.paid_amount,
+		sum(pay.amount) as paid_amount,
 		dl.status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
+		LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
 			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+		GROUP BY dl.ledgerid 
 ";
 
 if(isset($_REQUEST['sort'])){
@@ -56,7 +58,6 @@ $num_users=mysql_num_rows($my);
 <span class="admin_head">
 	Ledger Card
 </span>
-
 &nbsp;&nbsp;&nbsp;
 <?=$name;?>
 <? if(st($pat_myarray['add1']) <> '') {?>
@@ -113,6 +114,8 @@ return s;
 }
 
 </script>
+<br />
+<span class="admin_head">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
 <div align="right">
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger

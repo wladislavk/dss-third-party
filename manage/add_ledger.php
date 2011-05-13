@@ -1,6 +1,7 @@
 <?php 
 session_start();
 require_once('admin/includes/config.php');
+require_once('includes/constants.inc');
 include("includes/sescheck.php");
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -38,7 +39,7 @@ if($_POST["ledgerub"] == 1)
 	$paid_amount = $_POST['paid_amount'];
 	$transaction_type = $_POST['transaction_type'];
 	$transaction_code = $_POST['transaction_code'];
-        $status = (isset($_POST['status']))?1:0;	
+    $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
 
 	if(strpos($service_date,'-') === false)
 	{
@@ -132,7 +133,7 @@ if($_POST["ledgerub"] == 1)
         $trow = mysql_fetch_row($tmy);
         $transaction_code = $trow[0];
         $description = $trow[1];
-        $status = (isset($_POST['status']))?1:0;
+        $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
         $amount = $_POST['amount'];
         $paid_amount = $_POST['paid_amount'];
  
@@ -142,10 +143,10 @@ if($_POST["ledgerub"] == 1)
 		description = '".s_for($description)."',
 		amount = '".s_for($amount)."',
 		paid_amount = '".s_for($paid_amount)."',
-                transaction_type = '".s_for($transaction_type)."',
+        transaction_type = '".s_for($transaction_type)."',
 		transaction_code = '".s_for($transaction_code)."',
 		userid = '".s_for($_SESSION['userid'])."',
-                status = ". s_for($status)."
+        status = ". s_for($status)."
 	 	where ledgerid='".$_POST["ed"]."'";
 		
 		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
@@ -484,17 +485,18 @@ echo "</select>";
                               File
              </td>
                 <td valign="top" class="frmdata">
-                   <?php if($status){ ?>
-                       SENT
-                       <input type="hidden" name="status" value=1 />
-                   <?php }else{ ?>
-<?php
-if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
-?>
-		<input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value=1 />
-<?php }else{ ?> 
-          <input type="checkbox" name="status" value=1 />
-<?php } ?>
+                   <?php if ($status == DSS_TRXN_PENDING) { ?>
+                       <?= $dss_trxn_status_labels[DSS_TRXN_PENDING] ?>
+                       <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+                   <?php } else { ?>
+                     <?php
+                     if ($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == ''
+                             || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == '') {
+                     ?>
+		                 <input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+                     <?php } else { ?> 
+                         <input type="checkbox" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+                     <?php } ?>
                    <?php } ?>
                 </td>
           </tr>		

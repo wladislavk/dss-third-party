@@ -282,7 +282,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
  * false otherwise.
  */
 function get_franchisees() {
-    $sql = "SELECT * FROM dental_users";
+    $sql = "SELECT * FROM dental_users ORDER BY name ASC";
     return mysql_query($sql);
 }
 
@@ -296,5 +296,36 @@ function get_franchisees() {
 function get_patients($franchisee_id = -1) {
     $sql = "SELECT * FROM dental_patients WHERE docid = $franchisee_id ORDER BY lastname ASC, firstname ASC";
     return mysql_query($sql);
+}
+
+/**
+ * Returns the class 'arrow_asc' or 'arrow_desc' depending on the params
+ * passed in to the function.  Returns false if $sort_by or $sort_compare_to
+ * are null.
+ *
+ * @param $sort_by Required. The db table column being sorted.
+ * @param $sort_compare_to Required. The html table column we are checking.
+ * @param $sort_direction Optional (default 'asc'). Direction of the sort (desc|asc).
+ */
+function get_sort_arrow_class($sort_by, $sort_compare_to, $sort_direction = 'asc') {
+    print "$sort_by:$sort_compare_to ";
+
+    $arrow = '';
+    
+    if ($sort_by == $sort_compare_to) {
+        $arrow .= 'arrow_' . strtolower($sort_direction);
+    }
+    
+    return $arrow;
+}
+
+function get_sort_dir($sort_by, $sort_compare_to, $current_sort_dir = 'asc') {
+    $direction = $current_sort_dir;
+    
+    if ($sort_by == $sort_compare_to) {
+        $direction = (strtolower($current_sort_dir) == 'asc') ? 'desc' : 'asc';
+    }
+    
+    return $direction;
 }
 ?>

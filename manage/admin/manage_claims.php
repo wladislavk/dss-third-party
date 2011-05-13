@@ -3,6 +3,34 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+define('SORT_BY_DATE', 0);
+define('SORT_BY_STATUS', 1);
+define('SORT_BY_PATIENT', 2);
+define('SORT_BY_FRANCHISEE', 3);
+
+$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
+
+$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by_sql = '';
+switch ($sort_by) {
+  case SORT_BY_DATE:
+    $sort_by_sql = "claim.adddate $sort_dir";
+    break;
+  case SORT_BY_PATIENT:
+    $sort_by_sql = "claim.patient_lastname $sort_dir, claim.patient_firstname $sort_dir";
+    break;
+  case SORT_BY_FRANCHISEE:
+    $sort_by_sql = "doc_name $sort_dir";
+    break;
+  default:
+    // default is SORT_BY_STATUS
+    $sort_by_sql = "claim.status $sort_dir, claim.adddate $sort_dir";
+    break;
+}
+
+$status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
+
 if($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -27,23 +55,34 @@ else
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
-     . "  claim.adddate, claim.status, users.name as doc_name "
+     . "  claim.adddate, claim.status, users.name as doc_name, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_users users ON claim.docid = users.userid ";
 
-if (!empty($_REQUEST['fid'])) {
-    $sql .= "WHERE "
-          . "  users.userid = " . $_REQUEST['fid'] . " ";
+// filter based on select lists above table
+if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
+    $sql .= "WHERE ";
+    
+    if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+        $sql .= "  claim.status = " . $_REQUEST['status'] . " ";
+    }
+    
+    if (!empty($_REQUEST['fid'])) {
+        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+            $sql .= "  AND ";
+        }
+        $sql .= "  users.userid = " . $_REQUEST['fid'] . " ";
+    }
     
     if (!empty($_REQUEST['pid'])) {
         $sql .= "AND claim.patientid = " . $_REQUEST['pid'] . " ";
     }
 }
 
-$sql .= "ORDER BY "
-      . "  claim.status DESC, "
-      . "  claim.adddate ASC";
+$sql .= "ORDER BY " . $sort_by_sql;
+//print $sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -70,6 +109,16 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+    Status:
+    <select name="status">
+      <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
+      <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
+      <option value="">Any</option>
+      <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
+      <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+
     Franchisees:
     <select name="fid">
       <option value="">Any</option>
@@ -88,12 +137,14 @@ $my=mysql_query($sql) or die(mysql_error());
         <?php $patients = get_patients($_REQUEST['fid']); ?>
         <?php while ($row = mysql_fetch_array($patients)) { ?>
           <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['firstname'] ?> <?= $row['lastname'] ?></option>
+          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
         <?php } ?>
       </select>
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
     
+    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
@@ -111,18 +162,22 @@ $my=mysql_query($sql) or die(mysql_error());
 		</TD>
 	</TR>
 	<? }?>
+	<?php
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid']
+             . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
+    ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="15%">
-			Added
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Status
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Patient Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Franchisee Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee Name</a>
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -147,13 +202,13 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
 				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "yellow" : "green"; ?>
+				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
 				<?php $status_text = ($myarray["status"] == DSS_CLAIM_PENDING) ? "black" : "white"; ?>
 				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_firstname"]);?>&nbsp;
-                    <?=st($myarray["patient_lastname"]);?> 
+					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

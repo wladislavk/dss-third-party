@@ -3,6 +3,9 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include "includes/top.htm";
+?>
+<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
+<?php
 if($_POST["contactsub"] == 1)
 {
 	if($_POST["ed"] != "")
@@ -50,7 +53,7 @@ if($_POST["contactsub"] == 1)
 }
 
 ?>
-
+<?php /*
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,7 +64,7 @@ if($_POST["contactsub"] == 1)
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
-<body width="98%">
+<body width="98%"> */ ?>
 
     <?
     $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
@@ -382,7 +385,7 @@ if($_POST["contactsub"] == 1)
                 Preferred Contact Method
             </td>
             <td valign="top" class="frmdata">
-            	<select name="preferredcontact" class="tbox" tabindex="22">
+            	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
                 	<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
                 	<option value="fax" <? if($preferredcontact == 'fax') echo " selected";?>>Fax</option>
                 	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>

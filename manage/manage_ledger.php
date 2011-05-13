@@ -79,7 +79,7 @@ $sql = "select
 		n.id,
 		n.service_date,
 		n.entry_date,
-		p.name,
+		concat('Note - ', p.name),
 		n.note,
 		'',
 		'',

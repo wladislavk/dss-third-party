@@ -41,7 +41,7 @@ alert(' Note successfully added! To view note you must go to the patient\'s gene
 }else{
 alert(' Note successfully added!');
 }
-history.go(-1);
+parent.window.location.reload();
 </script>
 <?php
 }

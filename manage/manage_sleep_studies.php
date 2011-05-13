@@ -6,7 +6,11 @@ include("includes/sescheck.php");
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
+<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="admin/popup/popup.js"></script>
+<script src="/manage/js/add_new_sleeplab.js" type="text/javascript"></script>
+<script language="JavaScript" src="calendar1.js"></script>
+<script language="JavaScript" src="calendar2.js"></script>
  <script type="text/javascript">
 /* PopUp Calendar v2.1
 © PCI, Inc.,2000 • Freeware
@@ -445,7 +449,7 @@ else
 
 						<td>
 
-						<input id="scheddate<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $scheddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
+						<input id="sleepsched<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $scheddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" onclick="cal_sleepsched<?=$i?>.popup();" value="example 11/11/1234" />
 						
 						</td>
 						
@@ -455,7 +459,7 @@ else
 						
 						<td>
 						
-						<select name="sleeplabwheresched" id="sleeplabwheresched<?php echo $i; ?>">
+						<select name="sleeplabwheresched" id="sleeplabwheresched<?php echo $i; ?>" onclick="Javascript: scroll(0,0);loadPopup('add_patient_to.php?ed=51');">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -464,6 +468,7 @@ else
 						
 						<option value="<?php echo $sleeplab['sleeplabid']; ?>"><?php echo $sleeplab['company']; ?></option>
 						<?php } ?>
+						<option value="add new sleeplab">Add new sleeplab</option>
 						</select>
 						
 						</td>
@@ -516,7 +521,7 @@ else
 						
 						<td>
 						
-						<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+						<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 						
 						</td>
 						
@@ -569,7 +574,7 @@ else
 
 
 <?php
-
+$calendar_vars = array();
 $sleepstudyquery = "SELECT * FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
 $sleepstudyres = mysql_query($sleepstudyquery);
 if($sleepstudyres){
@@ -581,7 +586,8 @@ if($numrows){
  while($sleepstudy = mysql_fetch_array($sleepstudyres)){
   $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
  $sleeplabres = mysql_query($sleeplabquery);
- 
+ $calendar_vars[$i]['scheddate_id'] = "scheddate$i";
+ $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  ?>
  <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;">
  <div id="sleepstudyscrolltable<?php echo $i; ?>">
@@ -625,7 +631,7 @@ if($numrows){
 						<td>
             
             
-						<input id="scheddate<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="getCalendarFor(document.sleepstudy<?php echo($i); ?>.scheddate);return false" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
+						<input id="scheddate<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="cal_scheddate<?=$i?>.popup();" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
 						
 						<script id="js<?php echo $i; ?>" type="text/javascript">
                 var cal<?php echo $i; ?> = new CalendarPopup();
@@ -640,6 +646,7 @@ if($numrows){
 						<td name="sleeplabwheresched">
 						
 						<select id="sleeplabwheresched<?php echo $i; ?>" name="sleeplabwheresched">
+						<option value="add new sleeplab">Add new sleeplab</option>
 						<?php
             while($sleeplab = mysql_fetch_array($sleeplabres)){
             ?>
@@ -725,7 +732,7 @@ if($numrows){
 						
 						<td name="copyreqdate">
 						
-						<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+						<input id="copyreqdate<?=$i?>" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 						
 						</td>
 						
@@ -779,7 +786,7 @@ if($numrows){
  $di++;
  ?>
  <script type="text/javascript">
- var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);
+ <!--var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);-->
  </script>
  <?php
  
@@ -789,9 +796,17 @@ if($numrows){
  }
  ?>
 
- 
+<script type="text/javascript">
+	var cal_sleepsched9999 = new calendar2(document.getElementById('sleepsched9999'));
+	var cal_copyreqdate9999 = new calendar2(document.getElementById('copyreqdate9999'));
+	<?php
+	foreach ($calendar_vars as $key => $calid) {
+		print "var cal_" . $calid['scheddate_id'] . " = new calendar2(document.getElementById('" . $calid['scheddate_id'] . "'));";
+		print "var cal_" . $calid['copyreqdate_id'] . " = new calendar2(document.getElementById('" . $calid['copyreqdate_id'] . "'));";
+	}
+	?>
+</script> 
 
-				
 				
 				</body>
 				</html>

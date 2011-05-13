@@ -1,5 +1,8 @@
 <?php
 include "includes/top.htm";
+?>
+<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
+<?php
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
     $letter1id = "1";
@@ -150,7 +153,8 @@ if($_POST["patientsub"] == 1)
 		referred_by = '".s_for($_POST["referred_by"])."',
     premedcheck = '".s_for($_POST["premedcheck"])."',
 		premed = '".s_for($_POST["premeddet"])."', 
-		status = '".s_for($_POST["status"])."' 
+		status = '".s_for($_POST["status"])."',
+		preferredcontact = '".s_for($_POST["preferredcontact"])."'
 		where 
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -270,7 +274,8 @@ if($_POST["patientsub"] == 1)
 		docid='".$_SESSION['docid']."', 
 		status = '".s_for($_POST["status"])."',
 		adddate=now(),
-		ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		ip_address='".$_SERVER['REMOTE_ADDR']."',
+		preferredcontact='".s_for($_POST["preferredcontact"])."';";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
                 $pid = mysql_insert_id();
@@ -391,6 +396,7 @@ if($_POST["patientsub"] == 1)
 		$referred_by = $_POST["referred_by"];
 		$premedcheck = $_POST["premedcheck"];
 		$premed = $_POST["premeddet"];
+		$preferredcontact = $_POST["preferredcontact"];
 		
 	}
 	else
@@ -484,7 +490,7 @@ if($_POST["patientsub"] == 1)
 		$referred_by = st($themyarray["referred_by"]);
 		$premedcheck = st($themyarray["premedcheck"]);
 		$premeddet = st($themyarray["premed"]);
-		
+		$preferredcontact = st($themyarray["preferredcontact"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 		
 		$but_text = "Add ";
@@ -699,6 +705,18 @@ if($_POST["patientsub"] == 1)
                         </div>
                     </li>
 				</ul>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="20%">
+                Preferred Contact Method
+            </td>
+            <td valign="top" class="frmdata" width="80%">
+            	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+                	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                	<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                </select>
+                <br />&nbsp;
             </td>
         </tr>
 		<tr> 

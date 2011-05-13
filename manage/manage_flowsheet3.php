@@ -676,7 +676,6 @@ print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<b
 	}
 	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "8") { // Follow-Up/Check
 		$trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
-print $trigger_query;
 		$trigger_result = mysql_query($trigger_query);
 		$numrows = (mysql_num_rows($trigger_result));
 		if ($numrows > 0) {
@@ -719,7 +718,7 @@ print $trigger_query;
 			$values .= ", '".$letteridlist."'";
 			$setstring .= ", letterid='$letteridlist'";
 		}
-		if(isset($_POST['data'][$i]['datesched'])) {
+		if	(isset($_POST['data'][$i]['datesched'])) {
 			$datestring = s_for($_POST['data'][$i]['datesched']);
 			if ($datestring != '') {
 				$dateTime = date_create_from_format("m/d/Y", $datestring);
@@ -731,7 +730,7 @@ print $trigger_query;
 			$values .= ", '$date'";
 			$setstring .= ", date_scheduled='" . $date . "'";
 		}
-		if(isset($_POST['data'][$i]['datecomp'])) {
+		if	(isset($_POST['data'][$i]['datecomp'])) {
 			$datestring = s_for($_POST['data'][$i]['datecomp']);
 			if ($datestring != '') {
 				$dateTime = date_create_from_format("m/d/Y", $datestring);
@@ -742,6 +741,16 @@ print $trigger_query;
 			$columns .= ", date_completed";
 			$values .= ", '$date'";
 			$setstring .= ", date_completed='" . $date . "'";
+		}
+		if	(isset($_POST['data'][$i]['study_type'])) {
+			$columns .= ", study_type";
+			$values .= ", '" . s_for($_POST['data'][$i]['study_type']) . "'";
+			$setstring .= ", study_type='" . s_for($_POST['data'][$i]['study_type']) . "'";
+		}
+		if	(isset($_POST['data'][$i]['delay_reason'])) {
+			$columns .= ", delay_reason";
+			$values .= ", '" . s_for($_POST['data'][$i]['delay_reason']) . "'";
+			$setstring .= ", delay_reason='" . s_for($_POST['data'][$i]['delay_reason']) . "'";
 		}
 
 		if ($numrows == 0) {
@@ -959,7 +968,9 @@ Contact Location
 
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
 
-                <br /><button class="addButton" onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');">Add New Referrer</button>
+                <br /><!--<button class="addButton" onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');">Add New Referrer</button>-->
+											<!--<button class="addButton" onclick="Javascript: window.location='add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>';">Add New Referrer</button>-->
+											<a href="add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>">Add New Referrer</a>
 
 </td>
 
@@ -1869,7 +1880,7 @@ Next Appointment
   //print_r($order);
   
   
-  $flow_pg2_info_query = "SELECT `stepid`, UNIX_TIMESTAMP(`date_scheduled`) as `date_scheduled`, UNIX_TIMESTAMP(`date_completed`) as `date_completed`, `delay_reason`, `study_type`, `letterid` FROM `dental_flow_pg2_info` WHERE `patientid` = '".$_GET['pid']."' ORDER BY `stepid` ASC;";
+  $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, study_type, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
   $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
   while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
@@ -1914,18 +1925,21 @@ Next Appointment
 	$schedid = "datesched$i";
 	$compid = "datecomp$i";
 
-  $getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
+  /*$getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
   $steparrayqry = mysql_query($getsteparray);
   $steparray = mysql_fetch_array($steparrayqry);
   $steparray = explode(",", $steparray['steparray']);
   $stepcount = count($steparray);
-  $steparray_last = end($steparray);
+  $steparray_last = end($steparray);*/
 
   $step = count($order) - $i;
   $datesched = date('m/d/Y', $flow_pg2_info[$step]['date_scheduled']);
   if ($datesched == '12/31/1969') $datesched = '';
   $datecomp = date('m/d/Y', $flow_pg2_info[$step]['date_completed']);
   if ($datecomp == '12/31/1969') $datecomp = '';
+	$sleepstudy = $flow_pg2_info[$step]['study_type'];
+	$delayreason = strtolower($flow_pg2_info[$step]['delay_reason']);
+
   $pid = $_GET['pid'];
   $letterlink = "";
 	foreach ($dental_letters[$step] as $letter) {
@@ -1935,7 +1949,16 @@ Next Appointment
 		$gendate = date('m/d/Y', $letter['generated_date']);
 		if ($lid != '') {
 			foreach ($contacts['patient'] as $contact) {
-				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($contact['preferredcontact'] == "email") {
+					$preferred = "(E)";
+				}
+				if ($contact['preferredcontact'] == "paper") {
+					$preferred = "(M)";
+				}
+				if ($contact['preferredcontact'] == "fax") {
+					$preferred = "(F)";
+				}
+				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
 				if ($letter['status'] == 0) {
 					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
 				} elseif ($letter['status'] == 1) {
@@ -1945,7 +1968,16 @@ Next Appointment
 				}
 			}
 			foreach ($contacts['md_referrals'] as $contact) {
-				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($contact['preferredcontact'] == "email") {
+					$preferred = "(E)";
+				}
+				if ($contact['preferredcontact'] == "paper") {
+					$preferred = "(M)";
+				}
+				if ($contact['preferredcontact'] == "fax") {
+					$preferred = "(F)";
+				}
+				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
 				if ($letter['status'] == 0) {
 					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
 				} elseif ($letter['status'] == 1) {
@@ -1955,7 +1987,16 @@ Next Appointment
 				}
 			}
 			foreach ($contacts['mds'] as $contact) {
-				$name = $letter['name'] . " - " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
+				if ($contact['preferredcontact'] == "email") {
+					$preferred = "(E)";
+				}
+				if ($contact['preferredcontact'] == "paper") {
+					$preferred = "(M)";
+				}
+				if ($contact['preferredcontact'] == "fax") {
+					$preferred = "(F)";
+				}
+				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
 				if ($letter['status'] == 0) {
 					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
 				} elseif ($letter['status'] == 1) {

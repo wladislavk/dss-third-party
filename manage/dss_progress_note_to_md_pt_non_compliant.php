@@ -57,6 +57,25 @@ while ($row = mysql_fetch_assoc($letter_result)) {
   $md_referrals = explode(",", $md_referral_list);
 }
 
+// Pending and Sent Contacts
+$othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = ".$letterid." OR parentid = ".$letterid." ORDER BY letterid ASC;";
+$othermd_result = mysql_query($othermd_query);
+$md_array = array();
+$md_referral_array = array();
+while ($row = mysql_fetch_assoc($othermd_result)) {
+	$md_array = array_merge($md_array, explode(",", $row['md_list']));
+	$md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+}
+$full_md_list = implode(",", $md_array);
+$full_md_referral_list = implode(",", $md_referral_array);
+$contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
+foreach ($contacts['mds'] as $contact) {
+  $md_contacts[] = array_merge(array('type' => 'md'), $contact);
+}
+foreach ($contacts['md_referrals'] as $contact) {
+  $md_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
+}
+
 // Get Letter Subject
 $template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
 $template_result = mysql_query($template_query);
@@ -161,7 +180,6 @@ $appt_date = date('F d, Y', strtotime(mysql_result($appt_result, 0)));
 $device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
 $device_result = mysql_query($device_query);
 $delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
-
 
 ?>
 
@@ -308,7 +326,7 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $dentaldevice . "</strong>";
 		$other_mds = "";
 		$count = 1;
-		foreach ($letter_contacts as $index => $md) {
+		foreach ($md_contacts as $index => $md) {
 			if ($key != $index) {
 				$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 				if ($count < $numletters - 1) {
@@ -414,15 +432,17 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%other_mds%";
 	$other_mds = "";
   $count = 1;
-	foreach ($letter_contacts as $index => $md) {
-		if ($key != $index) {
-			$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
-			if ($count < $numletters - 1) {
+	foreach ($md_contacts as $index => $md) {
+		$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+		if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+			$other_mds .= $md_fullname;
+			if ($count < count($md_contacts)) {
 				$other_mds .= ", ";
 			}	
 			$count++;
 		}
 	}
+	$other_mds = rtrim($other_mds, ", ");
 	$replace[] = "<strong>" . $other_mds . "</strong>";
 				
 

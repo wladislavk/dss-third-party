@@ -25,7 +25,7 @@ switch ($sort_by) {
     break;
   default:
     // default is SORT_BY_STATUS
-    $sort_by_sql = "claim.status $sort_dir";
+    $sort_by_sql = "claim.status $sort_dir, claim.adddate $sort_dir";
     break;
 }
 
@@ -55,13 +55,14 @@ else
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
-     . "  claim.adddate, claim.status, users.name as doc_name "
+     . "  claim.adddate, claim.status, users.name as doc_name, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_users users ON claim.docid = users.userid ";
 
 // filter based on select lists above table
-if (isset($_REQUEST['status']) || !empty($_REQUEST['fid'])) {
+if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
     $sql .= "WHERE ";
     
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
@@ -81,6 +82,7 @@ if (isset($_REQUEST['status']) || !empty($_REQUEST['fid'])) {
 }
 
 $sql .= "ORDER BY " . $sort_by_sql;
+//print $sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -200,6 +202,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
 				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "yellow" : "green"; ?>
+				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
 				<?php $status_text = ($myarray["status"] == DSS_CLAIM_PENDING) ? "black" : "white"; ?>
 				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;

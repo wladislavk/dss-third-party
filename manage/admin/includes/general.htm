@@ -279,10 +279,10 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 
 /**
  * Returns a mysql resultset resource for dental_users table on success,
- * false otherwise.
+ * false otherwise. Only franchisees are included (no staff).
  */
 function get_franchisees() {
-    $sql = "SELECT * FROM dental_users ORDER BY name ASC";
+    $sql = "SELECT * FROM dental_users WHERE docid = 0 ORDER BY name ASC";
     return mysql_query($sql);
 }
 

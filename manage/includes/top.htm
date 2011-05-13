@@ -589,6 +589,8 @@ display:none;
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=sent\");'";}else{echo "href='letters.php?status=sent'";} ?>>Sent Letters</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"new_letter.php\");'";}else{echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
       <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_preauths.php\");'";}else{echo "href='manage_preauths.php'";} ?>>Pre-authorizations (<?= $num_pending_preauth; ?>/<?= $num_preauth; ?>)</a></li>
+      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_claims.php\");'";}else{echo "href='manage_claims.php'";} ?>>Claims</a></li>
+
 
   </ul>
 </li>

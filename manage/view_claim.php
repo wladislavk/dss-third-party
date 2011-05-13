@@ -54,6 +54,7 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
+<span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
 
 <span class="admin_head">
 	Ledger Card
@@ -115,17 +116,12 @@ return s;
 
 </script>
 <br />
-<span class="admin_head">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
-<div align="right">
+<div align="right" style="clear: right;">
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger
         </button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	
-	<button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?=$_GET['pid'];?>');" class="addButton">
-		Add New Transaction
-	</button>
-	&nbsp;&nbsp;
         <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?=$_GET['pid'];?>');" class="addButton">
                 Add Note 
         </button>

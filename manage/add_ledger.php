@@ -252,6 +252,9 @@ xmlhttp.onreadystatechange=function()
 <script language="JavaScript" src="calendar2.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
+<script type="text/javascript">
+parent.window.scroll(0, 0);
+</script>
 </head>
 <body>
 

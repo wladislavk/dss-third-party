@@ -83,7 +83,7 @@ $sql = "select
 		n.note,
 		'',
 		'',
-		''
+	 	n.private	
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
@@ -309,6 +309,7 @@ return s;
                                 </td>
 
 				<td valign="top">
+			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
                 	<?=st($myarray["description"]);?>
 				</td>
 				<td valign="top" align="right">

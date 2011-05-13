@@ -74,8 +74,6 @@ $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 ) VALUES ";
 foreach($_POST[form] as $form){
 if($d <= $i){
-echo $form[status];
-print_r($form);
 $descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form[proccode]."' LIMIT 1;";
 $descquery = mysql_query($descsql);
 $txcode = mysql_fetch_array($descquery);
@@ -166,7 +164,7 @@ eraseCookie('tempforledgerentry');
 <script type="text/javascript">
 eraseCookie('tempforledgerentry');
 alert('Transaction(s) successfully added!');
-history.go(-1);
+ parent.window.location.reload();
 </script>
 <?php
 }

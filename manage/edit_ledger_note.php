@@ -13,7 +13,9 @@ $n = mysql_fetch_assoc($nq);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript">
+parent.window.scroll(0, 0);
+</script>
 
 
 </head>

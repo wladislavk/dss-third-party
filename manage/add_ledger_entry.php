@@ -55,6 +55,8 @@ $producer_options .= "";
 
 <script type="text/javascript">
 
+parent.window.scroll(0, 0);
+
 function createCookie(name,value,days) {
               if (days) {
                   var date = new Date();

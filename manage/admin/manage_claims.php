@@ -11,7 +11,7 @@ define('SORT_BY_FRANCHISEE', 3);
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by  = (isset($_REQUEST['sort_by']))  ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
 $sort_by_sql = '';
 switch ($sort_by) {
   case SORT_BY_DATE:
@@ -28,6 +28,8 @@ switch ($sort_by) {
     $sort_by_sql = "claim.status $sort_dir";
     break;
 }
+
+$status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
 if($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
@@ -58,9 +60,20 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_users users ON claim.docid = users.userid ";
 
-if (!empty($_REQUEST['fid'])) {
-    $sql .= "WHERE "
-          . "  users.userid = " . $_REQUEST['fid'] . " ";
+// filter based on select lists above table
+if (isset($_REQUEST['status']) || !empty($_REQUEST['fid'])) {
+    $sql .= "WHERE ";
+    
+    if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+        $sql .= "  claim.status = " . $_REQUEST['status'] . " ";
+    }
+    
+    if (!empty($_REQUEST['fid'])) {
+        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+            $sql .= "  AND ";
+        }
+        $sql .= "  users.userid = " . $_REQUEST['fid'] . " ";
+    }
     
     if (!empty($_REQUEST['pid'])) {
         $sql .= "AND claim.patientid = " . $_REQUEST['pid'] . " ";
@@ -94,6 +107,16 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+    Status:
+    <select name="status">
+      <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
+      <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
+      <option value="">Any</option>
+      <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
+      <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+
     Franchisees:
     <select name="fid">
       <option value="">Any</option>
@@ -137,7 +160,10 @@ $my=mysql_query($sql) or die(mysql_error());
 		</TD>
 	</TR>
 	<? }?>
-	<? $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid'] . "&sort_by=%s&sort_dir=%s"; ?>
+	<?php
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid']
+             . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
+    ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>

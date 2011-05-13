@@ -8,15 +8,26 @@ define('SORT_BY_STATUS', 1);
 define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
 
-$sort_by  = (!empty($_REQUEST['sort_by']))  ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-$sort_dir = (!empty($_REQUEST['sort_dir'])) ? $_REQUEST['sort_dir'] : 'DESC';
+$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
-$sort_by_sql = array(
-  SORT_BY_DATE => "claim.adddate $sort_dir",
-  SORT_BY_STATUS => "claim.status $sort_dir",
-  SORT_BY_PATIENT => "claim.patient_lastname $sort_dir, claim.patient_firstname $sort_dir",
-  SORT_BY_FRANCHISEE => "doc_name $sort_dir"
-);
+$sort_by  = (isset($_REQUEST['sort_by']))  ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by_sql = '';
+switch ($sort_by) {
+  case SORT_BY_DATE:
+    $sort_by_sql = "claim.adddate $sort_dir";
+    break;
+  case SORT_BY_PATIENT:
+    $sort_by_sql = "claim.patient_lastname $sort_dir, claim.patient_firstname $sort_dir";
+    break;
+  case SORT_BY_FRANCHISEE:
+    $sort_by_sql = "doc_name $sort_dir";
+    break;
+  default:
+    // default is SORT_BY_STATUS
+    $sort_by_sql = "claim.status $sort_dir";
+    break;
+}
 
 if($_REQUEST["delid"] != "") {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
@@ -56,9 +67,7 @@ if (!empty($_REQUEST['fid'])) {
     }
 }
 
-$sql .= "ORDER BY "
-      . "  " . $sort_by_sql[$sort_by] . ", "
-      . "  claim.adddate ASC";
+$sql .= "ORDER BY " . $sort_by_sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -109,6 +118,8 @@ $my=mysql_query($sql) or die(mysql_error());
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
     
+    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
@@ -126,18 +137,19 @@ $my=mysql_query($sql) or die(mysql_error());
 		</TD>
 	</TR>
 	<? }?>
+	<? $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid'] . "&sort_by=%s&sort_dir=%s"; ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="15%">
-			Added
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Status
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Patient Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Franchisee Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee Name</a>
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action

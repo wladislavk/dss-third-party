@@ -8,8 +8,8 @@ define('DSS_TRXN_PAID', 4);       // trxn's associated claim was received by fro
 define('DSS_TRXN_REJECTED', 5);   // trxn's associated claim was received by front office and not paid.
 
 // Claim statuses (insurance)
-define('DSS_CLAIM_PENDING', 1);
-define('DSS_CLAIM_SENT', 0);
+define('DSS_CLAIM_PENDING', 0);
+define('DSS_CLAIM_SENT', 1);
 define('DSS_CLAIM_PAID', 3);
 define('DSS_CLAIM_REJECTED', 4);
 
@@ -17,18 +17,6 @@ define('DSS_CLAIM_REJECTED', 4);
 define('DSS_PREAUTH_PENDING', 0);
 define('DSS_PREAUTH_COMPLETE', 1);
 
-//Transaction Payers (ledger)
-define('DSS_TRXN_PYMT_PRIMARY', 0);
-define('DSS_TRXN_PYMT_SECONDARY', 1);
-define('DSS_TRXN_PYMT_PATIENT', 2);
-define('DSS_TRXN_PYMT_WRITEOFF', 3);
-define('DSS_TRXN_PYMT_DISCOUNT', 4);
-
-//Transaction Payment Types (ledger)
-define('DSS_TRXN_PYMT_CREDIT', 0);
-define('DSS_TRXN_PYMT_DEBIT', 1);
-define('DSS_TRXN_PYMT_CHECK', 2);
-define('DSS_TRXN_PYMT_CASH', 3);
 
 // A convenience array to get trxn labels
 $dss_trxn_status_labels = array();
@@ -62,30 +50,3 @@ $dss_preauth_status_labels[DSS_PREAUTH_PENDING] = 'Pending';
 $dss_preauth_status_labels[DSS_PREAUTH_PENDING]['short'] = 'Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE] = 'Complete';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
-
-// A convenience array to get trxn payment labels
-$dss_trxn_pymt_labels = array();
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_PRIMARY] = "Primary Insurance";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_PRIMARY]['short'] = "Prim. Ins.";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_SECONDARY] = "Secondary Insurance";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_SECONDARY]['short'] = "Sec. Ins.";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_PATIENT] = "Patient";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_PATIENT]['short'] = "Pat.";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_DISCOUNT] = "Professional Discount";
-$dss_trxn_pymt_labels[DSS_TRXN_PYMT_DISCOUNT]['short'] = "Pro. Disc.";
-
-// A convenience array to get trxn payment type labels
-$dss_trxn_pymt_type_lables = array();
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CREDIT] = "Credit Card";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CREDIT]['short'] = "CC";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_DEBIT] = "Debit";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_DEBIT]['short'] = "Debit";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CHECK] = "Check";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CHECK]['short'] = "Check";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CASH] = "Cash";
-$dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
-
-
-

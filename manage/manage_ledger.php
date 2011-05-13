@@ -64,10 +64,11 @@ $sql = "select
 		dl.service_date,
             	dl.entry_date,
 		p.name,
- 		concat(dl.description,' (',primary_claim_id,')') as description,
+ 		dl.description,
 		dl.amount,
 		sum(pay.amount) as paid_amount,
-		dl.status
+		dl.status,
+		dl.primary_claim_id
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -83,7 +84,8 @@ $sql = "select
 		n.note,
 		'',
 		'',
-	 	n.private	
+	 	n.private,
+		''	
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
@@ -99,7 +101,8 @@ $sql = "select
 				INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
 				where i2.insuranceid=i.insuranceid),
 		sum(pay.amount),
-		i.status
+		i.status,
+		''
 	from dental_insurance i
 		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
 		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
@@ -310,7 +313,8 @@ return s;
 
 				<td valign="top">
 			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
-                	<?=st($myarray["description"]);?>
+                	<?= $myarray["description"]; ?>
+			<?= ($myarray[0] == 'ledger' && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
 				</td>
 				<td valign="top" align="right">
 					<? if(st($myarray["amount"]) <> 0) {?>

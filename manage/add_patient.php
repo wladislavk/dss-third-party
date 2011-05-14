@@ -674,13 +674,15 @@ if($_POST["patientsub"] == 1)
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+                    	<!--<label class="desc" id="title0" for="Field0">
                             Optional Fields (not used in letters)
-                        </label>
+                        </label>-->
                         <div>
                             <span>
                                 <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>" tabindex="14" maxlength="255" style="width:200px;" />
-                                <label for="home_phone">Home Phone</label>
+                                <label for="home_phone">Home Phone
+																<span id="req_0" class="req">*</span>
+																</label>
                             </span>
                             <span>
                                 <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" tabindex="15" maxlength="255" style="width:200px;" />
@@ -801,7 +803,7 @@ if($_POST["patientsub"] == 1)
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div>
                             <span>
@@ -809,7 +811,7 @@ if($_POST["patientsub"] == 1)
                                 <label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-								<select name="p_m_relation" class="field text addr tbox" style="width:200px;">
+								<select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
 									<option value="" <? if($p_m_relation == '') echo " selected";?>>None</option>
 									<option value="Self" <? if($p_m_relation == 'Self') echo " selected";?>>Self</option>
 									<option value="Spouse" <? if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
@@ -928,7 +930,7 @@ if($_POST["patientsub"] == 1)
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div>
                             <span>
@@ -981,7 +983,7 @@ if($_POST["patientsub"] == 1)
                                 <a onclick="Javascript: window.location.href='add_contact.php<?php if(isset($_GET['pid'])){echo "?pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
                             </span>
                             <span>
-								 <input id="p_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
+								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
                                 <label for="s_m_ins_id">Insurance ID.</label>
                             </span>
                             <span>

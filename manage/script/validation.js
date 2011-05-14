@@ -265,6 +265,18 @@ function patientabc(fa)
 		fa.gender.focus();
 		return false;
 	}
+	if(trim(fa.home_phone.value) == "" )
+	{
+		alert("Home Phone Number is Required");
+		fa.home_phone.focus();
+		return false;
+	}
+	if(trim(fa.preferredcontact.value) == "email" && fa.email.value == "")
+	{
+		alert("Email is Required if Preferred Contact Method is Email");
+		fa.email.focus();
+		return false;
+	}
 	/*if(trim(fa.marital_status.value) == "" )
 	{
 		alert("Marital Status is Required");
@@ -287,6 +299,78 @@ function patientabc(fa)
 			return false;
 		}
 	}
+	if(trim(fa.p_m_dss_file_yes.value) == "1")
+	{
+		if(trim(fa.p_m_partyfname.value) == "") {
+			alert("Insured Party First Name is a Required Field");
+			fa.p_m_partyfname.focus();
+			return false;
+		} else if(trim(fa.p_m_partylname.value) == "") {
+			alert("Insured Party Last Name is a Required Field");
+			fa.p_m_partylname.focus();
+			return false;
+		} else if(trim(fa.p_m_relation.value) == "") {
+			alert("Relationship to insured party is a Required Field");
+			fa.p_m_relation.focus();
+			return false;
+		} else if(trim(fa.ins2_dob.value) == "") {
+			alert("Insured Date of Birth is a Required Field");
+			fa.ins2_dob.focus();
+			return false;
+		} else if(trim(fa.p_m_party.value) == "") {
+			alert("Insurance ID. is a Required Field");
+			fa.p_m_party.focus();
+			return false;
+		} else if(trim(fa.p_m_ins_grp.value) == "") {
+			alert("Group # is a Required Field");
+			fa.p_m_ins_grp.focus();
+			return false;
+		} else if(trim(fa.p_m_ins_plan.value) == "") {
+			alert("Plan Name is a Required Field");
+			fa.p_m_ins_plan.focus();
+			return false;
+		} else if(trim(fa.p_m_ins_type.value) == "Select Type") {
+			alert("Insurance Type is a Required Field");
+			fa.p_m_ins_type.focus();
+			return false;
+		}
+	}	
+	if(trim(fa.s_m_dss_file_yes.value) == "1")
+	{
+		if(trim(fa.s_m_partyfname.value) == "") {
+			alert("Insured Party First Name is a Required Field");
+			fa.s_m_partyfname.focus();
+			return false;
+		} else if(trim(fa.s_m_partylname.value) == "") {
+			alert("Insured Party Last Name is a Required Field");
+			fa.s_m_partylname.focus();
+			return false;
+		} else if(trim(fa.s_m_relation.value) == "") {
+			alert("Relationship to insured party is a Required Field");
+			fa.s_m_relation.focus();
+			return false;
+		} else if(trim(fa.ins_dob.value) == "") {
+			alert("Insured Date of Birth is a Required Field");
+			fa.ins_dob.focus();
+			return false;
+		} else if(trim(fa.s_m_party.value) == "") {
+			alert("Insurance ID. is a Required Field");
+			fa.s_m_party.focus();
+			return false;
+		} else if(trim(fa.s_m_ins_grp.value) == "") {
+			alert("Group # is a Required Field");
+			fa.s_m_ins_grp.focus();
+			return false;
+		} else if(trim(fa.s_m_ins_plan.value) == "") {
+			alert("Plan Name is a Required Field");
+			fa.s_m_ins_plan.focus();
+			return false;
+		} else if(trim(fa.s_m_ins_type.value) == "Select Type") {
+			alert("Insurance Type is a Required Field");
+			fa.s_m_ins_type.focus();
+			return false;
+		}
+	}	
 }
 
 function contactabc(fa)

@@ -35,8 +35,13 @@ eraseCookie('tempforledgerentry');
 }else{
 ?>
 <script type="text/javascript">
-alert('Note successfully added!');
-history.go(-1);
+var p = parent.window.location.toString();
+if(p.substr(p.lastIndexOf('/'),15)=='/view_claim.php'){
+alert(' Note successfully added! To view note you must go to the patient\'s general ledger.');
+}else{
+alert(' Note successfully added!');
+}
+parent.window.location = parent.window.location;
 </script>
 <?php
 }

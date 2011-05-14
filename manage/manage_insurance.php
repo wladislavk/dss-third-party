@@ -183,7 +183,6 @@ $sql = "SELECT "
      . "  dental_insurance_preauth "
      . "WHERE "
      . "  patient_id = " . $_GET['pid'] . " "
-     . "  AND STATUS = " . DSS_PREAUTH_COMPLETE . " "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
@@ -199,11 +198,23 @@ $my = mysql_query($sql) or die(mysql_error());
 	<? if (mysql_num_rows($my) == 0) { ?>
       <tr class="tr_bg">
         <td valign="top" align="center">
-          No completed pre-authorizations on record.
+          No pre-authorizations on record.
         </td>
       </tr>
 	<?php } else { ?> 
       <?php while ($preauth = mysql_fetch_array($my)) { ?>
+
+	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
+
+	<tr class="tr_bg">
+        <td valign="top" align="center">
+		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+        </td>
+      </tr>
+
+
+
+	<?php }elseif($preauth['status']==DSS_PREAUTH_COMPLETE){ ?>
         <tr class="tr_bg">
           <td>Benefits</td>
           <td>
@@ -253,6 +264,7 @@ $my = mysql_query($sql) or die(mysql_error());
           <td>Expected patient payment?</td>
           <td>$<?= $preauth['expected_patient_payment'] ?></td>
         </tr>
+	<?php } ?>
       <?php } ?>
     <?php } ?>
   </table>

@@ -252,6 +252,9 @@ xmlhttp.onreadystatechange=function()
 <script language="JavaScript" src="calendar2.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
+<script type="text/javascript">
+parent.window.scroll(0, 0);
+</script>
 </head>
 <body>
 
@@ -271,7 +274,7 @@ xmlhttp.onreadystatechange=function()
 	$amount = st($themyarray['amount']);
 	$paid_amount = st($themyarray['paid_amount']);
         $transaction_code = st($themyarray['transaction_code']);
-        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code=".$transaction_code; 
+        $tsql = "SELECT type FROM dental_transaction_code WHERE docid=".$_SESSION['docid']." AND transaction_code='".$transaction_code."'"; 
         $tmy = mysql_query($tsql);
         $trow = mysql_fetch_row($tmy);
         $transaction_type = $trow[0];
@@ -420,7 +423,7 @@ xmlhttp.onreadystatechange=function()
 
 		<tr>
         	<td valign="top" class="frmhead">
-				Procedure Code<?= $transaction_code; ?>
+				Procedure Code
             </td>
         	<td valign="top" class="frmdata"> 
 				<div id="proccode_div">

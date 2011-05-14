@@ -20,7 +20,7 @@ if (isset($_REQUEST['ed'])) {
 } else {
     // update preauth
     $sql = "UPDATE dental_insurance_preauth SET "
-         . "date_of_call = '" . s_for($_POST["date_of_call"]) . "', "
+         . "date_of_call = '" . $_POST["date_of_call"] . "', "
          . "insurance_rep = '" . s_for($_POST["insurance_rep"]) . "', "
          . "call_reference_num = '".s_for($_POST["call_reference_num"])."', "
          . "ins_effective_date = '".s_for($_POST["ins_effective_date"])."', "
@@ -139,7 +139,7 @@ $(function() {
   $("#ins_cal_year_end").bind("focus blur click", function() {
     $("#deductible_reset_date").val($(this).val());
   });
-  $("#ins_cal_year_end").click();
+  $("#ins_cal_year_end").blur();
   
   function calc_amount_left_to_meet() {
     var deductible = $('#patient_deductible').val();
@@ -450,7 +450,7 @@ $(function() {
                 Date of Call
             </td>
             <td valign="top" class="frmdata">
-                <?php if (empty($preauth['date_of_call'])) { $preauth['date_of_call'] = date('d/m/Y'); } ?>
+                <?php if (empty($preauth['date_of_call'])) { $preauth['date_of_call'] = date('m/d/Y'); } ?>
                 <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>

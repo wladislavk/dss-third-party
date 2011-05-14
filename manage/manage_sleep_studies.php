@@ -531,7 +531,7 @@ else
 						
 						<td>
 						
-						<select name="sleeplab">
+						<select id="sleeplab" name="sleeplab">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -540,6 +540,7 @@ else
 						
 						<option value="<?php echo $sleeplab['sleeplabid']; ?>"><?php echo $sleeplab['company']; ?></option>
 						<?php } ?>
+						<option value="add new sleeplab">Add new sleeplab</option>
 						</select>
 						
 						</td>
@@ -653,6 +654,7 @@ if($numrows){
 						
 						<option value="<?php echo $sleeplab['sleeplabid']; ?>" <?php if($sleepstudy['sleeplabwheresched'] == $sleeplab['sleeplabid']){echo " selected='selected'";} ?>><?php echo $sleeplab['company']; ?></option>
 						<?php } ?>
+						<option value="add new sleeplab">Add new sleeplab</option>
 						</select>
 						
 						</td>
@@ -742,7 +744,7 @@ if($numrows){
 						
 						<td name="sleeplab">
 						
-						<select name="sleeplab">
+						<select id="sleeplab" name="sleeplab">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -751,6 +753,7 @@ if($numrows){
 						
 						<option value="<?php echo $sleeplab['sleeplabid']; ?>" <?php if($sleeplab['sleeplabid'] == $sleepstudy['sleeplab']){ echo " selected='selected'";}?>><?php echo $sleeplab['company']; ?></option>
 						<?php } ?>
+						<option value="add new sleeplab">Add new sleeplab</option>
 						</select>
 						
 						</td>

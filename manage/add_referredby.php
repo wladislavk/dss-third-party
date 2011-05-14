@@ -6,12 +6,15 @@ $addtopat = $_GET['addtopat'];
 }
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
-
+?>
+<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
+<?php
 if($_POST["referredbysub"] == 1)
 {
 	if($_POST["ed"] != "")
 	{
-		$ed_sql = "update dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."' where referredbyid='".$_POST["ed"]."'";
+		$ed_sql = "update dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where referredbyid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		//echo $ed_sql.mysql_error();
@@ -23,6 +26,7 @@ if($_POST["referredbysub"] == 1)
       <script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='add_patient.php?ed=<?=$addedtopat;?>';
+			<?php $_GET['ed'] = $addedtopat; ?>
 		</script>
 		<?php
     }else{
@@ -37,7 +41,7 @@ if($_POST["referredbysub"] == 1)
 	}
 	else
 	{
-		$ins_sql = "insert into dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		$ins_sql = "insert into dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', preferredcontact = '".s_for($_POST["preferredcontact"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
 		$msg = "Added Successfully";
@@ -103,6 +107,7 @@ if($_POST["referredbysub"] == 1)
 		$greeting = $_POST['greeting'];
 		$sincerely = $_POST['sincerely'];
 		$notes = $_POST['notes'];
+		$preferredcontact = $_POST['preferredcontact'];
 	}
 	else
 	{
@@ -126,6 +131,7 @@ if($_POST["referredbysub"] == 1)
 		$greeting = st($themyarray['greeting']);
 		$sincerely = st($themyarray['sincerely']);
 		$notes = st($themyarray['notes']);
+		$preferredcontact = st($_POST['preferredcontact']);
 		
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
 		
@@ -273,7 +279,22 @@ if($_POST["referredbysub"] == 1)
 				</ul>
             </td>
         </tr>
-        <tr> 
+        <tr>
+				<tr bgcolor="#FFFFFF">
+										<td valign="top" class="frmhead" width="30%">
+												Preferred Contact Method
+										</td>
+										<td valign="top" class="frmdata" width="70%">
+											<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+													<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+													<option value="fax" <? if ($preferredcontact == 'fax') echo " selected";?>>Fax</option>
+													<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+												</select>
+												<br />&nbsp;
+										</td>
+								</tr>
+						<tr> 
+				
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	

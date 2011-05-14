@@ -140,7 +140,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </div>
 
 
-
+<!--
 <div style="border:1px black solid;width:60%;margin:auto;padding:10px">
 <form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
   <div>
@@ -155,6 +155,7 @@ $my=mysql_query($sql) or die(mysql_error());
   <input type="submit"/>
 </form>
 </div><br/>
+-->
 
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
@@ -210,7 +211,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			Patient Name
 		</td>
 		<td valign="top" class="col_head" width="30%">
-			Franchisee Name
+			Franchisee
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action

@@ -7,6 +7,13 @@ define('DSS_TRXN_SENT', 3);       // trxn's associated claim form was sent to in
 define('DSS_TRXN_PAID', 4);       // trxn's associated claim was received by front office and paid.
 define('DSS_TRXN_REJECTED', 5);   // trxn's associated claim was received by front office and not paid.
 
+// Transaction types (ledger)
+define('DSS_TRXN_TYPE_MED', 1);
+define('DSS_TRXN_TYPE_PATIENT', 2);
+define('DSS_TRXN_TYPE_INS', 3);
+define('DSS_TRXN_TYPE_DIAG', 4);
+define('DSS_TRXN_TYPE_ADJ', 6);
+
 // Claim statuses (insurance)
 define('DSS_CLAIM_PENDING', 0);
 define('DSS_CLAIM_SENT', 1);
@@ -16,7 +23,6 @@ define('DSS_CLAIM_REJECTED', 4);
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);
 define('DSS_PREAUTH_COMPLETE', 1);
-
 
 // A convenience array to get trxn labels
 $dss_trxn_status_labels = array();
@@ -32,6 +38,14 @@ $dss_trxn_status_labels[DSS_TRXN_PAID] = 'Paid';
 $dss_trxn_status_labels[DSS_TRXN_PAID]['short'] = 'Paid';
 $dss_trxn_status_labels[DSS_TRXN_REJECTED] = 'Rejected';
 $dss_trxn_status_labels[DSS_TRXN_REJECTED]['short'] = 'Rej.';
+
+// A convenience array to get trxn type labels
+$dss_trxn_type_labels = array();
+$dss_trxn_type_labels[DSS_TRXN_TYPE_MED] = 'Medical Code';
+$dss_trxn_type_labels[DSS_TRXN_TYPE_PATIENT] = 'Patient Payment Code';
+$dss_trxn_type_labels[DSS_TRXN_TYPE_INS] = 'Insurance Payment Code';
+$dss_trxn_type_labels[DSS_TRXN_TYPE_DIAG] = 'Dianostic Code';
+$dss_trxn_type_labels[DSS_TRXN_TYPE_ADJ] = 'Adjustment Code';
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();

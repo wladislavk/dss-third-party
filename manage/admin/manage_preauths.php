@@ -72,6 +72,34 @@ if ($_REQUEST['gen_preauth'] == 1) {
   insert_preauth_row($_REQUEST['patient_id']);
 }
 
+define('SORT_BY_DATE', 0);
+define('SORT_BY_STATUS', 1);
+define('SORT_BY_PATIENT', 2);
+define('SORT_BY_FRANCHISEE', 3);
+
+$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
+
+$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
+$sort_by_sql = '';
+switch ($sort_by) {
+  case SORT_BY_DATE:
+    $sort_by_sql = "preauth.front_office_request_date $sort_dir";
+    break;
+  case SORT_BY_PATIENT:
+    $sort_by_sql = "preauth.patient_lastname $sort_dir, preauth.patient_firstname $sort_dir";
+    break;
+  case SORT_BY_FRANCHISEE:
+    $sort_by_sql = "doc_name $sort_dir";
+    break;
+  default:
+    // default is SORT_BY_STATUS
+    $sort_by_sql = "preauth.status $sort_dir, preauth.front_office_request_date $sort_dir";
+    break;
+}
+
+$status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
+
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
@@ -97,24 +125,43 @@ else
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
-     . "  preauth.front_office_request_date, users.name as doc_name, "
-     . "  preauth.status "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  join dental_users users on preauth.doc_id = users.userid ";
 
-if (!empty($_REQUEST['fid'])) {
-    $sql .= "WHERE "
-          . "  users.userid = " . $_REQUEST['fid'] . " ";
+// filter based on select lists above table
+if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
+    $sql .= "WHERE ";
+    
+    if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+        $sql .= "  preauth.status = " . $_REQUEST['status'] . " ";
+    }
+    
+    if (!empty($_REQUEST['fid'])) {
+        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
+            $sql .= "  AND ";
+        }
+        $sql .= "  users.userid = " . $_REQUEST['fid'] . " ";
+    }
     
     if (!empty($_REQUEST['pid'])) {
         $sql .= "AND preauth.patient_id = " . $_REQUEST['pid'] . " ";
     }
 }
 
-$sql .= "ORDER BY "
-      . "  preauth.status ASC, "
-      . "  preauth.front_office_request_date ASC";
+
+/*if (!empty($_REQUEST['fid'])) {
+    $sql .= "WHERE "
+          . "  users.userid = " . $_REQUEST['fid'] . " ";
+    
+    if (!empty($_REQUEST['pid'])) {
+        $sql .= "AND preauth.patient_id = " . $_REQUEST['pid'] . " ";
+    }
+}*/
+
+$sql .= "ORDER BY " . $sort_by_sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -140,7 +187,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </div>
 
 
-
+<!--
 <div style="border:1px black solid;width:60%;margin:auto;padding:10px">
 <form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
   <div>
@@ -155,9 +202,20 @@ $my=mysql_query($sql) or die(mysql_error());
   <input type="submit"/>
 </form>
 </div><br/>
+-->
 
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+    Status:
+    <select name="status">
+      <?php $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : ''; ?>
+      <?php $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : ''; ?>
+      <option value="">Any</option>
+      <option value="<?=DSS_PREAUTH_PENDING?>" <?=$pending_selected?>><?=$dss_preauth_status_labels[DSS_PREAUTH_PENDING]?></option>
+      <option value="<?=DSS_PREAUTH_COMPLETE?>" <?=$complete_selected?>><?=$dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?></option>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+
     Franchisees:
     <select name="fid">
       <option value="">Any</option>
@@ -182,6 +240,8 @@ $my=mysql_query($sql) or die(mysql_error());
       &nbsp;&nbsp;&nbsp;
     <?php } ?>
     
+    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
@@ -199,18 +259,22 @@ $my=mysql_query($sql) or die(mysql_error());
 		</TD>
 	</TR>
 	<? }?>
+	<?php
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid']
+             . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
+    ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="15%">
-			Requested
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Requested</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Status
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Patient Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Franchisee Name
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="30%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee</a>
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -235,6 +299,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
 				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING) ? "yellow" : "green"; ?>
+				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
 				<?php $status_text = ($myarray["status"] == DSS_PREAUTH_PENDING) ? "black" : "white"; ?>
 				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
 					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;

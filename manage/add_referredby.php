@@ -301,6 +301,7 @@ if($_POST["referredbysub"] == 1)
                         <div>
                             <span>
                             	National Provider ID
+															<span id="req_0" class="req">*</span>
                                 <input id="national_provider_id" name="national_provider_id" type="text" class="field text addr tbox" value="<?=$national_provider_id?>" tabindex="15" maxlength="255" style="width:200px;" />
                             </span>
                         </div>

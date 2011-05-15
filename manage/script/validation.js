@@ -566,7 +566,7 @@ function referredbyabc(fa)
 		alert("Middle Name is Required");
 		fa.middlename.focus();
 		return false;
-	}
+	}*/
 	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
@@ -591,7 +591,6 @@ function referredbyabc(fa)
 		fa.zip.focus();
 		return false;
 	}
-	 */
 	if(trim(fa.email.value) != "" )
 	{
 		if(! is_email(trim(fa.email.value)))
@@ -600,6 +599,12 @@ function referredbyabc(fa)
 			fa.email.focus();
 			return false;
 		}
+	}
+	if(trim(fa.national_provider_id.value) == "")
+	{
+		alert("National Provider ID is Required");
+		fa.national_provider_id.focus();
+		return false;
 	}
 }
 

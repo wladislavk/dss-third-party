@@ -970,7 +970,7 @@ Contact Location
 
                 <br /><!--<button class="addButton" onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');">Add New Referrer</button>-->
 											<!--<button class="addButton" onclick="Javascript: window.location='add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>';">Add New Referrer</button>-->
-											<a href="add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>">Add New Referrer</a>
+											<a onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');" href="Javascript: ;">Add New Referrer</a>
 
 </td>
 

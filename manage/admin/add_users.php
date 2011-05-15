@@ -2,7 +2,6 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
-
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -139,7 +138,7 @@ if($_POST["usersub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="username" value="<?=$username?>" class="tbox" /> 
+                <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -148,7 +147,7 @@ if($_POST["usersub"] == 1)
                 NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="npi" value="<?=$npi?>" class="tbox" /> 
+                <input id="npi" type="text" name="npi" value="<?=$npi?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -157,7 +156,7 @@ if($_POST["usersub"] == 1)
                 Medicare NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
+                <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -166,7 +165,7 @@ if($_POST["usersub"] == 1)
                 Tax ID or SSN
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
+                <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -175,7 +174,7 @@ if($_POST["usersub"] == 1)
                 Practice
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="practice" value="<?=$practice?>" class="tbox" /> 
+                <input id="practice" type="text" name="practice" value="<?=$practice?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -184,7 +183,7 @@ if($_POST["usersub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="password" value="<?=$password;?>" class="tbox" /> 
+                <input id="password" type="text" name="password" value="<?=$password;?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -193,7 +192,7 @@ if($_POST["usersub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -202,7 +201,7 @@ if($_POST["usersub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -220,7 +219,7 @@ if($_POST["usersub"] == 1)
                 City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?php echo $city;?>" name="city" class="tbox" />
+                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -229,7 +228,7 @@ if($_POST["usersub"] == 1)
                 State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?php echo $state;?>" name="state" class="tbox" />
+                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -238,7 +237,7 @@ if($_POST["usersub"] == 1)
                 Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
+                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -247,7 +246,7 @@ if($_POST["usersub"] == 1)
                 Phone
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>

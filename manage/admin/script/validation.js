@@ -146,6 +146,30 @@ function userabc(fa)
 		fa.username.focus();
 		return false;
 	}
+	if(trim(fa.npi.value) == "" )
+	{
+		alert("NPI Number is Required");
+		fa.npi.focus();
+		return false;
+	}
+	if(trim(fa.medicare_npi.value) == "" )
+	{
+		alert("Medicare NPI Number  is Required");
+		fa.medicare_npi.focus();
+		return false;
+	}
+	if(trim(fa.tax_id_or_ssn.value) == "" )
+	{
+		alert("Tax ID or SSN is Required");
+		fa.tax_id_or_ssn.focus();
+		return false;
+	}
+	if(trim(fa.practice.value) == "" )
+	{
+		alert("Practice is Required");
+		fa.practice.focus();
+		return false;
+	}
 	if(trim(fa.password.value) == "" )
 	{
 		alert("Password is Required");
@@ -164,7 +188,7 @@ function userabc(fa)
 		fa.email.focus();
 		return false;
 	}
-	if(! is_emai(trim(fa.email.value)))
+	if(! is_email(trim(fa.email.value)))
 	{
 		alert("In-Valid Email ");
 		fa.email.focus();
@@ -174,6 +198,24 @@ function userabc(fa)
 	{
 		alert("Address is Required");
 		fa.address.focus();
+		return false;
+	}
+	if(trim(fa.city.value) == "" )
+	{
+		alert("City is Required");
+		fa.city.focus();
+		return false;
+	}
+	if(trim(fa.state.value) == "" )
+	{
+		alert("State is Required");
+		fa.state.focus();
+		return false;
+	}
+	if(trim(fa.zip.value) == "" )
+	{
+		alert("Zip is Required");
+		fa.zip.focus();
 		return false;
 	}
 	if(trim(fa.phone.value) == "" )

@@ -2,6 +2,7 @@
 include "includes/top.htm";
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
+<script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <?php
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
@@ -842,7 +843,8 @@ if($_POST["patientsub"] == 1)
                   
                         <div>
                             <span>
-                                <select id="s_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" />
+																	<option value="">Select Insurance Company</option>
                             <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
@@ -903,7 +905,7 @@ if($_POST["patientsub"] == 1)
                                 <label for="home_phone">Insurance Type</label>
                             </span>
                             <span>
-								            <input type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+								            <input id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
                             </span>
                             
 						</div>
@@ -938,7 +940,7 @@ if($_POST["patientsub"] == 1)
                                 <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-								<select name="s_m_relation" class="field text addr tbox" style="width:200px;">
+								<select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
 									<option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
 									<option value="Self" <? if($s_m_relation == 'Self') echo " selected";?>>Self</option>
 									<option value="Spouse" <? if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
@@ -970,6 +972,7 @@ if($_POST["patientsub"] == 1)
                         <div>
                             <span>
                              <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" />
+															<option value="">Select Insurance Company</option>
                             <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
@@ -1030,7 +1033,7 @@ if($_POST["patientsub"] == 1)
                                 <label for="s_m_ins_type">Insurance Type</label>
                             </span>
                             <span>
-								            <input type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+								            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
                             </span>
                             
 						</div>

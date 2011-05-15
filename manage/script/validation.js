@@ -197,6 +197,88 @@ function staffabc(fa)
 	}
 }
 
+function userabc(fa)
+{
+	if(trim(fa.username.value) == "" )
+	{
+		alert("Username is Required");
+		fa.username.focus();
+		return false;
+	}
+	if(trim(fa.npi.value) == "" )
+	{
+		alert("NPI Number is Required");
+		fa.npi.focus();
+		return false;
+	}
+	if(trim(fa.medicare_npi.value) == "" )
+	{
+		alert("Medicare NPI Number  is Required");
+		fa.medicare_npi.focus();
+		return false;
+	}
+	if(trim(fa.tax_id_or_ssn.value) == "" )
+	{
+		alert("Tax ID or SSN is Required");
+		fa.tax_id_or_ssn.focus();
+		return false;
+	}
+	if(trim(fa.practice.value) == "" )
+	{
+		alert("Practice is Required");
+		fa.practice.focus();
+		return false;
+	}
+	if(trim(fa.password.value) == "" )
+	{
+		alert("Password is Required");
+		fa.password.focus();
+		return false;
+	}
+	if(trim(fa.name.value) == "" )
+	{
+		alert("Name is Required");
+		fa.name.focus();
+		return false;
+	}
+	if(trim(fa.email.value) == "" )
+	{
+		alert("Email is Required");
+		fa.email.focus();
+		return false;
+	}
+	if(trim(fa.address.value) == "" )
+	{
+		alert("Address is Required");
+		fa.address.focus();
+		return false;
+	}
+	if(trim(fa.city.value) == "" )
+	{
+		alert("City is Required");
+		fa.city.focus();
+		return false;
+	}
+	if(trim(fa.state.value) == "" )
+	{
+		alert("State is Required");
+		fa.state.focus();
+		return false;
+	}
+	if(trim(fa.zip.value) == "" )
+	{
+		alert("Zip is Required");
+		fa.zip.focus();
+		return false;
+	}
+	if(trim(fa.phone.value) == "" )
+	{
+		alert("Phone is Required");
+		fa.phone.focus();
+		return false;
+	}
+}
+
 function patientabc(fa)
 {
 	if(trim(fa.firstname.value) == "" )
@@ -223,30 +305,30 @@ function patientabc(fa)
 		fa.salutation.focus();
 		return false;
 	}*/
-	/*if(trim(fa.add1.value) == "" )
+	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
 		fa.add1.focus();
 		return false;
-	}*/
-	/*if(trim(fa.city.value) == "" )
+	}
+	if(trim(fa.city.value) == "" )
 	{
 		alert("City is Required");
 		fa.city.focus();
 		return false;
-	}*/
-	/*if(trim(fa.state.value) == "" )
+	}
+	if(trim(fa.state.value) == "" )
 	{
 		alert("State is Required");
 		fa.state.focus();
 		return false;
-	}*/
-	/*if(trim(fa.zip.value) == "" )
+	}
+	if(trim(fa.zip.value) == "" )
 	{
 		alert("Zip is Required");
 		fa.zip.focus();
 		return false;
-	}*/
+	}
 	if(trim(fa.dob.value) == "" )
 	{
 		alert("Birthday is Required");
@@ -299,7 +381,7 @@ function patientabc(fa)
 			return false;
 		}
 	}
-	if(trim(fa.p_m_dss_file_yes.value) == "1")
+	if(fa.p_m_dss_file[0].checked)
 	{
 		if(trim(fa.p_m_partyfname.value) == "") {
 			alert("Insured Party First Name is a Required Field");
@@ -317,6 +399,10 @@ function patientabc(fa)
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins2_dob.focus();
 			return false;
+		} else if(trim(fa.p_m_ins_co.value) == "") {
+			alert("Insurance Company is a Required Field");
+			fa.p_m_ins_co.focus();
+			return false;
 		} else if(trim(fa.p_m_party.value) == "") {
 			alert("Insurance ID. is a Required Field");
 			fa.p_m_party.focus();
@@ -333,9 +419,20 @@ function patientabc(fa)
 			alert("Insurance Type is a Required Field");
 			fa.p_m_ins_type.focus();
 			return false;
+		} 
+		var assignment_selected = false;
+		for (i = 0; i < fa.p_m_ins_ass.length; i++) {
+			if (fa.p_m_ins_ass[i].checked) {
+				assignment_selected = true;
+			}
+		}
+		if (!assignment_selected) {
+			alert("You must choose 'Accept Assignment of Benefits' or 'Payment to Patient'");
+			fa.p_m_ins_ass_yes.focus();
+			return false;
 		}
 	}	
-	if(trim(fa.s_m_dss_file_yes.value) == "1")
+	if(fa.s_m_dss_file[0].checked)
 	{
 		if(trim(fa.s_m_partyfname.value) == "") {
 			alert("Insured Party First Name is a Required Field");
@@ -353,6 +450,10 @@ function patientabc(fa)
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins_dob.focus();
 			return false;
+		} else if(trim(fa.s_m_ins_co.value) == "") {
+			alert("Insurance Company is a Required Field");
+			fa.s_m_ins_co.focus();
+			return false;
 		} else if(trim(fa.s_m_party.value) == "") {
 			alert("Insurance ID. is a Required Field");
 			fa.s_m_party.focus();
@@ -368,6 +469,17 @@ function patientabc(fa)
 		} else if(trim(fa.s_m_ins_type.value) == "Select Type") {
 			alert("Insurance Type is a Required Field");
 			fa.s_m_ins_type.focus();
+			return false;
+		}
+		var assignment_selected = false;
+		for (i = 0; i < fa.s_m_ins_ass.length; i++) {
+			if (fa.s_m_ins_ass[i].checked) {
+				assignment_selected = true;
+			}
+		}
+		if (!assignment_selected) {
+			alert("You must choose 'Accept Assignment of Benefits' or 'Payment to Patient'");
+			fa.s_m_ins_ass_yes.focus();
 			return false;
 		}
 	}	
@@ -426,6 +538,12 @@ function contactabc(fa)
 			fa.email.focus();
 			return false;
 		}
+	}
+	if(trim(fa.contacttypeid.value) == "11" && trim(fa.phone1.value) == "")
+	{
+		alert("Phone number is a required field for Insurance Companies");
+		fa.phone1.focus();
+		return false;
 	}
 }
 

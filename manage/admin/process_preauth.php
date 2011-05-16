@@ -15,7 +15,6 @@ if (isset($_REQUEST['ed'])) {
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
-         print $sql;
 	$my = mysql_query($sql) or die(mysql_error());
 	$preauth = mysql_fetch_array($my);
 } else {

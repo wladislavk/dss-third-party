@@ -536,7 +536,7 @@ $(function() {
                     <?= $preauth['pcp_lastname'] ?><br/>
                     <?= $preauth['pcp_phone'] ?><br/>
                     <br/>
-                    <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('d/m/Y'); } ?>
+                    <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
                     Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox" <?=$disabled?>/><br/>
                     Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox" <?=$disabled?>/> <br/>
                     <br/>

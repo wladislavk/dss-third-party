@@ -101,6 +101,42 @@ function validatePreAuthForm(form) {
     errorMsg += "- Missing Insurance Calendar Year End\n";
   }
   
+  if (trim(form.patient_deductible.value) == "") {
+    errorMsg += "- Missing Patient Deductible\n";
+  }
+  
+  if (trim(form.patient_amount_met.value) == "") {
+    errorMsg += "- Missing Patient Amount Met\n";
+  }
+  
+  if (trim(form.patient_amount_left_to_meet.value) == "") {
+    errorMsg += "- Missing Patient Amount Left to Meet\n";
+  }
+  
+  if (trim(form.family_deductible.value) == "") {
+    errorMsg += "- Missing Family Deductible\n";
+  }
+  
+  if (trim(form.family_amount_met.value) == "") {
+    errorMsg += "- Missing Family Amount Met\n";
+  }
+  
+  if (trim(form.deductible_reset_date.value) == "") {
+    errorMsg += "- Missing Deductible Reset Date\n";
+  }
+  
+  if (trim(form.trxn_code_amount.value) == "") {
+    errorMsg += "- Missing Device Amount\n";
+  }
+  
+  if (trim(form.expected_insurance_payment.value) == "") {
+    errorMsg += "- Missing Expected Insurance Payment\n";
+  }
+  
+  if (trim(form.expected_patient_payment.value) == "") {
+    errorMsg += "- Missing Expected Patient Payment\n";
+  }
+  
   if (errorMsg != '') {
     alert(errorMsg);
   }

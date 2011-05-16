@@ -98,6 +98,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
 <script language="JavaScript" src="../calendar2.js"></script>
 <script>
 $(function() {
+  $('input, select, textarea').each(function() { console.log($(this).attr('name')); });
   $("input[name='has_out_of_network_benefits']").bind('click', function() {
     if ($(this).val() == 1) {
       $('#has_out_of_network_benefits_yes').css('display', 'block');
@@ -148,7 +149,9 @@ $(function() {
     var amountMet  = $('#patient_amount_met').val();
     if (isNaN(deductible)) { deductible = 0; }
     if (isNaN(amountMet))  { amountMet = 0; }
-    $('#patient_amount_left_to_meet').val(parseFloat(deductible - amountMet).toFixed(2));
+    var leftToMeet = deductible - amountMet;
+    if (leftToMeet < 0) { leftToMeet = 0; }
+    $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
   }
   
   $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
@@ -199,7 +202,11 @@ $(function() {
       }
     } else {
       var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
+      if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
+
       var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+      if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
+
       if (debug) { 
         console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
         console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));

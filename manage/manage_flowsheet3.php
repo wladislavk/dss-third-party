@@ -1,8 +1,6 @@
 <?php include "includes/top.htm";
 require_once('includes/constants.inc');
 
-
-
 function preauth_allowed(){
 
   $pa_sql = "SELECT * FROM dental_insurance_preauth WHERE patient_id=".$_GET['pid'];
@@ -200,7 +198,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
        . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
        . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
-       . "  front_office_request_date, status "
+       . "  front_office_request_date, status, userid "
        . ") VALUES ("
        . "  " . $_GET['pid'] . ", "
        . "  " . $my_array['doc_id'] . ", "
@@ -227,7 +225,8 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  '" . $my_array['doc_medicare_npi'] . "', "
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
        . "  '" . date('Y-m-d H:i:s') . "', "
-       . DSS_PREAUTH_PENDING
+       . DSS_PREAUTH_PENDING . ", "
+       . "  '" . $_SESSION['userid'] . "' "
        . ")";
   //print_r($my_array);
   //print_r($sql);exit;

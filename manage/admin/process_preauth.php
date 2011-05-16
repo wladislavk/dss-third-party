@@ -94,6 +94,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
 </style>
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="JavaScript" src="../calendar2.js"></script>
 <script>
 $(function() {
@@ -249,7 +250,7 @@ $(function() {
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return userabc(this)">
+    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -308,7 +309,6 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_add2" class="tbox" value="<?=$preauth['patient_add2'];?>" DISABLED/>
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -379,7 +379,7 @@ $(function() {
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins__id" value="<?=$preauth['patient_ins_id']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox" DISABLED/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -425,7 +425,6 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox" DISABLED/> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

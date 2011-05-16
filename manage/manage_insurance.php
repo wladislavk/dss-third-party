@@ -58,7 +58,6 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $myid=mysql_query($sqlid) or die(mysql_error());
 $num_users=mysql_num_rows($my);
-
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -94,10 +93,6 @@ $num_users=mysql_num_rows($my);
 	</button>
   <?php }} ?>
   
-  
-  <button onclick="Javascript: window.location = 'insurance.php?pid=<?=$_GET['pid'];?>';" class="addButton">
-		Add New Claim
-	</button>
 	&nbsp;&nbsp;
 </div>
 
@@ -169,8 +164,37 @@ $num_users=mysql_num_rows($my);
 					</a>
 				</td>
 			</tr>
-	<? 	}
-	}?>
+	  <? } ?>
+	<? } ?>
+  <?php
+    // Display a placeholder row for any ledger trxns that need added to a new claim
+    $sql = "SELECT "
+         . "  ledger.* "
+         . "FROM "
+         . "  dental_ledger ledger "
+         . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+         . "  JOIN dental_users user ON user.userid = ledger.docid "
+         . "WHERE "
+         . "  ledger.status = " . DSS_TRXN_PENDING . " "
+         . "  AND ledger.patientid = " . $_GET['pid'] . " "
+         . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " ";
+    $query = mysql_query($sql);
+    $num_trxns = mysql_num_rows($query);
+    $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
+  ?>
+  <tr class="<?=$tr_class;?>">
+    <td>There <?=$row_text?> ready to be added to a new claim.</td>
+    <td>n/a</td>
+    <td>
+      <?php if ($num_trxns > 0) { ?>
+        <button onclick="Javascript: window.location = 'insurance.php?pid=<?=$_GET['pid'];?>';" class="addButton">
+		  Add New Claim
+	    </button>
+      <?php } ?>
+    </td>
+  </tr>
 </table>
 </insurance>
 

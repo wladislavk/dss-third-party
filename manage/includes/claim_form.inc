@@ -58,7 +58,8 @@ if ($_REQUEST["delid"] != "") {
 	die(); // already did a javascript redirect...just die
 }
 
-$is_new_claim = (!isset($_REQUEST['insid']) && $_POST['ed'] == '') ? true : false;
+$is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_POST['ed'] == '') ? true : false;
+//print "\$is_new_claim: $is_new_claim";exit;
 
 // process inserts/updates for claim form
 if ($_POST['insurancesub'] == 1) {
@@ -476,7 +477,7 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		status = '".s_for(($status == DSS_CLAIM_SENT) ? DSS_CLAIM_SENT : DSS_CLAIM_PENDING)."',
+		status = '".s_for(DSS_CLAIM_PENDING)."',
 		userid = '".s_for($_SESSION['userid'])."',
 		docid = '".s_for($_SESSION['docid'])."',
 		adddate = now(),
@@ -488,7 +489,7 @@ if ($_POST['insurancesub'] == 1) {
 		$primary_claim_id = mysql_insert_id();
 		
 		// update the ledger trxns passed in with the form
-		update_ledger_trxns($primary_claim_id, DSS_TRXN_PENDING);
+		update_ledger_trxns($primary_claim_id, DSS_TRXN_PROCESSING);
 		
 		$msg = "Added Successfully";
 		
@@ -695,13 +696,13 @@ if ($_POST['insurancesub'] == 1) {
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		// update the ledger trxns passed in with the form
-		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PENDING;
-		update_ledger_trxns($_GET['insid'], $trxn_status);
+		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
+		update_ledger_trxns($_POST['ed'], $trxn_status);
 
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';
-        print '  window.location="' . $_SERVER['PHP_SELF'] . '?pid=' . $_GET['pid'] . '&insid=' . $_GET['insid'] . '&ed=' . $_GET['ed'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
 
 		die(); // already did a javascript redirect...just die
@@ -1030,7 +1031,7 @@ if ($dent_rows <= 0) {
 <script src="<?=$admin_path?>popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
-<?php if ($is_sent) { ?>
+<?php if ($is_sent || (!$is_new_claim && $is_front_office)) { ?>
   <script>
 	$(function() {
 	  $('input, select, textarea').attr('disabled', 'true');
@@ -2018,7 +2019,7 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
   $mod_array[] = $mod_row;
 }
 
-// Load N/A medical trxns if new claim form. Otherwise, load associated trxns.
+// Load pending medical trxns if new claim form. Otherwise, load associated trxns.
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
@@ -2028,9 +2029,10 @@ if ($is_new_claim) {
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_NA . " "
+       . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
        . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2157,9 +2159,10 @@ if ($is_new_claim) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_NA . " "
+       . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
        . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2177,9 +2180,10 @@ if ($is_new_claim) {
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
-       . "  ledger.status = " . DSS_TRXN_NA . " "
+       . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
        . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";

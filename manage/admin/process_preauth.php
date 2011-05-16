@@ -59,6 +59,7 @@ if (isset($_REQUEST['ed'])) {
     
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
+        $sql .= ", date_completed = NOW() ";
     } else {
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
     }

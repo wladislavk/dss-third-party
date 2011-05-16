@@ -12,9 +12,10 @@ if (isset($_REQUEST['ed'])) {
          . "FROM "
          . "  dental_insurance_preauth preauth "
          . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
-         . "  JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
+         . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
+         print $sql;
 	$my = mysql_query($sql) or die(mysql_error());
 	$preauth = mysql_fetch_array($my);
 } else {

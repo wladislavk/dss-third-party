@@ -386,9 +386,9 @@ if($_POST["contactsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
             	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+                	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
                 	<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
                 	<option value="fax" <? if($preferredcontact == 'fax') echo " selected";?>>Fax</option>
-                	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
                 </select>
                 <br />&nbsp;
             </td>

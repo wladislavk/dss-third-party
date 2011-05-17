@@ -58,13 +58,17 @@ while ($row = mysql_fetch_assoc($letter_result)) {
 }
 
 // Pending and Sent Contacts
-$othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = ".$letterid." OR parentid = ".$letterid." ORDER BY letterid ASC;";
+$othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
 $othermd_result = mysql_query($othermd_query);
 $md_array = array();
 $md_referral_array = array();
 while ($row = mysql_fetch_assoc($othermd_result)) {
-	$md_array = array_merge($md_array, explode(",", $row['md_list']));
-	$md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+	if ($row['md_list'] != null) {
+		$md_array = array_merge($md_array, explode(",", $row['md_list']));
+	} 
+	if ($row['md_referral_list'] != null) {
+		$md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+	}
 }
 $full_md_list = implode(",", $md_array);
 $full_md_referral_list = implode(",", $md_referral_array);
@@ -324,17 +328,20 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $delivery_date . "</strong>";
 		$search[] = "%dental_device%";
 		$replace[] = "<strong>" . $dentaldevice . "</strong>";
+		$search[] = "%other_mds%";
 		$other_mds = "";
 		$count = 1;
 		foreach ($md_contacts as $index => $md) {
-			if ($key != $index) {
-				$other_mds .= $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
-				if ($count < $numletters - 1) {
+			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+				$other_mds .= $md_fullname;
+				if ($count < count($md_contacts)) {
 					$other_mds .= ", ";
 				}	
 				$count++;
 			}
 		}
+		$other_mds = rtrim($other_mds, ", ");
 		$replace[] = "<strong>" . $other_mds . "</strong>";
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field

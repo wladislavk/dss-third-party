@@ -1940,6 +1940,7 @@ Next Appointment
 	$delayreason = strtolower($flow_pg2_info[$step]['delay_reason']);
 
   $pid = $_GET['pid'];
+	$preferred = "";
   $letterlink = "";
 	foreach ($dental_letters[$step] as $letter) {
 		$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);

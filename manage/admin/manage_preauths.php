@@ -76,6 +76,7 @@ define('SORT_BY_DATE', 0);
 define('SORT_BY_STATUS', 1);
 define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
+define('SORT_BY_USER', 4);
 
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
@@ -91,6 +92,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_FRANCHISEE:
     $sort_by_sql = "doc_name $sort_dir";
+    break;
+  case SORT_BY_USER:
+    $sort_by_sql = "user_name $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -126,10 +130,12 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
-     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
-     . "  join dental_users users on preauth.doc_id = users.userid ";
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
@@ -151,15 +157,6 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     }
 }
 
-
-/*if (!empty($_REQUEST['fid'])) {
-    $sql .= "WHERE "
-          . "  users.userid = " . $_REQUEST['fid'] . " ";
-    
-    if (!empty($_REQUEST['pid'])) {
-        $sql .= "AND preauth.patient_id = " . $_REQUEST['pid'] . " ";
-    }
-}*/
 
 $sql .= "ORDER BY " . $sort_by_sql;
 $my = mysql_query($sql);
@@ -270,11 +267,14 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="30%">
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="30%">
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee</a>
+		</td>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
+			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -283,7 +283,7 @@ $my=mysql_query($sql) or die(mysql_error());
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="5" align="center">
+			<td valign="top" class="col_head" colspan="6" align="center">
 				No Records
 			</td>
 		</tr>
@@ -309,6 +309,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;
+				</td>
+				<td valign="top">
+					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>

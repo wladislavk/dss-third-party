@@ -12,7 +12,7 @@ if (isset($_REQUEST['ed'])) {
          . "FROM "
          . "  dental_insurance_preauth preauth "
          . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
-         . "  JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
+         . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
 	$my = mysql_query($sql) or die(mysql_error());
@@ -59,6 +59,7 @@ if (isset($_REQUEST['ed'])) {
     
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
+        $sql .= ", date_completed = NOW() ";
     } else {
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
     }
@@ -93,9 +94,11 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
 </style>
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="JavaScript" src="../calendar2.js"></script>
 <script>
 $(function() {
+  $('input, select, textarea').each(function() { console.log($(this).attr('name')); });
   $("input[name='has_out_of_network_benefits']").bind('click', function() {
     if ($(this).val() == 1) {
       $('#has_out_of_network_benefits_yes').css('display', 'block');
@@ -146,7 +149,9 @@ $(function() {
     var amountMet  = $('#patient_amount_met').val();
     if (isNaN(deductible)) { deductible = 0; }
     if (isNaN(amountMet))  { amountMet = 0; }
-    $('#patient_amount_left_to_meet').val(parseFloat(deductible - amountMet).toFixed(2));
+    var leftToMeet = deductible - amountMet;
+    if (leftToMeet < 0) { leftToMeet = 0; }
+    $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
   }
   
   $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
@@ -197,7 +202,11 @@ $(function() {
       }
     } else {
       var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
+      if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
+
       var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
+      if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
+
       if (debug) { 
         console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
         console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
@@ -248,7 +257,7 @@ $(function() {
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return userabc(this)">
+    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -307,7 +316,6 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_add2" class="tbox" value="<?=$preauth['patient_add2'];?>" DISABLED/>
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -378,7 +386,7 @@ $(function() {
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins__id" value="<?=$preauth['patient_ins_id']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox" DISABLED/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -424,7 +432,6 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox" DISABLED/> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -536,7 +543,7 @@ $(function() {
                     <?= $preauth['pcp_lastname'] ?><br/>
                     <?= $preauth['pcp_phone'] ?><br/>
                     <br/>
-                    <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('d/m/Y'); } ?>
+                    <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
                     Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox" <?=$disabled?>/><br/>
                     Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox" <?=$disabled?>/> <br/>
                     <br/>

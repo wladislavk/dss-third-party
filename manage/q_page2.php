@@ -304,17 +304,25 @@ if($cpap == '')
 		
 	}
 	
-	function q_page2abc(fa)
-	{
-		if(trim(fa.sleep_study_on.value) != '')
-		{ 
-			if(is_date(trim(fa.sleep_study_on.value)) == -1 ||  is_date(trim(fa.sleep_study_on.value)) == false)
-			{
-				alert("Invalid Date Format, Valid Format : (mm/dd/YYYY);");
+	function q_page2abc(fa) {
+	    var errorMsg = '';
+	    
+		if (trim(fa.sleep_study_on.value) != '') { 
+			if (is_date(trim(fa.sleep_study_on.value)) == -1 ||  is_date(trim(fa.sleep_study_on.value)) == false) {
+				errorMsg += "- Invalid Date Format, Valid Format : (mm/dd/YYYY);\n";
 				fa.sleep_study_on.focus();
-				return false;
 			}
-		}	
+		}
+		
+		if (trim(fa.confirmed_diagnosis.selectedIndex) < 1) {
+		    errorMsg += "- Missing Confirmed Diagnosis\n";
+		}
+		
+		if (errorMsg != '') {
+		    alert(errorMsg);
+		}
+		
+		return (errorMsg == '');
 	}
 </script>
 
@@ -425,6 +433,7 @@ if($cpap == '')
                                 	519.80 - UARS
                                 </option>
                             </select>
+                            <span style="color:red; float:none">*</span>
 							
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input id="custom_diagnosis" name="custom_diagnosis" type="text" class="field text addr tbox" value="<?=$custom_diagnosis;?>" maxlength="255" style="width:225px;" /> 

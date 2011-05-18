@@ -1,5 +1,26 @@
 <?php include "includes/top.htm";
 require_once('includes/constants.inc');
+?>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("[id^=delay_reason]").each(function() {
+			var reason = $(this).attr('id');
+			var button = reason.replace("delay_reason", "reason_btn");
+			if ($("#" + reason).val() == "other") {
+				$("#" + button).attr("style", "display:block;");
+			}
+			$("#" + reason).change(function () {
+				if ($(this).val() == "other") {
+					$('#page2form').submit();
+					$("#" + button).attr("style", "display:block;");
+				} else {
+					$("#" + button).attr("style", "display:none;");
+				}
+			});
+		});
+	});
+</script>
+<?php
 
 function preauth_allowed(){
 
@@ -1718,7 +1739,7 @@ $e_text .= '\n'.$e;
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>" />
 </form>
 
-<form action="manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>&page=page2" method="POST" name="page2submit" style="clear: both;">
+<form id="page2form" action="manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>&page=page2" method="POST" name="page2submit" style="clear: both;">
 <h2 style="float:left;width:200px;">Treatment Steps</h2>
 
 <style>

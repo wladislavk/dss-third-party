@@ -6,15 +6,46 @@ require_once('includes/constants.inc');
 		$("[id^=delay_reason]").each(function() {
 			var reason = $(this).attr('id');
 			var button = reason.replace("delay_reason", "reason_btn");
+			var description = reason.replace("delay_reason", "description");
+			var row = reason.replace("delay_reason", "delayingtreatmentrow");
 			if ($("#" + reason).val() == "other") {
-				$("#" + button).attr("style", "display:block;");
+				$("#" + button).attr("style", "display:inline;");
+				$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
+				$("#" + description).attr("style", "display:table-cell;");
 			}
 			$("#" + reason).change(function () {
 				if ($(this).val() == "other") {
 					$('#page2form').submit();
-					$("#" + button).attr("style", "display:block;");
+					$("#" + button).attr("style", "display:inline;");
+					$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
+					$("#" + description).attr("style", "display:table-cell;");
 				} else {
 					$("#" + button).attr("style", "display:none;");
+					$("tr." + row + " > td").attr("style", "border-bottom: 1px solid #000000;");
+					$("#" + description).attr("style", "display:none;");
+				}
+			});
+		});
+		$("[id^=noncomp_reason]").each(function() {
+			var reason = $(this).attr('id');
+			var button = reason.replace("noncomp_reason", "reason_btn");
+			var description = reason.replace("noncomp_reason", "description");
+			var row = reason.replace("noncomp_reason", "patientnoncomprow");
+			if ($("#" + reason).val() == "other") {
+				$("#" + button).attr("style", "display:inline;");
+				$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
+				$("#" + description).attr("style", "display:table-cell;");
+			}
+			$("#" + reason).change(function () {
+				if ($(this).val() == "other") {
+					$('#page2form').submit();
+					$("#" + button).attr("style", "display:inline;");
+					$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
+					$("#" + description).attr("style", "display:table-cell;");
+				} else {
+					$("#" + button).attr("style", "display:none;");
+					$("tr." + row + " > td").attr("style", "border-bottom: 1px solid #000000;");
+					$("#" + description).attr("style", "display:none;");
 				}
 			});
 		});
@@ -772,6 +803,11 @@ print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<b
 			$values .= ", '" . s_for($_POST['data'][$i]['delay_reason']) . "'";
 			$setstring .= ", delay_reason='" . s_for($_POST['data'][$i]['delay_reason']) . "'";
 		}
+		if	(isset($_POST['data'][$i]['noncomp_reason'])) {
+			$columns .= ", noncomp_reason";
+			$values .= ", '" . s_for($_POST['data'][$i]['noncomp_reason']) . "'";
+			$setstring .= ", noncomp_reason='" . s_for($_POST['data'][$i]['noncomp_reason']) . "'";
+		}
 
 		if ($numrows == 0) {
 			$insertquery = "INSERT INTO dental_flow_pg2_info (".$columns.") VALUES (".$values.");";
@@ -826,29 +862,36 @@ $explode = explode(",", $array['steparray']);
 
 $stepid = count($explode);
 
-array_pop($explode);
+$letter_query = "SELECT dental_flow_pg2_info.stepid, dental_letters.status FROM dental_flow_pg2_info JOIN dental_letters ON dental_flow_pg2_info.stepid=dental_letters.stepid WHERE dental_letters.patientid = '".$patientid."' AND dental_letters.status = '1' AND dental_flow_pg2_info.stepid = '".$stepid."';";
+$letter_result = mysql_query($letter_query);
+$numrows = mysql_num_rows($letter_result);
+if ($numrows == 0) {
+	array_pop($explode);
 
-$implode = implode(",", $explode);
-//echo $implode;
+	$implode = implode(",", $explode);
+	//echo $implode;
 
-$updatesteparray = "UPDATE `dental_flow_pg2` SET `steparray` = '".$implode."' WHERE `patientid` = '".$patientid."' LIMIT 1;";
-if ($stepid != 1) {
-if(mysql_query($updatesteparray)){
+	$updatesteparray = "UPDATE `dental_flow_pg2` SET `steparray` = '".$implode."' WHERE `patientid` = '".$patientid."' LIMIT 1;";
+	if ($stepid != 1) {
+	if(mysql_query($updatesteparray)){
 
-  $delete_pg2_info_query = "DELETE FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND stepid = '".$stepid."';";
-  $result = mysql_query($delete_pg2_info_query);
+		$delete_pg2_info_query = "DELETE FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND stepid = '".$stepid."';";
+		$result = mysql_query($delete_pg2_info_query);
+		$delete_letters_query = "DELETE FROM dental_letters WHERE patientid = '".$patientid."' AND stepid = '".$stepid."' AND status = '0';";
+		$result2 = mysql_query($delete_letters_query);
+	?>
+	<script type="text/javascript">
+	window.location.href='manage_flowsheet3.php?pid=<?php echo($_GET["pid"]); ?>&page=page2&msg=Deleted Successfully';
+	</script>
 
-?>
-<script type="text/javascript">
-window.location.href='manage_flowsheet3.php?pid=<?php echo($_GET["pid"]); ?>&page=page2&msg=Deleted Successfully';
-</script>
-
-<?php
-}
+	<?php
+	}
+	} else {
+		print "Can not delete Initial Contact step";
+	}
 } else {
-  print "Can not delete Initial Contact step";
+	print "Can not delete last step, because letters have already been sent";
 }
-
 
 }
 
@@ -1900,7 +1943,7 @@ Next Appointment
   //print_r($order);
   
   
-  $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, study_type, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
+  $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
   $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
   while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
@@ -1959,9 +2002,10 @@ Next Appointment
   if ($datecomp == '12/31/1969') $datecomp = '';
 	$sleepstudy = $flow_pg2_info[$step]['study_type'];
 	$delayreason = strtolower($flow_pg2_info[$step]['delay_reason']);
+	$noncompreason = strtolower($flow_pg2_info[$step]['noncomp_reason']);
+	$description = $flow_pg2_info[$step]['description'];
 
   $pid = $_GET['pid'];
-	$preferred = "";
   $letterlink = "";
 	foreach ($dental_letters[$step] as $letter) {
 		$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
@@ -1970,6 +2014,7 @@ Next Appointment
 		$gendate = date('m/d/Y', $letter['generated_date']);
 		if ($lid != '') {
 			foreach ($contacts['patient'] as $contact) {
+				$preferred = "";
 				if ($contact['preferredcontact'] == "email") {
 					$preferred = "(E)";
 				}
@@ -1989,6 +2034,7 @@ Next Appointment
 				}
 			}
 			foreach ($contacts['md_referrals'] as $contact) {
+				$preferred = "";
 				if ($contact['preferredcontact'] == "email") {
 					$preferred = "(E)";
 				}
@@ -2008,6 +2054,7 @@ Next Appointment
 				}
 			}
 			foreach ($contacts['mds'] as $contact) {
+				$preferred = "";
 				if ($contact['preferredcontact'] == "email") {
 					$preferred = "(E)";
 				}

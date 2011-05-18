@@ -179,6 +179,14 @@ $appt_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid =
 $appt_result = mysql_query($appt_query);
 $appt_date = date('F d, Y', strtotime(mysql_result($appt_result, 0)));
 
+// Delay Reason and Description
+$reason_query = "SELECT delay_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 5 AND letterid = '".$letterid."';";
+$reason_result = mysql_query($reason_query);
+while ($row = mysql_fetch_assoc($reason_result)) {
+	$delay = $row;
+}
+$delay['description'] = str_replace(".", "", strtolower($delay['description']));
+
 ?>
 
 
@@ -236,7 +244,7 @@ $template = "<p>%todays_date%</p>
 
 <p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
 
-<p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  However, %he/she% is waiting to begin treatment due to [Reason for Delay -- Need to add this field to SW].</p>
+<p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  However, %he/she% is waiting to begin treatment due to %delay_reason%.</p>
 
 <p>Thank you again for your confidence and the referral.  We will keep you updated on %his/her% treatment progress.</p>
 
@@ -328,6 +336,27 @@ if ($_POST != array()) {
 		}
 		$other_mds = rtrim($other_mds, ", ");
 		$replace[] = "<strong>" . $other_mds . "</strong>";
+		$search[] = "%delay_reason%";
+		switch ($delay['reason']) {
+			case 'insurance':
+				$replace[] = "<strong>insurance problems or issues</strong>";
+				break;
+			case 'dental work':
+				$replace[] = "<strong>additional pending dental work</strong>";
+				break;
+			case 'deciding':
+				$replace[] = "<strong>personal decision</strong>";
+				break;
+			case 'sleep study':
+				$replace[] = "<strong>a pending sleep study</strong>";
+				break;
+			case 'other':
+				$replace[] = "<strong>" . $delay['description'] . "</strong>";
+				break;
+			default:
+				$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+		}
+
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -430,6 +459,26 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$other_mds = rtrim($other_mds, ", ");
 	$replace[] = "<strong>" . $other_mds . "</strong>";
+	$search[] = "%delay_reason%";
+	switch ($delay['reason']) {
+		case 'insurance':
+			$replace[] = "<strong>insurance problems or issues</strong>";
+			break;
+		case 'dental work':
+			$replace[] = "<strong>additional pending dental work</strong>";
+			break;
+		case 'deciding':
+			$replace[] = "<strong>personal decision</strong>";
+			break;
+		case 'sleep study':
+			$replace[] = "<strong>a pending sleep study</strong>";
+			break;
+		case 'other':
+			$replace[] = "<strong>" . $delay['description'] . "</strong>";
+			break;
+		default:
+			$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+	}
 
 
  	if ($new_template[$key] != null) {

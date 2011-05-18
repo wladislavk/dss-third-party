@@ -185,6 +185,14 @@ $device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid
 $device_result = mysql_query($device_query);
 $delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
 
+// Non Compliance Reason and Description
+$reason_query = "SELECT noncomp_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 9 AND letterid = '".$letterid."';";
+$reason_result = mysql_query($reason_query);
+while ($row = mysql_fetch_assoc($reason_result)) {
+	$noncomp = $row;
+}
+$noncomp['description'] = str_replace(".", "", strtolower($noncomp['description']));
+
 ?>
 
 
@@ -244,7 +252,7 @@ $template = "<p>%todays_date%</p>
 
 <p>We delivered a %dental_device% dental device on %delivery_date%.</p>
 
-<p>I regret to inform you that %he/she% has become non compliant with dental device therapy due to [Reason for Non Compliance - NEED TO PUT IN SW].</p>
+<p>I regret to inform you that %he/she% has become non compliant with dental device therapy due to %noncomp_reason%.</p>
 
 <p>I am referring her back to you to discuss other treatment alternatives.  Thank you again for the opportunity to participate in %patient_firstname%'s therapy; please know that we will do our best to follow through with all patients to ensure successful treatment.</p>
 
@@ -343,6 +351,24 @@ if ($_POST != array()) {
 		}
 		$other_mds = rtrim($other_mds, ", ");
 		$replace[] = "<strong>" . $other_mds . "</strong>";
+		$search[] = "%noncomp_reason%";
+		switch ($noncomp['reason']) {
+			case 'pain/discomfort':
+				$replace[] = "<strong>pain and/or discomfort</strong>";
+				break;
+			case 'lost device':
+				$replace[] = "<strong>the device being lost and not replaced</strong>";
+				break;
+			case 'device not working':
+				$replace[] = "<strong>patient claims that the device is not working properly or adequately</strong>";
+				break;
+			case 'other':
+				$replace[] = "<strong>" . $noncomp['description'] . "</strong>";
+				break;
+			default:
+				$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+		}
+
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
@@ -451,7 +477,23 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$other_mds = rtrim($other_mds, ", ");
 	$replace[] = "<strong>" . $other_mds . "</strong>";
-				
+	$search[] = "%noncomp_reason%";
+	switch ($noncomp['reason']) {
+		case 'pain/discomfort':
+			$replace[] = "<strong>pain and/or discomfort</strong>";
+			break;
+		case 'lost device':
+			$replace[] = "<strong>the device being lost and not replaced</strong>";
+			break;
+		case 'device not working':
+			$replace[] = "<strong>patient claims that the device is not working properly or adequately</strong>";
+			break;
+		case 'other':
+			$replace[] = "<strong>" . $noncomp['description'] . "</strong>";
+			break;
+		default:
+			$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+	}
 
 
  	if ($new_template[$key] != null) {

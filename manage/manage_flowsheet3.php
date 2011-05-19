@@ -877,8 +877,12 @@ if ($numrows == 0) {
 
 		$delete_pg2_info_query = "DELETE FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND stepid = '".$stepid."';";
 		$result = mysql_query($delete_pg2_info_query);
-		$delete_letters_query = "DELETE FROM dental_letters WHERE patientid = '".$patientid."' AND stepid = '".$stepid."' AND status = '0';";
+		$delete_letters_query = "SELECT letterid FROM dental_letters WHERE patientid = '".$patientid."' AND stepid = '".$stepid."' AND status = '0';";
 		$result2 = mysql_query($delete_letters_query);
+		$parent = true;
+		while ($row = mysql_fetch_assoc($result2)) {
+			delete_letter($row['letterid'], $parent);
+		}
 	?>
 	<script type="text/javascript">
 	window.location.href='manage_flowsheet3.php?pid=<?php echo($_GET["pid"]); ?>&page=page2&msg=Deleted Successfully';

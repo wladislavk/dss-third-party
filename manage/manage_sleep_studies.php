@@ -11,6 +11,17 @@ include("includes/sescheck.php");
 <script src="/manage/js/add_new_sleeplab.js" type="text/javascript"></script>
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('[id^=edit]').click(function() {
+			var edit_id = $(this).attr('id');
+			var num = edit_id.replace("edit", "");
+			$('#view'+num).css("display", "none");
+			$('#edit'+num).css("display", "none");
+			$('#file'+num).css("display", "inline");
+		});
+	});
+</script>
  <script type="text/javascript">
 /* PopUp Calendar v2.1
 © PCI, Inc.,2000 • Freeware
@@ -340,80 +351,87 @@ $insslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid
 
 
 if(isset($_POST['submitnewstudy'])){
-$docid = $_SESSION['docid'];
-$patientid = $_POST['patientid'];
-$needed = $_POST['needed'];
-$scheddate = $_POST['scheddate'];
-$sleeplabwheresched = $_POST['sleeplabwheresched'];
-$completed = $_POST['completed'];
-$interpolation = $_POST['interpolation'];
-$labtype = $_POST['labtype'];
-$copyreqdate = $_POST['copyreqdate'];
-$sleeplab = $_POST['sleeplab'];
-$date = date("Ymd");
-$filename = $_FILES["file"]["name"];
-$random = rand(111111111,999999999);
-$scanext = end(explode('.', $filename));
-$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."');";
-echo $insslquery;
+	$docid = $_SESSION['docid'];
+	$patientid = $_POST['patientid'];
+	$needed = $_POST['needed'];
+	$scheddate = $_POST['scheddate'];
+	$sleeplabwheresched = $_POST['sleeplabwheresched'];
+	$completed = $_POST['completed'];
+	$interpolation = $_POST['interpolation'];
+	$labtype = $_POST['labtype'];
+	$copyreqdate = $_POST['copyreqdate'];
+	$sleeplab = $_POST['sleeplab'];
+	$date = date("Ymd");
+	$filename = $_FILES["file"]["name"];
+	$random = rand(111111111,999999999);
+	$scanext = end(explode('.', $filename));
+	$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."');";
+	//echo $insslquery;
 
 if(!mysql_query($insslquery)){
-echo "Could not add sleep lab, please try again!";
+	echo "Could not add sleep lab, please try again!";
 }else{
-?>
-<script type="text/javascript">
-window.location.href='manage_sleep_studies.php?pid=<?php echo($_POST["patientid"]); ?>';
-</script>
-<?php
-}
-
-
-if ((($_FILES["file"]["type"] == "image/gif")
-|| ($_FILES["file"]["type"] == "image/jpeg")
-|| ($_FILES["file"]["type"] == "image/pjpeg")
-|| ($_FILES["file"]["type"] == "application/pdf"))
-&& ($_FILES["file"]["size"] < 200000000))
-  {
-  if ($_FILES["file"]["error"] > 0)
-    {
-     ?>
-           <script type="text/javascript">
-           alert("<?php echo($_FILES['file']['error']); ?>");
-           </script>
-     <?php
-    }
-  else
-    {
-    if (file_exists("upload/" . $_FILES["file"]["name"]))
-      {
-      ?>
-           <script type="text/javascript">
-           alert("File Already Exists");
-            </script>           
-           <?php
-      }
-    else
-      {
-      move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/".$patientid.'-'.$random.".".$scanext);
-       ?>
-           <script type="text/javascript">
-           alert("It's done! The file has been saved as: "+<?php echo($newname); ?>);
-            </script>           
-           <?php
-      }
-    }
-  }
-else
-  {
- ?>
-           <script type="text/javascript">
-           alert("Invalid File Type");
-            </script>           
-           <?php
-  }
-
-
- 
+	if ((($_FILES["file"]["type"] == "image/gif")
+	|| ($_FILES["file"]["type"] == "image/jpeg")
+	|| ($_FILES["file"]["type"] == "image/pjpeg")
+	|| ($_FILES["file"]["type"] == "application/pdf"))
+	&& ($_FILES["file"]["size"] < 200000000))
+		{
+//print_r($_FILES);
+//print sys_get_temp_dir();
+//die();
+		if ($_FILES["file"]["error"] > 0)
+			{
+			 ?>
+						 <script type="text/javascript">
+						 alert("<?php echo($_FILES['file']['error']); ?>");
+						 </script>
+			 <?php
+			}
+		else
+			{
+			if (file_exists("upload/" . $_FILES["file"]["name"]))
+				{
+				?>
+						 <script type="text/javascript">
+						 alert("File Already Exists");
+							</script>           
+						 <?php
+				}
+			else
+				{
+				$filename = $patientid.'-'.$random.".".$scanext;
+				$success = move_uploaded_file($_FILES["file"]["tmp_name"],"/manage/sleepstudies/".$filename);
+					if ($sucess) {
+					 ?>
+							 <script type="text/javascript">
+							 alert("It's done! The file has been saved as: " + "<?php echo($filename); ?>");
+								</script>           
+							 <?php
+					} else {			
+						?>
+						<script type="text/javascript">
+							alert("File could not be stored to server.");
+						</script><?php
+					}
+				}
+			}
+		}
+	else
+		{
+	 ?>
+						 <script type="text/javascript">
+						 alert("Invalid File Type");
+							</script>           
+						 <?php
+		}
+	?>
+	<script type="text/javascript">
+	window.location.href='manage_sleep_studies.php?pid=<?php echo($_POST["patientid"]); ?>';
+	</script>
+	<?php
+	die();
+	}
 }
 
 ?>
@@ -552,7 +570,7 @@ else
 						<td>
             <input type="hidden" value="<?php echo $_GET['pid'] ?>" name="patientid" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="1000000000" />
-            <input name="file" type="file" />
+            <input name="file" type="file" size="4" />
 					
 						</td>
 					
@@ -590,7 +608,7 @@ if($numrows){
  $calendar_vars[$i]['scheddate_id'] = "scheddate$i";
  $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  ?>
- <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;">
+ <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
  <div id="sleepstudyscrolltable<?php echo $i; ?>">
  <table id="sleepstudyscrolltable" style="border-right: 1px solid #000000;float: left;margin-right: 27px;width: 150px;">
 
@@ -765,8 +783,16 @@ if($numrows){
 						<td>
 						
 
-						&nbsp;&nbsp;&nbsp;<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?php echo($_GET['pid']); ?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>
-						
+						<?php 
+						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
+							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('sleepstudies/".$_GET['pid']."-".$sleepstudy['testnumber'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
+							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"file$i\" name=\"file\" type=\"file\" size=\"4\" />";
+						}
+						?>
 						</td>
 						</div>
 						</tr>

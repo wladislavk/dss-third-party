@@ -230,10 +230,17 @@ function deliver_letter($letterid, $message) {
 	}
 }
 
+/* Set $parent to true if you want to delete the original letter including all contacts
+ * if $parent is false or not set, one contact will be removed from the letter and a new letter will be created
+ * with the deleted flag set to true.
+ * $type is either patient, md, or md_referral.  It refers to the type of contact who's letter is being deleted
+ * $recipientid is the id of the contact to be removed from the original letter
+ * $template is for a modified template (including tokens) if the original template has been edited.
+ */
 function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
 		return false;
-  } elseif ($parent != null) {
+  } elseif ($parent == true) {
 		$letter_query = "UPDATE dental_letters SET deleted='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
   } else {

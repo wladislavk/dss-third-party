@@ -331,22 +331,37 @@ if($_SESSION['userid'] == '')
 	die();
 }
 
+// Create Filename
+if(isset($_POST['updatestudy']) || isset($_POST['submitnewstudy'])) {
+  $sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid = '".$_POST['patientid']."';";
+	$result = mysql_query($sql);
+	while ($row = mysql_fetch_assoc($result)) {
+		$patient = $row;
+	}
+	$date = date("Y-m-d-H-i-s");
+	$filename = "Sleepstudy_Scan_".$patient['lastname']."_".$patient['firstname']."_$date";
+}
+
 if(isset($_POST['updatestudy']) && isset($_POST['sleepstudyid'])){
-$docid = $_SESSION['docid'];
-$patientid = $_POST['patientid'];
-$needed = $_POST['needed'];
-$scheddate = $_POST['scheddate'];
-$sleeplabwheresched = $_POST['sleeplabwheresched'];
-$completed = $_POST['completed'];
-$interpolation = $_POST['interpolation'];
-$labtype = $_POST['labtype'];
-$copyreqdate = $_POST['copyreqdate'];
-$sleeplab = $_POST['sleeplab'];
-$date = date("Ymd");
-$insslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid` = '".$_POST['patientid']."', `needed` = '".$needed."',`scheddate` = '".$scheddate."',`sleeplabwheresched` = '".$sleeplabwheresched."',`completed` = '".$completed."',`interpolation` = '".$interpolation."',`labtype` = '".$labtype."',`copyreqdate` = '".$copyreqdate."',`sleeplab` = '".$sleeplab."',`date` = '".$date."' WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
-    if(!mysql_query($insslquery)){
-      echo "Could not update sleep study, please try again!";
-    }  
+	$docid = $_SESSION['docid'];
+	$patientid = $_POST['patientid'];
+	$needed = $_POST['needed'];
+	$scheddate = $_POST['scheddate'];
+	$sleeplabwheresched = $_POST['sleeplabwheresched'];
+	$completed = $_POST['completed'];
+	$interpolation = $_POST['interpolation'];
+	$labtype = $_POST['labtype'];
+	$copyreqdate = $_POST['copyreqdate'];
+	$sleeplab = $_POST['sleeplab'];
+	$origfilename = $_FILES["file"]["name"];
+	$scanext = end(explode('.', $origfilename));
+	$date = date("Ymd");
+	$updslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid` = '".$_POST['patientid']."', `needed` = '".$needed."',`scheddate` = '".$scheddate."',`sleeplabwheresched` = '".$sleeplabwheresched."',`completed` = '".$completed."',`interpolation` = '".$interpolation."',`labtype` = '".$labtype."',`copyreqdate` = '".$copyreqdate."',`sleeplab` = '".$sleeplab."',`date` = '".$date."', `filename` = '".$filename."', `scanext` = '".$scanext."' WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
+	if (!mysql_query($updslquery)){
+		echo "Could not update sleep study, please try again!";
+	} else {
+		$updated = true;
+	}
 }
 
 
@@ -362,61 +377,68 @@ if(isset($_POST['submitnewstudy'])){
 	$copyreqdate = $_POST['copyreqdate'];
 	$sleeplab = $_POST['sleeplab'];
 	$date = date("Ymd");
-	$filename = $_FILES["file"]["name"];
+	$origfilename = $_FILES["file"]["name"];
 	$random = rand(111111111,999999999);
-	$scanext = end(explode('.', $filename));
-	$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."');";
+	$scanext = end(explode('.', $origfilename));
+	$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`, `filename`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."','".$filename."');";
 	//echo $insslquery;
+	if (!mysql_query($insslquery)){
+		echo "Could not add sleep lab, please try again!";
+	} else {
+		$inserted = true;
+	}
+}
 
-if(!mysql_query($insslquery)){
-	echo "Could not add sleep lab, please try again!";
-}else{
+if ($inserted || $updated) {
+//print_r($_FILES);
+//print "<br />" . sys_get_temp_dir() . "<br />";
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1); 
+//die();
 	if ((($_FILES["file"]["type"] == "image/gif")
 	|| ($_FILES["file"]["type"] == "image/jpeg")
 	|| ($_FILES["file"]["type"] == "image/pjpeg")
 	|| ($_FILES["file"]["type"] == "application/pdf"))
 	&& ($_FILES["file"]["size"] < 200000000))
+	{
+	if ($_FILES["file"]["error"] > 0)
 		{
-//print_r($_FILES);
-//print sys_get_temp_dir();
-//die();
-		if ($_FILES["file"]["error"] > 0)
+		 ?>
+					 <script type="text/javascript">
+					 alert("<?php echo($_FILES['file']['error']); ?>");
+					 </script>
+		 <?php
+		}
+	else
+		{
+		if (file_exists("upload/" . $_FILES["file"]["name"]))
 			{
-			 ?>
-						 <script type="text/javascript">
-						 alert("<?php echo($_FILES['file']['error']); ?>");
-						 </script>
-			 <?php
+			?>
+					 <script type="text/javascript">
+					 alert("File Already Exists");
+						</script>           
+					 <?php
 			}
 		else
 			{
-			if (file_exists("upload/" . $_FILES["file"]["name"]))
-				{
-				?>
+			//$filename = $patientid.'-'.$random.".".$scanext;
+			$filename .= "." . $scanext;
+			$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$filename");
+				if ($success) {
+				 ?>
 						 <script type="text/javascript">
-						 alert("File Already Exists");
+						 alert("It's done! The file has been saved as: " + "<?php echo($filename); ?>");
 							</script>           
 						 <?php
-				}
-			else
-				{
-				$filename = $patientid.'-'.$random.".".$scanext;
-				$success = move_uploaded_file($_FILES["file"]["tmp_name"],"/manage/sleepstudies/".$filename);
-					if ($sucess) {
-					 ?>
-							 <script type="text/javascript">
-							 alert("It's done! The file has been saved as: " + "<?php echo($filename); ?>");
-								</script>           
-							 <?php
-					} else {			
-						?>
-						<script type="text/javascript">
-							alert("File could not be stored to server.");
-						</script><?php
-					}
+				} else {			
+					?>
+					<script type="text/javascript">
+						alert("File could not be stored to server.");
+					</script><?php
 				}
 			}
 		}
+	}
 	else
 		{
 	 ?>
@@ -431,8 +453,8 @@ if(!mysql_query($insslquery)){
 	</script>
 	<?php
 	die();
-	}
 }
+
 
 ?>
 
@@ -608,7 +630,7 @@ if($numrows){
  $calendar_vars[$i]['scheddate_id'] = "scheddate$i";
  $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  ?>
- <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
+ <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
  <div id="sleepstudyscrolltable<?php echo $i; ?>">
  <table id="sleepstudyscrolltable" style="border-right: 1px solid #000000;float: left;margin-right: 27px;width: 150px;">
 
@@ -785,7 +807,7 @@ if($numrows){
 
 						<?php 
 						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
-							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('sleepstudies/".$_GET['pid']."-".$sleepstudy['testnumber'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
 							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/

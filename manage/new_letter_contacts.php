@@ -15,11 +15,6 @@ $md_list = get_mdcontactids($patientid);
 $md_referral_list = get_mdreferralids($patientid);
 $contactinfo = get_contact_info($patientid, $md_list, $md_referral_list);
 
-if (!isset($html)) {
-  $html = "<p>Select Contacts:</p>";
-	$html .= "<input id=\"default_contacts\" type=\"checkbox\" name=\"defaults\" value=\"defaults\" />Default Contacts<br />";
-}
-
 $html .= "<input class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"$patientid\" />Patient: " . $contactinfo['patient'][0]['salutation'] . $contactinfo['patient'][0]['firstname'] . " " . $contactinfo['patient'][0]['lastname'] . "<br />";
 $i = 0;
 foreach ($contactinfo['md_referrals'] as $md) {

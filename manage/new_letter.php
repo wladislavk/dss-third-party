@@ -57,7 +57,7 @@ function trigger_letter4($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/dss_cover_letter_for_sleep_screening.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -220,7 +220,7 @@ function trigger_letter14($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/dss_to_pt_soap_cover_ltr.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -236,7 +236,7 @@ function trigger_letter15($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/dss_to_md_pt_soap.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -348,7 +348,7 @@ function trigger_letter22($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/dss_appeal_to_insurance.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -514,12 +514,18 @@ if (isset($_POST['submit'])) {
 				sendValues($('#template').val(), $(this).val());
 			}
 		});
+		$('#default_contacts').click(function(){
+			if ($(this).attr('checked') && $('#template').val() == "1") {
+				$('.md_checkbox').each(function() {
+					$(this).attr('checked', true);
+				});
+			}
+		});
 		$('#submit').click(function(){
 			if ($('#template').val() == "") {
 				alert("You must select a letter template.");
 				return false;
-			}
-			if ($('#patient').val() == "") {
+			} if ($('#patient').val() == "") {
 				alert("You must select a patient.");
 				return false;
 			}
@@ -556,6 +562,7 @@ if (isset($_POST['submit'])) {
 		},
 
 		function(data) {
+			$('#contact_header').css('display', 'table-cell');
 			$('#contacts').html(data.returnValue);
 		},
 
@@ -589,6 +596,9 @@ if (isset($_POST['submit'])) {
 				?>
 				</select>
 			</td>
+		</tr>
+		<tr>
+			<td id="contact_header" style="display:none;">Select Contacts:<br /><input id="default_contacts" type="checkbox" name="defaults" value="defaults" />Default Contacts<br /></td>
 		</tr>
 		<tr>
 			<td id="contacts"></td>

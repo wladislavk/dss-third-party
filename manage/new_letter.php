@@ -514,6 +514,36 @@ if (isset($_POST['submit'])) {
 				sendValues($('#template').val(), $(this).val());
 			}
 		});
+		$('#submit').click(function(){
+			if ($('#template').val() == "") {
+				alert("You must select a letter template.");
+				return false;
+			}
+			if ($('#patient').val() == "") {
+				alert("You must select a patient.");
+				return false;
+			}
+			var one_selected = false;
+			$('.patient_checkbox').each(function() {
+				if ($(this).attr('checked')) {
+					one_selected = true;
+				}
+			});
+			$('.md_referral_checkbox').each(function() {
+				if ($(this).attr('checked')) {
+					one_selected = true;
+				}
+			});
+			$('.md_checkbox').each(function() {
+				if ($(this).attr('checked')) {
+					one_selected = true;
+				}
+			});
+			if (one_selected != true) {
+				alert("You must select at least one contact.");
+				return false;
+			}
+		});
 	});
 	function sendValues(templateid, patientid) {
 		$.post(
@@ -573,7 +603,7 @@ if (isset($_POST['submit'])) {
 			</td>
 		</tr>
 		<tr>
-			<td><input type="submit" name="submit" value="Create Letter" class="addButton"></td>
+			<td><input id="submit" type="submit" name="submit" value="Create Letter" class="addButton"></td>
 		</tr>
 	<table>
 </form>

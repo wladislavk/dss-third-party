@@ -80,14 +80,14 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
       $contact_info['patient'][] = $row;
     }
   }
-  if (isset($md_list)) {
+  if (isset($md_list) && $md_list != "") {
     $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.preferredcontact, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['mds'][] = $row;
     }
   }
-  if (isset($md_referral_list)) {
+  if (isset($md_referral_list) && $md_referral_list != "") {
     $sql = "SELECT dental_referredby.referredbyid AS id, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_referredby.company, dental_referredby.add1, dental_referredby.add2, dental_referredby.city, dental_referredby.state, dental_referredby.zip, dental_referredby.preferredcontact, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN(".$md_referral_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {

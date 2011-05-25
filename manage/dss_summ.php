@@ -1374,7 +1374,7 @@ if($docmdother == $pcont_l5['contactid']){
 
   </tr>
   <tr valign="top">
-    <td width="15%" height="5">Ref�d By</td>
+    <td width="15%" height="5">Referred By</td>
     <td colspan="1">
     
     

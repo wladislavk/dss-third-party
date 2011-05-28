@@ -98,7 +98,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
 <script language="JavaScript" src="../calendar2.js"></script>
 <script>
 $(function() {
-  $('input, select, textarea').each(function() { console.log($(this).attr('name')); });
+  //$('input, select, textarea').each(function() { console.log($(this).attr('name')); });
   $("input[name='has_out_of_network_benefits']").bind('click', function() {
     if ($(this).val() == 1) {
       $('#has_out_of_network_benefits_yes').css('display', 'block');

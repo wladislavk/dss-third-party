@@ -1,6 +1,23 @@
-<? 
+<?php 
 include "includes/top.htm";
-
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#q_sleepfrm').submit(function() {
+			if($('#iframestatus').val() == "clean") {
+				window.onbeforeunload = null;
+			}
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+<?php
 if($_POST['q_sleepsub'] == 1)
 {
 	$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
@@ -142,7 +159,7 @@ if($epworthid <> '')
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="q_sleepfrm" name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="q_sleepsub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_sleepid;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
@@ -254,6 +271,7 @@ if($epworthid <> '')
     
 	<tr>
         <td valign="top" class="frmhead" style="text-align:center;">
+			<input id="iframestatus" name="iframestatus" type="hidden" />
 			<iframe src="thorton.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" width="98%" height="420px;">Your Browser Does Not Support Iframes</iframe>
 		</td>
 	</tr>    

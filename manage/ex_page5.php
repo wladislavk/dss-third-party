@@ -1,6 +1,22 @@
-<? 
+<?php 
 include "includes/top.htm";
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#ex_page5frm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
 
+<?php
 if($_POST['ex_page5sub'] == 1)
 {
 	$additional_paragraph_pal = $_POST['additional_paragraph_pal'];
@@ -377,7 +393,7 @@ if($jointid <> '')
 	}
 </script>
 
-<form name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page5sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page5id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

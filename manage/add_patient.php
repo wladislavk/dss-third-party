@@ -3,6 +3,20 @@ include "includes/top.htm";
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#patientfrm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
 <?php
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
@@ -499,7 +513,7 @@ if($_POST["patientsub"] == 1)
 	
 	if($themyarray["userid"] != '')
 	{
-		$but_text = "Edit ";
+		$but_text = "Save/Update ";
 	}
 	else
 	{

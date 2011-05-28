@@ -1,6 +1,21 @@
-<? 
+<?php 
 include "includes/top.htm";
-
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#ex_page7frm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+<?php
 function trigger_letter7($pid) {
   $letterid = '7';
 	$md_list = get_mdcontactids($pid);
@@ -328,7 +343,7 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 	}
 </script>
 
-<form name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return ex_page7abc(this)">
+<form id="ex_page7frm" name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return ex_page7abc(this)">
 <input type="hidden" name="ex_page7sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page7id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

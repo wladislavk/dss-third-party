@@ -1,6 +1,24 @@
-<? 
+<?php 
 include "includes/top.htm";
+?>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#q_page2frm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+
+
+<?php
 if($_POST['q_page2sub'] == 1)
 {
 	$polysomnographic = $_POST['polysomnographic'];
@@ -326,7 +344,7 @@ if($cpap == '')
 	}
 </script>
 
-<form name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return q_page2abc(this)">
+<form id="q_page2frm" name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return q_page2abc(this)">
 <input type="hidden" name="q_page2sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page2id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

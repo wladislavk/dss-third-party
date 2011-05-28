@@ -1,6 +1,21 @@
-<? 
+<?php 
 include "includes/top.htm";
-
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#q_page3frm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+<?php
 if($_POST['q_page3sub'] == 1)
 {
 	$allergens = $_POST['allergens'];
@@ -362,7 +377,7 @@ $orthodontics = st($myarray['orthodontics']);
 	
 </script>
 
-<form name="q_page3frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
+<form id="q_page3frm" name="q_page3frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="q_page3sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page3id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

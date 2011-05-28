@@ -1,6 +1,21 @@
-<? 
+<?php 
 include "includes/top.htm";
-
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#q_page4frm').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+<?php
 if($_POST['q_page4sub'] == 1)
 {
 	$family_had = $_POST['family_had'];
@@ -164,7 +179,7 @@ $tobacco = st($myarray['tobacco']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form name="q_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
+<form id="q_page4frm" name="q_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="q_page4sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page4id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

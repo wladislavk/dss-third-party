@@ -1,6 +1,23 @@
-<? 
+<?php
 include "admin/includes/config.php";
-
+?>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			parent.window.onbeforeunload = confirmExit;
+			parent.document.q_sleepfrm.iframestatus.value = "dirty";
+		});
+		$('#selfrm').submit(function() {
+			parent.document.q_sleepfrm.iframestatus.value = "clean";
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+<?php
 if($_POST['thortonsub'] == 1)
 {
 	$snore_1 = $_POST['snore_1'];
@@ -115,7 +132,7 @@ $snore_5 = st($myarray['snore_5']);
 </div>
 <br>
 
-<form name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="selfrm" name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="thortonsub" value="1" />
 <input type="hidden" name="ed" value="<?=$thortonid;?>" />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >

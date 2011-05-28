@@ -2,7 +2,7 @@
 require_once('includes/constants.inc');
 ?>
 <script type="text/javascript">
-	$(document).ready(function () {
+	$(document).ready(function() {
 		$("[id^=delay_reason]").each(function() {
 			var reason = $(this).attr('id');
 			var button = reason.replace("delay_reason", "reason_btn");
@@ -13,7 +13,7 @@ require_once('includes/constants.inc');
 				$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
 				$("#" + description).attr("style", "display:table-cell;");
 			}
-			$("#" + reason).change(function () {
+			$("#" + reason).change(function() {
 				if ($(this).val() == "other") {
 					$('#page2form').submit();
 					$("#" + button).attr("style", "display:inline;");
@@ -36,7 +36,7 @@ require_once('includes/constants.inc');
 				$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
 				$("#" + description).attr("style", "display:table-cell;");
 			}
-			$("#" + reason).change(function () {
+			$("#" + reason).change(function() {
 				if ($(this).val() == "other") {
 					$('#page2form').submit();
 					$("#" + button).attr("style", "display:inline;");
@@ -51,6 +51,25 @@ require_once('includes/constants.inc');
 		});
 	});
 </script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(':input').change(function() { 
+			window.onbeforeunload = confirmExit;
+		});
+		$('#form_page1').submit(function() {
+			window.onbeforeunload = null;
+		});
+		$('#page2form').submit(function() {
+			window.onbeforeunload = null;
+		});
+	});
+  function confirmExit()
+  {
+    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+  }
+</script>
+
 <?php
 
 function preauth_allowed(){
@@ -604,7 +623,21 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
     			echo "error updating record";
     			$error = "MySQL error ".mysql_errno().": ".mysql_error();
 			echo $error."3";
-    			}
+    			} else {
+						// Automatically enter Date Complete for Treatment Complete
+						if ($value == "11") {
+							$select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' ORDER BY stepid DESC;";
+							$select_result = mysql_query($select_query);
+							if(!$select_result) {
+								print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting information from flowsheet during update.";
+								die();
+							}
+							$stepid = mysql_result($select_result, 0);
+							$stepid++;
+							$ins_date = "INSERT INTO dental_flow_pg2_info (patientid, stepid, segmentid, date_completed, letterid) VALUES ('".$patientid."', '".$stepid."', '".$value."', NOW(), '');";
+							$ins_result = mysql_query($ins_date);
+						}
+					}
           $getcurrpos1 = "UPDATE `segments_order` SET `".$_POST['formsegment']."` = '2' WHERE `patientid` ='".$patientid."'";
           $currpos1 = mysql_query($getcurrpos1);
           if(!$currpos1){
@@ -962,7 +995,7 @@ height:35px;
     ?>
 </div>
 
-<form action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
+<form id="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT</div>
 <table width="60%" align="center">
@@ -2128,7 +2161,7 @@ Next Appointment
 
 
 </div>
-<!-- END FLOWSHEET PAGE 2 ***************************** -->
+<!-- END FLOWSHEET PAGE 2 ***************************** -->javascript input field by elmentid
 
 
 

@@ -117,6 +117,11 @@ return s;
 </script>
 <br />
 <div align="right" style="clear: right;">
+        <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
+               Make Payment 
+        </button>
+        &nbsp;&nbsp;
+
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger
         </button>

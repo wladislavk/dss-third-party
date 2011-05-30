@@ -182,10 +182,12 @@ background:#999999;
     $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."'";
     }
 
-if(isset($_GET['pid'])){
-                    $psql = " AND `patientid` = '".$_GET['pid']."'";
+                if(isset($_GET['pid'])){
+                    $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
+                    $npsql = " AND n.patientid = '".$_GET['pid']."'";
+                    $ipsql = " AND i.patientid = '".$_GET['pid']."'";
                 }else{
-                    $psql = "";
+                    $ipsql = $lpsql = $npsql= "";
                 }
 
                 if($start_date){
@@ -197,7 +199,7 @@ if(isset($_GET['pid'])){
                   $i_date = $n_date = $l_date = '';
                 }
 
-   $newquery = "select 
+$newquery = "select 
                 'ledger',
                 dl.ledgerid,
                 dl.service_date,
@@ -205,27 +207,31 @@ if(isset($_GET['pid'])){
                 p.name,
                 dl.description,
                 dl.amount,
-                dl.paid_amount,
+                sum(pay.amount) as paid_amount,
                 dl.status,
-                dl.patientid
+                dl.patientid,
+                dl.primary_claim_id
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                        where dl.docid='".$_SESSION['docid']."' ".$psql." ".$l_date." 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                       where dl.docid='".$_SESSION['docid']."' ".$lpsql." ".$l_date." 
+                GROUP BY dl.ledgerid
   UNION
         select 
                 'note',
                 n.id,
                 n.service_date,
                 n.entry_date,
-                p.name,
+                concat('Note - ', p.name),
                 n.note,
                 '',
                 '',
-                '',
-                n.patientid
+                n.private,
+                n.patientid,
+                ''      
         from dental_ledger_note n
                 LEFT JOIN dental_users p on n.producerid=p.userid
-                        where n.docid='".$_SESSION['docid']."' AND (n.private IS NULL or n.private=0) ".$psql." ".$n_date."       
+                       where n.docid='".$_SESSION['docid']."' AND (n.private IS NULL or n.private=0) ".$npsql." ".$n_date." 
   UNION
         select
                 'claim',
@@ -233,13 +239,19 @@ if(isset($_GET['pid'])){
                 i.adddate,
                 i.adddate,
                 'Claim',
-                'Insurance claim',
-                '',
-                '',
+                'Insurance Claim',
+                (select sum(dl2.amount) FROM dental_ledger dl2
+                                INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
+                                where i2.insuranceid=i.insuranceid),
+                sum(pay.amount),
                 i.status,
-                i.patientid
+                i.patientid,
+                ''
         from dental_insurance i
-                where i.docid='".$_SESSION['docid']."' ".$psql." ".$i_date."
+                LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
+                LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
+                      where i.docid='".$_SESSION['docid']."' ".$ipsql." ".$i_date." 
+        GROUP BY i.insuranceid
 ";
 
 
@@ -292,6 +304,7 @@ if(isset($_GET['pid'])){
 				</td>
 				<td valign="top" width="30%">
                 	<?=st($myarray["description"]);?>
+                        <?= ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';?>
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
@@ -310,14 +323,12 @@ if(isset($_GET['pid'])){
 					&nbsp;
 				</td>
 				<td valign="top" width="5%">&nbsp;
-         <? if($myarray["status"] == 1){
-	           echo "Sent";
-	          }elseif($myarray["status"] == 2){
-             echo "Filed";
-            }else{
-             echo "Pend";
-            }
-				
+			 <? if($myarray[0] == 'ledger'){
+                  echo $dss_trxn_status_labels[$myarray["status"]];
+        }elseif($myarray[0] == 'claim'){
+                  echo $dss_claim_status_labels[$myarray["status"]];
+        }
+	
 					}?>       	
 				</td>
 			</tr>

@@ -71,18 +71,19 @@ while($p = mysql_fetch_array($p_sql)){
 <div id="select_fields" style="margin: 10px;color:#fff;">
 <label>Payer</label>
 <select id="payer" name="payer" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
-  <option value="<?= DSS_TRXN_PYMT_PRIMARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PRIMARY]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_SECONDARY; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_SECONDARY]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_PATIENT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_PATIENT]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_WRITEOFF]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_DISCOUNT; ?>"><?= $dss_trxn_pymt_labels[DSS_TRXN_PYMT_DISCOUNT]; ?></option>
+  <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
+  <option value="<?= DSS_TRXN_PAYER_SECONDARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?></option>
+  <option value="<?= DSS_TRXN_PAYER_PATIENT; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?></option>
+  <option value="<?= DSS_TRXN_PAYER_WRITEOFF; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF]; ?></option>
+  <option value="<?= DSS_TRXN_PAYER_DISCOUNT; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_DISCOUNT]; ?></option>
 </select>
 <label>Payment Type</label>
 <select id="payment_type" name="payment_type" style="width:120px;margin: 0pt 10px 0pt 0pt; " >
-  <option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CREDIT]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_DEBIT]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CHECK]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_lables[DSS_TRXN_PYMT_CASH]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?></option>
+  <option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?></option>
 </select>
 </div>
 

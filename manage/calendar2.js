@@ -26,6 +26,7 @@ function calendar2(obj_target) {
 	this.prs_time = cal_prs_time2;
 	this.prs_tsmp = cal_prs_tsmp2;
 	this.popup    = cal_popup2;
+	this.change   = cal_change2;
 
 	// validate input parameters
 	if (!obj_target)
@@ -58,6 +59,11 @@ function cal_popup2 (str_datetime) {
 	);
 	obj_calwindow.opener = window;
 	obj_calwindow.focus();
+}
+
+// trigger jquery change event
+function cal_change2 () {
+	$('#'+this.target.id).change();
 }
 
 // timestamp generating function

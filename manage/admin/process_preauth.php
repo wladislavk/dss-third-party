@@ -642,7 +642,7 @@ $(function() {
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Familiy Deductible
+                Family Deductible
             </td>
             <td valign="top" class="frmdata">
                 $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox" <?=$disabled?>/> 

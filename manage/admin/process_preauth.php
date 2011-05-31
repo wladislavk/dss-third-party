@@ -28,6 +28,7 @@ if (isset($_REQUEST['ed'])) {
          . "ins_cal_year_end = '".s_for($_POST["ins_cal_year_end"])."', "
          . "trxn_code_covered = '" . $_POST["trxn_code_covered"] . "', "
          . "code_covered_notes = '".s_for($_POST["code_covered_notes"])."', "
+         . "how_often = '".s_for($_POST["how_often"])."', "
          . "has_out_of_network_benefits = '" . $_POST["has_out_of_network_benefits"] . "', "
          . "out_of_network_percentage = '" . $_POST["out_of_network_percentage"] . "', "
          . "is_hmo = '" . $_POST["is_hmo"] . "', "
@@ -512,6 +513,15 @@ $(function() {
                 <br/><br/>
                 Notes:<br/>
                 <textarea name="code_covered_notes" class="tbox" <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                How often will you pay for another device?
+            </td>
+            <td class="frmdata">
+                <input id="how_often" type="text" name="how_often" value="<?=$preauth['how_often']?>" class="tbox"/> years
+                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

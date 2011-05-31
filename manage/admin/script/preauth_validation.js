@@ -1,3 +1,30 @@
+function validateDate(dtControl) {
+    var input = document.getElementById(dtControl)
+    var validformat=/^\d{1,2}\/\d{1,2}\/\d{4}$/ //Basic check for format validity
+    var returnval=false
+    if (!validformat.test(input.value))
+    alert('Invalid Day, Month, or Year range detected. Please correct. Must be xx/xx/xxxx');
+    else{ //Detailed check for valid date ranges
+    var monthfield=input.value.split("/")[0]
+    var dayfield=input.value.split("/")[1]
+    var yearfield=input.value.split("/")[2]
+    var dayobj = new Date(yearfield, monthfield-1, dayfield)
+    if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
+    alert('Invalid Day, Month, or Year range detected. Please correct. Must be xx/xx/xxxx')
+    else
+    {
+        returnval=true
+    }
+    }
+    
+    if (!validformat.test(input.value)){
+    document.getElementById(dtControl).focus;
+    }
+    if (returnval==false){ input.focus() }
+    return returnval
+    focusIt(dtControl);
+}
+
 function validatePreAuthForm(form) {
   var errorMsg = '';
   
@@ -100,6 +127,10 @@ function validatePreAuthForm(form) {
     
     if (trim(form.ins_cal_year_end.value) == "") {
       errorMsg += "- Missing Insurance Calendar Year End\n";
+    }
+    
+    if (trim(form.how_often.value) == "") {
+      errorMsg += "- Missing How Often You Will Pay for Another Device\n";
     }
     
     if (trim(form.patient_deductible.value) == "") {

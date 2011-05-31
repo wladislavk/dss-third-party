@@ -69,7 +69,8 @@ if (isset($_REQUEST['ed'])) {
     mysql_query($sql) or die($sql." | ".mysql_error());
     
     //echo $ed_sql.mysql_error();
-    $msg = "Pre-Authorization Completed Successfully";
+    $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
+    $msg = "Pre-Authorization $task_label Successfully";
     print "<script type='text/javascript'>";
     print "parent.window.location='manage_preauths.php?msg=$msg'";
     print "</script>";

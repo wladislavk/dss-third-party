@@ -28,7 +28,11 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php if($_GET['popup']==1){ ?>
+                  parent.window.location.reload();
+                <?php }else{ ?>
+		  window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php } ?>
 	</script>
 	<?
 	die();
@@ -397,9 +401,6 @@ return s;
 						Edit 
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						 Delete 
-					</a>
                                            <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
                                                  Payment 
                                         </a>

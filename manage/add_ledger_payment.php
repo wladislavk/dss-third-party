@@ -177,8 +177,8 @@ while($p = mysql_fetch_array($p_sql)){
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
-<div style="width:200px;float:left;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Submit New Payment" /></div>
-<div style="width:200px;margin-right:10px;float:right;text-align:right;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
+<div style="width:200px;margin-left:10px;float:left;text-align:left;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
+<div style="width:200px;float:right;margin-right:10px;text-align:right;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Submit New Payment" /></div>
 </form>
 <script type="text/javascript">
 function setupCal(tempforledgerentry){

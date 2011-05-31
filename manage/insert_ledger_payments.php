@@ -48,16 +48,14 @@ if(!$insqry){
 ?>
 <script type="text/javascript">
 alert('Could not add ledger payments, please close this window and contact your system administrator');
-eraseCookie('tempforledgerentry');
 </script>                               
 <?= $sqlinsertqry; ?>
 <?php
 }else{
 ?>
 <script type="text/javascript">
-eraseCookie('tempforledgerentry');
 alert('Payment(s) successfully added!');
-history.go(-1);
+parent.window.location.reload();
 </script>
 <?php
 }

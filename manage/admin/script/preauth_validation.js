@@ -45,6 +45,10 @@ function validatePreAuthForm(form) {
       errorMsg += "- Missing Patient's Last Name\n";
     }
     
+    if (trim(form.patient_phone.value) == "") {
+      errorMsg += "- Missing Patient's Phone #\n";
+    }
+    
     if (trim(form.patient_add1.value) == "") {
       errorMsg += "- Missing Patient's Address\n";
     }

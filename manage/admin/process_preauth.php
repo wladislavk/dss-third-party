@@ -304,6 +304,15 @@ $(function() {
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Phone #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox" DISABLED/> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Patient's Address
             </td>

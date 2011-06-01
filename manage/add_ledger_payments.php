@@ -42,6 +42,14 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 </script>
 
 </div>
+
+<?php
+$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
+$p_sql = mysql_query($sql);
+if(mysql_num_rows($p_sql)==0){
+?><div style="margin-left:50px; color:#fff;">No Previous Payments</div><?php
+}else{
+?>
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
@@ -50,26 +58,26 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width: 147px;">Payment Type</span>
 <span style="float:left;font-weight:bold;">Amount</span>
 </div>
-
 <?php
-$sql = "SELECT dlp.*, dl.description FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE dl.primary_claim_id='".$_GET['cid']."' ;";
-$p_sql = mysql_query($sql);
 while($p = mysql_fetch_array($p_sql)){
 ?>
 <div style="margin-left:9px; margin-top: 10px; width:98%;height:16px; color: #fff;">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:180px;"><?= $p['description']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:120px;"><?= $dss_trxn_pymt_labels[$p['payer']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:147px;"><?= $dss_trxn_pymt_type_lables[$p['payment_type']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:120px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:147px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;"><?= $p['amount']; ?></span>
 
 </div>
-<?php } ?>
+<?php 
+}
+}
+ ?>
 
 
 <div id="select_fields" style="margin: 10px;color:#fff;">
-<label>Payer</label>
+<label>Paid By</label>
 <select id="payer" name="payer" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
   <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
   <option value="<?= DSS_TRXN_PAYER_SECONDARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?></option>

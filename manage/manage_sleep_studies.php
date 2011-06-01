@@ -14,248 +14,28 @@ include("includes/sescheck.php");
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('[id^=edit]').click(function() {
-			var edit_id = $(this).attr('id');
-			var num = edit_id.replace("edit", "");
-			$('#view'+num).css("display", "none");
-			$('#edit'+num).css("display", "none");
-			$('#file'+num).css("display", "inline");
+			var r = confirm("Do you want to replace the image on file? This cannot be undone.");
+			if (r == true) {
+				var edit_id = $(this).attr('id');
+				var num = edit_id.replace("edit", "");
+				$('#view'+num).css("display", "none");
+				$('#edit'+num).css("display", "none");
+				$('#file'+num).css("display", "inline");
+			}
 		});
+		$(':input').change(function() { 
+			parent.window.onbeforeunload = confirmExit;
+			parent.document.form_page1.iframestatus.value = "dirty";
+		});
+		$('[id^=sleepstudy]').submit(function() {
+			parent.document.form_page1.iframestatus.value = "clean";
+		});
+		function confirmExit()
+		{
+			return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+		}
 	});
 </script>
- <script type="text/javascript">
-/* PopUp Calendar v2.1
-© PCI, Inc.,2000 • Freeware
-webmaster@personal-connections.com
-+1 (925) 955 1624
-Permission granted  for unlimited use so far
-as the copyright notice above remains intact. */
-
-/* Settings. Please read readme.html file for instructions*/
-var ppcDF = "m/d/Y";
-var ppcMN = new Array("January","February","March","April","May","June","July","August","September","October","November","December");
-var ppcWN = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-var ppcER = new Array(4);
-ppcER[0] = "Required DHTML functions are not supported in this browser.";
-ppcER[1] = "Target form field is not assigned or not accessible.";
-ppcER[2] = "Sorry, the chosen date is not acceptable. Please read instructions on the page.";
-ppcER[3] = "Unknown error occured while executing this script.";
-var ppcUC = false;
- var ppcUX = 4;
- var ppcUY = 4;
-
-/* Do not edit below this line unless you are sure what are you doing! */
-
-var ppcIE=(navigator.appName == "Microsoft Internet Explorer");
-var ppcNN=((navigator.appName == "Netscape")&&(document.layers));
-var ppcTT="<table width=\"200\" cellspacing=\"1\" cellpadding=\"2\" border=\"1\" bordercolorlight=\"#000000\" bordercolordark=\"#000000\">\n";
-var ppcCD=ppcTT;var ppcFT="<font face=\"MS Sans Serif, sans-serif\" size=\"1\" color=\"#000000\">";var ppcFC=true;
-var ppcTI=false;var ppcSV=null;var ppcRL=null;var ppcXC=null;var ppcYC=null;
-var ppcML=new Array(31,28,31,30,31,30,31,31,30,31,30,31);
-var ppcWE=new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-var ppcNow=new Date();var ppcPtr=new Date();
-if (ppcNN) {
- window.captureEvents(Event.RESIZE);
- window.onresize = restoreLayers;
- document.captureEvents(Event.MOUSEDOWN|Event.MOUSEUP);
- document.onmousedown = recordXY;
- document.onmouseup = confirmXY;}
-function restoreLayers(e) {
- if (ppcNN) {
-  with (window.document) {
-   open("text/html");
-   write("<html><head><title>Restoring the layer structure...</title></head>");
-   write("<body bgcolor=\"#FFFFFF\" onLoad=\"history.go(-1)\">");
-   write("</body></html>");
-   close();}}}
-function recordXY(e) {
- if (ppcNN) {
-  ppcXC = e.x;
-  ppcYC = e.y;
-  document.routeEvent(e);}}
-function confirmXY(e) {
- if (ppcNN) {
-  ppcXC = (ppcXC == e.x) ? e.x : null;
-  ppcYC = (ppcYC == e.y) ? e.y : null;
-  document.routeEvent(e);}}
-function getCalendarFor(target,rules) {
- ppcSV = target;
- ppcRL = rules;
- if (ppcFC) {setCalendar();ppcFC = false;}
- if ((ppcSV != null)&&(ppcSV)) {
-  if (ppcIE) {
-   var obj = document.all['PopUpCalendar'];
-   obj.style.left = document.body.scrollLeft+event.clientX;
-   obj.style.top  = document.body.scrollTop+event.clientY;
-   obj.style.visibility = "visible";}
-  else if (ppcNN) {
-   var obj = document.layers['PopUpCalendar'];
-   obj.left = ppcXC
-   obj.top  = ppcYC
-   obj.visibility = "show";}
-  else {showError(ppcER[0]);}}
- else {showError(ppcER[1]);}}
-function switchMonth(param) {
- var tmp = param.split("|");
- setCalendar(tmp[0],tmp[1]);}
-function moveMonth(dir) {
- var obj = null;
- var limit = false;
- var tmp,dptrYear,dptrMonth;
- if (ppcIE) {obj = document.ppcMonthList.sItem;}
- else if (ppcNN) {obj = document.layers['PopUpCalendar'].document.layers['monthSelector'].document.ppcMonthList.sItem;}
- else {showError(ppcER[0]);}
- if (obj != null) {
-  if ((dir.toLowerCase() == "back")&&(obj.selectedIndex > 0)) {obj.selectedIndex--;}
-  else if ((dir.toLowerCase() == "forward")&&(obj.selectedIndex < 12)) {obj.selectedIndex++;}
-  else {limit = true;}}
- if (!limit) {
-  tmp = obj.options[obj.selectedIndex].value.split("|");
-  dptrYear  = tmp[0];
-  dptrMonth = tmp[1];
-  setCalendar(dptrYear,dptrMonth);}
- else {
-  if (ppcIE) {
-   obj.style.backgroundColor = "#FF0000";
-   window.setTimeout("document.ppcMonthList.sItem.style.backgroundColor = '#FFFFFF'",50);}}}
-function selectDate(param) {
- var arr   = param.split("|");
- var year  = arr[0];
- var month = arr[1];
- var date  = arr[2];
- var ptr = parseInt(date);
- ppcPtr.setDate(ptr);
- if ((ppcSV != null)&&(ppcSV)) {
-  if (validDate(date)) {ppcSV.value = dateFormat(year,month,date);hideCalendar();}
-  else {showError(ppcER[2]);if (ppcTI) {clearTimeout(ppcTI);ppcTI = false;}}}
- else {
-  showError(ppcER[1]);
-  hideCalendar();}}
-function setCalendar(year,month) {
- if (year  == null) {year = getFullYear(ppcNow);}
- if (month == null) {month = ppcNow.getMonth();setSelectList(year,month);}
- if (month == 1) {ppcML[1]  = (isLeap(year)) ? 29 : 28;}
- ppcPtr.setYear(year);
- ppcPtr.setMonth(month);
- ppcPtr.setDate(1);
- updateContent();}
-function updateContent() {
- generateContent();
- if (ppcIE) {document.all['monthDays'].innerHTML = ppcCD;}
- else if (ppcNN) {
-  with (document.layers['PopUpCalendar'].document.layers['monthDays'].document) {
-   open("text/html");
-   write("<html>\n<head>\n<title>DynDoc</title>\n</head>\n<body bgcolor=\"#FFFFFF\">\n");
-   write(ppcCD);
-   write("</body>\n</html>");
-   close();}}
- else {showError(ppcER[0]);}
- ppcCD = ppcTT;}
-function generateContent() {
- var year  = getFullYear(ppcPtr);
- var month = ppcPtr.getMonth();
- var date  = 1;
- var day   = ppcPtr.getDay();
- var len   = ppcML[month];
- var bgr,cnt,tmp = "";
- var j,i = 0;
- for (j = 0; j < 7; ++j) {
-  if (date > len) {break;}
-  for (i = 0; i < 7; ++i) {
-   bgr = ((i == 0)||(i == 6)) ? "#FFFFCC" : "#FFFFFF";
-   if (((j == 0)&&(i < day))||(date > len)) {tmp  += makeCell(bgr,year,month,0);}
-   else {tmp  += makeCell(bgr,year,month,date);++date;}}
-  ppcCD += "<tr align=\"center\">\n" + tmp + "</tr>\n";tmp = "";}
- ppcCD += "</table>\n";}
-function makeCell(bgr,year,month,date) {
- var param = "\'"+year+"|"+month+"|"+date+"\'";
- var td1 = "<td width=\"20\" bgcolor=\""+bgr+"\" ";
- var td2 = (ppcIE) ? "</font></span></td>\n" : "</font></a></td>\n";
- var evt = "onMouseOver=\"this.style.backgroundColor=\'#FF0000\'\" onMouseOut=\"this.style.backgroundColor=\'"+bgr+"\'\" onMouseUp=\"selectDate("+param+")\" ";
- var ext = "<span Style=\"cursor: hand\">";
- var lck = "<span Style=\"cursor: default\">";
- var lnk = "<a href=\"javascript:selectDate("+param+")\" onMouseOver=\"window.status=\' \';return true;\">";
- var cellValue = (date != 0) ? date+"" : "&nbsp;";
- if ((ppcNow.getDate() == date)&&(ppcNow.getMonth() == month)&&(getFullYear(ppcNow) == year)) {
-  cellValue = "<b>"+cellValue+"</b>";}
- var cellCode = "";
- if (date == 0) {
-  if (ppcIE) {cellCode = td1+"Style=\"cursor: default\">"+lck+ppcFT+cellValue+td2;}
-  else {cellCode = td1+">"+ppcFT+cellValue+td2;}}
- else {
-  if (ppcIE) {cellCode = td1+evt+"Style=\"cursor: hand\">"+ext+ppcFT+cellValue+td2;}
-  else {
-   if (date < 10) {cellValue = "&nbsp;" + cellValue + "&nbsp;";}
-   cellCode = td1+">"+lnk+ppcFT+cellValue+td2;}}
- return cellCode;}
-function setSelectList(year,month) {
- var i = 0;
- var obj = null;
- if (ppcIE) {obj = document.ppcMonthList.sItem;}
- else if (ppcNN) {obj = document.layers['PopUpCalendar'].document.layers['monthSelector'].document.ppcMonthList.sItem;}
- else {/* NOP */}
- while (i < 13) {
-  obj.options[i].value = year + "|" + month;
-  obj.options[i].text  = year + " • " + ppcMN[month];
-  i++;
-  month++;
-  if (month == 12) {year++;month = 0;}}}
-function hideCalendar() {
- if (ppcIE) {document.all['PopUpCalendar'].style.visibility = "hidden";}
- else if (ppcNN) {document.layers['PopUpCalendar'].visibility = "hide";window.status = " ";}
- else {/* NOP */}
- ppcTI = false;
- setCalendar();
- ppcSV = null;
- if (ppcIE) {var obj = document.ppcMonthList.sItem;}
- else if (ppcNN) {var obj = document.layers['PopUpCalendar'].document.layers['monthSelector'].document.ppcMonthList.sItem;}
- else {/* NOP */}
- obj.selectedIndex = 0;}
-function showError(message) {
- window.alert("[ PopUp Calendar ]\n\n" + message);}
-function isLeap(year) {
- if ((year%400==0)||((year%4==0)&&(year%100!=0))) {return true;}
- else {return false;}}
-function getFullYear(obj) {
- if (ppcNN) {return obj.getYear() + 1900;}
- else {return obj.getYear();}}
-function validDate(date) {
- var reply = true;
- if (ppcRL == null) {/* NOP */}
- else {
-  var arr = ppcRL.split(":");
-  var mode = arr[0];
-  var arg  = arr[1];
-  var key  = arr[2].charAt(0).toLowerCase();
-  if (key != "d") {
-   var day = ppcPtr.getDay();
-   var orn = isEvenOrOdd(date);
-   reply = (mode == "[^]") ? !((day == arg)&&((orn == key)||(key == "a"))) : ((day == arg)&&((orn == key)||(key == "a")));}
-  else {reply = (mode == "[^]") ? (date != arg) : (date == arg);}}
- return reply;}
-function isEvenOrOdd(date) {
- if (date - 21 > 0) {return "e";}
- else if (date - 14 > 0) {return "o";}
- else if (date - 7 > 0) {return "e";}
- else {return "o";}}
-function dateFormat(year,month,date) {
- if (ppcDF == null) {ppcDF = "m/d/Y";}
- var day = ppcPtr.getDay();
- var crt = "";
- var str = "";
- var chars = ppcDF.length;
- for (var i = 0; i < chars; ++i) {
-  crt = ppcDF.charAt(i);
-  switch (crt) {
-   case "M": str += ppcMN[month]; break;
-   case "m": str += (month<9) ? ("0"+(++month)) : ++month; break;
-   case "Y": str += year; break;
-   case "y": str += year.substring(2); break;
-   case "d": str += ((ppcDF.indexOf("m")!=-1)&&(date<10)) ? ("0"+date) : date; break;
-   case "W": str += ppcWN[day]; break;
-    default: str += crt;}}
- return unescape(str);}
- 
- </script>
   <script type="text/javascript">
  function formshowhide(status, val)
   {
@@ -289,9 +69,9 @@ function popitup(url) {
 function autoselect(selectedOption, updateCompleted)
 {
 if(selectedOption.value=="No")
-//updateCompleted[0].checked=true;
+	updateCompleted[0].checked=true;
 else
-//updateCompleted[1].checked=true;
+	updateCompleted[1].checked=true;
 }
 </script>
 
@@ -343,6 +123,7 @@ if(isset($_POST['updatestudy']) || isset($_POST['submitnewstudy'])) {
 }
 
 if(isset($_POST['updatestudy']) && isset($_POST['sleepstudyid'])){
+	$sleepstudyid = $_POST['sleepstudyid'];
 	$docid = $_SESSION['docid'];
 	$patientid = $_POST['patientid'];
 	$needed = $_POST['needed'];
@@ -354,9 +135,8 @@ if(isset($_POST['updatestudy']) && isset($_POST['sleepstudyid'])){
 	$copyreqdate = $_POST['copyreqdate'];
 	$sleeplab = $_POST['sleeplab'];
 	$origfilename = $_FILES["file"]["name"];
-	$scanext = end(explode('.', $origfilename));
 	$date = date("Ymd");
-	$updslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid` = '".$_POST['patientid']."', `needed` = '".$needed."',`scheddate` = '".$scheddate."',`sleeplabwheresched` = '".$sleeplabwheresched."',`completed` = '".$completed."',`interpolation` = '".$interpolation."',`labtype` = '".$labtype."',`copyreqdate` = '".$copyreqdate."',`sleeplab` = '".$sleeplab."',`date` = '".$date."', `filename` = '".$filename."', `scanext` = '".$scanext."' WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
+	$updslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid` = '".$_POST['patientid']."', `needed` = '".$needed."',`scheddate` = '".$scheddate."',`sleeplabwheresched` = '".$sleeplabwheresched."',`completed` = '".$completed."',`interpolation` = '".$interpolation."',`labtype` = '".$labtype."',`copyreqdate` = '".$copyreqdate."',`sleeplab` = '".$sleeplab."',`date` = '".$date."' $filequery WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
 	if (!mysql_query($updslquery)){
 		echo "Could not update sleep study, please try again!";
 	} else {
@@ -379,67 +159,115 @@ if(isset($_POST['submitnewstudy'])){
 	$date = date("Ymd");
 	$origfilename = $_FILES["file"]["name"];
 	$random = rand(111111111,999999999);
-	$scanext = end(explode('.', $origfilename));
-	$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`scanext`,`date`, `filename`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$scanext."','".$date."','".$filename."');";
+	//$scanext = end(explode('.', $origfilename));
+	$insslquery = "INSERT INTO `dental_sleepstudy` (`id`,`testnumber`,`docid`,`patientid`,`needed`,`scheddate`,`sleeplabwheresched`,`completed`,`interpolation`,`labtype`,`copyreqdate`,`sleeplab`,`date`) VALUES (NULL,'".$random."','".$docid."','".$_POST['patientid']."','".$needed."','".$scheddate."','".$sleeplabwheresched."','".$completed."','".$interpolation."','".$labtype."','".$copyreqdate."','".$sleeplab."','".$date."');";
 	//echo $insslquery;
 	if (!mysql_query($insslquery)){
 		echo "Could not add sleep lab, please try again!";
 	} else {
+		$sleepstudyid = mysql_insert_id();
 		$inserted = true;
 	}
 }
-
-if ($inserted || $updated) {
-//print_r($_FILES);
-//print "<br />" . sys_get_temp_dir() . "<br />";
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1); 
-//die();
-	if ((($_FILES["file"]["type"] == "image/gif")
-	|| ($_FILES["file"]["type"] == "image/jpeg")
-	|| ($_FILES["file"]["type"] == "image/pjpeg")
-	|| ($_FILES["file"]["type"] == "application/pdf"))
-	&& ($_FILES["file"]["size"] < 200000000))
-	{
-	if ($_FILES["file"]["error"] > 0)
+if ($origfilename != '') {
+	if ($inserted || $updated) {
+	//print_r($_FILES);
+	//print "<br />" . sys_get_temp_dir() . "<br />";
+	//error_reporting(E_ALL);
+	//ini_set("display_errors", 1); 
+	//die();
+		if ((($_FILES["file"]["type"] == "image/gif")
+		|| ($_FILES["file"]["type"] == "image/jpeg")
+		|| ($_FILES["file"]["type"] == "image/pjpeg")
+		|| ($_FILES["file"]["type"] == "application/pdf"))
+		&& ($_FILES["file"]["size"] < 200000000))
 		{
-		 ?>
-					 <script type="text/javascript">
-					 alert("<?php echo($_FILES['file']['error']); ?>");
-					 </script>
-		 <?php
-		}
-	else
-		{
-		if (file_exists("upload/" . $_FILES["file"]["name"]))
+		if ($_FILES["file"]["error"] > 0)
 			{
-			?>
-					 <script type="text/javascript">
-					 alert("File Already Exists");
-						</script>           
-					 <?php
+			 ?>
+						 <script type="text/javascript">
+						 alert("<?php echo($_FILES['file']['error']); ?>");
+						 </script>
+			 <?php
 			}
 		else
 			{
-			//$filename = $patientid.'-'.$random.".".$scanext;
-			$filename .= "." . $scanext;
-			$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$filename");
-				if ($success) {
-				 ?>
+			if (file_exists("upload/" . $_FILES["file"]["name"]))
+				{
+				?>
 						 <script type="text/javascript">
-						 alert("It's done! The file has been saved as: " + "<?php echo($filename); ?>");
+						 alert("File Already Exists");
 							</script>           
 						 <?php
-				} else {			
-					?>
-					<script type="text/javascript">
-						alert("File could not be stored to server.");
-					</script><?php
+				}
+			else
+				{
+				//$filename = $patientid.'-'.$random.".".$scanext;
+				$scanext = end(explode('.', $origfilename));
+				$fullfilename = $filename . "." . $scanext;
+				$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
+					if ($success) {
+					  // Delete previous file if updating, then add reference to filename in database
+						if ($updated) {
+							$prevfile_qry = "SELECT filename, scanext FROM dental_sleepstudy WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
+							$prevfile_result = mysql_query($prevfile_qry);
+							$prev_filename = mysql_result($prevfile_result, 0, 0);
+							$prev_scanext = mysql_result($prevfile_result, 0, 1);
+							unlink("sleepstudies/" . $prev_filename . "." . $prev_scanext);
+						}
+						$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
+						$updateimgquery = "UPDATE `dental_sleepstudy` SET $filequery WHERE `id` = '".$sleepstudyid."' and `patientid` = '".$patientid."';";
+						if (!mysql_query($updateimgquery)){
+							?>
+							<script type="text/javascript">
+							 alert("The file saved as: " + "<?php echo($fullfilename); ?>" + " But it could not be stored in the database");
+							</script> 
+							<?php
+						} else {
+							// if file is an image, copy to patient images page
+							if ($_FILES["file"]["type"] != "application/pdf") {
+								$copied = copy("sleepstudies/$fullfilename", "q_file/$fullfilename");
+								if ($copied) {
+									$ins_sql = " insert into dental_q_image set 
+										patientid = '".s_for($patientid)."',
+										title = '".s_for($_POST['title'])."',
+										imagetypeid = '1',
+										image_file = '".s_for($fullfilename)."',
+										userid = '".s_for($_SESSION['userid'])."',
+										docid = '".s_for($_SESSION['docid'])."',
+										adddate = now(),
+										ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+									if (!mysql_query($ins_sql)) {
+									?>
+										<script type="text/javascript">
+							 				alert("The image could not be copied to the patient images page.");
+										</script>
+									<?php
+									}
+								} else {
+								?>
+							 		<script type="text/javascript">
+							 			alert("The image could not be copied to the patient images page.");
+									</script>           
+							 	<?php
+								}
+							}
+					 ?>
+							 <script type="text/javascript">
+							 alert("It's done! The file has been saved as: " + "<?php echo($fullfilename); ?>");
+								</script>           
+							 <?php
+						}
+					} else {			
+						?>
+						<script type="text/javascript">
+							alert("File could not be stored to server.");
+						</script><?php
+					}
 				}
 			}
 		}
-	}
-	else
+		else
 		{
 	 ?>
 						 <script type="text/javascript">
@@ -447,6 +275,7 @@ if ($inserted || $updated) {
 							</script>           
 						 <?php
 		}
+	}
 	?>
 	<script type="text/javascript">
 	window.location.href='manage_sleep_studies.php?pid=<?php echo($_POST["patientid"]); ?>';
@@ -459,8 +288,16 @@ if ($inserted || $updated) {
 ?>
 
 
-  <?php $i = 9999; ?>
+  <?php 
+	$sleepstudyquery = "SELECT COUNT(id) FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
+	$sleepstudyres = mysql_query($sleepstudyquery);
+	$i = mysql_result($sleepstudyres, 0) + 1;
+	$calendar_vars = array();
+  $calendar_vars[$i]['scheddate_id'] = "sleepsched$i";
+  $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i" 
+	?>
   <form name="sleepstudyadd" id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+	<input id="title<?=$i?>" name="title" type="hidden" value="Sleep Study <?=$i?>" />
 	<table id="sleepstudyscrolltable">
 
 						<tr style="height:25px;">
@@ -477,9 +314,9 @@ if ($inserted || $updated) {
 						<td>
             
 
-						<input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='visible';autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='visible';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='visible';autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             
-						<input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
+						<input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='hidden';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
 
 						</td>
 
@@ -615,7 +452,6 @@ if ($inserted || $updated) {
 
 
 <?php
-$calendar_vars = array();
 $sleepstudyquery = "SELECT * FROM dental_sleepstudy WHERE docid=".$_SESSION['docid']." AND patientid='".$_GET['pid']."' ORDER BY id DESC;";
 $sleepstudyres = mysql_query($sleepstudyquery);
 if($sleepstudyres){
@@ -631,6 +467,7 @@ if($numrows){
  $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i"
  ?>
  <form id="sleepstudy<?php echo $i; ?>" name="sleepstudy<?php echo $i; ?>" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?php echo $_GET['pid']; ?>" method="POST" style="height:400px;width:150px;float:left;margin:0 7px 0 0;">
+ <input id="title<?=$i?>" name="title" type="hidden" value="Sleep Study <?=$i?>" />
  <div id="sleepstudyscrolltable<?php echo $i; ?>">
  <table id="sleepstudyscrolltable" style="border-right: 1px solid #000000;float: left;margin-right: 27px;width: 150px;">
 
@@ -848,8 +685,6 @@ if($numrows){
  ?>
 
 <script type="text/javascript">
-	var cal_sleepsched9999 = new calendar2(document.getElementById('sleepsched9999'));
-	var cal_copyreqdate9999 = new calendar2(document.getElementById('copyreqdate9999'));
 	<?php
 	foreach ($calendar_vars as $key => $calid) {
 		print "var cal_" . $calid['scheddate_id'] . " = new calendar2(document.getElementById('" . $calid['scheddate_id'] . "'));";

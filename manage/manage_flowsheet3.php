@@ -58,7 +58,11 @@ require_once('includes/constants.inc');
 			window.onbeforeunload = confirmExit;
 		});
 		$('#form_page1').submit(function() {
-			window.onbeforeunload = null;
+			if($('#iframestatus').val() == "dirty") {
+				window.onbeforeunload = confirmExit;
+			} else {
+				window.onbeforeunload = null;
+			}
 		});
 		$('#page2form').submit(function() {
 			window.onbeforeunload = null;
@@ -987,15 +991,18 @@ height:35px;
 <!-- START FLOWSHEET PAGE 1 ***************************** -->
 <div id="flowsheet_page1">
 
-<div style="width:98%; margin:0 auto; text-align:center;">
+<div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-    if($insinforeq == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if(	$copyreqdate == '' || $referred_by == '' || $contact_location == '' || $referreddate == ''
+				|| $thxletter == '' || $queststartdate == '' || $questcompdate == '' || $insinforec == '' 
+				|| $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
       echo "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>";    
     }
     ?>
 </div>
 
-<form id="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
+<form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
+<input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT</div>
 <table width="60%" align="center">
@@ -1196,6 +1203,7 @@ Completed/Uploaded
 <option value="Online">Online</option>
 <option value="Email">Email</option>
 <option value="Fax">Fax</option>
+<option value="Mail">Mail</option>
 <option value="At Office">At Office</option>
 </select>
 
@@ -1332,7 +1340,7 @@ Completed/Uploaded
 			
 			<td>
 			
-			Copy Obtained/Scanned In
+			Scanned Copy
 			
 			</td>
 			

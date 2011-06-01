@@ -26,7 +26,7 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
+/*$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
 $form_my = mysql_query($form_sql);
 $form_myarray = mysql_fetch_array($form_my);
 
@@ -38,9 +38,10 @@ if($form_myarray['formid'] == '')
 	</script>
 	<?
 	die();
-}
+}*/
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+//$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 

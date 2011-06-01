@@ -7,7 +7,9 @@ include "includes/top.htm";
 			window.onbeforeunload = confirmExit;
 		});
 		$('#q_sleepfrm').submit(function() {
-			if($('#iframestatus').val() == "clean") {
+			if($('#iframestatus').val() == "dirty") {
+				window.onbeforeunload = confirmExit;
+			} else {
 				window.onbeforeunload = null;
 			}
 		});

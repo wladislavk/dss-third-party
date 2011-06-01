@@ -303,9 +303,10 @@ return s;
   
   <tr>
       <td colspan="8">
-          <center><button class="addButton" onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');">
-		View Ledger Records
-	</button></center>
+        <center><a style="padding: 2px;" href='manage_ledger.php?pid=<?=$_GET['pid'];?>' class="addButton">
+               Return to Patient Ledger
+        </a></center>
+
       </td>
   </tr> 
 </table>

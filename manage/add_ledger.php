@@ -504,13 +504,19 @@ echo "</select>";
                 </td>
           </tr>		
         <tr>
-            <td  colspan="2" align="center">
+            <td>
+              <a href="/manage/manage_ledger.php?delid=<?= $_GET['ed']; ?>&amp;pid=<?= $_GET['pid']; ?>&popup=1" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a>
+ 
+            </td>
+            <td >
                 <span class="red">
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="ledgerub" value="1" />
                 <input type="hidden" name="ed" value="<?php echo $_GET["ed"]?>" />
-                <input type="submit" value=" <?=$but_text?> Transaction" class="button" />
+                <input type="submit" value=" <?=$but_text?> Transaction" style="float:right;" class="button" />
             </td>
         </tr>
     </table>

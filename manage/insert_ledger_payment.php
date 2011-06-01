@@ -85,7 +85,7 @@ eraseCookie('tempforledgerentry');
 <script type="text/javascript">
 eraseCookie('tempforledgerentry');
 alert('Payment(s) successfully added!');
-history.go(-1);
+parent.window.location.reload();
 </script>
 <?php
 }

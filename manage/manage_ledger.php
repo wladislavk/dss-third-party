@@ -28,7 +28,11 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php if($_GET['popup']==1){ ?>
+                  parent.window.location.reload();
+                <?php }else{ ?>
+		  window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php } ?>
 	</script>
 	<?
 	die();
@@ -58,6 +62,32 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
+if($_GET['openclaims']==1){
+$sql = "        select
+                'claim',
+                i.insuranceid as ledgerid,
+                i.adddate as service_date,
+                i.adddate as entry_date,
+                'Claim' as name,
+                'Insurance Claim' as description,
+                (select sum(dl2.amount) FROM dental_ledger dl2
+                                INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
+                                where i2.insuranceid=i.insuranceid) as amount,
+                sum(pay.amount) as paid_amount,
+                i.status,
+                i.insuranceid as primary_claim_id
+        from dental_insurance i
+                LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
+                LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
+                where i.patientid='".s_for($_GET['pid'])."'
+                      AND i.status != ".DSS_CLAIM_PAID." 
+        GROUP BY i.insuranceid
+";
+
+
+
+}else{
+
 $sql = "select 
                 'ledger',
 		dl.ledgerid,
@@ -102,14 +132,14 @@ $sql = "select
 				where i2.insuranceid=i.insuranceid),
 		sum(pay.amount),
 		i.status,
-		''
+		i.insuranceid
 	from dental_insurance i
 		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
 		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
 		where i.patientid='".s_for($_GET['pid'])."'
 	GROUP BY i.insuranceid
 ";
-
+}
 if(isset($_REQUEST['sort'])){
   if($_REQUEST['sort']=='producer'){
     $sql .= " ORDER BY name ".$_REQUEST['sortdir']; 
@@ -193,10 +223,22 @@ return s;
 
 </script>
 <div align="right">
-<button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
+<? if($_GET['openclaims']==1){
+?>
+<button onclick="Javascript: window.location='manage_ledger.php?<?= 'pid='.$_GET['pid'];?>';" class="addButton">
+               View All 
+        </button>
+<?php
+}else{
+?>
+<button onclick="Javascript: window.location='manage_ledger.php?openclaims=1&<?= 'pid='.$_GET['pid'];?>';" class="addButton">
+               Claims Outstanding 
+        </button>
+<?php } ?>	&nbsp;&nbsp;
+        <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger
         </button>
-	&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;
 	
 	<button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?=$_GET['pid'];?>');" class="addButton">
 		Add New Transaction
@@ -291,6 +333,7 @@ return s;
 				$tr_class = "tr_inactive";
 			}
 			$tr_class = "tr_active";
+                        if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row'; }
 		?>
 			<tr 
 			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; } ?>
@@ -314,10 +357,10 @@ return s;
 				<td valign="top">
 			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
                 	<?= $myarray["description"]; ?>
-			<?= ($myarray[0] == 'ledger' && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+			<?= (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
 				</td>
 				<td valign="top" align="right">
-					<? if(st($myarray["amount"]) <> 0) {?>
+					<? if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
 					 	if($myarray[0]!='claim')
@@ -326,7 +369,7 @@ return s;
 					&nbsp;
 				</td>
 				<td valign="top" align="right">
-					<? if(st($myarray["paid_amount"]) <> 0) {?>
+					<? if(st($myarray["paid_amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
 						if($myarray[0]!='claim')
@@ -335,7 +378,7 @@ return s;
 					&nbsp;
 				</td>
 				<td valign="top" align="right">
-					<?php if($myarray[0]!='claim')
+					<?php if($myarray[0]=='ledger')
 					 echo number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
@@ -358,9 +401,6 @@ return s;
 						Edit 
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						 Delete 
-					</a>
                                            <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
                                                  Payment 
                                         </a>

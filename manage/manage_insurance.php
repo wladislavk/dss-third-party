@@ -241,7 +241,8 @@ $my = mysql_query($sql) or die(mysql_error());
 	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="2" align="center">
-		  Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.
+		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>
+		    Pays for replacement device every <?=$preauth['how_often'];?> years.
           </td>
         </tr>
         <tr class="tr_bg">

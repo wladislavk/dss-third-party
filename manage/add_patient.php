@@ -795,7 +795,8 @@ if($_POST["patientsub"] == 1)
                   <option value="Patient" <? if($referred_source == 'Patient') echo " selected";?>>Patient</option>
                   <option value="Physician" <? if($referred_source == 'Physician') echo " selected";?>>Physician</option>
 									<option value="Media" <? if($referred_source == 'Media') echo " selected";?>>Media</option>
-									<option value="Media" <? if($referred_source == 'Franchise') echo " selected";?>>Franchise</option>
+									<option value="Franchise" <? if($referred_source == 'Franchise') echo " selected";?>>Franchise</option>
+									<option value="DSS Office" <? if($referred_source == 'DSS Office') echo " selected";?>>DSS Office</option>
 									<option value="Other" <? if($referred_source == 'Other') echo " selected";?>>Other</option>
                                 </select>
                                 <label for="referred_source">Referred Source</label>

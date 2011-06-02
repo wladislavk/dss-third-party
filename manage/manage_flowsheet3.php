@@ -241,7 +241,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-    if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if($insinforec == '' || /*$rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == '' || /*$clinnotereq == '' ||*/ $clinnoterec == ''){
        array_push($errors, "Medical insurance dates are not filled out."); 
      }
 
@@ -1682,19 +1682,60 @@ Completed/Uploaded
 
 <!-- START MED INS TABLE -->
 
+<?php
+$sql = "SELECT "
+     . "  * "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$my = mysql_query($sql) or die(mysql_error());
+?>
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
 <table width="50%" align="center">
 
-<tr>
+	<? if (mysql_num_rows($my) == 0) { ?>
+      <tr class="tr_bg">
+        <td colspan="3" valign="top" align="center">
+          No pre-authorizations on record.
+        </td>
+      </tr>
+	<?php } else { ?> 
+      <?php while ($preauth = mysql_fetch_array($my)) { ?>
 
+	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td colspan="3" valign="top" align="center">
+		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+        </td>
+      </tr>
+
+
+
+	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
+        <tr class="tr_bg">
+          <td colspan="3" valign="top" colspan="2" align="center">
+		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>
+		    Pays for replacement device every <?=$preauth['how_often'];?> years.
+          </td>
+        </tr>
+	<?php } ?>
+      <?php } ?>
+    <?php } ?>
+
+<tr>
 <td>
-Procedure
+<h3>Procedure</h3>
 </td>
 <td>
-Requested
+<h3>Requested</h3>
 </td>
 <td>
-Received
+<h3>Received</h3>
 </td>
 
 </tr>

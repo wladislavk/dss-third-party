@@ -74,6 +74,18 @@ require_once('includes/constants.inc');
   }
 </script>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		if ($('#datecomp0').val() == "") {
+			$('#stepselectedsubmit').css("display", "none");
+		}
+		$('#datecomp0').change(function() {
+			if ($('#datecomp0').val() != "") {
+				$('#stepselectedsubmit').css("display", "inline");
+			}
+		});
+	});
+</script>
 <?php
 
 function preauth_allowed(){
@@ -312,8 +324,6 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
 
 
 
-
-// Todo add $stepid to each segment so that it can be passed to the letter triggers
 function trigger_letter5($pid, $stepid) {
 	$letterid = '5';
 	$topatient = '1';
@@ -629,8 +639,30 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
     			$error = "MySQL error ".mysql_errno().": ".mysql_error();
 			echo $error."3";
     			} else {
-						// Automatically enter Date Complete for Treatment Complete
-						if ($value == "11") {
+						// Automatically enter Date Complete for Delaying Treatment (5), Refused Treatment (6), Patient Non-Compliant (9), Treatment Complete (11)
+						if ($value == "5" || $value == "6" || $value == "9" || $value == "11") {
+							$numsteps = count($_POST['data']) + 1; // +1 because we just added this additional step
+							$consult_query = "SELECT stepid, date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
+							$consult_result = mysql_query($consult_query);
+							$consult_stepid = mysql_result($consult_result, 0, 0);
+							$consult_date = mysql_result($consult_result, 0, 1);
+							if ($consult_date != "0000-00-00" && $consult_stepid < $numsteps) {
+								$consulted = true;
+							}
+							// Delaying Treatment / Waiting
+							if ($consulted == true && $value == "5") { 								
+								$letterid[] = trigger_letter10($_GET['pid'], $numsteps);
+							}
+							// Refused Treatment
+							if ($consulted == true && $value == "6") { 
+								$letterid[] = trigger_letter8($_GET['pid'], $numsteps);
+								$letterid[] = trigger_letter11($_GET['pid'], $numsteps);
+							}
+							// Patient Non Compliant
+							if ($value == "9") { 
+								$letterid[] = trigger_letter17($_GET['pid'], $numsteps);
+							}
+							$letteridlist = implode(",", $letterid);
 							$select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' ORDER BY stepid DESC;";
 							$select_result = mysql_query($select_query);
 							if(!$select_result) {
@@ -639,7 +671,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 							}
 							$stepid = mysql_result($select_result, 0);
 							$stepid++;
-							$ins_date = "INSERT INTO dental_flow_pg2_info (patientid, stepid, segmentid, date_completed, letterid) VALUES ('".$patientid."', '".$stepid."', '".$value."', NOW(), '');";
+							$ins_date = "INSERT INTO dental_flow_pg2_info (patientid, stepid, segmentid, date_completed, letterid) VALUES ('".$patientid."', '".$stepid."', '".$value."', NOW(), '".$letteridlist."');";
 							$ins_result = mysql_query($ins_date);
 						}
 					}
@@ -770,7 +802,7 @@ print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<b
 		if ($numrows > 0) {
 			$letterid[] = trigger_letter16($_GET['pid'], $numsteps);
 		}
-	}    
+	}
 	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "5") { // Delaying Treatment / Waiting
 		$letterid[] = trigger_letter10($_GET['pid'], $numsteps);
 	}
@@ -994,7 +1026,10 @@ height:35px;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-    if(	$copyreqdate == '' || $referred_by == '' || $contact_location == '' || $referreddate == ''
+		$sleepstudies = "SELECT completed FROM dental_sleepstudy WHERE completed = 'Yes' AND patientid = '".$_GET['pid']."';";
+		$result = mysql_query($sleepstudies);
+		$numrows = mysql_num_rows($result);
+    if(	$numrows == '0' && $copyreqdate == '' || $referred_by == '' || $contact_location == '' || $referreddate == ''
 				|| $thxletter == '' || $queststartdate == '' || $questcompdate == '' || $insinforec == '' 
 				|| $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
       echo "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>";    
@@ -1970,7 +2005,11 @@ Next Appointment
 	*/
 	
 	
-	$order = explode(",",$fsData_array['steparray']);
+ 	if (!empty($fsData_array['steparray'])) {
+		$order = explode(",",$fsData_array['steparray']);
+  	$order = array_reverse($order);
+  	//print_r($order);
+	}
 	
 	
 	/*
@@ -1979,14 +2018,9 @@ Next Appointment
 	echo '</pre>';	
   echo '<br /><br />';
   */
+   
   
   
-  
- 
-  $order = array_reverse($order);
-  
-  
-  //print_r($order);
   
   
   $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
@@ -2019,16 +2053,14 @@ Next Appointment
   if($segment_res){
     $segment = mysql_fetch_array($segment_res);
   }else{
-    echo "Click 'Start Consult' above to create your first step";
+    echo "Error selecting segments from flowsheet"; 
   }
-	if ($order[$i] != 1 && $order[$i] != 13) {
+	if ($order[$i] != 1 && $order[$i] != 5 && $order[$i] != 6 && $order[$i] != 9 && $order[$i] != 13) {
 		$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
 		$calendar_vars[$i]['varsched'] = "cal_sched$i";
 	}
-  if ($order[$i] != 6 && $order[$i] != 5 && $order[$i] != 9) {
-		$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
-		$calendar_vars[$i]['varcomp'] = "cal_comp$i";
-	}
+	$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
+	$calendar_vars[$i]['varcomp'] = "cal_comp$i";
 	$caldatesched = $calendar_vars[$i]['varsched'];
 	$caldatecomp = $calendar_vars[$i]['varcomp'];
 	$schedid = "datesched$i";
@@ -2126,14 +2158,15 @@ Next Appointment
   //echo "<br />".$i."<br />";
   $i++; 
   }
-  
-	print '<script type="text/javascript">';
-	foreach ($calendar_vars as $var) {
-		print (isset($var['datesched'])) ? $var['datesched'] . "\n" : "";
-		print (isset($var['datecomp'])) ? $var['datecomp'] . "\n" : "";
- 	}
-	print "</script>";
-
+//	print "<tr><td style=\"border-bottom: 0px;\">";
+  if (!empty($calendar_vars)) {
+		print '<script type="text/javascript">';
+		foreach ($calendar_vars as $var) {
+			print (isset($var['datesched'])) ? $var['datesched'] . "\n" : "";
+			print (isset($var['datecomp'])) ? $var['datecomp'] . "\n" : "";
+		}
+		print "</script>";
+	}
 	/*
   	asort($final_fsData_array, SORT_NUMERIC);	
 	
@@ -2163,8 +2196,7 @@ Next Appointment
 
 ?>
 <input type="hidden" name="flowsubmitpgtwo" value="1">
-<input type="button" class="addButton" value="Submit" onClick="document.page2submit.submit();"/>
-
+<input type="submit" class="addButton" value="Submit" <?php print $order == null ? 'style="display: none"' : ''; ?> />
 </form> 
 </table>
 

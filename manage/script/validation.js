@@ -395,7 +395,7 @@ function patientabc(fa)
 			alert("Relationship to insured party is a Required Field");
 			fa.p_m_relation.focus();
 			return false;
-		} else if(trim(fa.ins2_dob.value) == "") {
+		} else if(trim(fa.ins_dob.value) == "") {
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins2_dob.focus();
 			return false;
@@ -446,7 +446,7 @@ function patientabc(fa)
 			alert("Relationship to insured party is a Required Field");
 			fa.s_m_relation.focus();
 			return false;
-		} else if(trim(fa.ins_dob.value) == "") {
+		} else if(trim(fa.ins2_dob.value) == "") {
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins_dob.focus();
 			return false;

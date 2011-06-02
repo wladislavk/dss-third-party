@@ -823,18 +823,19 @@ if($_POST["patientsub"] == 1)
                         </label>
                         <div>
                             <span>
+                                                                <select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
+                                                                        <option value="" <? if($p_m_relation == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <? if($p_m_relation == 'Self') echo " selected";?>>Self</option>
+                                                                        <option value="Spouse" <? if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <? if($p_m_relation == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <? if($p_m_relation == 'Other') echo " selected";?>>Other</option>
+                                                                </select>
+                                <label for="work_phone">Relationship to insured party</label>
+                            </span>
+
+                            <span>
                                 <input id="p_m_partyfname" name="p_m_partyfname" type="text" class="field text addr tbox" value="<?=$p_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="p_m_partymname" name="p_m_partymname" type="text" class="field text addr tbox" value="<?=$p_m_partymname?>" maxlength="255" style="width:50px;" /><input id="p_m_partylname" name="p_m_partylname" type="text" class="field text addr tbox" value="<?=$p_m_partylname?>" maxlength="255" style="width:150px;" />
                                 <label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
-                            </span>
-                            <span>
-								<select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
-									<option value="" <? if($p_m_relation == '') echo " selected";?>>None</option>
-									<option value="Self" <? if($p_m_relation == 'Self') echo " selected";?>>Self</option>
-									<option value="Spouse" <? if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-									<option value="Child" <? if($p_m_relation == 'Child') echo " selected";?>>Child</option>
-									<option value="Other" <? if($p_m_relation == 'Other') echo " selected";?>>Other</option>
-								</select>
-                                <label for="work_phone">Relationship to insured party</label>
                             </span>
                             <span>
                                 <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox" value="<?=$ins_dob?>" maxlength="255" style="width:200px;" onChange="validateDate('ins_dob');" />
@@ -951,18 +952,18 @@ if($_POST["patientsub"] == 1)
                         </label>
                         <div>
                             <span>
-                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?=$s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?=$s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?=$s_m_partylname?>" maxlength="255" style="width:150px;" />
-                                <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
+                                                                <select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
+                                                                        <option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
+                                                                        <option value="Self" <? if($s_m_relation == 'Self') echo " selected";?>>Self</option>
+                                                                        <option value="Spouse" <? if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
+                                                                        <option value="Child" <? if($s_m_relation == 'Child') echo " selected";?>>Child</option>
+                                                                        <option value="Other" <? if($s_m_relation == 'Other') echo " selected";?>>Other</option>
+                                                                </select>
+                                <label for="work_phone">Relationship to insured party</label>
                             </span>
                             <span>
-								<select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
-									<option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
-									<option value="Self" <? if($s_m_relation == 'Self') echo " selected";?>>Self</option>
-									<option value="Spouse" <? if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-									<option value="Child" <? if($s_m_relation == 'Child') echo " selected";?>>Child</option>
-									<option value="Other" <? if($s_m_relation == 'Other') echo " selected";?>>Other</option>
-								</select>
-                                <label for="work_phone">Relationship to insured party</label>
+                                <input id="s_m_partyfname" name="s_m_partyfname" type="text" class="field text addr tbox" value="<?=$s_m_partyfname?>" maxlength="255" style="width:150px;" /><input id="s_m_partymname" name="s_m_partymname" type="text" class="field text addr tbox" value="<?=$s_m_partymname?>" maxlength="255" style="width:50px;" /><input id="s_m_partylname" name="s_m_partylname" type="text" class="field text addr tbox" value="<?=$s_m_partylname?>" maxlength="255" style="width:150px;" />
+                                <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
                                 <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox" value="<?=$ins2_dob?>" maxlength="255" style="width:200px;" onChange="validateDate('ins2_dob');" />

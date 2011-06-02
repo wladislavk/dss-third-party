@@ -37,7 +37,31 @@ if($_REQUEST["delid"] != "")
 	<?
 	die();
 }
+if($_REQUEST["delclaimid"] != "")
+{
 
+        $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
+        if(mysql_query($del_sql)){
+
+	  $up_sql = "UPDATE dental_ledger set primary_claim_id=NULL WHERE primary_claim_id='".$_REQUEST["delclaimid"]."'";
+          mysql_query($up_sql);
+
+          $msg= "Deleted Successfully";
+        }else{
+          $msg = "Error deleting.";
+        }
+        ?>
+        <script type="text/javascript">
+                //alert("Deleted Successfully");
+                <?php if($_GET['popup']==1){ ?>
+                  parent.window.location.reload();
+                <?php }else{ ?>
+                  window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php } ?>
+        </script>
+        <?
+        die();
+}
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my); 
@@ -415,10 +439,11 @@ return s;
 <a href="insurance.php?insid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
                                                 Edit 
                                         </a>
-
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                    <?php if($myarray['status']==DSS_CLAIM_PENDING){ ?>
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delclaimid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
                                         </a>
+                                   <?php } ?>
   				<?php } ?>
 				</td>
 			</tr>

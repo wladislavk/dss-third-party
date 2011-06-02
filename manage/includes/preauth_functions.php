@@ -7,13 +7,13 @@ function claim_errors( $pid ){
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
-    array_push($errors, "Missing referral");
+    array_push($errors, "Missing referral - Flow Sheet");
   }
   $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
-    array_push($errors, "Missing insurance company");
+    array_push($errors, "Missing insurance company - Patient Info");
   }
 
   $sql = "SELECT * FROM dental_patients p JOIN dental_users d ON p.docid = d.userid WHERE p.patientid=".$pid;
@@ -27,7 +27,7 @@ function claim_errors( $pid ){
   $my = mysql_query($sql);
   $m = mysql_fetch_row($my);
   if( $m[0]!=1 ){
-    array_push($errors, "Primary DSS filing insurance not selected");
+    array_push($errors, "Primary DSS filing insurance not selected - Patient Info");
   }
 
   $sql = "SELECT * FROM dental_patients p JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' WHERE p.patientid=".$pid;
@@ -80,7 +80,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
     if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
-       array_push($errors, "Medical insurance dates are not filled out");
+       array_push($errors, "Medical insurance dates are not filled out - Flow Sheet");
      }
 
 

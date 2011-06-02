@@ -55,7 +55,7 @@ alert('Could not add ledger payments, please close this window and contact your 
 ?>
 <script type="text/javascript">
 alert('Payment(s) successfully added!');
-parent.window.location.reload();
+parent.window.location = parent.window.location;
 </script>
 <?php
 }

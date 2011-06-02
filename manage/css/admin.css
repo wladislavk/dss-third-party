@@ -922,6 +922,7 @@ text-align:center;
 font-weight:bold;
 font-size:15px;
 background:url(../images/btn.png) no-repeat top left;
+cursor: pointer;
 }
 	
 /*1st sub level menu*/

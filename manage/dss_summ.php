@@ -644,6 +644,7 @@ $q1_my = mysql_query($q1_sql);
 $q1_myarray = mysql_fetch_array($q1_my);
 
 $main_reason = st($q1_myarray['main_reason']);
+$main_reason_other = st($q1_myarray['main_reason_other']);
 $complaintid = st($q1_myarray['complaintid']);
 $bed_time_partner1 = st($q1_myarray['bed_time_partner']);
 $sleep_same_room1 = st($q1_myarray['sleep_same_room']);
@@ -906,8 +907,13 @@ if(count($main_arr) <> 0)
 	{
 		if(trim($m_val) <> '')
 		{
+if($m_val == 'other'){
+$main_disp .= $m_val." - ".$main_reason_other."
+";
+}else{
 $main_disp .= $m_val."
 ";
+}
 		}
 	}
 }

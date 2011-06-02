@@ -501,6 +501,11 @@ if ($_POST['insurancesub'] == 1) {
 		
     // Update the claim in the dental_insurance table
 	} else {
+             $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+             $pat_my = mysql_query($pat_sql);
+             $pat_myarray = mysql_fetch_array($pat_my);
+             $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
+
 		$ed_sql = " update dental_insurance set 
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
@@ -690,11 +695,10 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		status = '".s_for(($status == DSS_CLAIM_SENT) ? DSS_CLAIM_SENT : DSS_CLAIM_PENDING)."'
+		status = '".s_for(($status == DSS_CLAIM_SENT) ? (($p_m_ins_ass == 'No')?DSS_CLAIM_PAID_PATIENT:DSS_CLAIM_SENT) : DSS_CLAIM_PENDING)."'
 		where insuranceid = '".s_for($_POST['ed'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
 		update_ledger_trxns($_POST['ed'], $trxn_status);
@@ -723,6 +727,7 @@ $other_insured_lastname = st($pat_myarray['s_m_partymname']);
 $other_insured_middle = st($pat_myarray['s_m_partylname']);
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
+$p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
 $other_insured_dob = st($pat_myarray['ins2_dob']);
 $insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
 $other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);

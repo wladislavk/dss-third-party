@@ -1,6 +1,9 @@
 <?php 
 include "includes/top.htm";
 ?>
+<script language="JavaScript" src="calendar1.js"></script>
+<script language="JavaScript" src="calendar2.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(':input').change(function() { 
@@ -19,6 +22,7 @@ include "includes/top.htm";
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
 {
+        $exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
 	$feet = $_POST['feet'];
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
@@ -94,6 +98,7 @@ if($_POST['q_page1sub'] == 1)
 		$ins_sql = " insert into dental_q_page1 set 
 		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
+                exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -133,6 +138,7 @@ if($_POST['q_page1sub'] == 1)
 	else
 	{
 		$ed_sql = " update dental_q_page1 set 
+                exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -211,6 +217,7 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
+$exam_date = st($myarray['exam_date']);
 $feet = st($myarray['feet']);
 $inches = st($myarray['inches']);
 $weight = st($myarray['weight']);
@@ -314,6 +321,14 @@ if($complaintid <> '')
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <tr>
+        <td colspan="2">
+           Exam date: <input onClick="cal_exam.popup();" type="text" id="exam_date" name="exam_date" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
+           <script type="text/javascript">
+             var cal_exam = new calendar2(document.getElementById('exam_date'));
+           </script>
+        </td>
+    </tr>
     <tr>
         <td colspan="2" class="sub_head">
            Additional Patient Information
@@ -719,7 +734,7 @@ if($complaintid <> '')
                         	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
                             	<tr>
                                     <td valign="top">
-                                    	<select multiple="multiple" name="main_reason[]" class="field text addr tbox" style="width:350px;" size="7">
+                                    	<select multiple="multiple" id="main_reason" name="main_reason[]" class="field text addr tbox" onchange="showOtherBox()" style="width:350px;" size="7">
                                     	      <?php
                                             $cmp_query = "SELECT * FROM dental_complaint WHERE status=1";
                                             $cmp_array = mysql_query($cmp_query);
@@ -734,10 +749,12 @@ if($complaintid <> '')
 												Other - Fill in below
 											</option>
                                         </select>
-										<br /><br />
+				<div id="main_reason_other_div">
+						<br /><br />
 										Other Main Reason for Seeking Treatment:
 										<br />
 										<input id="main_reason_other" name="main_reason_other" type="text" class="tbox" value="<?=$main_reason_other?>" maxlength="255" />
+				</div>
                                     </td>
                                 </tr>
 							</table>
@@ -749,6 +766,24 @@ if($complaintid <> '')
 	</tr>
 	   
 </table>
+
+<script type="text/javascript">
+
+function showOtherBox(){
+sel = String($('#main_reason').val());
+if($.inArray('other', sel.split(','))!=-1){
+  $('#main_reason_other_div').show();
+}else{
+  $('#main_reason_other_div').hide();
+
+}
+
+}
+$('document').ready( function(){
+  showOtherBox();
+});
+
+</script>
 
 <div align="right">
 	<input type="reset" value="Reset" />

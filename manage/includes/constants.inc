@@ -40,8 +40,9 @@ $dss_trxn_type_labels[DSS_TRXN_TYPE_ADJ] = 'Adjustment Code';
 // Claim statuses (insurance)
 define('DSS_CLAIM_PENDING', 0);
 define('DSS_CLAIM_SENT', 1);
-define('DSS_CLAIM_PAID', 3);
+define('DSS_CLAIM_PAID_INSURANCE', 3);
 define('DSS_CLAIM_REJECTED', 4);
+define('DSS_CLAIM_PAID_PATIENT', 5);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
@@ -49,8 +50,10 @@ $dss_claim_status_labels[DSS_CLAIM_PENDING] = 'Pending';
 $dss_claim_status_labels[DSS_CLAIM_PENDING]['short'] = 'Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SENT] = 'Sent';
 $dss_claim_status_labels[DSS_CLAIM_SENT]['short'] = 'Sent';
-$dss_claim_status_labels[DSS_CLAIM_PAID] = 'Paid';
-$dss_claim_status_labels[DSS_CLAIM_PAID]['short'] = 'Paid';
+$dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE] = 'Paid';
+$dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]['short'] = 'Paid';
+$dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT] = 'Paid to Patient';
+$dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT]['short'] = 'Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED] = 'Rejected';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED]['short'] = 'Rej.';
 

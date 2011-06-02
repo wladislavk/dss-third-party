@@ -29,7 +29,13 @@
         	<b>
             Exam Date
             &nbsp;&nbsp;&nbsp;
-            <?=date('m/d/y', strtotime(st($form_myarray['adddate'])));?>
+<?php
+$sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+echo ($myarray['exam_date']!='')?date('m/d/Y', strtotime($myarray['exam_date'])):'';
+?>
+
             </b>
         </td>
         <td valign="middle" width="15%" align="right">

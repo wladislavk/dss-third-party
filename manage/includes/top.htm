@@ -559,27 +559,27 @@ display:none;
 <?php if(isset($_GET['pid'])){ ?>
   <ul>
   
-              <li><a href="add_patient.php?ed=<?php echo $_GET["pid"]; ?>&preview=1&addtopat=1&pid=<?php echo $_GET["pid"]; ?>" target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo " onclick='areyousure(\"manage_contact.php\");' target='_self'>";}else{ echo ">";} ?>Patient Info</a></li>
-              <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"q_page1.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{ echo "href='q_page1.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Questionnaire</a></li>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ex_page4.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{echo "href='ex_page4.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Clinical Exam</a> </li>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"q_image.php?fid=".$_GET["pid"]."&pid=".$_GET["pid"]."&addtopat=1\");'";}else{echo "href='q_image.php?fid=".$_GET["pid"]."&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Patient Images</a> </li>							
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"dss_summ.php?pid=".$_GET['pid']."&addtopat=1\");'";}else{echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{ echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
+              <li><a href="add_patient.php?ed=<?php echo $_GET["pid"]; ?>&preview=1&addtopat=1&pid=<?php echo $_GET["pid"]; ?>" target="_self">Patient Info</a></li>
+              <li><a href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
+							<li><a href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>
+							<li><a <?php {echo "href='q_image.php?fid=".$_GET["pid"]."&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Patient Images</a> </li>							
+							<li><a <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
+							<li><a <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
+							<li><a <?php {echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
+							<li><a <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
 							<? //if(st($_SESSION['adminuserid'] <> '')) {?>
-								<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"dss_letters.php?fid=".$_GET["fid"]."&pid=".$_GET['pid']."&addtopat=1\");'";}else{echo "href='dss_letters.php?fid=".$_GET["fid"]."&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
+								<li><a <?php {echo "href='dss_letters.php?fid=".$_GET["fid"]."&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
 							<? //}?>
-							<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_flowsheet3.php?pid=".$_GET["pid"]."&addtopat=1\");'";}else{echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Flow Sheet</a></li>
+							<li><a <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Flow Sheet</a></li>
   </ul>
   <?php } ?>
 </li>
 <li>
 <?php if($_GET['pid'] != ''){ ?>
-<a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ledger.php\");'";}else{echo "href='manage_ledger.php?pid=".$_GET['pid']."'";} ?>>REPORTS</a>
+<a <?php {echo "href='manage_ledger.php?pid=".$_GET['pid']."'";} ?>>REPORTS</a>
 <?php }else{
 ?>
-<a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"ledger.php\");'";}else{echo "href='ledger_reportfull.php'";} ?>>REPORTS</a>
+<a <?php {echo "href='ledger_reportfull.php'";} ?>>REPORTS</a>
 <?php
 }
 ?>
@@ -587,44 +587,44 @@ display:none;
 
 </li>
 
-<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=pending\");'";}else{echo "href='letters.php?status=pending'";} ?>>LETTERS (<?php echo $pending_letters; ?>)</a>
+<li><a <?php {echo "href='letters.php?status=pending'";} ?>>LETTERS (<?php echo $pending_letters; ?>)</a>
   <ul>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=pending\");'";}else{echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"letters.php?status\=sent\");'";}else{echo "href='letters.php?status=sent'";} ?>>Sent Letters</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"new_letter.php\");'";}else{echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_preauths.php\");'";}else{echo "href='manage_preauths.php'";} ?>>Pre-authorizations (<?= $num_pending_preauth; ?>/<?= $num_preauth; ?>)</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_claims.php\");'";}else{echo "href='manage_claims.php'";} ?>>Claims</a></li>
+      <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
+      <li><a <?php {echo "href='letters.php?status=sent'";} ?>>Sent Letters</a></li>
+      <li><a <?php {echo "href='new_letter.php'";} ?>>Create New Letter</a></li>
+      <li><a <?php {echo "href='manage_preauths.php'";} ?>>Pre-authorizations (<?= $num_pending_preauth; ?>/<?= $num_preauth; ?>)</a></li>
+      <li><a <?php {echo "href='manage_claims.php'";} ?>>Claims</a></li>
 
 
   </ul>
 </li>
 
-<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"directory.php\");'";}else{echo "href='directory.php'";} ?>>DIRECTORY</a>
+<li><a <?php {echo "href='directory.php'";} ?>>DIRECTORY</a>
   <ul>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_contact.php\");'";}else{echo "href='manage_contact.php'";} ?>>Contacts</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_staff.php\");'";}else{echo "href='manage_staff.php'";} ?>>Staff</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_referredby.php\");'";}else{echo "href='manage_referredby.php'";} ?>>Referral List</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_fcontact.php\");'";}else{echo "href='manage_fcontact.php'";} ?>>Corporate Contacts</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_transaction_code.php\");'";}else{echo "href='manage_transaction_code.php'";} ?>>Transaction Codes</a></li>
-      <li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_sleeplab.php\");'";}else{echo "href='manage_sleeplab.php'";} ?>>Sleep Labs</a></li>
+      <li><a <?php {echo "href='manage_contact.php'";} ?>>Contacts</a></li>
+      <li><a <?php {echo "href='manage_staff.php'";} ?>>Staff</a></li>
+      <li><a <?php {echo "href='manage_referredby.php'";} ?>>Referral List</a></li>
+      <li><a <?php {echo "href='manage_fcontact.php'";} ?>>Corporate Contacts</a></li>
+      <li><a <?php {echo "href='manage_transaction_code.php'";} ?>>Transaction Codes</a></li>
+      <li><a <?php {echo "href='manage_sleeplab.php'";} ?>>Sleep Labs</a></li>
   </ul>
 </li>
 
-<li><a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"tools.php\");'";}else{echo "href='tools.php'";} ?>>TOOLS</a>
+<li><a <?php {echo "href='tools.php'";} ?>>TOOLS</a>
   <ul>
     <li>
        <a href="">Files</a>
        <ul style="border-top:1px solid #095d81;">
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_oper.php\");'";}else{echo "href='fm_oper.php'";} ?>>Operations manual</a></li>
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_mark.php\");'";}else{echo "href='fm_mark.php'";} ?>>Marketing Files</a> </li>
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_edu.php\");'";}else{echo "href='fm_edu.php'";} ?>>Educational Materials</a></li>
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_news.php\");'";}else{echo "href='fm_news.php'";} ?>>Newsletters</a></li>
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_qna.php\");'";}else{echo "href='fm_qna.php'";} ?>>Health Questionnaires</a></li>
-            <li><a target="_self" <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"fm_misc.php\");'";}else{echo "href='fm_misc.php'";} ?>>Miscellaneous Files</a></li>
+            <li><a target="_self" <?php {echo "href='fm_oper.php'";} ?>>Operations manual</a></li>
+            <li><a target="_self" <?php {echo "href='fm_mark.php'";} ?>>Marketing Files</a> </li>
+            <li><a target="_self" <?php {echo "href='fm_edu.php'";} ?>>Educational Materials</a></li>
+            <li><a target="_self" <?php {echo "href='fm_news.php'";} ?>>Newsletters</a></li>
+            <li><a target="_self" <?php {echo "href='fm_qna.php'";} ?>>Health Questionnaires</a></li>
+            <li><a target="_self" <?php {echo "href='fm_misc.php'";} ?>>Miscellaneous Files</a></li>
        </ul>
     </li>
     <li>
-       <a <?php if(substr($_SERVER["SCRIPT_NAME"], 8, -5) == "q_page" || substr($_SERVER["SCRIPT_NAME"], 8, -5) == "ex_page"){echo "onclick='areyousure(\"manage_custom.php\");'";}else{echo "href='manage_custom.php'";} ?>>Custom Text</a>
+       <a <?php {echo "href='manage_custom.php'";} ?>>Custom Text</a>
     </li>
   </ul>
 </li>

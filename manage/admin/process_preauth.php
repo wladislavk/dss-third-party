@@ -8,25 +8,73 @@ if (isset($_REQUEST['ed'])) {
     // load preauth
     $sql = "SELECT "
          . "  preauth.*, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
-         . "  pcp.lastname as 'pcp_lastname', pcp.phone1 as 'pcp_phone1' "
+         . "  pcp.lastname as 'pcp_lastname', pcp.phone1 as 'pcp_phone1', p.patientid as 'patientid' "
          . "FROM "
          . "  dental_insurance_preauth preauth "
          . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
-	$my = mysql_query($sql) or die(mysql_error());
-	$preauth = mysql_fetch_array($my);
+		$my = mysql_query($sql) or die(mysql_error());
+		$preauth = mysql_fetch_array($my);
+		// load dynamic preauth info
+		$sql = "SELECT "
+		 . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+		 . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+		 . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+		 . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+		 . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+		 . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+		 . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
+		 . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+		 . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+		 . "  p.home_phone as 'patient_phone'  "
+		 . "FROM "
+		 . "  dental_patients p  "
+		 . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+		 . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+		 . "  JOIN dental_users d ON p.docid = d.userid "
+		 . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+		 . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+		 . "WHERE "
+		 . "  p.patientid = ".$preauth['patientid'];
+
+		$my = mysql_query($sql);
+		$my_array = mysql_fetch_array($my);
+		$preauth = array_merge($preauth, $my_array);
 } else {
     // update preauth
     $sql = "UPDATE dental_insurance_preauth SET "
-         . "date_of_call = '" . $_POST["date_of_call"] . "', "
+				 . "ins_co = '" . s_for($_POST["ins_co"]) . "', "
+				 . "ins_rank = '" . s_for($_POST["ins_rank"]) . "', "
+				 . "ins_phone = '" . s_for($_POST["ins_phone"]) . "', "
+				 . "patient_ins_group_id = '" . s_for($_POST["patient_ins_group_id"]) . "', "
+				 . "patient_ins_id = '" . s_for($_POST["patient_ins_id"]) . "', "
+				 . "patient_firstname = '" . s_for($_POST["patient_firstname"]) . "', "
+				 . "patient_lastname = '" . s_for($_POST["patient_lastname"]) . "', "
+				 . "patient_add1 = '" . s_for($_POST["patient_add1"]) . "', "
+				 . "patient_add2 = '" . s_for($_POST["patient_add2"]) . "', "
+				 . "patient_city = '" . s_for($_POST["patient_city"]) . "', "
+				 . "patient_state = '" . s_for($_POST["patient_state"]) . "', "
+				 . "patient_zip = '" . s_for($_POST["patient_zip"]) . "', "
+				 . "patient_dob = '" . s_for($_POST["patient_dob"]) . "', "
+				 . "insured_first_name = '" . s_for($_POST["insured_first_name"]) . "', "
+				 . "insured_last_name = '" . s_for($_POST["insured_last_name"]) . "', "
+				 . "insured_dob = '" . s_for($_POST["insured_dob"]) . "', "
+				 . "doc_npi = '" . s_for($_POST["doc_npi"]) . "', "
+				 . "referring_doc_npi = '" . s_for($_POST["referring_doc_npi"]) . "', "
+				 . "doc_medicare_npi = '" . s_for($_POST["doc_medicare_npi"]) . "', "
+				 . "doc_tax_id_or_ssn = '" . s_for($_POST["doc_tax_id_or_ssn"]) . "', "
+				 . "trxn_code_amount = '" . s_for($_POST["trxn_code_amount"]) . "', "
+				 . "diagnosis_code = '" . s_for($_POST["diagnosis_code"]) . "', "
+				 . "patient_phone = '" . s_for($_POST["patient_phone"]) . "', "
+         . "date_of_call = '" . s_for($_POST["date_of_call"]) . "', "
          . "insurance_rep = '" . s_for($_POST["insurance_rep"]) . "', "
          . "call_reference_num = '".s_for($_POST["call_reference_num"])."', "
          . "ins_effective_date = '".s_for($_POST["ins_effective_date"])."', "
          . "ins_cal_year_start = '".s_for($_POST["ins_cal_year_start"])."', "
          . "ins_cal_year_end = '".s_for($_POST["ins_cal_year_end"])."', "
-         . "trxn_code_covered = '" . $_POST["trxn_code_covered"] . "', "
+         . "trxn_code_covered = '" . s_for($_POST["trxn_code_covered"]) . "', "
          . "code_covered_notes = '".s_for($_POST["code_covered_notes"])."', "
          . "how_often = '".s_for($_POST["how_often"])."', "
          . "has_out_of_network_benefits = '" . $_POST["has_out_of_network_benefits"] . "', "
@@ -36,7 +84,7 @@ if (isset($_REQUEST['ed'])) {
          . "hmo_date_received = '".s_for($_POST["hmo_date_received"])."', "
          . "hmo_needs_auth = '" . $_POST["hmo_needs_auth"] . "', "
          . "hmo_auth_date_requested = '".s_for($_POST["hmo_auth_date_requested"])."', "
-         . "hmo_auth_date_received = '".s_for($_POST["hmo_auth_date_received"])."', "
+         . "hmo_auth_date_received = '".s_for($_POST["hmo_audoc_tax_id_or_ssnth_date_received"])."', "
          . "hmo_auth_notes = '".s_for($_POST["hmo_auth_notes"])."', "
          . "in_network_percentage = '" . $_POST["in_network_percentage"] . "', "
          . "in_network_appeal_date_sent = '".s_for($_POST["in_network_appeal_date_sent"])."', "
@@ -64,9 +112,7 @@ if (isset($_REQUEST['ed'])) {
     } else {
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
     }
-    
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
-
     mysql_query($sql) or die($sql." | ".mysql_error());
     
     //echo $ed_sql.mysql_error();
@@ -271,9 +317,10 @@ $(function() {
                 Patient's Insurance Company
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="ins_co" value="<?=$preauth['ins_co']?>" class="tbox" DISABLED/>
+                <input type="text" name="ins_co" value="<?=$preauth['ins_co']?>" class="tbox" readonly/>
                 <span class="red">*</span>
                 (<?= $preauth['ins_rank'] ?>)
+								<input type="hidden" value="<?= $preauth['ins_rank'] ?>" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -281,7 +328,7 @@ $(function() {
                 Insurance Company's Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="ins_phone" value="<?=$preauth['ins_phone']?>" class="tbox" DISABLED/> 
+                <input type="text" name="ins_phone" value="<?=$preauth['ins_phone']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -290,7 +337,7 @@ $(function() {
                 Patient's First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_firstname" value="<?=$preauth['patient_firstname']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_firstname" value="<?=$preauth['patient_firstname']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -299,7 +346,7 @@ $(function() {
                 Patient's Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_lastname" value="<?=$preauth['patient_lastname']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_lastname" value="<?=$preauth['patient_lastname']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -308,7 +355,7 @@ $(function() {
                 Patient's Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -317,7 +364,7 @@ $(function() {
                 Patient's Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add1" class="tbox" value="<?=$preauth['patient_add1'];?>" DISABLED/>
+                <input type="text" name="patient_add1" class="tbox" value="<?=$preauth['patient_add1'];?>" readonly/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -326,7 +373,7 @@ $(function() {
                 Patient's Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add2" class="tbox" value="<?=$preauth['patient_add2'];?>" DISABLED/>
+                <input type="text" name="patient_add2" class="tbox" value="<?=$preauth['patient_add2'];?>" readonly/>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -334,7 +381,7 @@ $(function() {
                 Patient's City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$preauth['patient_city']?>" name="patient_city" class="tbox" DISABLED/>
+                <input type="text" value="<?=$preauth['patient_city']?>" name="patient_city" class="tbox" readonly/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -343,7 +390,7 @@ $(function() {
                 Patient's State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$preauth['patient_state']?>" name="patient_state" class="tbox" DISABLED/>
+                <input type="text" value="<?=$preauth['patient_state']?>" name="patient_state" class="tbox" readonly/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -352,7 +399,7 @@ $(function() {
                 Patient's Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_zip" value="<?= $preauth['patient_zip']?>" class="tbox" DISABLED/>
+                <input type="text" name="patient_zip" value="<?= $preauth['patient_zip']?>" class="tbox" readonly/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -361,7 +408,7 @@ $(function() {
                 Insured First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_first_name" value="<?=$preauth['insured_first_name']?>" class="tbox" DISABLED/> 
+                <input type="text" name="insured_first_name" value="<?=$preauth['insured_first_name']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -370,7 +417,7 @@ $(function() {
                 Insured Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_last_name" value="<?=$preauth['insured_last_name']?>" class="tbox" DISABLED/> 
+                <input type="text" name="insured_last_name" value="<?=$preauth['insured_last_name']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -379,7 +426,7 @@ $(function() {
                 Insured DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox" DISABLED/> 
+                <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -388,7 +435,7 @@ $(function() {
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -397,7 +444,7 @@ $(function() {
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -406,7 +453,7 @@ $(function() {
                 Patient's DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox" DISABLED/> 
+                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -415,7 +462,7 @@ $(function() {
                 Franchisee's NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_npi" value="<?=$preauth['doc_npi']?>" class="tbox" DISABLED/> 
+                <input type="text" name="doc_npi" value="<?=$preauth['doc_npi']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -424,7 +471,7 @@ $(function() {
                 Franchisee's Medicare NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_medicare_npi" value="<?=$preauth['doc_medicare_npi']?>" class="tbox" DISABLED/> 
+                <input type="text" name="doc_medicare_npi" value="<?=$preauth['doc_medicare_npi']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -433,7 +480,7 @@ $(function() {
                 Franchisee's Tax ID or SSN
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_tax_id_or_ssn" value="<?=$preauth['doc_tax_id_or_ssn']?>" class="tbox" DISABLED/> 
+                <input type="text" name="doc_tax_id_or_ssn" value="<?=$preauth['doc_tax_id_or_ssn']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -442,7 +489,7 @@ $(function() {
                 Referring Doctor's NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox" DISABLED/> 
+                <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox" readonly/> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -450,7 +497,7 @@ $(function() {
                 Code E0486 - Durable Medical Equipment Amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" DISABLED/> 
+                $<input type="text" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -459,7 +506,7 @@ $(function() {
                 Diagnosis Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox" DISABLED/> 
+                <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -702,7 +749,7 @@ $(function() {
                 Device amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" DISABLED/> 
+                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" readonly/> 
                 <span class="red">*</span>				
             </td>
         </tr>

@@ -759,10 +759,13 @@ if(isset($_POST['flowsubmitpgtwo'])){
 	$flowsheet_segments = explode(",", $result_array['steparray']);
 	$topstep = array_pop($flowsheet_segments); 
 
-	$segment_query = "SELECT segmentid, date_scheduled, date_completed FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
+	$segment_query = "SELECT segmentid, date_scheduled, date_completed, letterid FROM dental_flow_pg2_info WHERE segmentid = '".$topstep."' AND patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
 	$segment_result = mysql_query($segment_query);
 	while ($row = mysql_fetch_assoc($segment_result)) {
 		$laststep = $row;
+	}
+	if ($laststep['letterid'] != '') {
+		$letter = true;
 	}
 
 	$consult_query = "SELECT stepid, date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
@@ -782,20 +785,21 @@ print $datesched . "<br />";
 print (strtotime($datesched) != strtotime($laststep['date_scheduled'])) ? "Not equal<br />": "equal<br />";
 print $datecomp . "<br />";
 print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<br />": "equal<br />";*/
+print $datesched . " " . $letter ? "true":"false" . " " . $topstep;
 	$letterid = array();
-	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "2") { // Consultation
+	if ($datesched != "" && !$letter && $topstep == "2") { // Consultation
 		$letterid[] = trigger_letter5($_GET['pid'], $numsteps);
 		$letterid[] = trigger_letter6($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "6") { // Refused Treatment
+	if ($consulted == true && $datesched != "" && !$letter && $topstep == "6") { // Refused Treatment
 		$letterid[] = trigger_letter8($_GET['pid'], $numsteps);
 		$letterid[] = trigger_letter11($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "4") { // Impressions
+	if ($consulted == true && $datesched != "" && !$letter && $topstep == "4") { // Impressions
 		$letterid[] = trigger_letter9($_GET['pid'], $numsteps);
 		$letterid[] = trigger_letter13($_GET['pid'], $numsteps);
 	}
-	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "8") { // Follow-Up/Check
+	if ($datecomp != "" && !$letter && $topstep == "8") { // Follow-Up/Check
 		$trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
 		$trigger_result = mysql_query($trigger_query);
 		$numrows = (mysql_num_rows($trigger_result));
@@ -803,16 +807,16 @@ print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<b
 			$letterid[] = trigger_letter16($_GET['pid'], $numsteps);
 		}
 	}
-	if ($consulted == true && $datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "5") { // Delaying Treatment / Waiting
+	if ($consulted == true && $datesched != "" && !$letter && $topstep == "5") { // Delaying Treatment / Waiting
 		$letterid[] = trigger_letter10($_GET['pid'], $numsteps);
 	}
-	if ($datesched != "" && strtotime($datesched) != strtotime($laststep['date_scheduled']) && $topstep == "9") { // Patient Non Compliant
+	if ($datesched != "" && !$letter && $topstep == "9") { // Patient Non Compliant
 		$letterid[] = trigger_letter17($_GET['pid'], $numsteps);
 	}
-	if ($consulted == true && $datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "11") { // Treatment Complete
+	if ($consulted == true && $datecomp != "" && !$letter && $topstep == "11") { // Treatment Complete
 		$letterid[] = trigger_letter19($_GET['pid'], $numsteps);
 	}
-	if ($datecomp != "" && strtotime($datecomp) != strtotime($laststep['date_completed']) && $topstep == "13") { // Termination
+	if ($datecomp != "" && !$letter && $topstep == "13") { // Termination
 		$letterid[] = trigger_letter25($_GET['pid'], $numsteps);
 	}
 
@@ -1682,52 +1686,9 @@ Completed/Uploaded
 
 <!-- START MED INS TABLE -->
 
-<?php
-$sql = "SELECT "
-     . "  * "
-     . "FROM "
-     . "  dental_insurance_preauth "
-     . "WHERE "
-     . "  patient_id = " . $_GET['pid'] . " "
-     . "ORDER BY "
-     . "  front_office_request_date DESC "
-     . "LIMIT 1";
-$my = mysql_query($sql) or die(mysql_error());
-?>
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
 <table width="50%" align="center">
 
-	<? if (mysql_num_rows($my) == 0) { ?>
-      <tr class="tr_bg">
-        <td colspan="3" valign="top" align="center">
-          No pre-authorizations on record.
-        </td>
-      </tr>
-	<?php } else { ?> 
-      <?php while ($preauth = mysql_fetch_array($my)) { ?>
-
-	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
-
-      <tr class="tr_bg">
-        <td colspan="3" valign="top" align="center">
-		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
-        </td>
-      </tr>
-
-
-
-	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
-        <tr class="tr_bg">
-          <td colspan="3" valign="top" colspan="2" align="center">
-		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>
-		    Pays for replacement device every <?=$preauth['how_often'];?> years.
-          </td>
-        </tr>
-	<?php } ?>
-      <?php } ?>
-    <?php } ?>
-
-<tr>
 <td>
 <h3>Procedure</h3>
 </td>
@@ -1800,8 +1761,81 @@ Clinical notes
 
 <!-- END MED INS TABLE -->
 
+<!-- START PRE-AUTHORIZATION TABLE -->
+
+<?php
+$sql = "SELECT "
+     . "  * "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$my = mysql_query($sql) or die(mysql_error());
+?>
+
+<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">PRE-AUTHORIZATION</div>
+<table width="50%" align="center">
+	<? if (mysql_num_rows($my) == 0) { ?>
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+          No pre-authorizations on record.
+        </td>
+      </tr>
+	<?php } else { ?> 
+      <?php while ($preauth = mysql_fetch_array($my)) { ?>
+
+	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+        </td>
+      </tr>
 
 
+
+	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
+        <tr class="tr_bg">
+          <td valign="top" colspan="2" align="center">
+		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/manage/manage_insurance.php?pid=<?= $_GET['pid'] ?>">VIEW Pre-Authorization</a>
+          </td>
+        </tr>
+	<?php } ?>
+      <?php } ?>
+    <?php } ?>
+	<tr>
+		<td style="padding:10px;">
+			<?php 
+			$errors = preauth_errors();
+			if(count($errors)>0){ 
+				$e_text = 'Unable to request pre-authorization:\n';
+				foreach($errors as $e){
+					$e_text .= '\n'.$e;
+				}
+			}
+			if (mysql_num_rows($my) == 0) {
+				if ($e_text) {
+			?>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Pre-authorization</a>
+				<? }else{ ?>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Pre-authorization</a>
+				<?php } ?>
+			<? } else { 
+				if ($e_text) { ?>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Additional Pre-authorization</a>
+				<? }else{ ?>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Additional Pre-authorization</a>
+				<?php } ?>			
+			<?php } ?>
+		</td>
+	</tr>
+</table>
+
+<!-- END PRE-AUTHORIZATION TABLE -->
 
 <!-- 
 START MED INS CORP TABLE 
@@ -1871,19 +1905,6 @@ N/A
 
 
 
-<?php 
-$errors = preauth_errors();
-if(count($errors)>0){ 
-$e_text = 'Unable to request pre-authorization:\n';
-foreach($errors as $e){
-$e_text .= '\n'.$e;
-}
-
-?>
- <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Pre-authorization</a>
-<? }else{ ?>
- <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Pre-authorization</a>
-<?php } ?>
 <input type="submit" class="addButton" style="float:right;margin-right:20px;" name="flowsubmit" value="Update Flowsheet">
 <br /><br />
 

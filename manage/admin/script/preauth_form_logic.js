@@ -147,4 +147,27 @@ $(function() {
   $('#patient_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
     $(this).blur();
   });
+  
+  // Disable/enable fields related to this trxn code being covered by insurance
+  $("input[name='trxn_code_covered']").bind('click', function() {
+    if ($(this).val() == 1) {
+      // enable all the "covered" fields
+      $('.covered').each(function() {
+        $(this).removeAttr('disabled');
+        $(this).css('background-color', '');
+      });
+    } else {
+      // set "out of pocket met" radio buttons to no and then recalculate payments
+      $('#out_of_pocket_met_no').click();
+      calc_expected_payments();
+      
+      // disable all the "covered" fields
+      $('.covered').each(function() {
+        $(this).attr('disabled', 'true');
+        $(this).css('background-color', '#cccccc');
+      });
+    }
+  });
+  $("input[name='trxn_code_covered']:checked").click();
+
 });

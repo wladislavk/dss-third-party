@@ -156,11 +156,17 @@ $(function() {
         $(this).removeAttr('disabled');
         $(this).css('background-color', '');
       });
+      
+      // show all the "covered-row" elements
+      $('.covered-row').show();
 
       // update expected payments
       calc_expected_payments();
       
     } else {
+      // hide all the "covered-row" elements
+      $('.covered-row').hide();
+
       // manually set expected payments
       var deviceAmount = $('#trxn_code_amount').val();
       $('#expected_insurance_payment').val('0.00');

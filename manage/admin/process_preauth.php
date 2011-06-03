@@ -429,7 +429,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <textarea name="code_covered_notes" class="tbox" <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 How often will you pay for another device?
             </td>
@@ -438,7 +438,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Does the patient have "out-of-network" benefits?
             </td>
@@ -494,7 +494,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 </div>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Is Pre-Authorization required?
             </td>
@@ -518,7 +518,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
             </td>
         </tr>
         <tr><td  colspan="2" align="center">&nbsp;</td></tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Benefits
             </td>
@@ -529,7 +529,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> In Network
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient Deductible
             </td>
@@ -538,7 +538,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient amount met
             </td>
@@ -547,7 +547,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient amount left to meet
             </td>
@@ -556,7 +556,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Family Deductible
             </td>
@@ -565,7 +565,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Family amount met
             </td>
@@ -574,7 +574,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 When does the deductible reset?
             </td>
@@ -583,7 +583,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Has patient's out-of-pocket expense been met?
             </td>

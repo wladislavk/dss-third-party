@@ -143,6 +143,11 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
   padding: 10px;
   display: none;
 }
+
+.question-indent {
+  margin-top: 10px;
+  margin-left: 20px;
+}
 </style>
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
@@ -456,6 +461,11 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                   <input type="radio" name="is_hmo" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
                   <input type="radio" name="is_hmo" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
                   
+                  <div class="question-indent">
+                    What percent do they pay an "in-network" provider?<br/>
+                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox covered" <?=$disabled?>/>% (enter 0-100)
+                  </div>
+                  
                   <div id="is_hmo_yes" class="sub-question">
                     Call primary care physician to obtain referral:<br/>
                     <?= $preauth['pcp_salutation'] ?>
@@ -468,31 +478,18 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                     Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
                     <br/>
                     
-                    Is it necessary to obtain authorization for appropriate appointments and/or codes (not to be confused with a pre-authorization)?<br/>
-                    <?php $yes_checked = ($preauth['hmo_needs_auth'] == '1') ? 'CHECKED' : ''; ?>
-                    <?php $no_checked  = ($preauth['hmo_needs_auth'] != '1') ? 'CHECKED' : ''; ?>
-                    <input type="radio" name="hmo_needs_auth" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
-                    <input type="radio" name="hmo_needs_auth" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
-                    <br/><br/>
-                    
-                    <div id="hmo_needs_auth_yes" class="sub-question">
-                      Date Requested <input id="hmo_auth_date_requested" type="text" name="hmo_auth_date_requested" value="<?=$preauth['hmo_auth_date_requested']?>" onclick="cal7.popup();" onchange="validateDate('hmo_auth_date_requested');" class="tbox covered" <?=$disabled?>/><br/>
-                      Date Received <input id="hmo_auth_date_received" type="text" name="hmo_auth_date_received" value="<?=$preauth['hmo_auth_date_received']?>" onclick="cal8.popup();" onchange="validateDate('hmo_auth_date_received');" class="tbox covered" <?=$disabled?>/> 
-                    </div>
-                    <br/>
-                    
-                    Notes:<br/>
-                    <textarea name="hmo_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
 
                   <div id="is_hmo_no" class="sub-question">
-                    What percent do they pay an "in-network" provider?
-                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox covered" <?=$disabled?>/>% (enter 0-100)
-                    <br/><br/>
                     Appeal for in network benefits needed.
                     <br/><br/>
                     Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox covered" <?=$disabled?>/><br/>
                     Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox covered" <?=$disabled?>/> 
+                  </div>
+                  
+                  <div class="question-indent">
+                    Notes:<br/>
+                    <textarea name="hmo_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
                 </div>
             </td>
@@ -646,8 +643,6 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
   var cal4 = new calendar2(document.getElementById('ins_cal_year_end'));
   var cal5 = new calendar2(document.getElementById('hmo_date_called'));
   var cal6 = new calendar2(document.getElementById('hmo_date_received'));
-  var cal7 = new calendar2(document.getElementById('hmo_auth_date_requested'));
-  var cal8 = new calendar2(document.getElementById('hmo_auth_date_received'));
   var cal9 = new calendar2(document.getElementById('in_network_appeal_date_sent'));
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));

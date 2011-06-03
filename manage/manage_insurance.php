@@ -297,6 +297,9 @@ $my = mysql_query($sql) or die(mysql_error());
 	<?php } ?>
       <?php } ?>
     <?php } ?>
+		<tr>
+			<td>New pre-authorizations can be requested on Patient Flow Sheet.</td>
+		</tr>
   </table>
 </div>
 

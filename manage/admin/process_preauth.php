@@ -95,6 +95,7 @@ if (isset($_REQUEST['ed'])) {
          . "verbal_pre_auth_notes = '".s_for($_POST["verbal_pre_auth_notes"])."', "
          . "written_pre_auth_notes = '".s_for($_POST["written_pre_auth_notes"])."', "
          . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
+         . "pre_auth_num = '".s_for($_POST["pre_auth_num"])."', "
          . "network_benefits = '" . $_POST["network_benefits"] . "', "
          . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
          . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
@@ -513,6 +514,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                   
                   <h3>Written</h3>
                   Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
+                  Pre-Authorization Number <input id="pre_auth_num" type="text" name="pre_auth_num" value="<?=$preauth['pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
                   Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
             </td>

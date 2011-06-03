@@ -156,10 +156,15 @@ $(function() {
         $(this).removeAttr('disabled');
         $(this).css('background-color', '');
       });
-    } else {
-      // set "out of pocket met" radio buttons to no and then recalculate payments
-      $('#out_of_pocket_met_no').click();
+
+      // update expected payments
       calc_expected_payments();
+      
+    } else {
+      // manually set expected payments
+      var deviceAmount = $('#trxn_code_amount').val();
+      $('#expected_insurance_payment').val('0.00');
+      $('#expected_patient_payment').val(deviceAmount);
       
       // disable all the "covered" fields
       $('.covered').each(function() {

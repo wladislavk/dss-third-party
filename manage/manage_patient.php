@@ -1,6 +1,72 @@
-<? 
+<?php 
 include "includes/top.htm";
+?>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#patient_search').keyup(function() {
+			if ($(this).val() == "") {
+				$('.initial_list').css("display", "table-row");
+			}
+		});
+		$('#patient_search').keypress(function() {
+				if ($(this).val() != "") {
+					$('.initial_list').css("display", "none");
+					sendValue($(this).val());
+				}
+		});
+	});
+	function sendValue(partial_name) {
+		$.post(
+		
+		"list_patients.php",
+
+		{ 
+			"partial_name": partial_name 
+		},
+
+		function(data) {
+			if (data.error) {
+				alert(data.error);
+			} else {
+				$('.patient').remove();
+				for (i in data) {
+					if (data[i].stat == "1") {
+						var tr_class = "tr_active";
+					} else {
+						var tr_class = "tr_inactive";
+					}
+					var newRow = $('#patients .template').clone().removeClass('template').addClass('patient').addClass(tr_class);
+					template(newRow, data[i])
+						.appendTo('#patients')
+						.fadeIn();
+				}
+			}
+		},
+
+		"json"
+		);
+	}
+	function template(row, patient) {
+		var pm = "";
+		if (patient.premedcheck == "1") {
+			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
+		}
+		row.find('.patient_name').html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + pm);
+		row.find('.questionnaire_link').html("<a href=\"q_page1.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Questionnaire\">Manage</a>");
+		row.find('.clinical_exam_link').html("<a href=\"ex_page4.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Clinical Exam\">Manage</a>");
+		row.find('.summary_sheet_link').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Summary Sheet\">Manage</a>");
+		row.find('.ledger_link').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Ledger\">Manage</a>");
+		row.find('.progress_notes_link').html("<a href=\"manage_progress_notes.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Progress Notes\">Manage</a>");
+		row.find('.insurance_link').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Insurance\">Manage</a>");
+		row.find('.letters_link').html("<a href=\"dss_letters.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Letters\">Manage</a>");
+		row.find('.flowsheet_link').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Flowsheet\">Manage</a>");
+		row.find('.contact_info_link').html("<a href=\"add_patient.php?ed=" + patient.patientid + "&pid=" + patient.patientid + "\" class=\"editlink\" title=\"EDIT\">Edit</a><br /><a href=\"/manage/manage_patient.php?delid=" + patient.patientid + "\" onclick=\"javascript: return confirm('Do Your Really want to Delete?.');\" class=\"dellink\" title=\"DELETE\">Delete</a>");
+		return row;
+	}
+</script>
+
+<?
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
@@ -143,9 +209,31 @@ background:#999999;
 	</tr>
 	</table>
 	<div style="overflow:auto; height:400px; overflow-x:hidden;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
-	
-	<? if(mysql_num_rows($my) == 0)
+<table id="patients" width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
+				<tr class="template" style="display:none;">
+					<td class="patient_name" valign="top" width="17%">
+						Lastname, Firstname Middlename
+					</td>
+					<td class="questionnaire_link" valign="top" width="10%">
+        	</td>
+          <td class="clinical_exam_link" valign="top" width="11%">
+          </td>
+          <td class="summary_sheet_link" valign="top" width="12%">
+          </td>
+          <td class="ledger_link" valign="top" width="6%">	
+          </td>
+					<td class="progress_notes_link" valign="top" width="12%">
+          </td>
+          <td class="insurance_link" valign="top" width="8%">
+          </td>
+          <td class="letters_link" valign="top" width="7%">
+          </td>
+				  <td class="flowsheet_link" valign="top" width="10%">
+          </td>
+					<td class="contact_info_link" valign="top" width="14%">
+											</td>
+				</tr>
+					<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="10" align="center">
@@ -167,7 +255,7 @@ background:#999999;
 				$tr_class = "tr_inactive";
 			}
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?=$tr_class;?> initial_list">
 				<td valign="top" width="17%">
 					<?=st($myarray["lastname"]);?>&nbsp;
                     <?=st($myarray["middlename"]);?>,&nbsp;

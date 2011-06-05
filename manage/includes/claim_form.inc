@@ -1014,6 +1014,28 @@ if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
 
+// If claim doesn't yet have a preauth number, try to load it
+// from the patient's most recently completed preauth.
+if (empty($prior_authorization_number)) {
+    $sql = "SELECT "
+         . "  * "
+         . "FROM "
+         . "  dental_insurance_preauth "
+         . "WHERE "
+         . "  patient_id = '" . $_GET['pid'] . "' "
+         . "  AND status = " . DSS_PREAUTH_COMPLETE . " "
+         . "ORDER BY "
+         . "  date_completed desc "
+         . "LIMIT 1";
+    $my = mysql_query($sql);
+    $num_rows = mysql_num_rows($my);
+    
+    if ($num_rows > 0) {
+        $myarray = mysql_fetch_array($my);
+        $prior_authorization_number = $myarray['pre_auth_num'];
+    }
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

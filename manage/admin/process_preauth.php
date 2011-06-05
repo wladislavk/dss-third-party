@@ -95,6 +95,7 @@ if (isset($_REQUEST['ed'])) {
          . "verbal_pre_auth_notes = '".s_for($_POST["verbal_pre_auth_notes"])."', "
          . "written_pre_auth_notes = '".s_for($_POST["written_pre_auth_notes"])."', "
          . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
+         . "pre_auth_num = '".s_for($_POST["pre_auth_num"])."', "
          . "network_benefits = '" . $_POST["network_benefits"] . "', "
          . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
          . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
@@ -124,8 +125,7 @@ if (isset($_REQUEST['ed'])) {
 }
 
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
-$disabled = ($is_complete) ? 'disabled' : '';
-$bgcolor = ($is_complete) ? 'style="background-color:#cccccc;color:#3c3c3c;"' : '';
+$disabled = ($is_complete) ? 'DISABLED' : '';
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -133,6 +133,10 @@ $bgcolor = ($is_complete) ? 'style="background-color:#cccccc;color:#3c3c3c;"' : 
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <style>
+.readonly {
+  background-color: #cccccc;
+}
+
 .sub-question {
   border: 1px black solid;
   margin-top: 10px;
@@ -140,163 +144,17 @@ $bgcolor = ($is_complete) ? 'style="background-color:#cccccc;color:#3c3c3c;"' : 
   padding: 10px;
   display: none;
 }
+
+.question-indent {
+  margin-top: 10px;
+  margin-left: 20px;
+}
 </style>
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="JavaScript" src="../calendar2.js"></script>
-<script>
-$(function() {
-  //$('input, select, textarea').each(function() { console.log($(this).attr('name')); });
-  $("input[name='has_out_of_network_benefits']").bind('click', function() {
-    if ($(this).val() == 1) {
-      $('#has_out_of_network_benefits_yes').css('display', 'block');
-      $('#has_out_of_network_benefits_no').css('display', 'none');
-    } else {
-      $('#has_out_of_network_benefits_yes').css('display', 'none');
-      $('#has_out_of_network_benefits_no').css('display', 'block');
-    }
-  });
-  $("input[name='has_out_of_network_benefits']:checked").click();
-  
-  $("input[name='is_hmo']").bind('click', function() {
-    if ($(this).val() == 1) {
-      $('#is_hmo_yes').css('display', 'block');
-      $('#is_hmo_no').css('display', 'none');
-    } else {
-      $('#is_hmo_yes').css('display', 'none');
-      $('#is_hmo_no').css('display', 'block');
-    }
-  });
-  $("input[name='is_hmo']:checked").click();
-
-  $("input[name='hmo_needs_auth']").bind('click', function() {
-    if ($(this).val() == 1) {
-      $('#hmo_needs_auth_yes').css('display', 'block');
-    } else {
-      $('#hmo_needs_auth_yes').css('display', 'none');
-    }
-  });
-  $("input[name='hmo_needs_auth']:checked").click();
-
-  $("input[name='is_pre_auth_required']").bind('click', function() {
-    if ($(this).val() == 1) {
-      $('#is_pre_auth_required_yes').css('display', 'block');
-    } else {
-      $('#is_pre_auth_required_yes').css('display', 'none');
-    }
-  });
-  $("input[name='is_pre_auth_required']:checked").click();
-  
-  $("#ins_cal_year_end").bind("focus blur click", function() {
-    $("#deductible_reset_date").val($(this).val());
-  });
-  $("#ins_cal_year_end").blur();
-  
-  function calc_amount_left_to_meet() {
-    var deductible = $('#patient_deductible').val();
-    var amountMet  = $('#patient_amount_met').val();
-    if (isNaN(deductible)) { deductible = 0; }
-    if (isNaN(amountMet))  { amountMet = 0; }
-    var leftToMeet = deductible - amountMet;
-    if (leftToMeet < 0) { leftToMeet = 0; }
-    $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
-  }
-  
-  $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
-    calc_amount_left_to_meet();
-  });
-  
-  function calc_expected_payments() {
-    var debug = false;
-    if (debug) { console.log('calc_expected_payments'); }
-    
-    var deviceAmount = $('#trxn_code_amount').val();
-    var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
-    var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
-    var isHmo = $("input[name='is_hmo']:checked").val();
-    var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
-    var percentagePaid = 0;
-    
-    if (debug) { 
-      console.log('amountLeftToMeet: ' + amountLeftToMeet);
-      console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
-      console.log('isHmo: ' + isHmo);
-      console.log('outOfPocketMet: ' + outOfPocketMet);
-    }
-    
-    if (hasOutOfNetwork == 1) {
-      // percentage from out_of_network_percentage
-      percentagePaid = $('#out_of_network_percentage').val();
-    } else if (isHmo == 0) {
-      // percentage from in_network_percentage
-      percentagePaid = $('#in_network_percentage').val();
-    } else {
-      // no percentage, set to 0
-      percentagePaid = 0;
-    }
-    
-    if (debug) { console.log('percentagePaid: ' + percentagePaid); }
-
-    if (isNaN(deviceAmount))     { deviceAmount = 0; }
-    if (isNaN(percentagePaid))   { percentagePaid = 0; }
-    if (isNaN(amountLeftToMeet)) { amountLeftToMeet = 0; }
-    
-    if (outOfPocketMet == 1) {
-      $('#expected_insurance_payment').val(deviceAmount);
-      $('#expected_patient_payment').val('0.00');
-      if (debug) { 
-        console.log('expected_insurance_payment: ' + deviceAmount);
-        console.log('expected_patient_payment: ' + 0.00);
-      }
-    } else {
-      var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid/100);
-      if (expectedInsurancePayment < 0) { expectedInsurancePayment = 0; }
-
-      var expectedPatientPayment = deviceAmount - expectedInsurancePayment;
-      if (expectedPatientPayment < 0) { expectedPatientPayment = 0; }
-
-      if (debug) { 
-        console.log('expectedInsurancePayment: ' + expectedInsurancePayment.toFixed(2));
-        console.log('expectedPatientPayment: ' + expectedPatientPayment.toFixed(2));
-      }
-      $('#expected_insurance_payment').val(expectedInsurancePayment.toFixed(2));
-      $('#expected_patient_payment').val(expectedPatientPayment.toFixed(2));
-    }
-    
-    if (debug) { console.log('-----------------------'); }
-  }
-  
-  // Fields that should be clear on focus if value is 0
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('focus', function() {
-    var value = $(this).val();
-    if (isNaN(value) || (value == 0)) {
-      $(this).val('');
-    }
-  });
-  
-  // Fields that should display two decimal places on blur
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met').bind('blur', function() {
-    var value = parseFloat($(this).val());
-    if (!isNaN(value)) {
-      $(this).val(value.toFixed(2));
-    }
-  });
-  
-  // Fields that should trigger calculations
-  $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind("mouseup keyup", function() {
-    calc_expected_payments();
-  });
-  $("[name='has_out_of_network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
-    calc_expected_payments();
-  });
-  
-  // Fields where the user shouldn't be able to gain focus
-  $('#patient_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
-    $(this).blur();
-  });
-});
-</script>
+<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
 </head>
 <body>
 	<br /><br />
@@ -318,7 +176,7 @@ $(function() {
                 Patient's Insurance Company
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="ins_co" value="<?=$preauth['ins_co']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" name="ins_co" value="<?=$preauth['ins_co']?>" class="tbox readonly" readonly />
                 <span class="red">*</span>
                 (<?= $preauth['ins_rank'] ?>)
 								<input type="hidden" value="<?= $preauth['ins_rank'] ?>" />
@@ -329,7 +187,7 @@ $(function() {
                 Insurance Company's Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="ins_phone" value="<?=$preauth['ins_phone']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="ins_phone" value="<?=$preauth['ins_phone']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -338,7 +196,7 @@ $(function() {
                 Patient's First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_firstname" value="<?=$preauth['patient_firstname']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_firstname" value="<?=$preauth['patient_firstname']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -347,7 +205,7 @@ $(function() {
                 Patient's Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_lastname" value="<?=$preauth['patient_lastname']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_lastname" value="<?=$preauth['patient_lastname']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -356,7 +214,7 @@ $(function() {
                 Patient's Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -365,7 +223,7 @@ $(function() {
                 Patient's Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add1" class="tbox" value="<?=$preauth['patient_add1'];?>" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" name="patient_add1" class="tbox readonly" value="<?=$preauth['patient_add1'];?>" readonly />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -374,7 +232,7 @@ $(function() {
                 Patient's Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_add2" class="tbox" value="<?=$preauth['patient_add2'];?>" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" name="patient_add2" class="tbox readonly" value="<?=$preauth['patient_add2'];?>" readonly />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -382,7 +240,7 @@ $(function() {
                 Patient's City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$preauth['patient_city']?>" name="patient_city" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" value="<?=$preauth['patient_city']?>" name="patient_city" class="tbox readonly" readonly />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -391,7 +249,7 @@ $(function() {
                 Patient's State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" value="<?=$preauth['patient_state']?>" name="patient_state" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" value="<?=$preauth['patient_state']?>" name="patient_state" class="tbox readonly" readonly />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -400,7 +258,7 @@ $(function() {
                 Patient's Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_zip" value="<?= $preauth['patient_zip']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly />
+                <input type="text" name="patient_zip" value="<?= $preauth['patient_zip']?>" class="tbox readonly" readonly />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -409,7 +267,7 @@ $(function() {
                 Insured First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_first_name" value="<?=$preauth['insured_first_name']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="insured_first_name" value="<?=$preauth['insured_first_name']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -418,7 +276,7 @@ $(function() {
                 Insured Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_last_name" value="<?=$preauth['insured_last_name']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="insured_last_name" value="<?=$preauth['insured_last_name']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -427,7 +285,7 @@ $(function() {
                 Insured DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="insured_dob" value="<?=$preauth['insured_dob']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -436,7 +294,7 @@ $(function() {
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_ins_group_id" value="<?=$preauth['patient_ins_group_id']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -445,7 +303,7 @@ $(function() {
                 Patient's Insurance ID #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_ins_id" value="<?=$preauth['patient_ins_id']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -454,7 +312,7 @@ $(function() {
                 Patient's DOB
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="patient_dob" value="<?=$preauth['patient_dob']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -463,7 +321,7 @@ $(function() {
                 Franchisee's NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_npi" value="<?=$preauth['doc_npi']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="doc_npi" value="<?=$preauth['doc_npi']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -472,7 +330,7 @@ $(function() {
                 Franchisee's Medicare NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_medicare_npi" value="<?=$preauth['doc_medicare_npi']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="doc_medicare_npi" value="<?=$preauth['doc_medicare_npi']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -481,7 +339,7 @@ $(function() {
                 Franchisee's Tax ID or SSN
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="doc_tax_id_or_ssn" value="<?=$preauth['doc_tax_id_or_ssn']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="doc_tax_id_or_ssn" value="<?=$preauth['doc_tax_id_or_ssn']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -490,7 +348,7 @@ $(function() {
                 Referring Doctor's NPI Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="referring_doc_npi" value="<?=$preauth['referring_doc_npi']?>" class="tbox readonly" readonly /> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -498,7 +356,7 @@ $(function() {
                 Code E0486 - Durable Medical Equipment Amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                $<input type="text" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -507,7 +365,7 @@ $(function() {
                 Diagnosis Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -517,7 +375,7 @@ $(function() {
             </td>
             <td valign="top" class="frmdata">
                 <?php if (empty($preauth['date_of_call'])) { $preauth['date_of_call'] = date('m/d/Y'); } ?>
-                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -526,7 +384,7 @@ $(function() {
                 Name of Insurance Representative
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="insurance_rep" value="<?=$preauth['insurance_rep']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                <input type="text" name="insurance_rep" value="<?=$preauth['insurance_rep']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -535,7 +393,7 @@ $(function() {
                 Reference # pertaining to call
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -544,7 +402,7 @@ $(function() {
                 Insurance Effective Date
             </td>
             <td valign="top" class="frmdata">
-                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onclick="cal2.popup();" onchange="validateDate('ins_effective_date');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onclick="cal2.popup();" onchange="validateDate('ins_effective_date');" class="tbox" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -553,8 +411,8 @@ $(function() {
                 Insurance Calendar Year
             </td>
             <td valign="top" class="frmdata">
-                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onclick="cal3.popup();" onchange="validateDate('ins_cal_year_start');" class="tbox" style="width:125px;<?php print $is_complete ? 'background-color:#cccccc;color:#3c3c3c;' : ''; ?>" <?=$disabled?>/>
-                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" <onclick="cal4.popup();" onchange="validateDate('ins_cal_year_end');" class="tbox" style="width:125px;<?php print $is_complete ? 'background-color:#cccccc;color:#3c3c3c;' : ''; ?>" <?=$bgcolor?> <?=$disabled?>/>
+                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onclick="cal3.popup();" onchange="validateDate('ins_cal_year_start');" class="tbox" style="width:125px" <?=$disabled?>/>
+                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onclick="cal4.popup();" onchange="validateDate('ins_cal_year_end');" class="tbox" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -565,44 +423,49 @@ $(function() {
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['trxn_code_covered'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['trxn_code_covered'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
+                <input type="radio" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                 <br/><br/>
                 Notes:<br/>
-                <textarea name="code_covered_notes" class="tbox" <?=$bgcolor?> <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>
+                <textarea name="code_covered_notes" class="tbox" <?=$disabled?>><?=$preauth['code_covered_notes']?></textarea>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 How often will you pay for another device?
             </td>
             <td class="frmdata">
-                <input id="how_often" type="text" name="how_often" value="<?=$preauth['how_often']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> years
+                <input id="how_often" type="text" name="how_often" value="<?=$preauth['how_often']?>" class="tbox covered"/> years
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Does the patient have "out-of-network" benefits?
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['has_out_of_network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
                 <?php $no_checked  = ($preauth['has_out_of_network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
-                <input type="radio" name="has_out_of_network_benefits" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                <input type="radio" name="has_out_of_network_benefits" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
+                <input type="radio" name="has_out_of_network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input type="radio" name="has_out_of_network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
                 <br/><br/>
 
                 <div id="has_out_of_network_benefits_yes" class="sub-question">
                   What percent do they pay an "out-of-network" provider?
-                  <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/>% (enter 0-100)
+                  <input type="text" id="out_of_network_percentage" name="out_of_network_percentage" value="<?=$preauth['out_of_network_percentage']?>" class="tbox covered" <?=$disabled?>/>% (enter 0-100)
                 </div>
                 
                 <div id="has_out_of_network_benefits_no" class="sub-question">
                   Is this an HMO?
                   <?php $yes_checked = ($preauth['is_hmo'] == '1') ? 'CHECKED' : ''; ?>
                   <?php $no_checked  = ($preauth['is_hmo'] != '1') ? 'CHECKED' : ''; ?>
-                  <input type="radio" name="is_hmo" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                  <input type="radio" name="is_hmo" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
+                  <input type="radio" name="is_hmo" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                  <input type="radio" name="is_hmo" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+                  
+                  <div class="question-indent">
+                    What percent do they pay an "in-network" provider?<br/>
+                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox covered" <?=$disabled?>/>% (enter 0-100)
+                  </div>
                   
                   <div id="is_hmo_yes" class="sub-question">
                     Call primary care physician to obtain referral:<br/>
@@ -612,137 +475,125 @@ $(function() {
                     <?= $preauth['pcp_phone'] ?><br/>
                     <br/>
                     <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
-                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox" <?=$bgcolor?> <?=$disabled?>/><br/>
-                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> <br/>
+                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox covered" <?=$disabled?>/><br/>
+                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
                     <br/>
                     
-                    Is it necessary to obtain authorization for appropriate appointments and/or codes (not to be confused with a pre-authorization)?<br/>
-                    <?php $yes_checked = ($preauth['hmo_needs_auth'] == '1') ? 'CHECKED' : ''; ?>
-                    <?php $no_checked  = ($preauth['hmo_needs_auth'] != '1') ? 'CHECKED' : ''; ?>
-                    <input type="radio" name="hmo_needs_auth" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                    <input type="radio" name="hmo_needs_auth" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
-                    <br/><br/>
-                    
-                    <div id="hmo_needs_auth_yes" class="sub-question">
-                      Date Requested <input id="hmo_auth_date_requested" type="text" name="hmo_auth_date_requested" value="<?=$preauth['hmo_auth_date_requested']?>" onclick="cal7.popup();" onchange="validateDate('hmo_auth_date_requested');" class="tbox" <?=$bgcolor?> <?=$disabled?>/><br/>
-                      Date Received <input id="hmo_auth_date_received" type="text" name="hmo_auth_date_received" value="<?=$preauth['hmo_auth_date_received']?>" onclick="cal8.popup();" onchange="validateDate('hmo_auth_date_received');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
-                    </div>
-                    <br/>
-                    
-                    Notes:<br/>
-                    <textarea name="hmo_auth_notes" class="tbox" <?=$bgcolor?> <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
 
                   <div id="is_hmo_no" class="sub-question">
-                    What percent do they pay an "in-network" provider?
-                    <input type="text" id="in_network_percentage" name="in_network_percentage" value="<?=$preauth['in_network_percentage']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/>% (enter 0-100)
-                    <br/><br/>
                     Appeal for in network benefits needed.
                     <br/><br/>
-                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox" <?=$bgcolor?> <?=$disabled?>/><br/>
-                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox covered" <?=$disabled?>/><br/>
+                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox covered" <?=$disabled?>/> 
+                  </div>
+                  
+                  <div class="question-indent">
+                    Notes:<br/>
+                    <textarea name="hmo_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
                 </div>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Is Pre-Authorization required?
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['is_pre_auth_required'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['is_pre_auth_required'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
+                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
                 <br/><br/>
 
                 <div id="is_pre_auth_required_yes" class="sub-question">
                   <h3>Verbal</h3>
-                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/><br/>
-                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/><br/>
-                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox" <?=$bgcolor?> <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
+                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
                   
                   <h3>Written</h3>
-                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox" <?=$bgcolor?> <?=$disabled?>/> <br/>
-                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox" <?=$bgcolor?> <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
+                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
+                  Pre-Authorization Number <input id="pre_auth_num" type="text" name="pre_auth_num" value="<?=$preauth['pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
+                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
             </td>
         </tr>
         <tr><td  colspan="2" align="center">&nbsp;</td></tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Benefits
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['network_benefits'] == '1') ? 'CHECKED="true"' : ''; ?>
                 <?php $no_checked  = ($preauth['network_benefits'] != '1') ? 'CHECKED="true"' : ''; ?>
-                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Out of network
-                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> In Network
+                <input type="radio" name="network_benefits" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Out of network
+                <input type="radio" name="network_benefits" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> In Network
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient Deductible
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                $<input type="text" id="patient_deductible" name="patient_deductible" value="<?=$preauth['patient_deductible']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient amount met
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                $<input type="text" id="patient_amount_met" name="patient_amount_met" value="<?=$preauth['patient_amount_met']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Patient amount left to meet
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" <?=$bgcolor?> <?=$disabled?>/> 
+                $<input type="text" id="patient_amount_left_to_meet" name="patient_amount_left_to_meet" value="<?=$preauth['patient_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Family Deductible
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                $<input type="text" id="family_deductible" name="family_deductible" value="<?=$preauth['family_deductible']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Family amount met
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox" <?=$bgcolor?> <?=$disabled?>/> 
+                $<input type="text" id="family_amount_met" name="family_amount_met" value="<?=$preauth['family_amount_met']?>" class="tbox covered" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 When does the deductible reset?
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" <?=$disabled?>/>
+                <input type="text" id="deductible_reset_date" name="deductible_reset_date" value="<?=$preauth['deductible_reset_date']?>" class="tbox covered" style="color:grey" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 Has patient's out-of-pocket expense been met?
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['out_of_pocket_met'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$bgcolor?> <?=$disabled?>/> Yes
-                <input type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?> <?=$bgcolor?> <?=$disabled?>/> No
+                <input id="out_of_pocket_met_yes" type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input id="out_of_pocket_met_no" type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -750,7 +601,7 @@ $(function() {
                 Device amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" readonly /> 
+                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -759,7 +610,7 @@ $(function() {
                 Expected insurance payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" <?=$disabled?>/> 
+                $<input type="text" id="expected_insurance_payment" name="expected_insurance_payment" value="<?=$preauth['expected_insurance_payment']?>" class="tbox readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -768,7 +619,7 @@ $(function() {
                 Expected patient payment
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox" style="background-color:#cccccc;color:#3c3c3c;" <?=$disabled?>/> 
+                $<input type="text" id="expected_patient_payment" name="expected_patient_payment" value="<?=$preauth['expected_patient_payment']?>" class="tbox readonly" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -778,7 +629,7 @@ $(function() {
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
-                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$bgcolor?> <?=$disabled?>/>
+                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete) { ?>
                   <input type="submit" value="Save Pre-Authorization" class="button" />
                 <?php } ?>
@@ -794,8 +645,6 @@ $(function() {
   var cal4 = new calendar2(document.getElementById('ins_cal_year_end'));
   var cal5 = new calendar2(document.getElementById('hmo_date_called'));
   var cal6 = new calendar2(document.getElementById('hmo_date_received'));
-  var cal7 = new calendar2(document.getElementById('hmo_auth_date_requested'));
-  var cal8 = new calendar2(document.getElementById('hmo_auth_date_received'));
   var cal9 = new calendar2(document.getElementById('in_network_appeal_date_sent'));
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));

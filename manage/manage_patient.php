@@ -9,10 +9,11 @@ include "includes/top.htm";
 				$('.initial_list').css("display", "table-row");
 			}
 		});
-		$('#patient_search').keypress(function() {
-				if ($(this).val() != "") {
+		$('#patient_search').keypress(function(e) {
+				var c = String.fromCharCode(e.which);
+				if (e.which >= 32 && e.which <= 122) { // greater than space less than z
 					$('.initial_list').css("display", "none");
-					sendValue($(this).val());
+					sendValue($('#patient_search').val() + c);
 				}
 		});
 	});

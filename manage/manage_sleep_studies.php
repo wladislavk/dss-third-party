@@ -224,33 +224,31 @@ if ($origfilename != '') {
 							</script> 
 							<?php
 						} else {
-							// if file is an image, copy to patient images page
-							if ($_FILES["file"]["type"] != "application/pdf") {
-								$copied = copy("sleepstudies/$fullfilename", "q_file/$fullfilename");
-								if ($copied) {
-									$ins_sql = " insert into dental_q_image set 
-										patientid = '".s_for($patientid)."',
-										title = '".s_for($_POST['title'])."',
-										imagetypeid = '1',
-										image_file = '".s_for($fullfilename)."',
-										userid = '".s_for($_SESSION['userid'])."',
-										docid = '".s_for($_SESSION['docid'])."',
-										adddate = now(),
-										ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-									if (!mysql_query($ins_sql)) {
-									?>
-										<script type="text/javascript">
-							 				alert("The image could not be copied to the patient images page.");
-										</script>
-									<?php
-									}
-								} else {
+							// copy file to patient images page
+							$copied = copy("sleepstudies/$fullfilename", "q_file/$fullfilename");
+							if ($copied) {
+								$ins_sql = " insert into dental_q_image set 
+									patientid = '".s_for($patientid)."',
+									title = '".s_for($_POST['title'])."',
+									imagetypeid = '1',
+									image_file = '".s_for($fullfilename)."',
+									userid = '".s_for($_SESSION['userid'])."',
+									docid = '".s_for($_SESSION['docid'])."',
+									adddate = now(),
+									ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+								if (!mysql_query($ins_sql)) {
 								?>
-							 		<script type="text/javascript">
-							 			alert("The image could not be copied to the patient images page.");
-									</script>           
-							 	<?php
+									<script type="text/javascript">
+										alert("The image could not be copied to the patient images page.");
+									</script>
+								<?php
 								}
+							} else {
+							?>
+								<script type="text/javascript">
+									alert("The image could not be copied to the patient images page.");
+								</script>           
+							<?php
 							}
 					 ?>
 							 <script type="text/javascript">

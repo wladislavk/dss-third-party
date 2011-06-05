@@ -76,6 +76,18 @@ require_once('includes/constants.inc');
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#additional-preauth').click(function(e) {
+			var r = confirm("You have already requested a Pre-Authorization. Are you sure you want to request an additional Pre-Authorization?");
+			if (r == false) {
+				e.preventDefault();
+			}
+		});
+	});
+</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
 		if ($('#datecomp0').val() == "") {
 			$('#stepselectedsubmit').css("display", "none");
 		}
@@ -83,6 +95,18 @@ require_once('includes/constants.inc');
 			if ($('#datecomp0').val() != "") {
 				$('#stepselectedsubmit').css("display", "inline");
 			}
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#').click(function() {
+			var edit_id = $(this).attr('id');
+			var num = edit_id.replace("edit", "");
+			$('#view'+num).css("display", "none");
+			$('#edit'+num).css("display", "none");
+			$('#file'+num).css("display", "inline");
 		});
 	});
 </script>
@@ -170,8 +194,8 @@ function preauth_errors(){
   $errors = array();
   $pa_sql = "SELECT * FROM dental_insurance_preauth WHERE patient_id=".$_GET['pid'];
   $pa = mysql_query($pa_sql);
-  if(mysql_num_rows($pa)>0)
-    array_push($errors, "Already has pre-authorization"); 
+  /*if(mysql_num_rows($pa)>0)
+    array_push($errors, "Already has pre-authorization"); */
 
    $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
@@ -1724,7 +1748,7 @@ Rx.
 <input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6" target="_self">Add/Edit RX</a>
+<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6" id="add-rx" target="_self">Add/Edit RX</a>
 </td>
 
 </tr>
@@ -1828,7 +1852,7 @@ $my = mysql_query($sql) or die(mysql_error());
 				if ($e_text) { ?>
 				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Additional Pre-authorization</a>
 				<? }else{ ?>
-				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Additional Pre-authorization</a>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" id="additional-preauth" class="addButton" >Request Additional Pre-authorization</a>
 				<?php } ?>			
 			<?php } ?>
 		</td>

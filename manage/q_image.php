@@ -77,7 +77,7 @@ $my = mysql_query($sql);
 	<b>&lt;&lt;Back To Forms</b></a>
 <br />
 
-<div style="visibility:hidden; height:10px;"><?php include("includes/form_top.htm");?></div>
+<!--<div style="visibility:hidden; height:10px;"><?php //include("includes/form_top.htm");?></div>-->
 
 <br />
 <br>
@@ -173,11 +173,15 @@ $itype_my = mysql_query($itype_sql);
 					<?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>
 				</td>
 				<td valign="top">
+					<?php if (end(explode('.', st($myarray["image_file"]))) != "pdf") { ?>
 					<a href="javascript:void(0)" onclick="window.open('imageholder.php?image=<?=st($myarray["image_file"]);?>',
 'welcome','width=800,height=400,scrollbars=yes');">
 						Preview</a>
-						
-						
+					<?php } else { ?>
+						<a href="javascript:void(0)" onclick="window.open('/manage/q_file/<?=st($myarray["image_file"]);?>',
+'welcome','width=800,height=400,scrollbars=yes');">
+						Preview</a>
+					<?php } ?>	
 				</td>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink" title="EDIT">

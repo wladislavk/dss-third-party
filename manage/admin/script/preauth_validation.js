@@ -106,7 +106,7 @@ function validatePreAuthForm(form) {
     }
     
     if (trim(form.diagnosis_code.value) == "") {
-      errorMsg += "- Missing Patient's Diagnosis Code from Page 2 of Sleep Test Questionnaire\n";
+      errorMsg += "- Missing Patient's Diagnosis Code from Page 3 of Sleep Test Questionnaire\n";
     }
     
     if (trim(form.date_of_call.value) == "") {

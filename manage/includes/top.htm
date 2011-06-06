@@ -74,6 +74,7 @@ $num_pending_preauth = mysql_num_rows($preauth_res);
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/search-hints.css" rel="stylesheet" type="text/css">
 
 <?php //<script type="text/javascript" src="js/p7tbmenu.js"></script> ?>
 <script type="text/javascript" src="js/ddlevelsmenu.js">
@@ -462,6 +463,96 @@ function popitup(url) {
 
 </script> 
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// Patient Search Autocomplete Script
+	$(document).ready(function() {
+		$('#patient_search').keyup(function(e) {
+				//var c = String.fromCharCode(e.which);
+				if ($(this).val().trim() == "") {
+					$('#search_hints').css('display', 'none');
+					$('.initial_list').css("display", "table-row");
+				} else if (e.which >= 33 && e.which <= 122 || e.which == 8) { // greater than space less than z, backspace
+					$('.initial_list').css("display", "none");
+					$('#search_hints').css("display", "inline");
+					sendValue($('#patient_search').val());
+				}
+		});
+		$('#patient_list > li').hover(function() {
+			$(this).css('cursor','pointer');
+		}, function() {
+			$(this).css('cursor','auto');
+		});
+		$('#patient_list > li').click(function() {
+			$('#patient_search').val($(this).html());
+		});
+		$('*').click(function() {
+			$('#search_hints').css('display', 'none');
+		});
+	});
+	function sendValue(partial_name) {
+		$.post(
+		
+		"list_patients.php",
+
+		{ 
+			"partial_name": partial_name 
+		},
+
+		function(data) {
+			if (data.length == 0) {
+				$('#search_hints').css('display', 'none');
+			}
+			if (data.error) {
+				alert(data.error);
+			} else {
+				$('.patient').remove();
+				for (i in data) {
+					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('patient');
+					template_list(newLi, data[i])
+						.appendTo('#patient_list')
+						.fadeIn();
+					<?php if ($_SERVER['PHP_SELF'] == "/manage/manage_patient.php") { ?>
+					if (data[i].stat == "1") {
+						var tr_class = "tr_active";
+					} else {
+						var tr_class = "tr_inactive";
+					}
+					var newRow = $('#patients .template').clone().removeClass('template').addClass('patient').addClass(tr_class);
+					template_table(newRow, data[i])
+						.appendTo('#patients')
+						.fadeIn();
+					<?php } ?>
+				}
+			}
+		},
+
+		"json"
+		);
+	}
+	function template_list(li, patient) {
+		li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename);
+		return li;
+	}
+	function template_table(row, patient) {
+		var pm = "";
+		if (patient.premedcheck == "1") {
+			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
+		}
+		row.find('.patient_name').html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + pm);
+		row.find('.questionnaire_link').html("<a href=\"q_page1.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Questionnaire\">Manage</a>");
+		row.find('.clinical_exam_link').html("<a href=\"ex_page4.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Clinical Exam\">Manage</a>");
+		row.find('.summary_sheet_link').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Summary Sheet\">Manage</a>");
+		row.find('.ledger_link').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Ledger\">Manage</a>");
+		row.find('.progress_notes_link').html("<a href=\"manage_progress_notes.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Progress Notes\">Manage</a>");
+		row.find('.insurance_link').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Insurance\">Manage</a>");
+		row.find('.letters_link').html("<a href=\"dss_letters.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Letters\">Manage</a>");
+		row.find('.flowsheet_link').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Flowsheet\">Manage</a>");
+		row.find('.contact_info_link').html("<a href=\"add_patient.php?ed=" + patient.patientid + "&pid=" + patient.patientid + "\" class=\"editlink\" title=\"EDIT\">Edit</a><br /><a href=\"/manage/manage_patient.php?delid=" + patient.patientid + "\" onclick=\"javascript: return confirm('Do Your Really want to Delete?.');\" class=\"dellink\" title=\"DELETE\">Delete</a>");
+		return row;
+	}
+</script>
+
 </head>
 <body onload="disableBackspace();hideallblocks();document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';<?php if(isset($_GET['preview']) && $_GET['preview'] == '1'){?>check();<?php } if(isset($_GET['page']) && $_GET['page'] == 'page2'){ echo "document.getElementById('flowsheet_page1').style.display='none';";
  echo "document.getElementById('flowsheet_page2').style.display='block';";
@@ -530,8 +621,14 @@ display:none;
      
     <div style="margin-top:30px; margin-left:20px; float:left;">
     <form name="form" action="search.php" method="get">
-  <input type="text" id="patient_search" name="q" />
+  <input type="text" id="patient_search" name="q" autocomplete="off" />
   <input type="submit" name="Submit" value="Patient Search By Last Name" />
+	<br />
+	<div id="search_hints" style="display:none;">
+		<ul id="patient_list">
+			<li class="template" style="display:none">Doe, John S</li>
+		</ul>
+	</div>
 </form>
     </div>
     

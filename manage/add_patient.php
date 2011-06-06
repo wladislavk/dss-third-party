@@ -185,7 +185,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_patient.php?msg=<?=$msg;?>';
+			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -304,7 +304,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_patient.php?msg=<?=$msg;?>';
+			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -528,7 +528,7 @@ if($_POST["patientsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return patientabc(this); return validateDate('dob'); return validateDate('ins_dob');return validateDate('ins2_dob');">
+    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return patientabc(this); return validateDate('dob'); return validateDate('ins_dob');return validateDate('ins2_dob');">
     
     <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>

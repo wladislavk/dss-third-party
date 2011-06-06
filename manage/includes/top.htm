@@ -472,7 +472,7 @@ function popitup(url) {
 				if ($(this).val().trim() == "") {
 					$('#search_hints').css('display', 'none');
 					$('.initial_list').css("display", "table-row");
-				} else if (e.which >= 33 && e.which <= 122 || e.which == 8) { // greater than space less than z, backspace
+				} else if (e.which >= 39 && e.which <= 122 || e.which == 8) { // greater than apostrophe less than z, backspace
 					$('.initial_list').css("display", "none");
 					$('#search_hints').css("display", "inline");
 					sendValue($('#patient_search').val());
@@ -485,6 +485,7 @@ function popitup(url) {
 		});
 		$('#patient_list > li').click(function() {
 			$('#patient_search').val($(this).html());
+			sendValue($(this).html());
 		});
 		$('*').click(function() {
 			$('#search_hints').css('display', 'none');

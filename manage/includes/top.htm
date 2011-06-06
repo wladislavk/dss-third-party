@@ -466,16 +466,22 @@ function popitup(url) {
 
 <script type="text/javascript">
 	// Patient Search Autocomplete Script
+	var searchVal = ""; // global variable to hold the last valid search string
 	$(document).ready(function() {
 		$('#patient_search').keyup(function(e) {
-				//var c = String.fromCharCode(e.which);
+				var a = e.which; // ascii decimal value
+				//var c = String.fromCharCode(a);
+				var listSize = $('#patient_list li').size();
+				var stringSize = $(this).val().length;
 				if ($(this).val().trim() == "") {
 					$('#search_hints').css('display', 'none');
+					$('.json_patient').remove();
 					$('.initial_list').css("display", "table-row");
-				} else if (e.which >= 39 && e.which <= 122 || e.which == 8) { // greater than apostrophe less than z, backspace
+				} else if ((stringSize == 1 || listSize > 2 || ($(this).val() == window.searchVal)) && (a >= 39 && a <= 122 || a == 8)) { // (greater than apostrophe and less than z) or backspace
 					$('.initial_list').css("display", "none");
 					$('#search_hints').css("display", "inline");
 					sendValue($('#patient_search').val());
+					window.searchVal = $(this).val().replace(/(\s+)?.$/, "");
 				}
 		});
 		$('#patient_list > li').hover(function() {
@@ -507,9 +513,9 @@ function popitup(url) {
 			if (data.error) {
 				alert(data.error);
 			} else {
-				$('.patient').remove();
+				$('.json_patient').remove();
 				for (i in data) {
-					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('patient');
+					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient');
 					template_list(newLi, data[i])
 						.appendTo('#patient_list')
 						.fadeIn();
@@ -519,7 +525,7 @@ function popitup(url) {
 					} else {
 						var tr_class = "tr_inactive";
 					}
-					var newRow = $('#patients .template').clone().removeClass('template').addClass('patient').addClass(tr_class);
+					var newRow = $('#patients .template').clone().removeClass('template').addClass('json_patient').addClass(tr_class);
 					template_table(newRow, data[i])
 						.appendTo('#patients')
 						.fadeIn();

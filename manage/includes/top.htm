@@ -320,13 +320,13 @@ function createCookie(name,value,days) {
 
 function focusIt(dtControl)
 {
-  var mytext = document.getElementById();
-  mytext.focus();
+  var mytext = document.getElementById(dtControl);
+  setTimeout("mytext.focus();",0);
 }
 
 function validateDate(dtControl)
 {
-    var input = document.getElementById(dtControl)
+    input = document.getElementById(dtControl)
     var validformat=/^\d{1,2}\/\d{1,2}\/\d{4}$/ //Basic check for format validity
     var returnval=false
     if (!validformat.test(input.value))
@@ -347,7 +347,7 @@ function validateDate(dtControl)
     if (!validformat.test(input.value)){
     document.getElementById(dtControl).focus;
     }
-    if (returnval==false){ input.focus() }
+    if (returnval==false){ setTimeout("input.focus();",0); }
     return returnval
     focusIt(dtControl);
 }

@@ -78,7 +78,7 @@ function disablePopup(){
 		popupStatus = 0;
 		parent.window.location.reload();
 	}else{
-		parent.window.location.reload();
+		//parent.window.location.reload();
 	}
 	}
 }

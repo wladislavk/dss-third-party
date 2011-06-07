@@ -1152,7 +1152,7 @@ background:#cccccc;
     <td width="15%" height="3">Name</td>
     <td colspan="1">
       <label>
-        <?php echo $patient_name; ?>
+        <strong><?php echo $patient_name; ?></strong>
       </label>
       <br />
     </td>

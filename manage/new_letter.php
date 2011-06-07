@@ -504,6 +504,18 @@ if (isset($_POST['submit'])) {
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		$('#template').change(function(){
+			if ($(this).val() == 5) {
+				$("#send_method option[value=email]").attr('selected','selected');
+				$("#send_method option[value=]").hide();
+				$("#send_method option[value=paper]").hide();
+				$("#send_method option[value=fax]").hide();
+			} else {
+				$("#send_method option[value=]").show().attr('selected','selected');
+				$("#send_method option[value=paper]").show();
+				$("#send_method option[value=fax]").show();				
+			}
+		});
 		$('#patient').change(function(){
 			if ($('#template').val() == "") {
 				alert("You must select a letter template.");
@@ -598,7 +610,7 @@ if (isset($_POST['submit'])) {
 			</td>
 		</tr>
 		<tr>
-			<td id="contact_header" style="display:none;">Select Contacts:<br /><input id="default_contacts" type="checkbox" name="defaults" value="defaults" />Default Contacts<br /></td>
+			<td id="contact_header" style="display:none;">Select Contacts:<br /><!--<input id="default_contacts" type="checkbox" name="defaults" value="defaults" />Default Contacts<br />--></td>
 		</tr>
 		<tr>
 			<td id="contacts"></td>

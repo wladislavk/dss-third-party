@@ -465,7 +465,9 @@ function popitup(url) {
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-	// Patient Search Autocomplete Script
+	// Patient Search Suggestion Script
+	var selection = 1;
+	var selectedUrl = '';
 	var searchVal = ""; // global variable to hold the last valid search string
 	$(document).ready(function() {
 		$('#patient_search').keyup(function(e) {
@@ -477,19 +479,46 @@ function popitup(url) {
 					$('#search_hints').css('display', 'none');
 					$('.json_patient').remove();
 					$('.initial_list').css("display", "table-row");
-				} else if ((stringSize == 1 || listSize > 2 || ($(this).val() == window.searchVal)) && (a >= 39 && a <= 122 || a == 8)) { // (greater than apostrophe and less than z) or backspace
+				} else if ((stringSize > 1 || listSize > 2 || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
 					$('.initial_list').css("display", "none");
 					$('#search_hints').css("display", "inline");
 					sendValue($('#patient_search').val());
-					window.searchVal = $(this).val().replace(/(\s+)?.$/, "");
+					window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
 				}
+		});
+		$(document).keyup(function(e) {
+			switch (e.which) {
+				case 38:
+					move_selection('up');
+					break;
+				case 40:
+					move_selection('down');
+					break;
+				case 13:
+					if (selectedUrl != '') {
+						window.location = window.selectedUrl;
+					}
+					break;
+			}
+		});
+		$('#patient_search').click(function() {
+			if ($(this).val() == 'Patient Search') {
+				$(this).val('');
+			}
 		});
 		$('#patient_list > li').hover(function() {
 			$(this).css('cursor','pointer');
+			window.selection = $(this).data("number");
+			set_selected(window.selection);
 		}, function() {
 			$(this).css('cursor','auto');
+			$('#patient_list li').removeClass('list_hover');
+			window.selectedUrl = '';
 		});
 		$('#patient_list > li').click(function() {
+			if (selectedUrl != '') {
+				window.location = window.selectedUrl;
+			}
 			$('#patient_search').val($(this).html());
 			sendValue($(this).html());
 		});
@@ -515,7 +544,7 @@ function popitup(url) {
 			} else {
 				$('.json_patient').remove();
 				for (i in data) {
-					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient');
+					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid);
 					template_list(newLi, data[i])
 						.appendTo('#patient_list')
 						.fadeIn();
@@ -536,6 +565,27 @@ function popitup(url) {
 
 		"json"
 		);
+	}
+	function move_selection(direction) {
+		if ($('#patient_list > li.list_hover').size() == 0) {
+			window.selection = 0;
+		}
+		if (direction == 'up' && window.selection != 0) {
+			if (window.selection != 1) {
+				window.selection--;
+			}
+		} else if (direction == 'down') {
+			if (window.selection != ($("#patient_list li").size() -1)) {
+				window.selection++;
+			}
+		}
+		set_selected(window.selection);
+	}
+	function set_selected(menuitem) {
+		$('#patient_list li').removeClass('list_hover');
+		$('#patient_list li').eq(menuitem).addClass('list_hover');
+		var pid = $('#patient_list li').eq(menuitem).data("patientid");
+		window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
 	}
 	function template_list(li, patient) {
 		li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename);
@@ -627,16 +677,16 @@ display:none;
   <div style="height:116px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"><div style="font-size:24px; font-weight:bold; font-family:arial; color:#FFFFFF; padding-top:20px; margin-left:20px;">Dental Sleep Solutions &reg;<font style="color:#000; font-size:14px; font-weight:bolder;padding-left:110px;font-style:italic;">Practice Management</font></div>
      
     <div style="margin-top:30px; margin-left:20px; float:left;">
-    <form name="form" action="search.php" method="get">
-  <input type="text" id="patient_search" name="q" autocomplete="off" />
-  <input type="submit" name="Submit" value="Patient Search By Last Name" />
+    <!--<form name="form" action="search.php" method="get">-->
+  <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
+  <!--<input type="submit" name="Submit" value="Patient Search By Last Name" />-->
 	<br />
 	<div id="search_hints" style="display:none;">
 		<ul id="patient_list">
 			<li class="template" style="display:none">Doe, John S</li>
 		</ul>
 	</div>
-</form>
+<!--</form>-->
     </div>
     
      <div style="clear:both;"></div>

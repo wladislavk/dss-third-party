@@ -228,7 +228,7 @@ function preauth_errors(){
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
-    array_push($errors, "Missing questionnaire page 2");
+    array_push($errors, "Missing questionnaire page 3"); // The file and table are named q_page2, but this is displayed on page 3 of questionnaire
   }
 
 

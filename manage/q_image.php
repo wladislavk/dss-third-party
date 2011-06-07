@@ -196,7 +196,7 @@ $itype_my = mysql_query($itype_sql);
 	<? 	}
 	}?>
 </table>
-
+</form>
 <br />
 <div style="visibility:hidden;"><? include("includes/form_bottom.htm");?></div>
 <br />

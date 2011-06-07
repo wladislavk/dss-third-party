@@ -1153,6 +1153,25 @@ background:#cccccc;
     <td colspan="1">
       <label>
         <strong><?php echo $patient_name; ?></strong>
+<?php
+$sql = "SELECT imageid FROM dental_q_image WHERE patientid='".$_GET['pid']."' AND imagetypeid=4";
+$p = mysql_query($sql);
+$num_face = mysql_num_rows($p);
+?>
+<span align="right">
+<?php if($num_face==0){ ?>
+        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="addButton">
+                Add Patient Photo
+        </button>
+<?php }else{ ?>
+        <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'" class="addButton">
+                View/Edit Patient Photos
+        </button>
+ 
+<?php } ?>
+        &nbsp;&nbsp;
+</span>
+
       </label>
       <br />
     </td>

@@ -3,7 +3,7 @@ include "includes/top.htm";
 ?>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(':input :not(#patient_search)').change(function() { 
+		$(':input:not(#patient_search)').change(function() { 
 			window.onbeforeunload = confirmExit;
 		});
 		$('#ex_page7frm').submit(function() {

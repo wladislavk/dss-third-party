@@ -1160,7 +1160,7 @@ $num_face = mysql_num_rows($p);
 ?>
 <span align="right">
 <?php if($num_face==0){ ?>
-        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="addButton">
+        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');" class="addButton">
                 Add Patient Photo
         </button>
 <?php }else{ ?>

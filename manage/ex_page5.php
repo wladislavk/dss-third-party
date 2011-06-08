@@ -664,32 +664,31 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
-                                
+                               <tr>
+                                </td>
+                                    <td valign="top">
+                                    <span>George Scale</span>
+                                    </td>
+                                        <td valign="top">
+                                        <input type="text" name="protrusion_from" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
+                                        &nbsp;&nbsp;&nbsp;
+                                        to
+                                        &nbsp;&nbsp;&nbsp;
+                                        <input type="text" name="protrusion_to" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
+
+                                        </span>
+                                    </td>
+                                </tr>
+ 
                                 <tr>
                                 	<td valign="top">
                                     	<span>
-                                    	Protrusion
+                                    	Protrusion (Automatically calculated from George Gauge above)
                                         </span>
                                     </td>
                                     <td valign="top">
                                     	<span>
                                     	<input type="text" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to-($protrusion_from);?>">                                     </td>
-                                </tr>
-                                
-                                <tr>
-                                </td>
-                                    <td valign="top">
-                                    <span>George Scale</span>
-                                    </td>
-                                	<td valign="top">
-                                    	<input type="text" name="protrusion_from" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
-                                        &nbsp;&nbsp;&nbsp;
-                                        to
-                                        &nbsp;&nbsp;&nbsp;
-                                        <input type="text" name="protrusion_to" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
-                                        
-                                        </span>
-                                    </td>
                                 </tr>
                                 
                                 <tr>

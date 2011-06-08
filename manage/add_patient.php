@@ -529,7 +529,25 @@ if($_POST["patientsub"] == 1)
     </div>
     <? }?>
 
-    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return patientabc(this); return validateDate('dob'); return validateDate('ins_dob');return validateDate('ins2_dob');">
+<script type="text/javascript">
+
+function validate_add_patient(){
+
+d = validateDate('dob');
+i = validateDate('ins_dob');
+i2 = validateDate('ins2_dob');
+
+if(d && i && i2)
+  return true
+
+return false;
+
+}
+
+</script>
+
+    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient();">
+
     
     <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>

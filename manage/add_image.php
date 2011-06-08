@@ -152,7 +152,7 @@ if($_POST["imagesub"] == 1)
 								<option value=""></option>
 								<? while($itype_myarray = mysql_fetch_array($itype_my))
 								{?>
-									<option value="<?=st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid'])) echo " selected";?>>
+									<option value="<?=st($itype_myarray['imagetypeid']);?>" <? if($imagetypeid == st($itype_myarray['imagetypeid']) || $_GET['it']==$itype_myarray['imagetypeid']) echo " selected"; ?>>
 										<?=st($itype_myarray['imagetype']);?>
 									</option>
 								<? }?>

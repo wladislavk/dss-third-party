@@ -7,7 +7,7 @@ include("includes/sescheck.php");
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 </head>
-<body style="width: 10000px; background: none repeat scroll 0% 0% transparent; height: 547px;">
+<body style="width: 10000px; background: none repeat scroll 0% 0% transparent; height: 537px;">
 
  <?php 
  if(isset($_POST['submitnewsleeplabsumm'])){ 
@@ -72,7 +72,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 		<td valign="top" style="background: #E4FFCF;">
 		<select name="sleeptesttype">
       <option value="HST">HST</option>
-      <option value="PST">PST</option>    
+      <option value="PSG">PSG</option>    
     </select>	
 		</td>
 </tr>

@@ -1136,18 +1136,11 @@ background:#cccccc;
 }
 </style>
 <div>
-<table width="98%" cellpadding="0" cellspacing="0" border="0" align="center">
+<table width="980" cellpadding="0" cellspacing="0" border="0" align="center">
 
 
 <div>
 <table width="90%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto;" id="hideshow1">
-  <col width="62*" />
-  <col width="54*" />
-  <col width="6*" />
-  <col width="8*" />
-  <col width="38*" />
-  <col width="26*" />
-  <col width="63*" />
   <tr valign="top">
     <td width="15%" height="3">Name</td>
     <td colspan="1">
@@ -1508,7 +1501,6 @@ echo "Not Set, Please set through patient info.";
 			<br /><br />
       Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br /> 
 </td>
-    <td width="18%"></td>
     <td colspan="5">
     History of Surgery or other Treatment Attempts:<br />
       <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
@@ -1614,7 +1606,7 @@ Sleep Labs:
 </table>  
 <div style="height:20px;"></div>  
 <!-- SLEEP LAB SECTION START -->  
-<table width="108" align="center" style="float:left; margin-left:15px;line-height:22px;">
+<table width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
 
 
 	<tr>
@@ -1707,12 +1699,12 @@ Sleep Labs:
   
   
   
-	<div style="border: medium none; float: left; margin-bottom: 20px; margin-top: -4px; overflow: auto; height: 519px;">
-		 <table width="700" style="overflow-x: auto; height: 466px;">
+	<div style="border: medium none; float: left; margin-bottom: 20px; margin-top: -4px; overflow: auto; height: 569px;">
+		 <table width="800" style="overflow-x: auto; height: 566px;">
 		   <tr>
 		    <td>
 		    
-		    <iframe height="492" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+		    <iframe height="562" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 
          </td>

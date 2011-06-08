@@ -33,7 +33,7 @@ if(isset($_POST['submitaddfu'])){
 <body style="width:10000px;background:none;">
 <form id="sleepstudyadd" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 	<table id="sleepstudyscrolltable" style="margin-top:-10px;">
-<tr style="background: #444;height: 25px;">
+<tr style="background: #444;height: 35px;">
   	<td colspan="4"><span style="color: #fff;">New</span></td>
   </tr>
 
@@ -188,7 +188,7 @@ $device = mysql_result($device_result, 0);
 
   <tr style="height: 25px;">
     <td style="background: #F9FFDF;">
-      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo $fuquery['ep_dateadd']; ?>" />
+      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo ($fuquery['ep_dateadd'])?date('m-d-Y', strtotime($fuquery['ep_dateadd'])):''; ?>" />
     </td>
   </tr>
   

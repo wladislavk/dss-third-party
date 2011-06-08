@@ -6,7 +6,7 @@ include "includes/top.htm";
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(':input').change(function() { 
+		$(':input :not(#patient_search').change(function() { 
 			window.onbeforeunload = confirmExit;
 		});
 		$('#q_page1frm').submit(function() {
@@ -442,7 +442,7 @@ if($complaintid <> '')
 					$complaint_number = mysql_num_rows($complaint_my);
 					?>
                     <span class="form_info">
-                    	Select Complaint Sequence from the DropDown or leave is Blank.
+                    	Select Complaint Sequence from the DropDown or leave it Blank.
                     </span>
                     <br />
                     <? 

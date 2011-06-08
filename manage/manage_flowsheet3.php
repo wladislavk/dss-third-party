@@ -54,7 +54,7 @@ require_once('includes/constants.inc');
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(':input').change(function() { 
+		$(':input :not(#patient_search)').change(function() { 
 			window.onbeforeunload = confirmExit;
 		});
 		$('#form_page1').submit(function() {

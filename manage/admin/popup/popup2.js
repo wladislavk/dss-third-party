@@ -256,7 +256,7 @@ $(document).ready(function(){
 				
 	//CLOSING POPUP
 	//Click the x event!
-	$("#popupMemoClose").click(function(){
+	$("#popupMemo2Close").click(function(){
 		disablePopup1();
 	});
 	//Click out event!

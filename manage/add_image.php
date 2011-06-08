@@ -67,7 +67,7 @@ if($_POST["imagesub"] == 1)
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
-			parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>&sh=<?=$_GET['sh'];?>';
+			parent.window.location=parent.window.location
 		</script>
 		<?
 		die();

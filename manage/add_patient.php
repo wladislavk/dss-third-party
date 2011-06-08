@@ -528,6 +528,7 @@ if($_POST["patientsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
+
     <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return patientabc(this); return validateDate('dob'); return validateDate('ins_dob');return validateDate('ins2_dob');">
     
     <script language="JavaScript" src="calendar1.js"></script>
@@ -1596,7 +1597,6 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 
     </table>
     </form>
-
 
 
 

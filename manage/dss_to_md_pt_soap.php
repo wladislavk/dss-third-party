@@ -233,6 +233,33 @@ $reason_query = "SELECT reason_seeking_tx FROM dental_summary WHERE patientid = 
 $reason_result = mysql_query($reason_query);
 $reason_seeking_tx = mysql_result($reason_result, 0);
 
+// Symptoms 
+$sql = "SELECT complaintid FROM dental_q_page1 WHERE patientid = '".$patientid."' LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_assoc($result)) {
+	$complaint = explode("~", rtrim($row['complaintid'], "~"));
+}
+foreach ($complaint as $pair) {
+	$idscore = explode("|", $pair);
+	$compid[] = $idscore[0];
+}
+foreach ($compid as $id) {
+	$sql = "SELECT complaint FROM dental_complaint WHERE complaintid = '".$id."';";
+	$result = mysql_query($sql);
+	while ($row = mysql_fetch_assoc($result)) {
+		$symptoms[] = $row['complaint'];
+	}
+}
+foreach ($symptoms as $key => $value) {
+	if ($key != count($symptoms) -1 && $key != count($symptoms) -2) {
+		$symptom_list .= $value . ", ";
+	} elseif ($key == count($symptoms) -2) {
+		$symptom_list .= $value . " and ";
+	} else {
+		$symptom_list .= $value;
+	}
+}
+
 ?>
 
 
@@ -279,9 +306,9 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>%patient_fullname% is a %patient_age% year old %patient_gender% with a [PMH] that includes:   Medications: %medications%</p>
+<p>%patient_fullname% is a %patient_age% year old %patient_gender% with a past medical history that includes:   Medications: %medications%</p>
 
-<p><b>HPI</b>:  Patient underwent a %2ndtype_study% on %2ndstudy_date% due to %reason_seeking_tx%.  Patient has a BMI of %bmi% and had symptoms of [Symptoms].  %He/She% was diagnosed with %2nddiagnosis%.</p>
+<p><b>HPI</b>:  Patient underwent a %2ndtype_study% on %2ndstudy_date% due to %reason_seeking_tx%.  Patient has a BMI of %bmi% and had symptoms of %symptoms%.  %He/She% was diagnosed with %2nddiagnosis%.</p>
 
 <p><b>SUBJECTIVE</b>:  %patient_firstname% presents with subjective complaint(s) of %reason_seeking_tx%.</p>
 
@@ -408,6 +435,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $bmi . "</strong>";
 		$search[] = "%reason_seeking_tx%";
 		$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+		$search[] = "%symptoms%";
+		$replace[] = "<strong>" . $symptom_list . "</strong>";
 		$search[] = "%other_mds%";
 		$other_mds = "";
 		$count = 1;
@@ -556,6 +585,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $bmi . "</strong>";
 	$search[] = "%reason_seeking_tx%";
 	$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+	$search[] = "%symptoms%";
+	$replace[] = "<strong>" . $symptom_list . "</strong>";
 	$search[] = "%other_mds%";
 	$other_mds = "";
   $count = 1;

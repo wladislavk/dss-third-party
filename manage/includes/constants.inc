@@ -107,3 +107,19 @@ $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]['short'] = "Cash";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
+
+//Max File size allowed for upload forms
+define('DSS_FILE_MAX_SIZE', 200000000);
+
+//Allowed File Types for upload forms
+define('DSS_FILE_IMAGE_GIF', 0);
+define('DSS_FILE_IMAGE_JPEG', 1);
+define('DSS_FILE_IMAGE_PJPEG', 2);
+define('DSS_FILE_APP_PDF', 3);
+
+// A convenience array to get file types
+$dss_file_types = array();
+$dss_file_types[DSS_FILE_IMAGE_GIF] = "image/gif";
+$dss_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
+$dss_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
+$dss_file_types[DSS_FILE_APP_PDF] = "application/pdf";

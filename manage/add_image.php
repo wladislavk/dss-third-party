@@ -1,76 +1,85 @@
 <?php 
 session_start();
 require_once('admin/includes/config.php');
+require_once('includes/constants.inc');
 include("includes/sescheck.php");
 
 if($_POST["imagesub"] == 1)
 {
-	$title = $_POST['title'];
-	$imagetypeid = $_POST['imagetypeid'];
-	
-	if($_FILES["image_file"]["name"] <> '')
-	{
-		$fname = $_FILES["image_file"]["name"];
-		$lastdot = strrpos($fname,".");
-		$name = substr($fname,0,$lastdot);
-		$extension = substr($fname,$lastdot+1);
-		$banner1 = $name.'_'.date('dmy_Hi');
-		$banner1 = str_replace(" ","_",$banner1);
-		$banner1 = str_replace(".","_",$banner1);
-		$banner1 .= ".".$extension;
+	if ((array_search($_FILES["file"]["type"], $dss_file_types) !== false) && ($_FILES["file"]["size"] < DSS_FILE_MAX_SIZE)) {
+		$title = $_POST['title'];
+		$imagetypeid = $_POST['imagetypeid'];
 		
-		@move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
-		@chmod("q_file/".$banner1,0777);
-		
-		if($_POST['image_file_old'] <> '')
+		if($_FILES["image_file"]["name"] <> '')
 		{
-			@unlink("q_file/".$_POST['image_file_old']);
+			$fname = $_FILES["image_file"]["name"];
+			$lastdot = strrpos($fname,".");
+			$name = substr($fname,0,$lastdot);
+			$extension = substr($fname,$lastdot+1);
+			$banner1 = $name.'_'.date('dmy_Hi');
+			$banner1 = str_replace(" ","_",$banner1);
+			$banner1 = str_replace(".","_",$banner1);
+			$banner1 .= ".".$extension;
+			
+			@move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
+			@chmod("q_file/".$banner1,0777);
+			
+			if($_POST['image_file_old'] <> '')
+			{
+				@unlink("q_file/".$_POST['image_file_old']);
+			}
 		}
-	}
-	else
-	{
-		$banner1 = $_POST['image_file_old'];
-	}
-	
-	
-	if($_POST["ed"] != "")
-	{
-		$ed_sql = " update dental_q_image set 
-		title = '".s_for($title)."',
-		imagetypeid = '".s_for($imagetypeid)."',
-		image_file = '".s_for($banner1)."'
-		where imageid = '".s_for($_POST['ed'])."'";
+		else
+		{
+			$banner1 = $_POST['image_file_old'];
+		}
 		
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
-		$msg = "Edited Successfully";
+		if($_POST["ed"] != "")
+		{
+			$ed_sql = " update dental_q_image set 
+			title = '".s_for($title)."',
+			imagetypeid = '".s_for($imagetypeid)."',
+			image_file = '".s_for($banner1)."'
+			where imageid = '".s_for($_POST['ed'])."'";
+			
+			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			
+			$msg = "Edited Successfully";
+			?>
+			<script type="text/javascript">
+				parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>&sh=<?=$_GET['sh'];?>';
+			</script>
+			<?
+			die();
+		}
+		else
+		{
+			$ins_sql = " insert into dental_q_image set 
+			patientid = '".s_for($_GET['pid'])."',
+			title = '".s_for($title)."',
+			imagetypeid = '".s_for($imagetypeid)."',
+			image_file = '".s_for($banner1)."',
+			userid = '".s_for($_SESSION['userid'])."',
+			docid = '".s_for($_SESSION['docid'])."',
+			adddate = now(),
+			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+			
+			mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+			$msg = "Added Successfully";
+			?>
+			<script type="text/javascript">
+				parent.window.location=parent.window.location
+			</script>
+			<?
+			die();
+		}
+	} else {
 		?>
-		<script type="text/javascript">
-			parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>&sh=<?=$_GET['sh'];?>';
-		</script>
-		<?
-		die();
-	}
-	else
-	{
-		$ins_sql = " insert into dental_q_image set 
-		patientid = '".s_for($_GET['pid'])."',
-		title = '".s_for($title)."',
-		imagetypeid = '".s_for($imagetypeid)."',
-		image_file = '".s_for($banner1)."',
-		userid = '".s_for($_SESSION['userid'])."',
-		docid = '".s_for($_SESSION['docid'])."',
-		adddate = now(),
-		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-		
-		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		$msg = "Added Successfully";
-		?>
-		<script type="text/javascript">
-			parent.window.location=parent.window.location
-		</script>
-		<?
-		die();
+			<script type="text/javascript">
+				alert("Invalid File Type or File too Large");
+			</script>           
+		<?php
 	}
 }
 

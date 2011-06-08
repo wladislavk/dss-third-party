@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('admin/includes/config.php');
+require_once('includes/constants.inc');
 include("includes/sescheck.php");
 ?>
 <html>
@@ -176,11 +177,7 @@ if ($origfilename != '') {
 	//error_reporting(E_ALL);
 	//ini_set("display_errors", 1); 
 	//die();
-		if ((($_FILES["file"]["type"] == "image/gif")
-		|| ($_FILES["file"]["type"] == "image/jpeg")
-		|| ($_FILES["file"]["type"] == "image/pjpeg")
-		|| ($_FILES["file"]["type"] == "application/pdf"))
-		&& ($_FILES["file"]["size"] < 200000000))
+		if ((array_search($_FILES["file"]["type"], $dss_file_types) !== false) && ($_FILES["file"]["size"] < DSS_FILE_MAX_SIZE))
 		{
 		if ($_FILES["file"]["error"] > 0)
 			{
@@ -269,7 +266,7 @@ if ($origfilename != '') {
 		{
 	 ?>
 						 <script type="text/javascript">
-						 alert("Invalid File Type");
+						 alert("Invalid File Type or File too Large");
 							</script>           
 						 <?php
 		}

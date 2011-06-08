@@ -192,10 +192,10 @@ return true;
 
 function preauth_errors(){
   $errors = array();
-  $pa_sql = "SELECT * FROM dental_insurance_preauth WHERE patient_id=".$_GET['pid'];
+  $pa_sql = "SELECT status FROM dental_insurance_preauth WHERE status = '".DSS_PREAUTH_PENDING."' AND patient_id=".$_GET['pid'];
   $pa = mysql_query($pa_sql);
-  /*if(mysql_num_rows($pa)>0)
-    array_push($errors, "Already has pre-authorization"); */
+  if(mysql_num_rows($pa)>0)
+    array_push($errors, "Already has pending pre-authorization");
 
    $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);

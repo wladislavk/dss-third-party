@@ -344,7 +344,7 @@ if($_POST["contactsub"] == 1)
                 }
                 ?>
                             	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-                                	 
+                              	<option value="">Select a contact type</option>  	 
                                     <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
                   ?>
                   

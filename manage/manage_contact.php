@@ -39,6 +39,13 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_contact=mysql_num_rows($my);
+
+// Select Contact Types
+$contact_types = "SELECT contacttypeid, contacttype FROM dental_contacttype;";
+$result = mysql_query($contact_types);
+while ($row = mysql_fetch_assoc($result)) {
+	$contact_type[$row['contacttypeid']] = $row['contacttype'];
+}
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -151,6 +158,8 @@ Filter by type: <select name="myjumpbox"
 					<?=st($myarray["company"]);?>
 				</td>
 				<td valign="top" width="30%">
+				<?php print ($contact_type[$myarray["contacttypeid"]]) ? $contact_type[$myarray["contacttypeid"]] : "Contact Type Not Set"; ?>
+				<?php /*
 				<?php if($myarray["contacttypeid"] == '6'){echo "Attorney";} ?>
 				<?php if($myarray["contacttypeid"] == '7'){echo "Consult";} ?>
 				<?php if($myarray["contacttypeid"] == '8'){echo "Guardian";} ?>
@@ -166,6 +175,7 @@ Filter by type: <select name="myjumpbox"
 				<?php if($myarray["contacttypeid"] == '19'){echo "Unknown";} ?>
 				<?php if($myarray["contacttypeid"] == '12'){echo "Other";} ?>
 				<?php if($myarray["contacttypeid"] == '0'){echo "Type Not Set";} ?>
+				*/ ?>
 	      </td>
 				<td valign="top" width="20%">
 					<a href="add_contact.php?ed=<?=$myarray["contactid"];?>" class="editlink" title="EDIT">

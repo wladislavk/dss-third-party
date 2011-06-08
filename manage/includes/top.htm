@@ -479,11 +479,13 @@ function popitup(url) {
 					$('#search_hints').css('display', 'none');
 					$('.json_patient').remove();
 					$('.initial_list').css("display", "table-row");
-				} else if ((stringSize > 1 || listSize > 2 || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
+				} else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
 					$('.initial_list').css("display", "none");
 					$('#search_hints').css("display", "inline");
 					sendValue($('#patient_search').val());
-					window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
+					if ($(this).val() > 2) {
+						window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
+					}
 				}
 		});
 		$(document).keyup(function(e) {

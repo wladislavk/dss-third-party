@@ -39,13 +39,6 @@ if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1)
                 <? }?>
                     <b>Family/Social Hx.</b></a>
             </td>
-            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_image.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                <? if($cur_f == 0) {?>
-                   <!-- <a href="q_recipients.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
-				   <a href="Javascript:;" onclick="Javascript: change_page('q_image');">
-                <? }?>
-                    <b>Images</b></a>
-            </td>
         </tr>
     </table>
 <?
@@ -89,21 +82,6 @@ else
 					<a href="Javascript:;" onclick="Javascript: change_page('ex_page5');">
                 <? }?>
                 TMJ/ROM </a>
-            </td>
-            
-            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page7.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                <? if($cur_f == 0) {?>
-                    <!--<a href="ex_page7.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
-					<a href="Javascript:;" onclick="Javascript: change_page('ex_page7');">
-                <? }?>
-                Diagnosis</a>
-            </td>
-            <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'ex_page8.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
-                <? if($cur_f == 0) {?>
-                    <!--<a href="ex_page8.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
-					<a href="Javascript:;" onclick="Javascript: change_page('ex_page8');">
-                <? }?>
-                Plan</a>
             </td>
             
             

@@ -592,14 +592,12 @@ $mob_arr = explode('~',$mob);
 					<tr>
 						<td valign="top" width="33%" align="left">
 							&nbsp;&nbsp;&nbsp;
-							<input type="submit" name="q_pagebtn" value="Save" />
 						</td>
 						<td valign="top" width="33%" align="left">
 							&nbsp;&nbsp;&nbsp;
 							<input type="submit" name="q_pagebtn" value="Save" />
 						</td>
 						<td valign="top" width="33%" align="right">
-							<input type="submit" name="q_pagebtn" value="Save" />
 							&nbsp;&nbsp;&nbsp;
 						</td>
 					</tr>

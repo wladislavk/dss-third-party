@@ -546,8 +546,9 @@ $crossbite = st($myarray['crossbite']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             
-                            <input type="text" name="initial_tooth" value="<?=$initial_tooth;?>" class="field text addr tbox" readonly="readonly" />
+                            <input type="text" name="initial_tooth" id="initial_tooth" value="<?=$initial_tooth;?>" class="field text addr tbox" readonly="readonly" />
                             <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=initial_tooth&fval=<?=$initial_tooth;?>'); getElementById('popupContact').style.top = '750px' ;  return false;">Chart</button>
+			    <button onclick="Javascript: $('#initial_tooth').val('Bilateral and even initial contact'); return false;">Bilateral and even initial contact</button>
                     	</span>
                     </div>
                     <br />

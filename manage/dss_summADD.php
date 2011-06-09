@@ -33,7 +33,11 @@ $fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' O
 $fuquery_array = mysql_query($fuquery_sql);
 
 ?>
+<style type="text/css">
 
+.followup-keytable tr{ height:28px; }
+
+</style>
 <!--key reference table-->
 <div style="float: left; width: 210px; margin-right: 10px; padding: 0; border: 0;">
 	
@@ -105,14 +109,14 @@ $fuquery_array = mysql_query($fuquery_sql);
 
 
 
-	<div style=" border: medium none;float: left;height: 480px;margin-bottom: 20px;margin-top: -4px;overflow: auto;">
+	<div style=" border: medium none;float: left;height: 560px;margin-bottom: 20px;margin-top: -4px;overflow: auto;">
 		 <table width="700" style="overflow-x: auto;">
 		   <tr>
 		    <td>
 
 <!-- IFRAME for FOLLOW UPS-->
 
-<iframe height="463" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+<iframe height="533" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 <!-- IFRAME for FOLLOW UPS-->
 

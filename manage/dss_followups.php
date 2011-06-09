@@ -245,8 +245,20 @@ $device = mysql_result($device_result, 0);
   
   <tr>
   	    <td style="background: #E4FFCF;">
-      <input type="text" size="12" name="devadd" style="width:90px;" value="<?php echo $device;?>" />
-      
+           <select name="devadd" style="width:150px;">
+        <?php
+        $device_sql = "select * from dental_device where status=1 order by sortby";
+                                                                $device_my = mysql_query($device_sql);
+
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?php echo ($device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+ 
     </td>
   </tr>
     

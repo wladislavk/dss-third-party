@@ -465,6 +465,12 @@ function popitup(url) {
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+	if(typeof String.prototype.trim !== 'function') {
+  	String.prototype.trim = function() {
+    	return this.replace(/^\s+|\s+$/g, ''); 
+  	}
+	}
+	
 	// Patient Search Suggestion Script
 	var selection = 1;
 	var selectedUrl = '';

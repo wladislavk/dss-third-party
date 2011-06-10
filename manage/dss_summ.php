@@ -1702,17 +1702,10 @@ Sleep Labs:
   
   
   
-	<div style="border: medium none; float: left; margin-bottom: 20px; margin-top: -4px; overflow: auto; height: 569px;">
-		 <table width="800" style="overflow-x: auto; height: 566px;">
-		   <tr>
-		    <td>
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; margin-top: -2px; height: 699px;">
 		    
-		    <iframe height="562" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+		    <iframe height="592" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
-
-         </td>
-      </tr>
-		 </table>
 	</div>
 <!-- SLEEP LAB SECTION END -->
 

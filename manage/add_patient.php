@@ -533,12 +533,23 @@ if($_POST["patientsub"] == 1)
 
 function validate_add_patient(){
 
-d = validateDate('dob');
-i = validateDate('ins_dob');
 i2 = validateDate('ins2_dob');
+i = validateDate('ins_dob');
+d = validateDate('dob');
 
 if(d && i && i2)
   return true
+
+//workaround for settimeout being called in conditionals even if not true
+if(!d){
+  err = "dob" 
+}else if(!i){
+  err = "ins_dob"
+}else{
+  err = "ins2_dob"
+}
+el = document.getElementById(err);
+setTimeout("el.focus()", 0);
 
 return false;
 

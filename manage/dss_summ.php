@@ -1606,7 +1606,10 @@ Sleep Labs:
 </table>  
 <div style="height:20px;"></div>  
 <!-- SLEEP LAB SECTION START -->  
-<table width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
+<style type="text/css">
+  .sleeplabstable tr{ height: 28px; }
+</style>
+<table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
 
 
 	<tr>

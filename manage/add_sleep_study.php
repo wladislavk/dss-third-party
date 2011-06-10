@@ -10,7 +10,8 @@ include("includes/sescheck.php");
 <body style="width: 10000px; background: none repeat scroll 0% 0% transparent; height: 537px;">
 
  <?php 
- if(isset($_POST['submitnewsleeplabsumm'])){ 
+ if(isset($_POST['submitupdatesleeplabsumm'])){ 
+  $id = s_for($_POST['sleeplabid']);
   $date = s_for($_POST['date']);
   $sleeptesttype = s_for($_POST['sleeptesttype']);
   $place = s_for($_POST['place']);
@@ -29,6 +30,51 @@ include("includes/sescheck.php");
   $diagnosis = s_for($_POST['diagnosis']); 
   $notes = s_for($_POST['notes']);
   $patientid = $_GET['pid']; 
+  $q = "UPDATE dental_summ_sleeplab SET
+`date` = '".$date."',
+`sleeptesttype`  = '".$sleeptesttype."',
+`place`  = '".$place."',
+`apnea`  = '".$apnea."',
+`hypopnea`  = '".$hypopnea."',
+`ahi`  = '".$ahi."',
+`ahisupine`  = '".$ahisupine."',
+`rdi`  = '".$rdi."',
+`rdisupine`  = '".$rdisupine."',
+`o2nadir`  = '".$o2nadir."',
+`t9002`  = '".$t9002."',
+`sleepefficiency`  = '".$sleepefficiency."',
+`cpaplevel`  = '".$cpaplevel."',
+`dentaldevice`  = '".$dentaldevice."',
+`devicesetting`  = '".$devicesetting."',
+`diagnosis`  = '".$diagnosis."',
+`notes`  = '".$notes."'
+WHERE id='".$id."'
+";
+  $run_q = mysql_query($q);
+  if(!$run_q){
+   echo "Could not update sleep lab... Please try again.";
+  }else{
+   $msg = "Successfully updated sleep lab";
+  }  
+ }elseif(isset($_POST['submitnewsleeplabsumm'])){
+  $date = s_for($_POST['date']);
+  $sleeptesttype = s_for($_POST['sleeptesttype']);
+  $place = s_for($_POST['place']);
+  $apnea = s_for($_POST['apnea']);
+  $hypopnea = s_for($_POST['hypopnea']);
+  $ahi = s_for($_POST['ahi']);
+  $ahisupine = s_for($_POST['ahisupine']);
+  $rdi = s_for($_POST['rdi']);
+  $rdisupine = s_for($_POST['rdisupine']);
+  $o2nadir = s_for($_POST['o2nadir']);
+  $t9002 = s_for($_POST['t9002']);
+  $sleepefficiency = s_for($_POST['sleepefficiency']);
+  $cpaplevel = s_for($_POST['cpaplevel']);
+  $dentaldevice = s_for($_POST['dentaldevice']);
+  $devicesetting = s_for($_POST['devicesetting']);
+  $diagnosis = s_for($_POST['diagnosis']);
+  $notes = s_for($_POST['notes']);
+  $patientid = $_GET['pid'];
   $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
 `date` ,
@@ -56,13 +102,15 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
    echo "Could not add sleep lab... Please try again.";
   }else{
    $msg = "Successfully added sleep lab";
-  }  
+  }
  }
  ?>
 <div>
-
-<form action="#" method="POST" style="float:left; width:150px;">
-<table id="sleepstudyscrolltable">
+<style type="text/css">
+.sleeplabstable tr{height:28px; }
+</style>
+<form action="#" method="POST" style="float:left; width:185px;">
+<table class="sleeplabstable" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" style="background: #F9FFDF;">
 		<input type="text" value="" onclick="cal1.popup();" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox" name="date" id="date">	
@@ -203,94 +251,130 @@ $device_result = mysql_query($device_query);
 $device = mysql_result($device_result, 0);
 
 ?>
-<table id="sleepstudyscrolltable">
+<form action="#" method="post">
+<input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
+<table id="sleepstudyscrolltable" class="sleeplabstable">
 	<tr>
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['date']; ?>" />	
+		<input type="text" name="date" value="<?php echo $s_lab['date']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['sleeptesttype']; ?>" />	
+                <select name="sleeptesttype">
+                   <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
+                   <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
+                </select>
+
 		</td>
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;"> 
-		<input type="text" value="<?php echo $place; ?>" />	
+                <select name="place">
+                <?php
+     $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
+     $lab_place_r = mysql_query($lab_place_q);
+     while($lab_place = mysql_fetch_array($lab_place_r)){
+    ?>
+                  <option <?= ($s_lab['place']==$lab_place['sleeplabid'])?'selected="selected"':''; ?> value="<?php echo $lab_place['sleeplabid']; ?>"><?php echo $lab_place['company']; ?></option>
+    <?php
+      }
+    ?>
+    </select>
+
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['apnea']; ?>" />	
+		<input type="text" name="apnea" value="<?php echo $s_lab['apnea']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['hypopnea']; ?>" />	
+		<input type="text" name="hypopnea" value="<?php echo $s_lab['hypopnea']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['ahi']; ?>" />	
+		<input type="text" name="ahi" value="<?php echo $s_lab['ahi']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['ahisupine']; ?>" />	
+		<input type="text" name="ahisupine" value="<?php echo $s_lab['ahisupine']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['rdi']; ?>" />	
+		<input type="text" name="rdi" value="<?php echo $s_lab['rdi']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['rdisupine']; ?>" />	
+		<input type="text" name="rdisupine" value="<?php echo $s_lab['rdisupine']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['o2nadir']; ?>" />	
+		<input type="text" name="o2nadir" value="<?php echo $s_lab['o2nadir']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['t9002']; ?>" />	
+		<input type="text" name="t9002" value="<?php echo $s_lab['t9002']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['sleepefficiency']; ?>" />	
+		<input type="text" name="sleepefficiency" value="<?php echo $s_lab['sleepefficiency']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['cpaplevel']; ?>" />	
+		<input type="text" name="cpaplevel" value="<?php echo $s_lab['cpaplevel']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $device; ?>" />	
+                <select name="dentaldevice" style="width:150px;">
+        <?php
+        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device==$device_myarray['device'])?'selected="selected"':'';?> value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+
 		</td>
   </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['devicesetting']; ?>" />	
+		<input type="text" name="devicesetting" value="<?php echo $s_lab['devicesetting']; ?>" />	
 		</td>
 	</tr>
   <tr>
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" value="<?php echo $s_lab['diagnosis']; ?>" />	
+		<input type="text" name="diagnosis" value="<?php echo $s_lab['diagnosis']; ?>" />	
 		</td>
 	</tr>
   <tr>	
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="<?php echo $s_lab['notes']; ?>" />	
+		<input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />	
 		</td>
 	</tr>
-</table>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                <input type="submit" name="submitupdatesleeplabsumm" value="Update" />
+                </td>
+        </tr>
 
+</table>
+</form>
 <?php }
 } ?>
 

@@ -247,7 +247,7 @@ cc:  %other_mds%</p>";
 
 
 ?>
-<form action="/manage/dss_referral_thank_you_pt_not_candidate?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
+<form action="/manage/dss_referral_thank_you_pt_not_candidate.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -442,7 +442,6 @@ foreach ($letter_contacts as $key => $contact) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }
-    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {

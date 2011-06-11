@@ -617,7 +617,6 @@ foreach ($letter_contacts as $key => $contact) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }
-    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {

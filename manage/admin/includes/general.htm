@@ -175,8 +175,29 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
 		return false;
-  } elseif ($parent != null) {
-		$letter_query = "UPDATE dental_letters SET status='1', template='".$template."' WHERE letterid='".$letterid."';";
+  }
+	// Find out preferred send_method
+	switch ($type) {
+		case "patient":
+			$sql = "SELECT preferredcontact FROM dental_patients WHERE patientid = '".$recipientid."';";
+			$result = mysql_query($sql);
+			$preferred = mysql_result($result, 0);
+			break;
+		case "md":
+			$sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
+			$result = mysql_query($sql);
+			$preferred = mysql_result($result, 0);
+
+			break;
+		case "md_referral":
+			$sql = "SELECT preferredcontact FROM dental_referredby WHERE referredbyid = '".$recipientid."';";
+			$result = mysql_query($sql);
+			$preferred = mysql_result($result, 0);
+			break;
+		}
+	}
+  if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
+		$letter_query = "UPDATE dental_letters SET status='1', send_method='".$preferred."', template='".$template."' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
   } else {
     $select_letter = "SELECT patientid, stepid, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
@@ -199,9 +220,14 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 				unset($md_referrals[$key]);
 				$new_md_referrals = implode(",", $mds);
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['stepid'], $topatient, $md_list, $md_referral_list, $letterid, $template, $row['send_method'], $status); 	
+			if ($row['send_method'] == "") {
+				$send_method = $preferred;
+			} else {
+				$send_method = $row['send_method'];
+			}
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['stepid'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status); 	
 		}
- 		if (is_numeric($letter)) {
+ 		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
 			if ($type == 'patient') {
 				$update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'md') {
@@ -219,14 +245,84 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
   }
 }
 
+// Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {
 	if (!isset($letterid)) {
 		return false;
 	} else {
-		// Todo Email, Fax, Print Letter
+		$sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid FROM dental_letters where letterid = '".$letterid."';";
+		$result = mysql_query($sql);
+		while ($row = mysql_fetch_assoc($result)) {
+			if ($row['topatient']) {
+				$id = $row['patientid'];
+				$sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
+				$myinfo = mysql_query($sql);
+				$firstname = mysql_result($myinfo, 0, 0);
+				$lastname = mysql_result($myinfo, 0, 1);
+				$email = mysql_result($myinfo, 0, 2);
+			} elseif ($row['md_list']) {
+				$id = $row['md_list'];
+				$sql = "SELECT firstname, lastname, email FROM dental_contacts WHERE contactid = '".$id."';";
+				$myinfo = mysql_query($sql);
+				$firstname = mysql_result($myinfo, 0, 0);
+				$lastname = mysql_result($myinfo, 0, 1);
+				$email = mysql_result($myinfo, 0, 2);
+			} elseif ($row['md_referral_list']) {
+				$id = $row['md_referral_list'];
+				$sql = "SELECT firstname, lastname, email FROM dental_referrals WHERE referralid = '".$id."';";
+				$myinfo = mysql_query($sql);
+				$firstname = mysql_result($myinfo, 0, 0);
+				$lastname = mysql_result($myinfo, 0, 1);
+				$email = mysql_result($myinfo, 0, 2);		
+			}
+			$send_method = $row['send_method'];
+			$docid = $row['docid'];
+		}
+		// Email, Fax, Print Letter
+		if ($send_method == 'email') {
+			// Get Doctor's Name and Email
+			//$sql =  
+			$to_name = $firstname . " " . $lastname;
+			//send_email($to_name, $email,
+		}
 		// Create PDF
 		$letter_query = "UPDATE dental_letters SET delivered='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
+	}
+}
+
+function send_email($to_name, $to_email, $from_name, $from_email, $subject, $body) {
+	$to = "$to_name <$to_email>";
+	$from = "$from_name <$from_email>";
+	$header_att = "admin/images/email/dss_header.jpg";
+	$header_att_type = "image/jpeg";
+	$header_att_name = "dss_header.jpg";
+	$file = fopen($header_att, 'rb');
+	$data1 = fread($file, filesize($header_att));
+	fclose($file);
+	$headers = "From: $from";
+	$semi_rand = md5(time());
+	$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
+	$headers .= "\nMIME-Version: 1.0\n"
+					 . "Content-Type: multipart/mixed;\n"
+					 . " boundary=\"{$mime_boundary}\"";
+	$message = "<image src=\"dss_header.jpg\" /><br />" . $body . "\n\n"
+					 . "-{$mime_boundary}\n"
+					 . "Content-Type: text/plain; charset=\"iso-8859-1\"\n"
+					 . "Content-Transfer-Encoding: 7bit\n\n";
+	$data = chunk_split(base64_encode($data));
+	$message .= "-{$mime_boundary}\n"
+					 . "Content-Type: {$header_att_type};\n"
+					 . " name=\"{$header_att_name}\"\n"
+					 . "Content-Disposition: attachment;\n"
+					 . " filename=\"{$header_att_name}\"\n"
+					 . "Content-Transfer-Encoding: base64\n\n"
+					 . $data . "\n\n"
+					 . "-{$mime_boundary}-\n";
+	if (mail($to, $subject, $message, $headers)) {
+		return true;
+	} else {
+		return false;
 	}
 }
 

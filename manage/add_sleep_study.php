@@ -3,11 +3,11 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php"); 
 ?>
-<html>
+<html style="overflow-y:hidden;">
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 </head>
-<body style="width: 10000px; background: none repeat scroll 0% 0% transparent; height: 537px;">
+<body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px;">
 
  <?php 
  if(isset($_POST['submitupdatesleeplabsumm'])){ 

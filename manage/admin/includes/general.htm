@@ -194,7 +194,6 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 			$result = mysql_query($sql);
 			$preferred = mysql_result($result, 0);
 			break;
-		}
 	}
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$letter_query = "UPDATE dental_letters SET status='1', send_method='".$preferred."', template='".$template."' WHERE letterid='".$letterid."';";

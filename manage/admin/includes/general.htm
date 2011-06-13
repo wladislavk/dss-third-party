@@ -154,9 +154,6 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 		$columns .= ", deleted";
 		$values .= ", '".mysql_real_escape_string($deleted)."'";
 	}
-  if (!isset($recipientids)) { // find the recipients using templateid
-    // Todo build logic to choose which column to select ids from based on template
-  }
 
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
@@ -258,21 +255,21 @@ function deliver_letter($letterid, $message) {
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
-				$email = mysql_result($myinfo, 0, 2);
+				$to_email = mysql_result($myinfo, 0, 2);
 			} elseif ($row['md_list']) {
 				$id = $row['md_list'];
 				$sql = "SELECT firstname, lastname, email FROM dental_contacts WHERE contactid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
-				$email = mysql_result($myinfo, 0, 2);
+				$to_email = mysql_result($myinfo, 0, 2);
 			} elseif ($row['md_referral_list']) {
 				$id = $row['md_referral_list'];
 				$sql = "SELECT firstname, lastname, email FROM dental_referrals WHERE referralid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
-				$email = mysql_result($myinfo, 0, 2);		
+				$to_email = mysql_result($myinfo, 0, 2);		
 			}
 			$send_method = $row['send_method'];
 			$docid = $row['docid'];
@@ -280,45 +277,101 @@ function deliver_letter($letterid, $message) {
 		// Email, Fax, Print Letter
 		if ($send_method == 'email') {
 			// Get Doctor's Name and Email
-			//$sql =  
+			$sql = "SELECT name, email FROM dental_users WHERE userid = '".$docid."';";
+			$result = mysql_query($sql);
+			$doc_name = mysql_result($result, 0, 0);
+			$doc_email = mysql_result($result, 0, 1);
 			$to_name = $firstname . " " . $lastname;
-			//send_email($to_name, $email,
+			$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message);
 		}
 		// Create PDF
-		$letter_query = "UPDATE dental_letters SET delivered='1' WHERE letterid='".$letterid."';";
-		$letter_result = mysql_query($letter_query);
+		if ($email_success || $send_method == 'fax' || $send_method == 'paper') {
+			$letter_query = "UPDATE dental_letters SET delivered='1' WHERE letterid='".$letterid."';";
+			$letter_result = mysql_query($letter_query);
+		} elseif (!$email_success) {
+			return "Email could not be sent";
+		}
 	}
 }
 
-function send_email($to_name, $to_email, $from_name, $from_email, $subject, $body) {
+function send_email($to_name, $to_email, $from_name, $from_email, $subject, $message) {
 	$to = "$to_name <$to_email>";
 	$from = "$from_name <$from_email>";
-	$header_att = "admin/images/email/dss_header.jpg";
-	$header_att_type = "image/jpeg";
-	$header_att_name = "dss_header.jpg";
-	$file = fopen($header_att, 'rb');
-	$data1 = fread($file, filesize($header_att));
+
+	$TextMessage = strip_tags($message,"<br>");
+	$HTMLMessage = html_entity_decode($message);
+
+	$boundary1 = rand(0,9) . "-"
+		. rand(1000000000,9999999999) . "-"
+		. rand(1000000000,9999999999) . "=:"
+		. rand(10000,99999);
+	$boundary2   =rand(0,9) . "-"
+		. rand(1000000000,9999999999) . "-"
+		. rand(1000000000,9999999999) . "=:"
+		. rand(10000,99999);
+
+	$file_att = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
+	$filetype[] = "image/jpeg";
+	$filename[] = "dss_header.jpg";
+	$cid[] = $filename[0] . "@" . rand(10000,99999) . "." . rand(10000,99999);
+	$handle = fopen($file_att, 'rb');
+	$data = fread($handle, filesize($file_att));
+	$attachment[] = chunk_split(base64_encode($data));
 	fclose($file);
-	$headers = "From: $from";
-	$semi_rand = md5(time());
-	$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
-	$headers .= "\nMIME-Version: 1.0\n"
-					 . "Content-Type: multipart/mixed;\n"
-					 . " boundary=\"{$mime_boundary}\"";
-	$message = "<image src=\"dss_header.jpg\" /><br />" . $body . "\n\n"
-					 . "-{$mime_boundary}\n"
-					 . "Content-Type: text/plain; charset=\"iso-8859-1\"\n"
-					 . "Content-Transfer-Encoding: 7bit\n\n";
-	$data = chunk_split(base64_encode($data));
-	$message .= "-{$mime_boundary}\n"
-					 . "Content-Type: {$header_att_type};\n"
-					 . " name=\"{$header_att_name}\"\n"
-					 . "Content-Disposition: attachment;\n"
-					 . " filename=\"{$header_att_name}\"\n"
-					 . "Content-Transfer-Encoding: base64\n\n"
-					 . $data . "\n\n"
-					 . "-{$mime_boundary}-\n";
-	if (mail($to, $subject, $message, $headers)) {
+
+	$HTMLMessage = "<img src=\"cid:" . $cid[0] . "\" />" . $HTMLMessage;
+
+	$attachments = '';
+	$headers =<<<AKAM
+From: $from
+Reply-To: $from_email
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+    boundary="$boundary1"
+AKAM;
+	
+	for ($i = 0; $i < count($attachment); $i++) {
+		$attachments .=<<<ATTA
+--$boundary1
+Content-Type: $filetype[$i];
+    name="$filename[$i]"
+Content-Transfer-Encoding: base64
+Content-ID: <$cid[$i]>
+Content-Disposition: attachment;
+    filename="$filename[$i]"
+
+$attachment[$i]
+
+ATTA;
+	}
+
+	$body =<<<AKAM
+This is a multi-part message in MIME format.
+
+--$boundary1
+Content-Type: multipart/alternative;
+    boundary="$boundary2"
+
+--$boundary2
+Content-Type: text/plain;
+    charset="windows-1256"
+Content-Transfer-Encoding: quoted-printable
+
+$TextMessage
+--$boundary2
+Content-Type: text/html;
+    charset="windows-1256"
+Content-Transfer-Encoding: quoted-printable
+
+$HTMLMessage
+
+--$boundary2--
+
+$attachments
+--$boundary1--
+AKAM;
+
+	if (mail($to, $subject, $body, $headers)) {
 		return true;
 	} else {
 		return false;

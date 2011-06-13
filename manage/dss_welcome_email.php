@@ -285,11 +285,13 @@ foreach ($letter_contacts as $key => $contact) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }
-    $letterid = $letterid;
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
-			deliver_letter($letterid);
+			$message = $letter[$key];
+			$search= array("<strong>","</strong>");
+			$message = str_replace($search, "", $message);	
+			deliver_letter($letterid, $message);
 		} else {
 	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}

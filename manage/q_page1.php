@@ -458,7 +458,7 @@ if($complaintid <> '')
 						}
 						
 					?>
-                    <div>
+                    <div style="width:48%;float:left;">
                         <span>
                         	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="field text addr tbox" style="width:50px;" onchange="chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
                             	<option value=""></option>
@@ -720,7 +720,7 @@ if($complaintid <> '')
 			</ul>
 		</td>
 	</tr>  
-	
+<!--	
 	<tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -763,7 +763,7 @@ if($complaintid <> '')
 				</li>
 			</ul>
 		</td>
-	</tr>
+	</tr>-->
 	   
 </table>
 

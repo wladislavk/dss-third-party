@@ -255,21 +255,21 @@ $mob_arr = explode('~',$mob);
 												&nbsp;&nbsp;
 												Me
 												<br />
-												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 											</td>
 										</tr>
 										
@@ -287,27 +287,27 @@ $mob_arr = explode('~',$mob);
 										<tr>
 											<td valign="top" align="center">
 												<? $mob_c++;?>
-												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
+												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<br />
 												Di
 												&nbsp;&nbsp;
@@ -442,27 +442,27 @@ $mob_arr = explode('~',$mob);
 												Me
 												<br />
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $mob_c++;?>
-												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
+												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
 											</td>
 										</tr>
 										
@@ -480,21 +480,21 @@ $mob_arr = explode('~',$mob);
 										<tr>
 											<td valign="top" align="center">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:20px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<br />
 												Di
 												&nbsp;&nbsp;
@@ -554,32 +554,32 @@ $mob_arr = explode('~',$mob);
 			<table cellpadding="5" cellspacing="1">
 				<tr>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s1" style="width:20px" value="<?=$s1;?>">
+						<input type="text" maxlength="2" name="s1" style="width:15px" value="<?=$s1;?>">
 						<br />
 						<b>S1</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s2" style="width:20px" value="<?=$s2;?>">
+						<input type="text" maxlength="2" name="s2" style="width:15px" value="<?=$s2;?>">
 						<br />
 						<b>S2</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s3" style="width:20px" value="<?=$s3;?>">
+						<input type="text" maxlength="2" name="s3" style="width:15px" value="<?=$s3;?>">
 						<br />
 						<b>S3</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s4" style="width:20px" value="<?=$s4;?>">
+						<input type="text" maxlength="2" name="s4" style="width:15px" value="<?=$s4;?>">
 						<br />
 						<b>S4</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s5" style="width:20px" value="<?=$s5;?>">
+						<input type="text" maxlength="2" name="s5" style="width:15px" value="<?=$s5;?>">
 						<br />
 						<b>S5</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s6" style="width:20px" value="<?=$s6;?>">
+						<input type="text" maxlength="2" name="s6" style="width:15px" value="<?=$s6;?>">
 						<br />
 						<b>S6</b>
 					</td>

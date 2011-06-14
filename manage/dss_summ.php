@@ -1436,7 +1436,7 @@ echo "Not Set, Please set through patient info.";
   <tr valign="top">
    <td width="15%" height="5">CPAP</td>
     <td colspan="6">
-    <div style="width:100%;"> 
+    <div style="width:80%;"> 
   
       
     <label>
@@ -1501,14 +1501,14 @@ echo "Not Set, Please set through patient info.";
 			<br /><br />
       Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br /> 
 </td>
-    <td colspan="5">
+    <td colspan="6">
     History of Surgery or other Treatment Attempts:<br />
       <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
       <br />
     </td>
   </tr>
   <tr>
-    <td valign="top" colspan="3">Notes/Personal:
+    <td valign="top" colspan="7">Notes/Personal:
       
       
        <?php include("dss_notes.php"); ?>

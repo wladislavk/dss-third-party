@@ -664,17 +664,25 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
+
+                               <script type="text/javascript">
+				  function updateProtrusion(){
+					pval = $('#protrusion_to').val() - $('#protrusion_from').val();
+					$('#protrusion_equal').val(pval);
+
+                                  }
+			       </script>
                                <tr>
                                 </td>
                                     <td valign="top">
                                     <span>George Scale</span>
                                     </td>
                                         <td valign="top">
-                                        <input type="text" name="protrusion_from" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
+                                        <input type="text" id="protrusion_from" name="protrusion_from" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
                                         &nbsp;&nbsp;&nbsp;
                                         to
                                         &nbsp;&nbsp;&nbsp;
-                                        <input type="text" name="protrusion_to" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
+                                        <input type="text" id="protrusion_to" name="protrusion_to" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
 
                                         </span>
                                     </td>
@@ -688,7 +696,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to-($protrusion_from);?>">                                     </td>
+                                    	<input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to-($protrusion_from);?>">                                     </td>
                                 </tr>
                                 
                                 <tr>

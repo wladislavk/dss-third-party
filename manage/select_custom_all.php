@@ -48,10 +48,12 @@ $total_rec = mysql_num_rows($my);
 			var desc_arr = new Array();
 			
 			<? $i=0;
+                        //$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+                        //$my = mysql_query($sql);
 			while($myarray = mysql_fetch_array($my))
 			{?>
-				title_arr[<?=$i;?>] = '<?=st($myarray['title']);?>';
-				desc_arr[<?=$i;?>] = '<?=st($myarray['description']);?>';
+				title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
+				desc_arr[<?=$i;?>] = "<?=st(addslashes($myarray['description']));?>";
 			<? 
 				$i++;
 			}?>

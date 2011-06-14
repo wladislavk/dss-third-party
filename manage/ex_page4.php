@@ -265,10 +265,14 @@ $crossbite = st($myarray['crossbite']);
                             <input type="text" name="missing" value="<?=$missing?>" class="field text addr tbox" readonly="readonly" />
                             <button onclick="Javascript: loadPopup('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; return false;">Change</button>
 							
-							<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>
+							<!--<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>-->
+                                                        <button onclick="Javascript: $('#perio_chart').toggle('slow'); return false;">Perio Chart</button>
 							
                         </span>
                     </div>
+<div id="perio_chart" style="display:none;">
+<iframe src="missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
+</div>
                     <br />
 					
                     <label class="desc" id="title0" for="Field0">
@@ -497,7 +501,7 @@ $crossbite = st($myarray['crossbite']);
                     <label class="desc" id="title0" for="Field0">
                         Other Items:
                         
-                        <button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page4frm&tx=additional_paragraph'); getElementById('popupContact').style.top = '700px'; return false;">Use Canned Text</button>
+                        <button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page4frm&tx=additional_paragraph'); getElementById('popupContact').style.top = '700px'; return false;">Use Custom Text</button>
                     </label>
                     
                     <div>
@@ -594,7 +598,7 @@ $crossbite = st($myarray['crossbite']);
 <br />
 
 
-<div id="popupContact" style="width:750px;">
+<div id="popupContact" style="width:750px; height: 500px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>

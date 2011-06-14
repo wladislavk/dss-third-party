@@ -50,8 +50,8 @@ $total_rec = mysql_num_rows($my);
 			<? $i=0;
 			while($myarray = mysql_fetch_array($my))
 			{?>
-				title_arr[<?=$i;?>] = '<?=st($myarray['title']);?>';
-				desc_arr[<?=$i;?>] = '<?=st($myarray['description']);?>';
+				title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
+				desc_arr[<?=$i;?>] = "<?=st(addslashes($myarray['description']));?>";
 			<? 
 				$i++;
 			}?>

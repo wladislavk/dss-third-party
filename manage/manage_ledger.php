@@ -181,11 +181,11 @@ $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>
-
+<!--
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+-->
 <span class="admin_head">
 	Ledger Card
 </span>
@@ -227,8 +227,8 @@ W1: <?=st($pat_myarray['cell_phone']);?>
 
 
 <br />
-<script type="text/javascript">
 
+<script type="text/javascript">
 function concat_checked(ids){
 var s = '';
 var first = true;

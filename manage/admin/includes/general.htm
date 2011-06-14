@@ -309,17 +309,32 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 		. rand(1000000000,9999999999) . "-"
 		. rand(1000000000,9999999999) . "=:"
 		. rand(10000,99999);
+	$boundary3   =rand(0,9) . "-"
+		. rand(1000000000,9999999999) . "-"
+		. rand(1000000000,9999999999) . "=:"
+		. rand(10000,99999);
 
+	// Attach an Image for embedded content
 	$file_att = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
+	$imgfiletype[] = "image/jpeg";
+	$imgfilename[] = "dss_header.jpg";
+	$cid[] = $imgfilename[0] . "@" . rand(10000,99999) . "." . rand(10000,99999);
+	$imgsize[] = filesize($file_att);
+	$handle = fopen($file_att, 'rb');
+	$data = fread($handle, $imgsize[0]);
+	$image[] = chunk_split(base64_encode($data));
+	fclose($file);
+
+	// Add an attachment
+	$file_att = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_footer.jpg";
 	$filetype[] = "image/jpeg";
-	$filename[] = "dss_header.jpg";
-	$cid[] = $filename[0] . "@" . rand(10000,99999) . "." . rand(10000,99999);
+	$filename[] = "dss_footer.jpg";
 	$handle = fopen($file_att, 'rb');
 	$data = fread($handle, filesize($file_att));
 	$attachment[] = chunk_split(base64_encode($data));
 	fclose($file);
 
-	$HTMLMessage = "<img src=\"cid:" . $cid[0] . "\" />" . $HTMLMessage;
+	$HTMLMessage = "<img src=\"cid:" . $cid[0] . "\" alt=\"Dental Sleep Solutions\">" . $HTMLMessage;
 
 	$attachments = '';
 	$headers =<<<AKAM
@@ -327,18 +342,33 @@ From: $from
 Reply-To: $from_email
 MIME-Version: 1.0
 Content-Type: multipart/mixed;
-    boundary="$boundary1"
+	boundary="$boundary1"
 AKAM;
-	
+
+	for ($i = 0; $i < count($image); $i++) {
+		$images .=<<<IMG
+--$boundary2
+Content-Type: $imgfiletype[$i];
+	name="$imgfilename[$i]"
+Content-Transfer-Encoding: base64
+Content-ID: <$cid[$i]>
+Content-Description: $imgfilename[$i]
+Content-Location: $imgfilename[$i]
+Content-Disposition: inline; filename="$imgfilename[$i]"; size=$imgsize[$i];
+
+$image[$i]
+
+IMG;
+	}
+
 	for ($i = 0; $i < count($attachment); $i++) {
 		$attachments .=<<<ATTA
 --$boundary1
 Content-Type: $filetype[$i];
-    name="$filename[$i]"
+	name="$filename[$i]"
 Content-Transfer-Encoding: base64
-Content-ID: <$cid[$i]>
 Content-Disposition: attachment;
-    filename="$filename[$i]"
+	filename="$filename[$i]"
 
 $attachment[$i]
 
@@ -349,22 +379,30 @@ ATTA;
 This is a multi-part message in MIME format.
 
 --$boundary1
-Content-Type: multipart/alternative;
-    boundary="$boundary2"
+Content-Type: multipart/related;
+	type="multipart/alternative";
+	boundary="$boundary2"
 
 --$boundary2
+Content-Type: multipart/alternative;
+	boundary="$boundary3"
+
+--$boundary3
 Content-Type: text/plain;
-    charset="windows-1256"
+	charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
 
 $TextMessage
---$boundary2
+--$boundary3
 Content-Type: text/html;
-    charset="windows-1256"
+	charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
 
 $HTMLMessage
 
+--$boundary3--
+
+$images
 --$boundary2--
 
 $attachments

@@ -274,7 +274,7 @@ if($epworthid <> '')
 	<tr>
         <td valign="top" class="frmhead" style="text-align:center;">
 			<input id="iframestatus" name="iframestatus" type="hidden" />
-			<iframe src="thorton.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" width="98%" height="420px;">Your Browser Does Not Support Iframes</iframe>
+			<iframe src="thorton.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" width="98%" height="440px;">Your Browser Does Not Support Iframes</iframe>
 		</td>
 	</tr>    
 </table>

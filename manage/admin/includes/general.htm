@@ -286,7 +286,7 @@ function deliver_letter($letterid, $message) {
 		}
 		// Create PDF
 		if ($email_success || $send_method == 'fax' || $send_method == 'paper') {
-			$letter_query = "UPDATE dental_letters SET delivered='1' WHERE letterid='".$letterid."';";
+			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".$letterid."';";
 			$letter_result = mysql_query($letter_query);
 		} elseif (!$email_success) {
 			return "Email could not be sent";

@@ -783,12 +783,12 @@ if(isset($_POST['flowsubmitpgtwo'])){
 	$flowsheet_segments = explode(",", $result_array['steparray']);
 	$topstep = array_pop($flowsheet_segments); 
 
-	$segment_query = "SELECT segmentid, date_scheduled, date_completed, letterid FROM dental_flow_pg2_info WHERE segmentid = '".$topstep."' AND patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
+	$segment_query = "SELECT segmentid, date_scheduled, date_completed, letterid FROM dental_flow_pg2_info WHERE stepid = '".$numsteps."' AND segmentid = '".$topstep."' AND patientid = '".$_GET['pid']."' ORDER BY stepid DESC LIMIT 1;";
 	$segment_result = mysql_query($segment_query);
 	while ($row = mysql_fetch_assoc($segment_result)) {
 		$laststep = $row;
 	}
-	if ($laststep['letterid'] != '') {
+	if (!empty($laststep['letterid'])) {
 		$letter = true;
 	}
 
@@ -808,8 +808,8 @@ print ($consulted) ? "true" . "<br />" : "false<br />";
 print $datesched . "<br />";
 print (strtotime($datesched) != strtotime($laststep['date_scheduled'])) ? "Not equal<br />": "equal<br />";
 print $datecomp . "<br />";
-print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<br />": "equal<br />";*/
-print $datesched . " " . $letter ? "true":"false" . " " . $topstep;
+print (strtotime($datecomp) != strtotime($laststep['date_comp'])) ? "Not equal<br />": "equal<br />";
+print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $laststep['letterid'];*/
 	$letterid = array();
 	if ($datesched != "" && !$letter && $topstep == "2") { // Consultation
 		$letterid[] = trigger_letter5($_GET['pid'], $numsteps);
@@ -997,7 +997,7 @@ if ($numrows == 0) {
 
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."';";
 $pat_my = mysql_query($pat_sql);
 if (!$pat_my) {
   print "MySQL error ".mysql_errno().": ".mysql_error();
@@ -1006,11 +1006,17 @@ $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $referred_by = $pat_myarray['referred_by'];
-$referredby_sql = "select * from dental_referredby where `referredbyid` = ".$reffered_by.";";
+$referredby_sql = "select * from dental_referredby where `referredbyid` = '".$referred_by."';";
 $referredby_my = mysql_query($referredby_sql);
 $referrer_array = mysql_fetch_array($referredby_my);
 $referrer = $referrer_array['firstname']." ".$referrer_array['middlename']." ".$referrer_array['lastname'];
+}
 
+// Get delivery date of Thank You letter to Referral Source
+$sql = "SELECT UNIX_TIMESTAMP(delivery_date) as delivery_date FROM dental_letters WHERE templateid = '9' AND md_referral_list = '".$referred_by."' AND patientid = '".s_for($_GET['pid'])."' ORDER BY delivery_date DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_assoc($result)) {
+	$delivery_date = date('m/d/Y', $row['delivery_date']);
 }
 ?>
 
@@ -1061,7 +1067,16 @@ height:35px;
 				|| $thxletter == '' || $queststartdate == '' || $questcompdate == '' || $insinforec == '' 
 				|| $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
       echo "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>";    
-    }
+    } else {
+?>
+			<script type="text/javascript">
+				$(document).ready(function() {	
+					$('#flowsheet_page2').css("display", "block");
+					$('#flowsheet_page1').css("display", "none");
+				});
+			</script>
+<?php
+		}
     ?>
 </div>
 
@@ -1210,7 +1225,7 @@ echo $referrer;
 
 </td>
 <td>
-<input id="thxletter" name="thxletter" type="text" class="field text addr tbox" value="<?php echo $thxletter; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('thxletter');" onClick="cal3.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="thxletter" name="thxletter" type="text" class="field text addr tbox" value="<?php echo $delivery_date; //$thxletter ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate('thxletter');" onClick="cal3.popup();" value="example 11/11/1234" disabled /><!--<span id="req_0" class="req">*</span>-->
 
 
 

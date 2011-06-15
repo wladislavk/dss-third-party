@@ -131,7 +131,7 @@ if($_POST["referredbysub"] == 1)
 		$greeting = st($themyarray['greeting']);
 		$sincerely = st($themyarray['sincerely']);
 		$notes = st($themyarray['notes']);
-		$preferredcontact = st($_POST['preferredcontact']);
+		$preferredcontact = st($themyarray['preferredcontact']);
 		
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
 		

@@ -294,125 +294,41 @@ function deliver_letter($letterid, $message) {
 	}
 }
 
-function send_email($to_name, $to_email, $from_name, $from_email, $subject, $message) {
+function send_email($to_name, $to_email, $from_name, $from_email, $subject, $message, $attachment = null) {
+	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/swift-4.0.6/lib/swift_required.php');
+	$email = Swift_Message::newInstance();
+
 	$to = "$to_name <$to_email>";
 	$from = "$from_name <$from_email>";
 
+	$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
+	$header_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\">";
+	$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_footer.jpg";
+	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\">";
+
 	$TextMessage = strip_tags($message,"<br>");
-	$HTMLMessage = html_entity_decode($message);
-
-	$boundary1 = rand(0,9) . "-"
-		. rand(1000000000,9999999999) . "-"
-		. rand(1000000000,9999999999) . "=:"
-		. rand(10000,99999);
-	$boundary2   =rand(0,9) . "-"
-		. rand(1000000000,9999999999) . "-"
-		. rand(1000000000,9999999999) . "=:"
-		. rand(10000,99999);
-	$boundary3   =rand(0,9) . "-"
-		. rand(1000000000,9999999999) . "-"
-		. rand(1000000000,9999999999) . "=:"
-		. rand(10000,99999);
-
-	// Attach an Image for embedded content
-	$file_att = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
-	$imgfiletype[] = "image/jpeg";
-	$imgfilename[] = "dss_header.jpg";
-	$cid[] = $imgfilename[0] . "@" . rand(10000,99999) . "." . rand(10000,99999);
-	$imgsize[] = filesize($file_att);
-	$handle = fopen($file_att, 'rb');
-	$data = fread($handle, $imgsize[0]);
-	$image[] = chunk_split(base64_encode($data));
-	fclose($file);
-
-	// Add an attachment
-	$file_att = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_footer.jpg";
-	$filetype[] = "image/jpeg";
-	$filename[] = "dss_footer.jpg";
-	$handle = fopen($file_att, 'rb');
-	$data = fread($handle, filesize($file_att));
-	$attachment[] = chunk_split(base64_encode($data));
-	fclose($file);
-
-	$HTMLMessage = "<img src=\"cid:" . $cid[0] . "\" alt=\"Dental Sleep Solutions\">" . $HTMLMessage;
-
-	$attachments = '';
-	$headers =<<<AKAM
-From: $from
-Reply-To: $from_email
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="$boundary1"
-AKAM;
-
-	for ($i = 0; $i < count($image); $i++) {
-		$images .=<<<IMG
---$boundary2
-Content-Type: $imgfiletype[$i];
-	name="$imgfilename[$i]"
-Content-Transfer-Encoding: base64
-Content-ID: <$cid[$i]>
-Content-Description: $imgfilename[$i]
-Content-Location: $imgfilename[$i]
-Content-Disposition: inline; filename="$imgfilename[$i]"; size=$imgsize[$i];
-
-$image[$i]
-
-IMG;
+	$HTMLMessage = $header_html . html_entity_decode($message) . $footer_html;
+	
+	$email->setSubject('Dental Sleep Solutions Correspondance');
+	$email->setFrom(array($from_email => $from_name));
+	$email->setTo(array($to_email => $to_name));
+	$email->setBody($HTMLMessage, 'text/html');
+	if ($attachment != '') {
+		$email->attach(Swift_Attachment::fromPath($attachment));
 	}
 
-	for ($i = 0; $i < count($attachment); $i++) {
-		$attachments .=<<<ATTA
---$boundary1
-Content-Type: $filetype[$i];
-	name="$filename[$i]"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename="$filename[$i]"
+	$transport = Swift_SendmailTransport::newInstance('/usr/sbin/sendmail -bs');
 
-$attachment[$i]
+	$mailer = Swift_Mailer::newInstance($transport);
 
-ATTA;
-	}
-
-	$body =<<<AKAM
-This is a multi-part message in MIME format.
-
---$boundary1
-Content-Type: multipart/related;
-	type="multipart/alternative";
-	boundary="$boundary2"
-
---$boundary2
-Content-Type: multipart/alternative;
-	boundary="$boundary3"
-
---$boundary3
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-
-$TextMessage
---$boundary3
-Content-Type: text/html;
-	charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-
-$HTMLMessage
-
---$boundary3--
-
-$images
---$boundary2--
-
-$attachments
---$boundary1--
-AKAM;
-
-	if (mail($to, $subject, $body, $headers)) {
-		return true;
+	if (!$mailer->send($email, $failures)) {
+		if (count($failures) > 0) {
+			return "Rejected Email Address";
+		} else {
+			return false;
+		}
 	} else {
-		return false;
+		return true;
 	}
 }
 

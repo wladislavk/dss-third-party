@@ -40,9 +40,13 @@ $dss_trxn_type_labels[DSS_TRXN_TYPE_ADJ] = 'Adjustment Code';
 // Claim statuses (insurance)
 define('DSS_CLAIM_PENDING', 0);
 define('DSS_CLAIM_SENT', 1);
+define('DSS_CLAIM_DISPUTE', 2);
 define('DSS_CLAIM_PAID_INSURANCE', 3);
 define('DSS_CLAIM_REJECTED', 4);
 define('DSS_CLAIM_PAID_PATIENT', 5);
+define('DSS_CLAIM_SEC_PENDING', 6);
+define('DSS_CLAIM_SEC_SENT', 7);
+define('DSS_CLAIM_SEC_DISPUTE', 8);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();

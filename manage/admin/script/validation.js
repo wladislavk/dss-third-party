@@ -352,6 +352,7 @@ function patientabc(fa)
 			return false;
 		}
 	}
+  return true;
 }
 
 

@@ -483,6 +483,7 @@ function patientabc(fa)
 			return false;
 		}
 	}	
+        return true;
 }
 
 function contactabc(fa)

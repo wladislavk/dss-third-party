@@ -2,3 +2,4 @@ manage/admin/includes/config.php
 admin/includes/config.php
 manage/sleepstudies/*
 manage/q_file/*
+manage/letterpdfs/*

@@ -74,6 +74,7 @@ if($_POST["patientsub"] == 1)
 {
 	if($_POST["ed"] != "")
 	{
+          echo('edit');
 		$ed_sql = "update dental_patients 
 		set 
 		firstname = '".s_for($_POST["firstname"])."', 
@@ -192,6 +193,7 @@ if($_POST["patientsub"] == 1)
 	}
 	else
 	{
+        echo('in');
 		$ins_sql = "insert 
 		into 
 		dental_patients 

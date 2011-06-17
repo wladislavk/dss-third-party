@@ -23,7 +23,7 @@ $claim = mysql_fetch_array($cq);
 <body>
 
 <script type="text/javascript">
-
+//CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
 returnval = true;
 //CHECK PAYMENT IS ENTERED
@@ -48,6 +48,9 @@ if(f.dispute.checked){
     returnval = false;
   }else if(<?= ($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING)?1:0; ?>){
     alert('A pending claim cannot be disputed. You cannot dispute a claim until it has been sent.');
+    returnval = false;
+  }else if(f.ia1.value =='' && f.ia2.value == '' && f.ia3.value == ''){
+    alert('A disputed claim must have attachments from insurance company.');
     returnval = false;
   }else{
     //Dispute valid
@@ -227,7 +230,12 @@ while($row = mysql_fetch_assoc($lq)){
 <br />
 <input type="checkbox" name="close" value="1" /> Close Claim
 <br />
-<input type="checkbox" name="dispute" value='1' /> Dispute
+<input type="checkbox" name="dispute" onclick=" if(this.checked){ $('#ins_attach').show('slow'); }else{ $('#ins_attach').hide('slow'); }" value='1' /> Dispute
+<div id="ins_attach" style="display: none">
+<input type="file" name="ia1" /><br />
+<input type="file" name="ia2" /><br />
+<input type="file" name="ia3" /><br />
+</div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
 <input type="hidden" name="producer" value="<?php echo $_SESSION['username']; ?>">

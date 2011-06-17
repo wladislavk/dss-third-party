@@ -47,6 +47,7 @@ define('DSS_CLAIM_PAID_PATIENT', 5);
 define('DSS_CLAIM_SEC_PENDING', 6);
 define('DSS_CLAIM_SEC_SENT', 7);
 define('DSS_CLAIM_SEC_DISPUTE', 8);
+define('DSS_CLAIM_PAID_SEC_INSURANCE', 9);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();

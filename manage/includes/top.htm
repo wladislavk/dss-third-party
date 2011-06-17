@@ -801,7 +801,7 @@ display:none;
 <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
 
 <div style="clear:both;"></div>
-<?php if(isset($_GET['pid'])){?> <div style="margin-left:20px;float:left;width:400px;"> <?php echo "You are currently in a patient chart - " ?><a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a><?php ?> </div><div style="float:right;width:300px;"> 
+<?php if(isset($_GET['pid']) && $_GET['pid']!= ''){?> <div style="margin-left:20px;float:left;width:400px;"> <?php echo "You are currently in a patient chart - " ?><a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a><?php ?> </div><div style="float:right;width:300px;"> 
                     <?php
                     $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
                     $my=mysql_query($sql) or die(mysql_error());

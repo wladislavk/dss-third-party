@@ -505,6 +505,22 @@ if ($_POST['insurancesub'] == 1) {
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
+             $u_status = $status;
+             if($status == DSS_CLAIM_SENT){
+                if($p_m_ins_ass == 'No'){
+                   $u_status = DSS_CLAIM_PAID_PATIENT;
+                }else{
+                   $u_status = DSS_CLAIM_SENT;
+                }
+             }elseif($status == DSS_CLAIM_SEC_SENT){
+                if($s_m_ins_ass == 'No'){
+                  $u_status = DSS_CLAIM_PAID_PATIENT;
+                }else{
+                  $u_status = DSS_CLAIM_SEC_SENT;
+                }
+             }else{
+               $u_status = DSS_CLAIM_PENDING;
+             }
 
 		$ed_sql = " update dental_insurance set 
 		pica2 = '".s_for($pica2)."',
@@ -695,7 +711,7 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		status = '".s_for(($status == DSS_CLAIM_SENT) ? (($p_m_ins_ass == 'No')?DSS_CLAIM_PAID_PATIENT:DSS_CLAIM_SENT) : DSS_CLAIM_PENDING)."'
+		status = '".s_for($u_status)."'
 		where insuranceid = '".s_for($_POST['ed'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -931,7 +947,7 @@ $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $status = st($myarray['status']);
 
-$is_sent = ($status == DSS_CLAIM_SENT) ? true : false;
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 
 if($insured_sex == '')
 	$insured_sex = $pat_myarray['gender'];
@@ -1083,7 +1099,11 @@ if (empty($prior_authorization_number)) {
         <?php if ($is_sent) { ?>
           Claim has been sent
 	    <?php } else if ($is_back_office) { ?>
+               <?php if($status == DSS_CLAIM_PENDING){ ?>
           Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
+               <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
+          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" <?=($status == DSS_CLAIM_SEC_SENT) ? 'checked' : ''?>/>
+               <?php } ?>
 		<?php } ?>
 		<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>
         <?php if (!$is_sent) { ?>

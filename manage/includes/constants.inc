@@ -47,6 +47,7 @@ define('DSS_CLAIM_PAID_PATIENT', 5);
 define('DSS_CLAIM_SEC_PENDING', 6);
 define('DSS_CLAIM_SEC_SENT', 7);
 define('DSS_CLAIM_SEC_DISPUTE', 8);
+define('DSS_CLAIM_PAID_SEC_INSURANCE', 9);
 
 // A convenience array to get claim labels
 $dss_claim_status_labels = array();
@@ -54,12 +55,22 @@ $dss_claim_status_labels[DSS_CLAIM_PENDING] = 'Pending';
 $dss_claim_status_labels[DSS_CLAIM_PENDING]['short'] = 'Pend.';
 $dss_claim_status_labels[DSS_CLAIM_SENT] = 'Sent';
 $dss_claim_status_labels[DSS_CLAIM_SENT]['short'] = 'Sent';
+$dss_claim_status_labels[DSS_CLAIM_DISPUTE] = 'Disputed';
+$dss_claim_status_labels[DSS_CLAIM_DISPUTE]['short'] = 'Disp.';
 $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE] = 'Paid';
 $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]['short'] = 'Paid';
 $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT] = 'Paid to Patient';
 $dss_claim_status_labels[DSS_CLAIM_PAID_PATIENT]['short'] = 'Paid to pt.';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED] = 'Rejected';
 $dss_claim_status_labels[DSS_CLAIM_REJECTED]['short'] = 'Rej.';
+$dss_claim_status_labels[DSS_CLAIM_SEC_PENDING] = 'Secondary Pending';
+$dss_claim_status_labels[DSS_CLAIM_SEC_PENDING]['short'] = 'Sec Pend.';
+$dss_claim_status_labels[DSS_CLAIM_SEC_SENT] = 'Secondary Sent';
+$dss_claim_status_labels[DSS_CLAIM_SEC_SENT]['short'] = 'Sec Sent';
+$dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE] = 'Secondary Disputed';
+$dss_claim_status_labels[DSS_CLAIM_SEC_DISPUTE]['short'] = 'Sec Disp.';
+$dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE] = 'Secondary Paid';
+$dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
 
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);

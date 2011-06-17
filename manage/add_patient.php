@@ -531,15 +531,22 @@ if($_POST["patientsub"] == 1)
 
 <script type="text/javascript">
 
-function validate_add_patient(){
-
+function validate_add_patient(fa){
+p = patientabc(fa);
+if(document.getElementById('s_m_dss_file_yes').checked){
 i2 = validateDate('ins2_dob');
+}else{
+i2 = true;
+}
+if(document.getElementById('p_m_dss_file_yes').checked){
 i = validateDate('ins_dob');
+}else{
+i = true;
+}
 d = validateDate('dob');
-
-if(d && i && i2)
+if(p && d && i && i2){
   return true
-
+}
 //workaround for settimeout being called in conditionals even if not true
 if(!d){
   err = "dob" 
@@ -550,14 +557,14 @@ if(!d){
 }
 el = document.getElementById(err);
 setTimeout("el.focus()", 0);
-
 return false;
+
 
 }
 
 </script>
 
-    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient();">
+    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
     
     <script language="JavaScript" src="calendar1.js"></script>

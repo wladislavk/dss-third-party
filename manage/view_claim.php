@@ -50,10 +50,6 @@ $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>
-
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<script src="admin/popup/popup.js" type="text/javascript"></script>
 <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
 
 <span class="admin_head">

@@ -240,7 +240,6 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		}
   }
 }
-
 // Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {
 	if (!isset($letterid)) {
@@ -258,35 +257,43 @@ function deliver_letter($letterid, $message) {
 				$to_email = mysql_result($myinfo, 0, 2);
 			} elseif ($row['md_list']) {
 				$id = $row['md_list'];
-				$sql = "SELECT firstname, lastname, email FROM dental_contacts WHERE contactid = '".$id."';";
+				$sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_contact WHERE contactid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
 				$to_email = mysql_result($myinfo, 0, 2);
+				$fax = mysql_result($myinfo, 0, 3);
+				$company = mysql_result($myinfo, 0, 4);
+				$phone = mysql_result($myinfo, 0, 5);
 			} elseif ($row['md_referral_list']) {
 				$id = $row['md_referral_list'];
-				$sql = "SELECT firstname, lastname, email FROM dental_referrals WHERE referralid = '".$id."';";
+				$sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_referredby WHERE referredbyid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
-				$to_email = mysql_result($myinfo, 0, 2);		
+				$to_email = mysql_result($myinfo, 0, 2);	
+				$fax = mysql_result($myinfo, 0, 3);
+				$company = mysql_result($myinfo, 0, 4);
+				$phone = mysql_result($myinfo, 0, 5);
 			}
+			$to_name = $firstname . " " . $lastname;
 			$send_method = $row['send_method'];
 			$patientid = $row['patientid'];
 			$docid = $row['docid'];
 			$userid = $row['userid'];
 			$templateid = $row['templateid'];
 		}
-		// Email, Fax, Print Letter
+		// Get Doctor's Name and Email
+		$sql = "SELECT name, email FROM dental_users WHERE userid = '".$docid."';";
+		$result = mysql_query($sql);
+		$doc_name = mysql_result($result, 0, 0);
+		$doc_email = mysql_result($result, 0, 1);
+
+		// Send Email
 		if ($send_method == 'email') {
-			// Get Doctor's Name and Email
-			$sql = "SELECT name, email FROM dental_users WHERE userid = '".$docid."';";
-			$result = mysql_query($sql);
-			$doc_name = mysql_result($result, 0, 0);
-			$doc_email = mysql_result($result, 0, 1);
-			$to_name = $firstname . " " . $lastname;
 			$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message);
 		}
+
 		// Create PDF
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
@@ -299,12 +306,19 @@ function deliver_letter($letterid, $message) {
 		create_pdf($title, $filename, $html);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
-		
-		if ($email_success || $send_method == 'fax' || $send_method == 'paper') {
+	
+		// Send Fax	
+		if ($send_method == 'fax') {
+			$subject = "Dental Sleep Solutions";
+			$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename); 
+		}
+		if ($email_success || $fax_success || $send_method == 'paper') {
 			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".$letterid."';";
 			$letter_result = mysql_query($letter_query);
 		} elseif (!$email_success) {
 			return "Email could not be sent";
+		} elseif (!$fax_success) {
+			return "Fax could not be sent";
 		}
 	}
 }
@@ -344,6 +358,74 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 		}
 	} else {
 		return true;
+	}
+}
+
+function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name, $pdf_filename) {
+	$client = new SoapClient("https://faxregistration.com/sfaxws/sfaxapi.asmx?wsdl");
+
+	$fax = preg_replace("/[^0-9]/", "", $fax);
+	$phone = preg_replace("/[^0-9]/", "", $phone);
+
+	//set fax request variables
+	$sUserId = "dentalsleepsolutions"; // <-- Important: Your Sfax userID
+	$sPassword = "sfaxDSS54321!"; // <-- Important: Your Sfax password
+	$sRecipientName = $name;
+	//$sRecipientCompany = "<ENTER>";
+	$sRecipientPhone = $phone; // 1+; all digits only
+	$sRecipientFax = $fax; // 1+; all digits only
+	$sRecipientEmail = $email;
+	$sSubject = $subject;
+	$sDocType = "PDF"; // <--Important: tells Sfax how to process the document.
+	$sDocName = $pdf_filename;
+	$sImage = "";
+	$sTrackingKey = "000001-TEST";
+	$sDocMerge = "false";
+	$sNotes = "This is a test fax ONLY";
+	$sSenderName = $sender_name;
+	// CoverSheet values are:
+	// 1) “Default” – tells the fax engine to use the default cover sheet.
+	// 2) “<NameOfCoverSheet>” – tells the fax engine to use the cover sheet named.
+	$sCoverSheet = "Default";
+
+	//convert c:\test.doc to Base64 string
+	$filename = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $pdf_filename;
+	$handle = fopen($filename, "rb");
+	$contents = fread($handle, filesize($filename));
+	fclose($handle);
+	$sImage = base64_encode($contents);
+
+	//create fax request document
+	$xml = new DOMDocument('1.0', 'utf-16');
+	$xml->formatOutput = true;
+	$xml->preserveWhiteSpace = false;
+	$xml->appendChild($xml->createElement('FaxRequest'));
+	$xml->documentElement->appendChild($xml->createElement('UserId', $sUserId));
+	$xml->documentElement->appendChild($xml->createElement('Password', $sPassword));
+	$xml->documentElement->appendChild($xml->createElement('RecipientName', $sRecipientName));
+	//$xml->documentElement->appendChild($xml->createElement('RecipientCompany', $sRecipientCompany));
+	$xml->documentElement->appendChild($xml->createElement('RecipientPhone', $sRecipientPhone));
+	$xml->documentElement->appendChild($xml->createElement('RecipientFax', $sRecipientFax));
+	$xml->documentElement->appendChild($xml->createElement('RecipientEmail', $sRecipientEmail));
+	$xml->documentElement->appendChild($xml->createElement('Subject', $sSubject));
+	$xml->documentElement->appendChild($xml->createElement('DocType', $sDocType));
+	$xml->documentElement->appendChild($xml->createElement('DocName', $sDocName));
+	$xml->documentElement->appendChild($xml->createElement('image', $sImage));
+	$xml->documentElement->appendChild($xml->createElement('TrackingKey', $sTrackingKey));
+	$xml->documentElement->appendChild($xml->createElement('DocMerge', $sDocMerge));
+	$xml->documentElement->appendChild($xml->createElement('Notes', $sNotes));
+	$xml->documentElement->appendChild($xml->createElement('SenderName', $sSenderName));
+	$xml->documentElement->appendChild($xml->createElement('CoverSheet', $sCoverSheet));
+
+	//send fax as string
+	$sXML = $xml->saveXML($xml->documentElement);
+	$params = array('sDoc'=>$sXML);
+	$result = $client->sendFaxString($params);
+
+	if (strpos($result->sendFaxStringResult, "Success")) {
+		return true;
+	} else {
+		return false;
 	}
 }
 

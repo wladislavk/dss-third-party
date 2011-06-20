@@ -371,17 +371,17 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	$sUserId = "dentalsleepsolutions"; // <-- Important: Your Sfax userID
 	$sPassword = "sfaxDSS54321!"; // <-- Important: Your Sfax password
 	$sRecipientName = $name;
-	//$sRecipientCompany = "<ENTER>";
-	$sRecipientPhone = $phone; // 1+; all digits only
-	$sRecipientFax = $fax; // 1+; all digits only
+	$sRecipientCompany = $company;
+	$sRecipientPhone = "1" . $phone; // 1+; all digits only
+	$sRecipientFax = "1" . $fax; // 1+; all digits only
 	$sRecipientEmail = $email;
 	$sSubject = $subject;
 	$sDocType = "PDF"; // <--Important: tells Sfax how to process the document.
 	$sDocName = $pdf_filename;
 	$sImage = "";
-	$sTrackingKey = "000001-TEST";
+	$sTrackingKey = $pdf_filename;
 	$sDocMerge = "false";
-	$sNotes = "This is a test fax ONLY";
+	$sNotes = "";
 	$sSenderName = $sender_name;
 	// CoverSheet values are:
 	// 1) “Default” – tells the fax engine to use the default cover sheet.
@@ -403,7 +403,7 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	$xml->documentElement->appendChild($xml->createElement('UserId', $sUserId));
 	$xml->documentElement->appendChild($xml->createElement('Password', $sPassword));
 	$xml->documentElement->appendChild($xml->createElement('RecipientName', $sRecipientName));
-	//$xml->documentElement->appendChild($xml->createElement('RecipientCompany', $sRecipientCompany));
+	$xml->documentElement->appendChild($xml->createElement('RecipientCompany', $sRecipientCompany));
 	$xml->documentElement->appendChild($xml->createElement('RecipientPhone', $sRecipientPhone));
 	$xml->documentElement->appendChild($xml->createElement('RecipientFax', $sRecipientFax));
 	$xml->documentElement->appendChild($xml->createElement('RecipientEmail', $sRecipientEmail));

@@ -118,9 +118,9 @@ if (isset($_REQUEST['ed'])) {
     
     //echo $ed_sql.mysql_error();
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
-    $msg = "Pre-Authorization $task_label Successfully";
+    $msg = "Verification of Benefits $task_label Successfully";
     print "<script type='text/javascript'>";
-    print "parent.window.location='manage_preauths.php?msg=$msg'";
+    print "parent.window.location='manage_vobs.php?msg=$msg'";
     print "</script>";
 }
 
@@ -168,7 +168,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
-               Pre-Authorization for <?= $preauth['patient_firstname']; ?> <?= $preauth['patient_lastname']; ?> 
+               Verification of benefits for <?= $preauth['patient_firstname']; ?> <?= $preauth['patient_lastname']; ?> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -631,7 +631,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete) { ?>
-                  <input type="submit" value="Save Pre-Authorization" class="button" />
+                  <input type="submit" value="Save Verfication of Benefits" class="button" />
                 <?php } ?>
             </td>
         </tr>

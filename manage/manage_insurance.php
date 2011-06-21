@@ -18,9 +18,9 @@ if($_REQUEST["delid"] != "")
 }
 
 
-if(isset($_REQUEST['preauthid'])){
+if(isset($_REQUEST['vob_id'])){
 
-$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status=1",$_REQUEST['preauthid'], $_REQUEST['pid'], $_SESSION['docid']);
+$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status=1",$_REQUEST['vob_id'], $_REQUEST['pid'], $_SESSION['docid']);
 mysql_query($s);
 }
 
@@ -216,13 +216,13 @@ $my = mysql_query($sql) or die(mysql_error());
   <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" >
     <tr class="tr_bg_h">
       <th colspan="2" valign="top" class="col_head">
-        Patient Insurance Pre-Authorization Information
+        Patient Verification of Benefits Information
       </th>
     </tr>
 	<? if (mysql_num_rows($my) == 0) { ?>
       <tr class="tr_bg">
         <td valign="top" align="center">
-          No pre-authorizations on record.
+          No verification of benefits on record.
         </td>
       </tr>
 	<?php } else { ?> 
@@ -232,7 +232,7 @@ $my = mysql_query($sql) or die(mysql_error());
 
       <tr class="tr_bg">
         <td valign="top" align="center">
-		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+		Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
         </td>
       </tr>
 
@@ -241,7 +241,7 @@ $my = mysql_query($sql) or die(mysql_error());
 	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="2" align="center">
-		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>
+		    Verification of benefits completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>
 		    Pays for replacement device every <?=$preauth['how_often'];?> years.
           </td>
         </tr>
@@ -298,7 +298,7 @@ $my = mysql_query($sql) or die(mysql_error());
       <?php } ?>
     <?php } ?>
 		<tr>
-			<td>New pre-authorizations can be requested on Patient Flow Sheet.</td>
+			<td>New verification of benefits can be requested on Patient Flow Sheet.</td>
 		</tr>
   </table>
 </div>

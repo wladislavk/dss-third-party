@@ -92,7 +92,7 @@ return $errors;
 function list_preauth_errors( $pid ){
 $errors = preauth_errors($pid);
 if(count($errors)>0){
-$e_text = 'Unable to request pre-authorization:\n';
+$e_text = 'Unable to request verification of benefits:\n';
 foreach($errors as $e){
 $e_text .= '\n'.$e;
 }

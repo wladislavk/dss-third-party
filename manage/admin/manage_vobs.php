@@ -172,7 +172,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Pre-Authorizations
+	Manage Verification of Benefits
 </span>
 <br />
 <br />
@@ -182,24 +182,6 @@ $my=mysql_query($sql) or die(mysql_error());
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
-
-<!--
-<div style="border:1px black solid;width:60%;margin:auto;padding:10px">
-<form name="insert_form" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-  <div>
-    For dev/testing purposes only. Enter a valid patient id and then submit.
-    A pre-auth request will be generated for them (provided there is valid data in the database).
-    This testing won't be necessary once the pre-auth button is added to the flowsheet pg1.
-    I usually use Suzie Test (pid 16).
-  </div><br/>
-  <input type="text" name="patient_id"/>
-  <input type="hidden" name="page" value="<?=$_REQUEST["page"]?>"/>
-  <input type="hidden" name="gen_preauth" value="1"/>
-  <input type="submit"/>
-</form>
-</div><br/>
--->
 
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
@@ -315,7 +297,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="Javascript:;" onclick="Javascript: loadPopup('process_preauth.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
 						<?= $link_label ?>
 					</a>
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">

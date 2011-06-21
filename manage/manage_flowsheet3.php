@@ -77,7 +77,7 @@ require_once('includes/constants.inc');
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#additional-preauth').click(function(e) {
-			var r = confirm("You have already requested a Pre-Authorization. Are you sure you want to request an additional Pre-Authorization?");
+			var r = confirm("You have already requested a verification of benefits. Are you sure you want to request an additional verification of benefits?");
 			if (r == false) {
 				e.preventDefault();
 			}
@@ -195,7 +195,7 @@ function preauth_errors(){
   $pa_sql = "SELECT status FROM dental_insurance_preauth WHERE status = '".DSS_PREAUTH_PENDING."' AND patient_id=".$_GET['pid'];
   $pa = mysql_query($pa_sql);
   if(mysql_num_rows($pa)>0)
-    array_push($errors, "Already has pending pre-authorization");
+    array_push($errors, "Already has verification of benefits");
 
    $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
@@ -1815,12 +1815,12 @@ $sql = "SELECT "
 $my = mysql_query($sql) or die(mysql_error());
 ?>
 
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">PRE-AUTHORIZATION</div>
+<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
 <table width="50%" align="center">
 	<? if (mysql_num_rows($my) == 0) { ?>
       <tr class="tr_bg">
         <td valign="top" align="center">
-          No pre-authorizations on record.
+          No verification of benefits on record.
         </td>
       </tr>
 	<?php } else { ?> 
@@ -1830,7 +1830,7 @@ $my = mysql_query($sql) or die(mysql_error());
 
       <tr class="tr_bg">
         <td valign="top" align="center">
-		Pre-Authorization request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+		Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
         </td>
       </tr>
 
@@ -1839,8 +1839,8 @@ $my = mysql_query($sql) or die(mysql_error());
 	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="2" align="center">
-		    Pre-Authorization completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/manage/manage_insurance.php?pid=<?= $_GET['pid'] ?>">VIEW Pre-Authorization</a>
+		    Verification of benefits completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/manage/manage_insurance.php?pid=<?= $_GET['pid'] ?>">VIEW Verification of Benefits</a>
           </td>
         </tr>
 	<?php } ?>
@@ -1851,7 +1851,7 @@ $my = mysql_query($sql) or die(mysql_error());
 			<?php 
 			$errors = preauth_errors();
 			if(count($errors)>0){ 
-				$e_text = 'Unable to request pre-authorization:\n';
+				$e_text = 'Unable to request verification of benefits:\n';
 				foreach($errors as $e){
 					$e_text .= '\n'.$e;
 				}
@@ -1859,15 +1859,15 @@ $my = mysql_query($sql) or die(mysql_error());
 			if (mysql_num_rows($my) == 0) {
 				if ($e_text) {
 			?>
-				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Pre-authorization</a>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Verification of Benefits</a>
 				<? }else{ ?>
-				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Pre-authorization</a>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Verification of Benefits</a>
 				<?php } ?>
 			<? } else { 
 				if ($e_text) { ?>
-				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Additional Pre-authorization</a>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Additional Verification of Benefits</a>
 				<? }else{ ?>
-				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" id="additional-preauth" class="addButton" >Request Additional Pre-authorization</a>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" id="additional-preauth" class="addButton" >Request Additional Verification of Benefits</a>
 				<?php } ?>			
 			<?php } ?>
 		</td>
@@ -1902,7 +1902,7 @@ Referral Needed
 
 <tr>
 <td>
-Preauthorization
+Verification of Benefits
 </td>
 <td>
 <select>

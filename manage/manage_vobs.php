@@ -94,7 +94,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Pre-Authorizations
+	Manage Verification of Benefits
 </span>
 <br />
 <br />
@@ -158,7 +158,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= ($myarray["status"]==1)?'completed':'pending';?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&preauthid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&vob_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
 						View
 					</a>
 				</td>

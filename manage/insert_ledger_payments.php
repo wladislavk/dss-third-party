@@ -18,14 +18,59 @@ $pq = mysql_query($psql);
 $pat = mysql_fetch_array($pq);
 $msg = "Payments have been added.";
 echo "<br />";
+$d_sql = ''; //to update disput reason
 //Determine new status
 if($_POST['dispute']==1){
+                        $fname = $_FILES["attachment"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"q_file/".$banner1);
+                        @chmod("q_file/".$banner1,0777);
+
   if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
     $new_status = DSS_CLAIM_DISPUTE;
     $msg = 'Disputed Primary Insurance';
+    $d_sql = ", dispute_reason='".mysql_escape_string($_POST['dispute_reason'])."'";
+    $image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+		claimtype,
+		filename,
+		adddate,
+		ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'primary',
+		'".$banner1."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);   
+
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
     $new_status = DSS_CLAIM_SEC_DISPUTE;
     $msg = 'Disputed Secondary Insurance';
+    $d_sql = ", sec_dispute_reason='".mysql_escape_string($_POST['dispute_reason'])."'";
+$image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+                claimtype,
+                filename,
+                adddate,
+                ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'secondary',
+                '".$banner1."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);    
+
   }
 }else{
 
@@ -53,7 +98,7 @@ if($_POST['dispute']==1){
 
 }
 if(isset($new_status)){
-  $x = "UPDATE dental_insurance SET status='".$new_status."' WHERE insuranceid='".$_POST['claimid']."';";
+  $x = "UPDATE dental_insurance SET status='".$new_status."' ".$d_sql." WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x);
 }
 

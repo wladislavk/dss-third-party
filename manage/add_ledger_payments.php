@@ -49,8 +49,11 @@ if(f.dispute.checked){
   }else if(<?= ($claim['status']==DSS_CLAIM_PENDING || $claim['status']==DSS_CLAIM_SEC_PENDING)?1:0; ?>){
     alert('A pending claim cannot be disputed. You cannot dispute a claim until it has been sent.');
     returnval = false;
-  }else if(f.ia1.value =='' && f.ia2.value == '' && f.ia3.value == ''){
+  }else if(f.attachment.value ==''){
     alert('A disputed claim must have attachments from insurance company.');
+    returnval = false;
+  }else if(f.dispute_reason.value == ''){
+    alert('You must provide a reason to dispute a claim.');
     returnval = false;
   }else{
     //Dispute valid
@@ -136,7 +139,7 @@ return returnval;
 
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST">
+<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 
  
 <div style="width:200px; margin:0 auto; text-align:center;">
@@ -230,11 +233,12 @@ while($row = mysql_fetch_assoc($lq)){
 <br />
 <input type="checkbox" name="close" value="1" /> Close Claim
 <br />
-<input type="checkbox" name="dispute" onclick=" if(this.checked){ $('#ins_attach').show('slow'); }else{ $('#ins_attach').hide('slow'); }" value='1' /> Dispute
+<input type="checkbox" name="dispute" onclick=" if(this.checked){ $('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> Dispute
+<div id="dispute_reason_div" style="display: none">
+<label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
+</div>
 <div id="ins_attach" style="display: none">
-<input type="file" name="ia1" /><br />
-<input type="file" name="ia2" /><br />
-<input type="file" name="ia3" /><br />
+<label>Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">

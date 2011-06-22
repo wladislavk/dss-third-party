@@ -761,19 +761,13 @@ display:none;
 </li>
 
 <?php
-if($pending_letters >= $num_pending_claims && $pending_letters >= $num_pending_preauth){
-  $mess_count = $pending_letters;
-}elseif($num_pending_claims >= $num_pending_preauth){
-  $mess_count = $num_pending_claims;
-}else{
-  $mess_count = $num_pending_preauth;
-}
+  $mess_count = $pending_letters + $num_pending_claims + $num_preauth;
 ?>
 <li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
   <ul>
       <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
       <li><a <?php {echo "href='manage_claims.php'";} ?>>Claims (<?= $num_pending_claims; ?>)</a></li>
-      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_pending_preauth; ?>)</a></li>
+      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
 
 
   </ul>

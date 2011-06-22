@@ -115,19 +115,10 @@ if(!isset($_REQUEST['sort'])){
 $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
 $patientid = $_REQUEST['pid'];
-$page = $_REQUEST['page'];
-
+$page1 = $_REQUEST['page1'];
+$page2 = $_REQUEST['page2'];
 // Get doctor id
 $docid = $_SESSION['docid'];
-
-
-$pat_sql = "select lastname, middlename, firstname from dental_patients where patientid='".s_for($_GET['pid'])."';";
-$pat_my = mysql_query($pat_sql);
-if (!$pat_my) {
-  print "MySQL error ".mysql_errno().": ".mysql_error();
-}
-$pat_myarray = mysql_fetch_array($pat_my);
-$patientname = st($pat_myarray['lastname']) . ", " . st($pat_myarray['firstname']) . " " . st($pat_myarray['middlename']);
 
 $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.userid, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
 $letters_res = mysql_query($letters_query);
@@ -252,8 +243,9 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 ?>
 
 <div style="padding-left: 15px;">
-	<h1>Patient Letters for <?=$patientname;?></h1>
-  <form name="filter_letters" action="/manage/patient_letters.php?status=<?php echo $status ?>" method="get">
+	<h1>Patient Letters</h1>
+  <form name="filter_letters" action="/manage/patient_letters.php" method="get">
+	<input type="hidden" name="pid" value="<?=$patientid;?>" />
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php
@@ -266,20 +258,26 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     </select>
   </form>
 </div>
+<div style="float: right;margin-right:40px;">
+  <form method="get" action="/manage/new_letter.php">
+	<input type="hidden" name="pid" value="<?=$patientid?>" />
+  <input class="addButton" type="submit" value="Create New Letter">
+	</form>
+</div>
 <div style="padding-left: 15px; clear: left;float: left;">
 <h2>Pending Letters</h2>
 </div>
-<div class="letters-pager">Page(s): <?php paging($num_pages1,$page,"&pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
+<div class="letters-pager">Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir",$page2); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
+    <!--<td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>-->
     <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
   </tr>
 <?php
-  $i = $page_limit * $page;
+  $i = $page_limit * $page1;
   $end = $i + $page_limit;
   while ($i < count($pending_letters) && $i < $end) {
     //print $pending_letters[$i]['templateid']; print "<br />";
@@ -294,7 +292,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     } else {
       $alert = null;
     }
-		print "<tr$alert><td>$userid</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";
+		print "<tr$alert><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";
 		$i++;
   }
 ?>
@@ -303,7 +301,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 <div style="padding-left: 15px; clear: left;float: left;">
 <h2>Sent Letters</h2>
 </div>
-<div class="letters-pager">Page(s): <?php paging($num_pages2,$page,"&pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
+<div class="letters-pager">Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir",$page1); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
@@ -315,7 +313,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     <td class="col_head <?= ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
   </tr>
 <?php
-  $i = $page_limit * $page;
+  $i = $page_limit * $page2;
   $end = $i + $page_limit;
   while ($i < count($sent_letters) && $i < $end) {
     //print $sent_letters[$i]['templateid']; print "<br />";

@@ -721,7 +721,7 @@ padding-left:20px;
 
                     <a href="manage_letters.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_letters.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Letters</a>
 
-                    <a href="manage_vobs.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_vobs.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Verification of Benefits</a>
+                    <a href="manage_vobs.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_vobs.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage VOBs</a>
 
                     <a href="manage_claims.php" class="<? if(strpos($_SERVER['PHP_SELF'],'manage_claims.php') === false) echo "leftnav"; else echo "left_active"; ?>">Manage Claims</a>
 

@@ -231,7 +231,7 @@ while($row = mysql_fetch_assoc($lq)){
 }
 ?>
 <br />
-<input type="checkbox" name="close" value="1" /> Close Claim
+<input type="checkbox" name="close" onclick=" if(this.checked){ $('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1" /> Close Claim
 <br />
 <input type="checkbox" name="dispute" onclick=" if(this.checked){ $('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> Dispute
 <div id="dispute_reason_div" style="display: none">

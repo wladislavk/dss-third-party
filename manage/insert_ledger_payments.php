@@ -91,9 +91,62 @@ $image_sql = "INSERT INTO dental_insurance_file (
       }else{
         $new_status = DSS_CLAIM_PAID_INSURANCE;
       }
+                        $fname = $_FILES["attachment"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"q_file/".$banner1);
+                        @chmod("q_file/".$banner1,0777);
+
+$image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+                claimtype,
+                filename,
+                adddate,
+                ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'primary',
+                '".$banner1."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);
+
     }
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT && $_POST['close'] == 1){
     $new_status = DSS_CLAIM_PAID_SEC_INSURANCE;
+                        $fname = $_FILES["attachment"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"q_file/".$banner1);
+                        @chmod("q_file/".$banner1,0777);
+$image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+                claimtype,
+                filename,
+                adddate,
+                ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'secondary',
+                '".$banner1."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);
+
   }
 
 }

@@ -516,14 +516,11 @@ if (isset($_POST['submit'])) {
 				$("#send_method option[value=fax]").show();				
 			}
 		});
-		$('#patient').change(function(){
-			if ($('#template').val() == "") {
-				alert("You must select a letter template.");
-				$(this).val('');
-			} else if ($(this).val() == "") {
+		$('#template').change(function(){
+			if ($(this).val() == "") {
 				alert("You must select a patient.");
 			} else {
-				sendValues($('#template').val(), $(this).val());
+				sendValues($('#template').val(), <?=$_GET['pid'];?>);
 			}
 		});
 		$('#default_contacts').click(function(){
@@ -576,13 +573,16 @@ if (isset($_POST['submit'])) {
 		function(data) {
 			$('#contact_header').css('display', 'table-cell');
 			$('#contacts').html(data.returnValue);
+			$('#submit').css("display", "block");
 		},
 
 		"json"
 		);
 	}
 </script>
-
+<div style="padding-left:25px;">
+	<H1 class="blue">Create New Letter</H1>
+</div>
 <form name="create_letter" action="/manage/new_letter.php" method="post">
 	<table style="margin-left:25px; width=100%;">
 		<tr>
@@ -597,15 +597,11 @@ if (isset($_POST['submit'])) {
 				?>
 				</select>
 			</td>
-			<td>Select a patient: <select id="patient" name="patient">
-				<option value=""></option>
-				<?php
-				$patients = "SELECT patientid as id, lastname, middlename, firstname FROM dental_patients ORDER BY lastname ASC;";
-				$result = mysql_query($patients);
-				while ($row = mysql_fetch_assoc($result)) {
-					print "<option value=\"" . $row['id'] . "\">" . $row['lastname'] . (($row['middlename']) ? " " . $row['middlename'] : "") . ", " . $row['firstname'] . "</option>";
-				}
-				?>
+			<td style="padding-left: 20px;">Method of Sending: <select id="send_method" name="send_method">
+					<option value="">Default Preferred</option>
+					<option value="paper">Paper Mail</option>
+					<option value="email">Email</option>
+					<option value="fax">Fax</option>
 				</select>
 			</td>
 		</tr>
@@ -616,16 +612,9 @@ if (isset($_POST['submit'])) {
 			<td id="contacts"></td>
 		</tr>
 		<tr>
-			<td>Method of Sending: <select id="send_method" name="send_method">
-					<option value="">Default Preferred</option>
-					<option value="paper">Paper Mail</option>
-					<option value="email">Email</option>
-					<option value="fax">Fax</option>
-				</select>
-			</td>
 		</tr>
 		<tr>
-			<td><input id="submit" type="submit" name="submit" value="Create Letter" class="addButton"></td>
+			<td><input style="display:none;margin-top:25px;" id="submit" type="submit" name="submit" value="Create Letter" class="addButton"></td>
 		</tr>
 	<table>
 </form>

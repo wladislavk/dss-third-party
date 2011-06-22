@@ -49,6 +49,9 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
+$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($_GET['claimid']);
+$cq = mysql_query($csql);
+$claim = mysql_fetch_assoc($cq);
 ?>
 <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
 
@@ -131,6 +134,30 @@ return s;
                Reports 
         </button>
         &nbsp;&nbsp;
+      
+        <?php if($claim['status'] == DSS_CLAIM_DISPUTE){
+            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($_GET['claimid'])."'";
+            $sq = mysql_query($s);
+            $file = mysql_fetch_assoc($sq);
+            ?>
+           
+           <button onclick="Javascript: window.location = 'q_file/<?= $file['filename']; ?>'" class="addButton">
+               View EOB
+           </button>
+           &nbsp;&nbsp;
+ 
+        <?php }elseif($claim['status'] == DSS_CLAIM_SEC_DISPUTE){ 
+            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($_GET['claimid'])."'";
+            $sq = mysql_query($s);
+            $file = mysql_fetch_assoc($sq);
+            ?>
+           
+           <button onclick="Javascript: window.location = 'q_file/<?= $file['filename']; ?>'" class="addButton">
+               View EOB
+           </button>
+           &nbsp;&nbsp;
+ 
+        <?php } ?> 
 
         <button onclick="javascript: loadPopup('edit_ledger_entries.php?pid=<?=$_GET['pid'];?>&ids='+concat_checked(document.forms['edit_mult_form'].elements['edit_mult[]']));" class="addButton">
                Edit Multiple

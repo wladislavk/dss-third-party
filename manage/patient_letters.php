@@ -3,7 +3,11 @@
 function userid_asc($a, $b) {
 	if ($a['userid'] == $b['userid']) {
 		return 0;
-	} else {
+	} elseif ($a['userid'] == '' && $b['userid'] != '') {
+		return -1;
+	} elseif ($b['userid'] == '' && $a['userid'] != '') {
+		return 1;
+	}  else {
 		return ($a['userid'] < $b['userid']) ? -1 : 1;
 	}
 }
@@ -11,7 +15,11 @@ function userid_asc($a, $b) {
 function userid_desc($a, $b) {
 	if ($a['userid'] == $b['userid']) {
 		return 0;
-	} else {
+	} elseif ($a['userid'] == '' && $b['userid'] == '') {
+		return 1;
+	} elseif ($b['userid'] == '' && $a['userid'] != '') {
+		return -1;
+	}  else {
 		return ($a['userid'] > $b['userid']) ? -1 : 1;
 	}
 }
@@ -243,7 +251,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 ?>
 
 <div style="padding-left: 15px;">
-	<h1>Patient Letters</h1>
+	<h1 class="blue">Patient Letters</h1>
   <form name="filter_letters" action="/manage/patient_letters.php" method="get">
 	<input type="hidden" name="pid" value="<?=$patientid;?>" />
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
@@ -265,13 +273,13 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 	</form>
 </div>
 <div style="padding-left: 15px; clear: left;float: left;">
-<h2>Pending Letters</h2>
+<h2 class="blue">Pending Letters</h2>
 </div>
 <div class="letters-pager">Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir",$page2); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <!--<td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>-->
+    <!--<td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>-->
     <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
@@ -299,13 +307,13 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 </table>
 
 <div style="padding-left: 15px; clear: left;float: left;">
-<h2>Sent Letters</h2>
+<h2 class="blue">Sent Letters</h2>
 </div>
 <div class="letters-pager">Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir",$page1); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
     <td class="col_head <?= ($_REQUEST['sort'] == 'method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=method&sortdir=<?php echo ($_REQUEST['sort']=='method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>

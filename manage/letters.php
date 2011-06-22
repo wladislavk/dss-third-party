@@ -199,7 +199,8 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
 
 <div class="letters-tryptych1">
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
-  <form name="filter_letters" action="/manage/letters.php?status=<?php echo $status ?>" method="get">
+  <form name="filter_letters" action="/manage/letters.php" method="get">
+		<input type="hidden" name="status" value="<?=$status;?>" />
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php
@@ -217,16 +218,21 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
   <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">
-  <div style="float:right;">
-  	<form method="post" action="/manage/new_letter.php">
-  	<input class="addButton" type="submit" value="Create New">
-  	</form>
-  </div>
+<?php if ($status == "pending"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/letters.php?status=sent">
   	<input class="addButton" type="submit" value="Sent Letters">
   	</form>
   </div>
+<?php endif; ?>
+<?php if ($status == "sent"): ?>
+  <div style="float:right;margin-right: 10px;">
+  	<form method="post" action="/manage/letters.php?status=pending">
+  	<input class="addButton" type="submit" value="Pending Letters">
+  	</form>
+  </div>
+<?php endif; ?>
+
 </div>
 <div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">

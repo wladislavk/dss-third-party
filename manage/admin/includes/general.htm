@@ -33,6 +33,49 @@ function paging($no_pages,$index_val,$vid)
 	}
 		
 }
+function paging1($no_pages,$index_val,$vid,$index_val2 = 0)
+{
+	for($p_count=0;$p_count<$no_pages;$p_count++)
+	{
+		if($index_val == $p_count)
+		{
+		?>
+			<strong><?=$p_count+1;?></strong>
+		<?php
+		}
+		else
+		{
+			
+		?>
+			<a href="<?=$_SERVER['PHP_SELF']?>?page1=<?=$p_count?>&page2=<?=$index_val2?>&<?=$vid?>" class="fp">
+			<?=$p_count+1;?></a>
+		<?php
+		}
+	}
+		
+}
+
+function paging2($no_pages,$index_val,$vid,$index_val1 = 0)
+{
+	for($p_count=0;$p_count<$no_pages;$p_count++)
+	{
+		if($index_val == $p_count)
+		{
+		?>
+			<strong><?=$p_count+1;?></strong>
+		<?php
+		}
+		else
+		{
+			
+		?>
+			<a href="<?=$_SERVER['PHP_SELF']?>?page1=<?=$index_val1?>&page2=<?=$p_count?>&<?=$vid?>" class="fp">
+			<?=$p_count+1;?></a>
+		<?php
+		}
+	}
+		
+}
 
 // Function to Get Contacts
 // Returns comma delimited list of contactids

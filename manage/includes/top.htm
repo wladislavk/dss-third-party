@@ -671,12 +671,14 @@ display:none;
                      <li><a class="submenu_item" href="manage_sleeplab.php">Sleep Labs</a></li>
                      <li><a class="submenu_item" href="manage_fcontact.php">Corporate Contacts</a></li>
             <li><a class="menu_item" href="#">DSS Files</a></li>
-                     <li><a class="submenu_item" href="">Operations Manual</a></li>
-                     <li><a class="submenu_item" href="">Health Questionnaires</a></li>
-                     <li><a class="submenu_item" href="">Educational Materials</a></li>
-                     <li><a class="submenu_item" href="">Newsletters</a></li>
-                     <li><a class="submenu_item" href="">Marketing Files</a></li>
-                     <li><a class="submenu_item" href="">Misc. Files</a></li>
+                <?php 
+			$s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+			$sq = mysql_query($s);
+		        while($c = mysql_fetch_assoc($sq)){ ?>
+				<li><a class="submenu_item" href="view_documents.php?cat=<?= $c['categoryid'];?>"><?= $c['name']; ?></a></li>
+
+                       <?php }
+		?>
             <li><a class="menu_item" href="#">Admin</a></li>
                      <li><a class="submenu_item" href="manage_custom.php">Custom Text</a></li>
                      <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>

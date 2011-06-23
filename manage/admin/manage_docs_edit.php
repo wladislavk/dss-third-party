@@ -45,17 +45,19 @@ $doc = mysql_fetch_assoc($dq);
 <span class="admin_head">Edit Document</span>
 
 <form action="#" method="post" enctype="multipart/form-data">
-<input type="text" name="name" value="<?= $doc['name']; ?>" />
+<label>Name:</label> <input type="text" name="name" value="<?= $doc['name']; ?>" />
+<br />
   <?php  
     $cs = "SELECT * FROM dental_document_category ORDER BY name ASC";
     $cq = mysql_query($cs);
-    ?><select name="category"><?php
+    ?><label>Category:</label> <select name="category"><?php
     while($c = mysql_fetch_assoc($cq)){ ?>
 	<option <?= ($c['categoryid']==$doc['categoryid'])?'selected="selected"':''; ?> value="<?= $c['categoryid']; ?>"><?= $c['name']; ?></option>
     <?php } ?>	
     </select>
-
-<input type="file" name="attachment" />
+<br />
+<label>File:</label> <input type="file" name="attachment" />
+<br />
 <input type="submit" name="edit_doc" value="Edit" />
 </form>
 

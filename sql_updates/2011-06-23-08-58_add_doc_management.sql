@@ -5,7 +5,7 @@ CREATE TABLE dental_document_category (
   adddate datetime default NULL,
   ip_address varchar(50) default NULL,
   PRIMARY KEY (`categoryid`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1; 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1; 
 
 CREATE TABLE dental_document (
   documentid int(11) NOT NULL AUTO_INCREMENT,
@@ -15,4 +15,4 @@ CREATE TABLE dental_document (
   adddate datetime default NULL,
   ip_address varchar(50) default NULL,
   PRIMARY KEY (`documentid`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

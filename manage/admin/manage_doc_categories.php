@@ -18,7 +18,7 @@ if(isset($_POST['add_cat'])){
   mysql_query($ins);
 ?>
 <script type="text/javascript">
-  window.location = 'manage_docs_categories.php';
+  window.location = 'manage_doc_categories.php';
 </script>
 <?php
 

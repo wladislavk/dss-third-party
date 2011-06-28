@@ -36,7 +36,7 @@ $('.payment_amount').each( function(){
 });
 
 if( !payment ){
-  alert('You did not enter a payment to submit. Please enter a payment or exit payment window.');
+  alert('You did not enter a payment to submit. Please enter a payment or exit payment window. If disputing an unpaid claim enter 0 in payment field.');
   returnval = false;
 }
 

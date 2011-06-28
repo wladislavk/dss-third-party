@@ -82,7 +82,8 @@ $image_sql = "INSERT INTO dental_insurance_file (
     if($_POST['close'] == 1){
       if($pat['s_m_dss_file']==1){ //secondary
 
-        if($pat['s_m_ins_type']==1){ //medicare
+        if($pat['p_m_ins_type']==1){ //medicare
+	  $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
           $new_status = DSS_CLAIM_SEC_SENT;
         }else{
           $new_status = DSS_CLAIM_SEC_PENDING;

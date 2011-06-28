@@ -284,11 +284,12 @@ return s;
 				</td>
 				<td valign="top">
           <?php
-          
-          if($myarray["status"] == '0'){echo "Pend.";}
-          if($myarray["status"] == '1'){echo "Sent ";}
-          if($myarray["status"] == '2'){echo "Filed";}
-          
+             echo $dss_trxn_status_labels[$myarray["status"]]; 
+             /*
+               if($myarray["status"] == '0'){echo "Pend.";}
+               if($myarray["status"] == '1'){echo "Sent ";}
+               if($myarray["status"] == '2'){echo "Filed";}
+            */
           ?>       	
 				</td>
 				<td valign="top">

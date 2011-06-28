@@ -519,7 +519,7 @@ if ($_POST['insurancesub'] == 1) {
                   $u_status = DSS_CLAIM_SEC_SENT;
                 }
              }else{
-               $u_status = DSS_CLAIM_PENDING;
+               $u_status = false;
              }
 
 		$ed_sql = " update dental_insurance set 
@@ -710,9 +710,11 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_city = '".s_for($billing_provider_city)."',
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
-		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
-		status = '".s_for($u_status)."'
-		where insuranceid = '".s_for($_POST['ed'])."'";
+		billing_provider_b_other = '".s_for($billing_provider_b_other)."'";
+                if($u_status){
+		  $ed_sql .= ", status = '".s_for($u_status)."'";
+		}
+		$ed_sql .= "where insuranceid = '".s_for($_POST['ed'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		// update the ledger trxns passed in with the form

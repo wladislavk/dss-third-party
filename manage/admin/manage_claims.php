@@ -212,7 +212,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "yellow" : "green"; ?>
 				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
 				<?php $status_text = ($myarray["status"] == DSS_CLAIM_PENDING) ? "black" : "white"; ?>
-				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
+				<td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?>">
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
@@ -232,6 +232,26 @@ $my=mysql_query($sql) or die(mysql_error());
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
 					</a>
+<?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
+            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+            $sq = mysql_query($s);
+            if(mysql_num_rows($sq)>0){
+            $file = mysql_fetch_assoc($sq);
+            ?>
+
+           <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+
+        <?php } }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE){
+            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+            $sq = mysql_query($s);
+            if(mysql_num_rows($sq)>0){
+            $file = mysql_fetch_assoc($sq);
+            ?>
+
+           <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+
+        <?php } } ?>
+
 				</td>
 			</tr>
 	<? 	}

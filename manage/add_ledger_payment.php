@@ -161,8 +161,8 @@ while($p = mysql_fetch_array($p_sql)){
 <div style="margin-left:9px; margin-top: 10px; width:98%;height:16px; color: #fff;">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:120px;"><?= $dss_trxn_pymt_labels[$p['payer']]; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:327px;"><?= $dss_trxn_pymt_type_lables[$p['payment_type']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:120px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:327px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;"><?= $p['amount']; ?></span>
 
 </div>

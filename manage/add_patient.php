@@ -302,11 +302,11 @@ if($_POST["patientsub"] == 1)
 		  trigger_letter3($pid);
 		}
 
-		$msg = "Added Successfully";
+		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
 		?>
 		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?>';
+			alert("<?=$msg;?>");
+			parent.window.location='manage_patient.php';
 		</script>
 		<?
 		die();
@@ -535,30 +535,37 @@ if($_POST["patientsub"] == 1)
 
 function validate_add_patient(fa){
 p = patientabc(fa);
-if(document.getElementById('s_m_dss_file_yes').checked){
-i2 = validateDate('ins2_dob');
-}else{
-i2 = true;
+if(p){
+  if(document.getElementById('s_m_dss_file_yes').checked){
+    i2 = validateDate('ins2_dob');
+  }else{
+    i2 = true;
+  }
+  if(document.getElementById('p_m_dss_file_yes').checked){
+    i = validateDate('ins_dob');
+  }else{
+    i = true;
+  }
+  d = validateDate('dob');
 }
-if(document.getElementById('p_m_dss_file_yes').checked){
-i = validateDate('ins_dob');
-}else{
-i = true;
-}
-d = validateDate('dob');
-if(p && d && i && i2){
-  return true
-}
+if(p){
+  if( d && i && i2){
+    return true
+  }
 //workaround for settimeout being called in conditionals even if not true
+var err = '';
 if(!d){
   err = "dob" 
 }else if(!i){
   err = "ins_dob"
-}else{
+}else if(!i2){
   err = "ins2_dob"
 }
+if(err != ''){
 el = document.getElementById(err);
 setTimeout("el.focus()", 0);
+}
+}
 return false;
 
 

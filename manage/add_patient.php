@@ -917,7 +917,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
-                                <a onclick="Javascript: window.location.href='add_contact.php<?php if(isset($_GET['pid'])){echo "?pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
+                                <a onclick="Javascript: window.location.href='add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1045,7 +1045,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-                                <a onclick="Javascript: window.location.href='add_contact.php<?php if(isset($_GET['pid'])){echo "?pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
+                                <a onclick="Javascript: window.location.href='add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
                             </span>
                             <span>
 								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />

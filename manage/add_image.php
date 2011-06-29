@@ -6,7 +6,7 @@ include("includes/sescheck.php");
 
 if($_POST["imagesub"] == 1)
 {
-	if ((array_search($_FILES["file"]["type"], $dss_file_types) !== false) && ($_FILES["file"]["size"] < DSS_FILE_MAX_SIZE)) {
+	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) && ($_FILES["image_file"]["size"] < DSS_FILE_MAX_SIZE)) {
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
 		
@@ -67,12 +67,21 @@ if($_POST["imagesub"] == 1)
 			
 			mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 			$msg = "Added Successfully";
-			?>
-			<script type="text/javascript">
-				parent.window.location=parent.window.location
-			</script>
-			<?
-			die();
+			if ($_REQUEST['flow'] == "1") {
+				?>
+				<script type="text/javascript">
+					parent.window.location="/manage/manage_flowsheet3.php?pid=<?=$_GET['pid'];?>"
+				</script>
+				<?
+				die();
+			} else {
+				?>
+				<script type="text/javascript">
+					parent.window.location=parent.window.location
+				</script>
+				<?
+				die();
+			}
 		}
 	} else {
 		?>
@@ -137,6 +146,7 @@ if($_POST["imagesub"] == 1)
     </div>
     <? }?>
     <form name="imagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>" method="post" onSubmit="return imageabc(this)" enctype="multipart/form-data">
+		<input name="flow" type="hidden" value="<?=$_GET['flow'];?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

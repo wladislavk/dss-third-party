@@ -99,7 +99,7 @@ $itype_my = mysql_query($itype_sql);
 </select>
 <br />
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&flow=<?=$_GET['flow'];?>');" class="addButton">
 		Add New Image
 	</button>
 	&nbsp;&nbsp;

@@ -406,7 +406,7 @@ function trigger_letter25($pid, $topatient, $md_referral_list, $md_list, $send_m
 if (isset($_POST['submit'])) {
 	$templateid = $_POST['template'];
 	$patientid = $_POST['patient'];
-	$topatient = (isset($_POST['contacts']['patient']) ? true : false);
+	$topatient = (!empty($_POST['contacts']['patient']) ? true : false);
 	$md_referrals = $_POST['contacts']['md_referrals'];
 	$mds = $_POST['contacts']['mds'];
 	$send_method = $_POST['send_method'];
@@ -518,7 +518,7 @@ if (isset($_POST['submit'])) {
 		});
 		$('#template').change(function(){
 			if ($(this).val() == "") {
-				alert("You must select a patient.");
+				alert("You must select a template.");
 			} else {
 				sendValues($('#template').val(), <?=$_GET['pid'];?>);
 			}
@@ -584,6 +584,7 @@ if (isset($_POST['submit'])) {
 	<H1 class="blue">Create New Letter</H1>
 </div>
 <form name="create_letter" action="/manage/new_letter.php" method="post">
+  <input name="patient" type="hidden" value="<?php print $_GET['pid']; ?>" />
 	<table style="margin-left:25px; width=100%;">
 		<tr>
 			<td>Select a letter template: <select id="template" name="template">

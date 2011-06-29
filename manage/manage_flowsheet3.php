@@ -38,7 +38,7 @@ require_once('includes/constants.inc');
 			}
 			$("#" + reason).change(function() {
 				if ($(this).val() == "other") {
-					$('#page2form').submit();
+					//$('#page2form').submit();
 					$("#" + button).attr("style", "display:inline;");
 					$("tr." + row + " > td").attr("style", "border-bottom: 0px none;");
 					$("#" + description).attr("style", "display:table-cell;");
@@ -1025,8 +1025,8 @@ height:35px;
 
 <span class="admin_head">
 	Manage Flowsheet
-	-
-    Patient <i><?=$name;?></i>
+<!--	-
+    Patient <i><?=$name;?></i>-->
 </span>
 
 <form action="#" method="post">
@@ -1747,7 +1747,7 @@ Rx.
 <input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6" id="add-rx" target="_self">Add/Edit RX</a>
+<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>
 </td>
 
 </tr>
@@ -1761,7 +1761,7 @@ L.O.M.N.
 <input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" onClick="cal9.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="cal10.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=7" target="_self">Add/Edit LOMN</a>
+<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="cal10.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=7&flow=1" target="_self">Add/Edit LOMN</a>
 </td>
 
 </tr>
@@ -1775,7 +1775,7 @@ Clinical notes
 <input id="clinnotereq" name="clinnotereq" type="text" class="field text addr tbox" value="<?php echo $clinnotereq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnotereq');" onClick="cal11.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="cal12.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=8" target="_self">Add/Edit Notes</a>
+<input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="cal12.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=8&flow=1" target="_self">Add/Edit Notes</a>
 </td>
 
 </tr>
@@ -1943,10 +1943,18 @@ N/A
 
 <div id="flowsheet_page2" style="border-right: 1px solid rgb(0, 0, 0); margin-left: 20px; min-height: 400px; overflow: hidden; width: 932px;">  
 
+<?php if ($copyreqdate == ""): ?>
+<div style="margin:0 auto; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;float:left;">In order to to start this patient Flowsheet, you must enter a date in the "Initial Contact" section of Flowsheet Page 1.</div>
+<?php endif; ?>
+
+<?php if ($copyreqdate != ""): ?>
+<div id="dellaststep" style="float: right;">
 <form action="manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>&page=page2" method="POST" style="clear: both;">
 <input type="submit" name="dellaststep" value="Delete Last Step" style="float:right;" />
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>" />
 </form>
+</div>
+<?php endif; ?>
 
 <form id="page2form" action="manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>&page=page2" method="POST" name="page2submit" style="clear: both;">
 <h2 style="float:left;width:200px;">Treatment Steps</h2>

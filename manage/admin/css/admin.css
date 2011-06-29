@@ -517,3 +517,17 @@ width:125px;
   background-position: right 11px;
 }
 
+.claim_0, .claim_2, .claim_4, .claim_6, .claim_8{
+  background: yellow;
+  color: black;
+}
+
+.claim_0.old, .claim_2.old, .claim_4.old, .claim_6.old, .claim_8.old{
+  background: red;
+  color: white;
+  }
+
+.claim_1, .claim_3, .claim_5, .claim_7, .claim_9{
+  background: green;
+  color: white;
+  }

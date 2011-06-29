@@ -35,7 +35,7 @@ if($_POST["contactsub"] == 1)
     <script type="text/javascript">
 			//alert("<?=$msg;?>");
 			<?php
-      echo("window.location.href='add_patient_to.php?ed=".$_GET['activePat']."'");
+      echo("window.location.href='add_patient.php?ed=".$_GET['activePat']."&preview=1&addtopat=1&pid=".$_GET['activePat']."'");
       ?>
       // -->
 		</script>
@@ -146,10 +146,14 @@ if($_POST["contactsub"] == 1)
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
+               <?php if($_GET['ctype']=='ins'){ ?>
+		Add Insurance Company
+               <?php }else{ ?>
                <?=$but_text?> <?php echo $_GET['heading']; ?> Contact
                <? if($name <> "") {?>
                		&quot;<?=$name;?>&quot;
                <? }?>
+               <?php } ?>
             </td>
         </tr>
         <tr>

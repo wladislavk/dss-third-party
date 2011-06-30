@@ -1759,7 +1759,7 @@ Completed/Uploaded
 <!-- START MED INS TABLE -->
 
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
-<table width="65%" align="center">
+<table width="61%" align="center">
 <tr>
 <td>
 <h3>Procedure</h3>
@@ -1801,7 +1801,7 @@ Rx.
 <td>
 <input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
-<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
+<td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
 						<?php 
 						if ($rximgid != "") {
 							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";

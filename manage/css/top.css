@@ -42,6 +42,7 @@
 #patient_nav ul{
   list-style:none;
   margin-top:4px;
+  padding-left:15px;
   }
 
 #patient_nav li{

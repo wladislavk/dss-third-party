@@ -786,6 +786,7 @@ display:none;
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'active':'';?>" <?php {echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'active':'';?>" <?php {echo "href='patient_letters.php?fid=".$_GET["fid"]."&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_page1.php')?'active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/ex_page4.php')?'active':'';?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>
         <li class="last"><a class="<?= ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'active':'';?>" href="add_patient.php?ed=<?= $_GET['pid'] ?>&preview=1&addtopat=1&pid=<?= $_GET['pid'] ?>">Patient Info</a></li>

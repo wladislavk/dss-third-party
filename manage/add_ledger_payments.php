@@ -9,6 +9,19 @@ $payments = mysql_fetch_array($p_sql);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_GET['cid']."';";
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
+
+$pasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+		(status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE.")";
+$paq = mysql_query($pasql);
+$num_pa = mysql_num_rows($paq);
+
+
+$sasql = "SELECT * FROM dental_insurance_file where claimid='".mysql_real_escape_string($_GET['cid'])."' AND
+                (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE.")";
+$saq = mysql_query($sasql);
+$num_sa = mysql_num_rows($saq);
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -103,6 +116,10 @@ if(f.dispute.checked){
   }else if(<?= ($claim['status']==DSS_CLAIM_SENT)?1:0; ?>){
     if(f.payer.value==<?= DSS_TRXN_PAYER_PRIMARY;?>){
       if(f.close.checked){
+        if(f.attachment.value =='' && <?= ($num_pa == 0)?1:0; ?>){
+          returnval = false;
+          alert('A claim must have an EOB attached to close.');
+        }
         //file secondary
         //VALID
       }else{
@@ -120,6 +137,10 @@ if(f.dispute.checked){
     }
   }else if(<?= ($claim['status']==DSS_CLAIM_SEC_SENT)?1:0; ?>){
     if(f.close.checked){
+      if(f.attachment.value =='' && <?= ($num_sa == 0)?1:0; ?>){
+          returnval = false;
+          alert('A claim must have an EOB attached to close.');
+        }
       //VALID
     }else{
       if(!confirm('You did not select the "Close Claim" checkbox. Are you sure you want keep this claim open after submitting this payment?')){ returnval = false; }

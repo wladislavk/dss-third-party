@@ -557,6 +557,47 @@ if(isset($_POST['flowsubmit'])){
     $insverbendate1 = s_for($_POST['insverbendate1']);
     $insverbendate2 = s_for($_POST['insverbendate2']);
     $pid = $_GET['pid'];
+		
+		// Handle Insurance Images
+		function save_insurance_images($file, $imagetypeid) {
+			// Set title based on category
+			
+			if ((array_search($file["type"], $dss_file_types) !== false) && ($file["size"] < DSS_FILE_MAX_SIZE)) {
+				if($file["name"] <> '') {
+					$fname = $file["name"];
+					$lastdot = strrpos($fname,".");
+					$name = substr($fname,0,$lastdot);
+					$extension = substr($fname,$lastdot+1);
+					$banner1 = $name.'_'.date('dmy_Hi');
+					$banner1 = str_replace(" ","_",$banner1);
+					$banner1 = str_replace(".","_",$banner1);
+					$banner1 .= ".".$extension;
+				
+					@move_uploaded_file($file["tmp_name"],"q_file/".$banner1);
+					@chmod("q_file/".$banner1,0777);
+
+					$ins_sql = " insert into dental_q_image set 
+					patientid = '".s_for($_GET['pid'])."',
+					title = '".s_for($title)."',
+					imagetypeid = '".s_for($imagetypeid)."',
+					image_file = '".s_for($banner1)."',
+					userid = '".s_for($_SESSION['userid'])."',
+					docid = '".s_for($_SESSION['docid'])."',
+					adddate = now(),
+					ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+					
+					mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+					// get id and return it 
+				}
+			} else {
+		  	?>
+				<script type="text/javascript">
+					alert("Invalid File Type or File too Large");
+				</script>           
+	  		<?php
+	  	}	
+		} 
+
     if(mysql_num_rows($flowresult) <= 0){
       $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
@@ -623,6 +664,14 @@ if(isset($_POST['flowsubmit'])){
     }
 }
 
+if(isset($_POST['add_ref_but'])) {
+	?>
+	<script type="text/javascript">
+	window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+	</script>
+	<?php
+}
+		
 if(isset($_POST['flowsubmitpgtwo'])){
 	$numsteps = count($_POST['data']);
 
@@ -1140,8 +1189,8 @@ Contact Location
 
                 <br /><!--<button class="addButton" onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');">Add New Referrer</button>-->
 											<!--<button class="addButton" onclick="Javascript: window.location='add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>';">Add New Referrer</button>-->
-											<a onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');" href="Javascript: ;">Add New Referrer</a>
-
+											<!--<a onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');" href="Javascript: ;">Add New Referrer</a>-->
+											<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" />
 </td>
 
 <td>
@@ -1710,8 +1759,8 @@ Completed/Uploaded
 <!-- START MED INS TABLE -->
 
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
-<table width="50%" align="center">
-
+<table width="65%" align="center">
+<tr>
 <td>
 <h3>Procedure</h3>
 </td>
@@ -1721,7 +1770,7 @@ Completed/Uploaded
 <td>
 <h3>Received</h3>
 </td>
-
+<td></td>
 </tr>
 
 <tr>
@@ -1733,7 +1782,10 @@ Insurance Information
 N/A
 </td>
 <td>
-<input id="insinforec" name="insinforec" type="text" class="field text addr tbox" value="<?php echo $insinforec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('insinforec');" onClick="cal6.popup();"value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_self">Add/Edit Info</a>
+<input id="insinforec" name="insinforec" type="text" class="field text addr tbox" value="<?php echo $insinforec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('insinforec');" onClick="cal6.popup();"value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_self">Add/Edit Info</a>
 </td>
 
 </tr>
@@ -1747,7 +1799,19 @@ Rx.
 <input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>
+<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="cal8.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
+						<?php 
+						if ($rximgid != "") {
+							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" value=\"Edit\" title=\"Edit\" />";
+							print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"rximg\" name=\"rximg\" type=\"file\" size=\"4\" />";
+						}
+						?>
 </td>
 
 </tr>
@@ -1761,7 +1825,10 @@ L.O.M.N.
 <input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" onClick="cal9.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="cal10.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=7&flow=1" target="_self">Add/Edit LOMN</a>
+<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="cal10.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=7&flow=1" target="_self">Add/Edit LOMN</a>
 </td>
 
 </tr>
@@ -1775,7 +1842,10 @@ Clinical notes
 <input id="clinnotereq" name="clinnotereq" type="text" class="field text addr tbox" value="<?php echo $clinnotereq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnotereq');" onClick="cal11.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-<input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="cal12.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=8&flow=1" target="_self">Add/Edit Notes</a>
+<input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="cal12.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=8&flow=1" target="_self">Add/Edit Notes</a>
 </td>
 
 </tr>

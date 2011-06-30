@@ -1,7 +1,8 @@
 <?php
 session_start();
 require_once('admin/includes/config.php');
-include("includes/sescheck.php"); 
+include("includes/sescheck.php");
+include "includes/top.htm"; 
 ?>
 
 <?php
@@ -19,7 +20,12 @@ if(isset($_GET['ed'])){
  $pcont_array = mysql_query($pcont_qry);
 
 ?>
-<div style="margin:20px;"><table>
+<div style="margin:20px 20px 0px 20px;">
+<table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
+<tr>
+<td class="cat_head">Add Contact to Patient</td>
+</tr>
+
 <?php 
  while($pcont_l = mysql_fetch_array($pcont_array)){
  
@@ -102,3 +108,6 @@ echo("parent.window.location.href='add_patient.php?ed=".$_GET['ed']."&addtopat=1
 </tr>
  </table>
  </div>
+<?php 
+include "includes/bottom.htm"; 
+?>

@@ -181,6 +181,31 @@ if($_POST["patientsub"] == 1)
 		  trigger_letter3($_POST['ed']);
 		}
 
+		if(isset($_POST['add_ref_but'])) {
+			?>
+			<script type="text/javascript">
+			window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+			</script>
+			<?php
+		}
+
+
+		if(isset($_POST['add_ins_but'])) {
+			?>
+			<script type="text/javascript">
+			window.location = "add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>";
+			</script>
+			<?php
+		}
+
+		if(isset($_POST['add_contact_but'])) {
+			?>
+			<script type="text/javascript">
+			window.location = "add_patient_to.php?ed=<?php echo $_GET['pid']; ?>";
+			</script>
+			<?php
+		}
+
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
 		?>
@@ -830,7 +855,7 @@ return false;
 								</select>
 							
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-                                <label for="referred_by">Referred By</label><a href="add_referredby.php?addtopat=<?php echo $_GET['ed']; ?>">Add New Referrer</a>
+                                <label for="referred_by">Referred By</label><input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" />
                             </span>
                             
                             
@@ -917,7 +942,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
-                                <a onclick="Javascript: window.location.href='add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
+																<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1045,7 +1070,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-                                <a onclick="Javascript: window.location.href='add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>';" href="javascript:scroll(0,0)">Add Insurance Company</a>
+																<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1626,7 +1651,18 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
         </tr>
        <tr>
        <td valign="top">
+				<?php
+					$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' and patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
+					$result = mysql_query($sql);
+					$date_generated = mysql_result($result, 0);
+					if (mysql_num_rows($result) == 0) {
+				?>
          <input id="introletter" name="introletter" tabindex="20" type="checkbox" value="1"> Send Intro Letter to DSS patient
+				<?php
+					} else {
+						print "DSS Intro Letter Sent to Patient $date_generated";
+					}
+				?>
        </td>
        </tr>
         <tr>

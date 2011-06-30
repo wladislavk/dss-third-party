@@ -8,6 +8,58 @@ if(!isset($_REQUEST['sort'])){
   $_REQUEST['sortdir'] = 'asc';
 }
 
+
+if(isset($_REQUEST['deleobid'])){
+  $esql = "SELECT * FROM dental_insurance_file WHERE id=".mysql_real_escape_string($_GET['deleobid']);
+  $eq = mysql_query($esql);
+  $eob = mysql_fetch_assoc($eq);
+  $isql = "SELECT * FROM dental_insurance WHERE insuranceid=".mysql_real_escape_string($_GET['claimid']);
+  $iq = mysql_query($isql);
+  $ins = mysql_fetch_assoc($iq);
+  if( ($eob['status'] == DSS_CLAIM_DISPUTE && $ins['status']==DSS_CLAIM_DISPUTE) || ($eob['status'] == DSS_CLAIM_SEC_DISPUTE && $ins['status'] == DSS_CLAIM_SEC_DISPUTE)){
+    $dsql = "DELETE FROM dental_insurance_file WHERE id=".mysql_real_escape_string($_GET['deleobid'])." AND claimid=".mysql_real_escape_string($_GET['claimid']);
+    if(mysql_query($dsql)){
+      if($eob['status']==DSS_CLAIM_DISPUTE){
+        $del_pay = "DELETE FROM dental_ledger_payment 
+		WHERE payer=".DSS_TRXN_PAYER_PRIMARY." AND 
+			ledgerid in 
+				(SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".mysql_real_escape_string($_GET['claimid']).")";
+	$up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SENT." WHERE insuranceid=".mysql_real_escape_string($_GET['claimid']);
+      }elseif($eob['status']==DSS_CLAIM_SEC_DISPUTE){
+        $del_pay = "DELETE FROM dental_ledger_payment  
+                WHERE payer=".DSS_TRXN_PAYER_SECONDARY." AND 
+                        ledgerid in 
+                                (SELECT ledgerid FROM dental_ledger dl WHERE dl.primary_claim_id=".mysql_real_escape_string($_GET['claimid']).")";
+        $up_claim = "UPDATE dental_insurance SET status=".DSS_CLAIM_SEC_SENT." WHERE insuranceid=".mysql_real_escape_string($_GET['claimid']);
+      }
+      mysql_query($del_pay);
+      mysql_query($up_claim);
+      $msg = "Deleted succesfully.";
+      ?>
+	<script type="text/javascript">
+          window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&claimid=<?= $_GET['claimid']; ?>&pid=<?=$_GET['pid'];?>";    
+ 	</script>
+      <?php
+    }else{
+	$msg = "Error deleting EOB.";
+    ?>
+        <script type="text/javascript">
+          alert("<?= $msg; ?>");
+          window.location="<?=$_SERVER['PHP_SELF']?>?claimid=<?= $_GET['claimid']; ?>&pid=<?=$_GET['pid'];?>";    
+        </script>
+    <?php
+    } 
+  }else{
+    $msg = "You cannot delete an EOB after it is processed.";
+    ?>
+        <script type="text/javascript">
+	  alert("<?= $msg; ?>");
+          window.location="<?=$_SERVER['PHP_SELF']?>?claimid=<?= $_GET['claimid']; ?>&pid=<?=$_GET['pid'];?>";    
+        </script>
+    <?php
+  }
+}
+
 $rec_disp = 200;
 
 if($_REQUEST["page"] != "")
@@ -25,12 +77,28 @@ $sql = "select
  		dl.description,
 		dl.amount,
 		sum(pay.amount) as paid_amount,
-		dl.status
+		di.status,
+		'' AS filename
 	from dental_ledger dl 
+		INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
 			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 		GROUP BY dl.ledgerid 
+  UNION
+	SELECT
+		'eob',
+		dif.id,
+		dif.adddate,
+		dif.adddate,
+		'EOB',
+		dif.description,
+		'',
+		'',
+		dif.status,
+		dif.filename
+	from dental_insurance_file dif
+		where dif.claimid=".mysql_real_escape_string($_GET['claimid'])."
 ";
 
 if(isset($_REQUEST['sort'])){
@@ -239,30 +307,33 @@ return s;
 				$tr_class = "tr_inactive";
 			}
 			$tr_class = "tr_active";
+                        if($myarray[0] == 'eob'){ $tr_class .= ' clickable_row'; }
 		?>
 			<tr 
-			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'\'"'; } ?>
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
-				<td valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
 					<?php if($myarray["service_date"]!=$last_sd){
 						$last_sd = $myarray["service_date"];
        					      	echo date('m-d-Y',strtotime(st($myarray["service_date"])));
                                         } ?>
 				</td>
-				<td valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
 					<?php if($myarray["entry_date"]!=$last_ed){
                                                 $last_ed = $myarray["entry_date"];
                                                 echo date('m-d-Y',strtotime(st($myarray["entry_date"])));
                                         } ?>
 				</td>
-                                <td valign="top">
+                                <td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                         <?=st($myarray["name"]);?>
+                              <?php if($myarray[0]=='eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){
+				echo " (".$dss_claim_status_labels[$myarray['status']].")";
+			      } ?>
                                 </td>
 
-				<td valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                 	<?=st($myarray["description"]);?>
 				</td>
-				<td valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<? if(st($myarray["amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
@@ -270,7 +341,7 @@ return s;
 					}?>
 					&nbsp;
 				</td>
-				<td valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
@@ -278,13 +349,13 @@ return s;
 					}?>
 					&nbsp;
 				</td>
-				<td valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<?=number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
-				<td valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
           <?php
-             echo $dss_trxn_status_labels[$myarray["status"]]; 
+             echo $dss_claim_status_labels[$myarray["status"]]; 
              /*
                if($myarray["status"] == '0'){echo "Pend.";}
                if($myarray["status"] == '1'){echo "Sent ";}
@@ -319,7 +390,16 @@ return s;
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
                                         </a>
-  				<?php } ?>
+  				<?php }elseif($myarray[0]=='eob'){ ?>
+                    <a href="q_file/<?= $myarray["filename"]; ?>" target="_blank" class="editlink" title="VIEW">
+                                                View 
+                                        </a>
+
+                    <a href="<?=$_SERVER['PHP_SELF']?>?deleobid=<?=$myarray["ledgerid"];?>&claimid=<?= $_GET["claimid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete? WARNING: This will delete all associated payments.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a>
+
+				<?php } ?>
 				</td>
 			</tr>
 	<? 	}

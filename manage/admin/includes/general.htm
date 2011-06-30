@@ -379,7 +379,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 
 	$TextMessage = strip_tags($message,"<br>");
-	$HTMLMessage = $header_html . html_entity_decode($message) . $footer_html;
+	$HTMLMessage = $header_html . $message . $footer_html; 
 	
 	$email->setSubject('Dental Sleep Solutions Correspondance');
 	$email->setFrom(array($from_email => $from_name));

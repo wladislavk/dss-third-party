@@ -374,9 +374,9 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$from = "$from_name <$from_email>";
 
 	$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
-	$header_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\">";
+	$header_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($header_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 	$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_footer.jpg";
-	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\">";
+	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 
 	$TextMessage = strip_tags($message,"<br>");
 	$HTMLMessage = $header_html . html_entity_decode($message) . $footer_html;

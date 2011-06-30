@@ -8,7 +8,7 @@ if($_POST['selsub'] == 1)
 		parent.document.<?=$_GET['fr'];?>.<?=$_GET['tx'];?>.value = '<?=st($_POST['description']);?>';
 		parent.disablePopup1();
 		//alert("Hello");
-		window.opener.location = '#add_para';
+		//window.opener.location = '#add_para';
 	</script>
 	<?
 	die();

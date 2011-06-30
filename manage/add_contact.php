@@ -143,6 +143,7 @@ if($_POST["contactsub"] == 1)
     </div>
     <? }?>
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+    <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
@@ -198,7 +199,7 @@ if($_POST["contactsub"] == 1)
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
                             <span>
-                            <span style="color:#000000">Company</span>
+                            <span style="color:#000000">Company <?= ($_GET['ctype']=='ins')?'<span id="req_0" class="req">*</span>':''; ?></span>
                             <input id="company" name="company" type="text" class="field text addr tbox" value="<?=$company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
                             </span>
                         </label>

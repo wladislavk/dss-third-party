@@ -506,6 +506,12 @@ function contactabc(fa)
 		fa.middlename.focus();
 		return false;
 	}*/
+        if(trim(fa.company.value) == "" && fa.contact_type.value == 'ins')
+        {
+                alert("Company is Required");
+                fa.company.focus();
+                return false;
+        }
 	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
@@ -546,6 +552,18 @@ function contactabc(fa)
 		fa.phone1.focus();
 		return false;
 	}
+
+	if(fa.preferredcontact.value=="email" && trim(fa.email.value)==''){
+		alert("An email address must be entered if preferred contact method is email");
+		return false;
+	}
+
+        if(fa.preferredcontact.value=="fax" && trim(fa.fax.value)==''){
+                alert("A fax number must be entered if preferred contact method is fax");
+                return false;
+        }
+
+
 }
 
 function referredbyabc(fa)

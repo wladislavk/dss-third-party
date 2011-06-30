@@ -325,6 +325,9 @@ return s;
 				</td>
                                 <td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                         <?=st($myarray["name"]);?>
+                              <?php if($myarray[0]=='eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){
+				echo " (".$dss_claim_status_labels[$myarray['status']].")";
+			      } ?>
                                 </td>
 
 				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">

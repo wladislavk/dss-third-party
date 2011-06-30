@@ -25,8 +25,9 @@ if($_POST["referredbysub"] == 1)
 		?>
       <script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='add_patient.php?ed=<?=$addedtopat;?>';
-			<?php $_GET['ed'] = $addedtopat; ?>
+			//window.location='add_patient.php?ed=<?=$addedtopat;?>';
+			//<?php $_GET['ed'] = $addedtopat; ?>
+			window.history.go(-2)
 		</script>
 		<?php
     }else{
@@ -51,7 +52,8 @@ if($_POST["referredbysub"] == 1)
 		?>
       <script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='add_patient.php?ed=<?=$addedtopat;?>';
+			//window.location='add_patient.php?ed=<?=$addedtopat;?>';
+			window.history.go(-2)
 		</script>
 		<?php
     }else{

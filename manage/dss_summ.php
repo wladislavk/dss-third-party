@@ -946,7 +946,7 @@ if($complaintid <> '')
 	
 	asort($c_seq );
 	$reason_seeking_tx = "
-Chief Complaint:
+Chief Complaints:
 ";  
        foreach($c_seq as $i=>$val)
         {
@@ -956,32 +956,15 @@ Chief Complaint:
                 $comp_myarray = mysql_fetch_array($comp_my);
 
                 //echo $c_id[$i]." => ".st($comp_myarray['complaint'])."<br>";
-                if($c_seq[$i] == 1){
                   $reason_seeking_tx .= st($comp_myarray['complaint'])."\n";
-                }
         }
-        $reason_seeking_tx .= "
-Other Complaints:
-";
-	foreach($c_seq as $i=>$val)
-	{
-		//echo $c_id[$i]."<br>";
-		$comp_sql = "select * from dental_complaint where status=1 and complaintid='".$c_id[$i]."'";
-		$comp_my = mysql_query($comp_sql);
-		$comp_myarray = mysql_fetch_array($comp_my);
-		
-		//echo $c_id[$i]." => ".st($comp_myarray['complaint'])."<br>";
-	        if($c_seq[$i] != 1){	
-		  $reason_seeking_tx .= st($comp_myarray['complaint'])."\n";
-		}
-	}
 }
 
 
 if($other_complaint <> '')
 {
 $reason_seeking_tx .= "
-Other Items:
+Additional Complaints:
 ".$other_complaint;
 }
 

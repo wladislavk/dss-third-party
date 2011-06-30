@@ -476,7 +476,7 @@ if($complaintid <> '')
                     <div>
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
-                            	Other Items<br />
+                            	Other Complaints<br />
                             </span>
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>

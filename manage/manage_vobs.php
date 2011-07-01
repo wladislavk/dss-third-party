@@ -77,9 +77,33 @@ if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
+
+if(isset($_REQUEST['sort'])){
+  switch($_REQUEST['sort']){
+    case 'request_date':
+	$sort = "preauth.front_office_request_date";
+	break;
+    case 'patient_name':
+	$sort = "preauth.patient_lastname";
+	break;
+    case 'status':
+	$sort = 'preauth.status';
+	break;
+  }
+}else{
+  $_REQUEST['sort']='status';
+  $_REQUEST['sortdir']='DESC';
+  $sort = "preauth.status";
+}
+if(isset($_REQUEST['sortdir'])){
+  $dir = $_REQUEST['sortdir'];
+}else{
+  $dir = 'DESC';
+}
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth WHERE preauth.doc_id = ".$_SESSION['docid']." order by front_office_request_date DESC";
+$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth WHERE preauth.doc_id = ".$_SESSION['docid']." ";
+  $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -119,14 +143,14 @@ $my=mysql_query($sql) or die(mysql_error());
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="15%">
-			Requested
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
 		</td>
-		<td valign="top" class="col_head" width="35%">
-			Patient Name
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
+			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head" width="35%">
-			Status	
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
+			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action

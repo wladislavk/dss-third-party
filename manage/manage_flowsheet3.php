@@ -110,6 +110,22 @@ require_once('includes/constants.inc');
 		});
 	});
 </script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.toggle_but').click(function() {
+			var r = confirm("Do you want to replace the image on file? This cannot be undone.");
+			if (r == true) {
+				var prefix = $(this).attr('id');
+				$('#'+prefix+'view').css("display", "none");
+				$('#'+prefix).css("display", "none");
+				$('#'+prefix+'img').css("display", "inline");
+			}
+		});
+	});
+</script>
+
+
 <?php
 
 function preauth_allowed(){
@@ -528,6 +544,9 @@ $message = "There is no started flowsheet for the current patient.";
     $preauth2 = $flow['preauth2'];
     $insverbendate1 = $flow['insverbendate1'];
     $insverbendate2 = $flow['insverbendate2'];
+		$rximgid = $flow['rx_imgid'];
+		$lomnimgid = $flow['lomn_imgid'];
+		$notesimgid = $flow['notes_imgid'];
 }
 
 
@@ -559,9 +578,11 @@ if(isset($_POST['flowsubmit'])){
     $pid = $_GET['pid'];
 		
 		// Handle Insurance Images
-		function save_insurance_images($file, $imagetypeid) {
+		function save_insurance_image($file, $imagetypeid) {
 			// Set title based on category
-			
+			if ($imagetypeid == 6) $title = "RX Image";
+			if ($imagetypeid == 7) $title = "LOMN Image";
+			if ($imagetypeid == 8) $title = "Clinical Notes Image";
 			if ((array_search($file["type"], $dss_file_types) !== false) && ($file["size"] < DSS_FILE_MAX_SIZE)) {
 				if($file["name"] <> '') {
 					$fname = $file["name"];
@@ -587,7 +608,7 @@ if(isset($_POST['flowsubmit'])){
 					ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 					
 					mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-					// get id and return it 
+					return mysql_insert_id();
 				}
 			} else {
 		  	?>
@@ -598,9 +619,23 @@ if(isset($_POST['flowsubmit'])){
 	  	}	
 		} 
 
+		if ($_FILES["rximg"]["name"] <> '') {
+			$rximgid = save_insurance_image($_FILES["rximg"], 6);
+		}
+
+		if ($_FILES["lomnimg"]["name"] <> '') {
+			$lomnimgid = save_insurance_image($_FILES["lomnimg"], 7);
+		}
+
+		if ($_FILES["noteimg"]["name"] <> '') {
+			$noteimgid = save_insurance_image($_FILES["noteimg"], 8);
+		}
+
+		
+
     if(mysql_num_rows($flowresult) <= 0){
       $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
-      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."');";
+      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$noteimgid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
@@ -644,7 +679,7 @@ if(isset($_POST['flowsubmit'])){
 
     }else{
       $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
-      $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."' WHERE `pid` = '".$_GET['pid']."';";
+      $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$noteimgid."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
@@ -1113,7 +1148,7 @@ height:35px;
     ?>
 </div>
 
-<form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" method="post">
+<form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" enctype="multipart/form-data" method="post">
 <input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT</div>
@@ -1758,6 +1793,28 @@ Completed/Uploaded
 
 <!-- START MED INS TABLE -->
 
+<?php
+if ($rximgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$rximgid."';"; 
+	$result = mysql_query($sql);
+	$rximgname = mysql_result($result, 0);
+}
+
+if ($lomnimgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$lomnimgid."';"; 
+	$result = mysql_query($sql);
+	$lomnimgname = mysql_result($result, 0);
+}
+
+if ($noteimgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$noteimgid."';"; 
+	$result = mysql_query($sql);
+	$noteimgname = mysql_result($result, 0);
+}
+
+
+?>
+
 <div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
 <table width="61%" align="center">
 <tr>
@@ -1804,7 +1861,7 @@ Rx.
 <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
 						<?php 
 						if ($rximgid != "") {
-							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$rximgname','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" value=\"Edit\" title=\"Edit\" />";
 							print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -1828,7 +1885,17 @@ L.O.M.N.
 <input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="cal10.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=7&flow=1" target="_self">Add/Edit LOMN</a>
+						<?php 
+						if ($lomnimgid != "") {
+							print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$lomnimgname','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" value=\"Edit\" title=\"Edit\" />";
+							print "<input id=\"lomnimg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"lomnimg\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
+						}
+						?>
+
 </td>
 
 </tr>
@@ -1845,7 +1912,17 @@ Clinical notes
 <input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="cal12.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 </td>
 <td>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=8&flow=1" target="_self">Add/Edit Notes</a>
+						<?php 
+						if ($noteimgid != "") {
+							print "<input type=\"button\" id=\"noteview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$noteimgname','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" class=\"toggle_but\" id=\"note\" value=\"Edit\" title=\"Edit\" />";
+							print "<input id=\"noteimg\" style=\"display:none;\" name=\"noteimg\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"noteimg\" name=\"noteimg\" type=\"file\" size=\"4\" />";
+						}
+						?>
+
 </td>
 
 </tr>

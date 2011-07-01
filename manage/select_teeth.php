@@ -51,13 +51,13 @@ $mt_arr = explode(',',$_GET['fval']);
 <span class="admin_head">
 	<?=ucwords($_GET['tx']);?> Teeth #
 </span>
-
+<div style="clear:both"></div>
 <form name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?tx=<?=$_GET['tx'];?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td valign="top" colspan="2" width="50%" >
         	
-            <table width="80%" cellpadding="3" cellspacing="1" border="0">
+            <table width="80%" cellpadding="1" cellspacing="1" border="0">
             	<tr class="tr_bg_h">
                 	<td valign="top" class="col_head" colspan="2" class="col_head">
                     	Permanent Teeth
@@ -71,7 +71,7 @@ $mt_arr = explode(',',$_GET['fval']);
 						$i = '0'.$i;
 				?>
                     <tr>	
-                        <td valign="top" width="50%">
+                        <td valign="top" width="50%" height="10">
                         	<input type="checkbox" name="per_teeth[]" value="<?=$i?>" <? if(in_array($i,$mt_arr)) { echo " checked";}?> />
                             <?=$i;?>
                         </td>

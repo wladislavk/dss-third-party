@@ -667,7 +667,7 @@ if($jointid <> '')
 
                                <script type="text/javascript">
 				  function updateProtrusion(){
-					pval = $('#protrusion_to').val() - $('#protrusion_from').val();
+					pval = Math.abs($('#protrusion_to').val() - $('#protrusion_from').val());
 					$('#protrusion_equal').val(pval);
 
                                   }
@@ -696,7 +696,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_to-($protrusion_from);?>">                                     </td>
+                                    	<input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo abs($protrusion_to-($protrusion_from));?>">                                     </td>
                                 </tr>
                                 
                                 <tr>

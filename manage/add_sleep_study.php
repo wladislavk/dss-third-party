@@ -10,7 +10,16 @@ include("includes/sescheck.php");
 <body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px;">
 
  <?php 
- if(isset($_POST['submitupdatesleeplabsumm'])){ 
+ if(isset($_POST['submitdeletesleeplabsumm'])){
+  $id = s_for($_POST['sleeplabid']);
+   $q = "DELETE FROM dental_summ_sleeplab WHERE id=".mysql_real_escape_string($id);
+   if(!mysql_query($q)){
+       echo "Could not delete sleep lab... Please try again.";
+    }else{
+     $msg = "Successfully deleted sleep lab";
+    }
+ 
+ }elseif(isset($_POST['submitupdatesleeplabsumm'])){ 
   $id = s_for($_POST['sleeplabid']);
   $date = s_for($_POST['date']);
   $sleeptesttype = s_for($_POST['sleeptesttype']);
@@ -113,7 +122,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 <table class="sleeplabstable" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" style="background: #F9FFDF;">
-		<input type="text" value="" onclick="cal1.popup();" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox" name="date" id="date">	
+		<input type="text" onclick="cal1.popup();" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
 		</td>
 	</tr>
   <tr>	
@@ -370,6 +379,7 @@ $device = mysql_result($device_result, 0);
   <tr>
                 <td valign="top" style="background: #E4FFCF;">
                 <input type="submit" name="submitupdatesleeplabsumm" value="Update" />
+		<input type="submit" name="submitdeletesleeplabsumm" onclick='return confirm("Are you sure you want to delete this study?")' value="Delete" />
                 </td>
         </tr>
 

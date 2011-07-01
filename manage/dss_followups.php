@@ -232,7 +232,7 @@ $device = mysql_result($device_result, 0);
   ?>
 <form class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
- <table id="sleepstudyscrolltable" style="margin-top:-3px">
+ <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">
   	<td colspan="4"><span style="color: #ccc;"><?php echo $fuquery['followupid'];?></span></td>
   </tr>

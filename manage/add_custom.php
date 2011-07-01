@@ -86,7 +86,7 @@ if($_POST["customsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="customfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return customabc(this)">
+    <form name="customfrm" action="insert_custom.php?add=1" method="post" onSubmit="return customabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

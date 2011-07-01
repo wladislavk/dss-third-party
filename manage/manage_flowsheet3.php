@@ -1864,7 +1864,7 @@ Rx.
 <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
 						<?php 
 						if ($rximgid != "") {
-							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$rximgname','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$rximgname','windowname1','width=860, height=790');return false;\" />";
 							print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" value=\"Edit\" title=\"Edit\" />";
 							print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -1890,7 +1890,7 @@ L.O.M.N.
 <td>
 						<?php 
 						if ($lomnimgid != "") {
-							print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$lomnimgname','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$lomnimgname','windowname1','width=860, height=790');return false;\" />";
 							print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" value=\"Edit\" title=\"Edit\" />";
 							print "<input id=\"lomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -1917,7 +1917,7 @@ Clinical notes
 <td>
 						<?php 
 						if ($notesimgid != "") {
-							print "<input type=\"button\" id=\"noteview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$notesimgname','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"noteview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$notesimgname','windowname1','width=790, height=860');return false;\" />";
 							print "<input type=\"button\" class=\"toggle_but\" id=\"note\" value=\"Edit\" title=\"Edit\" />";
 							print "<input id=\"noteimg\" style=\"display:none;\" name=\"noteimg\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/

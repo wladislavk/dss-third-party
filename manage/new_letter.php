@@ -9,7 +9,7 @@ function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_intro_to_md_from_dss.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -25,7 +25,7 @@ function trigger_letter2($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_intro_to_md_from_dentist.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -41,7 +41,7 @@ function trigger_letter3($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_intro.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -57,7 +57,7 @@ function trigger_letter4($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_cover_letter_for_sleep_screening.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -76,7 +76,7 @@ function trigger_letter5($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_welcome_email.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -92,7 +92,7 @@ function trigger_letter6($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_welcome.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -108,7 +108,7 @@ function trigger_letter7($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_thank_you_pt_not_candidate.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -124,7 +124,7 @@ function trigger_letter8($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_no_treatment.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -140,7 +140,7 @@ function trigger_letter9($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_thank_you_pt_scheduled.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -156,7 +156,7 @@ function trigger_letter10($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_thank_you_pt_waiting_on.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -172,7 +172,7 @@ function trigger_letter11($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_thank_you_pt_did_not_accept.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -188,7 +188,7 @@ function trigger_letter12($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_thank_you_pt_did_not_come_in.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -204,7 +204,7 @@ function trigger_letter13($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_referral_treating_mutual_patient.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -220,7 +220,7 @@ function trigger_letter14($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_soap_cover_ltr.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -236,7 +236,7 @@ function trigger_letter15($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_md_pt_soap.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -252,7 +252,7 @@ function trigger_letter16($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_md_pt_progress_note.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -268,7 +268,7 @@ function trigger_letter17($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_progress_note_to_md_pt_non_compliant.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -284,7 +284,7 @@ function trigger_letter18($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_non_compliant.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -300,7 +300,7 @@ function trigger_letter19($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_md_pt_treatment_complete.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -316,7 +316,7 @@ function trigger_letter20($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -332,7 +332,7 @@ function trigger_letter21($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_yearly_follow_up.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -348,7 +348,7 @@ function trigger_letter22($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_appeal_to_insurance.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -364,7 +364,7 @@ function trigger_letter23($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/dss_to_pt_30month_follow_up.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -380,7 +380,7 @@ function trigger_letter24($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -396,7 +396,7 @@ function trigger_letter25($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/?pid=<?=$pid?>&lid=<?=$letter?>';		
+			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();

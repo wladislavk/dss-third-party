@@ -2331,7 +2331,7 @@ Next Appointment
 	foreach ($dental_letters[$step] as $letter) {
 		$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
 		$lid = $letter['letterid'];
-		$template = $letter['template'];
+		$template = "/manage/edit_letter.php";
 		$gendate = date('m/d/Y', $letter['generated_date']);
 		if ($lid != '') {
 			foreach ($contacts['patient'] as $contact) {

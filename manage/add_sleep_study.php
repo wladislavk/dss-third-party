@@ -127,15 +127,29 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<select name="sleeptesttype">
+		<select name="sleeptesttype" onchange="updatePlace(this.form);">
       <option value="HST">HST</option>
       <option value="PSG">PSG</option>    
     </select>	
+<script type="text/javascript">
+
+function updatePlace(f){
+if(f.sleeptesttype.value == "HST"){
+  f.place.style.display = "none";
+  f.home.style.display = "block";
+}else{
+  f.place.style.display = "block";
+  f.home.style.display = "none";
+}
+}
+
+</script>
 		</td>
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;">
-		<select name="place">
+                <input type="text" name="home" disabled="disabled" value="Home" />
+		<select style="display:none;" name="place">
 		<?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
@@ -270,7 +284,7 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-                <select name="sleeptesttype">
+                <select name="sleeptesttype" onchange="updatePlace(this.form)">
                    <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
                 </select>
@@ -279,7 +293,8 @@ $device = mysql_result($device_result, 0);
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;"> 
-                <select name="place">
+                <input type="text" name="home" <?= ($s_lab['sleeptesttype']=="PSG")?'style="display:none;"':''; ?> disabled="disabled" value="Home" />
+                <select <?= ($s_lab['sleeptesttype']!="PSG")?'style="display:none;"':''; ?> name="place">
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);

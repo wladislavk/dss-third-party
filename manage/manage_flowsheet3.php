@@ -1425,7 +1425,17 @@ Completed/Uploaded
 			</td>
 			
 			</tr>
-			
+
+                        <tr>
+
+                        <td>
+
+                        Type
+
+                        </td>
+
+                        </tr>
+	
 			<tr>
 			
 			<td>
@@ -1441,16 +1451,6 @@ Completed/Uploaded
 			<td>
 			
 			Completed
-			
-			</td>
-			
-			</tr>
-			
-			<tr>
-			
-			<td>
-			
-			Type
 			
 			</td>
 			

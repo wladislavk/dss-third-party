@@ -93,6 +93,23 @@ else
                 document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
             }
         }
+ function otherSelect2(ss, number) {
+            var list = document.sleepstudyadd.labtype;
+            var list = document[ss].labtype;
+            var chosenItemText = list.value;
+            if (chosenItemText == "PSG") {
+                document.getElementById('interpretation'+number+'1').style.visibility = 'hidden';
+                document.getElementById('interpretation'+number+'2').style.visibility = 'hidden';
+                document.getElementById('interpretation'+number+'3').style.visibility = 'hidden';
+                document.getElementById('interpretation'+number+'4').style.visibility = 'hidden';
+            }
+            else {
+                document.getElementById('interpretation'+number+'1').style.visibility = 'visible';
+                document.getElementById('interpretation'+number+'2').style.visibility = 'visible';
+                document.getElementById('interpretation'+number+'3').style.visibility = 'visible';
+                document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
+            }
+        }
 
 </script>
 
@@ -326,7 +343,22 @@ if ($origfilename != '') {
 						</td>
 						
 						</tr>
-						
+					<tr style="height:30px;">
+
+                                                <td>
+
+                                                <select name="labtype" onChange="otherSelect(<?php echo $i; ?>);">
+
+                                                <option value="HST">HST</option>
+
+            <option value="PSG">PSG</option>
+
+                                                </select>
+
+                                                </td>
+
+                                                </tr>
+	
 						<tr style="height:30px;">
 						
 						<td>
@@ -359,21 +391,6 @@ if ($origfilename != '') {
 						
 						</tr>
 						
-						<tr style="height:30px;">
-						
-						<td>
-						
-						<select name="labtype" onChange="otherSelect(<?php echo $i; ?>);">
-						
-						<option value="HST">HST</option>
-            
-            <option value="PSG">PSG</option>
-						
-						</select>
-						
-						</td>
-						
-						</tr>
 						
 						<tr style="height:44px;">
 						
@@ -514,6 +531,22 @@ if($numrows){
 						
 						</tr>
 						
+                                                <tr style="height:30px;">
+
+                                                <td name="labtype">
+
+                                                <select name="labtype" id="labtype<?php echo $i; ?>" onChange="otherSelect2('sleepstudy<?php echo $i; ?>',<?php echo $i; ?>);">
+
+                                                <option value="PSG" <?php if($sleepstudy['labtype'] == "PSG"){echo " selected='selected'";} ?>>PSG</option>
+
+                                                <option value="HST" <?php if($sleepstudy['labtype'] == "HST"){echo " selected='selected'";} ?>>HST</option>
+
+                                                </select>
+
+                                                </td>
+
+                                                </tr>
+
 						<tr style="height:30px;">
 						
 						<td name="sleeplabwheresched">
@@ -521,6 +554,9 @@ if($numrows){
 						<select id="sleeplabwheresched<?php echo $i; ?>" name="sleeplabwheresched">
 						<option value="add new sleeplab">Add new sleeplab</option>
 						<?php
+            $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
+            $sleeplabres = mysql_query($sleeplabquery);
+
             while($sleeplab = mysql_fetch_array($sleeplabres)){
             ?>
 						
@@ -558,22 +594,6 @@ if($numrows){
              </script>
              <?php            
              }?>
-						<tr style="height:30px;">
-						
-						<td name="labtype">
-						
-						<select name="labtype" id="labtype<?php echo $i; ?>" onChange="otherSelect2(sleepstudy<?php echo $i; ?>,<?php echo $i; ?>);">
-						
-						<option value="PSG" <?php if($sleepstudy['labtype'] == "PSG"){echo " selected='selected'";} ?>>PSG</option>
-						
-						<option value="HST" <?php if($sleepstudy['labtype'] == "HST"){echo " selected='selected'";} ?>>HST</option>
-						
-						</select>
-						
-						</td>
-						
-						</tr>
-						
 						<tr style="height:44px;">
 						
 						<td name="interpolation">

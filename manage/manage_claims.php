@@ -63,13 +63,13 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head <?= ($_GET['sort1'] == 'oldest')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=oldest&dir1=<?= ($_GET['sort1']=='oldest' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>">Oldest Transaction</a>
 		</td>
-                <td valign="top" class="col_head">
+                <td valign="top" class="col_head <?= ($_GET['sort1'] == 'patient')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
                         <a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=patient&dir1=<?= ($_GET['sort1']=='patient' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
                 </td>
-		<td valign="top" class="col_head">
+		<td valign="top" class="col_head <?= ($_GET['sort1'] == 'num_ledger')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=num_ledger&dir1=<?= ($_GET['sort1']=='num_ledger' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>"># Transactions</a>
 		</td>
                 <td valign="top" class="col_head">
@@ -192,13 +192,13 @@ if(v == '100'){
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=adddate&dir2=<?= ($_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
 		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=patient&dir2=<?= ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=status&dir2=<?= ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">

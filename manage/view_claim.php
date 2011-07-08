@@ -308,6 +308,9 @@ return s;
 			}
 			$tr_class = "tr_active";
                         if($myarray[0] == 'eob'){ $tr_class .= ' clickable_row'; }
+			if($myarray[0] == 'eob' && ($myarray['status']!=DSS_CLAIM_DISPUTE && $myarray['status']!=DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_text'; }
+                        if($myarray[0] == 'eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_dispute_text'; }
+
 		?>
 			<tr 
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">

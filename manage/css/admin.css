@@ -1222,4 +1222,9 @@ float:left;
 
 
 
-
+.eob_text td{
+  color:#0f0;
+}
+.eob_dispute_text td{
+  color:#f00;
+}

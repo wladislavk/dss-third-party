@@ -37,13 +37,19 @@ function claim_errors( $pid ){
     array_push($errors, "Missing transaction code E0486");
   }
 
-  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
+$sql = "SELECT * FROM dental_summ_sleeplab p WHERE p.patiendid=".$pid;
+  $my = mysql_query($sql);
+  $num = mysql_num_rows($my);
+  if( $num <= 0 ){
+    array_push($errors, "Missing sleep lab");
+  }
+/*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing questionnaire page 2");
   }
-
+*/
 
 
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$pid."' LIMIT 1;";

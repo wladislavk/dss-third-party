@@ -29,7 +29,7 @@ switch ($sort_by) {
     break;
   default:
     // default is SORT_BY_STATUS
-    $sort_by_sql = "claim.status $sort_dir, claim.adddate $sort_dir";
+    $sort_by_sql = "status_order $sort_dir, claim.adddate $sort_dir";
     break;
 }
 
@@ -60,7 +60,19 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
-     . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     . "  CASE claim.status 
+		WHEN ".DSS_CLAIM_PENDING." THEN 1
+                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
+                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
+                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
+                WHEN ".DSS_CLAIM_SENT." THEN 5
+                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
+                WHEN ".DSS_CLAIM_REJECTED." THEN 7
+                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
+                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
+                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
+       END AS status_order "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_users users ON claim.docid = users.userid "
@@ -233,24 +245,28 @@ $my=mysql_query($sql) or die(mysql_error());
 						Delete
 					</a>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
-            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
             if(mysql_num_rows($sq)>0){
             $file = mysql_fetch_assoc($sq);
             ?>
 
            <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+           <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
 
-        <?php } }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE){
-            $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+        <?php } 
+          }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE){
+            $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
             if(mysql_num_rows($sq)>0){
             $file = mysql_fetch_assoc($sq);
             ?>
 
            <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+           <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
 
-        <?php } } ?>
+        <?php }
+           } ?>
 
 				</td>
 			</tr>

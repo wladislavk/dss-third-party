@@ -842,7 +842,7 @@ return false;
 								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
 								$referredby_my = mysql_query($referredby_sql);
 								?>
-								<select name="referred_by" class="field text addr tbox">
+								<select name="referred_by" id="referred_by" class="field text addr tbox">
 									<option value=""></option>
 									<? while($referredby_myarray = mysql_fetch_array($referredby_my)) 
 									{
@@ -855,7 +855,8 @@ return false;
 								</select>
 							
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-                                <label for="referred_by">Referred By</label><input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" />
+                               <label for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
+				<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
                             </span>
                             
                             
@@ -942,7 +943,8 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
-																<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />
+																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1070,7 +1072,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-																<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1695,6 +1697,18 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
+<script type="text/javascript">
+
+function updateReferredBy(o, el){
+$('#'+el).append(o);
+
+}
+</script>
 <script type="text/javascript">
 var cal1 = new calendar2(document.getElementById('ins_dob'));
 </script>

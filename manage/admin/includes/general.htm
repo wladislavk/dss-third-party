@@ -157,6 +157,10 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
   } else {
     $values = "'".mysql_real_escape_string($templateid)."'";
   }
+  if ($status == 1) {
+    $columns .= ", date_sent";
+    $values .= ", NOW()";
+  }
   if (isset($pid)) {
     $columns .= ", patientid";
     $values .= ", '".mysql_real_escape_string($pid)."'";
@@ -236,8 +240,9 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 			break;
 	}
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-		$letter_query = "UPDATE dental_letters SET status='1', send_method='".$preferred."', template='".$template."' WHERE letterid='".$letterid."';";
+		$letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".$preferred."', template='".s_for($template)."' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
+    return mysql_error();
   } else {
     $select_letter = "SELECT patientid, stepid, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
 		$select_result = mysql_query($select_letter);

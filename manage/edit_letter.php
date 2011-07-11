@@ -88,7 +88,6 @@ foreach ($contact_info['md_referrals'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 }
 $numletters = count($letter_contacts);
-
 // Get Date
 
 $todays_date = date('F d, Y');
@@ -378,7 +377,7 @@ switch ($templateid) {
 		break;
 }
 
-if (!empty($altered_template)) $template = $altered_template;
+if (!empty($altered_template)) $template = html_entity_decode($altered_template);
 
 ?>
 <form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">

@@ -55,7 +55,13 @@ if($_POST["referredbysub"] == 1)
 		    parent.disablePopupRefClean();
 		  </script>
 		<?php
-		}elseif(isset($addtopat)){
+		}elseif(isset($_GET['from']) && $_GET['from']=='flowsheet3'){
+                  ?>
+                  <script type="text/javascript">
+			window.location = "/manage/manage_flowsheet3.php?pid=<?= $addedtopat; ?>&refid=<?= $rid; ?>"
+                  </script>
+                <?php
+                }elseif(isset($addtopat)){
 		?>
       <script type="text/javascript">
 			//alert("<?=$msg;?>");
@@ -164,7 +170,7 @@ if($_POST["referredbysub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="referredbyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&addtopat=1&from=<?= $_GET['from']; ?>" method="post" onSubmit="return referredbyabc(this)">
+    <form name="referredbyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&addtopat=1&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return referredbyabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

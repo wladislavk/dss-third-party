@@ -167,6 +167,7 @@ if($_POST["patientsub"] == 1)
 		emergency_number = '".s_for($_POST["emergency_number"])."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
+		copyreqdate = '".s_for($_POST["copyreqdate"])."',
     premedcheck = '".s_for($_POST["premedcheck"])."',
 		premed = '".s_for($_POST["premeddet"])."', 
 		status = '".s_for($_POST["status"])."',
@@ -310,6 +311,7 @@ if($_POST["patientsub"] == 1)
 		emergency_number = '".s_for($_POST["emergency_number"])."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
+		copyreqdate = '".s_for($_POST["copyreqdate"])."',
 		premedcheck = '".s_for($_POST["premedcheck"])."',
 		premed = '".s_for($_POST["premeddet"])."',
 		userid='".$_SESSION['userid']."', 
@@ -436,6 +438,7 @@ if($_POST["patientsub"] == 1)
 		$emergency_number = $_POST["emergency_number"];
 		$referred_source = $_POST["referred_source"];
 		$referred_by = $_POST["referred_by"];
+		$copyreqdate = $_POST["copyreqdate"];
 		$premedcheck = $_POST["premedcheck"];
 		$premed = $_POST["premeddet"];
 		$preferredcontact = $_POST["preferredcontact"];
@@ -530,6 +533,7 @@ if($_POST["patientsub"] == 1)
 		$emergency_number = st($themyarray["emergency_number"]);
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
+		$copyreqdate = st($themyarray["copyreqdate"]);
 		$premedcheck = st($themyarray["premedcheck"]);
 		$premeddet = st($themyarray["premed"]);
 		$preferredcontact = st($themyarray["preferredcontact"]);
@@ -828,6 +832,11 @@ return false;
 				</ul>
             </td>
         </tr>
+          <tr>
+              <td colspan="2">
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
+              </td>
+          </tr>
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
@@ -836,9 +845,10 @@ return false;
                            &nbsp;
                         </label>
                         <div>
-                            
-                            <span class="left">
-								<?
+<div style="float:left;"> 
+                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
+<label>Date</label>
+				</div><div style="float:left;"> 				<?
 								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
 								$referredby_my = mysql_query($referredby_sql);
 								?>
@@ -856,12 +866,9 @@ return false;
 							
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
                                <label for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
-				<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
-                            </span>
+                            </div>
+      <div style="float:left;">                      
                             
-                            
-                            
-                            <span class="right">
 								<select name="referred_source" id="referred_source" class="field text addr tbox" style="width:300px;" >
                   <option value="">Select</option>
                   <option value="Patient" <? if($referred_source == 'Patient') echo " selected";?>>Patient</option>
@@ -872,8 +879,9 @@ return false;
 									<option value="Other" <? if($referred_source == 'Other') echo " selected";?>>Other</option>
                                 </select>
                                 <label for="referred_source">Referred Source</label>
-                            </span>
-                            
+</div>
+                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
+ 
 						</div>
                     </li>
 				</ul>
@@ -1717,6 +1725,8 @@ var cal2 = new calendar2(document.getElementById('ins2_dob'));
 </script>
 <script type="text/javascript">
 var cal3 = new calendar2(document.getElementById('dob'));
+var cal4 = new calendar2(document.getElementById('copyreqdate'));
+
 </script>
 </body>
 </html>

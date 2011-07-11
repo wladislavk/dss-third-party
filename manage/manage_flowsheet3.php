@@ -556,6 +556,7 @@ $message = "There is no started flowsheet for the current patient.";
 if(isset($_POST['flowsubmit'])){
     $copyreqdate = s_for($_POST['copyreqdate']);
     $referred_by = s_for($_POST['referred_by']);
+    $referred_source = s_for($_POST['referred_source']);
     $referreddate = s_for($_POST['referreddate']);
     $thxletter = s_for($_POST['thxletter']);
     $queststartdate = s_for($_POST['queststartdate']);
@@ -637,7 +638,7 @@ if(isset($_POST['flowsubmit'])){
 		}
 
     if(mysql_num_rows($flowresult) <= 0){
-      $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
+      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$notesimgid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -681,7 +682,7 @@ if(isset($_POST['flowsubmit'])){
       }*/
 
     }else{
-      $referredbyqry = "UPDATE dental_patients SET referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
+      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
       $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$notesimgid."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -705,7 +706,7 @@ if(isset($_POST['flowsubmit'])){
 if(isset($_POST['add_ref_but'])) {
 	?>
 	<script type="text/javascript">
-	window.location = "add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>";
+	window.location = "add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>";
 	</script>
 	<?php
 }
@@ -1077,6 +1078,8 @@ $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $referred_by = $pat_myarray['referred_by'];
+$referred_source = $pat_myarray['referred_source'];
+$copyreqdate = $pat_myarray['copyreqdate'];
 $referredby_sql = "select * from dental_referredby where `referredbyid` = '".$referred_by."';";
 $referredby_my = mysql_query($referredby_sql);
 $referrer_array = mysql_fetch_array($referredby_my);
@@ -1154,7 +1157,7 @@ height:35px;
 <form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" enctype="multipart/form-data" method="post">
 <input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT</div>
+<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
 <table width="60%" align="center">
 
 <tr>
@@ -1167,13 +1170,13 @@ Date
 
 <td>
 
-Referral Source
+Referred By
 
 </td>
 
 <td>
 
-Contact Location
+Referral Source
 
 </td>
 
@@ -1184,7 +1187,6 @@ Contact Location
 <tr>
 
 <td>
-
 <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal1.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 
 </td>
@@ -1208,10 +1210,18 @@ Contact Location
 									{
 
 										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+										$selected = '';
+										if(isset($_GET['refid']) && $_GET['refid'] != ''){
+											if($_GET['refid'] == st($referredby_myarray['referredbyid'])){
+	                                                                                        $selected = ' selected="selected" ';
+											}
+										}elseif($referred_by == st($referredby_myarray['referredbyid'])){
+											$selected = ' selected="selected" ';
+										}
 
 									?>
 
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <? if($referred_by == st($referredby_myarray['referredbyid']) ) echo " selected";?>>
+										<option value="<?=st($referredby_myarray['referredbyid'])?>" <?= $selected; ?>>
 
 											<?php echo $ref_name;?>
 
@@ -1233,6 +1243,34 @@ Contact Location
 
 <td>
 
+                                        <select name="referred_source" id="referred_source" class="field text addr tbox" style="width:150px;" >
+                  <option value="">Select</option>
+                  <option value="Patient" <? if($referred_source == 'Patient') echo " selected";?>>Patient</option>
+                  <option value="Physician" <? if($referred_source == 'Physician') echo " selected";?>>Physician</option>
+                                                                        <option value="Media" <? if($referred_source == 'Media') echo " selected";?>>Media</option>
+                                                                        <option value="Franchise" <? if($referred_source == 'Franchise') echo " selected";?>>Franchise</option>
+                                                                        <option value="DSS Office" <? if($referred_source == 'DSS Office') echo " selected";?>>DSS Office</option>
+                                                                        <option value="Other" <? if($referred_source == 'Other') echo " selected";?>>Other</option>
+                                </select>
+
+
+</td>
+
+</tr>
+
+
+<!-- END INITIAL CONTACT TABLE -->
+
+<tr>
+<td colspan="2">
+<td>
+
+Contact Location
+</td>
+</tr>
+<tr>
+<td colspan="2"></td>
+<td>
 <select name="contact_location">
 
 <option value="DSS Franchisee"<?php if($contact_location == "DSS Franchisee"){echo " selected='selected'";} ?>>DSS Franchisee</option>
@@ -1240,27 +1278,17 @@ Contact Location
 <option value="Corporate Office"<?php if($contact_location == "Corporate Office"){echo " selected='selected'";} ?>>Corporate Office</option>
 
 </select>
-
 </td>
-
 </tr>
-
-</table>
-
-<!-- END INITIAL CONTACT TABLE -->
-
-
 
 
 
 <!-- START REFERRED TO DSS OFFICE TABLE -->
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">REFERRED TO DSS OFFICE</div>
-<table width="50%" align="center">
 
 <tr>
 
 <td>
-
+Contact Location
 Dentist Name/Office
 
 </td>
@@ -1425,7 +1453,17 @@ Completed/Uploaded
 			</td>
 			
 			</tr>
-			
+
+                        <tr>
+
+                        <td>
+
+                        Type
+
+                        </td>
+
+                        </tr>
+	
 			<tr>
 			
 			<td>
@@ -1441,16 +1479,6 @@ Completed/Uploaded
 			<td>
 			
 			Completed
-			
-			</td>
-			
-			</tr>
-			
-			<tr>
-			
-			<td>
-			
-			Type
 			
 			</td>
 			

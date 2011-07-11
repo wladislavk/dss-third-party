@@ -23,6 +23,24 @@ function loadPopup(fa){
 }
 
 //loading popup with jQuery magic!
+function loadPopupRefer(fa){
+        //centering with css
+        centerPopupRef();
+
+        document.getElementById("aj_ref").src = fa;
+
+        //loads popup only if it is disabled
+        if(popupStatus==0){
+                $("#backgroundPopupRef").css({
+                        "opacity": "0.7"
+                });
+                $("#backgroundPopupRef").fadeIn("slow");
+                $("#popupRefer").fadeIn("slow");
+                popupStatus = 1;
+        }
+}
+
+//loading popup with jQuery magic!
 function loadPopup1(fa){
 	//centering with css
 	centerPopup1();
@@ -82,6 +100,29 @@ function disablePopup(){
 	}
 	}
 }
+//disabling popup with jQuery magic!
+function disablePopupRef(){
+        //disables popup only if it is enabled
+        if(popupStatus==1){
+        var answer = confirm("Are you sure you want to exit without saving?")
+        if (answer){
+                                $("#backgroundPopupRef").fadeOut("slow");
+                $("#popupRefer").fadeOut("slow");
+                popupStatus = 0;
+        }else{
+                //parent.window.location.reload();
+        }
+        }
+}
+function disablePopupRefClean(){
+        //disables popup only if it is enabled
+        if(popupStatus==1){
+                                $("#backgroundPopupRef").fadeOut("slow");
+                $("#popupRefer").fadeOut("slow");
+                popupStatus = 0;
+        }
+}
+
 
 //disabling popup with jQuery magic!
 function disablePopup1(){
@@ -113,6 +154,27 @@ function centerPopup(){
 		"height": windowHeight
 	});
 	
+}
+
+//centering popup
+function centerPopupRef(){
+        //request data for centering
+        var windowWidth = document.documentElement.clientWidth;
+        var windowHeight = document.documentElement.clientHeight;
+        var popupHeight = $("#popupRefer").height();
+        var popupWidth = $("#popupRefer").width();
+        //centering
+        $("#popupRefer").css({
+                "position": "absolute",
+                "top": windowHeight/2-popupHeight/2,
+                "left": windowWidth/2-popupWidth/2
+        });
+        //only need force for IE6
+
+        $("#backgroundPopupRef").css({
+                "height": windowHeight
+        });
+
 }
 
 //centering popup
@@ -157,6 +219,15 @@ $(document).ready(function(){
 	$("#backgroundPopup").click(function(){
 		disablePopup();
 	});
+        //Click the x event!
+        $("#popupReferClose").click(function(){
+                disablePopupRef();
+        });
+        //Click out event!
+        $("#backgroundPopupRef").click(function(){
+                disablePopupRef();
+        });
+
 	//Press Escape event!
 	$(document).keypress(function(e){
 		if(e.keyCode==27 && popupStatus==1){

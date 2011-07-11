@@ -44,11 +44,24 @@ if($_POST["referredbysub"] == 1)
 	{
 		$ins_sql = "insert into dental_referredby set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."',  notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', preferredcontact = '".s_for($_POST["preferredcontact"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		
+		$rid = mysql_insert_id();		
 		$msg = "Added Successfully";
 		$addedtopat = $_POST['addedtopat'];
 		
-		if(isset($addtopat)){
+		if(isset($_GET['from']) && $_GET['from']=='add_patient'){
+                  ?>
+		  <script type="text/javascript">
+		    parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["salutation"]." ".$_POST["firstname"]." ".$_POST["lastname"]; ?></option>', 'referred_by');
+		    parent.disablePopupRefClean();
+		  </script>
+		<?php
+		}elseif(isset($_GET['from']) && $_GET['from']=='flowsheet3'){
+                  ?>
+                  <script type="text/javascript">
+			window.location = "/manage/manage_flowsheet3.php?pid=<?= $addedtopat; ?>&refid=<?= $rid; ?>"
+                  </script>
+                <?php
+                }elseif(isset($addtopat)){
 		?>
       <script type="text/javascript">
 			//alert("<?=$msg;?>");
@@ -56,7 +69,7 @@ if($_POST["referredbysub"] == 1)
 			window.history.go(-2)
 		</script>
 		<?php
-    }else{
+                }else{
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
@@ -64,7 +77,7 @@ if($_POST["referredbysub"] == 1)
 		</script>
 		<?
 		}
-		die();
+		//die();
 	}
 }
 
@@ -157,7 +170,7 @@ if($_POST["referredbysub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="referredbyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&addtopat=1" method="post" onSubmit="return referredbyabc(this)">
+    <form name="referredbyfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&addtopat=1&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return referredbyabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

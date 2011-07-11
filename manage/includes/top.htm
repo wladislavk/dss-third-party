@@ -61,6 +61,17 @@ $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (s
 $claim_res = mysql_query($claim_query);
 $num_pending_claims = mysql_num_rows($claim_res);
 
+    $claim_query = "SELECT DISTINCT p.patientid FROM dental_ledger ledger
+                         JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
+                         JOIN dental_users user ON user.userid = ledger.docid
+                         JOIN dental_patients p ON p.patientid = ledger.patientid
+                  WHERE 
+                         ledger.status = " . DSS_TRXN_PENDING ." 
+                         AND ledger.docid = " . $_SESSION['docid'] . "
+                         AND trxn_code.docid = " . $_SESSION['docid'] . "
+                         AND trxn_code.type = " . DSS_TRXN_TYPE_MED;
+    $claim_res = mysql_query($claim_query);
+    $num_pending_claims = mysql_num_rows($claim_res);
 
 // Count Preauths
 $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_COMPLETE." AND (viewed IS NULL OR viewed != 1);";

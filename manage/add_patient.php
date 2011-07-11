@@ -74,7 +74,6 @@ if($_POST["patientsub"] == 1)
 {
 	if($_POST["ed"] != "")
 	{
-          echo('edit');
 		$ed_sql = "update dental_patients 
 		set 
 		firstname = '".s_for($_POST["firstname"])."', 
@@ -1652,7 +1651,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
        <tr>
        <td valign="top">
 				<?php
-					$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' and patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
+					$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' AND deleted = '0' AND patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
 					$result = mysql_query($sql);
 					$date_generated = mysql_result($result, 0);
 					if (mysql_num_rows($result) == 0) {

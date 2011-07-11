@@ -68,6 +68,20 @@ function generated_date_desc($a, $b) {
 	return ($a['generated_date'] > $b['generated_date']) ? -1 : 1;
 }
 
+function date_sent_asc($a, $b) {
+  if ($a['date_sent'] == $b['date_sent']) {
+		return 0;
+	}
+	return ($a['date_sent'] < $b['date_sent']) ? -1 : 1;
+}
+
+function date_sent_desc($a, $b) {
+  if ($a['date_sent'] == $b['date_sent']) {
+		return 0;
+	}
+	return ($a['date_sent'] > $b['date_sent']) ? -1 : 1;
+}
+
 $status = 'pending';
 $page = '0';
 $page_limit = '10';
@@ -106,7 +120,7 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -192,6 +206,12 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
 if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
   usort($dental_letters, 'generated_date_desc'); 
 }
+if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "ASC") {
+  usort($dental_letters, 'date_sent_asc'); 
+}
+if ($_REQUEST['sort'] == "date_sent" && $_REQUEST['sortdir'] == "DESC") {
+  usort($dental_letters, 'date_sent_desc'); 
+}
 
 //print_r($dental_letters);
 
@@ -238,10 +258,13 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <td class="col_head <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a></td>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></td>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></td>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
+<?php if ($status == "sent"): ?>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=date_sent&sortdir=<?php echo ($_REQUEST['sort']=='date_sent'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent On</a></td>
+<?php endif; ?>
   </tr>
 <?php
   $i = $page_limit * $page;
@@ -253,13 +276,14 @@ if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
     $subject = $dental_letters[$i]['subject'];
     $sentto = $dental_letters[$i]['sentto'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
+    $sent = date('m/d/Y', $dental_letters[$i]['date_sent']);
     if ($dental_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;
     }
     
-    print "<tr$alert><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td></tr>";
+    print "<tr$alert><td>$name</td><td><a ".(end(explode('.', $url)) == "pdf" ? "target=\"_blank\" " : "" )."href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td>".($status == "sent" ? "<td>$sent</td>" : "")."</tr>";
     $i++;
   }
 ?>

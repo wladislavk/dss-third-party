@@ -50,7 +50,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Claims 
+	Unsubmitted Claims 
 </span>
 <br />
 &nbsp;&nbsp;
@@ -61,7 +61,7 @@ $my=mysql_query($sql) or die(mysql_error());
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table style="margin-bottom:20px;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
 		<td valign="top" class="col_head <?= ($_GET['sort1'] == 'oldest')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=oldest&dir1=<?= ($_GET['sort1']=='oldest' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>">Oldest Transaction</a>
@@ -112,10 +112,10 @@ while($myarrayp = mysql_fetch_array($myp))
                 ?>
                         <tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?= $myarrayp['oldest']; ?>
+					<?= date('m-d-Y', strtotime($myarrayp['oldest'])); ?>
 				</td>
                                 <td valign="top">
-                                        <?= $myarrayp['firstname'].' '.$myarrayp['lastname']; ?>
+				<?= $myarrayp['firstname'].' '.$myarrayp['lastname']; ?>
                                 </td>
    				<td valign="top">
 					<?= $myarrayp['num_ledger']; ?>
@@ -131,7 +131,7 @@ while($myarrayp = mysql_fetch_array($myp))
 ?>
 </table>
 
-<span class="admin_head">Claims</span>
+<span class="admin_head">Submitted Claims</span>
 <label style="margin-left:20px;">Filter by status</label> 
 <select onchange="updateClaims(this.value)">
 <option value="100"  <?= ($_GET['filter']== 100)?'selected="selected"':''; ?>>All</option>

@@ -20,8 +20,50 @@ if($_POST["imagesub"] == 1)
 			$banner1 = str_replace(" ","_",$banner1);
 			$banner1 = str_replace(".","_",$banner1);
 			$banner1 .= ".".$extension;
+
+$uploadedfile = $_FILES['image_file']['tmp_name'];
+list($width,$height)=getimagesize($uploadedfile);
+
+if($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT){
+
+if($extension=="jpg" || $extension=="jpeg" )
+{
+$src = imagecreatefromjpeg($uploadedfile);
+}
+else if($extension=="png")
+{
+$src = imagecreatefrompng($uploadedfile);
+}
+else 
+{
+$src = imagecreatefromgif($uploadedfile);
+}
+
+$newwidth=DSS_IMAGE_MAX_WIDTH;
+$newheight=($height/$width)*$newwidth;
+$tmp=imagecreatetruecolor($newwidth,$newheight);
+imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
+if($extension=="jpg" || $extension=="jpeg" )
+{
+imagejpeg($tmp,'q_file/'.$banner1,100);
+}
+else if($extension=="png")
+{
+imagepng($tmp,'q_file/'.$banner1,100);
+}
+else
+{
+imagegif($tmp,'q_file/'.$banner1,100);
+}
+
+
+imagedestroy($src);
+imagedestroy($tmp);
+
+}else{
 			
-			@move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
+  @move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
+}
 			@chmod("q_file/".$banner1,0777);
 			
 			if($_POST['image_file_old'] <> '')

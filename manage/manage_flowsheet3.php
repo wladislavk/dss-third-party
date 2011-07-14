@@ -1109,6 +1109,11 @@ vertical-align:top;
 .highrow{
 height:35px;
 }
+
+.yellow{
+background:#edeb46;
+}
+
 </style>
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
@@ -1134,12 +1139,34 @@ height:35px;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT completed FROM dental_sleepstudy WHERE completed = 'Yes' AND patientid = '".$_GET['pid']."';";
+		$sleepstudies = "SELECT completed FROM dental_sleepstudy WHERE completed = 'Yes' AND filename IS NOT NULL AND patientid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
-		$numrows = mysql_num_rows($result);
-    if(	$numrows == '0' && $copyreqdate == '' || $referred_by == '' || $contact_location == '' || $referreddate == ''
-				|| $thxletter == '' || $queststartdate == '' || $questcompdate == '' || $insinforec == '' 
-				|| $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+		$numsleepstudy = mysql_num_rows($result);
+
+		$sql = "SELECT " . "  status "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+		$my = mysql_query($sql) or die(mysql_error());
+		$numvob = mysql_num_rows($my);
+
+		$initialcontact = false;
+		$questionnaire = false;
+    $sleepstudy = false;
+		$medins = false;
+		$vob = false;
+    
+		if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $thxletter != '') $initialcontact = true;
+	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
+		if ($numsleepstudy > '0') $sleepstudy = true;
+		if ($rxreq != '' && $rxrec != '' && $lomnreq != '' && $lomnrec != '' && $clinnotereq != '' && $clinnoterec != '') $medins = true;
+		if ($numvob > '0') $vob = true;
+
+		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
       echo "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>";    
     } else {
 ?>
@@ -1157,8 +1184,8 @@ height:35px;
 <form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" enctype="multipart/form-data" method="post">
 <input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
-<table width="60%" align="center">
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
+<table width="610px" <?php print (!$initialcontact ? 'class="yellow"' : ''); ?> align="center">
 
 <tr>
 
@@ -1342,8 +1369,8 @@ echo $referrer;
 
 
 <!-- START SEND PATIENT QUESTIONNAIRE TABLE -->
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SEND PATIENT QUESTIONNAIRE</div>
-<table width="50%" align="center">
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SEND PATIENT QUESTIONNAIRE</div>
+<table width="610px" <?php print (!$queststartdate ? 'class="yellow"' : ''); ?> align="center">
 
 <tr>
 <td>
@@ -1416,11 +1443,11 @@ Completed/Uploaded
 	#sleeplablabels 	   tr td 	{ height: 35px; padding: 0; border-bottom: 1px solid #000; font-weight: bold; text-align: right; padding-right: 10px; }
 </style>
 
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SLEEP STUDY</div>
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SLEEP STUDY</div>
 
 <!--sleep study table-->
 
-<div style="width: 622px; margin: auto; display: table;" id="sleeplabtable">
+<div style="width: 610px; margin: auto; display: table;" <?php print (!$sleepstudy  ? 'class="yellow"' : ''); ?> id="sleeplabtable">
 	
 	<div style="float: left; width: 180px;">
 		<table id="sleeplablabels" style="border: 0; width: 100%;" cellpadding="0">
@@ -1527,7 +1554,7 @@ Completed/Uploaded
 		</table>
 	</div>
 	
-	<div style=" border: medium none;float: left;height: 440px;margin-bottom: 20px;margin-top: -4px;overflow: auto;width: 433px;">
+	<div style=" border: medium none;float: left;height: 440px;margin-bottom: 20px;margin-top: -4px;overflow: auto;width: 430px;">
 		 <table width="700" style="overflow-x: auto;">
 		   <tr>
 		    <td>
@@ -1848,9 +1875,9 @@ if (end(explode('.', $lomnimgname)) == "pdf") $pdf2 = true;
 if (end(explode('.', $notesimgname)) == "pdf") $pdf3 = true;
 ?>
 
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
-<table width="61%" align="center">
-<tr>
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
+<table width="610px" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
+<tr style="vertical-align:middle;">
 <td>
 <h3>Procedure</h3>
 </td>
@@ -1860,10 +1887,12 @@ if (end(explode('.', $notesimgname)) == "pdf") $pdf3 = true;
 <td>
 <h3>Received</h3>
 </td>
-<td></td>
+<td>
+<h3>Image</h3>
+</td>
 </tr>
 
-<tr>
+<!--<tr>
 
 <td>
 Insurance Information
@@ -1878,7 +1907,7 @@ N/A
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_self">Add/Edit Info</a>
 </td>
 
-</tr>
+</tr>-->
 
 <tr>
 
@@ -1979,10 +2008,11 @@ $sql = "SELECT "
 $my = mysql_query($sql) or die(mysql_error());
 ?>
 
-<div style="width:60%; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
-<table width="50%" align="center">
-	<? if (mysql_num_rows($my) == 0) { ?>
-      <tr class="tr_bg">
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
+<table width="610px" <?php print (!$vob ? 'class="yellow"' : ''); ?> align="center">
+	<? if (mysql_num_rows($my) == 0) { 
+	?>
+      <tr>
         <td valign="top" align="center">
           No verification of benefits on record.
         </td>
@@ -2124,7 +2154,7 @@ N/A
 <div id="flowsheet_page2" style="border-right: 1px solid rgb(0, 0, 0); margin-left: 20px; min-height: 400px; overflow: hidden; width: 932px;">  
 
 <?php if ($copyreqdate == ""): ?>
-<div style="margin:0 auto; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;float:left;">In order to to start this patient Flowsheet, you must enter a date in the "Initial Contact" section of Flowsheet Page 1.</div>
+<div style="margin:0 auto; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:red;float:left;">In order to to start this patient Flowsheet, you must enter a date in the "Initial Contact" section of Flowsheet Page 1.</div>
 <?php endif; ?>
 
 <?php if ($copyreqdate != ""): ?>
@@ -2488,7 +2518,7 @@ var cal2 = new calendar2(document.getElementById('referreddate'));
 var cal3 = new calendar2(document.getElementById('thxletter'));
 var cal4 = new calendar2(document.getElementById('queststartdate'));
 var cal5 = new calendar2(document.getElementById('questcompdate'));
-var cal6 = new calendar2(document.getElementById('insinforec'));
+//var cal6 = new calendar2(document.getElementById('insinforec'));
 var cal7 = new calendar2(document.getElementById('rxreq'));
 var cal8 = new calendar2(document.getElementById('rxrec'));
 var cal9 = new calendar2(document.getElementById('lomnreq'));

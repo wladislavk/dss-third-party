@@ -2,8 +2,20 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
-include "includes/top.htm";
+//include "includes/top.htm";
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+
+<link rel="stylesheet" href="css/form.css" type="text/css" />
+<script type="text/javascript" src="script/wufoo.js"></script>
+</head>
+<body>
+
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
 if($_POST["contactsub"] == 1)
@@ -436,16 +448,17 @@ if($_POST["contactsub"] == 1)
 
 
       </div>
-<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
+<!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
   </td>
-</tr>
+</tr>-->
 <!-- Stick Footer Section Here -->
-</table>
-<div id="popupContact" style="width:750px;">
+<!--</table>-->
+<!--<div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+-->
 <script type="text/javascript">
 var cal1 = new calendar2(document.getElementById('ins_dob'));
 </script>

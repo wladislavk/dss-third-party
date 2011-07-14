@@ -879,7 +879,7 @@ return false;
                                 </select>
                                 <label for="referred_source">Referred Source</label>
 </div>
-                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
+                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');scroll(0,0);" value="Add New Referrer" />
  
 						</div>
                     </li>
@@ -951,7 +951,7 @@ return false;
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
-<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="Add Insurance Company" />
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');window.scroll(0,0);" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1079,7 +1079,7 @@ return false;
                                 <?php } ?>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="Add Insurance Company" />
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />

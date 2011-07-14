@@ -706,7 +706,10 @@ if(isset($_POST['flowsubmit'])){
 if(isset($_POST['add_ref_but'])) {
 	?>
 	<script type="text/javascript">
-	window.location = "add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>";
+		//window.location = "add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>";
+		$('document').ready( function(){
+               loadPopup("add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>");
+		});
 	</script>
 	<?php
 }

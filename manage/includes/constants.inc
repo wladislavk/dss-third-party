@@ -124,7 +124,7 @@ $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF] = "Write Off";
 $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]['short'] = "Write Off";
 
 //Max File size allowed for upload forms
-define('DSS_FILE_MAX_SIZE', 200000000);
+define('DSS_FILE_MAX_SIZE', 20000000);
 
 //Allowed File Types for upload forms
 define('DSS_FILE_IMAGE_GIF', 0);
@@ -138,3 +138,20 @@ $dss_file_types[DSS_FILE_IMAGE_GIF] = "image/gif";
 $dss_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
 $dss_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
 $dss_file_types[DSS_FILE_APP_PDF] = "application/pdf";
+
+define('DSS_IMAGE_MAX_WIDTH', 2000);
+define('DSS_IMAGE_MAX_HEIGHT', 2000);
+
+
+// User types
+define('DSS_USER_TYPE_ROOT', 0);
+define('DSS_USER_TYPE_GLOBAL', 1);
+define('DSS_USER_TYPE_ADMIN', 2);
+define('DSS_USER_TYPE_LOCAL', 3);
+
+$dss_user_type_labels = array();
+$dss_user_type_labels[DSS_USER_TYPE_ROOT] = "Root User";
+$dss_user_type_labels[DSS_USER_TYPE_GLOBAL] = "Global User";
+$dss_user_type_labels[DSS_USER_TYPE_ADMIN] = "Local Admin";
+$dss_user_type_labels[DSS_USER_TYPE_LOCAL] = "Local User";
+

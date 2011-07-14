@@ -58,7 +58,7 @@ if($_POST["referredbysub"] == 1)
 		}elseif(isset($_GET['from']) && $_GET['from']=='flowsheet3'){
                   ?>
                   <script type="text/javascript">
-			window.location = "/manage/manage_flowsheet3.php?pid=<?= $addedtopat; ?>&refid=<?= $rid; ?>"
+			parent.window.location = "/manage/manage_flowsheet3.php?pid=<?= $addedtopat; ?>&refid=<?= $rid; ?>"
                   </script>
                 <?php
                 }elseif(isset($addtopat)){

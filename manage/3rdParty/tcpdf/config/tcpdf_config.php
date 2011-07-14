@@ -146,32 +146,32 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * header margin
 	 */
-	define ('PDF_MARGIN_HEADER', 10);
+	define ('PDF_MARGIN_HEADER', 48);
 
 	/**
 	 * footer margin
 	 */
-	define ('PDF_MARGIN_FOOTER', 10);
+	define ('PDF_MARGIN_FOOTER', 26);
 
 	/**
 	 * top margin
 	 */
-	define ('PDF_MARGIN_TOP', 40); // 27
+	define ('PDF_MARGIN_TOP', 48); // 27
 
 	/**
 	 * bottom margin
 	 */
-	define ('PDF_MARGIN_BOTTOM', 25);
+	define ('PDF_MARGIN_BOTTOM', 26);
 
 	/**
 	 * left margin
 	 */
-	define ('PDF_MARGIN_LEFT', 15);
+	define ('PDF_MARGIN_LEFT', 26);
 
 	/**
 	 * right margin
 	 */
-	define ('PDF_MARGIN_RIGHT', 15);
+	define ('PDF_MARGIN_RIGHT', 26);
 
 	/**
 	 * default main font name

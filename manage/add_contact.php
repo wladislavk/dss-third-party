@@ -45,7 +45,11 @@ if($_POST["contactsub"] == 1)
 		if(isset($_GET['from']) && $_GET['from']=='add_patient'){
                   ?>
                   <script type="text/javascript">
+			<?php if($_POST['contacttypeid']==11){ ?>
                     parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
+			<?php } ?>
+
+			
                     parent.disablePopupRefClean();
                   </script>
                 <?php

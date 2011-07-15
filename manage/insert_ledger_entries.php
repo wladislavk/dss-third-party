@@ -3,6 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
+require_once('includes/authorization_functions.php');
 ?>
 <html>
 <head>
@@ -52,21 +53,7 @@ function ledgerconfirmation(){
 <?php
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
-$authorized = false;
-if($_SESSION['user_access']==DSS_USER_TYPE_ADMIN){
-  $authorized = true;
-}else{
-$auth_sql = "SELECT userid FROM dental_users 
-		WHERE 
-			username='".mysql_real_escape_string($_POST['username'])."' AND 
-			password='".mysql_real_escape_string($_POST['password'])."' AND
-			user_access=".DSS_USER_TYPE_ADMIN;
-  $auth_q = mysql_query($auth_sql);
-  if(mysql_num_rows($auth_q)>0){
-    $authorized = true;
-  }
-}
-if($authorized){
+if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
 $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `ledgerid` ,
 `formid` ,

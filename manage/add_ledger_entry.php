@@ -294,7 +294,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 </script>
 
 </div>
-<div id="form_div">
+<div id="form_div" >
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;"><span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Service Date</span><span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Producer</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Procedure Code</span><div style="margin: 0pt 10px 0pt 0pt; float: left; width: 207px;">Transaction Code</div><div style="float:left;font-weight:bold;">Amount</div></div>
 <div id="FormFields" style="margin: 20px 10px;"></div>
 
@@ -307,7 +307,8 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 <div style="width:200px;margin-right:10px;float:right;text-align:right;" id="submitButton"><input type="submit" value="Submit Transactions" /></div>
 
 </div>
-<div id="auth_div" style="display:none;">
+<div id="auth_div" style="display:none; padding: 10px; color:#fff;">
+<p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
 Username: <input type="text" name="username" /><br />
 Password: <input type="password" name="password" /><br />
 <input type="submit" value="Submit" />

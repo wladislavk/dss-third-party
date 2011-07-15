@@ -144,10 +144,10 @@ define('DSS_IMAGE_MAX_HEIGHT', 2000);
 
 
 // User types
-define('DSS_USER_TYPE_ROOT', 0);
-define('DSS_USER_TYPE_GLOBAL', 1);
+define('DSS_USER_TYPE_ROOT', 4);
+define('DSS_USER_TYPE_GLOBAL', 3);
 define('DSS_USER_TYPE_ADMIN', 2);
-define('DSS_USER_TYPE_LOCAL', 3);
+define('DSS_USER_TYPE_LOCAL', 1);
 
 $dss_user_type_labels = array();
 $dss_user_type_labels[DSS_USER_TYPE_ROOT] = "Root User";

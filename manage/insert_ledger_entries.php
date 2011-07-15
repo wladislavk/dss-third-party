@@ -52,7 +52,21 @@ function ledgerconfirmation(){
 <?php
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
-
+$authorized = false;
+if($_SESSION['user_access']==DSS_USER_TYPE_ADMIN){
+  $authorized = true;
+}else{
+$auth_sql = "SELECT userid FROM dental_users 
+		WHERE 
+			username='".mysql_real_escape_string($_POST['username'])."' AND 
+			password='".mysql_real_escape_string($_POST['password'])."' AND
+			user_access=".DSS_USER_TYPE_ADMIN;
+  $auth_q = mysql_query($auth_sql);
+  if(mysql_num_rows($auth_q)>0){
+    $authorized = true;
+  }
+}
+if($authorized){
 $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `ledgerid` ,
 `formid` ,
@@ -168,6 +182,18 @@ parent.window.location = parent.window.location;
 </script>
 <?php
 }
+
+
+
+}else{ //NOT AUTHORIZED
+?>
+<script type="text/javascript">
+alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST;');
+history.go(-1);
+</script>
+<?php
+
+}
 ?>
 
 
@@ -186,7 +212,8 @@ parent.window.location = parent.window.location;
 
 
 <?php
-
+/*
+//NOT SURE WHAT THIS IS. COMMENTNIG OUT FOR NOW
 
 $sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
 `ledgerid` ,
@@ -292,6 +319,8 @@ $d++;
 
 $sqlinsertqry2 = substr($sqlinsertqry2, 0, -1).";";
 $insqry = mysql_query($sqlinsertqry2);
+
+*/
 ?>
 
 

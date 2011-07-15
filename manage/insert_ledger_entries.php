@@ -175,7 +175,7 @@ parent.window.location = parent.window.location;
 }else{ //NOT AUTHORIZED
 ?>
 <script type="text/javascript">
-alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST;');
+alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
 history.go(-1);
 </script>
 <?php

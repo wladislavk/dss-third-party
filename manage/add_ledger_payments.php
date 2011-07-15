@@ -39,6 +39,7 @@ $num_sa = mysql_num_rows($saq);
 //CHECK LEDGER PAYMENT SUBMISSION
 function validSubmission(f){
 returnval = true;
+if(!authShown){
 //CHECK PAYMENT IS ENTERED
 payment = false
 $('.payment_amount').each( function(){
@@ -149,10 +150,32 @@ if(f.dispute.checked){
     //WHAT HAPPENS?
   }
 }
-
-
-return returnval;
 }
+if(returnval){
+  if(<?= ($_SESSION['user_access']==2)?1:0;?>){
+    return true;
+  }else{
+    if(!authShown){
+      showAuthBox();
+      authShown = true;
+      return false;
+    }else{
+      return true;
+    }
+  }
+}else{
+  return returnval;
+}
+}
+var authShown = false;
+
+function showAuthBox(){
+document.getElementById('form_div').style.display = 'none';
+document.getElementById('auth_div').style.display = 'block';
+}
+
+
+
 
 </script>
 
@@ -208,7 +231,7 @@ while($p = mysql_fetch_array($p_sql)){
 }
  ?>
 
-
+<div id="form_div">
 <div id="select_fields" style="margin: 10px;color:#fff;">
 <label>Paid By</label>
 <select id="payer" name="payer" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
@@ -269,6 +292,14 @@ while($row = mysql_fetch_assoc($lq)){
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
 <div style="width:200px;float:right;margin-left:10px;text-align:left;" id="submitButton"><input type="submit" value="Submit Payments" /></div>
+</div>
+<div id="auth_div" style="display:none; padding: 10px; color:#fff;">
+<p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
+Username: <input type="text" name="username" /><br />
+Password: <input type="password" name="password" /><br />
+<input type="submit" value="Submit" />
+</div>
+
 </form>
 </body>
 </html> 

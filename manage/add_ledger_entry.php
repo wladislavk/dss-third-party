@@ -249,24 +249,17 @@ $e_text .= implode($errors, ', ');
   
 </script>
   <script type="text/javascript">
-var authShown = false;
-function validate(){
+function validate(f){
   if(<?= ($_SESSION['user_access']==2)?1:0;?>){
     return true;
   }else{
-    if(!authShown){
-      showAuthBox();
-      authShown = true;
+    if(f.username.value=='' || f.password.value==''){  
+      alert('Please enter a username and password.');
       return false;
     }else{
       return true;
     }
   }
-}
-
-function showAuthBox(){
-document.getElementById('form_div').style.display = 'none';
-document.getElementById('auth_div').style.display = 'block';
 }
 </script>
 
@@ -279,7 +272,7 @@ document.getElementById('auth_div').style.display = 'block';
 
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_entries.php" method="POST" onsubmit="return validate(<?php $_COOKIE['tempforledgerentry']; ?>);">
+<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_entries.php" method="POST" onsubmit="return validate(this);">
 
  
 <div style="width:200px; margin:0 auto; text-align:center;">
@@ -303,15 +296,16 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
+<?php if($_SESSION['user_access']!=DSS_USER_TYPE_ADMIN){ ?>
+<div id="auth_div" style="padding-left: 10px; color:#fff;">
+<p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
+Username: <input type="text" name="username" />
+Password: <input type="password" name="password" />
+</div>
+<?php } ?>
 <div style="width:200px;float:left;margin-left:10px;text-align:left;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
 <div style="width:200px;margin-right:10px;float:right;text-align:right;" id="submitButton"><input type="submit" value="Submit Transactions" /></div>
 
-</div>
-<div id="auth_div" style="display:none; padding: 10px; color:#fff;">
-<p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
-Username: <input type="text" name="username" /><br />
-Password: <input type="password" name="password" /><br />
-<input type="submit" value="Submit" />
 </div>
 </form>
 <script type="text/javascript">

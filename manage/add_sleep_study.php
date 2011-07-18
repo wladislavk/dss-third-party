@@ -2,6 +2,17 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php"); 
+require_once('includes/dental_patient_summary.php');
+
+// Determine Type of Appliance
+$sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='51' ORDER BY date DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_array($result)) {
+	$deviceid = $row['dentaldevice'];
+}
+update_patient_summary($_GET['pid'], 'appliance', $deviceid);
+
+
 ?>
 <html style="overflow-y:hidden;">
 <head>

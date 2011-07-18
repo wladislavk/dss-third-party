@@ -3,6 +3,17 @@ session_start();
 require_once('../includes/constants.inc');
 require_once('includes/config.php');
 include("includes/sescheck.php");
+require_once('../includes/dental_patient_summary.php');
+
+// Get patient id for updating patient summary table
+$sql = "SELECT "
+		 . "  preauth.patient_id "
+		 . "FROM "
+		 . "  dental_insurance_preauth preauth "
+		 . "WHERE "
+		 . "  preauth.id = " . $_REQUEST['ed'];
+$result = mysql_query($sql);
+$pid = mysql_result($result, 0);
 
 if (isset($_REQUEST['ed'])) {
     // load preauth
@@ -110,8 +121,10 @@ if (isset($_REQUEST['ed'])) {
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
+				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } else {
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
+				update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());

@@ -800,7 +800,7 @@ if(isset($_POST['add_ref_but'])) {
 	<script type="text/javascript">
 		//window.location = "add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>";
 		$('document').ready( function(){
-               loadPopup("add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>");
+               loadPopupRefer("add_referredby.php?from=flowsheet3&from_id=referred_by&addtopat=<?php echo $_GET['pid']; ?>");
 		});
 	</script>
 	<?php
@@ -2634,4 +2634,14 @@ var cal11 = new calendar2(document.getElementById('clinnotereq'));
 var cal12 = new calendar2(document.getElementById('clinnoterec'));
 // var cal13 = new calendar2(document.getElementById('refneeddate1'));
 // var cal14 = new calendar2(document.getElementById('refneeddate2'));
+// var cal15 = new calendar2(document.getElementById('preautho1'));
+// var cal16 = new calendar2(document.getElementById('preautho2'));
+// var cal17 = new calendar2(document.getElementById('insverbendate'));
+</script>
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 <? include "includes/bottom.htm";?>

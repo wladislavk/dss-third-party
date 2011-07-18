@@ -11,6 +11,7 @@ include "includes/top.htm";
 		$('#patientfrm').submit(function() {
 			window.onbeforeunload = null;
 		});
+$('input,select').keypress(function() { return event.keyCode != 13; });
 	});
   function confirmExit()
   {

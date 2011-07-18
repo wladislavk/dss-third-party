@@ -3,6 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
+require_once('includes/authorization_functions.php');
 ?>
 <html>
 <head>
@@ -52,7 +53,7 @@ function ledgerconfirmation(){
 <?php
 $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
-
+if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
 $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `ledgerid` ,
 `formid` ,
@@ -168,6 +169,18 @@ parent.window.location = parent.window.location;
 </script>
 <?php
 }
+
+
+
+}else{ //NOT AUTHORIZED
+?>
+<script type="text/javascript">
+alert('YOU ARE NOT AUTHORIZED TO COMPLETE THIS REQUEST');
+history.go(-1);
+</script>
+<?php
+
+}
 ?>
 
 
@@ -186,7 +199,8 @@ parent.window.location = parent.window.location;
 
 
 <?php
-
+/*
+//NOT SURE WHAT THIS IS. COMMENTNIG OUT FOR NOW
 
 $sqlinsertqry2 .= "INSERT INTO `dental_ledger_rec` (
 `ledgerid` ,
@@ -292,6 +306,8 @@ $d++;
 
 $sqlinsertqry2 = substr($sqlinsertqry2, 0, -1).";";
 $insqry = mysql_query($sqlinsertqry2);
+
+*/
 ?>
 
 

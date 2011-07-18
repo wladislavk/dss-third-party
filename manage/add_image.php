@@ -6,7 +6,7 @@ include("includes/sescheck.php");
 
 if($_POST["imagesub"] == 1)
 {
-	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) && ($_FILES["image_file"]["size"] < DSS_FILE_MAX_SIZE)) {
+	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
 		
@@ -39,6 +39,16 @@ else
 $src = imagecreatefromgif($uploadedfile);
 }
 
+if($width>$height){
+$newwidth=DSS_IMAGE_MAX_WIDTH;
+$newheight=($height/$width)*$newwidth;
+}elseif($height>$width){
+$newheight=DSS_IMAGE_MAX_HEIGHT;
+$newwidth=($width/$height)*$newheight;
+}else{
+$newwidth=DSS_IMAGE_MAX_WIDTH;
+$newheight=DSS_IMAGE_MAX_HEIGHT;
+}
 $newwidth=DSS_IMAGE_MAX_WIDTH;
 $newheight=($height/$width)*$newwidth;
 $tmp=imagecreatetruecolor($newwidth,$newheight);
@@ -55,15 +65,23 @@ else
 {
 imagegif($tmp,'q_file/'.$banner1,100);
 }
-
-
+$uploaded = true;
+if(filesize('q_file/'.$banner1) > DSS_FILE_MAX_SIZE){
+@unlink("q_file/".$banner1);
+$uploaded = false;
+}
 imagedestroy($src);
 imagedestroy($tmp);
 
 }else{
-			
-  @move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
+  if($_FILES['image_file']['size'] <= DSS_FILE_MAX_SIZE){			
+    @move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
+    $uploaded = true;
+  }else{
+    $uploaded =false;
+  }
 }
+
 			@chmod("q_file/".$banner1,0777);
 			
 			if($_POST['image_file_old'] <> '')
@@ -76,7 +94,7 @@ imagedestroy($tmp);
 			$banner1 = $_POST['image_file_old'];
 		}
 		
-		
+if($uploaded){		
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = " update dental_q_image set 
@@ -125,10 +143,17 @@ imagedestroy($tmp);
 				die();
 			}
 		}
+}else{
+  ?>
+                        <script type="text/javascript">
+                                alert("File too Large");
+                        </script>
+                <?php
+}
 	} else {
 		?>
 			<script type="text/javascript">
-				alert("Invalid File Type or File too Large");
+				alert("Invalid File Type");
 			</script>           
 		<?php
 	}

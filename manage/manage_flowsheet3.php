@@ -690,8 +690,9 @@ if(isset($_POST['flowsubmit'])){
 					$banner1 = str_replace(".","_",$banner1);
 					$banner1 .= ".".$extension;
 				
-					@move_uploaded_file($file["tmp_name"],"q_file/".$banner1);
-					@chmod("q_file/".$banner1,0777);
+					//@move_uploaded_file($file["tmp_name"],"q_file/".$banner1);
+					//@chmod("q_file/".$banner1,0777);
+					uploadImage($file, 'q_file/'.$banner1);
 
 					$ins_sql = " insert into dental_q_image set 
 					patientid = '".s_for($_GET['pid'])."',

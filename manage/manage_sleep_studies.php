@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
+require_once('includes/general_functions.php');
 include("includes/sescheck.php");
 ?>
 <html>
@@ -260,7 +261,8 @@ if ($origfilename != '') {
 				//$filename = $patientid.'-'.$random.".".$scanext;
 				$scanext = end(explode('.', $origfilename));
 				$fullfilename = $filename . "." . $scanext;
-				$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
+				$success = uploadImage($_FILES["file"],"sleepstudies/".$fullfilename);
+				//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 					if ($success) {
 					  // Delete previous file if updating, then add reference to filename in database
 						if ($updated) {
@@ -314,7 +316,7 @@ if ($origfilename != '') {
 					} else {			
 						?>
 						<script type="text/javascript">
-							alert("File could not be stored to server.");
+							alert("<?= "sleepstudies/$fullfilename"; ?> File could not be stored to server.");
 						</script><?php
 					}
 				}

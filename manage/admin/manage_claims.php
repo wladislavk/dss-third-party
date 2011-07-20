@@ -244,6 +244,7 @@ $my=mysql_query($sql) or die(mysql_error());
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
 					</a>
+                    <a href="../insurance_fdf.php?insid=<?=$myarray['insuranceid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">Print</a>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);

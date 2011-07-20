@@ -237,14 +237,16 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
-				    <?php $link_label = ($myarray["status"] == DSS_CLAIM_PENDING) ? 'Edit' : 'View'; ?>
+				    <?php if($myarray["status"] == DSS_CLAIM_PENDING){ ?>
 				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
-						<?= $link_label ?> 
-					</a>
+						Edit
+					</a> 
+				<?php }else{ ?>
+					<a href="../insurance_fdf.php?insid=<?=$myarray['insuranceid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">View</a>
+				<?php } ?>
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
 					</a>
-                    <a href="../insurance_fdf.php?insid=<?=$myarray['insuranceid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">Print</a>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
@@ -278,3 +280,12 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <br /><br />	
 <? include "includes/bottom.htm";?>
+<?php
+if(isset($_GET['showins'])&&$_GET['showins']==1){
+  ?>
+  <script type="text/javascript">
+    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&pid=<?= $_GET['pid'];?>";
+  </script>
+  <?php
+}
+?>

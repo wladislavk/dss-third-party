@@ -3,7 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
-
+require_once('includes/general_functions.php');
 if($_POST["imagesub"] == 1)
 {
 	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
@@ -21,69 +21,7 @@ if($_POST["imagesub"] == 1)
 			$banner1 = str_replace(".","_",$banner1);
 			$banner1 .= ".".$extension;
 
-$uploadedfile = $_FILES['image_file']['tmp_name'];
-list($width,$height)=getimagesize($uploadedfile);
-
-if($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT){
-
-if($extension=="jpg" || $extension=="jpeg" )
-{
-$src = imagecreatefromjpeg($uploadedfile);
-}
-else if($extension=="png")
-{
-$src = imagecreatefrompng($uploadedfile);
-}
-else 
-{
-$src = imagecreatefromgif($uploadedfile);
-}
-
-if($width>$height){
-$newwidth=DSS_IMAGE_MAX_WIDTH;
-$newheight=($height/$width)*$newwidth;
-}elseif($height>$width){
-$newheight=DSS_IMAGE_MAX_HEIGHT;
-$newwidth=($width/$height)*$newheight;
-}else{
-$newwidth=DSS_IMAGE_MAX_WIDTH;
-$newheight=DSS_IMAGE_MAX_HEIGHT;
-}
-$newwidth=DSS_IMAGE_MAX_WIDTH;
-$newheight=($height/$width)*$newwidth;
-$tmp=imagecreatetruecolor($newwidth,$newheight);
-imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
-if($extension=="jpg" || $extension=="jpeg" )
-{
-imagejpeg($tmp,'q_file/'.$banner1,100);
-}
-else if($extension=="png")
-{
-imagepng($tmp,'q_file/'.$banner1,100);
-}
-else
-{
-imagegif($tmp,'q_file/'.$banner1,100);
-}
-$uploaded = true;
-if(filesize('q_file/'.$banner1) > DSS_FILE_MAX_SIZE){
-@unlink("q_file/".$banner1);
-$uploaded = false;
-}
-imagedestroy($src);
-imagedestroy($tmp);
-
-}else{
-  if($_FILES['image_file']['size'] <= DSS_FILE_MAX_SIZE){			
-    @move_uploaded_file($_FILES["image_file"]["tmp_name"],"q_file/".$banner1);
-    $uploaded = true;
-  }else{
-    $uploaded =false;
-  }
-}
-
-			@chmod("q_file/".$banner1,0777);
-			
+			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1);
 			if($_POST['image_file_old'] <> '')
 			{
 				@unlink("q_file/".$_POST['image_file_old']);

@@ -724,7 +724,7 @@ if ($_POST['insurancesub'] == 1) {
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';
-        print '  window.location="' . $called_from . '?pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
 
 		die(); // already did a javascript redirect...just die
@@ -1107,9 +1107,9 @@ if (empty($prior_authorization_number)) {
           Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" <?=($status == DSS_CLAIM_SEC_SENT) ? 'checked' : ''?>/>
                <?php } ?>
 		<?php } ?>
-		<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>
+		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
         <?php if (!$is_sent) { ?>
-          <input type="submit" name="ex_pagebtn" value="Save" />
+          <input type="submit" name="ex_pagebtn" value="Save and Print" />
         <?php } ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>

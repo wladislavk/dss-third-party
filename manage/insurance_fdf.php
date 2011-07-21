@@ -4,7 +4,6 @@ header('Content-Disposition: attachment; filename="file.fdf"');
 session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/config.php');
-include("includes/sescheck.php");
 
 $field_path = "form1[0].#subform[0]";
 $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';

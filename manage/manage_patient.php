@@ -1,5 +1,7 @@
 <?php 
 include "includes/top.htm";
+require_once('includes/constants.inc');
+require_once('includes/formatters.php');
 
 if($_REQUEST["delid"] != "")
 {
@@ -32,20 +34,21 @@ if(!isset($_REQUEST['sort'])){
 
 $sql = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
-     . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, s.appliance, "
-		 . "  s.delivery_date, s.vob, s.ledger "
+     . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
+		 . "  s.delivery_date, s.vob, s.ledger, d.device "
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
+		 . "  LEFT JOIN dental_device d ON s.appliance = d.deviceid  "
 		 . "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
 {
-	$sql .= " AND patientid = ".$_GET['pid'];
+	$sql .= " AND p.patientid = ".$_GET['pid'];
 }
 if($_GET['sh'] != 2)
 {
-	$sql .= " AND status = 1";
+	$sql .= " AND p.status = 1";
 }
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
@@ -117,7 +120,7 @@ background:#999999;
 }
 </style>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -144,8 +147,8 @@ background:#999999;
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.last_treatment')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.last_treatment&sortdir=<?php echo ($_REQUEST['sort']=='s.last_treatment'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Treatment</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.appliance')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.appliance&sortdir=<?php echo ($_REQUEST['sort']=='s.appliance'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'd.device')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=d.device&sortdir=<?php echo ($_REQUEST['sort']=='d.device'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance</a>
 		</td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='s.delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance Since</a>
@@ -157,6 +160,17 @@ background:#999999;
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.ledger&sortdir=<?php echo ($_REQUEST['sort']=='s.ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
 		</td>
 	</tr>
+  <tr class="template" style="display:none;">
+    <td class="patient_name">John Smith</td>
+    <td class="flowsheet">No</td>
+    <td class="next_visit">(4 days)</td>
+    <td class="last_visit">1 yr 2 mo</td>
+    <td class="last_treatment">Consult</td>
+    <td class="appliance">TAP 3</td>
+    <td class="appliance_since">63 days</td>
+    <td class="vob">Complete</td>
+    <td class="ledger">($435.75)</td>
+  </tr>
 <? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -191,28 +205,28 @@ background:#999999;
                     ?> 
 				</td>
 				<td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['fspage1_complete'] ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
         </td>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= $myarray['next_visit'] ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['next_visit']); ?></a>
         </td>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= $myarray['last_visit'] ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['last_visit'], true); ?></a>
         </td>
         <td valign="top">
-          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= $myarray['last_treatment'] ?></a>
+          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?></a>
         </td>
 				<td valign="top">
-	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['appliance'] ?></a>
+	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?></a>
         </td>
         <td valign="top">
-	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= $myarray['delivery_date'] ?></a>
+	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
 	      </td>
         <td valign="top">
-	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['vob'] ?></a>
+	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?></a>
         </td>
         <td valign="top">
-	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['ledger'] ?></a>
+	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?></a>
         </td>
 			</tr>
 	<? 	}

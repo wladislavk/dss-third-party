@@ -1,5 +1,21 @@
-<? 
+<?php
 include "includes/top.htm";
+require_once('includes/dental_patient_summary.php');
+
+$sql = "SELECT  "
+		 . "  dl.amount, sum(pay.amount) as paid_amount "
+     . "FROM dental_ledger dl  "
+     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+     . "WHERE dl.docid='".$_SESSION['docid']."' AND dl.patientid='".s_for($_GET['pid'])."'  "
+     . "GROUP BY dl.ledgerid";
+$result = mysql_query($sql);
+$ledger_balance = 0;
+while ($row = mysql_fetch_array($result)) {
+  $ledger_balance -= $row['amount'];
+  $ledger_balance += $row['paid_amount'];
+}
+update_patient_summary($_GET['pid'], 'ledger', $ledger_balance);
+
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php

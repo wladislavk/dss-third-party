@@ -589,15 +589,14 @@ function popitup(url) {
 			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
 		}
 		row.find('.patient_name').html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + pm);
-		row.find('.questionnaire_link').html("<a href=\"q_page1.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Questionnaire\">Manage</a>");
-		row.find('.clinical_exam_link').html("<a href=\"ex_page4.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Clinical Exam\">Manage</a>");
-		row.find('.summary_sheet_link').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Summary Sheet\">Manage</a>");
-		row.find('.ledger_link').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Ledger\">Manage</a>");
-		row.find('.progress_notes_link').html("<a href=\"manage_progress_notes.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Progress Notes\">Manage</a>");
-		row.find('.insurance_link').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Insurance\">Manage</a>");
-		row.find('.letters_link').html("<a href=\"dss_letters.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Letters\">Manage</a>");
-		row.find('.flowsheet_link').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\" class=\"dellink\" title=\"Flowsheet\">Manage</a>");
-		row.find('.contact_info_link').html("<a href=\"add_patient.php?ed=" + patient.patientid + "&pid=" + patient.patientid + "\" class=\"editlink\" title=\"EDIT\">Edit</a><br /><a href=\"/manage/manage_patient.php?delid=" + patient.patientid + "\" onclick=\"javascript: return confirm('Do Your Really want to Delete?.');\" class=\"dellink\" title=\"DELETE\">Delete</a>");
+		row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
+		row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
+		row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
+		row.find('.last_treatment').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_treatment + "</a>");
+		row.find('.appliance').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\">" + patient.device + "</a>");
+		row.find('.appliance_since').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.delivery_date + "</a>");
+		row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
+		row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
 		return row;
 	}
 </script>

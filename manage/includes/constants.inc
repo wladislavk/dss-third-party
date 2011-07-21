@@ -155,3 +155,20 @@ $dss_user_type_labels[DSS_USER_TYPE_GLOBAL] = "Global User";
 $dss_user_type_labels[DSS_USER_TYPE_ADMIN] = "Local Admin";
 $dss_user_type_labels[DSS_USER_TYPE_LOCAL] = "Local User";
 
+/* Dynamically provided in database and set up by backoffice form
+// Appliances 
+define('DSS_APPLIANCE_MRD', 1);
+define('DSS_APPLIANCE_TRD', 2);
+define('DSS_APPLIANCE_TRD2', 3);
+define('DSS_APPLIANCE_TAP3', 5);
+
+$dss_appliance_labels = array();
+$dss_appliance_labels[DSS_APPLIANCE_MRD] = "FDA approved mandibular repositioning device (MRD)";
+$dss_appliance_labels[DSS_APPLIANCE_MRD]["short"] = "";
+$dss_appliance_labels[DSS_APPLIANCE_TRD] = "FDA approved tongue retaining device";
+$dss_appliance_labels[DSS_APPLIANCE_TRD]["short"] = "";
+$dss_appliance_labels[DSS_APPLIANCE_TRD2] = "FDA approved tongue retaining device with breathing tube";
+$dss_appliance_labels[DSS_APPLIANCE_TRD2]["short"] = "";
+$dss_appliance_labels[DSS_APPLIANCE_TAP3] = "TAP 3";
+$dss_appliance_labels[DSS_APPLIANCE_TAP3]["short"] = "";
+*/

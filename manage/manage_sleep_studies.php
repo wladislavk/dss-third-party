@@ -140,11 +140,11 @@ else
 
 function showWhere(f){
   if(f.labtype.value == "PSG"){
-  f.sleeplabwheresched.style.display = "block";
-  f.sleeplabschedhome.style.display = "none";
+		f.sleeplabwheresched.style.display = "block";
+		f.sleeplabschedhome.style.display = "none";
   }else{
-  f.sleeplabwheresched.style.display = "none";
-  f.sleeplabschedhome.style.display = "block";
+		f.sleeplabwheresched.style.display = "none";
+		f.sleeplabschedhome.style.display = "block";
   }
 }
 
@@ -183,17 +183,18 @@ if(isset($_POST['updatestudy']) || isset($_POST['submitnewstudy'])) {
 }
 
 if(isset($_POST['updatestudy']) && isset($_POST['sleepstudyid'])){
+	$i = $_POST['formid'];
 	$sleepstudyid = $_POST['sleepstudyid'];
 	$docid = $_SESSION['docid'];
 	$patientid = $_POST['patientid'];
-	$needed = $_POST['needed'];
-	$scheddate = $_POST['scheddate'];
-	$sleeplabwheresched = $_POST['sleeplabwheresched'];
-	$completed = $_POST['completed'];
-	$interpolation = $_POST['interpolation'];
-	$labtype = $_POST['labtype'];
-	$copyreqdate = $_POST['copyreqdate'];
-	$sleeplab = $_POST['sleeplab'];
+	$needed = $_POST['data'][$i]['needed'];
+	$scheddate = $_POST['data'][$i]['scheddate'];
+	$sleeplabwheresched = $_POST['data'][$i]['sleeplabwheresched'];
+	$completed = $_POST['data'][$i]['completed'];
+	$interpolation = $_POST['data'][$i]['interpolation'];
+	$labtype = $_POST['data'][$i]['labtype'];
+	$copyreqdate = $_POST['data'][$i]['copyreqdate'];
+	$sleeplab = $_POST['data'][$i]['sleeplab'];
 	$origfilename = $_FILES["file"]["name"];
 	$date = date("Ymd");
 	$updslquery = "UPDATE `dental_sleepstudy` SET `docid` = '".$docid."', `patientid` = '".$_POST['patientid']."', `needed` = '".$needed."',`scheddate` = '".$scheddate."',`sleeplabwheresched` = '".$sleeplabwheresched."',`completed` = '".$completed."',`interpolation` = '".$interpolation."',`labtype` = '".$labtype."',`copyreqdate` = '".$copyreqdate."',`sleeplab` = '".$sleeplab."',`date` = '".$date."' $filequery WHERE `id` = '".$_POST['sleepstudyid']."' and `patientid` = '".$patientid."';";
@@ -236,6 +237,7 @@ if ($origfilename != '') {
 	//error_reporting(E_ALL);
 	//ini_set("display_errors", 1); 
 	//die();
+
 		if ((array_search($_FILES["file"]["type"], $dss_file_types) !== false) && ($_FILES["file"]["size"] < DSS_FILE_MAX_SIZE))
 		{
 		if ($_FILES["file"]["error"] > 0)
@@ -338,7 +340,6 @@ if ($origfilename != '') {
 	<?php
 	die();
 }
-
 
 ?>
 
@@ -551,9 +552,9 @@ if($numrows){
              </script>
              <?php            
             } ?>
-						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="needed" value="Yes"<?php if($sleepstudy['needed'] == "Yes"){ echo " checked='checked'";} ?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="data[<?= $i ?>][needed]" value="Yes"<?php if($sleepstudy['needed'] == "Yes"){ echo " checked='checked'";} ?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="needed" value="No"<?php if($sleepstudy['needed'] == "No"){ echo " checked='checked'";} ?>>No
+						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="data[<?= $i ?>][needed]" value="No"<?php if($sleepstudy['needed'] == "No"){ echo " checked='checked'";} ?>>No
 
 						</td>
 
@@ -564,7 +565,7 @@ if($numrows){
 						<td>
             
             
-						<input id="scheddate<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="cal_scheddate<?=$i?>.popup();" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
+						<input id="scheddate<?php echo $i; ?>" name="data[<?= $i ?>][scheddate]" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="cal_scheddate<?=$i?>.popup();" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
 						
 						<script id="js<?php echo $i; ?>" type="text/javascript">
                 var cal<?php echo $i; ?> = new CalendarPopup();
@@ -576,7 +577,7 @@ if($numrows){
 						
                                                 <tr style="height:30px;">
 
-                                                <td name="labtype">
+                                                <td name="data[<?= $i ?>][labtype]">
 
                                                 <select name="labtype" id="labtype<?php echo $i; ?>" onChange="otherSelect2('sleepstudy<?php echo $i; ?>',<?php echo $i; ?>, this.form);">
 
@@ -593,8 +594,8 @@ if($numrows){
 						<tr style="height:30px;">
 						
 						<td name="sleeplabwheresched">
-						<input type="text" id="sleeplabschedhome<?php echo $i; ?>" name="sleeplabschedhome" value="home" <?php if($sleepstudy['labtype'] != "HST"){ echo 'style="display:none;"'; } ?> disabled="disabled">	
-						<select id="sleeplabwheresched<?php echo $i; ?>" name="sleeplabwheresched" <?php if($sleepstudy['labtype'] == "HST"){echo 'style="display:none;"'; } ?>>
+						<input type="text" id="sleeplabschedhome<?php echo $i; ?>" name="data[<?= $i ?>][sleeplabschedhome]" value="home" <?php if($sleepstudy['labtype'] != "HST"){ echo 'style="display:none;"'; } ?> disabled="disabled">	
+						<select id="sleeplabwheresched<?php echo $i; ?>" name="data[<?= $i ?>][sleeplabwheresched]" <?php if($sleepstudy['labtype'] == "HST"){echo 'style="display:none;"'; } ?>>
 						<option value="add new sleeplab">Add new sleeplab</option>
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
@@ -617,9 +618,9 @@ if($numrows){
 						<td>
 						<div id="completed">
 						
-						<input type="radio" id="completed<?php echo $i."1"; ?>" name="completed" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."3"; ?>" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="completed<?php echo $i."1"; ?>" name="data[<?= $i ?>][completed]" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."3"; ?>" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="completed<?php echo $i."2"; ?>" name="completed" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."4"; ?>" style="float:left;">No</div>
+						<input type="radio" id="completed<?php echo $i."2"; ?>" name="data[<?= $i ?>][completed]" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."4"; ?>" style="float:left;">No</div>
             </div>						
 						</td>
 						
@@ -641,9 +642,9 @@ if($numrows){
 						
 						<td name="interpolation">
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>1" name="interpolation" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>3" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="interpretation<?php echo $i; ?>1" name="data[<?= $i ?>][interpolation]" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>3" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>2" name="interpolation" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>4" style="float:left;">No</div>
+						<input type="radio" id="interpretation<?php echo $i; ?>2" name="data[<?= $i ?>][interpolation]" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>4" style="float:left;">No</div>
 						
 						</td>
 						
@@ -669,7 +670,7 @@ if($numrows){
 						
 						<td name="copyreqdate">
 						
-						<input id="copyreqdate<?=$i?>" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+						<input id="copyreqdate<?=$i?>" name="data[<?= $i ?>][copyreqdate]" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 						
 						</td>
 						
@@ -679,7 +680,7 @@ if($numrows){
 						
 						<td name="sleeplab">
 						
-						<select id="sleeplab" name="sleeplab">
+						<select id="sleeplab" name="data[<?= $i ?>][sleeplab]">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -717,6 +718,7 @@ if($numrows){
 						
 						<td>
 						<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+						<input type="hidden" name="formid" value="<?= $i ?>">
 						<input type="hidden" name="sleepstudyid" value="<?php echo $sleepstudy['id']; ?>">
             <input type="submit" name="updatestudy" value="Update Study" />
 						

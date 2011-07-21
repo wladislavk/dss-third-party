@@ -1,27 +1,11 @@
 <?php include 'includes/top.htm'; 
 
 function userid_asc($a, $b) {
-	if ($a['userid'] == $b['userid']) {
-		return 0;
-	} elseif ($a['userid'] == '' && $b['userid'] != '') {
-		return -1;
-	} elseif ($b['userid'] == '' && $a['userid'] != '') {
-		return 1;
-	}  else {
-		return ($a['userid'] < $b['userid']) ? -1 : 1;
-	}
+  return strcmp ($a['userid'], $b['userid']);
 }
 
 function userid_desc($a, $b) {
-	if ($a['userid'] == $b['userid']) {
-		return 0;
-	} elseif ($a['userid'] == '' && $b['userid'] == '') {
-		return 1;
-	} elseif ($b['userid'] == '' && $a['userid'] != '') {
-		return -1;
-	}  else {
-		return ($a['userid'] > $b['userid']) ? -1 : 1;
-	}
+  return strcmp ($b['userid'], $a['userid']);
 }
 
 function subject_asc($a, $b) {
@@ -128,7 +112,7 @@ $page2 = $_REQUEST['page2'];
 // Get doctor id
 $docid = $_SESSION['docid'];
 
-$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.userid, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid JOIN dental_users ON dental_letters.userid=dental_users.userid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
 $letters_res = mysql_query($letters_query);
 if (!$letters_res) {
 	print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";

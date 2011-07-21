@@ -114,6 +114,14 @@ function delivery_date_desc($a, $b) {
 	return ($a['delivery_date'] > $b['delivery_date']) ? -1 : 1;
 }
 
+function send_method_asc($a, $b) {
+  return strcmp ($a['send_method'], $b['send_method']);
+}
+
+function send_method_desc($a, $b) {
+  return strcmp ($b['send_method'], $a['send_method']);
+}
+
 $status = 'pending';
 $page = '0';
 $page_limit = '20';
@@ -125,7 +133,7 @@ if (isset($_GET['page'])) { $page = $_GET['page']; }
 //if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
 if (isset($_GET['filter'])) { $filter = mysql_real_escape_string($_GET['filter']); }
 if(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'generated_date';
+  $_REQUEST['sort'] = 'date_sent';
 	if ($status == 'sent') {
   	$_REQUEST['sortdir'] = 'DESC';
 	} else {
@@ -145,7 +153,7 @@ $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day)
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -157,7 +165,7 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -220,17 +228,13 @@ foreach ($dental_letters as $key => $letter) {
     // MD Referral: Salutation Lastname, Firstname - Contact Type
     $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
   }
-  // Determine if letter is older than 7 days
-  if (floor((time() - $letter['date_sent']) / $seconds_per_day) > 7 && $status == "pending") {
-    $dental_letters[$key]['old'] = true;
-  }
   // Determine Delivery Status
   if ($status == "pending") {
 		$age_in_days = floor((time() - $letter['date_sent']) / $seconds_per_day);
-		if ($age_in_days > 7) $dental_letters[$key]['delivery_status'] = "red";
-    if ($age_in_days < 7) $dental_letters[$key]['delivery_status'] = "yellow";
+		if ($age_in_days > 7) $dental_letters[$key]['bg'] = "redbg";
+    if ($age_in_days <= 7) $dental_letters[$key]['bg'] = "yellowbg";
   } elseif ($status == "sent") {
-		$dental_letters[$key]['delivery_status'] = "green";
+		$dental_letters[$key]['bg'] = "greenbg";
   }
 }
 
@@ -245,7 +249,7 @@ if ($_REQUEST['sort'] == "user" && $_REQUEST['sortdir'] == "ASC") {
   usort($dental_letters, 'franchisee_asc'); 
 }
 if ($_REQUEST['sort'] == "user" && $_REQUEST['sortdir'] == "DESC") {
-  usort($dental_letters, 'user_desc'); 
+ usort($dental_letters, 'user_desc'); 
 }
 if ($_REQUEST['sort'] == "patient_name" && $_REQUEST['sortdir'] == "ASC") {
   usort($dental_letters, 'name_asc'); 
@@ -283,22 +287,34 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "ASC") {
 if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
   usort($dental_letters, 'delivery_date_desc'); 
 }
+if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "ASC") {
+  usort($dental_letters, 'send_method_asc'); 
+}
+if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
+  usort($dental_letters, 'send_method_desc'); 
+}
+
 
 //print_r($dental_letters);
 
 ?>
 
 <style>
-td.red{
-background:#ff9696;
+.redbg{
+background:red;
+}
+tr.redbg > td{
+color: white;
+}
+.yellowbg{
+background: yellow;
 }
 
-td.yellow{
-background:#edeb46;
+.greenbg{
+background:green;
 }
-
-td.green{
-background:#9ad09a;
+tr.greenbg > td{
+color: white;
 }
 </style>
 
@@ -347,6 +363,7 @@ background:#9ad09a;
     <td class="col_head <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></td>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'send_method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=send_method&sortdir=<?php echo ($_REQUEST['sort']=='send_method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
 <?php if ($status == "pending"): ?>
     <td class="col_head <?= ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=date_sent&sortdir=<?php echo ($_REQUEST['sort']=='date_sent'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Received</a></td>
@@ -358,7 +375,6 @@ background:#9ad09a;
 <?php
   $i = $page_limit * $page;
   $end = $i + $page_limit;
-  $priority = '';
   while ($i < count($dental_letters) && $i < $end) {
     //print $dental_letters[$i]['templateid']; print "<br />";
     $franchisee = $dental_letters[$i]['franchisee'];
@@ -367,17 +383,17 @@ background:#9ad09a;
     $url = $dental_letters[$i]['url'];
     $subject = $dental_letters[$i]['subject'];
     $sentto = $dental_letters[$i]['sentto'];
+		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
     $sent = date('m/d/Y', $dental_letters[$i]['date_sent']);
 		$delivered = date('m/d/Y', $dental_letters[$i]['delivery_date']);
-    if ($dental_letters[$i]['old']) {
-      $alert = " bgcolor=\"#FF9696\"";
+    if (isset($dental_letters[$i]['bg'])) {
+      $bgcolor = ' class="'.$dental_letters[$i]['bg'].'"';
     } else {
-      $alert = null;
+      $bgcolor = null;
     }
-		$priority = $dental_letters[$key]['delivery_status'];
     
-    print "<tr$alert><td>$franchisee</td><td>$username</td><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$generated</td>".($status == "pending" ? "<td class=\"$priority\">$sent</td>" : "").($status == "sent" ? "<td class=\"$priority\">$delivered</td>" : "")."</tr>";
+    print "<tr$bgcolor><td>$franchisee</td><td>$username</td><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>".($status == "pending" ? "<td class=\"$priority\">$sent</td>" : "").($status == "sent" ? "<td>$delivered</td>" : "")."</tr>";
     $i++;
   }
 ?>

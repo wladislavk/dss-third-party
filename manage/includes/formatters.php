@@ -7,7 +7,7 @@ function format_date($date = null, $past = false) {
     return "N/A";
   }
 	$day = (24 * 60 * 60);
-  $totaldays = floor((strtotime($date) - time()) / $day);
+  $totaldays = ceil((strtotime($date) - time()) / $day);
   if ($totaldays < 0) {
     $neg = true;
     $totaldays = abs($totaldays);
@@ -25,19 +25,25 @@ function format_date($date = null, $past = false) {
   }
 
   if ($years > 0 && !$past && $neg) {
-    return "<span class=\"red\">($years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
+    $value = "<span class=\"red\">($years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
   } if ($months > 0 && !$past && $neg) {
-    return "<span class=\"red\">($months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
+    $value = "<span class=\"red\">($months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
   } else if ($totaldays > 0 && !$past && $neg) {
-    return "<span class=\"red\">(" . ($totaldays > 1 ? "$totaldays days" : "$totaldays day") . ")</span>";
+    $value = "<span class=\"red\">(" . ($totaldays > 1 ? "$totaldays days" : "$totaldays day") . ")</span>";
   } else if ($years > 0 && !$past) {
-    return "$years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
+    $value = "$years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
   } else if ($months > 0 && !$past) {
-    return "$months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
+    $value = "$months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
 	} else if ($totaldays > 0 && !$past) {
-    return $totaldays . ($totaldays > 1 ? " days" : " day");
+    $value = $totaldays . ($totaldays > 1 ? " days" : " day");
   } else if (!$past) {
-    return "Today";
+    $value = "Today";
+  }
+  if ($totaldays >= 0 && $totaldays <= 7 && !$neg) {
+		$value = "<span class=\"yellow\">$value</span>";
+  }
+  if (isset($value)) {
+		return $value;
   }
 }
 

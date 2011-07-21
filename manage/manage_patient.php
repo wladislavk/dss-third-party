@@ -81,11 +81,7 @@ $num_users=mysql_num_rows($my);
 	</select>
 
 </span>
-<br />
-<br />
-&nbsp;
-
-<div align="right">
+<!--<div align="right">
 		<div style="float:left;margin-right:386px;width:140px;padding-left:4px;"><script type="text/javascript" language="JavaScript" src="script/find.js">
 </script>
 </div>
@@ -104,7 +100,7 @@ $num_users=mysql_num_rows($my);
 		Print In-Active Patient
 	</button>
 	&nbsp;&nbsp;
-</div>
+</div>-->
 
 <br />
 <div align="center" class="red">

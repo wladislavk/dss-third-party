@@ -358,6 +358,7 @@ background:#9ad09a;
 <?php
   $i = $page_limit * $page;
   $end = $i + $page_limit;
+  $priority = '';
   while ($i < count($dental_letters) && $i < $end) {
     //print $dental_letters[$i]['templateid']; print "<br />";
     $franchisee = $dental_letters[$i]['franchisee'];

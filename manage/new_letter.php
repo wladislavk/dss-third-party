@@ -523,6 +523,20 @@ if (isset($_POST['submit'])) {
 				sendValues($('#template').val(), <?=$_GET['pid'];?>);
 			}
 		});
+    $('#send_method').change(function(){
+			if ($('#template').val() == "") {
+				alert("You must select a template.");
+			}
+			$('.json_contact').each(function() {
+				$(this).find('input').removeAttr('disabled');
+			});
+			if ($(this).val() == "fax") {
+				checkContacts("fax");
+      }
+			if ($(this).val() == "email") {
+				checkContacts("email");
+      }
+    });
 		$('#default_contacts').click(function(){
 			if ($(this).attr('checked') && $('#template').val() == "1") {
 				$('.md_checkbox').each(function() {
@@ -560,6 +574,23 @@ if (isset($_POST['submit'])) {
 			}
 		});
 	});
+  function checkContacts(method) {
+		var errorMsg = '';
+		$('.json_contact').each(function() {
+			if ($(this).data(method) == null) {
+				var name = $(this).data('name');
+        if (method == 'fax') {
+					 errorMsg += name + " doesn't have a " + method + " number.\n";
+        } else if (method == 'email') {
+					 errorMsg += name + " doesn't have an " + method + " address.\n";
+ 				}
+				$(this).find('input').attr('disabled', 'disabled');
+			}
+		});
+		if (errorMsg != '') {
+			alert(errorMsg);
+		}
+  }
 	function sendValues(templateid, patientid) {
 		$.post(
 		
@@ -572,13 +603,65 @@ if (isset($_POST['submit'])) {
 
 		function(data) {
 			$('#contact_header').css('display', 'table-cell');
-			$('#contacts').html(data.returnValue);
+      for (i in data) {
+				if (data[i]['type'] == 'patient') {
+					var newDiv = $('#contacts .patient_template')
+						.clone(true)
+						.removeClass('patient_template')
+						.addClass('json_contact')
+						.attr('id', 'contact'+i)
+						.data('name', data[i]['name'])
+						.data('fax', data[i]['fax'])
+						.data('email', data[i]['email']);
+					template_div(newDiv, i, data[i])
+						.appendTo('#contacts')
+						.fadeIn();
+ 				}
+				if (data[i]['type'] == 'md_referral') {
+					var newDiv = $('#contacts .md_referral_template')
+						.clone(true)
+						.removeClass('md_referral_template')
+						.addClass('json_contact')
+						.attr('id', 'contact'+i)
+						.data('name', data[i]['name'])
+						.data('fax', data[i]['fax'])
+						.data('email', data[i]['email']);
+					template_div(newDiv, i, data[i])
+						.appendTo('#contacts')
+						.fadeIn();
+ 				}
+				if (data[i]['type'] == 'md') {
+					var newDiv = $('#contacts .md_template')
+						.clone(true)
+						.removeClass('md_template')
+						.addClass('json_contact')
+						.attr('id', 'contact'+i)
+						.data('name', data[i]['name'])
+						.data('fax', data[i]['fax'])
+						.data('email', data[i]['email']);
+					template_div(newDiv, i, data[i])
+						.appendTo('#contacts')
+						.fadeIn();
+ 				}
+      }
 			$('#submit').css("display", "block");
 		},
 
 		"json"
 		);
 	}
+  function template_div(div, index, contact) {
+		if (contact.type == "patient") {
+			div.html("<input class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"" + contact.id + "\" />Patient: " + contact.name);
+    }
+		if (contact.type == "md_referral") {
+			div.html("<input class=\"md_referral_checkbox\" type=\"checkbox\" name=\"contacts[md_referrals][" + index + "]\" value=\"" + contact.id + "\" />Referring MD: " + contact.name);
+		}
+		if (contact.type == "md") {
+			div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />MD: " + contact.name);
+		}
+		return div;
+  }
 </script>
 <div style="padding-left:25px;">
 	<H1 class="blue">Create New Letter</H1>
@@ -610,7 +693,11 @@ if (isset($_POST['submit'])) {
 			<td id="contact_header" style="display:none;">Select Contacts:<br /><!--<input id="default_contacts" type="checkbox" name="defaults" value="defaults" />Default Contacts<br />--></td>
 		</tr>
 		<tr>
-			<td id="contacts"></td>
+			<td id="contacts">
+				<div class="patient_template" style="display: none;"><input type="checkbox" />Patient: Mr. John Doe</div>
+				<div class="md_referral_template" style="display: none;"><input type="checkbox" />Referring MD: Dr. John Doe</div>
+				<div class="md_template" style="display: none;"><input type="checkbox" />MD: Dr. John Doe</div>  
+			</td>
 		</tr>
 		<tr>
 		</tr>

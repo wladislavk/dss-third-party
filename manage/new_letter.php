@@ -602,6 +602,7 @@ if (isset($_POST['submit'])) {
 		},
 
 		function(data) {
+			$('.json_contact').remove();
 			$('#contact_header').css('display', 'table-cell');
       for (i in data) {
 				if (data[i]['type'] == 'patient') {

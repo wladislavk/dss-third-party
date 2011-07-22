@@ -1469,7 +1469,7 @@ Completed/Uploaded
 
 <div style="width: 610px; margin: auto; display: table;" <?php print (!$sleepstudy  ? 'class="yellow"' : ''); ?> id="sleeplabtable">
 	
-	<div style="float: left; width: 180px;">
+	<div style="float: left; width: 170px;">
 		<table id="sleeplablabels" style="border: 0; width: 100%;" cellpadding="0">
 			<tr>
 			

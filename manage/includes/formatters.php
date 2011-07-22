@@ -40,7 +40,7 @@ function format_date($date = null, $past = false) {
     $value = "Today";
   }
   if ($totaldays >= 0 && $totaldays <= 7 && !$neg) {
-		$value = "<span class=\"yellow\">$value</span>";
+		$value = "<span class=\"green\">$value</span>";
   }
   if (isset($value)) {
 		return $value;

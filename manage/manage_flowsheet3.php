@@ -159,6 +159,9 @@ update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 		$('#page2form').submit(function() {
 			window.onbeforeunload = null;
 		});
+		$('#stepselectedsubmit').change(function() {
+			window.onbeforeunload = null;
+    });
 	});
   function confirmExit()
   {

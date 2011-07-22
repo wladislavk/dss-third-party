@@ -825,53 +825,6 @@ foreach ($letter_contacts as $key => $contact) {
 	  $letter[$key] = str_replace($search, $replace, $template);
  	}
 
-	// Catch Post Send Submit Button and Send letters Here
-  if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
-    if (count($letter_contacts) == 1) {
-  		$parent = true;
-    }
- 		$type = $contact['type'];
-		$recipientid = $contact['id'];
-		if ($_GET['backoffice'] == '1') {
-			$message = $letter[$key];
-			$search= array("<strong>","</strong>");
-			$message = str_replace($search, "", $message);	
-			deliver_letter($letterid, $message);
-		} else {
-	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
-		}
-		if ($parent) {
-			?>
-			<script type="text/javascript">
-				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
-			</script>
-			<?php
-		}
-
-    continue;
-  }
-	// Catch Post Delete Button and Delete letters Here
-  if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
-    if (count($letter_contacts) == 1) {
-  		$parent = true;
-    } else {
-			$parent = false;
-		}
- 		$type = $contact['type'];
-		$recipientid = $contact['id'];
-    delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
-		if ($parent) {
-			?>
-			<script type="text/javascript">
-				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
-			</script>
-			<?php
-		}
-
-    continue;
-  }
-
-
 	?>
 	<?php // loop through letters ?>
 	<div align="right">
@@ -914,18 +867,80 @@ foreach ($letter_contacts as $key => $contact) {
 
 	<hr width="90%" />
 
-<?php
-}
-?>
 <br><br>
 </form>
-
 		</td>
 	</tr>
 </table>
 
+<?php
+
+	// Catch Post Send Submit Button and Send letters Here
+  if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
+    if (count($letter_contacts) == 1) {
+  		$parent = true;
+    }
+ 		$type = $contact['type'];
+		$recipientid = $contact['id'];
+		if ($_GET['backoffice'] == '1') {
+			$message = $letter[$key];
+			$search= array("<strong>","</strong>");
+			$message = str_replace($search, "", $message);	
+			deliver_letter($letterid, $message);
+			$sql = "SELECT send_method FROM dental_letters WHERE letterid = '" . $letterid . "'";
+			$result = mysql_query($sql);
+			$method = mysql_result($result, 0);
+			if ($method == "paper") {
+			?>
+				<form name="printpreview" action="/manage/print_preview.php" method="post" target="_blank">
+				<input type="hidden" name="message" value="<?= htmlentities($message) ?>" />
+				</form>
+				
+				<script type="text/javascript">
+					document.printpreview.submit();
+				</script>
+			<?php
+			}
+		} else {
+	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		}
+  }
+	// Catch Post Delete Button and Delete letters Here
+  if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
+    if (count($letter_contacts) == 1) {
+  		$parent = true;
+    } else {
+			$parent = false;
+		}
+ 		$type = $contact['type'];
+		$recipientid = $contact['id'];
+    delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+		if ($parent) {
+			?>
+			<script type="text/javascript">
+				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
+			</script>
+			<?php
+		}
+
+    continue;
+  }
+?>
 
 <?php
+if ($parent) {
+	?>
+	<script type="text/javascript">
+		window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
+	</script>
+	<?php
+}
+
+continue;
+
+} // End foreach loop through letters
+
+
 if($_GET['backoffice'] == '1') {
   include 'admin/includes/bottom.htm';
 } else {

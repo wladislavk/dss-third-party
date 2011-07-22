@@ -1,97 +1,6 @@
 <?php include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
-
-// Determine Next Visit
-$sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE date_scheduled != '0000-00-00' AND date_completed = '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
-	$date_scheduled = $row['date_scheduled'];
-}
-update_patient_summary($_GET['pid'], 'next_visit', $date_scheduled);
-
-// Determine Last Visit
-$sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
-	$date_completed = $row['date_completed'];
-}
-update_patient_summary($_GET['pid'], 'last_visit', $date_completed);
-
-// Determine Last Treatment
-$sql = "SELECT segmentid FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
-	$segmentid = $row['segmentid'];
-}
-switch ($segmentid) {
-	case 1:
-		$treatment = "Initial Contact";
-		break;
-	case 2:
-		$treatment = "Consult";
-		break;
-	case 3:
-		$treatment = "Sleep Study";
-		break;
-	case 4:
-		$treatment = "Impressions";
-		break;
-	case 5:
-		$treatment = "Delaying Treatment";
-		break;
-	case 6:
-		$treatment = "Refused Treatment";
-		break;
-	case 7:
-		$treatment = "Device Delivery";
-		break;
-	case 8:
-		$treatment = "Follow-Up / Check";
-		break;
-	case 9:
-		$treatment = "Patient Non-Compliant";
-		break;
-	case 10:
-		$treatment = "Home Sleep Test";
-		break;
-	case 11:
-		$treatment = "Treatment Complete";
-		break;
-	case 12:
-		$treatment = "Annual Recall";
-		break;
-	case 13:
-		$treatment = "Termination";
-		break;
-	default:
-		$treatment = "N/A";
-		break;
-}
-update_patient_summary($_GET['pid'], 'last_treatment', $treatment);
-
-// Determine Device Delivery Date
-$sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".s_for($_GET['pid'])."' and segmentid = '7' ORDER BY date_completed DESC LIMIT 1;";
-$result = mysql_query($sql);
-while ($row = mysql_fetch_array($result)) {
-	$date_completed = $row['date_completed'];
-}
-update_patient_summary($_GET['pid'], 'delivery_date', $date_completed);
-
-// Determine Verification of Benefits
-$sql = "SELECT "
-     . "  status "
-     . "FROM "
-     . "  dental_insurance_preauth "
-     . "WHERE "
-     . "  patient_id = " . $_GET['pid'] . " "
-     . "ORDER BY "
-     . "  front_office_request_date DESC "
-     . "LIMIT 1";
-$my = mysql_query($sql) or die(mysql_error());
-$preauth = mysql_fetch_array($my);
-update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
-
 ?>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -2648,4 +2557,97 @@ var cal12 = new calendar2(document.getElementById('clinnoterec'));
     <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopupRef"></div>
-<? include "includes/bottom.htm";?>
+<? 
+
+// Determine Next Visit
+$sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE date_scheduled != '0000-00-00' AND date_completed = '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_array($result)) {
+	$date_scheduled = $row['date_scheduled'];
+}
+update_patient_summary($_GET['pid'], 'next_visit', $date_scheduled);
+
+// Determine Last Visit
+$sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_array($result)) {
+	$date_completed = $row['date_completed'];
+}
+update_patient_summary($_GET['pid'], 'last_visit', $date_completed);
+
+// Determine Last Treatment
+$sql = "SELECT segmentid FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_array($result)) {
+	$segmentid = $row['segmentid'];
+}
+switch ($segmentid) {
+	case 1:
+		$treatment = "Initial Contact";
+		break;
+	case 2:
+		$treatment = "Consult";
+		break;
+	case 3:
+		$treatment = "Sleep Study";
+		break;
+	case 4:
+		$treatment = "Impressions";
+		break;
+	case 5:
+		$treatment = "Delaying Treatment";
+		break;
+	case 6:
+		$treatment = "Refused Treatment";
+		break;
+	case 7:
+		$treatment = "Device Delivery";
+		break;
+	case 8:
+		$treatment = "Follow-Up / Check";
+		break;
+	case 9:
+		$treatment = "Patient Non-Compliant";
+		break;
+	case 10:
+		$treatment = "Home Sleep Test";
+		break;
+	case 11:
+		$treatment = "Treatment Complete";
+		break;
+	case 12:
+		$treatment = "Annual Recall";
+		break;
+	case 13:
+		$treatment = "Termination";
+		break;
+	default:
+		$treatment = "N/A";
+		break;
+}
+update_patient_summary($_GET['pid'], 'last_treatment', $treatment);
+
+// Determine Device Delivery Date
+$sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".s_for($_GET['pid'])."' and segmentid = '7' ORDER BY date_completed DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_array($result)) {
+	$date_completed = $row['date_completed'];
+}
+update_patient_summary($_GET['pid'], 'delivery_date', $date_completed);
+
+// Determine Verification of Benefits
+$sql = "SELECT "
+     . "  status "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$my = mysql_query($sql) or die(mysql_error());
+$preauth = mysql_fetch_array($my);
+update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
+
+
+include "includes/bottom.htm";?>

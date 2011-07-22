@@ -281,7 +281,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 			}
 			$update_result = mysql_query($update_letters);
       if (!$update_result) {
-				return false;
+				return mysql_error();
 			} else {
 				return $letter;
 			}
@@ -295,6 +295,9 @@ function deliver_letter($letterid, $message) {
 	} else {
 		$sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
 		$result = mysql_query($sql);
+		if (!$result) {
+			return mysql_error();
+ 		}
 		while ($row = mysql_fetch_assoc($result)) {
 			if ($row['topatient']) {
 				$id = $row['patientid'];
@@ -363,6 +366,9 @@ function deliver_letter($letterid, $message) {
 		if ($email_success || $fax_success || $send_method == 'paper') {
 			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".$letterid."';";
 			$letter_result = mysql_query($letter_query);
+			if ($send_method == 'paper') {
+				return "paper";
+      }
 		} elseif (!$email_success) {
 			return "Email could not be sent";
 		} elseif (!$fax_success) {
@@ -384,7 +390,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$footer_html =	"<img src=\"" . $email->embed(Swift_Image::fromPath($footer_path)) . "\" alt=\"Dental Sleep Solutions\" />";
 
 	$TextMessage = strip_tags($message,"<br>");
-	$HTMLMessage = $header_html . $message . $footer_html; 
+	$HTMLMessage = "$header_html<table width=\"600px\"><tr><td>$message</tr></td></table>$footer_html"; 
 	
 	$email->setSubject('Dental Sleep Solutions Correspondance');
 	$email->setFrom(array($from_email => $from_name));
@@ -488,7 +494,7 @@ function create_pdf($title, $filename, $html) {
 			public function Header() {
 					// Logo
 					$image_file = K_PATH_IMAGES.'dss_print_header.jpg';
-					$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+					//$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
 			}
 
 			// Page footer
@@ -496,7 +502,7 @@ function create_pdf($title, $filename, $html) {
 					// Position at 26 mm from bottom
 					$this->SetY(-26);
 					$image_file = K_PATH_IMAGES.'dss_print_footer.jpg';
-						$this->Image($image_file, 0, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);					
+					//$this->Image($image_file, 0, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);					
 			}
 	}
 	

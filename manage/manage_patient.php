@@ -71,7 +71,7 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+<div style="clear: both">
 <span class="admin_head">
 	Manage Patient
 	-
@@ -115,7 +115,8 @@ background:#cccccc;
 background:#999999;
 }
 </style>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+</div>
+<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post" style="clear: both">
 <table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">

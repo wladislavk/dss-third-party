@@ -185,7 +185,9 @@ if(isset($_POST['summarybtn']))
   $wapn3 = $_POST['wapn3'];
   $wapn4 = $_POST['wapn4'];
   $wapn5 = $_POST['wapn5'];
-	
+$r_lateral_from	= $_POST['r_lateral_from'];
+$l_lateral_from = $_POST['l_lateral_from'];
+$i_opening_from = $_POST['i_opening_from'];
 	
 	
 	if($_POST['ed'] == '')
@@ -593,7 +595,7 @@ if(isset($_POST['summarybtn']))
     }?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pg=2&fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -1088,19 +1090,15 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+<!--
 <span class="admin_head">
-	DSS SUMMARY SHEET
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<button onclick="Javascript: window.open('dss_summary_print.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>','Summary_print','width=800,height=600,scrollbars=1');">
 		Print
 	</button>
 </span>
 <br />
 &nbsp;&nbsp;
-<a href="manage_patient.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a><br />
-	
+-->	
 	<?php 
 	
 	$pid = $_GET['pid'];
@@ -1112,12 +1110,11 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
  ?>
  	
 	
-<br /><br>
 
 <div align="right" style="margin-right:23px;">
 
-    <input type="button" onClick="document.getElementById('hideshow1').style.display='block';document.getElementById('hideshow2').style.display='none';document.getElementById('hideshow3').style.display='none';" value="Section 1" id="button1s">
-    <input type="button" onClick="document.getElementById('hideshow1').style.display='none';document.getElementById('hideshow2').style.display='block';document.getElementById('hideshow3').style.display='none';" value="Section 2" id="button1s">
+    <input type="button" class="summary_but <?= ($_GET['pg']!=2)?'active':''; ?>" onClick="$('.summary_but').addClass('active');$('.data_but').removeClass('active');document.getElementById('hideshow1').style.display='block';document.getElementById('hideshow2').style.display='none';document.getElementById('hideshow3').style.display='none';" value="Summary" id="button1s">
+    <input type="button" class="data_but <?= ($_GET['pg']==2)?'active':''; ?>" onClick="$('.summary_but').removeClass('active');$('.data_but').addClass('active');document.getElementById('hideshow1').style.display='none';document.getElementById('hideshow2').style.display='block';document.getElementById('hideshow3').style.display='none';" value="Data" id="button1s">
 </font>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1130,13 +1127,16 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
 #contentMain input, textarea, select{
 background:#cccccc;
 }
+#contentMain input.active{
+  background: #5C8DB8;
+}
 </style>
 <div>
 <table width="980" cellpadding="0" cellspacing="0" border="0" align="center">
 
 
 <div>
-<table width="90%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto;" id="hideshow1">
+<table width="90%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto; <?= ($_GET['pg']==2)?'display:none;':''; ?>" id="hideshow1">
   <tr valign="top">
     <td width="15%" height="3">Name</td>
     <td colspan="1">
@@ -1549,35 +1549,63 @@ echo "Not Set, Please set through patient info.";
 
 
 
-<div id="hideshow2" style="display:none;">
+<div id="hideshow2" style=" <?= ($_GET['pg']!=2)?'display:none;':''; ?>">
 <form id="form1" name="form1" method="post" action="" style="width:90%;margin:0 auto;">
   <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
   <tr valign="top">
     <td width="17%" height="4">ROM:&nbsp;&nbsp;</td>
     <td colspan="2">
-    Vert&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; R<input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  L<input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm 
+    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm 
     </td>
     
   </tr>
   
   <tr>
-  <td width="17%" height="4">Protrusive:&nbsp;&nbsp;</td>
+  <td width="17%" height="4">Incisal Edge Range:&nbsp;&nbsp;</td>
   <td colspan="2">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="textfield11" id="textfield12" size="5" value="<?php echo $protrusion_to-($protrusion_from); ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;George Gauge:&nbsp;&nbsp; <input type="text" name="textfield11" id="textfield12" size="5" value="<?php echo $protrusion_from; ?>" /> to <input type="text" name="textfield11" id="textfield12" size="5" value="<?php echo $protrusion_to; ?>" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input disabled="disabled" type="text" name="ir_range" id="ir_range" size="5" value="<?php echo $protrusion_to-($protrusion_from); ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Incisal Range (minimum):&nbsp;&nbsp; <input type="text" name="ir_min" id="ir_min" size="5" value="<?php echo $protrusion_from; ?>" onchange="checkIncisal()" /> (maximum) <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
+
   </td>
   </tr>
-  
+  <script type="text/javascript">
+	function checkIncisal(){
+		min = $('#ir_min').val();
+		max = $('#ir_max').val();
+		range = (max-min);
+		$('#ir_range').val(range);
+		pos = $('#i_pos').val();
+		perc = (pos/range);
+		dist = (min+range)*perc; 
+		$('#initial_device_titration_equal_h').val(Math.round(dist));
+		$('#i_perc').val(Math.round(perc*100));
+		if(min != '' && max != ''){
+			if((range)<0){
+				alert('Minimum must be less than maximum');
+				$('#ir_min').focus();
+			}
+		 	if((range-pos)<0){
+				alert('Position must be less than range');
+				$('#ir_min').focus();
+			}
+		}
+
+	}
+  </script>
   <tr>
   <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
   <td colspan="2">
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  V<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
   </td>
   </tr>
   
   <tr>
   <td width="17%" height="4">Initial Device Setting&nbsp;&nbsp;</td>
   <td colspan="2">
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;H<input type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm  (<input type="text" name="textfield16" id="textfield16" size="2" value="<?php echo $initialdevsettingp; ?>" />%)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GG <input type="text" name="textfield17" id="textfield17" size="5" value="<?php echo $ggfield; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  V <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Incisal Position <input type="text" onchange="checkIncisal()" name="i_pos" id="i_pos" size="5" value="<?php echo $ggfield; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Distance from minimum range<input disabled="disabled" type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm  
+(<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo $initialdevsettingp; ?>" />%)
   </td>
   </tr>
   
@@ -1596,7 +1624,7 @@ echo "Not Set, Please set through patient info.";
 <table width="97%" align="center" style="float:left;margin-left:15px;">
 <tr>
 <td style="background:#333; color:#FFFFFF; font-size: 14px; font-weight:bold; height:30px;">
-Sleep Labs:
+Sleep Studies:
 </td>
 </tr>
 </table>  
@@ -1698,7 +1726,7 @@ Sleep Labs:
   
   
   
-	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; margin-top: -2px; height: 699px;">
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; margin-top: -2px; height: 599px;">
 		    
 		    <iframe height="592" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
@@ -1720,7 +1748,6 @@ Subjective Findings:
 </tr>
 </table>
 
-<div style="height:20px;"></div>
 
 <!--
 	hideshow2section2
@@ -1740,13 +1767,7 @@ Subjective Findings:
 	
 </style>
 	
-<div id="hideshow2section2" style="width: 95%; border: 1px solid rgb(0, 0, 0); margin: auto; display: table;">
-	
-	<!--This first div is the grey title bar-->
-	<div style="width: 100%; padding: 8px 0; text-align: left; background: #ccc; color: #0c7eb0; font-weight: bold; clear: both; margin-bottom: 10px; text-indent: 20px;">
-		Follow Up:
-	</div>
-	
+<div id="hideshow2section2" style="width: 95%; margin: 0 auto; display: table;">
 	<!--The sumadd script generates divs and tabular data from a db-->
 	<?php include("dss_summADD.php"); ?>
 
@@ -1754,7 +1775,6 @@ Subjective Findings:
 
 <!--end hideshow2section2 wrapper div-->
 
-  <div style="height:20px;"></div>
   
 </form>
 </div>

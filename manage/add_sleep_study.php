@@ -247,7 +247,21 @@ if(f.sleeptesttype.value == "HST"){
 	</tr>
   <tr>
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" name="diagnosis" />	
+                          <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
+                                <option value="">SELECT</option>
+                                <option value="327.23" >
+                                        327.23 - Obstructive Sleep Apnea
+                                </option>
+                                <option value="750.15" >
+                                        750.15 - Macroglossia Congenital Hypertrophy of Tongue
+                                </option>
+                                <option value="786.09" >
+                                        786.09 - UARS
+                                </option>
+                                <option value="519.80" >
+                                        519.80 - UARS
+                                </option>
+                            </select>
 		</td>
 	</tr>
   <tr>	
@@ -394,7 +408,22 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="text" name="diagnosis" value="<?php echo $s_lab['diagnosis']; ?>" />	
+                          <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
+                                <option value="">SELECT</option>
+                                <option value="327.23" <? if($s_lab['diagnosis'] == '327.23' ) echo " selected";?>>
+                                        327.23 - Obstructive Sleep Apnea
+                                </option>
+                                <option value="750.15" <? if($s_lab['diagnosis'] == '750.15' ) echo " selected";?>>
+                                        750.15 - Macroglossia Congenital Hypertrophy of Tongue
+                                </option>
+                                <option value="786.09" <? if($s_lab['diagnosis'] == '786.09' ) echo " selected";?>>
+                                        786.09 - UARS
+                                </option>
+                                <option value="519.80" <? if($s_lab['diagnosis'] == '519.80' ) echo " selected";?>>
+                                        519.80 - UARS
+                                </option>
+                            </select>
+
 		</td>
 	</tr>
   <tr>	

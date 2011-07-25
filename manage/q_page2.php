@@ -241,9 +241,6 @@ if($cpap == '')
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -303,23 +300,28 @@ if($cpap == '')
 		
 		if(fa.cpap[1].checked)
 		{
+			$('#cpap_options').hide();
+			/*
 			for(var i=0; i<chk_l; i++)
 			{
 				document.getElementsByName('intolerance[]')[i].disabled = true;
 			}
 			fa.nights_wear_cpap.disabled = true;
 			fa.percent_night_cpap.disabled = true;
+			*/
 		}
 		else
 		{
+			$('#cpap_options').show();
+			/*
 			for(var i=0; i<chk_l; i++)
 			{
 				document.getElementsByName('intolerance[]')[i].disabled = false;
 			}
 			fa.nights_wear_cpap.disabled = false;
 			fa.percent_night_cpap.disabled = false;
+			*/
 		}
-		
 	}
 	
 	function q_page2abc(fa) {
@@ -498,13 +500,13 @@ if($cpap == '')
                             <input type="radio" name="cpap" value="Yes" <? if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
                             Yes
                             
-                            <input type="radio" name="cpap" value="Yes" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
                         </span>
                    	</div>
                    
                    	<br />
-                   	<div>
+                   	<div id="cpap_options">
                         <span>
                    			The Patient has attempted treatment with a CPAP but they could not tolerate it's use due to:	
                             <br />

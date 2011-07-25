@@ -10,6 +10,9 @@ include "includes/top.htm";
 			window.onbeforeunload = null;
 		});
 	});
+	function reloadPerio(t){
+	  window.frames.perio_iframe.updateTeeth(t);
+	}
   function confirmExit()
   {
     return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
@@ -211,9 +214,6 @@ $crossbite = st($myarray['crossbite']);
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -263,7 +263,7 @@ $crossbite = st($myarray['crossbite']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             
                             <input type="text" name="missing" value="<?=$missing?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; return false;">Change</button>
+                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
 							
 							<!--<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>-->
                                                         <button onclick="Javascript: $('#perio_chart').toggle('slow'); return false;">Perio Chart</button>
@@ -271,7 +271,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
 <div id="perio_chart" style="display:none;">
-<iframe src="missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
+<iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
 </div>
                     <br />
 					
@@ -310,52 +310,36 @@ $crossbite = st($myarray['crossbite']);
                     
                     <div>
                         <span style="color:#000000;">
-                        	Caries Tooth # 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            
+                            <label class="exam_label">Caries Tooth #</label> 
                             <input type="text" name="caries" value="<?=$caries?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); getElementById('popupContact').style.top = '500px'; return false;">Change</button>
+                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); return false;">Change</button>
                         </span>
                     </div>
                     <br />
                     
                     <div>
                         <span style="color:#000000;">
-                        	Wear Facets Tooth # 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;
+			    <label class="exam_label">Wear Facets Tooth #</label> 
                             <input type="text" name="where_facets" value="<?=$where_facets?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=where_facets&fval='+document.ex_page4frm.where_facets.value); getElementById('popupContact').style.top = '500px'; return false;">Change</button>
+                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=where_facets&fval='+document.ex_page4frm.where_facets.value); return false;">Change</button>
                         </span>
                     </div>
                     <br />
                     
                     <div>
                         <span style="color:#000000;">
-                        	Cracked or Fractured Tooth # 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        	<label class="exam_label">Cracked or Fractured Tooth #</label> 
                             <input type="text" name="cracked_fractured" value="<?=$cracked_fractured?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); getElementById('popupContact').style.top = '500px'; return false;">Change</button>
+                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); return false;">Change</button>
                         </span>
                     </div>
                     <br />
                     
                     <div>
                         <span style="color:#000000;">
-                        	Old, Worn or Inadequate Restorations Tooth # 
-                            &nbsp;
+                        	<label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label> 
                             <input type="text" name="old_worn_inadequate_restorations" value="<?=$old_worn_inadequate_restorations?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); getElementById('popupContact').style.top = '500px'; return false;">Change</button>
+                            <button onclick="Javascript: loadPopup('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); return false;">Change</button>
                         </span>
                     </div>
                     <br />
@@ -501,7 +485,7 @@ $crossbite = st($myarray['crossbite']);
                     <label class="desc" id="title0" for="Field0">
                         Other Items:
                         
-                        <button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page4frm&tx=additional_paragraph'); getElementById('popupContact').style.top = '700px'; return false;">Use Custom Text</button>
+                        <button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page4frm&tx=additional_paragraph'); return false;">Use Custom Text</button>
                     </label>
                     
                     <div>
@@ -526,32 +510,20 @@ $crossbite = st($myarray['crossbite']);
                     
 					<div>
                     	<span>
-                    		Teeth in Crossbite
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			    <label class="exam_label">Teeth in Crossbite</label>
                             
                             <input type="text" name="crossbite" value="<?=$crossbite;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=crossbite&fval=<?=$crossbite;?>'); getElementById('popupContact').style.top = '750px' ;  return false;">Chart</button>
+                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=crossbite&fval=<?=$crossbite;?>');  return false;">Chart</button>
                     	</span>
                     </div>
                     <br />
                     
                     <div>
                     	<span>
-                    		The initial tooth contact was between 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		<label class="exam_label">The initial tooth contact was between</label> 
                             
                             <input type="text" name="initial_tooth" id="initial_tooth" value="<?=$initial_tooth;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=initial_tooth&fval=<?=$initial_tooth;?>'); getElementById('popupContact').style.top = '750px' ;  return false;">Chart</button>
+                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=initial_tooth&fval=<?=$initial_tooth;?>'); return false;">Chart</button>
 			    <button onclick="Javascript: $('#initial_tooth').val('Bilateral and even initial contact'); return false;">Bilateral and even initial contact</button>
                     	</span>
                     </div>
@@ -559,23 +531,19 @@ $crossbite = st($myarray['crossbite']);
                     
                     <div>
                     	<span>
-                    		Open proximal contact(s) present between teeth numbers 
-                            &nbsp;&nbsp;
+                    		<label class="exam_label">Open proximal contact(s) present between teeth numbers</label> 
                             <input type="text" name="open_proximal" value="<?=$open_proximal;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=open_proximal&fval=<?=$open_proximal;?>'); getElementById('popupContact').style.top = '750px' ;  return false;">Chart</button>
+                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=open_proximal&fval=<?=$open_proximal;?>'); return false;">Chart</button>
                     	</span>
                     </div>
                     <br />
                     
                     <div>
                     	<span>
-                    		Diastema(s) present between teeth numbers 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    		<label class="exam_label">Diastema(s) present between teeth numbers</label> 
                             
                             <input type="text" name="deistema" value="<?=$deistema;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=deistema&fval=<?=$deistema;?>'); getElementById('popupContact').style.top = '750px' ;  return false;">Chart</button>
+                            <button onclick="Javascript: loadPopup('select_teeth_cross.php?tx=deistema&fval=<?=$deistema;?>'); return false;">Chart</button>
                     	</span>
                     </div>
                     <br />

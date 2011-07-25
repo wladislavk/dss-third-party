@@ -10,6 +10,9 @@ include "includes/top.htm";
 			window.onbeforeunload = null;
 		});
 	});
+  function setDefaults(){
+    $('#topcb select').val(0).attr('selected', 'selected');
+  }
   function confirmExit()
   {
     return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
@@ -345,9 +348,6 @@ if($jointid <> '')
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -399,6 +399,7 @@ if($jointid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
+<button onclick="setDefaults();return false;">Set all to 0</button>
 	<input type="reset" value="Reset" />
 	<input type="submit" name="ex_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
@@ -432,7 +433,7 @@ if($jointid <> '')
 						
                     </div>
                     
-                    <div>
+                    <div id="topcb">
                     	<span class="full">
                         	<table width="80%" cellpadding="3" cellspacing="1" border="0">
                             	<tr>

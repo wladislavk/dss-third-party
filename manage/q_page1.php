@@ -5,9 +5,12 @@ include "includes/top.htm";
 <script language="JavaScript" src="calendar2.js"></script>
 
 <script type="text/javascript">
+	edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
-			window.onbeforeunload = confirmExit;
+			//window.onbeforeunload = confirmExit;
+			//window.onunload = submitForm;
+			edited = true;
 		});
 		$('#q_page1frm').submit(function() {
 			window.onbeforeunload = null;
@@ -314,7 +317,7 @@ if($complaintid <> '')
 
 <div align="right">
 	<input type="reset" value="Reset" />
-	<input type="submit" name="q_pagebtn" value="Save" />
+	<input type="submit" id="save_but" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

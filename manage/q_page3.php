@@ -2,9 +2,11 @@
 include "includes/top.htm";
 ?>
 <script type="text/javascript">
+edited = false;
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
-			window.onbeforeunload = confirmExit;
+			edited = true;
+			//window.onbeforeunload = confirmExit;
 		});
 		$('#q_page3frm').submit(function() {
 			window.onbeforeunload = null;

@@ -427,9 +427,8 @@ if ($origfilename != '') {
 						
 						<td>
 						
-						<input type="radio" id="completed<?php echo $i; ?>1" name="completed" value="Yes" style="float:left;"><div id="completed<?php echo $i; ?>3" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						
-						<input type="radio" id="completed<?php echo $i; ?>2" name="completed" value="No" style="float:left;"><div id="completed<?php echo $i; ?>4" style="float:left;">No</div>
+						<input type="radio" id="completed<?php echo $i; ?>1" name="completed" value="Yes"><!--<div id="completed<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
+						<input type="radio" id="completed<?php echo $i; ?>2" name="completed" value="No"><!--<div id="completed<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
 						
 						</td>
 						
@@ -440,9 +439,8 @@ if ($origfilename != '') {
 						
 						<td>
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>1" name="interpolation" value="Yes" style="float:left;"><div id="interpretation<?php echo $i; ?>3" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						
-						<input type="radio" id="interpretation<?php echo $i; ?>2" name="interpolation" value="No" style="float:left;"><div id="interpretation<?php echo $i; ?>4" style="float:left;">No</div>
+						<input type="radio" id="interpretation<?php echo $i; ?>1" name="interpolation" value="Yes"><!--<div id="interpretation<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="interpretation<?php echo $i; ?>2" name="interpolation" value="No"><!--<div id="interpretation<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
 						
 						</td>
 						
@@ -618,9 +616,9 @@ if($numrows){
 						<td>
 						<div id="completed">
 						
-						<input type="radio" id="completed<?php echo $i."1"; ?>" name="data[<?= $i ?>][completed]" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."3"; ?>" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="completed<?php echo $i."1"; ?>" name="data[<?= $i ?>][completed]" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?>><!--<div id="completed<?php echo $i."3"; ?>" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="completed<?php echo $i."2"; ?>" name="data[<?= $i ?>][completed]" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="completed<?php echo $i."4"; ?>" style="float:left;">No</div>
+						<input type="radio" id="completed<?php echo $i."2"; ?>" name="data[<?= $i ?>][completed]" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?>><!--<div id="completed<?php echo $i."4"; ?>" style="float:left;">-->No<!--</div>-->
             </div>						
 						</td>
 						
@@ -642,9 +640,9 @@ if($numrows){
 						
 						<td name="interpolation">
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>1" name="data[<?= $i ?>][interpolation]" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>3" style="float:left;">Yes</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="interpretation<?php echo $i; ?>1" name="data[<?= $i ?>][interpolation]" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?>><!--<div id="interpretation<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>2" name="data[<?= $i ?>][interpolation]" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?> style="float:left;"><div id="interpretation<?php echo $i; ?>4" style="float:left;">No</div>
+						<input type="radio" id="interpretation<?php echo $i; ?>2" name="data[<?= $i ?>][interpolation]" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?>><!--<div id="interpretation<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
 						
 						</td>
 						

@@ -129,7 +129,6 @@ require_once('includes/dental_patient_summary.php');
 	});
 </script>
 
-
 <?php
 
 function preauth_allowed(){
@@ -1574,7 +1573,7 @@ Completed/Uploaded
 		</table>
 	</div>
 	
-	<div style=" border: medium none;float: left;height: 440px;margin-bottom: 20px;margin-top: -4px;overflow: auto;width: 430px;">
+	<div style=" border: medium none;float: left;height: 460px;margin-bottom: 20px;margin-top: -4px;overflow: auto;width: 430px;">
 		 <table width="700" style="overflow-x: auto;">
 		   <tr>
 		    <td>
@@ -1586,7 +1585,7 @@ Completed/Uploaded
 
 
 
-	<iframe src="manage_sleep_studies.php?pid=<?php echo $_GET['pid']; ?>" height="410" width="10000" style="border: medium none; overflow:hidden;">Iframes must be enabled to view this area.</iframe>
+	<iframe src="manage_sleep_studies.php?pid=<?php echo $_GET['pid']; ?>" height="430" width="10000" style="border: medium none; overflow:hidden;">Iframes must be enabled to view this area.</iframe>
 
 
 

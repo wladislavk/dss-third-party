@@ -11,10 +11,13 @@ $cur_page = substr($page_path,$lastslash);
 <script type="text/javascript">
 	function change_page(goto_p)
 	{
-		window.location = goto_p+".php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>"; 
-		//fa = document.<?=$cur_page?>frm;
-		//fa.goto_p.value = goto_p;
-		//fa.submit();
+		if(!edited){
+		  window.location = goto_p+".php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>"; 
+		}else{
+		  fa = document.<?=$cur_page?>frm;
+		  fa.goto_p.value = goto_p;
+		  fa.submit();
+		}
 	}
 	
 	function change_page1(goto_p)

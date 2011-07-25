@@ -44,7 +44,7 @@ if(isset($_POST['submitaddfu'])){
   $hours_sleepadd = $_POST['hours_sleepadd'];
   $appt_notesadd = $_POST['appt_notesadd'];
   $insertquery = "UPDATE dentalsummfu SET 
-`ep_dateadd` = '".$ep_dateadd."',
+`ep_dateadd` = '".date('Y-m-d', strtotime($ep_dateadd))."',
 `devadd` = '".$devadd."',
 `dsetadd` = '".$dsetadd."',
 `nightsperweek` = '".$nightsperweek."',
@@ -83,7 +83,7 @@ WHERE followupid='".$id."'
 
   <tr >
     <td style="background: #F9FFDF;">
-      <input type="text" size="12" style="width:100px;" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" READONLY />
+      <input type="text" size="12" style="width:100px;" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" />
     </td>
   </tr>
   
@@ -217,7 +217,7 @@ WHERE followupid='".$id."'
 				</form>
 
 <?php
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."'";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
 $fuquery_array = mysql_query($fuquery_sql);
 if($fuquery_array){
 $numrows = mysql_num_rows($fuquery_array);
@@ -239,7 +239,7 @@ $device = mysql_result($device_result, 0);
 
   <tr>
     <td style="background: #F9FFDF;">
-      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo ($fuquery['ep_dateadd'])?date('m-d-Y', strtotime($fuquery['ep_dateadd'])):''; ?>" />
+      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo ($fuquery['ep_dateadd'])?date('m/d/Y', strtotime($fuquery['ep_dateadd'])):''; ?>" />
     </td>
   </tr>
   

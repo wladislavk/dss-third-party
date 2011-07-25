@@ -12,6 +12,8 @@ include "includes/top.htm";
 			window.onbeforeunload = null;
 		});
 $('input,select').keypress(function() { return event.keyCode != 13; });
+updateNumber('p_m_ins_phone');
+updateNumber2('s_m_ins_phone');
 	});
   function confirmExit()
   {
@@ -128,6 +130,7 @@ if($_POST["patientsub"] == 1)
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
@@ -263,6 +266,7 @@ if($_POST["patientsub"] == 1)
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  
@@ -388,6 +392,7 @@ if($_POST["patientsub"] == 1)
 		$p_m_employer = $_POST["p_m_employer"];
 		$p_m_ins_co = $_POST["p_m_ins_co"];
 		$p_m_ins_id = $_POST["p_m_ins_id"];
+		$has_s_m_ins = $_POST["s_m_ins"];
 		$s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
 		$s_m_partylname = $_POST["s_m_partylname"];  
@@ -481,6 +486,7 @@ if($_POST["patientsub"] == 1)
 		$p_m_employer = st($themyarray["p_m_employer"]);
 		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
 		$p_m_ins_id = st($themyarray["p_m_ins_id"]);
+		$has_s_m_ins = st($themyarray["has_s_m_ins"]);
 		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
 		$s_m_partylname = st($themyarray["s_m_partylname"]);
@@ -634,15 +640,15 @@ return false;
                         </label>
                         <div>
                             <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" tabindex="1" maxlength="255" />
+                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" />
                                 <label for="firstname">First Name</label>
                             </span>
                             <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" tabindex="2" maxlength="255" />
+                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" />
                                 <label for="lastname">Last Name</label>
                             </span>
                             <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" tabindex="3" style="width:50px;" maxlength="1" />
+                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:50px;" maxlength="1" />
                                 <label for="middlename">Middle <br />Init</label>
                             </span>
                             <span>
@@ -693,25 +699,25 @@ return false;
                         </label>
                         <div>
                             <span>
-                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" tabindex="5" style="width:325px;"  maxlength="255"/>
+                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:325px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" tabindex="6" style="width:325px;" maxlength="255" />
+                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:325px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
                         </div>
                         <div>
                             <span>
-                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" tabindex="7" style="width:200px;" maxlength="255" />
+                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>
                             </span>
                             <span>
-                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" tabindex="8" style="width:25px;" maxlength="2" />
+                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" style="width:25px;" maxlength="2" />
                                 <label for="state">State</label>
                             </span>
                             <span>
-                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" tabindex="9" style="width:80px;" maxlength="255" />
+                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Zip / Post Code </label>
                             </span>
                         </div>
@@ -725,11 +731,11 @@ return false;
             		<li id="foli8" class="complex">	
                         <div>
                             <span>
-                                <input id="dob" name="dob" type="text" class="field text addr tbox" value="<?=$dob?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+                                <input id="dob" name="dob" type="text" class="field text addr tbox" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>
-                            	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" tabindex="11">
+                            	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
                                 	<option value="">Select</option>
                                     <option value="Male" <? if($gender == 'Male') echo " selected";?>>Male</option>
                                     <option value="Female" <? if($gender == 'Female') echo " selected";?>>Female</option>
@@ -738,7 +744,7 @@ return false;
                             </span>
                             
                             <span>
-                            	<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" tabindex="12">
+                            	<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                 	<option value="">Select</option>
                                     <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
                                     <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Un-Married</option>
@@ -747,13 +753,13 @@ return false;
                                 <label for="marital_status">Marital Status</label>
                             </span>
 							<span>
-                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>" tabindex="13" maxlength="255" />
+                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
                                 <label for="partner_name">Partner Name</label>
                             </span>
 						</div>
 						<div>
                             <span>
-                                <input id="ssn" name="ssn" type="text" class="field text addr tbox" value="<?=$ssn?>" tabindex="13" maxlength="255" />
+                                <input id="ssn" name="ssn" type="text" class="field text addr tbox" value="<?=$ssn?>"  maxlength="255" />
                                 <label for="ssn">Patient's Soc Sec No.</label>
                             </span>
                         </div>
@@ -770,29 +776,29 @@ return false;
                         </label>-->
                         <div>
                             <span>
-                                <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>" tabindex="14" maxlength="255" style="width:200px;" />
+                                <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Home Phone
 																<span id="req_0" class="req">*</span>
 																</label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" tabindex="15" maxlength="255" style="width:200px;" />
+                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
                             <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>" tabindex="16" maxlength="255" style="width:200px;" />
+                                <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="cell_phone">Cell Phone</label>
                             </span>
 						</div>
                         <div>
                             <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>" tabindex="17" maxlength="255" style="width:325px;" />
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:325px;" />
                                 <label for="email">Email</label>
                             </span>
                         </div>
                         <div>
                             <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:610px;" tabindex="18"><?=$patient_notes;?></textarea>
+                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:610px;" ><?=$patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
                             </span>
                         </div>
@@ -805,7 +811,7 @@ return false;
                 Preferred Contact Method
             </td>
             <td valign="top" class="frmdata" width="80%">
-            	<select id="preferredcontact" name="preferredcontact" class="tbox" tabindex="22">
+            	<select id="preferredcontact" name="preferredcontact" class="tbox" >
                 	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
                 	<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
                 </select>
@@ -847,7 +853,7 @@ return false;
                         </label>
                         <div>
 <div style="float:left;"> 
-                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
+                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
 <label>Date</label>
 				</div><div style="float:left;"> 				<?
 								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
@@ -940,16 +946,24 @@ return false;
                   
                         <div>
                             <span>
-                                <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" onchange="updateNumber('p_m_ins_phone');" style="width:200px;" />
 																	<option value="">Select Insurance Company</option>
+<script type="text/javascript">
+                                function updateNumber(f){
+                                   var selectBox = document.getElementById("p_m_ins_co");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                                   document.getElementById(f).value = insurance_nums[selectedValue];
+                                }
+                                insurance_nums = [];
                             <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected='selected'";} ?>><?php echo $ins_contact_res['company']; ?></option>
+                                document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo $ins_contact_res['company']; ?></option>');
                                 
                                 <?php } ?>
+				</script>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
@@ -968,6 +982,10 @@ return false;
                                  <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p_m_ins_plan?>" maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Plan Name</label>
                             </span>
+<span>                                                                 <input id="p_m_ins_phone" name="p_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;" />
+                                <label for="p_m_ins_phone">Phone Number</label>
+                            </span>
+
 						</div>
 						<div>
                             
@@ -1066,23 +1084,39 @@ return false;
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                  
-                        <div>
+                 	<div>
+			    <span>
+				<input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+                                <input type="radio" value="No" <?= ($has_s_m_ins == "No")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
+				<label>Does patient have secondary insurance?</label>
+			    </span>
+			</div> 
+                        <div class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
                             <span>
-                             <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                             <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
 															<option value="">Select Insurance Company</option>
+<script type="text/javascript">
+                                function updateNumber2(f){
+                                   var selectBox = document.getElementById("s_m_ins_co");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                                   document.getElementById(f).value = insurance_nums[selectedValue];
+                                }
+                                insurance_nums = []; 
                             <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected='selected'";} ?>><?php echo $ins_contact_res['company']; ?></option>
+					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['phone1']; ?>"
+                                document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo $ins_contact_res['company']; ?></option>');
                                 
                                 <?php } ?>
+				</script>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
 <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="Add Insurance Company" />
                             </span>
+
                             <span>
 								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
                                 <label for="s_m_ins_id">Insurance ID.</label>
@@ -1095,6 +1129,10 @@ return false;
                             <span>
                                  <input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?=$s_m_ins_plan?>" maxlength="255" style="width:200px;" />
                                 <label for="s_m_ins_plan">Plan Name</label>
+                            </span>
+<span>
+                                                                 <input id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;" />
+                                <label for="s_m_ins_phone">Phone Number</label>
                             </span>
 						</div>
 						<div>
@@ -1111,7 +1149,7 @@ return false;
         
         
         
-        <tr> 
+        <tr class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -1653,7 +1691,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="19">
+            	<select name="status" class="tbox" >
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -1668,7 +1706,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 					$date_generated = mysql_result($result, 0);
 					if (mysql_num_rows($result) == 0) {
 				?>
-         <input id="introletter" name="introletter" tabindex="20" type="checkbox" value="1"> Send Intro Letter to DSS patient
+         <input id="introletter" name="introletter" type="checkbox" value="1"> Send Intro Letter to DSS patient
 				<?php
 					} else {
 						print "DSS Intro Letter Sent to Patient $date_generated";
@@ -1706,7 +1744,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
-<div id="popupRefer" style="width:750px;">
+<div id="popupRefer" style="height:550px; width:750px;">
     <a id="popupReferClose"><button>X</button></a>
     <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>

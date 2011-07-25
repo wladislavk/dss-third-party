@@ -488,6 +488,7 @@ function patientabc(fa)
 
 function contactabc(fa)
 {
+	if(fa.contact_type.value != 'ins'){
 	if(trim(fa.firstname.value) == "" )
 	{
 		alert("First Name is Required");
@@ -499,6 +500,7 @@ function contactabc(fa)
 		alert("Last Name is Required");
 		fa.lastname.focus();
 		return false;
+	}
 	}
 	/*if(trim(fa.middlename.value) == "" )
 	{
@@ -619,12 +621,15 @@ function referredbyabc(fa)
 			return false;
 		}
 	}
-	if(trim(fa.national_provider_id.value) == "")
-	{
-		alert("National Provider ID is Required");
-		fa.national_provider_id.focus();
-		return false;
-	}
+        if(fa.preferredcontact.value=="email" && trim(fa.email.value)==''){
+                alert("An email address must be entered if preferred contact method is email");
+                return false;
+        }
+
+        if(fa.preferredcontact.value=="fax" && trim(fa.fax.value)==''){
+                alert("A fax number must be entered if preferred contact method is fax");
+                return false;
+        }
 }
 
 function sleeplababc(fa)

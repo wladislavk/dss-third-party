@@ -887,9 +887,11 @@ foreach ($letter_contacts as $key => $contact) {
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
 			deliver_letter($letterid, $message);
-			$sql = "SELECT send_method FROM dental_letters WHERE letterid = '" . $letterid . "'";
+			$sql = "SELECT send_method, pdf_path FROM dental_letters WHERE letterid = '" . $letterid . "'";
 			$result = mysql_query($sql);
-			$method = mysql_result($result, 0);
+			$my = mysql_fetch_array($result);
+			$method = $my['send_method'];
+			$pdf_path = $my['pdf_path'];
 			if ($method == "paper") {
 			?>
 				<form name="printpreview" action="/manage/print_preview.php" method="post" target="_blank">
@@ -897,7 +899,8 @@ foreach ($letter_contacts as $key => $contact) {
 				</form>
 				
 				<script type="text/javascript">
-					document.printpreview.submit();
+					//document.printpreview.submit();
+					window.open('/manage/letterpdfs/<?php print $pdf_path; ?>', 'DSS Letter');
 				</script>
 			<?php
 			}

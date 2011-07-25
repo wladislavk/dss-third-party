@@ -75,7 +75,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="40%">
 			Name
 		</td>
-        
+		<td valign="top" class="col_head" width="40%">
+			Letterhead
+		</td>       
 		<td valign="top" class="col_head" width="10%">
 			Login As
 		</td>
@@ -126,6 +128,10 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
+				<td valign="top">
+					<a href="/manage/admin/letterhead.php?uid=<?=st($myarray["userid"]);?>">Update Images</a>
+				</td>
+				
 				<td valign="top">
 					<form action="../login.php" method="post" target="Doctor_Login">
 						<input type="hidden" name="username" value="<?=st($myarray["username"]);?>">

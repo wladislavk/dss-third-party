@@ -133,6 +133,12 @@ define('DSS_FILE_IMAGE_PJPEG', 2);
 define('DSS_FILE_APP_PDF', 3);
 
 // A convenience array to get file types
+$dss_image_file_types = array();
+$dss_image_file_types[DSS_FILE_IMAGE_GIF] = "image/gif";
+$dss_image_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
+$dss_image_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
+
+// A convenience array to get file types
 $dss_file_types = array();
 $dss_file_types[DSS_FILE_IMAGE_GIF] = "image/gif";
 $dss_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";

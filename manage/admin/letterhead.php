@@ -3,7 +3,8 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once('../includes/general_functions.php');
 
-function save_image($field = null, $name = null, $folder = 'letterhead/') {
+function save_image($field = null, $name = null) {
+	$folder = $_SERVER['DOCUMENT_ROOT'].'/manage/admin/letterhead/';
 	if ((array_search($_FILES[$name]["type"], $dss_image_file_types) !== false) ) {
 		$sql = "select ".st($field)." from dental_users where userid = '".s_for($_POST['uid'])."';";
 		$result = mysql_query($sql);
@@ -34,29 +35,44 @@ function save_image($field = null, $name = null, $folder = 'letterhead/') {
 			where userid = '".s_for($_POST['uid'])."'";
 			
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());				
-			$msg = "Edited Successfully";
 
 			return true;
 		} else {
-			return "File is too large for $field";
+			return "File is too large for $field<br />";
 		}
 	} else {
-		return "Invalid file type for $field";
+		return "Invalid file type for $field<br />";
 	}
 }
 
 // Handle POST
 
 if($_POST["submit_letterhead"]) {
-	$result1 = save_image('email_header', 'emailheaderimg');
-	$result2 = save_image('email_footer', 'emailfooterimg');
-	$result3 = save_image('fax_header', 'faxheaderimg');
-	$result4 = save_image('fax_footer', 'faxfooterimg');
+	if ($_FILES['emailheaderimg']["name"]) $result1 = save_image('email_header', 'emailheaderimg');
+	if ($_FILES['emailfooterimg']["name"]) $result2 = save_image('email_footer', 'emailfooterimg');
+	if ($_FILES['faxheaderimg']["name"]) $result3 = save_image('fax_header', 'faxheaderimg');
+	if ($_FILES['faxfooterimg']["name"]) $result4 = save_image('fax_footer', 'faxfooterimg');
  
-  if ($result1 !== true) $msg = $result1;
-  if ($result2 !== true) $msg .= $result2;
-  if ($result3 !== true) $msg .= $result3;
-  if ($result4 !== true) $msg .= $result4;
+  if ($result1 !== true) { 
+		$msg = $result1;
+	} else {
+		$msg = "Email Header uploaded sucessfully";
+	}
+  if ($result2 !== true) {
+		$msg .= $result2;
+	} else {
+		$msg .= "Email Footer uploaded successfully";
+	}
+  if ($result3 !== true) {
+		$msg .= $result3;
+	} else {
+ 		$msg .= "Fax Header uploaded successfully";
+	}
+  if ($result4 !== true) {
+		$msg .= $result4;
+	} else {
+		$msg .= "Fax Footer uploaded successully";
+	}
 }
 
 // Query Database for User Information
@@ -95,6 +111,8 @@ $fax_footer_imgname = $my['fax_footer'];
 <span class="admin_head">
 	Update Letterhead for <?= $docname ?>
 </span>
+
+<div><?php print $msg; ?></div>
 
 <form name="letterhead" action="<?=$_SERVER['PHP_SELF'];?>?uid=<?=$_GET['uid'];?>" method="post" enctype="multipart/form-data">
 <input type="hidden" name="uid" value="<?=$_GET['uid'];?>" />

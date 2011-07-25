@@ -1154,7 +1154,7 @@ $num_face = mysql_num_rows($p);
         </button>
 <?php }else{ ?>
         <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'" class="addButton">
-                View/Edit Patient Photos
+                Add/Update Patient Photo
         </button>
  
 <?php } ?>

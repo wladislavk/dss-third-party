@@ -45,6 +45,8 @@ $injurytohead = $_POST['injurytohead'];
 	$no_medications = $_POST['no_medications'];
 	$no_history = $_POST['no_history'];
 	$orthodontics = $_POST['orthodontics'];
+        $premedcheck = $_POST["premedcheck"];
+ 	$premed = $_POST["premeddet"];
 	
 	$allergens_arr = '';
 	if(is_array($allergens))
@@ -146,7 +148,15 @@ $injurytohead = $_POST['injurytohead'];
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+
+		$ped_sql = "update dental_patients 
+                	set		
+			premedcheck = '".s_for($_POST["premedcheck"])."',
+                	premed = '".s_for($_POST["premeddet"])."'
+                	where 
+                	patientid='".$_GET["pid"]."'";
+                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
+
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -189,7 +199,13 @@ $injurytohead = $_POST['injurytohead'];
 		where q_page3id = '".s_for($_POST['ed'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
+		$ped_sql = "update dental_patients 
+                        set             
+                        premedcheck = '".s_for($_POST["premedcheck"])."',
+                        premed = '".s_for($_POST["premeddet"])."' 
+                        where 
+                        patientid='".$_GET["pid"]."'";
+                mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
 		?>
@@ -264,21 +280,28 @@ $no_allergens = st($myarray['no_allergens']);
 $no_medications = st($myarray['no_medications']);
 $no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
+$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$pmy = mysql_query($psql);
+$pmyarray = mysql_fetch_array($pmy);
+$premedcheck = st($pmyarray["premedcheck"]);
+$premeddet = st($pmyarray["premed"]);
 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+<style type="text/css">
+label {
+  width: 250px;
+  float:left;
+}
+</style>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -388,6 +411,28 @@ $orthodontics = st($myarray['orthodontics']);
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<tr>
+                <td valign="top" colspan="2" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">     
+                        <label class="desc" id="title0" for="Field0">
+                            Premedication
+                            <span id="req_0" class="req">*</span>
+                        </label>
+                        <div>
+                            <span>
+                                <label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
+                                
+                            </span>
+                            <span>
+                                <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?=$premeddet;?></textarea>
+                            </span>
+                          
+                       </div>   
+                    </li>
+                </ul>
+            </td>
+        </tr>
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -614,8 +659,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							Have you had wisdom teeth extracted?
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had wisdom teeth extracted?</label>
 							
 							<input type="radio" name="wisdom_extraction" value="Yes" <? if($wisdom_extraction == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -627,8 +671,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							Do you wear removable partials or dentures?
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Do you wear removable partials or dentures?</label>
 							
 							<input type="radio" name="removable" value="Yes" <? if($removable == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -640,16 +683,14 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Orthodontics (Braces)</b>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Orthodontics (Braces)</label>
 							
 							<input type="radio" name="orthodontics" value="Yes" <? if($orthodontics == 'Yes') echo " checked";?>  onclick="chk_ortho()"  />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" name="orthodontics" value="No" <? if($orthodontics == 'No') echo " checked";?>  onclick="chk_ortho()" />No
 							<br />
-							Year completed
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Year completed</label>
                             <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" /> 
 						</span>
 					</div>
@@ -657,7 +698,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>TMJ (jaw joint)</b>
+							TMJ (jaw joint)
 							<br />
 							<input type="radio" name="tmj" value="Popping or clicking" <? if($tmj == 'Popping or clicking') echo " checked";?> />Popping or clicking
 							
@@ -670,8 +711,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had Jaw Joint Surgery?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had jaw joint surgery?</label>
 							
 							<input type="radio" name="jawjointsurgery" value="Yes" <? if($jawjointsurgery == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -684,8 +724,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had an injury to your Head?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had an injury to your head?</label>
 							
 							<input type="radio" name="injurytohead" value="Yes" <? if($injurytohead == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -698,8 +737,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had an injury to your Face?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had an injury to your face?</label>
 							
 							<input type="radio" name="injurytoface" value="Yes" <? if($injurytoface == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -712,8 +750,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had an injury to your Neck?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had an injury to your neck?</label>
 							
 							<input type="radio" name="injurytoneck" value="Yes" <? if($injurytoneck == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -726,8 +763,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had an injury to your Mouth?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had an injury to your mouth?</label>
 							
 							<input type="radio" name="injurytomouth" value="Yes" <? if($injurytomouth == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -740,8 +776,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Have you had any teeth injuries?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Have you had any teeth injuries?</label>
 							
 							<input type="radio" name="injurytoteeth" value="Yes" <? if($injurytoteeth == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -754,8 +789,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Do you have morning dry mouth?</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Do you have morning dry mouth?</label>
 							
 							<input type="radio" name="drymouth" value="Yes" <? if($drymouth == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -768,8 +802,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							<b>Gum problems</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Gum problems</label>
                             <input id="gum_problems" name="gum_problems" type="text" class="field text addr tbox" value="<?=$gum_problems;?>" maxlength="255" style="width:225px;" /> 
 						</span>
 					</div>
@@ -795,8 +828,7 @@ $orthodontics = st($myarray['orthodontics']);
 					
 					<div>
                         <span>
-							Do you clinch or grind your teeth?
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label>Do you clinch or grind your teeth?</label>
 							
 							<input type="radio" name="clinch_grind" value="Yes" <? if($clinch_grind == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

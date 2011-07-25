@@ -264,9 +264,6 @@ if($complaintid <> '')
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -394,7 +391,7 @@ if($complaintid <> '')
                         <span>
                             <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
                             	<option value="0">Weight</option>
-                            	<? for($i=1;$i<800;$i++)
+                            	<? for($i=80;$i<=500;$i++)
 								{
 								?>
 									<option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>

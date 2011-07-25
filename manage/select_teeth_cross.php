@@ -18,7 +18,7 @@ include "admin/includes/config.php";
 	    <td> 
 <br />
 <span class="admin_head">
-	Tooth Contacts Prior to OAT
+	Tooth Contacts Prior to OAT <input type="button" value="save" onclick="fill_up()" />
 </span>
 <br />
 <br />
@@ -181,9 +181,6 @@ include "admin/includes/config.php";
                     </td>
                 </tr>
             </table>
-            <div align="center">
-	            <input type="button" value="save" onclick="fill_up()" />
-            </div>
         </td>
 	</tr>
 </table>

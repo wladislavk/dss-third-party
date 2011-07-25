@@ -26,6 +26,7 @@ if($_POST['selsub'] == 1)
 	<script type="text/javascript">
 		parent.document.ex_page4frm.<?=$_GET['tx']?>.value = '<?=$t_text;?>';
 		parent.disablePopup1();
+		parent.reloadPerio("<?=$t_text; ?>");
 	</script>
 	<?
 }
@@ -48,11 +49,11 @@ $mt_arr = explode(',',$_GET['fval']);
     <tr bgcolor="#FFFFFF">
 	    <td> 
 <br />
+<form name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?tx=<?=$_GET['tx'];?>" method="post">
 <span class="admin_head">
-	<?=ucwords($_GET['tx']);?> Teeth #
+	<?=ucwords($_GET['tx']);?> Teeth # <input type="submit" value="save" />
 </span>
 <div style="clear:both"></div>
-<form name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?tx=<?=$_GET['tx'];?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr>
 		<td valign="top" colspan="2" width="50%" >
@@ -115,7 +116,6 @@ $mt_arr = explode(',',$_GET['fval']);
 				}?>
             </table>
             <input type="hidden" name="selsub" value="1" />
-            <input type="submit" value="save" />
 		</td>
 	</tr>
 </table>

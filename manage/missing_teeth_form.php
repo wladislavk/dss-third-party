@@ -138,6 +138,22 @@ $mob_arr = explode('~',$mob);
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+function updateTeeth(teeth){
+  $('.tooth_image').each( function(index){
+     s = $(this).attr('src');
+     $(this).attr('src', s.replace('_red', ''));
+  });
+  teeth = teeth.replace(' ', '');
+  ts = teeth.split(',');
+  for(var tn in ts){
+   t = ts[tn];
+   $('#missing_'+t).attr('src', 'missing_teeth/'+t+'_red.png');
+  }
+
+}
+</script>
 </head>
 <body>
 
@@ -274,13 +290,13 @@ $mob_arr = explode('~',$mob);
 										</tr>
 										
 										<tr>
-											<td valign="top" align="center">
+											<td id="missing_cell_<?=$i;?>" valign="top" align="center">
 												<? if($miss == 1) {?>
-													<img src="missing_teeth/<?=$i;?>_red.png" width="33" height="60" border="0" alt="<?=$i;?>" />	
+													<img class="tooth_image" id="missing_<?=$i;?>" src="missing_teeth/<?=$i;?>_red.png" width="33" height="60" border="0" alt="<?=$i;?>" />	
 												<? }
 												else
 												{?>
-													<img src="missing_teeth/<?=$i;?>.png" width="33" height="60" border="0" alt="<?=$i;?>" />
+													<img id="missing_<?=$i;?>" src="missing_teeth/<?=$i;?>.png" width="33" height="60" border="0" alt="<?=$i;?>" />
 												<? }?>
 											</td>
 										</tr>

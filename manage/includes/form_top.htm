@@ -1,52 +1,4 @@
 <a name="form"></a>
-<table width="98%" bgcolor="#999999" cellpadding="3" cellspacing="1" border="0" align="center">
-	<tr>
-    	<td valign="middle" width="50%">
-        	<b>
-            Patient
-            &nbsp;&nbsp;&nbsp;
-            <?=$name;?>
-            </b>
-        </td>
-        <td valign="middle" width="10%">
-        	<? 
-            if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1) 
-            {?>
-                <!--<button onclick="Javascript: window.location = 'ex_page4.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>';"> -->
-				<button onclick="Javascript: change_page('ex_page4');">
-                    Exam
-                </button>
-            <? }
-            else
-            {?>
-            	<!--<button onclick="Javascript: window.location = 'q_page1.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>';"> -->
-				<button onclick="Javascript: change_page('q_page1');">
-                    Questionnaire
-                </button>
-            <? }?>
-        </td>
-        <td valign="middle" width="25%">
-        	<b>
-            Exam Date
-            &nbsp;&nbsp;&nbsp;
-<?php
-$sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
-echo ($myarray['exam_date']!='')?date('m/d/Y', strtotime($myarray['exam_date'])):'';
-?>
-
-            </b>
-        </td>
-        <td valign="middle" width="15%" align="right">
-        	<b>
-            Form ID
-            &nbsp;&nbsp;&nbsp;
-            <?=st($form_myarray['formid'])?>
-            </b>
-        </td>
-    </tr>
-</table>
 <?
 $lastdot = strrpos($_SERVER['PHP_SELF'],".");
 $page_path = substr($_SERVER['PHP_SELF'],0,$lastdot);
@@ -96,7 +48,7 @@ if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1)
                     <!--<a href="q_sleep.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
 					<a href="Javascript:;" onclick="Javascript: change_page('q_sleep');">
                 <? }?>
-                    Sleep Test</a>
+                    Sleepiness Test</a>
             </td>
             <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
                 <? if($cur_f == 0) {?>

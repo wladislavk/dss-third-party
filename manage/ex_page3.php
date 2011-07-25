@@ -1,6 +1,11 @@
 <?php 
 include "includes/top.htm";
 ?>
+<style type="text/css">
+.cb_half{ width:200px; float: left; }
+.ta_half{ width:200px; float:left; }
+.ta_half textarea { width: 400px; }
+</style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(':input:not(#patient_search)').change(function() { 
@@ -240,9 +245,6 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -286,7 +288,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Maxilla
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                         	<?
 							$maxilla_sql = "select * from dental_maxilla where status=1 order by sortby";
@@ -303,7 +305,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 							?>
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -327,7 +329,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Mandible
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                         	<?
 							$mandible_sql = "select * from dental_mandible where status=1 order by sortby";
@@ -344,7 +346,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 							?>
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -368,7 +370,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Soft Palate
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                         	<?
 							$soft_palate_sql = "select * from dental_soft_palate where status=1 order by sortby";
@@ -385,7 +387,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 							?>
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half"> 
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -409,7 +411,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Uvula
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                        <?php
 							$uvula_sql = "select * from dental_uvula where status=1 order by sortby";
@@ -435,7 +437,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 						
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -459,7 +461,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Gag Reflex
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                         	<?
 							$gag_reflex_sql = "select * from dental_gag_reflex where status=1 order by sortby";
@@ -476,7 +478,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 							?>
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -500,7 +502,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         Nasal Passages
                     </label>
                     
-                    <div>
+                    <div class="cb_half">
                     	<span>
                         	<?
 							$nasal_passages_sql = "select * from dental_nasal_passages where status=1 order by sortby";
@@ -517,7 +519,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 							?>
                         </span>
                    	</div>
-                    <div>
+                    <div class="ta_half">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />

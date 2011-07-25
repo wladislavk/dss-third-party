@@ -142,14 +142,14 @@ function centerPopup(){
 	var windowHeight = document.documentElement.clientHeight;
 	var popupHeight = $("#popupContact").height();
 	var popupWidth = $("#popupContact").width();
+        var topPos = (windowHeight/2-popupHeight/2 + window.pageYOffset) + "px";
 	//centering
 	$("#popupContact").css({
 		"position": "absolute",
-		"top": windowHeight/2-popupHeight/2,
+		"top": topPos,
 		"left": windowWidth/2-popupWidth/2
 	});
 	//only need force for IE6
-	
 	$("#backgroundPopup").css({
 		"height": windowHeight
 	});

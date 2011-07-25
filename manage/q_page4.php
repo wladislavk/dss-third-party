@@ -166,9 +166,6 @@ $tobacco = st($myarray['tobacco']);
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -256,7 +253,8 @@ $tobacco = st($myarray['tobacco']);
                     
                     Additional Paragraph
                     /
-                    <button onclick="Javascript: loadPopup('select_custom1.php'); return false;">Custom Text</button>
+                    <!--<button onclick="Javascript: loadPopup('select_custom1.php'); return false;">Custom Text</button>-->
+		    <button onclick="Javascript: loadPopup('select_custom_all.php?fr=q_page4frm&tx=additional_paragraph'); return false;">Custom Text</button>
                     <div>
                         <span>
                             <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>

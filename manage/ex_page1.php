@@ -152,9 +152,6 @@ $tongue = st($myarray['tongue']);
 
 <a name="top"></a>
 &nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <? include("includes/form_top.htm");?>
 
@@ -202,7 +199,7 @@ $tongue = st($myarray['tongue']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
                             <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
-                            	<? for($i=0;$i<1000;$i++)
+                            	<? for($i=50;$i<=150;$i++)
 								{
 								?>
 									<option value="<?=$i?>" <? if($pulse == $i) echo " selected";?>><?=$i?></option>
@@ -218,7 +215,7 @@ $tongue = st($myarray['tongue']);
                         	Neck Measurement
                             &nbsp;&nbsp;&nbsp;
                             <select name="neck_measurement" id="neck_measurement" class="field text addr tbox" style="width:50px;" tabindex="3">
-                            	<? for($i=0;$i<=29;$i+=.5)
+                            	<? for($i=5;$i<=29;$i+=.5)
 								{
 								?>
 									<option value="<?=$i?>" <? if($neck_measurement == $i) echo " selected";?>><?=$i?></option>

@@ -168,8 +168,6 @@ if($_POST["patientsub"] == 1)
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
 		copyreqdate = '".s_for($_POST["copyreqdate"])."',
-    premedcheck = '".s_for($_POST["premedcheck"])."',
-		premed = '".s_for($_POST["premeddet"])."', 
 		status = '".s_for($_POST["status"])."',
 		preferredcontact = '".s_for($_POST["preferredcontact"])."'
 		where 
@@ -312,8 +310,6 @@ if($_POST["patientsub"] == 1)
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
 		copyreqdate = '".s_for($_POST["copyreqdate"])."',
-		premedcheck = '".s_for($_POST["premedcheck"])."',
-		premed = '".s_for($_POST["premeddet"])."',
 		userid='".$_SESSION['userid']."', 
 		docid='".$_SESSION['docid']."', 
 		status = '".s_for($_POST["status"])."',
@@ -439,8 +435,6 @@ if($_POST["patientsub"] == 1)
 		$referred_source = $_POST["referred_source"];
 		$referred_by = $_POST["referred_by"];
 		$copyreqdate = $_POST["copyreqdate"];
-		$premedcheck = $_POST["premedcheck"];
-		$premed = $_POST["premeddet"];
 		$preferredcontact = $_POST["preferredcontact"];
 		
 	}
@@ -534,8 +528,6 @@ if($_POST["patientsub"] == 1)
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
 		$copyreqdate = st($themyarray["copyreqdate"]);
-		$premedcheck = st($themyarray["premedcheck"]);
-		$premeddet = st($themyarray["premed"]);
 		$preferredcontact = st($themyarray["preferredcontact"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 		
@@ -610,14 +602,23 @@ return false;
     
     
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> Patient
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
-            </td>
-        </tr>
+	<tr>
+		<td colspan="2">
+<?php
+			        $pid = $_GET['pid'];
+  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid;
+  $itype_my = mysql_query($itype_sql);
+  while($image = mysql_fetch_array($itype_my)){
+   echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
+  }
+?>
+        <button onclick="Javascript: window.location='./q_image.php?pid=<?= $_GET['pid']; ?>'" class="addButton">
+                View/Edit Patient Photos
+        </button>
+
+
+		</td>
+		</tr>
         	  <tr>
 	      <td colspan="2">
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>	      
@@ -660,7 +661,7 @@ return false;
                 </ul>
             </td>
         </tr>
-        <tr>
+        <!-- <tr>
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>
                     <li id="foli8" class="complex">	
@@ -681,7 +682,7 @@ return false;
                     </li>
                 </ul>
             </td>
-        </tr>
+        </tr>-->
         <tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

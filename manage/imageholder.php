@@ -16,8 +16,12 @@
 
 <?php
 $image = $_GET['image'];
+$folder = $_GET['folder'];
+if (empty($folder)) {
+	$folder = 'q_file';
+}
 
-echo "<a href='q_file/".$image."' class='cloud-zoom'><img height='250' src='q_file/".$image."' /></a><br /><img height='500' src='q_file/".$image."' />";
+echo "<a href='".$folder."/".$image."' class='cloud-zoom'><img height='250' src='".$folder."/".$image."' /></a><br /><img height='500' src='".$folder."/".$image."' />";
 
 
 ?>

@@ -3,16 +3,16 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once('../includes/general_functions.php');
 
-function save_image($field = null, $name = null) {
+function save_image($field = null, $fieldname = null) {
 	$folder = $_SERVER['DOCUMENT_ROOT'].'/manage/admin/letterhead/';
-	if ((array_search($_FILES[$name]["type"], $dss_image_file_types) !== false) ) {
+	if ((array_search($_FILES[$fieldname]["type"], $dss_image_file_types) !== false) ) {
 		$sql = "select ".st($field)." from dental_users where userid = '".s_for($_POST['uid'])."';";
 		$result = mysql_query($sql);
 		$my = mysql_fetch_array($result);
 		$imgname = $my[$field]; 
 
-		if($_FILES[$name]["name"] <> '') {
-			$fname = $_FILES[$name]["name"];
+		if($_FILES[$fieldname]["name"] <> '') {
+			$fname = $_FILES[$fieldname]["name"];
 			$lastdot = strrpos($fname,".");
 			$name = substr($fname,0,$lastdot);
 			$extension = substr($fname,$lastdot+1);
@@ -20,8 +20,7 @@ function save_image($field = null, $name = null) {
 			$banner1 = str_replace(" ","_",$banner1);
 			$banner1 = str_replace(".","_",$banner1);
 			$banner1 .= ".".$extension;
-
-			$uploaded = uploadImage($_FILES[$name], $folder.$banner1);
+			$uploaded = uploadImage($_FILES[$fieldname], $folder.$banner1);
 			if($imgname <> '') {
 				@unlink($folder.$imgname);
 			}
@@ -48,30 +47,32 @@ function save_image($field = null, $name = null) {
 // Handle POST
 
 if($_POST["submit_letterhead"]) {
+	$result1 = $result2 = $result3 = $result4 = null; 
+
 	if ($_FILES['emailheaderimg']["name"]) $result1 = save_image('email_header', 'emailheaderimg');
 	if ($_FILES['emailfooterimg']["name"]) $result2 = save_image('email_footer', 'emailfooterimg');
 	if ($_FILES['faxheaderimg']["name"]) $result3 = save_image('fax_header', 'faxheaderimg');
 	if ($_FILES['faxfooterimg']["name"]) $result4 = save_image('fax_footer', 'faxfooterimg');
- 
+
   if ($result1 !== true) { 
 		$msg = $result1;
 	} else {
-		$msg = "Email Header uploaded sucessfully";
+		$msg = "Email Header uploaded sucessfully<br />";
 	}
   if ($result2 !== true) {
 		$msg .= $result2;
 	} else {
-		$msg .= "Email Footer uploaded successfully";
+		$msg .= "Email Footer uploaded successfully<br />";
 	}
   if ($result3 !== true) {
 		$msg .= $result3;
 	} else {
- 		$msg .= "Fax Header uploaded successfully";
+ 		$msg .= "Fax Header uploaded successfully<br />";
 	}
   if ($result4 !== true) {
 		$msg .= $result4;
 	} else {
-		$msg .= "Fax Footer uploaded successully";
+		$msg .= "Fax Footer uploaded successully<br />";
 	}
 }
 
@@ -126,7 +127,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<?php if (empty($email_header_imgname)): ?>
 		<input id="emailheaderimg" name="emailheaderimg" type="file" size="4" />
 		<?php else: ?>
-		<input type="button" id="email_header_view" value="View" title="View" onClick="window.open('/manage/imageholder.php?image=<?= $email_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
+		<input type="button" id="email_header_view" value="View" title="View" onClick="window.open('/manage/admin/letterhead/<?= $email_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
 		<input type="button" class="toggle_but" id="emailheader" value="Edit" title="Edit" />
 		<input id="emailheaderimg" style="display:none;" name="emailheaderimg" type="file" size="4" />
 		<?php endif; ?>
@@ -137,7 +138,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<?php if (empty($email_footer_imgname)): ?>
 		<input id="emailfooterimg" name="emailfooterimg" type="file" size="4" />
 		<?php else: ?>
-		<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('/manage/imageholder.php?image=<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
+		<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('/manage/admin/letterhead/<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
 		<input type="button" class="toggle_but" id="emailfooter" value="Edit" title="Edit" />
 		<input id="emailfooterimg" style="display:none;" name="emailfooterimg" type="file" size="4" />
 		<?php endif; ?>
@@ -152,7 +153,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<?php if (empty($fax_header_imgname)): ?>
 		<input id="faxheaderimg" name="faxheaderimg" type="file" size="4" />
 		<?php else: ?>
-		<input type="button" id="fax_header_view" value="View" title="View" onClick="window.open('/manage/imageholder.php?image=<?= $fax_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
+		<input type="button" id="fax_header_view" value="View" title="View" onClick="window.open('/manage/admin/letterhead/<?= $fax_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
 		<input type="button" class="toggle_but" id="faxheader" value="Edit" title="Edit" />
 		<input id="faxheaderimg" style="display:none;" name="faxheaderimg" type="file" size="4" />
 		<?php endif; ?>
@@ -164,7 +165,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<?php if (empty($fax_footer_imgname)): ?>
 		<input id="faxfooterimg" name="faxfooterimg" type="file" size="4" />
 		<?php else: ?>
-		<input type="button" id="fax_footer_view" value="View" title="View" onClick="window.open('/manage/imageholder.php?image=<?= $fax_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
+		<input type="button" id="fax_footer_view" value="View" title="View" onClick="window.open('/manage/admin/letterhead/<?= $fax_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
 		<input type="button" class="toggle_but" id="faxfooter" value="Edit" title="Edit" />
 		<input id="faxfooterimg" style="display:none;" name="faxfooterimg" type="file" size="4" />
 		<?php endif; ?>

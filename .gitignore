@@ -3,3 +3,4 @@ admin/includes/config.php
 manage/sleepstudies/*
 manage/q_file/*
 manage/letterpdfs/*
+manage/admin/letterhead/*

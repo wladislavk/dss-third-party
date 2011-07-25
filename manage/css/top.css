@@ -37,18 +37,22 @@
   background: #fed68d;
   height:30px;
   width: 100%;
+  margin-top:13px;
   }
 
 #patient_nav ul{
   list-style:none;
-  margin-top:4px;
+  margin:0px;
   padding-left:15px;
+  height: 30px;
   }
 
 #patient_nav li{
   float:left;
   display:block;
-  margin-top:5px;
+  margin:0px;
+  height:30px;
+  padding:0;
   }
 
 #patient_nav li.last a{
@@ -58,8 +62,10 @@
 #patient_nav li a{
   color: #000;
   font-size: 14px;
-  padding: 3px 10px;
+  padding: 7px 10px 7px 10px;
   border-right: solid 1px #000;
+  height:30px;
+  line-height: 30px;
   }
 
 #patient_nav li a:hover, #patient_nav li a.active{

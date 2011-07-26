@@ -188,7 +188,40 @@ if(isset($_POST['summarybtn']))
 $r_lateral_from	= $_POST['r_lateral_from'];
 $l_lateral_from = $_POST['l_lateral_from'];
 $i_opening_from = $_POST['i_opening_from'];
-	
+$ir_range = $_POST['ir_range'];
+$ir_min = $_POST['ir_min'];
+$ir_max = $_POST['ir_max'];
+
+$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$q = mysql_query($sql);
+$row = mysql_fetch_assoc($q);
+$num = mysql_num_rows($q);
+if($num > 0){
+$ex_ed_sql = " update dental_ex_page5 set 
+		protrusion_from = '".s_for($ir_min)."',
+                protrusion_to = '".s_for($ir_max)."',
+                protrusion_equal = '".s_for($ir_range)."',
+                i_opening_from = '".s_for($i_opening_from)."',
+                l_lateral_from = '".s_for($l_lateral_from)."',
+                r_lateral_from = '".s_for($r_lateral_from)."'
+	where ex_page5id = '".$row['ex_page5id']."'";
+mysql_query($ex_ed_sql);
+}else{
+$ex_ins_sql = " insert dental_ex_page5 set 
+                patientid = '".s_for($_GET['pid'])."',
+                protrusion_from = '".s_for($ir_min)."',
+                protrusion_to = '".s_for($ir_max)."',
+                protrusion_equal = '".s_for($ir_range)."',
+                i_opening_from = '".s_for($i_opening_from)."',
+                l_lateral_from = '".s_for($l_lateral_from)."',
+                r_lateral_from = '".s_for($r_lateral_from)."'
+		userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                mysql_query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+}	
 	
 	if($_POST['ed'] == '')
 	{

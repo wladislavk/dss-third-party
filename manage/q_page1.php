@@ -445,6 +445,42 @@ if($complaintid <> '')
                     	Select Complaint Sequence from the DropDown or leave it Blank.
                     </span>
                     <br />
+		   <script type="text/javascript">
+			var removed = [];
+			function update_c_chb(){
+				var selections = [];
+				$('.complaint_chb').each( function(){
+					if($(this).val()!=''){
+						selections.push($(this).val());
+					}
+				})
+				$('.complaint_chb').each( function(){
+					$(' option', this).each( function(){
+						if(in_array($(this).attr("value"), selections) && !($(this).attr("selected")) ){
+							$(this).attr('disabled','disabled');
+						}else{
+							$(this).removeAttr('disabled');;
+						}
+					});
+                                })
+
+			}
+function in_array(needle, haystack)
+{
+    for(var key in haystack)
+    {
+        if(needle === haystack[key])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+			$('document').ready( function(){
+				update_c_chb();
+			});
+		    </script>
                     <? 
 					while($complaint_myarray = mysql_fetch_array($complaint_my))
 					{
@@ -458,9 +494,10 @@ if($complaintid <> '')
 						}
 						
 					?>
+
                     <div style="width:48%;float:left;">
                         <span>
-                        	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="field text addr tbox" style="width:50px;" onchange="chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
+                        	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
                             	<option value=""></option>
                             	<? 
 								for($i=1;$i<=$complaint_number;$i++)

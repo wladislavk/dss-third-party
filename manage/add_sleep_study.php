@@ -20,7 +20,7 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 </head>
-<body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px;">
+<body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px; position:absolute;top:0;margin:0; padding:0;">
 
  <?php 
  if(isset($_POST['submitdeletesleeplabsumm'])){
@@ -170,7 +170,6 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
   }
  }
  ?>
-<div>
 <style type="text/css">
 .sleeplabstable tr{height:28px; }
 </style>
@@ -349,7 +348,7 @@ $device_result = mysql_query($device_query);
 $device = mysql_result($device_result, 0);
 
 ?>
-<form action="#" method="post" enctype="multipart/form-data">
+<form action="#" style="float:left;" method="post" enctype="multipart/form-data">
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
 <table id="sleepstudyscrolltable" class="sleeplabstable">
 	<tr>

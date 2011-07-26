@@ -72,7 +72,7 @@ WHERE followupid='".$id."'
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 </head>
 <body style="width:10000px;background:none;">
-<form id="sleepstudyadd" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <style type="text/css">
 #sleepstudyscrolltable tr{ height:28px; }
 </style>
@@ -230,7 +230,7 @@ $device = mysql_result($device_result, 0);
 
  if($numrows){
   ?>
-<form class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form style="float:left;" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
  <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">

@@ -1716,8 +1716,13 @@ Sleep Studies:
 		Diagnosis	
 		</td>
 	</tr>
-  <tr>	
+  <tr>
 		<td valign="top" style="background: #F9FFDF;">
+		File
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" style="background: #E4FFCF;">
 		Notes
 		</td>
 	</tr>

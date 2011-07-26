@@ -2,8 +2,9 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php"); 
+require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
-
+require_once('includes/general_functions.php');
 // Determine Type of Appliance
 $sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY date DESC LIMIT 1;";
 $result = mysql_query($sql);
@@ -17,6 +18,7 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 <html style="overflow-y:hidden;">
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 </head>
 <body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px;">
 
@@ -50,6 +52,30 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
   $diagnosis = s_for($_POST['diagnosis']); 
   $notes = s_for($_POST['notes']);
   $patientid = $_GET['pid']; 
+	$s = "SELECT filename from dental_summ_sleeplab WHERE id='".$id."'";
+	$prevfile_result = mysql_query($s);
+        $prev_filename = mysql_result($prevfile_result, 0, 0);
+
+                if($_FILES["ss_file"]["name"] <> '')
+                {
+                        $fname = $_FILES["ss_file"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+                        $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+			if($prev_filename != ''){
+                          unlink("q_file/" . $prev_filename);
+			}
+                }
+                else
+                {
+                        $banner1 = $prev_filename;
+                }
+
   $q = "UPDATE dental_summ_sleeplab SET
 `date` = '".$date."',
 `sleeptesttype`  = '".$sleeptesttype."',
@@ -67,6 +93,7 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 `dentaldevice`  = '".$dentaldevice."',
 `devicesetting`  = '".$devicesetting."',
 `diagnosis`  = '".$diagnosis."',
+`filename` = '".$banner1."',
 `notes`  = '".$notes."'
 WHERE id='".$id."'
 ";
@@ -95,6 +122,23 @@ WHERE id='".$id."'
   $diagnosis = s_for($_POST['diagnosis']);
   $notes = s_for($_POST['notes']);
   $patientid = $_GET['pid'];
+                if($_FILES["ss_file"]["name"] <> '')
+                {
+                        $fname = $_FILES["ss_file"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+                }
+                else
+                {
+                        $banner1 = ''; 
+                }
   $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
 `date` ,
@@ -113,15 +157,16 @@ WHERE id='".$id."'
 `dentaldevice` ,
 `devicesetting` ,
 `diagnosis` ,
+`filename` ,
 `notes` ,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$notes."','".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."','".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
-   $msg = "Successfully added sleep lab";
+   $msg = "Successfully added sleep lab". $uploaded;
   }
  }
  ?>
@@ -129,7 +174,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 <style type="text/css">
 .sleeplabstable tr{height:28px; }
 </style>
-<form action="#" method="POST" style="float:left; width:185px;">
+<form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
 <table class="sleeplabstable" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" style="background: #F9FFDF;">
@@ -264,8 +309,13 @@ if(f.sleeptesttype.value == "HST"){
                             </select>
 		</td>
 	</tr>
-  <tr>	
+  <tr>
 		<td valign="top" style="background: #F9FFDF;">
+		  <input style="width:170px" type="file" name="ss_file" />
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" style="background: #E4FFCF;">
 		<input type="text" name="notes" />	
 		</td>
 	</tr>
@@ -299,7 +349,7 @@ $device_result = mysql_query($device_query);
 $device = mysql_result($device_result, 0);
 
 ?>
-<form action="#" method="post">
+<form action="#" method="post" enctype="multipart/form-data">
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
 <table id="sleepstudyscrolltable" class="sleeplabstable">
 	<tr>
@@ -426,8 +476,22 @@ $device = mysql_result($device_result, 0);
 
 		</td>
 	</tr>
-  <tr>	
+  <tr>
 		<td valign="top" style="background: #F9FFDF;">
+			<?php if($s_lab['filename']!=''){ ?>
+						<div id="file_edit_<?= $s_lab['id']; ?>">
+				<input type="button" id="view" value="View" title="View" onClick="window.open('q_file/<?= $s_lab['filename']; ?>','windowname1','width=400, height=400');return false;" />
+                                                        <input type="button" id="edit" onclick="$('#file_edit_<?= $s_lab['id']; ?>').hide();$('#file_<?= $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
+						</div>
+                                                        <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="4" />
+
+			<?php }else{ ?>
+			  <input style="width:170px;" type="file" name="ss_file" /> 
+			<?php } ?>	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" style="background: #E4FFCF;">
 		<input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />	
 		</td>
 	</tr>

@@ -342,7 +342,7 @@ function deliver_letter($letterid, $message) {
 
 		// Send Email
 		if ($send_method == 'email') {
-			$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, ,$docid);
+			$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
 		}
 
 		// Create PDF
@@ -391,7 +391,7 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$email_footer_imgname = $my['email_footer'];
 	if (!empty($email_header_imgname)) {
 		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $email_header_imgname;
-	else {
+	} else {
 		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_header.jpg";
 	}
 	if (!empty($email_footer_imgname)) {

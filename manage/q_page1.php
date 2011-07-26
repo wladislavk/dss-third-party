@@ -30,7 +30,7 @@ if($_POST['q_page1sub'] == 1)
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
 	$bmi = $_POST['bmi'];
-	
+        $chief_complaint_text = $_POST['chief_complaint_text'];	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
 	$complaint_my = mysql_query($complaint_sql);
 	
@@ -106,6 +106,7 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		sleep_qual = '".s_for($sleep_qual)."',
 		complaintid = '".s_for($comp_arr)."',
 		other_complaint = '".s_for($other_complaint)."',
@@ -146,6 +147,7 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		complaintid = '".s_for($comp_arr)."',
 		sleep_qual = '".s_for($sleep_qual)."',
 		other_complaint = '".s_for($other_complaint)."',
@@ -225,6 +227,7 @@ $feet = st($myarray['feet']);
 $inches = st($myarray['inches']);
 $weight = st($myarray['weight']);
 $bmi = st($myarray['bmi']);
+$chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
 $additional_paragraph = st($myarray['additional_paragraph']);
@@ -428,6 +431,15 @@ if($complaintid <> '')
         </td>
     </tr>
     <tr>
+	<td valign="top" class="frmhead">
+                    <label style="display:block;">
+                        What is the main reason you are seeking treatment?
+                    </label>
+                        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
+
+	</td>
+    </tr>
+    <tr>
         <td valign="top" class="frmhead">
         	<ul>
                 <li id="foli8" class="complex">	
@@ -540,12 +552,12 @@ function in_array(needle, haystack)
                         	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
                             	<tr>
                                 	<td valign="top" width="60%">
-                                    	Rate your overall energy level 1 -10 (10 being the highest) 
+                                    	Rate your overall energy level 0 -10 (10 being the highest) 
                                     </td>
                                     <td valign="top">
                                     	<select name="energy_level" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
+                                            <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
@@ -574,12 +586,12 @@ function in_array(needle, haystack)
 								
                                 <tr>
                                 	<td valign="top">
-                                    	Rate the sound of your snoring 1 -10 (10 being the highest) 
+                                    	Rate the sound of your snoring 0 -10 (10 being the highest) 
                                     </td>
                                     <td valign="top">
                                     	<select name="snoring_sound" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
+                                            <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($snoring_sound == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
@@ -594,7 +606,7 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="wake_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
+                                            <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
@@ -608,7 +620,7 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="breathing_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
+                                            <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($breathing_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
@@ -651,7 +663,7 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="hours_sleep" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<16;$i++)
+                                            <? for($i=0;$i<16;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
@@ -666,7 +678,7 @@ function in_array(needle, haystack)
                                     <td valign="top">
                                     	<select name="sleep_qual" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=1;$i<11;$i++)
+                                            <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>

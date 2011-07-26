@@ -954,6 +954,15 @@ $main_disp .= $m_val."
 }
 
 
+$cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+$cc_q = mysql_query($cc_sql);
+$cc_row = mysql_fetch_assoc($cc_q);
+$reason_seeking_tx = "
+Main reason seeking Tx:
+".$cc_row['chief_complaint_text']."
+";
+
+
 if($complaintid <> '')
 {
 	//$reason_seeking_tx .= $complaintid;
@@ -980,7 +989,7 @@ if($complaintid <> '')
 	}
 	
 	asort($c_seq );
-	$reason_seeking_tx = "
+	$reason_seeking_tx .= "
 Chief Complaints:
 ";  
        foreach($c_seq as $i=>$val)

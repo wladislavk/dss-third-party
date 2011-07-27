@@ -24,9 +24,15 @@ if($_POST['selsub'] == 1)
 	
 	?>
 	<script type="text/javascript">
+		var old = parent.document.ex_page4frm.<?=$_GET['tx']?>.value;
 		parent.document.ex_page4frm.<?=$_GET['tx']?>.value = '<?=$t_text;?>';
+		if(old != '<?= $t_text; ?>'){
+			parent.edited = true;
+		}
 		parent.disablePopup1();
-		parent.reloadPerio("<?=$t_text; ?>");
+		if("<?= $_GET['tx']; ?>" == "missing"){
+			parent.reloadPerio("<?=$t_text; ?>");
+		}
 	</script>
 	<?
 }

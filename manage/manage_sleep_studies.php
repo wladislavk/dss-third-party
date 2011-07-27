@@ -58,6 +58,7 @@ include("includes/sescheck.php");
 	document.getElementById(val).labtype.style.display='none';
 	document.getElementById(val).copyreqdate.style.display='none';
   }
+  }
  </script>
 
 <script type="text javascript">
@@ -68,12 +69,12 @@ function popitup(url) {
 }
 </script>
 <script language="javascript" type="text/javascript">
-function autoselect(selectedOption, updateCompleted)
-{
-if(selectedOption.value=="No")
-	updateCompleted[0].checked=true;
-else
-	updateCompleted[1].checked=true;
+function autoselect(selectedOption, updateCompleted) {
+	if(selectedOption.value=="No") {
+		updateCompleted[0].checked=true;
+	} else {
+		updateCompleted[1].checked=true;
+	}
 }
 </script>
 
@@ -107,20 +108,22 @@ else
             }
         }
  function otherSelect2(ss, number, f) {
-            var list = document.sleepstudyadd.labtype;
-            var list = document[ss].labtype;
+						var sleeplabwheresched = document.getElementById('sleeplabwheresched'+number);
+						var sleeplabschedhome = document.getElementById('sleeplabschedhome'+number);
+            //var list = document.sleepstudyadd.labtype;
+            var list = document.getElementById('labtype'+number);//document[ss].labtype;
             var chosenItemText = list.value;
             if (chosenItemText == "PSG") {
                 document.getElementById('interpretation'+number+'1').style.visibility = 'hidden';
                 document.getElementById('interpretation'+number+'2').style.visibility = 'hidden';
                 document.getElementById('interpretation'+number+'3').style.visibility = 'hidden';
                 document.getElementById('interpretation'+number+'4').style.visibility = 'hidden';
-                if($('input:radio[name=needed]:checked').val()=="Yes"){
-                f.sleeplabwheresched.style.display = "block";
+                if($('input:radio[name="data['+number+'][needed]"]:checked').val()=="Yes"){
+                sleeplabwheresched.style.display = "block";
                 }else{
-                f.sleeplabwheresched.style.display = "none";
+                sleeplabwheresched.style.display = "none";
                 }
-                f.sleeplabschedhome.style.display = "none";
+                sleeplabschedhome.style.display = "none";
 
             }
             else {
@@ -128,29 +131,36 @@ else
                 document.getElementById('interpretation'+number+'2').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'3').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
-                f.sleeplabwheresched.style.display = "none";
-                if($('input:radio[name=needed]:checked').val()=="Yes"){
-                f.sleeplabschedhome.style.display = "block";
+                sleeplabwheresched.style.display = "none";
+                if($('input:radio[name="data['+number+'][needed]"]:checked').val()=="Yes"){
+                sleeplabschedhome.style.display = "block";
                 }else{
-                f.sleeplabschedhome.style.display = "none";
+                sleeplabschedhome.style.display = "none";
                 }
 
             }
         }
 
 function showWhere(f){
-  if(f.labtype.value == "PSG"){
-		f.sleeplabwheresched.style.display = "block";
-		f.sleeplabschedhome.style.display = "none";
+	var id = f.formid.value;
+	var sleeplabwheresched = document.getElementById('sleeplabwheresched'+id);
+	var sleeplabschedhome = document.getElementById('sleeplabschedhome'+id);
+	var labtype = document.getElementById('labtype'+id);
+  if(labtype.value == "PSG"){
+		sleeplabwheresched.style.display = "block";
+		sleeplabschedhome.style.display = "none";
   }else{
-		f.sleeplabwheresched.style.display = "none";
-		f.sleeplabschedhome.style.display = "block";
+		sleeplabwheresched.style.display = "none";
+		sleeplabschedhome.style.display = "block";
   }
 }
 
 function hideWhere(f){
-  f.sleeplabwheresched.style.display = "none";
-  f.sleeplabschedhome.style.display = "none";
+	var id = f.formid.value;
+	var sleeplabwheresched = document.getElementById('sleeplabwheresched'+id);
+	var sleeplabschedhome = document.getElementById('sleeplabschedhome'+id);
+  sleeplabwheresched.style.display = "none";
+  sleeplabschedhome.style.display = "none";
 }
 
 </script>
@@ -391,7 +401,7 @@ if ($origfilename != '') {
 
                                                 <td>
 
-                                                <select name="labtype" onChange="otherSelect(<?php echo $i; ?>, this.form);">
+                                                <select id="labtype<?= $i ?>" name="labtype" onChange="otherSelect(<?php echo $i; ?>, this.form);">
 
                                                 <option value="HST">HST</option>
 
@@ -406,7 +416,7 @@ if ($origfilename != '') {
 						<tr style="height:30px;">
 						
 						<td>
-					        <input type="text" name="sleeplabschedhome" value="home" disabled="disabled" />	
+					        <input type="text" name="sleeplabschedhome" id="sleeplabschedhome<?= $i; ?>" value="home" disabled="disabled" />	
 						<select name="sleeplabwheresched" id="sleeplabwheresched<?php echo $i; ?>" onclick="Javascript: scroll(0,0);loadPopup('add_patient_to.php?ed=51');" style="display:none;">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
@@ -427,8 +437,8 @@ if ($origfilename != '') {
 						
 						<td>
 						
-						<input type="radio" id="completed<?php echo $i; ?>1" name="completed" value="Yes"><!--<div id="completed<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
-						<input type="radio" id="completed<?php echo $i; ?>2" name="completed" value="No"><!--<div id="completed<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
+						<input type="radio" id="completed<?php echo $i; ?>1" name="completed" value="Yes"><span id="completed<?php echo $i; ?>3">Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
+						<input type="radio" id="completed<?php echo $i; ?>2" name="completed" value="No"><span id="completed<?php echo $i; ?>4">No</span>
 						
 						</td>
 						
@@ -439,8 +449,8 @@ if ($origfilename != '') {
 						
 						<td>
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>1" name="interpolation" value="Yes"><!--<div id="interpretation<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" id="interpretation<?php echo $i; ?>2" name="interpolation" value="No"><!--<div id="interpretation<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
+						<input type="radio" id="interpretation<?php echo $i; ?>1" name="interpolation" value="Yes"><span id="interpretation<?php echo $i; ?>3">Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="interpretation<?php echo $i; ?>2" name="interpolation" value="No"><span id="interpretation<?php echo $i; ?>4">No</span>
 						
 						</td>
 						
@@ -481,6 +491,7 @@ if ($origfilename != '') {
 						<tr style="height:39px;">
 						
 						<td>
+						<input type="hidden" value="<?php echo $i; ?>" name="formid" />
             <input type="hidden" value="<?php echo $_GET['pid'] ?>" name="patientid" />
 						<input type="hidden" name="MAX_FILE_SIZE" value="1000000000" />
             <input name="file" type="file" size="4" />
@@ -537,22 +548,10 @@ if($numrows){
 						<tr style="height:30px;">
 
 						<td>
-            <?php if($sleepstudy['needed'] == "Yes"){
-             ?>
-             <script type="text/javascript">
-             document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='visible';autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);
-             </script>
-             <?php
-            }else{
-            ?>
-             <script type="text/javascript">
-             document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);
-             </script>
-             <?php            
-            } ?>
-						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="data[<?= $i ?>][needed]" value="Yes"<?php if($sleepstudy['needed'] == "Yes"){ echo " checked='checked'";} ?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);" name="data[<?= $i ?>][needed]" value="No"<?php if($sleepstudy['needed'] == "No"){ echo " checked='checked'";} ?>>No
+						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]']);" name="data[<?= $i ?>][needed]" value="Yes"<?php if($sleepstudy['needed'] == "Yes"){ echo " checked='checked'";} ?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+						<input type="radio" onclick="document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]']);" name="data[<?= $i ?>][needed]" value="No"<?php if($sleepstudy['needed'] == "No"){ echo " checked='checked'";} ?>>No
 
 						</td>
 
@@ -575,9 +574,9 @@ if($numrows){
 						
                                                 <tr style="height:30px;">
 
-                                                <td name="data[<?= $i ?>][labtype]">
+                                                <td name="data[<?= $i; ?>][labtype]">
 
-                                                <select name="labtype" id="labtype<?php echo $i; ?>" onChange="otherSelect2('sleepstudy<?php echo $i; ?>',<?php echo $i; ?>, this.form);">
+                                                <select name="data[<?= $i; ?>][labtype]" id="labtype<?php echo $i; ?>" onChange="otherSelect2('sleepstudy<?php echo $i; ?>',<?php echo $i; ?>, this.form);">
 
                                                 <option value="PSG" <?php if($sleepstudy['labtype'] == "PSG"){echo " selected='selected'";} ?>>PSG</option>
 
@@ -616,9 +615,9 @@ if($numrows){
 						<td>
 						<div id="completed">
 						
-						<input type="radio" id="completed<?php echo $i."1"; ?>" name="data[<?= $i ?>][completed]" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?>><!--<div id="completed<?php echo $i."3"; ?>" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="completed<?php echo $i."1"; ?>" name="data[<?= $i ?>][completed]" value="Yes" <?php if($sleepstudy['completed'] == "Yes"){echo " checked='checked'";} ?>><span id="completed<?php echo $i."3"; ?>">Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="completed<?php echo $i."2"; ?>" name="data[<?= $i ?>][completed]" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?>><!--<div id="completed<?php echo $i."4"; ?>" style="float:left;">-->No<!--</div>-->
+						<input type="radio" id="completed<?php echo $i."2"; ?>" name="data[<?= $i ?>][completed]" value="No" <?php if($sleepstudy['completed'] == "No"){echo " checked='checked'";} ?>><span id="completed<?php echo $i."4"; ?>">No</span>
             </div>						
 						</td>
 						
@@ -626,13 +625,17 @@ if($numrows){
 						<?php if($sleepstudy['needed'] == "Yes"){
              ?>
              <script type="text/javascript">
-             document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);
+             	document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';
+							autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i ?>][completed]']);
              </script>
              <?php
             }else{
             ?>
              <script type="text/javascript">
-             document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';document.getElementById('sleeplabschedhome<?php echo $i; ?>').style.display='none';document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.display='none';autoselect(this,document.sleepstudy<?php echo $i; ?>.completed);
+             	document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';
+							document.getElementById('sleeplabschedhome<?php echo $i; ?>').style.display='none';
+							document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.display='none';
+							autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i ?>][completed]']);
              </script>
              <?php            
              }?>
@@ -640,10 +643,9 @@ if($numrows){
 						
 						<td name="interpolation">
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>1" name="data[<?= $i ?>][interpolation]" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?>><!--<div id="interpretation<?php echo $i; ?>3" style="float:left;">-->Yes<!--</div>-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" id="interpretation<?php echo $i; ?>1" name="data[<?= $i ?>][interpolation]" value="Yes" <?php if($sleepstudy['interpolation'] == "Yes"){echo " checked='checked'";} ?>><span id="interpretation<?php echo $i; ?>3">Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<input type="radio" id="interpretation<?php echo $i; ?>2" name="data[<?= $i ?>][interpolation]" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?>><!--<div id="interpretation<?php echo $i; ?>4" style="float:left;">-->No<!--</div>-->
-						
+						<input type="radio" id="interpretation<?php echo $i; ?>2" name="data[<?= $i ?>][interpolation]" value="No"<?php if($sleepstudy['interpolation'] == "No"){echo " checked='checked'";} ?>><span id="interpretation<?php echo $i; ?>4">No</span>						
 						</td>
 						
 						</tr>
@@ -731,6 +733,25 @@ if($numrows){
  <?php
  $di++;
  ?>
+
+<?php if($sleepstudy['needed'] == "Yes"){
+ ?>
+ <script type="text/javascript">
+	document.getElementById('scheddate<?php echo $i; ?>').style.visibility='visible';
+	document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='visible';
+	autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]']);
+ </script>
+ <?php
+}else{
+?>
+ <script type="text/javascript">
+	document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';
+	document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';`
+	autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]');
+ </script>
+ <?php            
+} ?>
+
  <script type="text/javascript">
  <!--var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);-->
  </script>

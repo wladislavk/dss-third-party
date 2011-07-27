@@ -3,6 +3,15 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+if(isset($_GET['delid'])){
+
+$del = "DELETE FROM dental_document_category WHERE categoryid='".mysql_real_escape_string($_GET['delid'])."'";
+mysql_query($del);
+
+
+}
+
+
 if(isset($_POST['add_cat'])){
   $ins = "INSERT INTO dental_document_category (
 	name,
@@ -65,6 +74,7 @@ if(isset($_POST['add_cat'])){
 		<td>
 			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>">Edit</a>
 			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>">View</a>
+			<a href="manage_doc_categories.php?delid=<?= $cat['categoryid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $cat['name']; ?>');">Delete</a>
 		</td>
         </tr>
 

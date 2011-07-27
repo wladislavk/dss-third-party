@@ -2,6 +2,14 @@
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
+if(isset($_GET['delid'])){
+
+$del = "DELETE FROM dental_document WHERE documentid='".mysql_real_escape_string($_GET['delid'])."'";
+mysql_query($del);
+
+
+}
+
 
 if(isset($_POST['add_doc'])){
                         $fname = $_FILES["attachment"]["name"];
@@ -101,6 +109,7 @@ if(isset($_POST['add_doc'])){
                 <td>
                         <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" />Edit</a>
                         <a target="_blank" href="../q_file/<?= $doc['filename']; ?>">View</a>
+			<a href="manage_docs.php?cat=<?= $_GET['cat']; ?>&delid=<?= $doc['documentid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $doc['name']; ?>');">Delete</a>
                 </td>
         </tr>
 

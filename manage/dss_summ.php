@@ -188,7 +188,40 @@ if(isset($_POST['summarybtn']))
 $r_lateral_from	= $_POST['r_lateral_from'];
 $l_lateral_from = $_POST['l_lateral_from'];
 $i_opening_from = $_POST['i_opening_from'];
-	
+$ir_range = $_POST['ir_range'];
+$ir_min = $_POST['ir_min'];
+$ir_max = $_POST['ir_max'];
+
+$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$q = mysql_query($sql);
+$row = mysql_fetch_assoc($q);
+$num = mysql_num_rows($q);
+if($num > 0){
+$ex_ed_sql = " update dental_ex_page5 set 
+		protrusion_from = '".s_for($ir_min)."',
+                protrusion_to = '".s_for($ir_max)."',
+                protrusion_equal = '".s_for($ir_range)."',
+                i_opening_from = '".s_for($i_opening_from)."',
+                l_lateral_from = '".s_for($l_lateral_from)."',
+                r_lateral_from = '".s_for($r_lateral_from)."'
+	where ex_page5id = '".$row['ex_page5id']."'";
+mysql_query($ex_ed_sql);
+}else{
+$ex_ins_sql = " insert dental_ex_page5 set 
+                patientid = '".s_for($_GET['pid'])."',
+                protrusion_from = '".s_for($ir_min)."',
+                protrusion_to = '".s_for($ir_max)."',
+                protrusion_equal = '".s_for($ir_range)."',
+                i_opening_from = '".s_for($i_opening_from)."',
+                l_lateral_from = '".s_for($l_lateral_from)."',
+                r_lateral_from = '".s_for($r_lateral_from)."'
+		userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                mysql_query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+}	
 	
 	if($_POST['ed'] == '')
 	{
@@ -921,6 +954,15 @@ $main_disp .= $m_val."
 }
 
 
+$cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+$cc_q = mysql_query($cc_sql);
+$cc_row = mysql_fetch_assoc($cc_q);
+$reason_seeking_tx = "
+Main reason seeking Tx:
+".$cc_row['chief_complaint_text']."
+";
+
+
 if($complaintid <> '')
 {
 	//$reason_seeking_tx .= $complaintid;
@@ -947,7 +989,7 @@ if($complaintid <> '')
 	}
 	
 	asort($c_seq );
-	$reason_seeking_tx = "
+	$reason_seeking_tx .= "
 Chief Complaints:
 ";  
        foreach($c_seq as $i=>$val)
@@ -1716,8 +1758,13 @@ Sleep Studies:
 		Diagnosis	
 		</td>
 	</tr>
-  <tr>	
+  <tr>
 		<td valign="top" style="background: #F9FFDF;">
+		File
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" style="background: #E4FFCF;">
 		Notes
 		</td>
 	</tr>
@@ -1726,7 +1773,7 @@ Sleep Studies:
   
   
   
-	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; margin-top: -2px; height: 599px;">
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 599px;">
 		    
 		    <iframe height="592" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 

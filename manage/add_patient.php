@@ -98,6 +98,8 @@ if($_POST["patientsub"] == 1)
 		home_phone = '".s_for($_POST["home_phone"])."', 
 		work_phone = '".s_for($_POST["work_phone"])."', 
 		cell_phone = '".s_for($_POST["cell_phone"])."', 
+		best_time = '".s_for($_POST["best_time"])."',
+		best_number = '".s_for($_POST["best_number"])."',
 		email = '".s_for($_POST["email"])."', 
 		patient_notes = '".s_for($_POST["patient_notes"])."', 
 		p_d_party = '".s_for($_POST["p_d_party"])."', 
@@ -164,6 +166,7 @@ if($_POST["patientsub"] == 1)
     docdentist = '".s_for($_POST["docdentist"])."',
     docent = '".s_for($_POST["docent"])."',
     emergency_name = '".s_for($_POST["emergency_name"])."',
+    emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
     emergency_number = '".s_for($_POST["emergency_number"])."',
     docent = '".s_for($_POST["docent"])."',
 		emergency_name = '".s_for($_POST["emergency_name"])."',
@@ -244,6 +247,8 @@ if($_POST["patientsub"] == 1)
 		home_phone = '".s_for($_POST["home_phone"])."', 
 		work_phone = '".s_for($_POST["work_phone"])."', 
 		cell_phone = '".s_for($_POST["cell_phone"])."', 
+                best_time = '".s_for($_POST["best_time"])."',
+                best_number = '".s_for($_POST["best_number"])."',
 		email = '".s_for($_POST["email"])."', 
 		patient_notes = '".s_for($_POST["patient_notes"])."', 
 		p_d_party = '".s_for($_POST["p_d_party"])."', 
@@ -310,6 +315,7 @@ if($_POST["patientsub"] == 1)
 		docmdother = '".s_for($_POST["docmdother"])."', 
 		partner_name = '".s_for($_POST["partner_name"])."', 
 		emergency_name = '".s_for($_POST["emergency_name"])."',
+    emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
 		emergency_number = '".s_for($_POST["emergency_number"])."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
@@ -370,6 +376,8 @@ if($_POST["patientsub"] == 1)
 		$home_phone = $_POST['home_phone'];
 		$work_phone = $_POST['work_phone'];
 		$cell_phone = $_POST['cell_phone'];
+		$best_time = $_POST['best_time'];
+		$best_number = $_POST['best_number'];
 		$email = $_POST['email'];
 		$patient_notes = $_POST['patient_notes'];
 		$p_d_party = $_POST["p_d_party"]; 
@@ -436,6 +444,7 @@ if($_POST["patientsub"] == 1)
 		$inactive = $_POST["inactive"];
 		$partner_name = $_POST["partner_name"];
 		$emergency_name = $_POST["emergency_name"];
+    		$emergency_relationship = $_POST["emergency_relationship"];
 		$emergency_number = $_POST["emergency_number"];
 		$referred_source = $_POST["referred_source"];
 		$referred_by = $_POST["referred_by"];
@@ -464,6 +473,8 @@ if($_POST["patientsub"] == 1)
 		$home_phone = st($themyarray['home_phone']);
 		$work_phone = st($themyarray['work_phone']);
 		$cell_phone = st($themyarray['cell_phone']);
+		$best_time = st($themyarray['best_time']);
+		$best_number = st($themyarray['best_number']);
 		$email = st($themyarray['email']);
 		$patient_notes = st($themyarray['patient_notes']);
 		$p_d_party = st($themyarray["p_d_party"]); 
@@ -530,6 +541,7 @@ if($_POST["patientsub"] == 1)
 		$inactive = st($themyarray["inactive"]);
 		$partner_name = st($themyarray["partner_name"]);
 		$emergency_name = st($themyarray["emergency_name"]);
+                $emergency_relationship = st($themyarray["emergency_relationship"]);
 		$emergency_number = st($themyarray["emergency_number"]);
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
@@ -663,6 +675,48 @@ return false;
                                 <label for="salutation">Salutation</label>
                             </span>
                        </div>   
+                        <div>
+                            <span>
+                                <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
+                                <label for="home_phone">Home Phone
+                                                                                                                                <span id="req_0" class="req">*</span>
+                                                                                                                                </label>
+                            </span>
+                            <span>
+                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
+                                <label for="work_phone">Work Phone</label>
+                            </span>
+                            <span>
+                                <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
+                                <label for="cell_phone">Cell Phone</label>
+                            </span>
+                                                </div>
+			<div>
+			    <span style="width:200px;">
+				<select id="best_time" name="best_time">
+					<option value="">Please Select</option>
+					<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
+                                        <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
+                                        <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+				</select>
+				<label for="best_time">Best time to contact patient</label>
+			    </span>
+			    <span>
+                                <select id="best_number" name="best_number">
+                                        <option value="">Please Select</option>
+                                        <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
+                                        <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
+                                        <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+                                </select>
+                                <label for="best_number">Best number to contact patient</label>
+			    </span>
+			</div>
+                        <div>
+                            <span>
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:325px;" />
+                                <label for="email">Email</label>
+                            </span>
+                        </div>
                     </li>
                 </ul>
             </td>
@@ -774,29 +828,7 @@ return false;
                     	<!--<label class="desc" id="title0" for="Field0">
                             Optional Fields (not used in letters)
                         </label>-->
-                        <div>
-                            <span>
-                                <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
-                                <label for="home_phone">Home Phone
-																<span id="req_0" class="req">*</span>
-																</label>
-                            </span>
-                            <span>
-                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
-                                <label for="work_phone">Work Phone</label>
-                            </span>
-                            <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
-                                <label for="cell_phone">Cell Phone</label>
-                            </span>
-						</div>
-                        <div>
-                            <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:325px;" />
-                                <label for="email">Email</label>
-                            </span>
-                        </div>
-                        <div>
+			  <div>
                             <span>
                             	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:610px;" ><?=$patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
@@ -826,12 +858,16 @@ return false;
                             In case of an emergency
                         </label>
                         <div>
-                            <span class="left">
-                                <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:300px;" />
+                            <span>
+                                <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Name</label>
                             </span>
-                            <span class="right">
-                                <input id="emergency_number" name="emergency_number" type="text" class="field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:300px;" />
+                            <span>
+                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:200px;" />
+                                <label for="home_phone">Relationship</label>
+                            </span>
+                            <span>
+                                <input id="emergency_number" name="emergency_number" type="text" class="field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:200px;" />
                                 <label for="emergency_number">Number</label>
                             </span>
 						</div>
@@ -1047,10 +1083,18 @@ return false;
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
+                        <div>
+                            <span>
+                                <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
+                                <input type="radio" value="No" <?= ($has_s_m_ins == "No")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
+                                <label>Does patient have secondary insurance?</label>
+                            </span>
+                        </div>
+
+                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
                             Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
-                        <div>
+                        <div class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
                             <span>
                                                                 <select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
                                                                         <option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
@@ -1084,13 +1128,6 @@ return false;
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                 	<div>
-			    <span>
-				<input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins == "No")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
-				<label>Does patient have secondary insurance?</label>
-			    </span>
-			</div> 
                         <div class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
                             <span>
                              <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
@@ -1131,7 +1168,7 @@ return false;
                                 <label for="s_m_ins_plan">Plan Name</label>
                             </span>
 <span>
-                                                                 <input id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;" />
+                                                                 <input id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;background:#ccc;" />
                                 <label for="s_m_ins_phone">Phone Number</label>
                             </span>
 						</div>

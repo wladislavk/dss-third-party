@@ -1611,27 +1611,32 @@ echo "Not Set, Please set through patient info.";
   </tr>
   <script type="text/javascript">
 	function checkIncisal(){
-		min = $('#ir_min').val();
-		max = $('#ir_max').val();
+		min = Number($('#ir_min').val());
+		max = Number($('#ir_max').val());
 		range = (max-min);
 		$('#ir_range').val(range);
-		pos = $('#i_pos').val();
-		perc = (pos/range);
-		dist = (min+range)*perc; 
+		pos = Number($('#i_pos').val());
+		dist = Math.abs(pos-min); 
+		perc = (dist/range)
 		$('#initial_device_titration_equal_h').val(Math.round(dist));
 		$('#i_perc').val(Math.round(perc*100));
 		if(min != '' && max != ''){
 			if((range)<0){
 				alert('Minimum must be less than maximum');
 				$('#ir_min').focus();
+				return false;
 			}
-		 	if((range-pos)<0){
-				alert('Position must be less than range');
-				$('#ir_min').focus();
+		 	if(pos<min || pos>max){
+				alert('Incisal Position value must be between minimum and maximum range.');
+				$('#i_pos').focus();
+				return false;
 			}
 		}
-
+	 	return true;
 	}
+	$('document').ready( function(){
+		checkIncisal();
+	})
   </script>
   <tr>
   <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
@@ -1644,7 +1649,7 @@ echo "Not Set, Please set through patient info.";
   <td width="17%" height="4">Initial Device Setting&nbsp;&nbsp;</td>
   <td colspan="2">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Incisal Position <input type="text" onchange="checkIncisal()" name="i_pos" id="i_pos" size="5" value="<?php echo $ggfield; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+Incisal Position <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
 Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Distance from minimum range<input disabled="disabled" type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm  
 (<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo $initialdevsettingp; ?>" />%)
@@ -1657,7 +1662,7 @@ Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_
 <div align="right">
 <input type="hidden" name="summarysub" value="1" />
 <input type="hidden" name="ed" value="<?=$summaryid;?>" />
-    <input type="submit" name="summarybtn" value="Save" />
+    <input type="submit" name="summarybtn" onclick="return checkIncisal();" value="Save" />
 </div>
 </form>  
 

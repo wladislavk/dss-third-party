@@ -618,9 +618,9 @@ return false;
    echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
   }
 ?>
-        <button onclick="Javascript: window.location='./q_image.php?pid=<?= $_GET['pid']; ?>'" class="addButton">
-                View/Edit Patient Photos
-        </button>
+        <a href='./q_image.php?pid=<?= $_GET['pid']; ?>' class="addButton">
+                Add/Update Patient Photo
+        </a>
 
 
 		</td>

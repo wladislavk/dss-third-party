@@ -401,7 +401,6 @@ if($jointid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-<button onclick="setDefaults();return false;">Set all to 0</button>
 	<input type="reset" value="Reset" />
 	<input type="submit" name="ex_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
@@ -432,7 +431,8 @@ if($jointid <> '')
                         <span class="ex_p5_3" style="padding-left:10px;" >
                             3 - Severe
                         </span>
-						
+	<br />	<button onclick="setDefaults();return false;">Set all to 0</button>
+					
                     </div>
                     
                     <div id="topcb">

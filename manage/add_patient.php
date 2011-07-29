@@ -339,7 +339,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			alert("<?=$msg;?>");
-			parent.window.location='manage_patient.php';
+			parent.window.location='add_patient.php?pid=<?= $pid; ?>&addtopat=1';
 		</script>
 		<?
 		die();
@@ -620,6 +620,11 @@ return false;
     
     
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+	<tr>
+		<td colspan="2" align="right">
+			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
+		</td>
+	</tr>
 	<tr>
 		<td colspan="2">
 <?php
@@ -992,7 +997,7 @@ return false;
                                 }
                                 insurance_nums = [];
                             <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
@@ -1140,7 +1145,7 @@ return false;
                                 }
                                 insurance_nums = []; 
                             <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11'";
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
@@ -1752,7 +1757,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
        </td>
        </tr>
         <tr>
-            <td  colspan="2" align="center">
+            <td  colspan="2" align="right">
                 <span class="red">
                     * Required Fields					
                 </span><br />

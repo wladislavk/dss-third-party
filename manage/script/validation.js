@@ -548,6 +548,11 @@ function contactabc(fa)
 			return false;
 		}
 	}
+	if(trim(fa.contacttypeid.value) == ""){
+		alert("Contact type is Required");
+		fa.contacttypeid.focus();
+		return false;
+	}
 	if(trim(fa.contacttypeid.value) == "11" && trim(fa.phone1.value) == "")
 	{
 		alert("Phone number is a required field for Insurance Companies");

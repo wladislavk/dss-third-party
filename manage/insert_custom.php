@@ -5,8 +5,7 @@ include("includes/sescheck.php");
 
         if($_POST["ed"] != "")
         {
-                $ed_sql = "update dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."' where customid='".$_POST["e
-d"]."'";
+                $ed_sql = "update dental_custom set title = '".s_for($_POST["title"])."', description = '".s_for($_POST["description"])."', status = '".s_for($_POST["status"])."' where customid='".$_POST["ed"]."'";
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
                 //echo $ed_sql.mysql_error();

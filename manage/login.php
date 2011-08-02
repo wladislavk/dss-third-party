@@ -1,7 +1,7 @@
 <?
 session_start();
 require_once('admin/includes/config.php');
-
+include_once('admin/includes/password.php');
 $page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
 $page_my = mysql_query($page_sql);
 $page_myarray = mysql_fetch_array($page_my);
@@ -219,7 +219,13 @@ window.location.href = document.DropDown.DDlinks.options[number].value;
 
 if($_POST["loginsub"] == 1)
 {
-	$check_sql = "SELECT * FROM dental_users where username='".$_POST['username']."' and password='".$_POST['password']."' and status=1";
+	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+	$salt_q = mysql_query($salt_sql);
+	$salt_row = mysql_fetch_assoc($salt_q);
+
+	$pass = gen_password($_POST['password'], $salt_row['salt']);
+	
+	$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
 	$check_my = mysql_query($check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 
@@ -324,6 +330,7 @@ if($_POST["loginsub"] == 1)
     </tr>
 </table>
 </FORM>
+<a href="forgot_password.php">Forgot Password</a>
 
 
 <? include 'includes/bottom.htm';?>

@@ -2,6 +2,7 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
+include_once('includes/password.php');
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -21,7 +22,21 @@ if($_POST["usersub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_users set user_access=2,password = '".s_for($_POST["password"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', practice = '".s_for($_POST['practice'])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."' where userid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_users set 
+				user_access=2,
+				npi = '".s_for($_POST["npi"])."',
+				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
+				practice = '".s_for($_POST['practice'])."', 
+				name = '".s_for($_POST["name"])."', 
+				email = '".s_for($_POST["email"])."', 
+				address = '".s_for($_POST["address"])."', 
+				city = '".s_for($_POST["city"])."', 
+				state = '".s_for($_POST["state"])."', 
+				zip = '".s_for($_POST["zip"])."', 
+				phone = '".s_for($_POST["phone"])."', 
+				status = '".s_for($_POST["status"])."' 
+			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -36,7 +51,28 @@ if($_POST["usersub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_users set user_access=2,username = '".s_for($_POST["username"])."',npi = '".s_for($_POST["npi"])."',medicare_npi = '".s_for($_POST["medicare_npi"])."',tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', practice = '".s_for($_POST['practice'])."', password = '".s_for($_POST["password"])."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+
+			$salt = create_salt();
+			$password = gen_password($_POST['password'], $salt);
+
+			$ins_sql = "insert into dental_users set user_access=2,
+				username = '".s_for($_POST["username"])."',
+				npi = '".s_for($_POST["npi"])."',
+				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
+				practice = '".s_for($_POST['practice'])."', 
+				password = '".$password."', 
+				salt = '".$salt."',
+				name = '".s_for($_POST["name"])."', 
+				email = '".s_for($_POST["email"])."', 
+				address = '".s_for($_POST["address"])."', 
+				city = '".s_for($_POST["city"])."', 
+				state = '".s_for($_POST["state"])."', 
+				zip = '".s_for($_POST["zip"])."', 
+				phone = '".s_for($_POST["phone"])."', 
+				status = '".s_for($_POST["status"])."',
+				adddate=now(),
+				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, type, sortby, docid) SELECT transaction_code, description, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
@@ -178,15 +214,26 @@ if($_POST["usersub"] == 1)
                 <span class="red">*</span>				
             </td>
         </tr>
+	<?php if(!isset($_GET['ed'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="text" name="password" value="<?=$password;?>" class="tbox" /> 
+                <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
                 <span class="red">*</span>				
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Re-type Password
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Name

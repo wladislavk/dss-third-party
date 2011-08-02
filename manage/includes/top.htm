@@ -94,7 +94,7 @@ $num_pending_preauth = mysql_num_rows($preauth_res);
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <link href="css/top.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript" src="script/logout_timer.js"></script>
 <?php //<script type="text/javascript" src="js/p7tbmenu.js"></script> ?>
 <script type="text/javascript" src="js/ddlevelsmenu.js">
 
@@ -603,7 +603,7 @@ function popitup(url) {
 </script>
 
 </head>
-<body onload="disableBackspace();hideallblocks();document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';<?php if(isset($_GET['preview']) && $_GET['preview'] == '1'){?>check();<?php } if(isset($_GET['page']) && $_GET['page'] == 'page2'){ echo "document.getElementById('flowsheet_page1').style.display='none';";
+<body onload="set_interval();disableBackspace();hideallblocks();document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';<?php if(isset($_GET['preview']) && $_GET['preview'] == '1'){?>check();<?php } if(isset($_GET['page']) && $_GET['page'] == 'page2'){ echo "document.getElementById('flowsheet_page1').style.display='none';";
  echo "document.getElementById('flowsheet_page2').style.display='block';";
 }?>">
 <?php

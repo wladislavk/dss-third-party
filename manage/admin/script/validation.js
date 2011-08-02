@@ -176,6 +176,22 @@ function userabc(fa)
 		fa.password.focus();
 		return false;
 	}
+	var pass = fa.password.value;
+	if(pass.search(/[A-Za-z]/)<0){
+		alert("Password must contain an alpha character");
+		fa.password.focus();
+		return false;
+	}
+        if(pass.search(/[0-9]/)<0){
+                alert("Password must contain a numeric character");
+                fa.password.focus();
+                return false;
+        }
+	if(trim(fa.password.value) != trim(fa.password2.value)){
+		alert("Password fields must match");
+		fa.password.focus();
+		return false;
+	}
 	if(trim(fa.name.value) == "" )
 	{
 		alert("Name is Required");

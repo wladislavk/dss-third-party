@@ -68,6 +68,12 @@ include_once('admin/includes/password.php');
                         $pass = gen_password($_POST['password1'], $salt);
 			$up_sql = "UPDATE dental_users SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE userid='".mysql_real_escape_string($_POST['userid'])."' AND recover_hash='".mysql_real_escape_string($_POST['hash'])."'";
 			mysql_query($up_sql);
+			?>
+                <script type="text/javascript">
+                        //alert("<?= $check_myarray['userid']; ?>");
+                        window.location.replace('login.php?msg=Password reset');
+                </script>
+                <?
 		}
 	}
 	$check_sql = "SELECT userid FROM dental_users WHERE username='".mysql_real_escape_string($_GET['un'])."' AND recover_hash='".mysql_real_escape_string($_GET['rh'])."' AND recover_time>DATE_SUB(NOW(), INTERVAL 1 HOUR)";
@@ -85,7 +91,7 @@ include_once('admin/includes/password.php');
 		
 		?>
 		<script type="text/javascript">
-			alert("<?= $check_myarray['userid']; ?>");
+			//alert("<?= $check_myarray['userid']; ?>");
 			//window.location.replace('login.php?msg=Email sent');
 		</script>
 		<?
@@ -103,7 +109,7 @@ include_once('admin/includes/password.php');
 ?>
 <br />
 <span class="admin_head">
-	Forgot Password
+	Reset Password
 </span>
 <br />
 <br />
@@ -142,7 +148,7 @@ include_once('admin/includes/password.php');
     <tr bgcolor="#FFFFFF">
         <td colspan="2" align="center">
             <input type="hidden" name="recoversub" value="1">
-            <input type="submit" name="btnsubmit" value="Recover Password" class="addButton">
+            <input type="submit" name="btnsubmit" value="Reset Password" class="addButton">
         </td>
     </tr>
 </table>

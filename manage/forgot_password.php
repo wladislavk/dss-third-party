@@ -65,7 +65,7 @@ include_once('admin/includes/password.php');
 
 if($_POST["emailsub"] == 1)
 {
-	$check_sql = "SELECT userid FROM dental_users WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+	$check_sql = "SELECT userid, username, email FROM dental_users WHERE email='".mysql_real_escape_string($_POST['email'])."'";
 	$check_my = mysql_query($check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 
@@ -77,21 +77,29 @@ if($_POST["emailsub"] == 1)
 		$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
 		$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
 		mysql_query($ins_sql);
-		
+	
+		$headers = 'From: dss@dentalsleepsolutions.com' . "\r\n" .
+		    'Reply-To: dss@dentalsleepsolutions.com' . "\r\n" .
+   		     'X-Mailer: PHP/' . phpversion();
+	
+		$subject = "Dental Sleep Solutions Password Reset";
+		$message = "Please use this link to reset your password.
+
+http://dentalsleepsolutions.com/manage/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
 		//$ins_id = mysql_insert_id();
-		
+		$msg = mail($check_myarray['email'], $subject, $message, $headers);
 		
 		?>
 		<script type="text/javascript">
-			alert("<?= $ins_sql; ?>");
-			//window.location.replace('login.php?msg=Email sent');
+			//alert("<?= $msg; ?>");
+			window.location.replace('login.php?msg=Email sent');
 		</script>
 		<?
 		die();
 	}
 	else
 	{
-		$msg='Email not found';
+		$msg='Email address not found';
 		?>
 		<script type="text/javascript">
 			window.location.replace('forgot_password.php?msg=<?=$msg;?>');

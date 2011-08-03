@@ -644,6 +644,7 @@ display:none;
                     $my=mysql_query($sql) or die(mysql_error());
                     while($myarray = mysql_fetch_array($my))
                                 {
+			$premed = $myarray['premedcheck'];
                      $thename= $myarray['firstname']." ".$myarray['lastname'];
                     }
                     ?>
@@ -746,7 +747,10 @@ display:none;
 </script>
   <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;"><div style="width:98.6%; background:#00457c;margin:0 auto;">
   <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
-    <div id="patient_name_div"><?= $thename; ?></div>
+    <div id="patient_name_div" <?= (strlen($thename)>20)?'style="font-size:14px"':''; ?>><?= $thename; ?>
+		<?php if($premed == 1){
+                    echo "<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PM</font>";
+                    } ?></div>
   <?php } ?>
 
 <div class="suckertreemenu">
@@ -825,7 +829,7 @@ display:none;
 		                {
                      $thename= $myarray['firstname']." ".$myarray['lastname'];
                     if($myarray["premedcheck"] == 1){
-                    echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PREMED PATIENT</font>";
+                    //echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PREMED PATIENT</font>";
                     }
                     }
                     ?>

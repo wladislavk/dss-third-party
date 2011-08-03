@@ -280,7 +280,7 @@ $tongue = st($myarray['tongue']);
 					<label class="desc" id="title0" for="Field0">
 						Additional Paragraph
 						/
-						<button onclick="Javascript: loadPopup('select_custom2.php'); return false;">Custom Text</button>
+						<button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page1frm&tx=additional_paragraph'); return false;">Custom Text</button>
 					</label>
 					
 					<div>

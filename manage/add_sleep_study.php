@@ -68,6 +68,11 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
                         $banner1 .= ".".$extension;
                         $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
 			if($prev_filename != ''){
+                                        $ins_sql = " update dental_q_image set 
+                                        image_file = '".s_for($banner1)."'
+                                        WHERE title='Sleep Study ".$id."';";
+
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
                           unlink("q_file/" . $prev_filename);
 			}
                 }
@@ -101,6 +106,21 @@ WHERE id='".$id."'
   if(!$run_q){
    echo "Could not update sleep lab... Please try again.";
   }else{
+if($prev_filename == ''){
+if($uploaded){
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = 'Sleep Study ".$id."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+}
+}
    $msg = "Successfully updated sleep lab";
   }  
  }elseif(isset($_POST['submitnewsleeplabsumm'])){
@@ -134,6 +154,7 @@ WHERE id='".$id."'
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+
                 }
                 else
                 {
@@ -166,6 +187,20 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
+	if($uploaded){
+		$ins_id = mysql_insert_id();
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = 'Sleep Study ".$ins_id."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+}
    $msg = "Successfully added sleep lab". $uploaded;
   }
  }
@@ -310,7 +345,7 @@ if(f.sleeptesttype.value == "HST"){
 	</tr>
   <tr>
 		<td valign="top" style="background: #F9FFDF;">
-		  <input style="width:170px" type="file" name="ss_file" />
+		  <input style="width:170px" size="8" type="file" name="ss_file" />
 		</td>
 	</tr>
   <tr>	
@@ -482,10 +517,10 @@ $device = mysql_result($device_result, 0);
 				<input type="button" id="view" value="View" title="View" onClick="window.open('q_file/<?= $s_lab['filename']; ?>','windowname1','width=400, height=400');return false;" />
                                                         <input type="button" id="edit" onclick="$('#file_edit_<?= $s_lab['id']; ?>').hide();$('#file_<?= $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
 						</div>
-                                                        <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="4" />
+                                                        <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
 
 			<?php }else{ ?>
-			  <input style="width:170px;" type="file" name="ss_file" /> 
+			  <input style="width:170px;" size="8" type="file" name="ss_file" /> 
 			<?php } ?>	
 		</td>
 	</tr>

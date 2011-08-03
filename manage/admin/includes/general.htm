@@ -1,4 +1,12 @@
 <?php
+
+// Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
+$allowemail = false;
+// safeemail lists exceptions that will be allowed through.  Format: templateid[comma] [comment w/ title]
+$safeemails = array(
+	//5, // Welcome Letter Email
+);
+
 //This Function is Used to format Data to insert Data in DB
 function s_for($str)
 {
@@ -239,12 +247,21 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 			$preferred = mysql_result($result, 0);
 			break;
 	}
+	// Enable/Disable email
+	if ($preferred == "email") {
+		$sql = "SELECT templateid FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+		$result = mysql_query($sql);
+		$templateid = mysql_result($result, 0);
+		if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+			$preferred = "paper";
+		}
+	}
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-		$letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".$preferred."', template='".s_for($template)."' WHERE letterid='".$letterid."';";
+		$letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
 		$letter_result = mysql_query($letter_query);
     return mysql_error();
   } else {
-    $select_letter = "SELECT patientid, stepid, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
+    $select_letter = "SELECT patientid, stepid, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
 			$status = '1';
@@ -268,6 +285,11 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 				$send_method = $preferred;
 			} else {
 				$send_method = $row['send_method'];
+				if ($send_method == "email") {
+					if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+						$send_method = "paper";
+					}
+				}
 			}
 		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['stepid'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status); 	
 		}
@@ -334,6 +356,15 @@ function deliver_letter($letterid, $message) {
 			$userid = $row['userid'];
 			$templateid = $row['templateid'];
 		}
+
+		if ($send_method == "email") {
+			if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+				$send_method = "paper";
+				$sql = "UPDATE dental_letters SET send_method = 'paper' WHERE letterid = '".s_for($letterid)."';";
+				$result = mysql_query($sql);
+			}
+		}
+
 		// Get Doctor's Name and Email
 		$sql = "SELECT name, email FROM dental_users WHERE userid = '".$docid."';";
 		$result = mysql_query($sql);
@@ -364,8 +395,11 @@ function deliver_letter($letterid, $message) {
 			$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename); 
 		}
 		if ($email_success || $fax_success || $send_method == 'paper') {
-			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".$letterid."';";
+			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			$letter_result = mysql_query($letter_query);
+			if (!$letter_result) {
+				return mysql_error();
+			}
 			if ($send_method == 'paper') {
 				return "paper";
       }

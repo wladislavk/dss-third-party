@@ -2,7 +2,7 @@
 #export tag_name=$1
 export platform=xforty-dss
 export release_tag=$platform-`date +%Y-%m-%d-%H-%M`
-export release_dir=releate-`date +%Y%m%d%H%M`
+export release_dir=release-`date +%Y%m%d%H%M`
 git tag $release_tag -m "Release tag"
 echo "Created Tag $release_tag"
 echo "Creating tarball $release_tag.tar.gz..."
@@ -14,6 +14,7 @@ rm -rf $release_tag.temp.tar.gz
 ln -fs /srv/dss/shared/q_file ./$release_dir/manage/q_file
 ln -fs /srv/dss/shared/config/config.php ./$release_dir/manage/admin/includes/config.php
 ln -fs /srv/dss/shared/config/site_config.php ./$release_dir/admin/includes/config.php
+rm ./$release_dir/build.sh
 tar -czf $release_tag.tar.gz ./$release_dir
 rm -r ./$release_dir
 #scp ./$release_dir.tar.gz dss-rh:/srv/dss/tar

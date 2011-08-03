@@ -553,6 +553,7 @@ $message = "There is no started flowsheet for the current patient.";
 		if ($rximgid == 0) $rximgid = null;
 		if ($lomnimgid == 0) $lomnimgid = null;
 		if ($notesimgid == 0) $notesimgid = null;
+		$orig_referred_by = $referred_by;
 }
 
 
@@ -583,6 +584,13 @@ if(isset($_POST['flowsubmit'])){
     $insverbendate1 = s_for($_POST['insverbendate1']);
     $insverbendate2 = s_for($_POST['insverbendate2']);
     $pid = $_GET['pid'];
+
+		// Triger MD Referral Ty Letter
+		if ($orig_referred_by != $referred_by && $referred_by != "") {
+			$letterid = '9';
+			$letter = create_letter($letterid, $pid, '', '', '', $referred_by);
+		}
+
 		
 		// Handle Insurance Images
 		function save_insurance_image($file, $imagetypeid) {
@@ -1097,7 +1105,11 @@ $referrer = $referrer_array['firstname']." ".$referrer_array['middlename']." ".$
 $sql = "SELECT UNIX_TIMESTAMP(delivery_date) as delivery_date FROM dental_letters WHERE templateid = '9' AND md_referral_list = '".$referred_by."' AND patientid = '".s_for($_GET['pid'])."' ORDER BY delivery_date DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_assoc($result)) {
-	$delivery_date = date('m/d/Y', $row['delivery_date']);
+  if (!empty($row['delivery_date'])) {
+		$delivery_date = date('m/d/Y', $row['delivery_date']);
+	} else {
+		$delivery_date = null;
+  }
 }
 ?>
 
@@ -1167,7 +1179,12 @@ background:#edeb46;
 		$medins = false;
 		$vob = false;
     
-		if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $thxletter != '') $initialcontact = true;
+		//if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $delivery_date != '') $initialcontact = true;
+		if ($referred_by == '') {
+			if ($copyreqdate != '') $initialcontact = true;
+    } elseif ($referred_by != '') {
+			if ($delivery_date != '') $initialcontact = true;
+    }
 	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
 		if ($rxreq != '' && $rxrec != '' && $lomnreq != '' && $lomnrec != '' && $clinnotereq != '' && $clinnoterec != '') $medins = true;
@@ -1257,12 +1274,6 @@ Referral Source
 											}
 										}elseif($referred_by == st($referredby_myarray['referredbyid'])){
 											$selected = ' selected="selected" ';
-										}
-
-									?>
-
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <?= $selected; ?>>
-
 										}
 
 									?>

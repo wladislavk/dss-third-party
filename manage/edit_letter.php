@@ -886,7 +886,7 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = $letter[$key];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
-			deliver_letter($letterid, $message);
+			$status = deliver_letter($letterid, $message);
 			$sql = "SELECT send_method, pdf_path FROM dental_letters WHERE letterid = '" . $letterid . "'";
 			$result = mysql_query($sql);
 			$my = mysql_fetch_array($result);

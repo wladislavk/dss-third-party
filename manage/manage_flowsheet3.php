@@ -1263,12 +1263,6 @@ Referral Source
 
 										<option value="<?=st($referredby_myarray['referredbyid'])?>" <?= $selected; ?>>
 
-										}
-
-									?>
-
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <?= $selected; ?>>
-
 											<?php echo $ref_name;?>
 
 										</option>

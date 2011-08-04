@@ -132,14 +132,14 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
     }
   }
   if (isset($md_list) && $md_list != "") {
-    $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.preferredcontact, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
+    $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['mds'][] = $row;
     }
   }
   if (isset($md_referral_list) && $md_referral_list != "") {
-    $sql = "SELECT dental_referredby.referredbyid AS id, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_referredby.company, dental_referredby.add1, dental_referredby.add2, dental_referredby.city, dental_referredby.state, dental_referredby.zip, dental_referredby.email, dental_referredby.preferredcontact, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN(".$md_referral_list.");";
+    $sql = "SELECT dental_referredby.referredbyid AS id, dental_referredby.salutation, dental_referredby.lastname, dental_referredby.middlename, dental_referredby.firstname, dental_referredby.company, dental_referredby.add1, dental_referredby.add2, dental_referredby.city, dental_referredby.state, dental_referredby.zip, dental_referredby.email, dental_referredby.fax, dental_referredby.preferredcontact, dental_contacttype.contacttype FROM dental_referredby LEFT JOIN dental_contacttype ON dental_referredby.contacttypeid=dental_contacttype.contacttypeid WHERE dental_referredby.referredbyid IN(".$md_referral_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['md_referrals'][] = $row;
@@ -151,6 +151,7 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
 
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
+
   $gen_date = date('Y-m-d H:i:s');
   if ($status == null) {
 		$status = '0';
@@ -392,8 +393,8 @@ function deliver_letter($letterid, $message) {
 		// Send Fax	
 		if ($send_method == 'fax') {
 			$subject = "Dental Sleep Solutions";
-			$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename); 
-		}
+			$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
+		} 
 		if ($email_success || $fax_success || $send_method == 'paper') {
 			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			$letter_result = mysql_query($letter_query);
@@ -463,7 +464,25 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	}
 }
 
-function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name, $pdf_filename) {
+function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name, $pdf_filename, $message, $uid) {
+	$sql = "SELECT fax_header, fax_footer FROM dental_users WHERE userid = '".st($uid)."';"; 
+	$result = mysql_query($sql);
+	$my = mysql_fetch_array($result);
+	$fax_header_imgname = $my['fax_header'];
+	$fax_footer_imgname = $my['fax_footer'];
+	if (!empty($fax_header_imgname)) {
+		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $fax_header_imgname;
+	} /*else {
+		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_header.jpg";
+	}*/
+	if (!empty($fax_footer_imgname)) {
+	  $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $fax_footer_imgname;
+	} /*else {
+		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
+	}*/
+  $title = "Dental Sleep Solutions";
+	$filename = "fax_" . $pdf_filename;
+	create_pdf($title, $filename, $message, true, $header_path, $footer_path);
 	$client = new SoapClient("https://faxregistration.com/sfaxws/sfaxapi.asmx?wsdl");
 
 	$fax = preg_replace("/[^0-9]/", "", $fax);
@@ -479,9 +498,9 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	$sRecipientEmail = $email;
 	$sSubject = $subject;
 	$sDocType = "PDF"; // <--Important: tells Sfax how to process the document.
-	$sDocName = $pdf_filename;
+	$sDocName = $filename;
 	$sImage = "";
-	$sTrackingKey = $pdf_filename;
+	$sTrackingKey = $filename;
 	$sDocMerge = "false";
 	$sNotes = "";
 	$sSenderName = $sender_name;
@@ -491,7 +510,7 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	$sCoverSheet = "Default";
 
 	//convert c:\test.doc to Base64 string
-	$filename = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $pdf_filename;
+	$filename = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
 	$handle = fopen($filename, "rb");
 	$contents = fread($handle, filesize($filename));
 	fclose($handle);
@@ -531,31 +550,59 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	}
 }
 
-function create_pdf($title, $filename, $html) {
-	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
-	require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
-	// Extend the TCPDF class to create custom Header and Footer
-	class MYPDF extends TCPDF {
+// Extend the TCPDF class to create custom Header and Footer
+class MYPDF extends TCPDF {
 
-			//Page header
-			public function Header() {
-					// Logo
-					$image_file = K_PATH_IMAGES.'dss_print_header.jpg';
+		//Page header
+		public function Header() {
+				// Logo
+				$image_file = K_PATH_IMAGES.'dss_print_header.jpg';
 					//$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
 			}
 
 			// Page footer
 			public function Footer() {
-					// Position at 26 mm from bottom
-					$this->SetY(-26);
-					$image_file = K_PATH_IMAGES.'dss_print_footer.jpg';
-					//$this->Image($image_file, 0, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);					
-			}
-	}
-	
+				// Position at 26 mm from bottom
+				$this->SetY(-26);
+				$image_file = K_PATH_IMAGES.'dss_print_footer.jpg';
+				//$this->Image($image_file, 0, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);					
+		}
+}
+
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer) {	
 	// create new PDF document
-	$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+  if ($fax) {
+		global $pdf_header, $pdf_footer;
+		$pdf_header = $header;
+		$pdf_footer = $footer;
+		// Extend the TCPDF class to create custom Header and Footer
+		class FAXPDF extends TCPDF {
+				//Page header
+				public function Header() {
+						// Logo
+						global $pdf_header;
+						if ($pdf_header) {
+							$this->Image($pdf_header, 24, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+						}
+					}
+
+					// Page footer
+					public function Footer() {
+						// Position at 26 mm from bottom
+						$this->SetY(-26);
+						global $pdf_footer;
+						if ($pdf_footer) {
+							$this->Image($pdf_footer, 24, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
+						}
+				}
+		}
+		$pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+  } else {
+		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+	}
 
 	// set document information
 	$pdf->SetCreator(PDF_CREATOR);

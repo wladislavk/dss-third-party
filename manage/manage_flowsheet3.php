@@ -382,7 +382,7 @@ function trigger_letter5($pid, $stepid) {
 function trigger_letter6($pid, $stepid) {
 	$letterid = '6';
 	$topatient = '1';
-	$letter = create_letter($letterid, $pid, $stepid, $topatient, '', '', '', '', 'mail');
+	$letter = create_letter($letterid, $pid, $stepid, $topatient, '', '', '', '', 'paper');
 	if (!is_numeric($letter)) {
 		print "Can't send letter 6: " . $letter;
 		die();

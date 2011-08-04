@@ -14,7 +14,7 @@ if($_GET['backoffice'] == '1') {
 $letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template FROM dental_letters where letterid = ".$letterid.";";
+$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
 while ($row = mysql_fetch_assoc($letter_result)) {
   $templateid = $row['templateid'];
@@ -25,6 +25,7 @@ while ($row = mysql_fetch_assoc($letter_result)) {
   $mds = explode(",", $md_list);
   $md_referrals = explode(",", $md_referral_list);
 	$altered_template = $row['template'];
+	$method = $row['send_method'];
 }
 
 // Pending and Sent Contacts
@@ -825,9 +826,15 @@ foreach ($letter_contacts as $key => $contact) {
 	  $letter[$key] = str_replace($search, $replace, $template);
  	}
 
-	?>
-	<?php // loop through letters ?>
-	<div align="right">
+	// Print Letter Body		
+
+  ?>
+
+	<div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
+		<div align="left" style="width: 40%; padding: 3px; float: left">
+			Letter <?php print $key+1; ?> of <?php print count($letter_contacts); ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?>
+		</div>
+		<div align="right" style="width:40%; padding: 3px; float: right">
 		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$key?>');return false;" >
 			Edit Letter
 		</button>
@@ -846,7 +853,7 @@ foreach ($letter_contacts as $key => $contact) {
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="send_letter[<?=$key?>]" class="addButton" value="Send Letter" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
-	</div>
+		</div>
 
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
 		<tr>
@@ -864,14 +871,13 @@ foreach ($letter_contacts as $key => $contact) {
 		<input type="submit" name="delete_letter[<?=$key?>]" class="addButton" value="Delete" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
+	</div>
+<br><br>
 
 	<hr width="90%" />
 
 <br><br>
 </form>
-		</td>
-	</tr>
-</table>
 
 <?php
 
@@ -942,7 +948,15 @@ if ($parent) {
 continue;
 
 } // End foreach loop through letters
+?>
+			</div>
+		</td>
+	</tr>
+</table>
 
+<!-- include footer -->
+
+<?php
 
 if($_GET['backoffice'] == '1') {
   include 'admin/includes/bottom.htm';

@@ -183,6 +183,25 @@ foreach ($dental_letters as $key => $letter) {
 		// MD Referral: Salutation Lastname, Firstname - Contact Type
 		$dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
 	}
+	// Determine Delivery Method
+	if ($letter['send_method'] == '') {
+		$method = array();
+		foreach($contacts['patient'] as $contact) {
+			$method[] = $contact['preferredcontact'];
+		}
+		foreach($contacts['mds'] as $contact) {
+			$method[] = $contact['preferredcontact'];
+		}
+		foreach($contacts['md_referrals'] as $contact) {
+			$method[] = $contact['preferredcontact'];
+		}
+		$result = array_unique($method);
+		if (count($result) == 1) {
+			$dental_letters[$key]['send_method'] = $result[0];
+		} else {
+			$dental_letters[$key]['send_method'] = 'multiple';
+		}
+	}
   // Determine if letter is older than 7 days
   if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && $status == "pending") {
     $dental_letters[$key]['old'] = true;

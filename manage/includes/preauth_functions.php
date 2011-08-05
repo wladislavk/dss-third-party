@@ -85,7 +85,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-    if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if($rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
        array_push($errors, "Medical insurance dates are not filled out - Flow Sheet");
      }
 

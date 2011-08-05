@@ -1,10 +1,15 @@
 <?
 session_start();
 include('includes/config.php');
-
+include_once('../manage/admin/includes/password.php');
 if($_POST["loginsub"] == 1)
 {
-	$check_sql = "SELECT * FROM admin where username='".$_POST['username']."' and password='".$_POST['password']."'";
+	$salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+        $salt_q = mysql_query($salt_sql);
+        $salt_row = mysql_fetch_assoc($salt_q);	
+
+        $pass = gen_password($_POST['password'], $salt_row['salt']);
+	$check_sql = "SELECT * FROM admin where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
 	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 

@@ -1170,6 +1170,9 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
 #contentMain input, textarea, select{
 background:#cccccc;
 }
+#contentMain input[disabled]{
+background:#eee;
+}
 #contentMain input.active{
   background: #5C8DB8;
 }

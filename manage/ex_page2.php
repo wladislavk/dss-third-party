@@ -96,13 +96,13 @@ if($form_myarray['formid'] == '')
 {
 	?>
 	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
+		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
 	</script>
 	<?
-	die();
+	//die();
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 

@@ -1,4 +1,6 @@
 <?php include 'includes/top.htm';
+require_once('includes/patient_info.php');
+if ($patient_info) {
 $patid = $_GET['pid'];
 if(isset($_POST['summarybtn']))
 {
@@ -1843,5 +1845,13 @@ Subjective Findings:
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+
+<?php
+
+} else {  // end pt info check
+	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
+
+?>
 
 <? include 'includes/bottom.htm';?>

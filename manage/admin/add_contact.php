@@ -307,20 +307,20 @@ if($_POST["contactsub"] == 1)
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                        <div>
+                       <!-- <div>
                             <span>
                                 <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?=$greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
                                 <label for="greeting">Greeting</label>
                             </span>
                             
                             
-                    	</div>
+                    	</div>-->
                         
                         <div>
                         	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
+                            	<!--<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
                                 <label for="sincerely">Sincerely</label>
-                            </span>
+                            </span>-->
                             
                             <span>
                             	<? 

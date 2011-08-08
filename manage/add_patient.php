@@ -1,5 +1,6 @@
 <?php
 include "includes/top.htm";
+require_once('includes/dental_patient_summary.php');
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
@@ -541,7 +542,7 @@ if($_POST["patientsub"] == 1)
 		$inactive = st($themyarray["inactive"]);
 		$partner_name = st($themyarray["partner_name"]);
 		$emergency_name = st($themyarray["emergency_name"]);
-                $emergency_relationship = st($themyarray["emergency_relationship"]);
+    $emergency_relationship = st($themyarray["emergency_relationship"]);
 		$emergency_number = st($themyarray["emergency_number"]);
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
@@ -560,6 +561,21 @@ if($_POST["patientsub"] == 1)
 	{
 		$but_text = "Add ";
 	}
+
+	// Check if required information is filled out
+	$complete_info = 0;
+	if (!empty($home_phone) || !empty($work_phone) || !empty($cell_phone)) {
+		$patientphone = true;
+	}
+  if (!empty($email)) {
+		$patientemail = true;
+	}
+	if (($patientemail || $patientphone) && !empty($add1) && !empty($city) && !empty($state) && !empty($zip) && !empty($dob) && !empty($gender)) {
+		$complete_info = 1;
+	}
+	// Determine Whether Patient Info has been set
+	update_patient_summary($_GET['ed'], 'patient_info', $complete_info);
+
 	?>
 	
 	<br /><br />
@@ -585,11 +601,18 @@ if(p){
   }else{
     i = true;
   }
-  d = validateDate('dob');
+  /*d = validateDate('dob');*/
 }
 if(p){
-  if( d && i && i2){
-    return true
+  if( /*d &&*/ i && i2){
+		var result = true;
+		info = required_info(fa);
+		if (info) {
+			result = true;
+		} else {
+			result = confirm('Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?');
+		}
+    return result;
   }
 //workaround for settimeout being called in conditionals even if not true
 var err = '';

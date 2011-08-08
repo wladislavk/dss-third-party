@@ -537,7 +537,7 @@ function popitup(url) {
 			} else {
 				$('.json_patient').remove();
 				for (i in data) {
-					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid);
+					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
 					template_list(newLi, data[i])
 						.appendTo('#patient_list')
 						.fadeIn();
@@ -578,7 +578,12 @@ function popitup(url) {
 		$('#patient_list li').removeClass('list_hover');
 		$('#patient_list li').eq(menuitem).addClass('list_hover');
 		var pid = $('#patient_list li').eq(menuitem).data("patientid");
-		window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
+		var patient_info = $('#patient_list li').eq(menuitem).data("patient_info");
+		if (patient_info == 1) {
+			window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
+		} else {
+			window.selectedUrl = "/manage/add_patient.php?ed=" + pid;
+		}
 	}
 	function template_list(li, patient) {
 		li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename);
@@ -589,15 +594,27 @@ function popitup(url) {
 		if (patient.premedcheck == "1") {
 			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
 		}
-		row.find('.patient_name').html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + pm);
-		row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
-		row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
-		row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
-		row.find('.last_treatment').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_treatment + "</a>");
-		row.find('.appliance').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\">" + patient.device + "</a>");
-		row.find('.appliance_since').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.delivery_date + "</a>");
-		row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
-		row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
+		if (patient.patient_info == 1) {
+			row.find('.patient_name').html("<a href=\"add_patient.php?ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
+			row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
+			row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
+			row.find('.last_treatment').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_treatment + "</a>");
+			row.find('.appliance').html("<a href=\"dss_summ.php?pid=" + patient.patientid + "\">" + patient.device + "</a>");
+			row.find('.appliance_since').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.delivery_date + "</a>");
+			row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
+			row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
+		} else {
+			row.find('.patient_name').html("<a href=\"add_patient.php?ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			row.find('.flowsheet').html(patient.fspage1_complete);
+			row.find('.next_visit').html(patient.next_visit);
+			row.find('.last_visit').html(patient.last_visit);
+			row.find('.last_treatment').html(patient.last_treatment);
+			row.find('.appliance').html(patient.device);
+			row.find('.appliance_since').html(patient.delivery_date);
+			row.find('.vob').html(patient.vob);
+			row.find('.ledger').html(patient.ledger)
+		}
 		return row;
 	}
 </script>

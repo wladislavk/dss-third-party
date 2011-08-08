@@ -16,7 +16,7 @@ $names = explode(" ", $partial);
 
 $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS stat, p.premedcheck,  "
   .   " s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment,  "
-  .		" s.delivery_date, s.vob, s.ledger, d.device "
+  .		" s.delivery_date, s.vob, s.ledger, s.patient_info, d.device "
 	.		" FROM dental_patients p"
   .   " LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
   .   " LEFT JOIN dental_device d ON s.appliance = d.deviceid "
@@ -41,6 +41,7 @@ while ($row = mysql_fetch_assoc($result)) {
   $patients[$i]['delivery_date'] = format_date($row['delivery_date'], true);
   $patients[$i]['vob'] = ($row['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$row['vob']]);
   $patients[$i]['ledger'] = ($row['ledger'] == null ? 'N/A' : format_ledger($row['ledger']));
+	$patients[$i]['patient_info'] = $row['patient_info'];
   $patients[$i]['device'] = ($row['device'] == null ? 'N/A' : $row['device']);
   $i++;
 }

@@ -1,6 +1,8 @@
 <?php include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
+require_once('includes/patient_info.php');
+if ($patient_info) {
 ?>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -2664,5 +2666,8 @@ $my = mysql_query($sql) or die(mysql_error());
 $preauth = mysql_fetch_array($my);
 update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 
+} else {  // end pt info check
+	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
 
 include "includes/bottom.htm";?>

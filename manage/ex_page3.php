@@ -1,5 +1,8 @@
 <?php 
 include "includes/top.htm";
+require_once('includes/patient_info.php');
+if ($patient_info) {
+
 ?>
 <style type="text/css">
 .cb_half{ width:200px; float: left; }
@@ -560,4 +563,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+
+<?php
+
+} else {  // end pt info check
+	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
+
+?>
+
 <? include "includes/bottom.htm";?>

@@ -1,5 +1,7 @@
 <?php 
 include "includes/top.htm";
+require_once('includes/patient_info.php');
+if ($patient_info) {
 ?>
 
 <script type="text/javascript">
@@ -643,4 +645,13 @@ if($cpap == '')
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+
+<?php
+
+} else {  // end pt info check
+	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
+
+?>
+
 <? include "includes/bottom.htm";?>

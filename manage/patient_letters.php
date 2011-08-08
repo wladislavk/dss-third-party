@@ -1,4 +1,6 @@
-<?php include 'includes/top.htm'; 
+<?php include 'includes/top.htm';
+require_once('includes/patient_info.php');
+if ($patient_info) { 
 
 function userid_asc($a, $b) {
   return strcmp ($a['userid'], $b['userid']);
@@ -329,5 +331,14 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 </table>
 
 </div>
+
+<?php
+
+} else {  // end pt info check
+	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
+}
+
+?>
+
 
 <?php include 'includes/bottom.htm'; ?>

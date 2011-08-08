@@ -305,6 +305,8 @@ function patientabc(fa)
 		fa.salutation.focus();
 		return false;
 	}*/
+
+  /* 
 	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
@@ -334,25 +336,32 @@ function patientabc(fa)
 		alert("Birthday is Required");
 		fa.dob.focus();
 		return false;
-	}
-	if(! is_date(trim(fa.dob.value)))
+	}*/
+	if(trim(fa.dob.value) != "" && ! is_date(trim(fa.dob.value)))
 	{
 		alert("Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format");
 		fa.dob.focus();
 		return false;
-	}
+	}/*
 	if(trim(fa.gender.value) == "" )
 	{
 		alert("Gender is Required");
 		fa.gender.focus();
 		return false;
+	}*/
+	if( trim(fa.home_phone.value) == "" && trim(fa.work_phone.value) == "" && trim(fa.cell_phone.value) == "" && trim(fa.email.value) == "" )
+	{
+		alert("Either a Phone Number or Email Address are required");
+		fa.home_phone.focus();
+		return false;
 	}
-	if(trim(fa.home_phone.value) == "" )
+
+	/*if(trim(fa.home_phone.value) == "" )
 	{
 		alert("Home Phone Number is Required");
 		fa.home_phone.focus();
 		return false;
-	}
+	}*/
 	if(trim(fa.preferredcontact.value) == "email" && fa.email.value == "")
 	{
 		alert("Email is Required if Preferred Contact Method is Email");
@@ -372,7 +381,7 @@ function patientabc(fa)
 		return false;
 	}*/
 	
-	if(trim(fa.email.value) != "" )
+	/*if(trim(fa.email.value) != "" )
 	{
 		if(! is_email(trim(fa.email.value)))
 		{
@@ -380,7 +389,7 @@ function patientabc(fa)
 			fa.email.focus();
 			return false;
 		}
-	}
+	}*/
 	if(fa.p_m_dss_file[0].checked)
 	{
 		if(trim(fa.p_m_partyfname.value) == "") {
@@ -484,6 +493,19 @@ function patientabc(fa)
 		}
 	}	
         return true;
+}
+
+function required_info(fa) {
+	if (trim(fa.home_phone.value) != "" || trim(fa.work_phone.value) != "" || trim(fa.cell_phone.value) != "") {
+		var patientphone = true;
+	}
+  if (fa.email.value != "") {
+		var patientemail = true;
+	}
+	if ((patientemail || patientphone) && trim(fa.add1.value) != "" && trim(fa.city.value) != "" && trim(fa.state.value) != "" && trim(fa.zip.value) != "" && trim(fa.dob.value) != "" && trim(fa.gender.value) != "") {
+		return true;
+	}
+	return false;
 }
 
 function contactabc(fa)
@@ -593,6 +615,7 @@ function referredbyabc(fa)
 		fa.middlename.focus();
 		return false;
 	}*/
+  /*
 	if(trim(fa.add1.value) == "" )
 	{
 		alert("Address1 is Required");
@@ -616,7 +639,7 @@ function referredbyabc(fa)
 		alert("Zip is Required");
 		fa.zip.focus();
 		return false;
-	}
+	}*/
 	if(trim(fa.email.value) != "" )
 	{
 		if(! is_email(trim(fa.email.value)))
@@ -635,6 +658,13 @@ function referredbyabc(fa)
                 alert("A fax number must be entered if preferred contact method is fax");
                 return false;
         }
+		
+		if (trim(fa.add1.value) == "" && trim(fa.city.value) == "" && trim(fa.state.value) == "" && trim(fa.zip.value) == "") {
+		
+			return confirm('Warning! You have not entered an address for this contact. This contact will NOT receive correspondence from DSS. Are you sure you want to save without an address?');
+		
+		}
+	
 }
 
 function sleeplababc(fa)

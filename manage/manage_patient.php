@@ -35,7 +35,7 @@ if(!isset($_REQUEST['sort'])){
 $sql = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
      . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
-		 . "  s.delivery_date, s.vob, s.ledger, d.device "
+		 . "  s.delivery_date, s.vob, s.ledger, s.patient_info, d.device "
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
@@ -73,7 +73,7 @@ $num_users=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <div style="clear: both">
 <span class="admin_head">
-	Manage Patient
+	Manage Patient <?= $patient_info ?>
 	-
 	<select name="show" onchange="Javascript: window.location ='<?=$_SERVER['PHP_SELF'];?>?sh='+this.value;">
 		<option value="1">Active Patients</option>
@@ -192,38 +192,71 @@ background:#999999;
 		?>
 			<tr class="<?=$tr_class;?> initial_list">
 				<td valign="top">
+					<a href="add_patient.php?ed=<?=$myarray["patientid"];?>">
 					<?=st($myarray["lastname"]);?>,&nbsp;
 										<?=st($myarray["firstname"]); ?>&nbsp;
-                    <?= (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "");
-                    
+                    <?= (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : ""); ?></a>
+                    <?php
                     if($myarray["premedcheck"] == 1){
                     echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM</font>";
                     }
                     ?> 
 				</td>
 				<td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
+					<?php else: ?>
+					<?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?>
+					<?php endif; ?>
         </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['next_visit']); ?></a>
+					<?php else: ?>
+					<?= format_date($myarray['next_visit']); ?>
+					<?php endif; ?>
         </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['last_visit'], true); ?></a>
+					<?php else: ?>
+					<?= format_date($myarray['last_visit'], true); ?>
+					<?php endif; ?>
         </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
           <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?></a>
+					<?php else: ?>
+					<?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?>
+					<?php endif; ?>
         </td>
 				<td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?></a>
+					<?php else: ?>
+					<?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?>
+					<?php endif; ?>
         </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
+					<?php else: ?>
+					<?= format_date($myarray['delivery_date'], true); ?>
+					<?php endif; ?>
 	      </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?></a>
+					<?php else: ?>
+					<?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?>
+					<?php endif; ?>
         </td>
         <td valign="top">
+					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?></a>
+					<?php else: ?>
+					<?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?>
+					<?php endif; ?>
         </td>
 			</tr>
 	<? 	}

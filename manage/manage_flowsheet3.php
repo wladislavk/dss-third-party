@@ -2570,6 +2570,7 @@ var cal12 = new calendar2(document.getElementById('clinnoterec'));
 <? 
 
 // Determine Next Visit
+$date_scheduled = null;
 $sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE date_scheduled != '0000-00-00' AND date_completed = '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
@@ -2578,6 +2579,7 @@ while ($row = mysql_fetch_array($result)) {
 update_patient_summary($_GET['pid'], 'next_visit', $date_scheduled);
 
 // Determine Last Visit
+$date_completed = null;
 $sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
@@ -2586,6 +2588,7 @@ while ($row = mysql_fetch_array($result)) {
 update_patient_summary($_GET['pid'], 'last_visit', $date_completed);
 
 // Determine Last Treatment
+$segmentid = null;
 $sql = "SELECT segmentid FROM dental_flow_pg2_info WHERE date_completed != '0000-00-00' AND patientid = '".s_for($_GET['pid'])."' ORDER BY stepid DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
@@ -2638,6 +2641,7 @@ switch ($segmentid) {
 update_patient_summary($_GET['pid'], 'last_treatment', $treatment);
 
 // Determine Device Delivery Date
+$date_completed = null;
 $sql = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".s_for($_GET['pid'])."' and segmentid = '7' ORDER BY date_completed DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
@@ -2646,6 +2650,7 @@ while ($row = mysql_fetch_array($result)) {
 update_patient_summary($_GET['pid'], 'delivery_date', $date_completed);
 
 // Determine Verification of Benefits
+$preauth = null;
 $sql = "SELECT "
      . "  status "
      . "FROM "

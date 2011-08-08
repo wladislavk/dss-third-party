@@ -199,7 +199,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
 
-    if( $insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if( $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
        return false;
      }
 
@@ -216,12 +216,12 @@ function preauth_errors(){
   if(mysql_num_rows($pa)>0)
     array_push($errors, "Already has verification of benefits");
 
-   $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
+  /* $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing referral"); 
-  }
+  }*/
   $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
@@ -284,7 +284,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-    if($insinforec == '' || /*$rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == '' || /*$clinnotereq == '' ||*/ $clinnoterec == ''){
+    if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == '' || /*$clinnotereq == '' ||*/ $clinnoterec == ''){
        array_push($errors, "Medical insurance dates are not filled out."); 
      }
 

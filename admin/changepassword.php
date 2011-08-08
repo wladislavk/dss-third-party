@@ -1,9 +1,18 @@
 <?php include 'includes/top.htm';?>
 
 <?
+include_once('../manage/admin/includes/password.php');
+
 if($_POST['passsub'] == 1)
 {
-	$chk_sql = "select * from admin where adminid='".s_for($_SESSION['adminuserid'])."' and password='".s_for($_POST['old_pass'])."'";
+
+        $salt_sql = "SELECT salt FROM admin WHERE adminid='".s_for($_SESSION['adminuserid'])."'";
+        $salt_q = mysql_query($salt_sql);
+        $salt_row = mysql_fetch_assoc($salt_q);
+
+        $old_pass = gen_password($_POST['old_pass'], $salt_row['salt']);
+
+	$chk_sql = "select * from admin where adminid='".s_for($_SESSION['adminuserid'])."' and password='".$old_pass."'";
 	$chk_my = mysql_query($chk_sql);
 	
 	if(mysql_num_rows($chk_my) == 0)
@@ -19,7 +28,12 @@ if($_POST['passsub'] == 1)
 	}
 	else
 	{
-		$up_sql = "update admin set password='".s_for($_POST['new_pass'])."' where adminid='".s_for($_SESSION['adminuserid'])."'";
+
+
+		$salt = create_salt();
+		$new_pass = gen_password($_POST['new_pass'], $salt);
+
+		$up_sql = "update admin set password='".$new_pass."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
 		mysql_query($up_sql);
 		
 		$msg="Password Changed Successfully.";

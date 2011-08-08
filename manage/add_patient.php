@@ -635,9 +635,23 @@ return false;
    echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
   }
 ?>
-        <a href='./q_image.php?pid=<?= $_GET['pid']; ?>' class="addButton">
+<?php
+$sql = "SELECT imageid FROM dental_q_image WHERE patientid='".$_GET['pid']."' AND imagetypeid=4";
+$p = mysql_query($sql);
+$num_face = mysql_num_rows($p);
+?>
+<span align="right">
+<?php if($num_face==0){ ?>
+        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" class="addButton">
+                Add Patient Photo
+        </button>
+<?php }else{ ?>
+        <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'; return false;" class="addButton">
                 Add/Update Patient Photo
-        </a>
+        </button>
+
+<?php } ?>
+
 
 
 		</td>
@@ -1088,18 +1102,18 @@ return false;
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                        <div>
+                        <div style="height:40px;display:block;">
                             <span>
+				<label style="display:inline;">Does patient have secondary insurance?</label>
                                 <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins == "No")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
-                                <label>Does patient have secondary insurance?</label>
+                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
                             </span>
                         </div>
 
-                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
+                    	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
+                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                                                                 <select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
                                                                         <option value="" <? if($s_m_relation == '') echo " selected";?>>None</option>
@@ -1133,7 +1147,7 @@ return false;
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
-                        <div class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>>
+                        <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
                              <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
 															<option value="">Select Insurance Company</option>
@@ -1191,7 +1205,7 @@ return false;
         
         
         
-        <tr class="s_m_ins_div" <?= ($has_s_m_ins == "No")?'style="display:none;"':''; ?>> 
+        <tr class="s_m_ins_div" <?= ($has_s_m_ins!== "Yes")?'style="display:none;"':''; ?>> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	

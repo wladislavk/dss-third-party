@@ -294,8 +294,6 @@ if ($origfilename != '') {
 							<?php
 						} else {
 							// copy file to patient images page
-							$copied = copy("q_file/$fullfilename", "q_file/$fullfilename");
-							if ($copied) {
 								$ins_sql = " insert into dental_q_image set 
 									patientid = '".s_for($patientid)."',
 									title = '".s_for($_POST['title'])."',
@@ -312,13 +310,6 @@ if ($origfilename != '') {
 									</script>
 								<?php
 								}
-							} else {
-							?>
-								<script type="text/javascript">
-									alert("The image could not be copied to the patient images page.");
-								</script>           
-							<?php
-							}
 					 ?>
 							 <script type="text/javascript">
 							 alert("It's done! The file has been saved as: " + "<?php echo($fullfilename); ?>");

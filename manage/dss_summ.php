@@ -1,4 +1,7 @@
-<?php include 'includes/top.htm';
+<?php
+if(!isset($_GET['fid'])){ $_GET['fid']=$_GET['pid']; }
+
+include 'includes/top.htm';
 require_once('includes/patient_info.php');
 if ($patient_info) {
 $patid = $_GET['pid'];
@@ -738,11 +741,11 @@ $summaryid = st($myarray['summaryid']);
 $patient_name = st($myarray['patient_name']);
 $patient_dob = st($myarray['patient_dob']);
 $patientphoto = st($myarray['patientphoto']);
-$docpcp = st($myarray['docpcp']);
-$docsmd = st($myarray['docsmd']);
-$docomd1 = st($myarray['docomd1']);
-$docomd2 = st($myarray['docomd2']);
-$docdds = st($myarray['docdds']);
+//$docpcp = st($myarray['docpcp']);
+//$docsmd = st($myarray['docsmd']);
+//$docomd1 = st($myarray['docomd1']);
+//$docomd2 = st($myarray['docomd2']);
+//$docdds = st($myarray['docdds']);
 $osite = st($myarray['osite']);
 $referral_source = st($myarray['referral_source']);
 $reason_seeking_tx = st($myarray['reason_seeking_tx']);
@@ -1174,6 +1177,7 @@ background:#cccccc;
 }
 #contentMain input[disabled]{
 background:#eee;
+color:#000;
 }
 #contentMain input.active{
   background: #5C8DB8;
@@ -1220,7 +1224,7 @@ $num_face = mysql_num_rows($p);
 
  $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
  $pcont_array = mysql_query($pcont_qry);
-
+echo $pcont_qry;
 ?>
 <strong><h3 style="margin-top:-5px;">Medical Caregivers:</h3></strong>
 <div style="margin-left:20px;">

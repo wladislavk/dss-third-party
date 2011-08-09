@@ -273,7 +273,7 @@ if ($origfilename != '') {
 				//$filename = $patientid.'-'.$random.".".$scanext;
 				$scanext = end(explode('.', $origfilename));
 				$fullfilename = $filename . "." . $scanext;
-				$success = uploadImage($_FILES["file"],"sleepstudies/".$fullfilename);
+				$success = uploadImage($_FILES["file"],"q_file/".$fullfilename);
 				//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 					if ($success) {
 					  // Delete previous file if updating, then add reference to filename in database
@@ -282,7 +282,7 @@ if ($origfilename != '') {
 							$prevfile_result = mysql_query($prevfile_qry);
 							$prev_filename = mysql_result($prevfile_result, 0, 0);
 							$prev_scanext = mysql_result($prevfile_result, 0, 1);
-							unlink("sleepstudies/" . $prev_filename . "." . $prev_scanext);
+							unlink("q_file/" . $prev_filename . "." . $prev_scanext);
 						}
 						$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
 						$updateimgquery = "UPDATE `dental_sleepstudy` SET $filequery WHERE `id` = '".$sleepstudyid."' and `patientid` = '".$patientid."';";
@@ -294,7 +294,7 @@ if ($origfilename != '') {
 							<?php
 						} else {
 							// copy file to patient images page
-							$copied = copy("sleepstudies/$fullfilename", "q_file/$fullfilename");
+							$copied = copy("q_file/$fullfilename", "q_file/$fullfilename");
 							if ($copied) {
 								$ins_sql = " insert into dental_q_image set 
 									patientid = '".s_for($patientid)."',
@@ -328,7 +328,7 @@ if ($origfilename != '') {
 					} else {			
 						?>
 						<script type="text/javascript">
-							alert("<?= "sleepstudies/$fullfilename"; ?> File could not be stored to server.");
+							alert("<?= "q_file/$fullfilename"; ?> File could not be stored to server.");
 						</script><?php
 					}
 				}
@@ -703,7 +703,7 @@ if($numrows){
 
 						<?php 
 						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
-							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('q_file/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
 							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/

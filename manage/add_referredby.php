@@ -371,7 +371,7 @@ if($_POST["referredbysub"] == 1)
                 </ul>
             </td>
         </tr>
-        <tr> 
+        <!--<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -394,7 +394,7 @@ if($_POST["referredbysub"] == 1)
                     </li>
 				</ul>
             </td>
-        </tr>
+        </tr>-->
         
          <tr> 
         	<td valign="top" colspan="2" class="frmhead">

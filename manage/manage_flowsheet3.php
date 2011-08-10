@@ -949,6 +949,12 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 							if ($value == "9") { 
 								$letterid[] = trigger_letter17($_GET['pid'], $numsteps);
 							}
+							// Treatment Complete
+							if ($value == "11") { 
+								$letterid[] = trigger_letter19($_GET['pid'], $numsteps);
+							}
+
+
 							$letteridlist = implode(",", $letterid);
 							$select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' ORDER BY stepid DESC;";
 							$select_result = mysql_query($select_query);

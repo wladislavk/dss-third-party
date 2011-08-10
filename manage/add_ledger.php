@@ -404,7 +404,7 @@ parent.window.scroll(0, 0);
 					<option value="0" <?= ($transaction_type=='0')?'selected="selected"':''; ?>>Select Type</option>
 					<option value="1" <?= ($transaction_type=='1')?'selected="selected"':''; ?>>Medical Code</option>
 					<option value="2" <?= ($transaction_type=='2')?'selected="selected"':''; ?>>Patient Payment Code</option>
-					<option value="3" <?= ($transaction_type=='3')?'selected="selected"':''; ?>>Insurance Payment Code</option>
+					<!--<option value="3" <?= ($transaction_type=='3')?'selected="selected"':''; ?>>Insurance Payment Code</option>-->
 					<option value="4" <?= ($transaction_type=='4')?'selected="selected"':''; ?>>Diagnostic Code</option>
 					<option value="6" <?= ($transaction_type=='6')?'selected="selected"':''; ?>>Adjustment Code</option>
  				</select>
@@ -491,7 +491,7 @@ echo "</select>";
                        <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
                    <?php } else { ?>
                      <?php
-                     if ($insinforec == '' || $rxrec == '' 
+                     if ( $rxrec == '' 
                              || $lomnrec == '' ) {
                      ?>
 		                 <input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />

@@ -163,10 +163,11 @@ function centerPopupRef(){
         var windowHeight = document.documentElement.clientHeight;
         var popupHeight = $("#popupRefer").height();
         var popupWidth = $("#popupRefer").width();
+        var topPos = (windowHeight/2-popupHeight/2 + window.pageYOffset) + "px";
         //centering
         $("#popupRefer").css({
                 "position": "absolute",
-                "top": windowHeight/2-popupHeight/2,
+                "top": topPos, 
                 "left": windowWidth/2-popupWidth/2
         });
         //only need force for IE6

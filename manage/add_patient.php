@@ -166,6 +166,7 @@ if($_POST["patientsub"] == 1)
     mark_yes = '".s_for($_POST["mark_yes"])."',
     docdentist = '".s_for($_POST["docdentist"])."',
     docent = '".s_for($_POST["docent"])."',
+    docmdother = '".s_for($_POST["docmdother"])."',
     emergency_name = '".s_for($_POST["emergency_name"])."',
     emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
     emergency_number = '".s_for($_POST["emergency_number"])."',
@@ -589,6 +590,18 @@ if($_POST["patientsub"] == 1)
 <script type="text/javascript">
 
 function validate_add_patient(fa){
+if(document.getElementById('p_m_dss_file_yes').checked || document.getElementById('p_m_dss_file_no').checked){
+  //ok
+}else{
+  alert('Is DSS filing insurance?  Please select Yes or No.');
+  return false;
+}
+
+if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
+  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
+  return false;
+}
+
 p = patientabc(fa);
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){
@@ -984,7 +997,7 @@ $num_face = mysql_num_rows($p);
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div>
                             <span>
@@ -1134,7 +1147,7 @@ $num_face = mysql_num_rows($p);
                         </div>
 
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>

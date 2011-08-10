@@ -6,7 +6,7 @@ if($_POST['selsub'] == 1)
 	?>
 	<script type="text/javascript">
 		parent.document.<?=$_GET['fr'];?>.<?=$_GET['tx'];?>.value = '<?=addslashes(preg_replace('/\r\n|\n\r/',' ', $_POST['description']));?>';
-		parent.disablePopup1();
+		parent.disablePopupRefClean();
 		//alert("Hello");
 		//window.opener.location = '#add_para';
 	</script>

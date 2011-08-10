@@ -65,6 +65,7 @@ if($_POST['sortsub'] == 1)
 	<script type="text/javascript">
 		//alert("<?=$msg;?>");
 		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
+		disablePopupRefClean();
 	</script>
 	<?
 	die();

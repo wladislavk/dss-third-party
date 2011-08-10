@@ -29,7 +29,8 @@ if($_POST['selsub'] == 1)
 		if(old != '<?= $t_text; ?>'){
 			parent.edited = true;
 		}
-		parent.disablePopup1();
+		//parent.disablePopup1();
+		parent.disablePopupRefClean();
 		if("<?= $_GET['tx']; ?>" == "missing"){
 			parent.reloadPerio("<?=$t_text; ?>");
 		}
@@ -130,7 +131,8 @@ $mt_arr = explode(',',$_GET['fval']);
 	function fill_up(fa)
 	{
 		parent.document.q_recipientsfrm.<?=$_GET['tx']?>.value = fa;
-		parent.disablePopup1();
+		//parent.disablePopup1();
+		parent.disablePopupRefClean();
 	}
 </script>
 

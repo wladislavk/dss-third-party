@@ -1178,6 +1178,7 @@ background:#cccccc;
 #contentMain input[disabled]{
 background:#eee;
 color:#000;
+font-weight:bold;
 }
 #contentMain input.active{
   background: #5C8DB8;

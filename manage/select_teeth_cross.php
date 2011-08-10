@@ -192,7 +192,7 @@ include "admin/includes/config.php";
 		
 		fa = fa.replace(/\n/g,', ');
 		parent.document.ex_page4frm.<?=$_GET['tx']?>.value = fa;
-		parent.disablePopup1();
+		parent.disablePopupRefClean();
 	}
 </script>
 

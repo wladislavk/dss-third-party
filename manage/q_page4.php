@@ -258,7 +258,7 @@ $tobacco = st($myarray['tobacco']);
                     Additional Paragraph
                     /
                     <!--<button onclick="Javascript: loadPopup('select_custom1.php'); return false;">Custom Text</button>-->
-		    <button onclick="Javascript: loadPopup('select_custom_all.php?fr=q_page4frm&tx=additional_paragraph'); return false;">Custom Text</button>
+		    <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=q_page4frm&tx=additional_paragraph'); return false;">Custom Text</button>
                     <div>
                         <span>
                             <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
@@ -402,6 +402,12 @@ $tobacco = st($myarray['tobacco']);
 <br />
 <? include("includes/form_bottom.htm");?>
 <br />
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 
 
 <div id="popupContact" style="width:750px;">

@@ -675,18 +675,6 @@ function sleeplababc(fa)
 		fa.company.focus();
 		return false;
 	}
-	if(trim(fa.firstname.value) == "" )
-	{
-		alert("First Name is Required");
-		fa.firstname.focus();
-		return false;
-	}
-	if(trim(fa.lastname.value) == "" )
-	{
-		alert("Last Name is Required");
-		fa.lastname.focus();
-		return false;
-	}
 	/*if(trim(fa.middlename.value) == "" )
 	{
 		alert("Middle Name is Required");

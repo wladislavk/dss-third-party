@@ -17,8 +17,6 @@ $flowresult = mysql_query($flowquery);
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-    $clinnotereq = $flow['clinnotereq'];
-    $clinnoterec = $flow['clinnoterec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -493,8 +491,8 @@ echo "</select>";
                        <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
                    <?php } else { ?>
                      <?php
-                     if ($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == ''
-                             || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == '') {
+                     if ($insinforec == '' || $rxrec == '' 
+                             || $lomnrec == '' ) {
                      ?>
 		                 <input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
                      <?php } else { ?> 

@@ -416,7 +416,7 @@ if($cpap == '')
                     	<span>
                         	The sleep study and the diagnosis made by 
                             <input id="sleep_study_by" name="sleep_study_by" type="text" class="field text addr tbox" value="<?=$sleep_study_by?>" maxlength="255" style="width:200px;" />
-                             <button onclick="Javascript: loadPopup('select_contact_name.php?fr=q_page2frm&tx=sleep_study_by'); return false;">Use Contact List</button>
+                             <button onclick="Javascript: loadPopupRefer('select_contact_name.php?fr=q_page2frm&tx=sleep_study_by'); return false;">Use Contact List</button>
                         </span>
                     </div>
                     
@@ -636,6 +636,12 @@ if($cpap == '')
 <br />
 <? include("includes/form_bottom.htm");?>
 <br />
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 
 
 <div id="popupContact" style="width:750px;">

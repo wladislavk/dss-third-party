@@ -53,6 +53,9 @@ if($_POST["notesub"] == 1)
 		die();
 	}
 }
+$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+$my = mysql_query($sql);
+$total_rec = mysql_num_rows($my);
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -70,6 +73,36 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 ?>
+
+
+<script type="text/javascript">
+        function change_desc(fa)
+        {
+                if(fa != '')
+                {
+                        var title_arr = new Array();
+                        var desc_arr = new Array();
+                        
+                        <? $i=0;
+                        //$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
+                        //$my = mysql_query($sql);
+                        while($myarray = mysql_fetch_array($my))
+                        {?>
+                                title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
+                                desc_arr[<?=$i;?>] = "<?=st(trim( preg_replace( '/\n\r|\r\n/',' ',addslashes($myarray['description']))));?>";
+                        <?
+                                $i++;
+                        }?>
+                        document.getElementById("notes").value = desc_arr[fa];
+                }
+                else
+                {
+                        document.getElementById("notes").value = "";
+                }
+        }
+        
+</script>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -127,11 +160,26 @@ if($pat_myarray['patientid'] == '')
         	<td valign="top" class="frmhead">
 				Progress Note
 				<span class="red">*</span>
+            <select name="title" class="tbox" onChange="change_desc(this.value)">
+                <option value="">Select</option>
+                <?
+                                $j=0;
+                                $my = mysql_query($sql);
+                                while($myarray = mysql_fetch_array($my))
+                                {?>
+                                        <option value="<?=$j;?>">
+                        <?=st($myarray['title']);?>
+                    </option>
+                                <?
+                                        $j++;
+                                }?>
+            </select>
+
             </td>
 		</tr>
 		<tr>
         	<td valign="top" class="frmdata">
-				<textarea name="notes" class="tbox" style="width:100%; height:200px;"><?=$notes;?></textarea>
+				<textarea id="notes" name="notes" class="tbox" style="width:100%; height:200px;"><?=$notes;?></textarea>
             </td>
         </tr>
         

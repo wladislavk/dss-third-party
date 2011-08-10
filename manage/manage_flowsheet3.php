@@ -184,8 +184,6 @@ if(mysql_num_rows($flowresult) <= 0){
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-    $clinnotereq = $flow['clinnotereq'];
-    $clinnoterec = $flow['clinnoterec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -201,7 +199,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
 
-    if( $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+    if( $rxrec == '' || $lomnrec == '' ){
        return false;
      }
 
@@ -270,8 +268,6 @@ if(mysql_num_rows($flowresult) <= 0){
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-    $clinnotereq = $flow['clinnotereq'];
-    $clinnoterec = $flow['clinnoterec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -286,8 +282,8 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-    if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == '' || /*$clinnotereq == '' ||*/ $clinnoterec == ''){
-       array_push($errors, "Medical insurance dates are not filled out."); 
+    if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == ''  /*$clinnotereq == '' || $clinnoterec == ''*/){
+       //array_push($errors, "Medical insurance dates are not filled out."); 
      }
 
 
@@ -536,8 +532,6 @@ $message = "There is no started flowsheet for the current patient.";
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-    $clinnotereq = $flow['clinnotereq'];
-    $clinnoterec = $flow['clinnoterec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -572,8 +566,6 @@ if(isset($_POST['flowsubmit'])){
     $rxrec = s_for($_POST['rxrec']);
     $lomnreq = s_for($_POST['lomnreq']);
     $lomnrec = s_for($_POST['lomnrec']);
-    $clinnotereq = s_for($_POST['clinnotereq']);
-    $clinnoterec = s_for($_POST['clinnoterec']);
     $contact_location = s_for($_POST['contact_location']);
     $questsendmeth = s_for($_POST['questsendmeth']);
     $questsender = s_for($_POST['questsender']);
@@ -653,7 +645,7 @@ if(isset($_POST['flowsubmit'])){
 
     if(mysql_num_rows($flowresult) <= 0){
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
-      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`clinnotereq`,`clinnoterec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$clinnotereq."','".$clinnoterec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$notesimgid."');";
+      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$notesimgid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
@@ -697,7 +689,7 @@ if(isset($_POST['flowsubmit'])){
 
     }else{
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
-      $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`clinnotereq` = '".$clinnotereq."',`clinnoterec` = '".$clinnoterec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$notesimgid."' WHERE `pid` = '".$_GET['pid']."';";
+      $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$notesimgid."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
         //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating flowsheet, please try again!3";
@@ -1148,8 +1140,8 @@ background:#edeb46;
 <form action="#" method="post">
 <div style="margin:0 auto; width:500px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;"><?php echo $message; ?></div>
 <div style="width:200px; float:right;">
-<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';" value="Page 1" />
-<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Page 2" />
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';" value="Pre-Treatment" />
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Appointments" />
 </div>
 </form>
 <div style="clear:both;height:10px;width:100%;"></div>
@@ -1189,7 +1181,7 @@ background:#edeb46;
     }
 	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
-		if ($rxreq != '' && $rxrec != '' && $lomnreq != '' && $lomnrec != '' && $clinnotereq != '' && $clinnoterec != '') $medins = true;
+		if ($rxrec != '' && $lomnrec != '') $medins = true;
 		if ($numvob > '0') $vob = true;
 
 		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
@@ -1947,7 +1939,7 @@ N/A
 Rx.
 </td>
 <td>
-<input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" />
 </td>
 <td>
 <input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : "cal8.popup();"); ?>" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
@@ -1973,7 +1965,7 @@ Rx.
 L.O.M.N.
 </td>
 <td>
-<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" onClick="cal9.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" onClick="cal9.popup();" value="example 11/11/1234" />
 </td>
 <td>
 <input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="<?php print ($lomnimgid == "" ? "alert('You must upload an image before LOMN can be marked as received');" : "cal10.popup();"); ?>" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
@@ -1994,32 +1986,6 @@ L.O.M.N.
 
 </tr>
 
-<tr>
-
-<td>
-Clinical notes
-</td>
-<td>
-<input id="clinnotereq" name="clinnotereq" type="text" class="field text addr tbox" value="<?php echo $clinnotereq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnotereq');" onClick="cal11.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
-</td>
-<td>
-<input id="clinnoterec" name="clinnoterec" type="text" class="field text addr tbox" value="<?php echo $clinnoterec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('clinnoterec');" onClick="<?php print ($notesimgid == "" ? "alert('You must upload an image before Clinical notes can be marked as received');" : "cal12.popup();"); ?>" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
-</td>
-<td>
-						<?php 
-						if ($notesimgid != "") {
-							print "<input type=\"button\" id=\"noteview\" value=\"View\" title=\"View\" onClick=\"window.open(" . ($pdf3 ? "'/manage/q_file/$notesimgname'" : "'imageholder.php?image=$notesimgname'") . ",'windowname1','width=790, height=860,scrollbars=yes');return false;\" />";
-							print "<input type=\"button\" class=\"toggle_but\" id=\"note\" value=\"Edit\" title=\"Edit\" />";
-							print "<input id=\"noteimg\" style=\"display:none;\" name=\"noteimg\" type=\"file\" size=\"4\" />";
-							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
-						} else {
-							print "<input id=\"noteimg\" name=\"noteimg\" type=\"file\" size=\"4\" />";
-						}
-						?>
-
-</td>
-
-</tr>
 
 </table>
 
@@ -2555,8 +2521,8 @@ var cal7 = new calendar2(document.getElementById('rxreq'));
 var cal8 = new calendar2(document.getElementById('rxrec'));
 var cal9 = new calendar2(document.getElementById('lomnreq'));
 var cal10 = new calendar2(document.getElementById('lomnrec'));
-var cal11 = new calendar2(document.getElementById('clinnotereq'));
-var cal12 = new calendar2(document.getElementById('clinnoterec'));
+//var cal11 = new calendar2(document.getElementById('clinnotereq'));
+//var cal12 = new calendar2(document.getElementById('clinnoterec'));
 // var cal13 = new calendar2(document.getElementById('refneeddate1'));
 // var cal14 = new calendar2(document.getElementById('refneeddate2'));
 // var cal15 = new calendar2(document.getElementById('preautho1'));

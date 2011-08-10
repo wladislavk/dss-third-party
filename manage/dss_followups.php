@@ -65,6 +65,10 @@ WHERE followupid='".$id."'
   if(!$insert){
   echo "Could not update follow up, please try again!";
   }
+}elseif(isset($_POST['submitdeletefu'])){
+    $id = $_POST['id'];
+  $delsql = "DELETE FROM dentalsummfu WHERE followupid='".mysql_real_escape_string($id)."'";
+  mysql_query($delsql);
 } 
 ?>
 <html>
@@ -363,6 +367,8 @@ $device = mysql_result($device_result, 0);
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
       <input type="submit" name="submitupdatefu" value="Update Follow Up" id="submitupdatefu" style="width:120px;" />
+      <input type="submit" name="submitdeletefu" onclick="return confirm('Are you sure you want to delete this follow up?');" value="Delete" id="submitdeletefu" style="width:120px;" />
+
 
     </td>
   </tr>
@@ -374,6 +380,148 @@ $device = mysql_result($device_result, 0);
  }
  ?>
 
+<?php
+$q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$q_q = mysql_query($q_sql);
+$q_row = mysql_fetch_assoc($q_q);
+?>
+<form style="float:left;" class="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<input type="hidden" name="id" value="baseline" />
+ <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
+  <tr style="background: #444;height: 30px;">
+        <td colspan="4"><span style="color: #ccc;">Baseline</span></td>
+  </tr>
+
+  <tr>
+    <td style="background: #F9FFDF;">
+      <input type="text" size="12" style="width:75px;" name="exam_date" value="<?php echo ($q_row['exam_date'])?date('m/d/Y', strtotime($q_row['exam_date'])):''; ?>" />
+    </td>
+  </tr>
+
+  <tr>
+            <td style="background: #E4FFCF;">
+           <select name="devadd" style="width:150px;">
+        <?php
+        $device_sql = "select * from dental_device where status=1 order by sortby";
+                                                                $device_my = mysql_query($device_sql);
+
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?php echo ($device==$device_myarray['device'])?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+
+    </td>
+  </tr>
+
+  <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="dsetadd" value="<?php echo $fuquery['dsetadd'];?>" />
+
+    </td>
+  <tr>
+            <td style="background: #E4FFCF;">
+      <select name="nightsperweek" style="width:150px;">
+        <?php
+                                                                for ($i = 0; $i <= 7; $i++)
+                                                                {
+                                                                 print ($i == $fuquery['nightsperweek']) ? "<option selected value=\"$i\">$i</option>" : "<option value=\"$i\">$i</option>";
+
+                                                                 }
+                                                                ?>
+    </select>
+                                </td>
+        </tr>
+
+  <tr>
+            <td style="background: #E4FFCF;">      <input type="text" size="12" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" />
+
+    </td>
+  </tr>
+
+  <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" />
+
+    </td>
+  </tr>
+
+  <tr>
+            <td style="background: #E4FFCF;">
+      <input type="text" size="12" name="ep_sadd" value="<?php echo $q_row['snoring_sound'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="ep_radd" value="<?php echo $fuquery['ep_radd'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #E4FFCF;">
+      <input type="text" size="12" name="energy_level" value="<?php echo $q_row['energy_level'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="sleep_qual" value="<?php echo $q_row['sleep_qual'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #E4FFCF;">
+      <input type="text" size="12" style="width:90px;" name="morning_headaches" value="<?php echo $q_row['morning_headaches'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="wake_night" value="<?php echo $q_row['wake_night'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #E4FFCF;">
+      <input type="text" size="12" style="width:90px;" name="wapnadd" value="<?php echo $fuquery['wapnadd'];?>" />
+
+    </td>
+  </tr>
+
+    <tr>
+            <td style="background: #F9FFDF;">
+      <input type="text" size="12" name="hours_sleepadd" value="<?php echo $fuquery['hours_sleepadd'];?>" />
+
+    </td>
+  </tr>
+
+
+    <tr>
+            <td style="background: #E4FFCF;">
+      <input type="text" size="12" name="appt_notesadd" value="<?php echo $fuquery['appt_notesadd']; ?>" style="width:100px;" />
+
+    </td>
+  </tr>
+    <tr>
+            <td style="background: #E4FFCF;">
+          <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
+      <input type="submit" name="submitupdatefu" value="Update Follow Up" id="submitupdatefu" style="width:120px;" />
+
+    </td>
+  </tr>
+
+                                </table>
+</form>
 
   
 				

@@ -582,7 +582,7 @@ function popitup(url) {
 		if (patient_info == 1) {
 			window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
 		} else {
-			window.selectedUrl = "/manage/add_patient.php?ed=" + pid;
+			window.selectedUrl = "/manage/add_patient.php?pid=" + pid + "&ed=" + pid;
 		}
 	}
 	function template_list(li, patient) {
@@ -595,7 +595,7 @@ function popitup(url) {
 			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
 		}
 		if (patient.patient_info == 1) {
-			row.find('.patient_name').html("<a href=\"add_patient.php?ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
 			row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
 			row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
 			row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
@@ -605,7 +605,7 @@ function popitup(url) {
 			row.find('.vob').html("<a href=\"manage_insurance.php?pid=" + patient.patientid + "\">" + patient.vob + "</a>");
 			row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
 		} else {
-			row.find('.patient_name').html("<a href=\"add_patient.php?ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
 			row.find('.flowsheet').html(patient.fspage1_complete);
 			row.find('.next_visit').html(patient.next_visit);
 			row.find('.last_visit').html(patient.last_visit);

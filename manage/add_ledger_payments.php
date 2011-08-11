@@ -230,11 +230,24 @@ while($p = mysql_fetch_array($p_sql)){
 }
 }
  ?>
+<script type="text/javascript">
 
+function updateType(payer){
+  v = payer.value;
+  if(v==1 || v==0){
+    document.getElementById('payment_type').selectedIndex = 2;
+  }else if(v==2){
+    document.getElementById('payment_type').selectedIndex = 0;
+  }else if(v==3 || v==4){
+    document.getElementById('payment_type').selectedIndex = 4;
+  }
+}
+
+</script>
 <div id="form_div">
 <div id="select_fields" style="margin: 10px;color:#fff;">
 <label>Paid By</label>
-<select id="payer" name="payer" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
+<select id="payer" name="payer" onchange="updateType(this)" style="width:170px;margin: 0pt 10px 0pt 0pt;" >
   <option value="<?= DSS_TRXN_PAYER_PRIMARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PRIMARY]; ?></option>
   <option value="<?= DSS_TRXN_PAYER_SECONDARY; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_SECONDARY]; ?></option>
   <option value="<?= DSS_TRXN_PAYER_PATIENT; ?>"><?= $dss_trxn_payer_labels[DSS_TRXN_PAYER_PATIENT]; ?></option>
@@ -245,7 +258,7 @@ while($p = mysql_fetch_array($p_sql)){
 <select id="payment_type" name="payment_type" style="width:120px;margin: 0pt 10px 0pt 0pt; " >
   <option value="<?= DSS_TRXN_PYMT_CREDIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CREDIT]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_DEBIT; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_DEBIT]; ?></option>
-  <option value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
+  <option selected="selected" value="<?= DSS_TRXN_PYMT_CHECK; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CHECK]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_CASH; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_CASH]; ?></option>
   <option value="<?= DSS_TRXN_PYMT_WRITEOFF; ?>"><?= $dss_trxn_pymt_type_labels[DSS_TRXN_PYMT_WRITEOFF]; ?></option>
 </select>

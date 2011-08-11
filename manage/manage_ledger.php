@@ -178,11 +178,12 @@ $sql = "select
                 dl.paid_amount,
                 dl.status,
                 dl.primary_claim_id,
-		dl.transaction_code,
+		tc.type,
 		''	
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 			AND dl.paid_amount IS NOT NULL
   UNION

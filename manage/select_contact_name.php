@@ -114,7 +114,7 @@ $num_contact=mysql_num_rows($my);
 	function fill_up(fa)
 	{
 		parent.document.<?=$_GET['fr'];?>.<?=$_GET['tx'];?>.value = fa;
-		parent.disablePopup1();
+		parent.disablePopupRefClean();
 	}
 </script>
 

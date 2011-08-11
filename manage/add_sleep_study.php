@@ -217,7 +217,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<select name="sleeptesttype" onchange="updatePlace(this.form);">
+		<select name="sleeptesttype">
       <option value="HST">HST</option>
       <option value="PSG">PSG</option>    
     </select>	
@@ -238,8 +238,7 @@ if(f.sleeptesttype.value == "HST"){
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;">
-                <input type="text" name="home" disabled="disabled" value="Home" />
-		<select style="display:none;" name="place">
+		<select name="place">
 		<?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
@@ -393,7 +392,7 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>	
 		<td valign="top" style="background: #E4FFCF;">
-                <select name="sleeptesttype" onchange="updatePlace(this.form)">
+                <select name="sleeptesttype">
                    <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
                 </select>
@@ -402,8 +401,7 @@ $device = mysql_result($device_result, 0);
 </tr>
   <tr>		
 		<td valign="top" style="background: #F9FFDF;"> 
-                <input type="text" name="home" <?= ($s_lab['sleeptesttype']=="PSG")?'style="display:none;"':''; ?> disabled="disabled" value="Home" />
-                <select <?= ($s_lab['sleeptesttype']!="PSG")?'style="display:none;"':''; ?> name="place">
+                <select name="place">
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);

@@ -282,7 +282,7 @@ $tongue = st($myarray['tongue']);
 					<label class="desc" id="title0" for="Field0">
 						Additional Paragraph
 						/
-						<button onclick="Javascript: loadPopup('select_custom_all.php?fr=ex_page1frm&tx=additional_paragraph'); return false;">Custom Text</button>
+						<button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page1frm&tx=additional_paragraph'); return false;">Custom Text</button>
 					</label>
 					
 					<div>
@@ -311,6 +311,12 @@ $tongue = st($myarray['tongue']);
 <? include("includes/form_bottom.htm");?>
 <br />
 
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

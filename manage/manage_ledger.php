@@ -122,7 +122,6 @@ $sql = "        select
                 LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
                 LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
                 where i.patientid='".s_for($_GET['pid'])."'
-                      AND i.status != ".DSS_CLAIM_PAID_INSURANCE." AND i.status != ".DSS_CLAIM_PAID_PATIENT." 
         GROUP BY i.insuranceid
 ";
 
@@ -138,14 +137,55 @@ $sql = "select
 		p.name,
  		dl.description,
 		dl.amount,
-		sum(pay.amount) as paid_amount,
+		'' as paid_amount,
 		dl.status,
-		dl.primary_claim_id
+		dl.primary_claim_id,
+		'' as payer,
+		'' as payment_type
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
 			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			and dl.paid_amount IS NULL
 		GROUP BY dl.ledgerid
+  UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                p.name,
+                '',
+                '',
+                dlp.amount,
+                '',
+                dl.ledgerid,
+		dlp.payer,
+		dlp.payment_type
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+  UNION
+	select 
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.primary_claim_id,
+		tc.type,
+		''	
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			AND dl.paid_amount IS NOT NULL
   UNION
    	select 
 		'note',
@@ -157,6 +197,8 @@ $sql = "select
 		'',
 		'',
 	 	n.private,
+		'',
+		'',
 		''	
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
@@ -174,12 +216,15 @@ $sql = "select
 				where i2.insuranceid=i.insuranceid),
 		sum(pay.amount),
 		i.status,
-		i.insuranceid
+		i.insuranceid,
+		'',
+		''
 	from dental_insurance i
 		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
 		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
 		where i.patientid='".s_for($_GET['pid'])."'
 	GROUP BY i.insuranceid
+
 ";
 }
 if(isset($_REQUEST['sort'])){
@@ -398,9 +443,14 @@ return s;
 
 				<td valign="top">
 			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
+                        <?= (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
                 	<?= $myarray["description"]; ?>
 			<?= (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+			<?= (($myarray[0] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
 				</td>
+
 				<td valign="top" align="right">
 					<? if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
@@ -420,13 +470,13 @@ return s;
 					&nbsp;
 				</td>
 				<td valign="top" align="right">
-					<?php if($myarray[0]=='ledger')
+					<?php if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid')
 					 echo number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
 				<td valign="top">
           <?php
-		if($myarray[0]=='ledger'){
+		if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid'){
 	          	echo $dss_trxn_status_labels[$myarray["status"]]; 
 		}elseif($myarray[0]=='claim'){
 			echo $dss_claim_status_labels[$myarray["status"]];
@@ -438,7 +488,7 @@ return s;
           ?>       	
 				</td>
 				<td valign="top">
-                                   <?php if($myarray[0]=='ledger'){ ?>
+                                   <?php if($myarray[0]=='ledger'||$myarray[0] == 'ledger_paid'){ ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>

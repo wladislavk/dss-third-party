@@ -425,12 +425,12 @@ function send_email($to_name, $to_email, $from_name, $from_email, $subject, $mes
 	$email_header_imgname = $my['email_header'];
 	$email_footer_imgname = $my['email_footer'];
 	if (!empty($email_header_imgname)) {
-		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $email_header_imgname;
+		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $email_header_imgname;
 	} else {
 		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_header.jpg";
 	}
 	if (!empty($email_footer_imgname)) {
-	  $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $email_footer_imgname;
+	  $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $email_footer_imgname;
 	} else {
 		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
 	}
@@ -471,12 +471,12 @@ function send_fax($fax, $phone, $email, $name, $company, $subject, $sender_name,
 	$fax_header_imgname = $my['fax_header'];
 	$fax_footer_imgname = $my['fax_footer'];
 	if (!empty($fax_header_imgname)) {
-		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $fax_header_imgname;
+		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $fax_header_imgname;
 	} /*else {
 		$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_header.jpg";
 	}*/
 	if (!empty($fax_footer_imgname)) {
-	  $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/letterhead/" . $fax_footer_imgname;
+	  $footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/q_file/" . $fax_footer_imgname;
 	} /*else {
 		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_email_footer.jpg";
 	}*/

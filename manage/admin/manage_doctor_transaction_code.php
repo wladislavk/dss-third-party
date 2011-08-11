@@ -51,7 +51,7 @@ if($_POST['sortsub'] == 1)
 	?>
 	<script type="text/javascript">
 		//alert("<?=$msg;?>");
-		window.location.replace("<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg;?>");
+		window.location.replace("<?=$_SERVER['PHP_SELF']?>?docid=<?= $_GET['docid']; ?>&msg=<?=$msg;?>");
 	</script>
 	<?
 	die();
@@ -83,7 +83,7 @@ if($_POST['sortsub'] == 1)
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>?docid=<?= $_GET['docid']; ?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">

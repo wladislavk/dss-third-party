@@ -525,7 +525,7 @@ if($jointid <> '')
 								}?>
                                 <tr>
                                 	<td valign="top" colspan="3" align="right">
-                                    	<button onclick="Javascript: loadPopup('custom_palpation.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>'); getElementById('popupContact').style.top = '300px'; return false;">Customize</button>
+                                    	<button onclick="Javascript: loadPopupRefer('custom_palpation.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>'); getElementById('popupContact').style.top = '300px'; return false;">Customize</button>
                                     </td>
                                 </tr>
                             </table>
@@ -545,7 +545,7 @@ if($jointid <> '')
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
                         /
-                        <button onclick="Javascript: loadPopup1('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_pal'); getElementById('popupContact1').style.top = '400px'; return false;">Custom Text</button>
+                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_pal'); getElementById('popupContact1').style.top = '400px'; return false;">Custom Text</button>
                     </label>
                     
                     <div>
@@ -794,7 +794,7 @@ if($jointid <> '')
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
                         /
-                        <button onclick="Javascript: loadPopup1('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_rm'); return false;">Custom Text</button>
+                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_rm'); return false;">Custom Text</button>
                     </label>
                     
                     <div>
@@ -851,6 +851,12 @@ if($jointid <> '')
 <br />
 <? include("includes/form_bottom.htm");?>
 <br />
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 
 
 <div id="popupContact" style="width:750px;">

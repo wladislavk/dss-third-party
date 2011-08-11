@@ -17,8 +17,6 @@ $flowresult = mysql_query($flowquery);
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-    $clinnotereq = $flow['clinnotereq'];
-    $clinnoterec = $flow['clinnoterec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -262,7 +260,7 @@ echo $a['transaction_code'];
 <?= $a['amount']; ?>
 </span>
 <?php
-if($insinforec == '' || $rxreq == '' || $rxrec == '' || $lomnreq == '' || $lomnrec == '' || $clinnotereq == '' || $clinnoterec == ''){
+if($insinforec == '' || $rxrec == '' || $lomnrec == '' ){
 $onc = 'onclick="alert(\'Insurance information needs completed\'); return false;"';
 }else{
 $onc = '';

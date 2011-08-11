@@ -92,18 +92,18 @@ function autoselect(selectedOption, updateCompleted) {
 		}else{
 		f.sleeplabwheresched.style.display = "none";
 		}
-		f.sleeplabschedhome.style.display = "none";
+		//f.sleeplabschedhome.style.display = "none";
             }
             else {
                 document.getElementById('interpretation'+number+'1').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'2').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'3').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
-                f.sleeplabwheresched.style.display = "none";
+                //f.sleeplabwheresched.style.display = "none";
 		if($('input:radio[name=needed]:checked').val()=="Yes"){
-                f.sleeplabschedhome.style.display = "block";
+                f.sleeplabsched.style.display = "block";
 		}else{
-                f.sleeplabschedhome.style.display = "none";
+                f.sleeplabsched.style.display = "none";
 		}
             }
         }
@@ -123,7 +123,7 @@ function autoselect(selectedOption, updateCompleted) {
                 }else{
                 sleeplabwheresched.style.display = "none";
                 }
-                sleeplabschedhome.style.display = "none";
+                //sleeplabschedhome.style.display = "none";
 
             }
             else {
@@ -131,11 +131,11 @@ function autoselect(selectedOption, updateCompleted) {
                 document.getElementById('interpretation'+number+'2').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'3').style.visibility = 'visible';
                 document.getElementById('interpretation'+number+'4').style.visibility = 'visible';
-                sleeplabwheresched.style.display = "none";
+                //sleeplabwheresched.style.display = "none";
                 if($('input:radio[name="data['+number+'][needed]"]:checked').val()=="Yes"){
-                sleeplabschedhome.style.display = "block";
+                sleeplabsched.style.display = "block";
                 }else{
-                sleeplabschedhome.style.display = "none";
+                sleeplabsched.style.display = "none";
                 }
 
             }
@@ -146,13 +146,7 @@ function showWhere(f){
 	var sleeplabwheresched = document.getElementById('sleeplabwheresched'+id);
 	var sleeplabschedhome = document.getElementById('sleeplabschedhome'+id);
 	var labtype = document.getElementById('labtype'+id);
-  if(labtype.value == "PSG"){
 		sleeplabwheresched.style.display = "block";
-		sleeplabschedhome.style.display = "none";
-  }else{
-		sleeplabwheresched.style.display = "none";
-		sleeplabschedhome.style.display = "block";
-  }
 }
 
 function hideWhere(f){
@@ -160,7 +154,6 @@ function hideWhere(f){
 	var sleeplabwheresched = document.getElementById('sleeplabwheresched'+id);
 	var sleeplabschedhome = document.getElementById('sleeplabschedhome'+id);
   sleeplabwheresched.style.display = "none";
-  sleeplabschedhome.style.display = "none";
 }
 
 </script>
@@ -182,6 +175,10 @@ if($_SESSION['userid'] == '')
 }
 
 // Create Filename
+if(isset($_POST['deletestudy'])&&isset($_POST['sleepstudyid'])){
+  $s = "DELETE FROM dental_sleepstudy where id=".mysql_real_escape_string($_POST['sleepstudyid'])." AND patientid=".mysql_real_escape_string($_POST['patientid']); 
+  mysql_query($s);
+}
 if(isset($_POST['updatestudy']) || isset($_POST['submitnewstudy'])) {
   $sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid = '".$_POST['patientid']."';";
 	$result = mysql_query($sql);
@@ -273,7 +270,7 @@ if ($origfilename != '') {
 				//$filename = $patientid.'-'.$random.".".$scanext;
 				$scanext = end(explode('.', $origfilename));
 				$fullfilename = $filename . "." . $scanext;
-				$success = uploadImage($_FILES["file"],"sleepstudies/".$fullfilename);
+				$success = uploadImage($_FILES["file"],"q_file/".$fullfilename);
 				//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 					if ($success) {
 					  // Delete previous file if updating, then add reference to filename in database
@@ -282,7 +279,7 @@ if ($origfilename != '') {
 							$prevfile_result = mysql_query($prevfile_qry);
 							$prev_filename = mysql_result($prevfile_result, 0, 0);
 							$prev_scanext = mysql_result($prevfile_result, 0, 1);
-							unlink("sleepstudies/" . $prev_filename . "." . $prev_scanext);
+							unlink("q_file/" . $prev_filename . "." . $prev_scanext);
 						}
 						$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
 						$updateimgquery = "UPDATE `dental_sleepstudy` SET $filequery WHERE `id` = '".$sleepstudyid."' and `patientid` = '".$patientid."';";
@@ -294,8 +291,6 @@ if ($origfilename != '') {
 							<?php
 						} else {
 							// copy file to patient images page
-							$copied = copy("sleepstudies/$fullfilename", "q_file/$fullfilename");
-							if ($copied) {
 								$ins_sql = " insert into dental_q_image set 
 									patientid = '".s_for($patientid)."',
 									title = '".s_for($_POST['title'])."',
@@ -312,13 +307,6 @@ if ($origfilename != '') {
 									</script>
 								<?php
 								}
-							} else {
-							?>
-								<script type="text/javascript">
-									alert("The image could not be copied to the patient images page.");
-								</script>           
-							<?php
-							}
 					 ?>
 							 <script type="text/javascript">
 							 alert("It's done! The file has been saved as: " + "<?php echo($fullfilename); ?>");
@@ -328,7 +316,7 @@ if ($origfilename != '') {
 					} else {			
 						?>
 						<script type="text/javascript">
-							alert("<?= "sleepstudies/$fullfilename"; ?> File could not be stored to server.");
+							alert("<?= "q_file/$fullfilename"; ?> File could not be stored to server.");
 						</script><?php
 					}
 				}
@@ -416,8 +404,7 @@ if ($origfilename != '') {
 						<tr style="height:30px;">
 						
 						<td>
-					        <input type="text" name="sleeplabschedhome" id="sleeplabschedhome<?= $i; ?>" value="home" disabled="disabled" />	
-						<select name="sleeplabwheresched" id="sleeplabwheresched<?php echo $i; ?>" onclick="Javascript: scroll(0,0);loadPopup('add_patient_to.php?ed=51');" style="display:none;">
+						<select name="sleeplabwheresched" id="sleeplabwheresched<?php echo $i; ?>" onclick="Javascript: scroll(0,0);loadPopup('add_patient_to.php?ed=51');">
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -591,8 +578,7 @@ if($numrows){
 						<tr style="height:30px;">
 						
 						<td name="sleeplabwheresched">
-						<input type="text" id="sleeplabschedhome<?php echo $i; ?>" name="data[<?= $i ?>][sleeplabschedhome]" value="home" <?php if($sleepstudy['labtype'] != "HST"){ echo 'style="display:none;"'; } ?> disabled="disabled">	
-						<select id="sleeplabwheresched<?php echo $i; ?>" name="data[<?= $i ?>][sleeplabwheresched]" <?php if($sleepstudy['labtype'] == "HST"){echo 'style="display:none;"'; } ?>>
+						<select id="sleeplabwheresched<?php echo $i; ?>" name="data[<?= $i ?>][sleeplabwheresched]" >
 						<option value="add new sleeplab">Add new sleeplab</option>
 						<?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
@@ -703,7 +689,7 @@ if($numrows){
 
 						<?php 
 						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
-							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('sleepstudies/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('q_file/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
 							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -721,7 +707,7 @@ if($numrows){
 						<input type="hidden" name="formid" value="<?= $i ?>">
 						<input type="hidden" name="sleepstudyid" value="<?php echo $sleepstudy['id']; ?>">
             <input type="submit" name="updatestudy" value="Update Study" />
-						
+	    <input type="submit" name="deletestudy" value="Delete" onclick="return confirm('Are you sure you want to delete this sleep study?');" />						
 						
 						</td>
 						

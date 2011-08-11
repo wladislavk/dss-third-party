@@ -192,7 +192,7 @@ background:#999999;
 		?>
 			<tr class="<?=$tr_class;?> initial_list">
 				<td valign="top">
-					<a href="add_patient.php?ed=<?=$myarray["patientid"];?>">
+					<a href="add_patient.php?pid=<?=$myarray["patientid"];?>&ed=<?=$myarray["patientid"];?>">
 					<?=st($myarray["lastname"]);?>,&nbsp;
 										<?=st($myarray["firstname"]); ?>&nbsp;
                     <?= (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : ""); ?></a>

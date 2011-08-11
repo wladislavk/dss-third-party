@@ -191,7 +191,6 @@ if($_POST["sleeplabsub"] == 1)
                     <li id="foli8" class="complex">	
                         <label class="desc" id="title0" for="Field0">
                             Name
-                            <span id="req_0" class="req">*</span>
                         </label>
                         <div>
                         	<span>

@@ -18,7 +18,7 @@ $sql="SELECT amount FROM dental_transaction_code WHERE transaction_code = '".$tc
 
 $result = mysql_query($sql);
 $row = mysql_fetch_row($result);
-$r = ($t==2||$t==3)?'':'readonly="readonly"';
+$r = ($t==2||$t==3||$t==6)?'':'readonly="readonly"';
 if(($t!=2&&$t!=3)&&$row[0]==''){
 echo "0";
 }else{

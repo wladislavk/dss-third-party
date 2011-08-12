@@ -86,7 +86,7 @@ $fuquery_array = mysql_query($fuquery_sql);
   </tr>
   
     <tr>
-  	<td style="background: #E4FFCF;"><strong>H/W</strong> - Headaches per Week</td>
+  	<td style="background: #E4FFCF;"><strong>H/W</strong> - How often do you wake up with morning headaches?</td>
   </tr>
   
     <tr>

@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%contact_fullname%<br />
-%practice%
-%addr1%<br />
-%addr2%
-%city%, %state% %zip%<br />
+%referral_fullname%<br />
+%referral_practice%
+%ref_addr1%<br />
+%ref_addr2%
+%ref_city%, %ref_state% %ref_zip%<br />
 </p>
 <table>
   <tr>
@@ -19,11 +19,11 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %contact_lastname%:</p>
+<p>Dear Dr. %referral_lastname%:</p>
 
-<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
+<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
 
-<p>I appreciate your confidence and the referral, but I regret to inform you that %patient_firstname% is not a candidate for dental device therapy.  I have counseled %him/her% to return to your office to discuss other treatment options.</p>
+<p>I very much appreciate your confidence and the referral, but I regret to inform you that %patient_firstname% is not a candidate for dental device therapy.  I have counseled %him/her% to return to your office to discuss other treatment options.</p>
 
 <p>Sincerely,
 <br />
@@ -31,7 +31,7 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  %other_mds%</p>";
+cc:<br />  %other_mds%</p>";
 
 
 ?>

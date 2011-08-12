@@ -27,7 +27,7 @@ $template = "<p>%todays_date%</p>
 
 <p>The good news is that we can do something about these problems!</p>
 
-<p>%franchisee_practice% has joined with Dental Sleep Solutions&reg; to undergo specific training on how to treat snoring and sleep apnea utilizing state of the art, FDA approved dental sleep devices.</p>
+<p>%franchisee_practice% has joined with <b>Dental Sleep Solutions&reg;</b> to undergo specific training on how to treat snoring and sleep apnea utilizing state of the art, FDA approved dental sleep devices.</p>
 
 <p>If you or someone you know is suffering with snoring or sleep apnea and would like more information about how we can help by using dental sleep therapy please call our office and we will be happy to schedule a complimentary consultation.  We also invite you to visit our website at www.dentalsleepsolutions.com for more information.</p>
 

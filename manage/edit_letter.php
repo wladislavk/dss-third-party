@@ -78,17 +78,21 @@ if ($topatient) {
   $contact_info = get_contact_info('', $md_list, $md_referral_list);
 }
 
+$md_referral = get_mdreferralids($_GET['pid']);
+$ref_info = get_contact_info('', '', $md_referral);
+
 $letter_contacts = array();
 foreach ($contact_info['patient'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
 }
-foreach ($contact_info['mds'] as $contact) {
-  $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
-}
 foreach ($contact_info['md_referrals'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
 }
+foreach ($contact_info['mds'] as $contact) {
+  $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
+}
 $numletters = count($letter_contacts);
+
 // Get Date
 
 $todays_date = date('F d, Y');
@@ -417,6 +421,22 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $contact['state'] . "</strong>";
 		$search[] = '%zip%';
 		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
+		$search[] = '%referral_fullname%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		$search[] = '%referral_lastname%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		$search[] = '%referral_practice%';
+		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0] . "</strong><br />" : "<!--%referral_practice%-->";	
+		$search[] = '%ref_addr1%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+		$search[] = '%ref_addr2%';
+		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$search[] = '%ref_city%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+		$search[] = '%ref_state%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+		$search[] = '%ref_zip%';
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
 		$search[] = "%franchisee_fullname%";
 		$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 		$search[] = "%franchisee_lastname%";
@@ -460,7 +480,7 @@ if ($_POST != array()) {
 		$search[] = "%type_study%";
 		$replace[] = "<strong>" . $second_type_study . "</strong>";
 		$search[] = "%ahi%";
-		$replace[] = "<strong>" . $second_ahi . "</strong>";
+		$replace[] = "<strong>" . $first_ahi . "</strong>";
 		$search[] = "%diagnosis%";
 		$replace[] = "<strong>" . $second_diagnosis . "</strong>";
 		$search[] = "%1ststudy_date%";
@@ -578,16 +598,18 @@ if ($_POST != array()) {
 		$other_mds = "";
 		$count = 1;
 		foreach ($md_contacts as $index => $md) {
-			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
-			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
-				$other_mds .= $md_fullname;
-				if ($count < count($md_contacts)) {
-					$other_mds .= ", ";
-				}	
-				$count++;
+			if ($md['type'] != "md_referral") {
+				$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+				if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+					$other_mds .= $md_fullname;
+					if ($count < count($contacts['mds'])) {
+						$other_mds .= ",<br /> ";
+					}	
+					$count++;
+				}
 			}
 		}
-		$other_mds = rtrim($other_mds, ", ");
+		$other_mds = rtrim($other_mds, ",<br /> ");
 		$replace[] = "<strong>" . $other_mds . "</strong>";
 
 		$new_template[$key] = html_entity_decode($new_template[$key]);
@@ -647,6 +669,22 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['state'] . "</strong>";
   $search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
+	$search[] = '%referral_fullname%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	$search[] = '%referral_lastname%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	$search[] = '%referral_practice%';
+	$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0] . "</strong><br />" : "<!--%referral_practice%-->";	
+	$search[] = '%ref_addr1%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+	$search[] = '%ref_addr2%';
+	$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	$search[] = '%ref_city%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+	$search[] = '%ref_state%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+	$search[] = '%ref_zip%';
+	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
 	$search[] = "%franchisee_fullname%";
 	$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 	$search[] = "%franchisee_lastname%";
@@ -808,16 +846,18 @@ foreach ($letter_contacts as $key => $contact) {
 	$other_mds = "";
 	$count = 1;
 	foreach ($md_contacts as $index => $md) {
-		$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
-		if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
-			$other_mds .= $md_fullname;
-			if ($count < count($md_contacts)) {
-				$other_mds .= ", ";
-			}	
-			$count++;
+		if ($md['type'] != "md_referral") {
+			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+				$other_mds .= $md_fullname;
+				if ($count < count($contacts['mds'])) {
+					$other_mds .= ",<br /> ";
+				}	
+				$count++;
+			}
 		}
 	}
-	$other_mds = rtrim($other_mds, ", ");
+	$other_mds = rtrim($other_mds, ",<br /> ");
 	$replace[] = "<strong>" . $other_mds . "</strong>";
 	
  	if ($new_template[$key] != null) {

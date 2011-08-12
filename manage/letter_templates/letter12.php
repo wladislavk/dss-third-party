@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%contact_fullname%<br />
-%practice%
-%addr1%<br />
-%addr2%
-%city%, %state% %zip%</p>
+%referral_fullname%<br />
+%referral_practice%
+%ref_addr1%<br />
+%ref_addr2%
+%ref_city%, %ref_state% %ref_zip%</p>
 <table>
   <tr>
 		<td width=\"50px\">Re:</td>
@@ -18,11 +18,11 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %contact_lastname%:</p>
+<p>Dear Dr. %referral_lastname%:</p>
 
 <p>Thank you for referring %patient_fullname% to our office.</p>
 
-<p>I appreciate your confidence and the referral, but I regret to inform you that our attempts to arrange a consultation with %patient_firstname% have been unsuccessful.  Please be aware that %he/she% may not be treating her sleep disordered breathing.</p>
+<p>I appreciate your confidence and the referral, but I regret to inform you that our attempts to arrange a consultation with %patient_firstname% have been unsuccessful.  Please be aware that %he/she% may not be treating %his/her% sleep disordered breathing.</p>
 
 <p>Again, thank you and please continue to keep us in mind for all of your mild to moderate sleep apneics, as well as those who cannot tolerate CPAP.</p>
 
@@ -32,6 +32,6 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%</p>
 
-<p>cc:  %other_mds%</p>";
+<p>cc:<br />  %other_mds%</p>";
 
 ?>

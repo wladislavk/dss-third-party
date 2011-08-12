@@ -588,13 +588,17 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-
+	  <input type="button" value="Update Baseline" onclick="gotoQuestionnaire();" />
     </td>
   </tr>
 
                                 </table>
 </form>
-
+<script type="text/javascript">
+function gotoQuestionnaire(){
+  parent.window.location = 'q_page1.php?pid=<?= $_GET['pid']; ?>';
+}
+</script>
   
 				
 				</body>

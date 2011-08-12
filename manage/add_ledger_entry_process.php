@@ -11,7 +11,7 @@ $sql="SELECT * FROM dental_transaction_code WHERE type = '".$q."' and docid=".$_
 $result = mysql_query($sql);
 
 
-echo "<select onchange='return getTransCodesAmount(this.value,this.name,".$q.")' id='form[".$pco."][proccode]' name='form[".$pco."][proccode]'><option>Select TX Code</option>";
+echo "<select style=\"width: 150px;\" onchange='return getTransCodesAmount(this.value,this.name,".$q.")' id='form[".$pco."][proccode]' name='form[".$pco."][proccode]'><option>Select TX Code</option>";
 while($row = mysql_fetch_array($result))
   {
   echo "<option value='".$row['transaction_codeid']."'>".$row['transaction_code']." - ".$row['description']."</option>";

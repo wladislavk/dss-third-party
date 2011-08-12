@@ -1167,10 +1167,18 @@ $num_face = mysql_num_rows($p);
                             <span>
 				<label style="display:inline;">Does patient have secondary insurance?</label>
                                 <input type="radio" value="Yes" <?= ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide();" /> No
+                                <input type="radio" value="No" <?= ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); clearInfo();" /> No
                             </span>
                         </div>
 
+		<script type="text/javascript">
+			function clearInfo(){
+				$('.s_m_ins_div input[type="text"]').val('');
+				$('.s_m_ins_div select option[value=]').attr('selected', 'selected');
+				$('.s_m_ins_div input[type="radio"]').removeAttr("checked");
+			}
+
+		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>

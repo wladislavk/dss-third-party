@@ -176,7 +176,28 @@ WHERE followupid='".$id."'
   
     <tr>
   	    <td style="background: #E4FFCF;">
-      <input type="text" size="12" style="width:90px;" name="ep_hadd" />
+      <!--<input type="text" size="12" style="width:90px;" name="ep_hadd" />-->
+<select name="ep_hadd" class="field text addr tbox" style="width:150px;">
+                                            <option value=""></option>
+                                            <option value="Most Mornings" >
+                                                Most Mornings
+                                            </option>
+                                            <option value="Several times per week" >
+                                                Several times per week
+                                            </option>
+                                            <option value="Several times per month" >
+                                                Several times per month
+                                            </option>
+                                            <option value="Occasionally" >
+                                                Occasionally
+                                            </option>
+                                            <option value="Rarely" >
+                                                Rarely
+                                            </option>
+                                            <option value="Never" >
+                                                Never
+                                            </option>
+                                        </select>
       
     </td>
   </tr>
@@ -331,8 +352,30 @@ $device = mysql_result($device_result, 0);
   
     <tr>
   	    <td style="background: #E4FFCF;">
-      <input type="text" size="12" style="width:90px;" name="ep_hadd" value="<?php echo $fuquery['ep_hadd'];?>" />
-      
+      <!--<input type="text" size="12" style="width:90px;" name="ep_hadd" value="<?php echo $fuquery['ep_hadd'];?>" />-->
+             <?php $morning_headaches = $fuquery['ep_hadd']; ?>
+<select name="ep_hadd" class="field text addr tbox" style="width:150px;">
+                                            <option value=""></option>
+                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
+                                                Most Mornings
+                                            </option>
+                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
+                                                Several times per week
+                                            </option>
+                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
+                                                Several times per month
+                                            </option>
+                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
+                                                Occasionally
+                                            </option>
+                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
+                                                Rarely
+                                            </option>
+                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
+                                                Never
+                                            </option>
+                                        </select>
+ 
     </td>
   </tr>
   
@@ -384,6 +427,16 @@ $device = mysql_result($device_result, 0);
 $q_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $q_q = mysql_query($q_sql);
 $q_row = mysql_fetch_assoc($q_q);
+
+$t_sql = "SELECT tot_score FROM dental_thorton WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$t_q = mysql_query($t_sql);
+$t_row = mysql_fetch_assoc($t_q);
+
+$s_sql = "SELECT analysis FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$s_q = mysql_query($s_sql);
+$s_row = mysql_fetch_assoc($s_q);
+$ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
+
 ?>
 <form style="float:left;" class="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <input type="hidden" name="id" value="baseline" />
@@ -437,14 +490,14 @@ $q_row = mysql_fetch_assoc($q_q);
         </tr>
 
   <tr>
-            <td style="background: #E4FFCF;">      <input type="text" size="12" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" />
+            <td style="background: #E4FFCF;">      <input type="text" size="12" name="ep_eadd" value="<?php echo $ep;?>" />
 
     </td>
   </tr>
 
   <tr>
             <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" />
+      <input type="text" size="12" name="tot_score" value="<?php echo $t_row['tot_score'];?>" />
 
     </td>
   </tr>
@@ -479,8 +532,28 @@ $q_row = mysql_fetch_assoc($q_q);
 
     <tr>
             <td style="background: #E4FFCF;">
-      <input type="text" size="12" style="width:90px;" name="morning_headaches" value="<?php echo $q_row['morning_headaches'];?>" />
-
+	<?php $morning_headaches = $q_row['morning_headaches']; ?>
+<select name="morning_headaches" class="field text addr tbox" style="width:150px;">
+                                            <option value=""></option>
+                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
+                                                Most Mornings
+                                            </option>
+                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
+                                                Several times per week
+                                            </option>
+                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
+                                                Several times per month
+                                            </option>
+                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
+                                                Occasionally
+                                            </option>
+                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
+                                                Rarely
+                                            </option>
+                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
+                                                Never
+                                            </option>
+                                        </select>
     </td>
   </tr>
 
@@ -500,7 +573,7 @@ $q_row = mysql_fetch_assoc($q_q);
 
     <tr>
             <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="hours_sleepadd" value="<?php echo $fuquery['hours_sleepadd'];?>" />
+      <input type="text" size="12" name="hours_sleepadd" value="<?php echo $q_row['hours_sleep'];?>" />
 
     </td>
   </tr>
@@ -515,7 +588,6 @@ $q_row = mysql_fetch_assoc($q_q);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-      <input type="submit" name="submitupdatefu" value="Update Follow Up" id="submitupdatefu" style="width:120px;" />
 
     </td>
   </tr>

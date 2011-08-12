@@ -350,7 +350,7 @@ if ($origfilename != '') {
   $calendar_vars[$i]['scheddate_id'] = "sleepsched$i";
   $calendar_vars[$i]['copyreqdate_id'] = "copyreqdate$i" 
 	?>
-  <form name="sleepstudyadd" id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <form name="sleepstudyadd" id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>?pid=<?= $_GET['pid']; ?>">
 	<input id="title<?=$i?>" name="title" type="hidden" value="Sleep Study <?=$i?>" />
 	<table id="sleepstudyscrolltable">
 

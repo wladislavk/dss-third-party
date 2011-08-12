@@ -146,9 +146,9 @@ $sql = "select
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
 			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-			and dl.paid_amount IS NULL
+			and (dl.paid_amount IS NULL || dl.paid_amount = 0)
 		GROUP BY dl.ledgerid
-  UNION
+ UNION
         select 
                 'ledger_payment',
                 dlp.id,
@@ -159,13 +159,14 @@ $sql = "select
                 '',
                 dlp.amount,
                 '',
-                dl.ledgerid,
+                dl.primary_claim_id,
 		dlp.payer,
 		dlp.payment_type
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+			AND primary_claim_id IS NOT NULL
   UNION
 	select 
                 'ledger_paid',
@@ -185,7 +186,7 @@ $sql = "select
                 LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
 		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-			AND dl.paid_amount IS NOT NULL
+			AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
   UNION
    	select 
 		'note',

@@ -188,7 +188,7 @@ if($pat_myarray['patientid'] == '')
 				Editor Initials: <input type="text" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
             </td>
         </tr>
-        tr>
+        <tr>
         	<td valign="top" class="frmdata">
 				Procedure Date: <input type="text" name="procedure_date" onclick="javascript:cal72.popup();" value="<?=$procedure_date ?>" /><a href="javascript:cal72.popup();"><img width="16" height="16" border="0" alt="Click Here to Pick up the date" src="img/cal.gif"></a>
             </td>

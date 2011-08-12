@@ -338,10 +338,9 @@ if($cpap == '')
 			}
 		}
 		
-		if (trim(fa.confirmed_diagnosis.selectedIndex) < 1) {
+		if (document.getElementById('polysomnographic_yes').checked && trim(fa.confirmed_diagnosis.selectedIndex) < 1) {
 		    errorMsg += "- Missing Confirmed Diagnosis\n";
 		}
-		
 		if (errorMsg != '') {
 		    alert(errorMsg);
 		}
@@ -374,7 +373,7 @@ if($cpap == '')
                         <span>
 							Have you had a sleep study
 							
-							<input type="radio" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
+							<input type="radio" id="polysomnographic_yes" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
                             Yes
                             
                             <input type="radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />

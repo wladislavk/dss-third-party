@@ -1187,7 +1187,7 @@ background:#edeb46;
 
 <form action="#" method="post">
 <div style="margin:0 auto; width:500px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;"><?php echo $message; ?></div>
-<div style="width:200px; float:right;">
+<div style="width:300px; float:right;">
 <input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';" value="Pre-Treatment" />
 <input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Appointments" />
 </div>

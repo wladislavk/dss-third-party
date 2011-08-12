@@ -21,7 +21,7 @@ foreach ($patients as $patient) {
 
 // Trigger Letter 18
 // Select patients where Device Delivery is the last step on their flowsheet
-$dd_query = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%7]';";
+/*$dd_query = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%7]';";
 $dd_result = mysql_query($dd_query);
 $patients = array();
 while ($row = mysql_fetch_assoc($dd_result)) {
@@ -39,10 +39,12 @@ foreach ($patients as $patient) {
   while ($row = mysql_fetch_assoc($ddpastdue_result)) {
     $pastdue_patients[] = $row;
   }
-}
+}*/
 //print_r($pastdue_patients); print "<br />";
 // SELECT patients who have CURRENT STEP is [Follow-up / Check] OR [Consult] OR [Device Delivery]
-$casetwo = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%8]' OR CONCAT('[', steparray, ']') LIKE '%2]' OR CONCAT('[', steparray, ']') LIKE '%7]';";
+//$casetwo = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%8]' OR CONCAT('[', steparray, ']') LIKE '%2]' OR CONCAT('[', steparray, ']') LIKE '%7]';";
+// SELECT patients who have CURRENT STEP is [Follow-up / Check]
+$casetwo = "SELECT patientid, steparray FROM dental_flow_pg2 WHERE CONCAT('[', steparray, ']') LIKE '%8]';";
 $casetwo_result = mysql_query($casetwo);
 $casetwo_patients;
 while ($row = mysql_fetch_assoc($casetwo_result)) {
@@ -72,9 +74,9 @@ foreach ($casetwo_patients as $patient) {
 //print_r($current_step); print "<br />";
 //print_r($second_case_patients);
 
-$letter18_patientlist = array_merge($pastdue_patients, $second_case_patients);
+//$letter18_patientlist = array_merge($pastdue_patients, $second_case_patients);
 //print_r($letter18_patientlist);
-$unique_pids = array();
+/*$unique_pids = array();
 foreach ($letter18_patientlist as $patient) {
   if (array_search($patient['patientid'], $unique_pids) === false) {
     $unique_pids[] = $patient['patientid'];
@@ -92,11 +94,11 @@ foreach ($pastdue_patients as $patient) {
   if (!isset($segment_count[$patient['patientid']])) {
     $segment_count[$patient['patientid']] = 1;
   }
-}
+}*/
 //print_r($segment_count);
 //print_r($unique_pids);
 //$sentto = array();
-foreach ($letter18_patientlist as $patient) {
+foreach ($second_case_patients as $patient) {
   $user_id = $patient['docid'];
   $memo = "Patient, " . $patient['salutation'] . " " . $patient['firstname'] . " " . $patient['lastname'] . ", has not been in for a device check appt within 30 days of delivery.  Click <a href=\"/manage/letter18.php?pid=" . $patient['patientid'] . "\">Yes</a> to send them a letter, or click <a href=\"/manage/manage_flowsheet3.php?pid=" . $patient['patientid'] . "&page=page2\">No</a> to view the patient's Flow Sheet.";
   $memo = mysql_real_escape_string($memo); 

@@ -19,6 +19,7 @@ include "includes/top.htm";
 function trigger_letter7($pid) {
   $letterid = '7';
 	$md_list = get_mdcontactids($pid);
+
   $md_referral_list = get_mdreferralids($pid); 
   $contacts['mds'] = explode(",", $md_list);
   foreach ($contacts['mds'] as $contact) {

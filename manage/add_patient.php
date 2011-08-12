@@ -1,6 +1,31 @@
 <?php
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
+
+function trigger_letter20($pid) {
+  $letterid = '20';
+	$pt_referral_list = get_ptreferralids($pid);
+  $letter = create_letter($letterid, $pid, '', '', '', $pt_referral_list);
+  if (!is_numeric($letter)) {
+    print "Can't send letter 20: " . $letter;
+    die();
+  } else {
+    return $letter;
+  }
+}
+
+// Trigger Letter 20 Thankyou
+$pt_referralid = get_ptreferralids($_GET['pid']);
+if ($pt_referralid) {
+	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."';";
+	$result = mysql_query($sql);
+	$numrows = mysql_num_rows($result);
+	if ($numrows == 0) {
+		trigger_letter20($_GET['pid']);
+	}
+}
+
+
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>

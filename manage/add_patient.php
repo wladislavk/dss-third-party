@@ -4,8 +4,9 @@ require_once('includes/dental_patient_summary.php');
 
 function trigger_letter20($pid) {
   $letterid = '20';
+  $md_list = get_mdcontactids($pid);
 	$pt_referral_list = get_ptreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $pt_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 20: " . $letter;
     die();

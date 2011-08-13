@@ -517,8 +517,9 @@ function trigger_letter19($pid, $stepid) {
 
 function trigger_letter20($pid) {
   $letterid = '20';
+  $md_list = get_mdcontactids($pid);
 	$pt_referral_list = get_ptreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', '', $pt_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 20: " . $letter;
     die();
@@ -528,7 +529,7 @@ function trigger_letter20($pid) {
 }
 
 
-function trigger_letter24($pid, $stepid) {
+/*function trigger_letter24($pid, $stepid) {
   $letterid = '24';
   $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $stepid, '', '', $md_referral_list);
@@ -538,14 +539,14 @@ function trigger_letter24($pid, $stepid) {
   } else {
     return $letter;
   }
-}
+}*/
 
-function trigger_letter25($pid, $stepid) {
-  $letterid = '25';
+function trigger_letter24($pid, $stepid) {
+  $letterid = '24';
   $topatient = '1';
   $letter = create_letter($letterid, $pid, $stepid, $topatient);
   if (!is_numeric($letter)) {
-    print "Can't send letter 25: " . $letter;
+    print "Can't send letter 24: " . $letter;
     die();
   } else {
     return $letter;
@@ -739,13 +740,13 @@ if(isset($_POST['flowsubmit'])){
     }
 
     // Trigger Letter 24
-    $referral_query = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_contacttype ON dental_referredby.referredbyid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_referredby.referredbyid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
+    /*$referral_query = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_contacttype ON dental_referredby.referredbyid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_referredby.referredbyid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
     $referral_result = mysql_query($referral_query);
     $numrows = mysql_num_rows($referral_result);
     //print $numrows;
     if ($numrows == 1) {
       trigger_letter24($_GET['pid']);
-    }
+    }*/
 }
 
 if(isset($_POST['add_ref_but'])) {
@@ -813,7 +814,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 		}
 	}
 	if ($datecomp != "" && !$letter && $topstep == "13") { // Termination
-		$letterid[] = trigger_letter25($_GET['pid'], $numsteps);
+		$letterid[] = trigger_letter24($_GET['pid'], $numsteps);
 	}
 
 	//print_r($_POST);

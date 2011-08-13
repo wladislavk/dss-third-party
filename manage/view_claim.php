@@ -76,15 +76,37 @@ $sql = "select
 		p.name,
  		dl.description,
 		dl.amount,
-		sum(pay.amount) as paid_amount,
+		'' as paid_amount,
 		di.status,
-		'' AS filename
+		'' AS filename,
+                '' as payer,
+                '' as payment_type
 	from dental_ledger dl 
 		INNER JOIN dental_insurance di ON dl.primary_claim_id = di.insuranceid
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay ON pay.ledgerid=dl.ledgerid
 			where dl.primary_claim_id=".$_GET['claimid']."  AND dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 		GROUP BY dl.ledgerid 
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                p.name,
+                '',
+                '',
+                dlp.amount,
+                '',
+                dl.primary_claim_id,
+                dlp.payer,
+                dlp.payment_type
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND primary_claim_id IS NOT NULL
+
   UNION
 	SELECT
 		'eob',
@@ -96,7 +118,9 @@ $sql = "select
 		'',
 		'',
 		dif.status,
-		dif.filename
+		dif.filename,
+		'',
+		''
 	from dental_insurance_file dif
 		where dif.claimid=".mysql_real_escape_string($_GET['claimid'])."
 ";
@@ -277,9 +301,10 @@ return s;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
+		<!--
 		<td valign="top" class="col_head" width="20%">
 			Action
-		</td>
+		</td>-->
 	</tr>
 
 	<? if(mysql_num_rows($my) == 0)
@@ -311,6 +336,7 @@ return s;
 			if($myarray[0] == 'eob' && ($myarray['status']!=DSS_CLAIM_DISPUTE && $myarray['status']!=DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_text'; }
                         if($myarray[0] == 'eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){ $tr_class .= ' eob_dispute_text'; }
 
+
 		?>
 			<tr 
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
@@ -335,6 +361,9 @@ return s;
 
 				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                 	<?=st($myarray["description"]);?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+
 				</td>
 				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<? if(st($myarray["amount"]) <> 0) {?>
@@ -366,7 +395,7 @@ return s;
             */
           ?>       	
 				</td>
-				<td valign="top">
+				<!--<td valign="top">
                                    <?php if($myarray[0]=='ledger'){ ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
@@ -403,7 +432,7 @@ return s;
                                         </a>
 
 				<?php } ?>
-				</td>
+				</td>-->
 			</tr>
 	<? 	}
 	}?>

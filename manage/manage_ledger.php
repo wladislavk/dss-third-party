@@ -141,10 +141,12 @@ $sql = "select
 		dl.status,
 		dl.primary_claim_id,
 		'' as payer,
-		'' as payment_type
+		'' as payment_type,
+		di.status as claim_status
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+		LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
 			where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 			and (dl.paid_amount IS NULL || dl.paid_amount = 0)
 		GROUP BY dl.ledgerid
@@ -161,12 +163,13 @@ $sql = "select
                 '',
                 dl.primary_claim_id,
 		dlp.payer,
-		dlp.payment_type
+		dlp.payment_type,
+		''
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
-			AND primary_claim_id IS NOT NULL
+			AND dlp.amount != 0
   UNION
 	select 
                 'ledger_paid',
@@ -180,6 +183,7 @@ $sql = "select
                 dl.status,
                 dl.primary_claim_id,
 		tc.type,
+		'',
 		''	
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
@@ -200,6 +204,7 @@ $sql = "select
 	 	n.private,
 		'',
 		'',
+		'',
 		''	
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
@@ -218,6 +223,7 @@ $sql = "select
 		sum(pay.amount),
 		i.status,
 		i.insuranceid,
+		'',
 		'',
 		''
 	from dental_insurance i
@@ -489,7 +495,7 @@ return s;
           ?>       	
 				</td>
 				<td valign="top">
-                                   <?php if($myarray[0]=='ledger'||$myarray[0] == 'ledger_paid'){ ?>
+                                   <?php if(($myarray[0]=='ledger'&&($myarray['claim_status']!=DSS_CLAIM_SENT&&$myarray['claim_status']!=DSS_CLAIM_SEC_SENT))||$myarray[0] == 'ledger_paid'){ ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>

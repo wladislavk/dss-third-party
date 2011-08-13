@@ -209,8 +209,8 @@ if(mysql_num_rows($p_sql)==0){
 <div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;">
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Payment Date</span>
 <span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span>
-<span style="width:140px;margin: 0 10px 0 0; float:left;">Description</span>
-<span style="width:130px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
+<span style="width:190px;margin: 0 10px 0 0; float:left;">Description</span>
+<span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;">Paid By</span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width: 100px;">Payment Type</span>
 <span style="float:left;font-weight:bold;width:100px;">Amount</span>
 </div>
@@ -220,8 +220,8 @@ while($p = mysql_fetch_array($p_sql)){
 <div style="margin-left:9px; margin-top: 10px; width:98%;height:16px; color: #fff;">
 <span style="margin: 0 10px 0 0; float:left;width:83px;"><?= date('m/d/Y', strtotime($p['payment_date'])); ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:80px;"><?= date('m/d/Y', strtotime($p['entry_date'])); ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:140px;"><?= $p['description']; ?></span>
-<span style="margin: 0 10px 0 0; float:left;width:130px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:190px;"><?= $p['description']; ?></span>
+<span style="margin: 0 10px 0 0; float:left;width:80px;"><?= $dss_trxn_payer_labels[$p['payer']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $dss_trxn_pymt_type_labels[$p['payment_type']]; ?></span>
 <span style="margin: 0 10px 0 0; float:left;width:100px;"><?= $p['amount']; ?></span>
 

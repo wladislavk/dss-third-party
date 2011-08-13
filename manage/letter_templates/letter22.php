@@ -25,7 +25,7 @@ $template = "<p>%todays_date%</p>
 
 <p>It is gross negligence to deny payment for a Mandibular Repositioning Device under these circumstances.</p>
 
-<p>The American Academy of Sleep Medicine recently published a Practice Parameters paper (Sleep, February, 2006) on the use of oral appliances to treat sleep apnea.  This paper stated that the abundance of evidence-based research on oral appliance therapy has shown Mandibular Repositioners to be successful enough that they are now recommend as a first line of therapy for mild to moderate sleep apnea, as well as for patients with more severe apnea who prefer the appliance to CPAP or cannot tolerate CPAP.</p>
+<p>The American Academy of Sleep Medicine recently published a Practice Parameters paper (<i>Sleep</i>, February, 2006) on the use of oral appliances to treat sleep apnea.  This paper stated that the abundance of evidence-based research on oral appliance therapy has shown Mandibular Repositioners to be successful enough that they are now recommend as a first line of therapy for mild to moderate sleep apnea, as well as for patients with more severe apnea who prefer the appliance to CPAP or cannot tolerate CPAP.</p>
 
 <p>This letter should explain why treatment for %patient_lastname% should be covered under \"medical reimbursement.\"   I look forward to the opportunity to discuss this appeal and this case with you over the telephone.</p>
 

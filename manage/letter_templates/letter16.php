@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%contact_fullname%<br />
-%practice%
-%addr1%<br />
-%addr2%
-%city%, %state% %zip%<br />
+%referral_fullname%<br />
+%referral_practice%
+%ref_addr1%<br />
+%ref_addr2%
+%ref_city%, %ref_state% %ref_zip%<br />
 </p>
 <table>
   <tr>
@@ -19,13 +19,13 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear %salutation% %contact_lastname%:</p>
+<p>Dear Dr. %referral_lastname%:</p>
 
-<p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
+<p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% after undergoing a %type_study% done at the %1st_sleeplab_name%.
 
 <p>We delivered a %dental_device% dental device on %delivery_date%.  We are now seeing %patient_firstname% for follow up.</p>
 
-<p>The patient reports wearing the device %nightsperweek% nights. %His/Her% ESS/TSS has changed from %initESS/TSS% to %currESS/TSS%.  Additionally, %he/she% reports [Improvement in Symptoms].</p>
+<p>The patient reports wearing the device %nightsperweek% nights. %His/Her% ESS/TSS has changed from %initESS/TSS% to %currESS/TSS%.  Additionally, %he/she% reports less snoring, improved daytime functioning, and more refereshing sleep.</p>
 
 <p>We will continue to update you on %his/her% progress.  Thank you for the opportunity to participate in this patient's treatment.</p>
 
@@ -35,7 +35,7 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  %other_mds%<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%ccpatient_fullname%</p>";
+cc:<br />  %nonpcp_mds%<br />
+%ccpatient_fullname%</p>";
 
 ?>

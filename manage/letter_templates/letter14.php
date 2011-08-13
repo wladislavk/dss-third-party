@@ -22,6 +22,16 @@ $template = "<p>%todays_date%</p>
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%</p>";
+<table width=\"100%\">
+<tr>
+<td width=\"60%\">
+Richard B. Drake, DDS
+</td>
+<td width=\"40%\">
+George \"Gy\" Yatros, DMD
+</td>
+</tr>
+</table>
+</p>";
 
 ?>

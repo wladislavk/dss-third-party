@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%contact_fullname%<br />
-%practice%
-%addr1%<br />
-%addr2%
-%city%, %state% %zip%<br />
+%referral_fullname%<br />
+%referral_practice%
+%ref_addr1%<br />
+%ref_addr2%
+%ref_city%, %ref_state% %ref_zip%<br />
 </p>
 <table>
   <tr>
@@ -19,9 +19,9 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear %salutation% %contact_lastname%:</p>
+<p>Dear Dr. %referral_lastname%:</p>
 
-<p>We have a mutual patient, %patient_fullname%, a %patient_age% year old %patient_gender% who was diagnosed with %2nddiagnosis% after undergoing %2ndtype_study% on %2ndstudy_date% where %he/she% scored an AHI of %2ndahi% and/or RDI of %2ndrdi%; and spent %2ndO2Sat90%% of the night below 90% O2.</p>
+<p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% and/or RDI of %1stRDI% after undergoing a %type_study% done at the %1st_sleeplab_name%.   %He/She% spent %1stTO290% % of the night below 90% sp O2, and had an O2 nadir of %1stLowO2%.</p>
 
 <p>We delivered %dental_device% device on %delivery_date%, and %he/she% has reported doing well with it.  I write to give you a progress update after the initial titration period and following a take home sleep study. %patient_firstname%'s results, baseline and post appliance insertion appear below.</p>
 
@@ -85,6 +85,7 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  %patient_fullname%</p>";
+cc:<br />  %nonpcp_mds%<br />
+%ccpatient_fullname%</p>";
 
 ?>

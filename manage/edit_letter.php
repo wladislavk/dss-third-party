@@ -81,6 +81,9 @@ if ($topatient) {
 $md_referral = get_mdreferralids($_GET['pid']);
 $ref_info = get_contact_info('', '', $md_referral);
 
+$pt_referral = get_ptreferralids($_GET['pid']);
+$ptref_info = get_contact_info('', '', $pt_referral);
+
 $letter_contacts = array();
 foreach ($contact_info['patient'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'patient'), $contact);
@@ -92,6 +95,18 @@ foreach ($contact_info['mds'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
 $numletters = count($letter_contacts);
+
+$sql = "select docpcp from dental_patients where patientid = '".s_for($_GET['pid'])."';";
+$result = mysql_query($sql);
+$docpcp = mysql_result($result, 0, 0);
+foreach ($contact_info['mds'] as $contact) {
+	if ($contact['id'] == $docpcp) {
+		$pcp = $contact;
+	}
+}
+
+
+
 
 // Get Date
 
@@ -194,6 +209,14 @@ $first_rdi = st($q1_myarray['rdi']);
 $first_o2sat90 = st($q1_myarray['t9002']);
 $first_o2nadir = st($q1_myarray['o2nadir']);
 $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
+$first_center_name = st($q1_myarray['place']);
+
+$sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$first_center_name."';";
+$sleeplab_my = mysql_query($sleeplab_sql);
+$sleeplab_myarray = mysql_fetch_array($sleeplab_my);
+
+$first_sleeplab_name = st($sleeplab_myarray['company']);
+
 
 // Newest Sleep Study Results
 $q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
@@ -422,21 +445,89 @@ if ($_POST != array()) {
 		$search[] = '%zip%';
 		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 		$search[] = '%referral_fullname%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+		}
 		$search[] = '%referral_lastname%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['lastname'] . "</strong>";
+		}
 		$search[] = '%referral_practice%';
-		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0] . "</strong><br />" : "<!--%referral_practice%-->";	
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		} else {
+			$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		}
 		$search[] = '%ref_addr1%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['add1'] . "</strong>";
+		}
 		$search[] = '%ref_addr2%';
-		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		} else {
+			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		}
 		$search[] = '%ref_city%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['city'] . "</strong>";
+		}
 		$search[] = '%ref_state%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['state'] . "</strong>";
+		}
 		$search[] = '%ref_zip%';
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+		if (!empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $pcp['zip'] . "</strong>";
+		}
+		$search[] = '%ptreferral_fullname%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+		}
+		$search[] = '%ptreferral_firstname%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['firstname'] . "</strong>";
+		}
+		$search[] = '%ptreferral_lastname%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+		}
+		$search[] = '%ptreferral_practice%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		}
+		$search[] = '%ptref_addr1%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['add1'] . "</strong>";
+		}
+		$search[] = '%ptref_addr2%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		} 
+		$search[] = '%ptref_city%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['city'] . "</strong>";
+		} 
+		$search[] = '%ptref_state%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['state'] . "</strong>";
+		} 
+		$search[] = '%ptref_zip%';
+		if (!empty($ptref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['zip'] . "</strong>";
+		} 
 		$search[] = "%franchisee_fullname%";
 		$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 		$search[] = "%franchisee_lastname%";
@@ -475,17 +566,21 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $history_disp . "</strong>";
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
-		$search[] = "%sleeplab_name%";
+		$search[] = "%1st_sleeplab_name%";
+		$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
+		$search[] = "%2nd_sleeplab_name%";
 		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 		$search[] = "%type_study%";
-		$replace[] = "<strong>" . $second_type_study . "</strong>";
+		$replace[] = "<strong>" . $first_type_study . "</strong>";
 		$search[] = "%ahi%";
 		$replace[] = "<strong>" . $first_ahi . "</strong>";
 		$search[] = "%diagnosis%";
-		$replace[] = "<strong>" . $second_diagnosis . "</strong>";
+		$replace[] = "<strong>" . $first_diagnosis . "</strong>";
 		$search[] = "%1ststudy_date%";
 		$replace[] = "<strong>" . $first_study_date . "</strong>";
-		$search[] = "%1stRDI/AHI%";
+		$search[] = "%1stRDI%";
+		$replace[] = "<strong>" . $first_rdi . "</strong>";
+		$search[] = "%1stRDI/AHI%";		
 		$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
 		$search[] = "%1stLowO2%";
 		$replace[] = "<strong>" . $first_o2nadir . "</strong>";
@@ -611,6 +706,27 @@ if ($_POST != array()) {
 		}
 		$other_mds = rtrim($other_mds, ",<br /> ");
 		$replace[] = "<strong>" . $other_mds . "</strong>";
+		$search[] = "%nonpcp_mds%";
+		$nonpcp_mds = "";
+		$count = 1;
+		foreach ($md_contacts as $index => $md) {
+			if ($md['type'] != "md_referral" && $md['contacttype'] != 'Primary Care Physician') {
+				$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+				if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+					$nonpcp_mds .= $md_fullname;
+					if ($count < count($contacts['mds'])) {
+						$nonpcp_mds .= ",<br /> ";
+					}	
+					$count++;
+				}
+			}
+		}
+		$nonpcp_mds = rtrim($nonpcp_mds, ",<br /> ");
+		if (empty($ref_info['md_referrals'])) {
+			$replace[] = "<strong>" . $nonpcp_mds . "</strong>";
+		} else {
+			$replace[] = "<strong>" . $other_mds . "</strong>";
+		}
 
 		$new_template[$key] = html_entity_decode($new_template[$key]);
     $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
@@ -670,21 +786,89 @@ foreach ($letter_contacts as $key => $contact) {
   $search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%referral_fullname%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+	}
 	$search[] = '%referral_lastname%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['lastname'] . "</strong>";
+	}
 	$search[] = '%referral_practice%';
-	$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0] . "</strong><br />" : "<!--%referral_practice%-->";	
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+	} else {
+		$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+	}
 	$search[] = '%ref_addr1%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['add1'] . "</strong>";
+	}
 	$search[] = '%ref_addr2%';
-	$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	} else {
+		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	}
 	$search[] = '%ref_city%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['city'] . "</strong>";
+	}
 	$search[] = '%ref_state%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['state'] . "</strong>";
+	}
 	$search[] = '%ref_zip%';
-	$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+	if (!empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $pcp['zip'] . "</strong>";
+	}
+	$search[] = '%ptreferral_fullname%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+	}
+	$search[] = '%ptreferral_firstname%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['firstname'] . "</strong>";
+	}
+	$search[] = '%ptreferral_lastname%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+	}
+	$search[] = '%ptreferral_practice%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+	}
+	$search[] = '%ptref_addr1%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['add1'] . "</strong>";
+	}
+	$search[] = '%ptref_addr2%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	} 
+	$search[] = '%ptref_city%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['city'] . "</strong>";
+	} 
+	$search[] = '%ptref_state%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['state'] . "</strong>";
+	} 
+	$search[] = '%ptref_zip%';
+	if (!empty($ptref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['zip'] . "</strong>";
+	} 
 	$search[] = "%franchisee_fullname%";
 	$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 	$search[] = "%franchisee_lastname%";
@@ -723,16 +907,20 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
-	$search[] = "%sleeplab_name%";
+	$search[] = "%1st_sleeplab_name%";
+	$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
+	$search[] = "%2nd_sleeplab_name%";
 	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%type_study%";
-	$replace[] = "<strong>" . $second_type_study . "</strong>";
+	$replace[] = "<strong>" . $first_type_study . "</strong>";
 	$search[] = "%ahi%";
-	$replace[] = "<strong>" . $second_ahi . "</strong>";
+	$replace[] = "<strong>" . $first_ahi . "</strong>";
 	$search[] = "%diagnosis%";
-	$replace[] = "<strong>" . $second_diagnosis . "</strong>";
+	$replace[] = "<strong>" . $first_diagnosis . "</strong>";
 	$search[] = "%1ststudy_date%";
 	$replace[] = "<strong>" . $first_study_date . "</strong>";
+	$search[] = "%1stRDI%";
+	$replace[] = "<strong>" . $first_rdi . "</strong>";
 	$search[] = "%1stRDI/AHI%";
 	$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
 	$search[] = "%1stLowO2%";
@@ -859,6 +1047,27 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$other_mds = rtrim($other_mds, ",<br /> ");
 	$replace[] = "<strong>" . $other_mds . "</strong>";
+	$search[] = "%nonpcp_mds%";
+	$nonpcp_mds = "";
+	$count = 1;
+	foreach ($md_contacts as $index => $md) {
+		if ($md['type'] != "md_referral" && $md['contacttype'] != 'Primary Care Physician') {
+			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
+			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
+				$nonpcp_mds .= $md_fullname;
+				if ($count < count($contacts['mds'])) {
+					$nonpcp_mds .= ",<br /> ";
+				}	
+				$count++;
+			}
+		}
+	}
+	$nonpcp_mds = rtrim($nonpcp_mds, ",<br /> ");
+  if (empty($ref_info['md_referrals'])) {
+		$replace[] = "<strong>" . $nonpcp_mds . "</strong>";
+	} else {
+		$replace[] = "<strong>" . $other_mds . "</strong>";
+	}
 	
  	if ($new_template[$key] != null) {
 	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);

@@ -121,7 +121,7 @@ function get_mdreferralids ($pid) {
 }
 
 function get_ptreferralids ($pid) {
-	$contact_sql = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_patients ON  dental_patients.referred_by=dental_referredby.referredbyid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source NOT IN('Physician);";
+	$contact_sql = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_patients ON  dental_patients.referred_by=dental_referredby.referredbyid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source NOT IN('Physician');";
 	$contact_res = mysql_query($contact_sql);
   $contactids = array();
   while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {

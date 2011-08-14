@@ -990,7 +990,7 @@ if(isset($_POST['stepselectedsubmit']) && $_POST['stepselectedsubmit'] != 'Next 
 								$letterid[] = trigger_letter7($_GET['pid'], $numsteps);
 							}
 
-
+							$letterid = array_unique($letterid);
 							$letteridlist = implode(",", $letterid);
 							$select_query = "SELECT stepid FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' ORDER BY stepid DESC;";
 							$select_result = mysql_query($select_query);

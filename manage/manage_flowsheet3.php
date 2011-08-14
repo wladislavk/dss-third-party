@@ -834,6 +834,7 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 		$columns = "patientid, stepid, segmentid";
 		$values = "'$pid', '$i', '$segmentid'";
 		$setstring = "stepid='$i', segmentid='$segmentid'";
+		$letterid = array_unique($letterid);
 		if (count($letterid) > 0 && $i == $numsteps) {
 			$columns .= ", letterid";
 			$letteridlist = implode(",", $letterid);
@@ -2381,7 +2382,7 @@ Next Appointment
 //print_r($flow_pg2_info);
   foreach ($flow_pg2_info as $row) {
 		if ($row['letterid'] != "") {
-			$letters[$row['stepid']] = $row['letterid'];
+			$letters[$row['stepid']] = trim($row['letterid'], ',');
 		}
   }
 //print_r($letters);

@@ -10,8 +10,8 @@ Not a Candidate
 
 
 <td width="117">
-<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" />
-<input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" disabled /><span id="req_0" class="req">*</span>
+<input id="<?=$compid?>" name="data[<?php echo $step; ?>][datecomp]" type="text" class="field text addr tbox" value="<?php echo $datecomp; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datecomp]'');" onClick="<?=$caldatecomp?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="<?=$schedid?>" name="data[<?php echo $step; ?>][datesched]" type="text" class="field text addr tbox" value="<?php echo $datesched; ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate(''data[<?php echo $step; ?>][datesched]'');" onClick="<?=$caldatesched?>.popup();"  value="example 11/11/1234" disabled />
 </td>
 
 

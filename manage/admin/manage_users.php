@@ -133,7 +133,7 @@ $num_users=mysql_num_rows($my);
 				</td>
 				
 				<td valign="top">
-					<form action="../login.php" method="post" target="Doctor_Login">
+					<form action="login_as.php" method="post" target="Doctor_Login">
 						<input type="hidden" name="username" value="<?=st($myarray["username"]);?>">
 						<input type="hidden" name="password" value="<?=st($myarray["password"]);?>">
 			            <input type="hidden" name="loginsub" value="1">

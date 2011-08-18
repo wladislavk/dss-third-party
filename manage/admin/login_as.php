@@ -1,12 +1,12 @@
 <?php
 	session_start();
+        require_once('includes/config.php');
 	require_once('includes/sescheck.php');
-
-        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."'";
+        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".$_POST['username']."'";
         $check_my = mysql_query($check_sql);
-
         if(mysql_num_rows($check_my) == 1)
         {
+		echo('here');
                 $check_myarray = mysql_fetch_array($check_my);
 
                 /*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";

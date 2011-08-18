@@ -18,7 +18,8 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 <html style="overflow-y:hidden;">
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 </head>
 <body style="width: 10000px; background: none repeat 0% 0% transparent; height: 557px; position:absolute;top:0;margin:0; padding:0;">
 

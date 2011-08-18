@@ -163,7 +163,7 @@ function centerPopupRef(){
         var windowHeight = document.documentElement.clientHeight;
         var popupHeight = $("#popupRefer").height();
         var popupWidth = $("#popupRefer").width();
-        var topPos = (windowHeight/2-popupHeight/2 + window.pageYOffset) + "px";
+        var topPos = (windowHeight/2-popupHeight/2 + $(document).scrollTop()) + "px";
         //centering
         $("#popupRefer").css({
                 "position": "absolute",

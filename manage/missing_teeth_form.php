@@ -138,7 +138,8 @@ $mob_arr = explode('~',$mob);
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">
 function updateTeeth(teeth){
   $('.tooth_image').each( function(index){

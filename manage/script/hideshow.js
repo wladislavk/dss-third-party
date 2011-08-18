@@ -1,4 +1,3 @@
-<script>
 var browserType;
 
 if (document.layers) {browserType = "nn4"}
@@ -137,4 +136,3 @@ function show5() {
   document.poppedLayer.style.display = "inline";
 }
 
-</script>

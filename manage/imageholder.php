@@ -6,8 +6,9 @@
   
   <!-- You can load the jQuery library from the Google Content Network.
   Probably better than from your own server. -->
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  
+<!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+    <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+
   <!-- Load the Cloud Zoom JavaScript file -->
   <script type="text/JavaScript" src="js/cloud-zoom.1.0.2.min.js"></script>
 </head>

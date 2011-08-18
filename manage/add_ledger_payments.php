@@ -30,7 +30,8 @@ $num_sa = mysql_num_rows($saq);
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 
 <head>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 
 </head>
 <body>

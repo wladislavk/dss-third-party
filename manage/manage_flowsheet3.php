@@ -349,7 +349,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  '" . $my_array['insured_dob'] . "', "
        . "  '" . $my_array['doc_npi'] . "', "
        . "  '" . $my_array['referring_doc_npi'] . "', "
-       . "  " . $my_array['trxn_code_amount'] . ", "
+       . "  '" . $my_array['trxn_code_amount'] . "', "
        . "  '" . $my_array['diagnosis_code'] . "', "
        . "  '" . $my_array['doc_medicare_npi'] . "', "
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "

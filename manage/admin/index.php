@@ -109,6 +109,7 @@ if($_POST["loginsub"] == 1)
 				<td colspan="2" align="center">
 					<input type="hidden" name="loginsub" value="1">
 					<input type="submit" name="btnsubmit" value=" Login " class="button">
+					<a href="forgot_password.php">Forgot Password</a>
 				</td>
 			</tr>
 		  </table>

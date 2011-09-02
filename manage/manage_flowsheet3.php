@@ -308,7 +308,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  d.userid as 'doc_id', p.home_phone as 'patient_phone'  "
        . "FROM "
        . "  dental_patients p  "
-       . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  LEFT JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
        . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
        . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "

@@ -136,10 +136,6 @@ $num_users=mysql_num_rows($my);
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?=$myarray["userid"];?>&docid=<?=$_GET['docid'];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
-                    
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["userid"];?>&docid=<?=$_GET['docid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
 	<? 	}

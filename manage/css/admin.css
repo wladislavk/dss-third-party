@@ -1244,3 +1244,7 @@ float:left;
 .eob_dispute_text td{
   color:#f00;
 }
+
+.pat_incomplete{
+  color: #f00;
+  }

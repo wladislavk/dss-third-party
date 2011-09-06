@@ -157,9 +157,6 @@ $num_users=mysql_num_rows($my);
 						Edit
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["userid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
 	<? 	}

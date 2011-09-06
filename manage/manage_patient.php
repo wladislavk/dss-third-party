@@ -202,62 +202,37 @@ background:#999999;
                     }
                     ?> 
 				</td>
+          <?php if($myarray['patient_info'] == 1){ ?>
 				<td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
-					<?php else: ?>
-					<?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?>
-					<?php endif; ?>
         </td>
+
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['next_visit']); ?></a>
-					<?php else: ?>
-					<?= format_date($myarray['next_visit']); ?>
-					<?php endif; ?>
         </td>
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['last_visit'], true); ?></a>
-					<?php else: ?>
-					<?= format_date($myarray['last_visit'], true); ?>
-					<?php endif; ?>
         </td>
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
           <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?></a>
-					<?php else: ?>
-					<?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?>
-					<?php endif; ?>
         </td>
 				<td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?></a>
-					<?php else: ?>
-					<?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?>
-					<?php endif; ?>
         </td>
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
-					<?php else: ?>
-					<?= format_date($myarray['delivery_date'], true); ?>
-					<?php endif; ?>
 	      </td>
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?></a>
-					<?php else: ?>
-					<?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?>
-					<?php endif; ?>
         </td>
         <td valign="top">
-					<?php if($myarray['patient_info'] == 1): ?>
 	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?></a>
-					<?php else: ?>
-					<?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?>
-					<?php endif; ?>
         </td>
+        <?php }else{ ?>
+
+           <td colspan="8" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
+
+        <?php } ?> 
 			</tr>
 	<? 	}
 	}?>

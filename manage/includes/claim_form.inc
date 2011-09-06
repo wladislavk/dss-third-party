@@ -1109,7 +1109,7 @@ if (empty($prior_authorization_number)) {
 		<?php } ?>
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
         <?php if (!$is_sent) { ?>
-          <input type="submit" name="ex_pagebtn" value="Save and Print" />
+          <input type="submit" name="ex_pagebtn" value="Submit Claim" />
         <?php } ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
@@ -2417,18 +2417,6 @@ if ($is_new_claim) {
 	</tr>
 </table>
 
-<div align="right">
-    <?php if ($is_sent) { ?>
-      Claim has been sent
-    <?php } else if ($is_back_office) { ?>
-      Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
-    <?php } ?>
-    <input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>
-    <?php if (!$is_sent) { ?>
-      <input type="submit" name="q_pagebtn" value="Save" />
-    <?php } ?>
-    &nbsp;&nbsp;&nbsp;
-</div>
 </form>
 <br />
 

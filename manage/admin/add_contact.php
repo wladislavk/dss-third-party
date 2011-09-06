@@ -394,6 +394,11 @@ if($_POST["contactsub"] == 1)
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
+		<?php  if($themyarray["contactid"] != ''){ ?>
+                    <a style="float:right;" href="javascript:parent.window.location='manage_contact.php?delid=<?=$themyarray["contactid"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                Delete
+                                        </a>
+                 <?php } ?>
             </td>
         </tr>
     </table>

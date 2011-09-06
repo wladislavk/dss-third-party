@@ -182,9 +182,6 @@ Filter by type: <select name="myjumpbox"
 						Edit 
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						 Delete 
-					</a>
 				</td>
 			</tr>
 	<? 	}

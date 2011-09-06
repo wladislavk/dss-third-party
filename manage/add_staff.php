@@ -196,6 +196,11 @@ if($_POST["staffsub"] == 1)
                 <input type="hidden" name="staffsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Staff" class="button" />
+		<?php if($themyarray["userid"] != ''){ ?>
+                    <a style="float:right;" href="manage_staff.php?delid=<?=$themyarray["userid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+                                                 Delete 
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

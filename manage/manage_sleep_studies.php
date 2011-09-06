@@ -706,7 +706,7 @@ if($numrows){
 						<input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
 						<input type="hidden" name="formid" value="<?= $i ?>">
 						<input type="hidden" name="sleepstudyid" value="<?php echo $sleepstudy['id']; ?>">
-            <input type="submit" name="updatestudy" value="Update Study" />
+            <input type="submit" name="updatestudy" value="Save Study" />
 	    <input type="submit" name="deletestudy" value="Delete" onclick="return confirm('Are you sure you want to delete this sleep study?');" />						
 						
 						</td>

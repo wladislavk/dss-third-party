@@ -355,7 +355,7 @@ if(f.sleeptesttype.value == "HST"){
 	</tr>
 	<tr>	
 		<td valign="top" style="background: #E4FFCF;">
-		<input type="submit" name="submitnewsleeplabsumm" />	
+		<input type="submit" name="submitnewsleeplabsumm" value="Submit Study" />	
 		</td>
 	</tr>
 </table>
@@ -530,7 +530,7 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>
                 <td valign="top" style="background: #E4FFCF;">
-                <input type="submit" name="submitupdatesleeplabsumm" value="Update" />
+                <input type="submit" name="submitupdatesleeplabsumm" value="Save" />
 		<input type="submit" name="submitdeletesleeplabsumm" onclick='return confirm("Are you sure you want to delete this study?")' value="Delete" />
                 </td>
         </tr>

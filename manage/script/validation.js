@@ -185,7 +185,6 @@ function staffabc(fa)
 		fa.name.focus();
 		return false;
 	}
-	
 	if(trim(fa.email.value) != "" )
 	{
 		if(! is_email(trim(fa.email.value)))
@@ -194,6 +193,10 @@ function staffabc(fa)
 			fa.email.focus();
 			return false;
 		}
+	}else{
+		alert("Email is Required");
+                fa.email.focus();
+                return false;
 	}
 }
 

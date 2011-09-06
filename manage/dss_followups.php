@@ -409,7 +409,7 @@ $device = mysql_result($device_result, 0);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-      <input type="submit" name="submitupdatefu" value="Update Follow Up" id="submitupdatefu" style="width:120px;" />
+      <input type="submit" name="submitupdatefu" value="Save Follow Up" id="submitupdatefu" style="width:120px;" />
       <input type="submit" name="submitdeletefu" onclick="return confirm('Are you sure you want to delete this follow up?');" value="Delete" id="submitdeletefu" style="width:120px;" />
 
 
@@ -588,7 +588,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-	  <input type="button" value="Update Baseline" onclick="gotoQuestionnaire();" />
+	  <input type="button" value="Save Baseline" onclick="gotoQuestionnaire();" />
     </td>
   </tr>
 

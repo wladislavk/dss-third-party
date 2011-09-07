@@ -324,7 +324,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
   //print_r($my_array);exit;
-
+  $sd = date('Y-m-d H:i:s');
   $sql = "INSERT INTO dental_insurance_preauth ("
        . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
        . "  patient_ins_id, patient_firstname, patient_lastname, patient_phone, patient_add1, "
@@ -358,13 +358,17 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  '" . $my_array['diagnosis_code'] . "', "
        . "  '" . $my_array['doc_medicare_npi'] . "', "
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
-       . "  '" . date('Y-m-d H:i:s') . "', "
+       . "  '" . $sd . "', "
        . DSS_PREAUTH_PENDING . ", "
        . "  '" . $_SESSION['userid'] . "' "
        . ")";
   //print_r($my_array);
   //print_r($sql);exit;
-  $my = mysql_query($sql);
+  if($my = mysql_query($sql)){
+    ?><script type="text/javascript">
+      alert("Submitted! Verification of benefits request was submitted <?= date('m/d/Y', strtotime($sd)); ?> and is currently pending.");
+    </script><?php
+  }
 }
 
 

@@ -241,6 +241,11 @@ function preauth_errors(){
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing transaction code E0486");
+  }else{
+    $row=mysql_fetch_assoc($my);
+    if($row['amount']==0||$row['amount']==''){
+    array_push($errors, "You have not set a dollar amount for E0486 - Dental Device. Please contact Dental Sleep Solutions Corporate Office to set this fee.");
+    }
   }
 
   $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];

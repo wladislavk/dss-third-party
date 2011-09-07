@@ -285,6 +285,14 @@ $my = mysql_query($sql) or die(mysql_error());
           <td><?= ($preauth['out_of_pocket_met'] == '0') ? 'No' : 'Yes' ?></td>
         </tr>
         <tr class="tr_bg">
+          <td>Insurance plan notes</td>
+          <td><?= $preauth['code_covered_notes']; ?></td>
+        </tr>
+        <tr class="tr_bg">
+          <td>Out-of-network notes</td>
+          <td><?= $preauth['hmo_auth_notes']; ?></td>
+        </tr>
+        <tr class="tr_bg">
           <td>Device amount?</td>
           <td>$<?= $preauth['trxn_code_amount'] ?></td>
         </tr>

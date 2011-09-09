@@ -26,7 +26,7 @@ Our dentists receive training from Board Certified dentists in the areas of:<br 
 </ul>
 </p>
 <p>
-We are writing to you today to invite you to partner with us in diagnosing and treating patients with sleep disordered breathing.  We promote a team healthcare approach that involves the physician and dentist working closely to provide a successful treatment modality for each and every patient.  If you feel that your patients could benefit from a sleep screening consultation, we invite you to contact us directly so that we can put you in touch with a local Dental Sleep Solutions® provider.  Rest assured that when you are dealing with a Dental Sleep Solutions® dentist, you are dealing with an individual who understands the issues and the treatment options. 
+We are writing to you today to invite you to partner with us in diagnosing and treating patients with sleep disordered breathing.  We promote a team healthcare approach that involves the physician and dentist working closely to provide a successful treatment modality for each and every patient.  If you feel that your patients could benefit from a sleep screening consultation, we invite you to contact us directly so that we can put you in touch with a local Dental Sleep Solutions&reg; provider.  Rest assured that when you are dealing with a Dental Sleep Solutions&reg; dentist, you are dealing with an individual who understands the issues and the treatment options. 
 </p>
 <p>
 Enclosed is a Dental Sleep Solutions&reg; brochure.  Please don't hesitate to call if you have any questions.

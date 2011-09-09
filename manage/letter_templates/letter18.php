@@ -22,6 +22,6 @@ $template = "<p>%todays_date%</p>
 <br />
 Dr. %franchisee_fullname%<br />
 <br />
-cc:  %other_mds%</p>";
+cc:<br />  %other_mds%</p>";
 
 ?>

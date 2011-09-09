@@ -120,7 +120,7 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 }
 
 // Get Patient Information
-$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob, email FROM dental_patients WHERE patientid = '".$patientid."';";
+$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob, email, p_m_ins_id FROM dental_patients WHERE patientid = '".$patientid."';";
 $patient_result = mysql_query($patient_query);
 $patient_info = array();
 while ($row = mysql_fetch_assoc($patient_result)) {
@@ -219,7 +219,7 @@ $first_sleeplab_name = st($sleeplab_myarray['company']);
 
 
 // Newest Sleep Study Results
-$q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+$q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device FROM dental_summ_sleeplab dss LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $second_study_date = st($q2_myarray['date']);
@@ -231,7 +231,7 @@ $second_o2sat90 = st($q2_myarray['t9002']);
 $second_o2nadir = st($q2_myarray['o2nadir']);
 $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
-$dentaldevice = st($q2_myarray['dentaldevice']);
+$dentaldevice = st($q2_myarray['device']);
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
@@ -276,6 +276,59 @@ $bmi = mysql_result($bmi_result, 0);
 $reason_query = "SELECT reason_seeking_tx FROM dental_summary WHERE patientid = '".$patientid."';";
 $reason_result = mysql_query($reason_query);
 $reason_seeking_tx = mysql_result($reason_result, 0);
+
+$cc_sql = "select chief_complaint_text from dental_q_page1 WHERE patientid=".mysql_real_escape_string($patientid);
+$cc_q = mysql_query($cc_sql);
+$cc_row = mysql_fetch_assoc($cc_q);
+$reason_seeking_tx = $cc_row['chief_complaint_text'];
+$q1_sql = "select * from dental_q_page1 where formid='".$patientid."' and patientid='".$patientid."'";
+$q1_my = mysql_query($q1_sql);
+$q1_myarray = mysql_fetch_array($q1_my);
+
+$main_reason = st($q1_myarray['main_reason']);
+$main_reason_other = st($q1_myarray['main_reason_other']);
+$complaintid = st($q1_myarray['complaintid']);
+
+
+if($complaintid <> '')
+{
+        //$reason_seeking_tx .= $complaintid;
+
+        //echo $complaintid."<br>"      ;
+
+        $chief_arr = explode('~',$complaintid);
+
+        if(count($chief_arr) <> 0)
+        {
+                $c_count = 0;
+                foreach($chief_arr as $c_val)
+                {
+                        if(trim($c_val) <> '')
+                        {
+                                $c_s = explode('|',$c_val);
+
+                                $c_id[$c_count] = $c_s[0];
+                                $c_seq[$c_count] = $c_s[1];
+
+                                $c_count++;
+                        }
+                }
+        }
+
+        asort($c_seq );
+       foreach($c_seq as $i=>$val)
+        {
+                //echo $c_id[$i]."<br>";
+                $comp_sql = "select * from dental_complaint where status=1 and complaintid='".$c_id[$i]."'";
+                $comp_my = mysql_query($comp_sql);
+                $comp_myarray = mysql_fetch_array($comp_my);
+
+                //echo $c_id[$i]." => ".st($comp_myarray['complaint'])."<br>";
+                  $reason_seeking_tx .= ", " . st($comp_myarray['complaint']);
+        }
+}
+
+
 
 // Symptoms 
 $sql = "SELECT complaintid FROM dental_q_page1 WHERE patientid = '".$patientid."' LIMIT 1;";
@@ -326,7 +379,7 @@ while ($row = mysql_fetch_assoc($reason_result)) {
 $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description']));
 
 // Load $template
-
+echo $templateid;
 switch ($templateid) {
 	case 1:
 		require_once("letter_templates/letter1.php");
@@ -438,6 +491,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $contact['add1'] . "</strong>";
 		$search[] = '%addr2%';
 		$replace[] = ($contact['add2']) ? "<strong>" . $contact['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$search[] = '%insurance_id%';
+		$replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
 		$search[] = '%city%';
 		$replace[] = "<strong>" . $contact['city'] . "</strong>";
 		$search[] = '%state%';
@@ -644,6 +699,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $consult_date . "</strong>";
 		$search[] = "%impressions_date%";
 		$replace[] = "<strong>" . $impressions_date . "</strong>";
+                $search[] = "%sleeplab_name%";
+                $replace[] = "<strong>" . $impressions_date . "</strong>";
 		$search[] = "%delay_reason%";
 		switch ($delay['reason']) {
 			case 'insurance':
@@ -755,7 +812,6 @@ if ($_POST != array()) {
 		$new_template[$resetid] = null;
 	}
 }
-
 foreach ($letter_contacts as $key => $contact) {
 	// Token search and replace arrays
 	// search and replace 2 of 2
@@ -773,6 +829,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
 	$search[] = '%practice%';
 	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
+        $search[] = '%insurance_id%';
+        $replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
 	$search[] = '%contact_email%';
 	$replace[] = "<strong>" . $letter_contacts[$key]['email'] . "</strong>";
 	$search[] = '%addr1%';
@@ -907,6 +965,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $history_disp . "</strong>";
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
+	$search[] = "%sleeplab_name%";
+        $replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%1st_sleeplab_name%";
 	$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
 	$search[] = "%2nd_sleeplab_name%";
@@ -1068,13 +1128,11 @@ foreach ($letter_contacts as $key => $contact) {
 	} else {
 		$replace[] = "<strong>" . $other_mds . "</strong>";
 	}
-	
  	if ($new_template[$key] != null) {
 	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);
 	} else {
 	  $letter[$key] = str_replace($search, $replace, $template);
  	}
-
 	// Print Letter Body		
 
   ?>

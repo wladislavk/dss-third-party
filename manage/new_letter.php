@@ -316,7 +316,7 @@ function trigger_letter20($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();
@@ -380,7 +380,7 @@ function trigger_letter24($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			//parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
 		</script>	
 		<?php
 		die();

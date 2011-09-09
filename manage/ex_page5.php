@@ -525,7 +525,6 @@ if($jointid <> '')
 								}?>
                                 <tr>
                                 	<td valign="top" colspan="3" align="right">
-                                    	<button onclick="Javascript: loadPopupRefer('custom_palpation.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>'); getElementById('popupContact').style.top = '300px'; return false;">Customize</button>
                                     </td>
                                 </tr>
                             </table>

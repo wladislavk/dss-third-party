@@ -531,3 +531,7 @@ width:125px;
   background: green;
   color: white;
   }
+
+.editdel{
+  float:right;
+  }

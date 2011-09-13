@@ -16,9 +16,10 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="script/jquery-1.6.2.min.js"></script>
   <script type="text/javascript" src="../3rdParty/free-css-drop-down-menu_v1.2/js/jquery/jquery.dropdown.js"></script>
+<!-- THESE ARE NOT RELATIVE TO WORK WHEN INCLUDED FROM DIFFERENT DIRECTORIES -->
 <link href="/manage/admin/calendar.css" rel="stylesheet" type="text/css">
-<link href="../3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/dropdown.vertical.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="../3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/themes/default/default.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/manage/3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/dropdown.vertical.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/manage/3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/themes/default/default.css" media="screen" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .logout{ float:right;
 	font-size: 12px;
@@ -43,17 +44,17 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 <?php
 // Count letters
 // Select Letters into Array
+$pending_letters=0;
   $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
   } else {
     while ($row = mysql_fetch_assoc($letters_res)) {
-      $dental_letters[] = $row;
+      $pending_letters++;
     }
   }
 
-$pending_letters = count($dental_letters);
 
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
@@ -82,30 +83,29 @@ $num_pending_claims = mysql_num_rows($my);
 
 ?>
         <ul class="dropdown dropdown-horizontal">
-                <li><a href="manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
-                <li><a href="manage_vobs.php">VOBs (<?= $num_pending_preauth; ?>)</a></li>
-                <li><a href="manage_claims.php">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
-                <li><a href="manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
+                <li><a href="/manage/admin/manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
+                <li><a href="/manage/admin/manage_vobs.php">VOBs (<?= $num_pending_preauth; ?>)</a></li>
+                <li><a href="/manage/admin/manage_claims.php">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
+                <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
                 <li class="dir">Users
                         <ul>
-                                <li><a href="">Test</a></li>
-                                <li><a href="manage_users.php">User Accounts</a></li>
-                                <li><a href="manage_patient.php">Patient List (All)</a></li>
-                                <li><a href="manage_franchisee_analysis.php">Franchisee Analysis</a></li>
+                                <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
+                                <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
+                                <li><a href="/manage/admin/manage_franchisee_analysis.php">Franchisee Analysis</a></li>
                                 <li class="dir">Insurance Codes
                                         <ul>
-                                                <li><a href="manage_transaction_code.php">Default Codes (Global)</a></li>
-                                                <li><a href="manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
+                                                <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>
+                                                <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
                                 </li>
                                 <li class="dir">Password
                                         <ul>
-                                                <li><a href="changepassword.php">Change Admin Password</a></li>
+                                                <li><a href="/manage/admin/changepassword.php">Change Admin Password</a></li>
                                         </ul>
                                 </li>
                                 <li class="dir">Security
                                         <ul>
-                                                <li><a href="manage_log.php">Login Data</a></li>
-                                                <li><a href="manage_pages.php">Custom Pages</a></li>
+                                                <li><a href="/manage/admin/manage_log.php">Login Data</a></li>
+                                                <li><a href="/manage/admin/manage_pages.php">Custom Pages</a></li>
                                         </ul>
                                 </li>
                         </ul>                </li>
@@ -115,100 +115,106 @@ $num_pending_claims = mysql_num_rows($my);
 					<ul>
 	                                	<li class="dir">Bmi/Symptoms
 							<ul>
-                                                		<li><a href="manage_complaint.php">Chief Complaint</a></li>
+                                                		<li><a href="/manage/admin/manage_complaint.php">Chief Complaint</a></li>
 							</ul>
 						</li>
 	                                	<li class="dir">Sleepiness test
 							<ul>
-                                                                <li><a href="manage_epworth.php">Epworth</a></li>
+                                                                <li><a href="/manage/admin/manage_epworth.php">Epworth</a></li>
 							</ul>
 						</li>
 	                                	<li class="dir">Sleep Study / Cpap
-                                                                <li><a href="manage_intolerance.php">Cpap Intolerance</a></li>
+							<ul>
+                                                                <li><a href="/manage/admin/manage_intolerance.php">Cpap Intolerance</a></li>
+							</ul>
+						</li>
 	                                	<li class="dir">Medical Hx
-                                                                <li><a href="manage_allergens.php">Allergens</a></li>
-                                                                <li><a href="manage_medications.php">Medications</a></li>
-                                                                <li><a href="manage_history.php">Medical Hx</a></li>
+							<ul>
+                                                                <li><a href="/manage/admin/manage_allergens.php">Allergens</a></li>
+                                                                <li><a href="/manage/admin/manage_medications.php">Medications</a></li>
+                                                                <li><a href="/manage/admin/manage_history.php">Medical Hx</a></li>
+							</ul>
+						</li>
 					</ul>
 				</li>
                                 <li class="dir">Clinical Exam Edits
 					<ul>
 	                                	<li class="dir">Dental Exam
 							<ul>
-                                                                <li><a href="manage_exam_teeth.php">Teeth Examination</a></li>
+                                                                <li><a href="/manage/admin/manage_exam_teeth.php">Teeth Examination</a></li>
 							</ul>
 						</li>
 	                                	<li class="dir">Vital Data / Tongue 
 							<ul>
-                                                                <li><a href="manage_tongue.php">Tongue Evaluation</a></li>
+                                                                <li><a href="/manage/admin/manage_tongue.php">Tongue Evaluation</a></li>
 							</ul>
 						</li>
 	                                	<li class="dir">Airway Evaluation
 							<ul>
-                                                                <li><a href="manage_maxilla.php">Maxilla</a></li>
-                                                                <li><a href="manage_mandible.php">Mandible</a></li>
-                                                                <li><a href="manage_soft_palate.php">Soft Palate</a></li>
-                                                                <li><a href="manage_uvula.php">Uvula</a></li>
-                                                                <li><a href="manage_gag_reflex.php">Gag Reflex</a></li>
-                                                                <li><a href="manage_nasal_passages.php">Nasal Passages</a></li>
+                                                                <li><a href="/manage/admin/manage_maxilla.php">Maxilla</a></li>
+                                                                <li><a href="/manage/admin/manage_mandible.php">Mandible</a></li>
+                                                                <li><a href="/manage/admin/manage_soft_palate.php">Soft Palate</a></li>
+                                                                <li><a href="/manage/admin/manage_uvula.php">Uvula</a></li>
+                                                                <li><a href="/manage/admin/manage_gag_reflex.php">Gag Reflex</a></li>
+                                                                <li><a href="/manage/admin/manage_nasal_passages.php">Nasal Passages</a></li>
 							</ul>
 						</li>
 	                                	<li class="dir">TMJ / ROM
 							<ul>
-                                                                <li><a href="manage_palpation.php">Muscles & Palpation</a></li>
-                                                                <li><a href="manage_joint_exam.php">Joint Exam Type</a></li>
-                                                                <li><a href="manage_joint.php">Joint Exam</a></li>
+                                                                <li><a href="/manage/admin/manage_palpation.php">Muscles & Palpation</a></li>
+                                                                <li><a href="/manage/admin/manage_joint_exam.php">Joint Exam Type</a></li>
+                                                                <li><a href="/manage/admin/manage_joint.php">Joint Exam</a></li>
 							</ul>
 						</li>
 					</ul>
 				<li class="dir">Summary Sheet Edits
 					<ul>
-						<li><a href="manage_device.php">Dental Device List</a></li>
+						<li><a href="/manage/admin/manage_device.php">Dental Device List</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Contacts (Global List And Type)
 					<ul>
-                                                <li><a href="manage_contacttype.php">Contact Types</a></li>
-                                                <li><a href="manage_fcontact.php">Corporate Contacts (Global List)</a></li>
-                                                <li><a href="manage_doc_lab.php">Dental Appliance Labs (Global List)</a></li>
-                                                <li><a href="manage_doc_insurance.php">Insurance Info (Global List)</a></li>
+                                                <li><a href="/manage/admin/manage_contacttype.php">Contact Types</a></li>
+                                                <li><a href="/manage/admin/manage_fcontact.php">Corporate Contacts (Global List)</a></li>
+                                                <li><a href="/manage/admin/manage_doc_lab.php">Dental Appliance Labs (Global List)</a></li>
+                                                <li><a href="/manage/admin/manage_doc_insurance.php">Insurance Info (Global List)</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Images
 					<ul>
-                                                <li><a href="manage_imagetype.php">Image Type (Global List)</a></li>
+                                                <li><a href="/manage/admin/manage_imagetype.php">Image Type (Global List)</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Home Page
 					<ul>
-                                                <li><a href="manage_doc_welcome.php">Welcome Screen Message (Global)</a></li>
+                                                <li><a href="/manage/admin/manage_doc_welcome.php">Welcome Screen Message (Global)</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Insurance Claim
 					<ul>
-                                                <li><a href="manage_ins_diagnosis.php">Insurance Diagnosis</a></li>
-                                                <li><a href="manage_place_service.php">Place Of Service</a></li>
-                                                <li><a href="manage_type_service.php">Type Of Service</a></li>
-                                                <li><a href="manage_cpt_code.php">Cpt Code</a></li>
-                                                <li><a href="manage_modifier_code.php">Modifier Code</a></li>
+                                                <li><a href="/manage/admin/manage_ins_diagnosis.php">Insurance Diagnosis</a></li>
+                                                <li><a href="/manage/admin/manage_place_service.php">Place Of Service</a></li>
+                                                <li><a href="/manage/admin/manage_type_service.php">Type Of Service</a></li>
+                                                <li><a href="/manage/admin/manage_cpt_code.php">Cpt Code</a></li>
+                                                <li><a href="/manage/admin/manage_modifier_code.php">Modifier Code</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Files
 					<ul>
-                                                <li><a href="manage_doc_categories.php">Dss Files For Franchisees (Global)</a></li>
+                                                <li><a href="/manage/admin/manage_doc_categories.php">Dss Files For Franchisees (Global)</a></li>
 					</ul>
 				</li>
                                 <li class="dir">Additional Items
 					<ul>
-                                                <li><a href="manage_ins_type.php">Insurance Type</a></li>
-                                                <li><a href="manage_diagnostic.php">Diagnostic Test</a></li>
-                                                <li><a href="manage_assessment.php">Assessment</a></li>
-                                                <li><a href="manage_assess_addition.php">Assessment Addition</a></li>
-                                                <li><a href="manage_consultation.php">Consultation</a></li>
-                                                <li><a href="manage_evaluation_new.php">Evaluation New</a></li>
-                                                <li><a href="manage_evaluation_est.php">Evaluation Established</a></li>
-                                                <li><a href="manage_followup.php">Follow Up</a></li>
-                                                <li><a href="manage_plan_text.php">Plan / Progress Text</a></li>
+                                                <li><a href="/manage/admin/manage_ins_type.php">Insurance Type</a></li>
+                                                <li><a href="/manage/admin/manage_diagnostic.php">Diagnostic Test</a></li>
+                                                <li><a href="/manage/admin/manage_assessment.php">Assessment</a></li>
+                                                <li><a href="/manage/admin/manage_assess_addition.php">Assessment Addition</a></li>
+                                                <li><a href="/manage/admin/manage_consultation.php">Consultation</a></li>
+                                                <li><a href="/manage/admin/manage_evaluation_new.php">Evaluation New</a></li>
+                                                <li><a href="/manage/admin/manage_evaluation_est.php">Evaluation Established</a></li>
+                                                <li><a href="/manage/admin/manage_followup.php">Follow Up</a></li>
+                                                <li><a href="/manage/admin/manage_plan_text.php">Plan / Progress Text</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -194,6 +194,11 @@ if($_POST["historysub"] == 1)
                 <input type="hidden" name="historysub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["historyid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Medical History" class="button" />
+		<?php if($themyarray["historyid"] != ''){ ?>
+                    <a href="manage_history.php?delid=<?=$themyarray["historyid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

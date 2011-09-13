@@ -194,6 +194,11 @@ if($_POST["soft_palatesub"] == 1)
                 <input type="hidden" name="soft_palatesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["soft_palateid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Soft Palate" class="button" />
+		<?php if($themyarray["soft_palateid"] != ''){ ?>
+                    <a href="manage_soft_palate.php?delid=<?=$themyarray["soft_palateid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

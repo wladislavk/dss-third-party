@@ -137,9 +137,6 @@ if($_POST['sortsub'] == 1)
 						Edit
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["doc_insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
 	<? 	}

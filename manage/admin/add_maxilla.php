@@ -194,6 +194,11 @@ if($_POST["maxillasub"] == 1)
                 <input type="hidden" name="maxillasub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["maxillaid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Maxilla" class="button" />
+		<?php if($themyarray["maxillaid"] != ''){ ?>
+                    <a href="manage_maxilla.php?delid=<?=$themyarray["maxillaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

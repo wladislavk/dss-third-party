@@ -300,9 +300,6 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
 						<?= $link_label ?>
 					</a>
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
 	<? 	}

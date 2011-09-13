@@ -194,6 +194,11 @@ if($_POST["type_servicesub"] == 1)
                 <input type="hidden" name="type_servicesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["type_serviceid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Type of Service" class="button" />
+		<?php if($themyarray["type_serviceid"] != ''){ ?>
+                    <a href="manage_type_service.php?delid=<?=$themyarray["type_serviceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

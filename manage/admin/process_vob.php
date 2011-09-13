@@ -646,6 +646,10 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <?php if (!$is_complete) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="button" />
                 <?php } ?>
+                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+
             </td>
         </tr>
     </table>

@@ -318,7 +318,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     $sentto = $sent_letters[$i]['sentto'];
 		$method = $sent_letters[$i]['send_method'];
     $generated = date('m/d/Y', $sent_letters[$i]['generated_date']);
-    $delivered = date('m/d/Y', $sent_letters[$i]['delivery_date']);
+    $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
     if ($sent_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {

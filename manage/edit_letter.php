@@ -379,7 +379,6 @@ while ($row = mysql_fetch_assoc($reason_result)) {
 $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description']));
 
 // Load $template
-echo $templateid;
 switch ($templateid) {
 	case 1:
 		require_once("letter_templates/letter1.php");

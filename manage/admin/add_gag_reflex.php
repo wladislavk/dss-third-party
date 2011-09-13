@@ -194,6 +194,11 @@ if($_POST["gag_reflexsub"] == 1)
                 <input type="hidden" name="gag_reflexsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["gag_reflexid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Gag Reflex" class="button" />
+		<?php if($themyarray["gag_reflexid"] != ''){ ?>
+                    <a href="manage_gag_reflex.php?delid=<?=$themyarray["gag_reflexid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

@@ -107,9 +107,6 @@ $num_pages=mysql_num_rows($my);
 						Edit
 					</a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["pageid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
             <tr class="<?=$tr_class;?>">

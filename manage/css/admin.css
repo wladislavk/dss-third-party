@@ -1248,3 +1248,7 @@ float:left;
 .pat_incomplete{
   color: #f00;
   }
+
+.editdel{
+  float: right;
+  }

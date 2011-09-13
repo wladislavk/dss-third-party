@@ -311,6 +311,11 @@ if($_POST["doc_labub"] == 1)
                 <input type="hidden" name="doc_labub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["doc_labid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Dental Appliance Lab Info " class="button" />
+		<?php if($themyarray["doc_labid"] != ''){ ?>
+                    <a href="manage_doc_lab.php?delid=<?=$themyarray["doc_labid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

@@ -194,6 +194,11 @@ if($_POST["medicationssub"] == 1)
                 <input type="hidden" name="medicationssub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["medicationsid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Medications" class="button" />
+		<?php if($themyarray["medicationsid"] != ''){ ?>
+                    <a href="manage_medications.php?delid=<?=$themyarray["medicationsid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

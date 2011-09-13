@@ -194,6 +194,11 @@ if($_POST["uvulasub"] == 1)
                 <input type="hidden" name="uvulasub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["uvulaid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Uvula" class="button" />
+		<?php if($themyarray["uvulaid"] != ''){ ?>
+                    <a href="manage_uvula.php?delid=<?=$themyarray["uvulaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

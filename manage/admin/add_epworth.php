@@ -194,6 +194,11 @@ if($_POST["epworthsub"] == 1)
                 <input type="hidden" name="epworthsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["epworthid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Epworth" class="button" />
+		<?php if($themyarray["epworthid"] != ''){ ?>
+		                    <a href="manage_epworth.php?delid=<?=$themyarray["epworthid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

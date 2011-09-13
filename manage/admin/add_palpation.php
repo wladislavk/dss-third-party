@@ -194,6 +194,11 @@ if($_POST["palpationsub"] == 1)
                 <input type="hidden" name="palpationsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["palpationid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Palpation" class="button" />
+		<?php if($themyarray["palpationid"] != ''){ ?>
+                    <a href="manage_palpation.php?delid=<?=$themyarray["palpationid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

@@ -388,7 +388,7 @@ function deliver_letter($letterid, $message) {
 
 		// Send Email
 		if ($send_method == 'email') {
-			$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
+			//$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
 		}
 
 		// Create PDF
@@ -407,9 +407,9 @@ function deliver_letter($letterid, $message) {
 		// Send Fax	
 		if ($send_method == 'fax') {
 			$subject = "Dental Sleep Solutions";
-			$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
+			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
-		if ($email_success || $fax_success || $send_method == 'paper') {
+		if (true){ //($email_success || $fax_success || $send_method == 'paper') {
 			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			$letter_result = mysql_query($letter_query);
 			if (!$letter_result) {

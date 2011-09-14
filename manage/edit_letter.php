@@ -1183,7 +1183,6 @@ foreach ($letter_contacts as $key => $contact) {
 	<hr width="90%" />
 
 <br><br>
-</form>
 
 <?php
 
@@ -1255,6 +1254,8 @@ continue;
 
 } // End foreach loop through letters
 ?>
+</form>
+
 			</div>
 		</td>
 	</tr>

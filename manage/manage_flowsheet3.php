@@ -236,6 +236,14 @@ function preauth_errors(){
     array_push($errors, "Missing doctor");
   }
 
+  $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
+  $my = mysql_query($sql);
+  $row = mysql_fetch_array($my);
+  if($row['p_m_ins_type']==1){
+    array_push($errors, "patient has Medicare Insurance. You can change patient\'s insurance type in the Patient Info section");
+  }
+
+
   $sql = "SELECT * FROM dental_patients p JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
@@ -2067,6 +2075,19 @@ $my = mysql_query($sql) or die(mysql_error());
 
 <div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
 <table width="610px" <?php print (!$vob ? 'class="yellow"' : ''); ?> align="center">
+    <?php
+  $sql2 = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
+  $my2 = mysql_query($sql2);
+  $row2 = mysql_fetch_array($my2);
+  if($row2['p_m_ins_type']==1){
+    ?>
+      <tr>
+        <td valign="top" align="center">
+          VOB CANNOT BE REQUESTED - patient has Medicare Insurance.<br />You can change patient's insurance type in the Patient Info section.
+        </td>
+      </tr>
+      <?php } ?>
+
 	<? if (mysql_num_rows($my) == 0) { 
 	?>
       <tr>

@@ -221,6 +221,18 @@ $my = mysql_query($sql) or die(mysql_error());
         Patient Verification of Benefits Information
       </th>
     </tr>
+    <?php
+  $sql2 = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
+  $my2 = mysql_query($sql2);
+  $row2 = mysql_fetch_array($my2);
+  if($row2['p_m_ins_type']==1){
+    ?>
+      <tr class="tr_bg">
+	<td valign="top" align="center">
+	  VOB CANNOT BE REQUESTED - patient has Medicare Insurance. You can change patient's insurance type in the Patient Info section.
+ 	</td>
+      </tr>
+      <?php } ?>
 	<? if (mysql_num_rows($my) == 0) { ?>
       <tr class="tr_bg">
         <td valign="top" align="center">

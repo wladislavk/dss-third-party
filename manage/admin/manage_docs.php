@@ -109,7 +109,6 @@ if(isset($_POST['add_doc'])){
                 <td>
                         <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" />Edit</a>
                         <a target="_blank" href="../q_file/<?= $doc['filename']; ?>">View</a>
-			<a href="manage_docs.php?cat=<?= $_GET['cat']; ?>&delid=<?= $doc['documentid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $doc['name']; ?>');">Delete</a>
                 </td>
         </tr>
 

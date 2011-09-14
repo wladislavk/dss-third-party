@@ -194,6 +194,11 @@ if($_POST["followupsub"] == 1)
                 <input type="hidden" name="followupsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["followupid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Follow Up" class="button" />
+		<?php if($themyarray["followupid"] != ''){ ?>
+                    <a href="manage_followup.php?delid=<?=$themyarray["followupid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent"class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

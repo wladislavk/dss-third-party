@@ -194,6 +194,11 @@ if($_POST["assessmentsub"] == 1)
                 <input type="hidden" name="assessmentsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["assessmentid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Assessment" class="button" />
+		<?php if($themyarray["assessmentid"] != ''){ ?>
+                    <a href="manage_assessment.php?delid=<?=$themyarray["assessmentid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

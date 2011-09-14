@@ -74,7 +74,6 @@ if(isset($_POST['add_cat'])){
 		<td>
 			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>">Edit</a>
 			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>">View</a>
-			<a href="manage_doc_categories.php?delid=<?= $cat['categoryid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $cat['name']; ?> and the documents in this category?');">Delete</a>
 		</td>
         </tr>
 

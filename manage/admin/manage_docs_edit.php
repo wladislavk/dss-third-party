@@ -59,6 +59,8 @@ $doc = mysql_fetch_assoc($dq);
 <label>File:</label> <input type="file" name="attachment" />
 <br />
 <input type="submit" name="edit_doc" value="Edit" />
+<a class="editdel" href="manage_docs.php?cat=<?= $_GET['cat']; ?>&delid=<?= $doc['documentid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $doc['name']; ?>');">Delete</a>
+
 </form>
 
 

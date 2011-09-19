@@ -5,7 +5,6 @@ if($_GET['backoffice'] == '1') {
 } else {
   include 'includes/top.htm';
 }
-
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
@@ -699,7 +698,7 @@ if ($_POST != array()) {
 		$search[] = "%impressions_date%";
 		$replace[] = "<strong>" . $impressions_date . "</strong>";
                 $search[] = "%sleeplab_name%";
-                $replace[] = "<strong>" . $impressions_date . "</strong>";
+                $replace[] = "<strong>" . $sleeplab_name . "</strong>";
 		$search[] = "%delay_reason%";
 		switch ($delay['reason']) {
 			case 'insurance':
@@ -761,6 +760,7 @@ if ($_POST != array()) {
 			}
 		}
 		$other_mds = rtrim($other_mds, ",<br /> ");
+		$other_mds .= "PAT,<br />";
 		$replace[] = "<strong>" . $other_mds . "</strong>";
 		$search[] = "%nonpcp_mds%";
 		$nonpcp_mds = "";
@@ -1105,6 +1105,9 @@ foreach ($letter_contacts as $key => $contact) {
 		}
 	}
 	$other_mds = rtrim($other_mds, ",<br /> ");
+	if($topatient && $contact['type']!='patient'){
+		$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
+	}
 	$replace[] = "<strong>" . $other_mds . "</strong>";
 	$search[] = "%nonpcp_mds%";
 	$nonpcp_mds = "";
@@ -1235,6 +1238,13 @@ foreach ($letter_contacts as $key => $contact) {
 				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
+		}else{
+                        ?>
+                        <script type="text/javascript">
+                                window.location.reload();
+                        </script>
+                        <?php
+
 		}
 
     continue;

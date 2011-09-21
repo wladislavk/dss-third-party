@@ -996,7 +996,7 @@ if($complaintid <> '')
 	
 	asort($c_seq );
 	$reason_seeking_tx .= "
-Chief Complaints:
+Other Complaints:
 ";  
        foreach($c_seq as $i=>$val)
         {
@@ -1013,9 +1013,7 @@ Chief Complaints:
 
 if($other_complaint <> '')
 {
-$reason_seeking_tx .= "
-Additional Complaints:
-".$other_complaint;
+$reason_seeking_tx .= $other_complaint;
 }
 
 if($additional_paragraph <> '')
@@ -1122,13 +1120,12 @@ $problem_cpap .= "
 ".st($intolerance_myarray['intolerance']);
 		}
 	}
+  $problem_cpap .= "\n\n";
 }
 
 if(other_intolerance <> '')
 {
-$problem_cpap .= "
-
-Other Items
+$problem_cpap .= "Other Items
 ".$other_intolerance;
 }
 

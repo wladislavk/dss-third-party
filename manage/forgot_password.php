@@ -10,56 +10,10 @@ include_once('admin/includes/password.php');
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/login.css" rel="stylesheet" type="text/css" />
 
 </head>
-<body onload="document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';">
-
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<table width="980" border="0" cellpadding="1" cellspacing="1" align="center">
-<!-- Header and nav goes here -->
-  <tr>
-    <td colspan="2" align="right" > 
-	
-	</td>
-  </tr>
-  <tr>
-	<td valign='top' height="400">
-	<div style="float:right;margin-right:20px;margin-top:8px;">
-  
-  <div style="text-align:center; float:left;width:50px; color:#00457c; padding-right:20px;"><a style="color:#00457c;text-decoration:none;" href="index.php" target="_self"><img border="0" src="images/homeIcon.png"><br />Home</a></div>
-
-  <div style="text-align:center;float:right;width:50px;margin-top:7px;"><div><a style="color:#00457c;text-decoration:none;" href="#" target="_self">Login Below</div>
-
-  </div>
-
-  
-  
-  </div>
-
-  
-  
-  
-  <div style="height:116px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"><div style="font-size:24px; font-weight:bold; font-family:arial; color:#FFFFFF; padding-top:20px; margin-left:20px;">Dental Sleep Solutions &reg;<font style="color:#000; font-size:14px; font-weight:bolder;padding-left:110px;font-style:italic;">Practice Management</font></div>
-     
-    <div style="margin-top:30px; margin-left:20px; float:left;">
-    </div>
-    
-     <div style="clear:both;"></div>
-  </div>
-  <div style="height:40px; background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;"><div style="width:98.6%; background:#00457c;margin:0 auto;"><div class="suckertreemenu">
-<br style="clear: left;" />
-</div>
-</div>
-<div style="clear:both;"></div>
-</div>
-
-
-<div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
-<div style="clear:both;"></div>
-
- 
- 
+<body>
 
 <?php
 
@@ -109,14 +63,15 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 	}
 }
 ?>
-<br />
-<span class="admin_head">
-	Forgot Password
-</span>
-<br />
-<br />
+<div id="login_container">
 <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
 <table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
+    <tr bgcolor="#FFFFFF">
+        <td colspan="2" class="t_head">
+              Forgot Password 
+        </td>
+    </tr>
+
 	<? if($_GET['msg']!="")
     {
     ?> 
@@ -144,6 +99,5 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
     </tr>
 </table>
 </FORM>
+</div>
 
-
-<? include 'includes/bottom.htm';?>

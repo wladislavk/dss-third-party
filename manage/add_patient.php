@@ -1004,7 +1004,7 @@ $num_face = mysql_num_rows($p);
                                 </select>
                                 <label for="referred_source">Referred Source</label>
 </div>
-                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');scroll(0,0);" value="Add New Referrer" />
+                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
  
 						</div>
                     </li>

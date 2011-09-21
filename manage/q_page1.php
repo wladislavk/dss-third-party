@@ -437,7 +437,7 @@ if($complaintid <> '')
     <tr>
 	<td valign="top" class="frmhead">
                     <label style="display:block;">
-                        What is the main reason you are seeking treatment?
+                        What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
                     </label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
 
@@ -450,7 +450,7 @@ if($complaintid <> '')
 					<span class="form_info">Subjective</span>
                     <br />
                     <label class="desc" id="title0" for="Field0">
-                        Chief Complaints
+                        Other Complaints
                     </label>
                     <? 
 					$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
@@ -529,7 +529,7 @@ function in_array(needle, haystack)
                     <div>
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
-                            	Other Complaints<br />
+                            	Additional Complaints<br />
                             </span>
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>

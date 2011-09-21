@@ -5,7 +5,7 @@ include "includes/top.htm";
 <?php
 if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'service_date';
-  $_REQUEST['sortdir'] = 'asc';
+  $_REQUEST['sortdir'] = 'desc';
 }
 
 

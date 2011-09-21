@@ -250,11 +250,13 @@ function staffabc(fa)
 		fa.username.focus();
 		return false;
 	}
+	if(fa.password){
 	if(trim(fa.password.value) == "" )
 	{
 		alert("Password is Required");
 		fa.password.focus();
 		return false;
+	}
 	}
 	if(trim(fa.name.value) == "" )
 	{
@@ -262,16 +264,19 @@ function staffabc(fa)
 		fa.name.focus();
 		return false;
 	}
-	
 	if(trim(fa.email.value) != "" )
 	{
-		if(! is_emai(trim(fa.email.value)))
+		if(! is_email(trim(fa.email.value)))
 		{
 			alert("In-Valid Email ");
 			fa.email.focus();
 			return false;
 		}
-	}
+	}else{
+                alert("Email is Required");
+                fa.email.focus();
+                return false;
+        }
 }
 
 function pageabc(fa)

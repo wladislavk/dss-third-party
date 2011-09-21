@@ -1476,7 +1476,7 @@ echo "Not Set, Please set through patient info.";
     <td width="15%" height="5">Reason seeking tx</td>
     <td colspan="6">
       <label>
-        <textarea name="reason_seeking_tx" id="textarea" cols="68" rows="5"><?=$reason_seeking_tx;?></textarea>
+        <textarea name="reason_seeking_tx" id="textarea" cols="68" rows="7"><?=$reason_seeking_tx;?></textarea>
       </label>
       
       </td>

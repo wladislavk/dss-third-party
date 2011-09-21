@@ -159,6 +159,7 @@ if($_POST["staffsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

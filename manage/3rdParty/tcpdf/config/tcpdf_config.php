@@ -156,7 +156,7 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * top margin
 	 */
-	define ('PDF_MARGIN_TOP', 48); // 27
+	define ('PDF_MARGIN_TOP', 53); // 27
 
 	/**
 	 * bottom margin

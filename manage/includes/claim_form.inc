@@ -2418,6 +2418,18 @@ if ($is_new_claim) {
 </table>
 
 </form>
+                                <?php if($myarray['status']==DSS_CLAIM_PENDING){ ?>
+			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
+                    <a href="manage_claims.php?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+			<?php }else{ ?>
+                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                                                Delete
+                                        </a>
+			<?php } ?>
+                                <?php } ?>
+
 <br />
 
 

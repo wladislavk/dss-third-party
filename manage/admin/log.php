@@ -16,7 +16,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_log where userid='".$_GET['led']."' order by adddate desc";
+$sql = "select * from dental_login where userid='".$_GET['led']."' order by login_date desc";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -47,7 +47,7 @@ $num_users=mysql_num_rows($my);
             <TD  align="right" colspan="15" class="bp">
                 Pages:
                 <?
-                     paging($no_pages,$index_val,"");
+                     paging($no_pages,$index_val,"led=".$_GET['led']);
                 ?>
             </TD>        
         </TR>
@@ -84,7 +84,7 @@ $num_users=mysql_num_rows($my);
             ?>
                 <tr class="<?=$tr_class;?>">
                     <td valign="top">
-                    	<?= date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+                    	<?= date('m-d-Y H:i',strtotime(st($myarray["login_date"])));?>
                     </td>
                     <td valign="top">
                         <?=st($myarray["ip_address"]);?>

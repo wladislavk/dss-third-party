@@ -56,7 +56,10 @@ $num_users=mysql_num_rows($my);
             <td valign="top" class="col_head" width="30%">
                 Login Date	
             </td>
-            <td valign="top" class="col_head" width="70%">
+            <td valign="top" class="col_head" width="30%">
+                Logout Date
+            </td>
+            <td valign="top" class="col_head" width="40%">
                 IP Address
             </td>
         </tr>
@@ -85,6 +88,9 @@ $num_users=mysql_num_rows($my);
                 <tr class="<?=$tr_class;?>">
                     <td valign="top">
                     	<?= date('m-d-Y H:i',strtotime(st($myarray["login_date"])));?>
+                    </td>
+                    <td valign="top">
+                        <?= (($myarray["logout_date"]!='')?date('m-d-Y H:i',strtotime(st($myarray["logout_date"]))):'');?>
                     </td>
                     <td valign="top">
                         <?=st($myarray["ip_address"]);?>

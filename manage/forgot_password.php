@@ -32,8 +32,8 @@ if($_POST["emailsub"] == 1)
 		$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
 		mysql_query($ins_sql);
 	
-		$headers = 'From: dss@dentalsleepsolutions.com' . "\r\n" .
-		    'Reply-To: dss@dentalsleepsolutions.com' . "\r\n" .
+		$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+		    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
    		     'X-Mailer: PHP/' . phpversion();
 	
 		$subject = "Dental Sleep Solutions Password Reset";

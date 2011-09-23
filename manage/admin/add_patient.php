@@ -2,8 +2,7 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
-
-
+$docid = $_REQUEST['docid'];
 if($_POST["patientsub"] == 1)
 {
 	if($_POST["ed"] != "")
@@ -113,7 +112,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_patient.php?msg=<?=$msg;?>&docid=<?php echo($_GET["docid"]); ?>';
+			parent.window.location='manage_patient.php?msg=<?=$msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?
 		die();
@@ -224,7 +223,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_patient.php?msg=<?=$msg;?>&docid=<?php echo($_GET["docid"]); ?>';
+			parent.window.location='manage_patient.php?msg=<?=$msg;?>&docid=<?php echo($_REQUEST["docid"]); ?>';
 		</script>
 		<?
 		die();
@@ -239,7 +238,7 @@ if($_POST["patientsub"] == 1)
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
-	if($msg != '')
+	if($msg != '' || !isset($_REQUEST["ed"]))
 	{
 		$firstname = $_POST['firstname'];
 		$middlename = $_POST['middlename'];
@@ -262,7 +261,7 @@ if($_POST["patientsub"] == 1)
 		$cell_phone = $_POST['cell_phone'];
 		$email = $_POST['email'];
 		$patient_notes = $_POST['patient_notes'];
-		$docid = $_POST['docid'];
+		$docid = $_REQUEST['docid'];
 		$p_d_party = $_POST["p_d_party"]; 
 		$p_d_relation = $_POST["p_d_relation"];
 		$p_d_other = $_POST["p_d_other"];
@@ -1486,7 +1485,8 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
               $result = mysql_query($query);
               while($array = mysql_fetch_array($result)){ ?>
             	
-                	<option value="<?php echo $array['userid']; ?>" <? if($docid == $array['id']) echo " selected";?>><?php echo $array['name']; ?></option>
+                	<option value="<?php echo $array['userid']; ?>" <? if($docid == $array['userid']){ echo " selected"; }?>><?php echo $array['name']; ?></option>
+
               <?php } ?>  	
                 </select>
                 <br />&nbsp;

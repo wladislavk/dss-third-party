@@ -117,7 +117,13 @@ if($_POST["loginsub"] == 1)
 	</td>
   </tr>
   <tr bgcolor="#FFFFFF">
-    <td height="23" colspan="2" align="center" class="bottom_bg">&copy; dentalsleepsolutions.com</td>
+    <td height="23" colspan="2" align="center" class="bottom_bg">&copy; dentalsleepsolutions.com
+
+<span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
+<br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
+<div style="clear:both;"></div>
+
+</td>
   </tr>
 </table>
 </BODY>

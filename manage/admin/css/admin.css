@@ -535,3 +535,9 @@ width:125px;
 .editdel{
   float:right;
   }
+
+#siteseal{
+  float:right;
+  margin-right: 10px;
+  display: block;
+  }

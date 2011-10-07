@@ -35,11 +35,13 @@ if(!isset($_REQUEST['sort'])){
 $sql = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
      . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
-		 . "  s.delivery_date, s.vob, s.ledger, s.patient_info, d.device "
+		 . "  s.delivery_date, s.vob, s.ledger, s.patient_info, d.device, "
+                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec "
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
 		 . "  LEFT JOIN dental_device d ON s.appliance = d.deviceid  "
+		 . "  LEFT JOIN dental_flow_pg1 fs ON fs.pid = p.patientid " 
 		 . "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
@@ -153,6 +155,9 @@ background:#999999;
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.vob')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.vob&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
 		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.vob')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.rx&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
+                </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.ledger&sortdir=<?php echo ($_REQUEST['sort']=='s.ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
 		</td>
@@ -226,11 +231,48 @@ background:#999999;
 	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?></a>
         </td>
         <td valign="top">
+                <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>">
+			<?php 
+			  if($myarray['rxreq'] != null && $myarray['rxrec'] == null){
+        $day = (24 * 60 * 60);
+  $diff = ceil((time() - strtotime($myarray['rxreq'])) / $day);
+                                if($diff > 7){
+				  ?><span class="red">Pending</span><?php
+				}else{
+				  ?>Pending<?php
+				}
+			  }elseif($myarray['rxrec'] != null){
+				?>Completed<?php
+			  }else{
+				?>N/A<?php
+                          }
+			?>
+		/
+                        <?php  
+                          if($myarray['lomnreq'] != null && $myarray['lomnrec'] == null){
+        $day = (24 * 60 * 60);
+  $diff = ceil((time() - strtotime($myarray['lomnreq'])) / $day);
+                                if($diff > 7){
+                                  ?><span class="red">Pending</span><?php
+                                }else{
+                                  ?>Pending<?php
+                                }
+
+                          }elseif($myarray['lomnrec'] != null){
+                                ?>Completed<?php
+                          }else{ 
+                                ?>N/A<?php
+                          } 
+                        ?>
+
+		</a>
+        </td>
+        <td valign="top">
 	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?></a>
         </td>
         <?php }else{ ?>
 
-           <td colspan="8" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
+           <td colspan="9" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
 
         <?php } ?> 
 			</tr>

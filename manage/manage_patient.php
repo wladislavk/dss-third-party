@@ -228,7 +228,7 @@ background:#999999;
 	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
 	      </td>
         <td valign="top">
-	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : $dss_preauth_status_labels[$myarray['vob']]); ?></a>
+	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : ($myarray['vob']==1 ? "Yes": "Pending")); ?></a>
         </td>
         <td valign="top">
                 <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>">
@@ -242,7 +242,7 @@ background:#999999;
 				  ?>Pending<?php
 				}
 			  }elseif($myarray['rxrec'] != null){
-				?>Completed<?php
+				?>Yes<?php
 			  }else{
 				?>N/A<?php
                           }
@@ -259,7 +259,7 @@ background:#999999;
                                 }
 
                           }elseif($myarray['lomnrec'] != null){
-                                ?>Completed<?php
+                                ?>Yes<?php
                           }else{ 
                                 ?>N/A<?php
                           } 

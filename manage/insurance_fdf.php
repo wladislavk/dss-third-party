@@ -505,16 +505,16 @@ $fdf = "
   ";
   if($hospitalization_date_from!=''){
     $fdf .= "
-      << /T(".$field_path.".hospitization_date_from_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_from)).") >>
-      << /T(".$field_path.".hospitization_date_from_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_from)).") >>
-      << /T(".$field_path.".hospitization_date_from_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_from)).") >>
+      << /T(".$field_path.".hospitalization_date_from_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_from)).") >>
+      << /T(".$field_path.".hospitalization_date_from_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_from)).") >>
+      << /T(".$field_path.".hospitalization_date_from_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_from)).") >>
     ";
   }
   if($hospitalization_date_to!=''){
     $fdf .= "
-      << /T(".$field_path.".hospitization_date_to_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_to)).") >>
-      << /T(".$field_path.".hospitization_date_to_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_to)).") >>
-      << /T(".$field_path.".hospitization_date_to_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_to)).") >>
+      << /T(".$field_path.".hospitalization_date_to_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_to)).") >>
+      << /T(".$field_path.".hospitalization_date_to_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_to)).") >>
+      << /T(".$field_path.".hospitalization_date_to_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_to)).") >>
     ";
   }
   $fdf .= "

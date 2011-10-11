@@ -152,7 +152,7 @@ if($_POST["ins_diagnosissub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Insurance Diagnosis
+                Insurance Diagnosis (Code Only)
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="ins_diagnosis" value="<?=$ins_diagnosis?>" class="tbox" /> 

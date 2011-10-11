@@ -78,7 +78,6 @@ if($_POST['ex_page4sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page4 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		exam_teeth = '".s_for($exam_teeth_arr)."',
 		other_exam_teeth = '".s_for($other_exam_teeth)."',
@@ -107,7 +106,7 @@ if($_POST['ex_page4sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -139,35 +138,13 @@ if($_POST['ex_page4sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-if($p_form_myarray['formid'] == '' && $_GET['fid'] == '' )
-{
-	$ins_sql = "insert into dental_forms set docid='".$_SESSION['docid']."', patientid = '".s_for($_GET["pid"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
-	mysql_query($ins_sql) or die($ins_sql . " | ".mysql_error());
-	
-	$ins_id = mysql_insert_id();
-	$_GET['fid'] = $ins_id;
-}
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	//die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -185,7 +162,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$sql = "select * from dental_ex_page4 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -229,7 +206,7 @@ $crossbite = st($myarray['crossbite']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="ex_page4frm" name="ex_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page4frm" name="ex_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page4sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page4id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
@@ -276,7 +253,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
 <div id="perio_chart" style="display:none;">
-<iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
+<iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
 </div>
                     <br />
 					

@@ -23,8 +23,8 @@ $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
-$insured_lastname = st($pat_myarray['p_m_partymname']);
-$insured_middle = st($pat_myarray['p_m_partylname']);
+$insured_lastname = st($pat_myarray['p_m_partylname']);
+$insured_middle = st($pat_myarray['p_m_partymname']);
 $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
 $other_insured_lastname = st($pat_myarray['s_m_partymname']);
 $other_insured_middle = st($pat_myarray['s_m_partylname']);
@@ -366,7 +366,6 @@ $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
 $diagnosis_4_fill = $ins_diag_myarray['ins_diagnosis'];
 
-
 $fdf = "
 %FDF-1.2
 1 0 obj
@@ -388,13 +387,13 @@ $fdf = "
   << /T(".$field_path.".otherins_chkbox[0]) /V(".(($insurancetype == '7')?1:'').") >>
 
   << /T(".$field_path.".insured_id_number_fill[0]) /V(".$insured_id_number.") >>
-  << /T(".$field_path.".pt_name_fill[0]) /V(".$patient_lastname." ".$patient_firstname." ".$patient_middle.") >>
+  << /T(".$field_path.".pt_name_fill[0]) /V(".$patient_lastname.", ".$patient_firstname.", ".$patient_middle.") >>
   << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".date('m',strtotime($patient_dob)).") >>
   << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".date('d',strtotime($patient_dob)).") >>
   << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".date('y',strtotime($patient_dob)).") >>
   << /T(".$field_path.".pt_sex_m_chkbox[0]) /V(".(($patient_sex == "M" || $patient_sex == "Male")?1:'').") >>
   << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
-  << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname." ".$insured_firstname." ".$insured_middle.") >>
+  << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.", ".$insured_middle.") >>
   << /T(".$field_path.".pt_address_fill[0]) /V(".$patient_address.") >>
   << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "Self")?1:'').") >>
   << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "Spouse")?1:'').") >>
@@ -444,9 +443,13 @@ $fdf = "
   << /T(".$field_path.".reserved_local_use_fill[0]) /V(".$reserved_local_use.") >>
   << /T(".$field_path.".another_health_benefit_yes_chkbox[0]) /V(".(($another_plan == "YES")?1:'').") >>
   << /T(".$field_path.".another_health_benefit_no_chkbox[0]) /V(".(($another_plan == "NO")?1:'').") >>
-  << /T(".$field_path.".pt_signature_fill[0]) /V() >>
-  << /T(".$field_path.".pt_signature_date_fill[0]) /V(".$patient_signed_date.") >>
-  << /T(".$field_path.".insured_signature_fill[0]) /V() >>
+  << /T(".$field_path.".pt_signature_fill[0]) /V(".(($patient_signature)?'SIGNATURE ON FILE':'').") >>
+  ";
+  if($patient_signature){
+    $fdf .= "<< /T(".$field_path.".pt_signature_date_fill[0]) /V(".$patient_signed_date.") >>";
+  }
+  $fdf .= "
+  << /T(".$field_path.".insured_signature_fill[0]) /V(".(($insured_signature)?'SIGNATURE ON FILE':'').") >>
   << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".date('m', strtotime($date_current)).") >>
   << /T(".$field_path.".date_of_current_dd_fill[0]) /V(".date('d', strtotime($date_current)).") >>
   << /T(".$field_path.".date_of_current_yy_fill[0]) /V(".date('y', strtotime($date_current)).") >>
@@ -494,12 +497,18 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
 $sql = "";
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id' "
+       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "WHERE "
        . "  ledger.primary_claim_id = " . $insuranceid . " "
+       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
@@ -515,7 +524,7 @@ $fdf .= "
   << /T(".$field_path.".".$p."_dates_of_service_to_mm_fill[0]) /V(".date('m', strtotime($array['service_date'])).") >>
   << /T(".$field_path.".".$p."_dates_of_service_to_dd_fill[0]) /V(".date('d', strtotime($array['service_date'])).") >>
   << /T(".$field_path.".".$p."_dates_of_service_to_yy_fill[0]) /V(".date('y', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
+  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['place'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
   << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V() >>
@@ -524,7 +533,7 @@ $fdf .= "
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V() >>
   << /T(".$field_path.".".$p."_diagnosis_fill[0]) /V(".$array['diagnosispointer'].") >>
   << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0).") >>
-  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".($array['amount']-floor($array['amount'])).") >>
+  << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents($array['amount']-floor($array['amount'])).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>
   << /T(".$field_path.".".$p."_EPSDT_fill[0]) /V(".$array['epsdt'].") >>
   << /T(".$field_path.".".$p."_rendering_provider_fill[0]) /V(".$array['provider_id'].") >> ";
@@ -541,15 +550,16 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".(($accept_assignment == "Yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
-  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".($total_charge-floor($total_charge)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0).") >>
-  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".($amount_paid-floor($amount_paid)).") >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0).") >>
-  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".($balance_due-floor($balance_due)).") >>
+  << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(0) >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(00) >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".$userinfo['name']."\n".$userinfo['address']."\n".$userinfo['city'].", ".$userinfo['state']." ".$userinfo['zipcode'].") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".substr($userinfo['phone'], 0, 3).") >>
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".substr($userinfo['phone'], 3).") >>
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".$userinfo['name']."\n".$userinfo['address']."\n".$userinfo['city'].", ".$userinfo['state']." ".$userinfo['zipcode'].") >>
+  << /T(".$field_path.".signature_of_physician-supplier__date_fill[0]) /V(".date('m/d/Y').") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
@@ -580,6 +590,13 @@ trailer
             // write the file out
               echo  $fdf;
 
+function fill_cents($v){
+  if($v<10){
+	return '0'.$v;
+  }else{
+	return $v;
+  }
+}
 
 ?>
 

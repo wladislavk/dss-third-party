@@ -57,7 +57,6 @@ if ($_REQUEST["delid"] != "") {
 
 	die(); // already did a javascript redirect...just die
 }
-
 $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_POST['ed'] == '') ? true : false;
 //print "\$is_new_claim: $is_new_claim";exit;
 
@@ -986,6 +985,14 @@ if($patient_phone == '')
 if($patient_dob == '')
 	$patient_dob = $pat_myarray['dob'];
 
+if($is_new_claim){
+	if($pat_myarray['p_m_ins_ass']=='Yes'){
+	  $insured_signature = 1;
+	}
+	$patient_signature = 1;
+	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
+	
+  }
 if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
 
@@ -1628,16 +1635,16 @@ if (empty($prior_authorization_number)) {
 						<br /><br /><br />
 						
 						<input type="checkbox" name="patient_signature" value="1" <? if($patient_signature == "1") echo " checked";?> />
-						Signature
+						Signature on File
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
-						<input type="text" value="<?=$patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3" />
+						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3" />
 					</td>
 					<td align="left" valign="top">
 						<span class="num">13.</span>
@@ -1647,11 +1654,9 @@ if (empty($prior_authorization_number)) {
 						
 						<?php
             $patient_signature = st($myarray['patient_signature']);
-            if($patient_signature == "1"){
-            echo "<center><strong>SIGNATURE ON FILE</strong></center>";
-            }else{
-            echo "<center>Check to confirm patient signature is on file: <input type='checkbox' name='patient_signature' value='1' /></center>";
-            }	
+            echo "<center>SIGNATURE ON FILE: <input type='checkbox' name='insured_signature' value='1' ";
+            if($insured_signature){ echo "checked"; }
+	    echo " /></center>";
             ?>
 						
 					</td>
@@ -1856,7 +1861,7 @@ if (empty($prior_authorization_number)) {
 										{
 										?>
 											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_1 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])?>
+												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
 											</option>
 										<?
 										}?>
@@ -1873,7 +1878,7 @@ if (empty($prior_authorization_number)) {
 										{
 										?>
 											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_3 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])?>
+												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
 											</option>
 										<?
 										}?>
@@ -1892,7 +1897,7 @@ if (empty($prior_authorization_number)) {
 										{
 										?>
 											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_2 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])?>
+												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
 											</option>
 										<?
 										}?>
@@ -1909,7 +1914,7 @@ if (empty($prior_authorization_number)) {
 										{
 										?>
 											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_4 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])?>
+												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
 											</option>
 										<?
 										}?>
@@ -2072,11 +2077,12 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id' "
+       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
+       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
@@ -2087,18 +2093,23 @@ if ($is_new_claim) {
        . "  ledger.service_date ASC";
 } else {
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id' "
+       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "WHERE "
        . "  ledger.primary_claim_id = " . $insuranceid . " "
+       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
 }
 
 $query = mysql_query($sql);
-
 // Display ledger trxns
 if (!$query) {
   print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There was a database error when selecting ledger transactions.</font><br/><br/>" . mysql_errno() . ": " . mysql_error() . "</center><br />";
@@ -2113,7 +2124,7 @@ if (!$query) {
       <tr>
         <td width="106"><?php echo $array['service_date']; ?></td>
         <td width="106"><?php echo $array['service_date']; ?></td>
-        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo $array['placeofservice']; ?>"></td>
+        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo $array['place']; ?>"></td>
         <td width="41"><input  style="width:26px;"type="text" name="emg<?=$li;?>" value="<?php echo $array['emg']; ?>"></td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">
@@ -2263,11 +2274,11 @@ if ($is_new_claim) {
     </td>
     <td valign="top" width="33%">
       <span class="num">29.</span> Amount Paid<br/>
-      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3" size="15"/>
+      $ <input type="text" value="0.00" name="amount_paid" class="inbox_line3" size="15"/>
     </td>
     <td valign="top" width="33%">
       <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$total_charge;?>" name="balance_due" class="inbox_line3" size="15" />
       <br/>
       <span class="small_cap">&nbsp;</span>
     </td>

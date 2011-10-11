@@ -61,7 +61,7 @@ if($_POST["transaction_codesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."' where transaction_codeid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place= '".s_for($_POST['place'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."' where transaction_codeid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -76,7 +76,7 @@ if($_POST["transaction_codesub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', default_code = 1";
+			$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place='".s_for($_POST['place'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', default_code = 1";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -111,6 +111,7 @@ if($_POST["transaction_codesub"] == 1)
 	{
 		$transaction_code = $_POST['transaction_code'];
     $type = $_POST['type'];		
+		$place = $_POST['place'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
@@ -119,6 +120,7 @@ if($_POST["transaction_codesub"] == 1)
 	{
 		$transaction_code = st($themyarray['transaction_code']);
 		$type = st($themyarray['type']);
+		$place = st($themyarray['place']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
@@ -175,6 +177,23 @@ if($_POST["transaction_codesub"] == 1)
                   <option value="6" <?php if($type == "6"){echo " selected='selected'";} ?>> Adjustment Code </option>              
                 </select> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+               Place 
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="place" class="tbox" />
+		  <option value=""></option>
+		  <?php 
+			$psql = "select * from dental_place_service order by sortby";
+			$pmy = mysql_query($psql);
+			while($prow = mysql_fetch_assoc($pmy)){
+		  ?>
+                  <option value="<?= $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?= $prow['place_service']." ".$prow['description']; ?></option>
+		  <?php } ?>
+                </select>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

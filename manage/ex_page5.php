@@ -136,7 +136,6 @@ if($_POST['ex_page5sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page5 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		palpationid = '".s_for($pal_arr)."',
 		palpationRid = '".s_for($palR_arr)."',
@@ -180,7 +179,7 @@ if($_POST['ex_page5sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -227,27 +226,13 @@ if($_POST['ex_page5sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	//die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -265,7 +250,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$sql = "select * from dental_ex_page5 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -398,7 +383,7 @@ if($jointid <> '')
 	}
 </script>
 
-<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page5sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page5id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

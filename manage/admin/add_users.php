@@ -87,7 +87,7 @@ if($_POST["usersub"] == 1)
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
-                        $code_sql = "insert into dental_transaction_code (transaction_code, description, type, sortby, docid) SELECT transaction_code, description, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
+                        $code_sql = "insert into dental_transaction_code (transaction_code, description, place, type, sortby, docid) SELECT transaction_code, description, place, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
                         mysql_query($code_sql) or die($code_sql.mysql_error());
 
 			$msg = "Added Successfully";

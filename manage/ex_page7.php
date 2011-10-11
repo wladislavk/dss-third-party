@@ -146,7 +146,6 @@ if($_POST['ex_page7sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_ex_page7 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		sleep_study_on = '".s_for($sleep_study_on)."',
 		sleep_study_by = '".s_for($sleep_study_by)."',
@@ -174,7 +173,7 @@ if($_POST['ex_page7sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -205,27 +204,13 @@ if($_POST['ex_page7sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -243,7 +228,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$sql = "select * from dental_ex_page7 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_ex_page7 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -260,7 +245,7 @@ $evaluation_est = st($myarray['evaluation_est']);
 $additional_paragraph_candidate = st($myarray['additional_paragraph_candidate']);
 $additional_paragraph_suffers = st($myarray['additional_paragraph_suffers']);
 
-$q2_sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 
@@ -344,7 +329,7 @@ $sleep_study_by = st($q2_myarray['sleep_study_by']);
 	}
 </script>
 
-<form id="ex_page7frm" name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return ex_page7abc(this)">
+<form id="ex_page7frm" name="ex_page7frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" onsubmit="return ex_page7abc(this)">
 <input type="hidden" name="ex_page7sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page7id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

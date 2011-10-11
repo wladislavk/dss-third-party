@@ -388,9 +388,15 @@ $fdf = "
 
   << /T(".$field_path.".insured_id_number_fill[0]) /V(".$insured_id_number.") >>
   << /T(".$field_path.".pt_name_fill[0]) /V(".$patient_lastname.", ".$patient_firstname.", ".$patient_middle.") >>
-  << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".date('m',strtotime($patient_dob)).") >>
-  << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".date('d',strtotime($patient_dob)).") >>
-  << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".date('y',strtotime($patient_dob)).") >>
+  ";
+  if($patient_dob!=''){
+    $fdf .= "
+      << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".date('m',strtotime($patient_dob)).") >>
+      << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".date('d',strtotime($patient_dob)).") >>
+      << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".date('y',strtotime($patient_dob)).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".pt_sex_m_chkbox[0]) /V(".(($patient_sex == "M" || $patient_sex == "Male")?1:'').") >>
   << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
   << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.", ".$insured_middle.") >>
@@ -426,14 +432,27 @@ $fdf = "
   << /T(".$field_path.".pt_condition_place_fill[0]) /V(".$auto_accident_place.") >>
   << /T(".$field_path.".pt_condition_other_yes_chkbox[0]) /V(".(($other_accident == "YES")?1:'').") >>
   << /T(".$field_path.".pt_condition_other_no_chkbox[0]) /V(".(($other_accident == "NO")?1:'').") >>
-  << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".date('m', strtotime($insured_dob)).") >>
-  << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".date('d', strtotime($insured_dob)).") >>
-  << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".date('y', strtotime($insured_dob)).") >>
+  ";
+
+  if($insured_dob!=''){
+    $fdf .= "
+      << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".date('m', strtotime($insured_dob)).") >>
+      << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".date('d', strtotime($insured_dob)).") >>
+      << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".date('y', strtotime($insured_dob)).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".insured_sex_m_chkbox[0]) /V(".(($insured_sex == "M" || $insured_sex == "Male")?1:'').") >>
   << /T(".$field_path.".insured_sex_f_chkbox[0]) /V(".(($insured_sex == "F" || $insured_sex == "Female")?1:'').") >>
-  << /T(".$field_path.".other_insured_dob_mm_fill[0]) /V(".date('m', strtotime($other_insured_dob)).") >>
-  << /T(".$field_path.".other_insured_dob_dd_fill[0]) /V(".date('d', strtotime($other_insured_dob)).") >>
-  << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".date('y', strtotime($other_insured_dob)).") >>
+  ";
+  if($other_insured_dob!=''){
+    $fdf .= "
+      << /T(".$field_path.".other_insured_dob_mm_fill[0]) /V(".date('m', strtotime($other_insured_dob)).") >>
+      << /T(".$field_path.".other_insured_dob_dd_fill[0]) /V(".date('d', strtotime($other_insured_dob)).") >>
+      << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".date('y', strtotime($other_insured_dob)).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".other_insured_sex_m_chkbox[0]) /V(".(($other_insured_sex == "M" || $other_insured_sex == "Male")?1:'').") >>
   << /T(".$field_path.".other_insured_sex_f_chkbox[0]) /V(".(($other_insured_sex == "F" || $other_insured_sex == "Female")?1:'').") >>
   << /T(".$field_path.".insured_employers_name_fill[0]) /V(".$insured_employer_school_name.") >>
@@ -450,27 +469,55 @@ $fdf = "
   }
   $fdf .= "
   << /T(".$field_path.".insured_signature_fill[0]) /V(".(($insured_signature)?'SIGNATURE ON FILE':'').") >>
-  << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".date('m', strtotime($date_current)).") >>
-  << /T(".$field_path.".date_of_current_dd_fill[0]) /V(".date('d', strtotime($date_current)).") >>
-  << /T(".$field_path.".date_of_current_yy_fill[0]) /V(".date('y', strtotime($date_current)).") >>
-  << /T(".$field_path.".pt_similar_illness_mm_fill[0]) /V(".date('m', strtotime($date_same_illness)).") >>
-  << /T(".$field_path.".pt_similar_illness_dd_fill[0]) /V(".date('d', strtotime($date_same_illness)).") >>
-  << /T(".$field_path.".pt_similar_illness_yy_fill[0]) /V(".date('y', strtotime($date_same_illness)).") >>
-  << /T(".$field_path.".date_pt_unable_work_from_mm_fill[0]) /V(".date('m', strtotime($unable_date_from)).") >>
-  << /T(".$field_path.".date_pt_unable_work_from_dd_fill[0]) /V(".date('d', strtotime($unable_date_from)).") >>
-  << /T(".$field_path.".date_pt_unable_work_from_yy_fill[0]) /V(".date('y', strtotime($unable_date_from)).") >>
-  << /T(".$field_path.".date_pt_unable_work_to_mm_fill[0]) /V(".date('m', strtotime($unable_date_to)).") >>
-  << /T(".$field_path.".date_pt_unable_work_to_dd_fill[0]) /V(".date('d', strtotime($unable_date_to)).") >>
-  << /T(".$field_path.".date_pt_unable_work_to_yy_fill[0]) /V(".date('y', strtotime($unable_date_to)).") >>
+  ";
+  if($date_current!=''){
+    $fdf .= "
+      << /T(".$field_path.".date_of_current_mm_fill[0]) /V(".date('m', strtotime($date_current)).") >>
+      << /T(".$field_path.".date_of_current_dd_fill[0]) /V(".date('d', strtotime($date_current)).") >>
+      << /T(".$field_path.".date_of_current_yy_fill[0]) /V(".date('y', strtotime($date_current)).") >>
+    ";
+  }
+  if($date_same_illness!=''){
+    $fdf .= "
+      << /T(".$field_path.".pt_similar_illness_mm_fill[0]) /V(".date('m', strtotime($date_same_illness)).") >>
+      << /T(".$field_path.".pt_similar_illness_dd_fill[0]) /V(".date('d', strtotime($date_same_illness)).") >>
+      << /T(".$field_path.".pt_similar_illness_yy_fill[0]) /V(".date('y', strtotime($date_same_illness)).") >>
+    ";
+  }
+  if($unable_date_from != ''){
+    $fdf .= "
+      << /T(".$field_path.".date_pt_unable_work_from_mm_fill[0]) /V(".date('m', strtotime($unable_date_from)).") >>
+      << /T(".$field_path.".date_pt_unable_work_from_dd_fill[0]) /V(".date('d', strtotime($unable_date_from)).") >>
+      << /T(".$field_path.".date_pt_unable_work_from_yy_fill[0]) /V(".date('y', strtotime($unable_date_from)).") >>
+    ";
+  }
+  if($unable_date_to!=''){
+    $fdf .= "
+      << /T(".$field_path.".date_pt_unable_work_to_mm_fill[0]) /V(".date('m', strtotime($unable_date_to)).") >>
+      << /T(".$field_path.".date_pt_unable_work_to_dd_fill[0]) /V(".date('d', strtotime($unable_date_to)).") >>
+      << /T(".$field_path.".date_pt_unable_work_to_yy_fill[0]) /V(".date('y', strtotime($unable_date_to)).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$refname.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
   << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$userinfo['npi'].") >>
-  << /T(".$field_path.".hospitization_date_from_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_from)).") >>
-  << /T(".$field_path.".hospitization_date_from_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_from)).") >>
-  << /T(".$field_path.".hospitization_date_from_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_from)).") >>
-  << /T(".$field_path.".hospitization_date_to_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_to)).") >>
-  << /T(".$field_path.".hospitization_date_to_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_to)).") >>
-  << /T(".$field_path.".hospitization_date_to_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_to)).") >>
+  ";
+  if($hospitalization_date_from!=''){
+    $fdf .= "
+      << /T(".$field_path.".hospitization_date_from_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_from)).") >>
+      << /T(".$field_path.".hospitization_date_from_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_from)).") >>
+      << /T(".$field_path.".hospitization_date_from_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_from)).") >>
+    ";
+  }
+  if($hospitalization_date_to!=''){
+    $fdf .= "
+      << /T(".$field_path.".hospitization_date_to_mm_fill[0]) /V(".date('m', strtotime($hospitalization_date_to)).") >>
+      << /T(".$field_path.".hospitization_date_to_dd_fill[0]) /V(".date('d', strtotime($hospitalization_date_to)).") >>
+      << /T(".$field_path.".hospitization_date_to_yy_fill[0]) /V(".date('y', strtotime($hospitalization_date_to)).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".reserved_for_local_fill[0]) /V(".$reserved_local_use1.") >>
   << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".(($outside_lab == "YES")?1:'').") >>
   << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".(($outside_lab == "NO")?1:'').") >>
@@ -517,13 +564,21 @@ $c=0;
 while ($array = mysql_fetch_array($query)) { 
 $p = $prefix[$c];
 $c++;
-$fdf .= "
-  << /T(".$field_path.".".$p."_dates_of_service_from_mm_fill[0]) /V(".date('m', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_dates_of_service_from_dd_fill[0]) /V(".date('d', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_dates_of_service_from_yy_fill[0]) /V(".date('y', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_dates_of_service_to_mm_fill[0]) /V(".date('m', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_dates_of_service_to_dd_fill[0]) /V(".date('d', strtotime($array['service_date'])).") >>
-  << /T(".$field_path.".".$p."_dates_of_service_to_yy_fill[0]) /V(".date('y', strtotime($array['service_date'])).") >>
+  if($array['service_date']!=''){
+    $fdf .= "
+      << /T(".$field_path.".".$p."_dates_of_service_from_mm_fill[0]) /V(".date('m', strtotime($array['service_date'])).") >>
+      << /T(".$field_path.".".$p."_dates_of_service_from_dd_fill[0]) /V(".date('d', strtotime($array['service_date'])).") >>
+      << /T(".$field_path.".".$p."_dates_of_service_from_yy_fill[0]) /V(".date('y', strtotime($array['service_date'])).") >>
+    ";
+  }
+  if($array['service_date']){
+    $fdf .= " 
+      << /T(".$field_path.".".$p."_dates_of_service_to_mm_fill[0]) /V(".date('m', strtotime($array['service_date'])).") >>
+      << /T(".$field_path.".".$p."_dates_of_service_to_dd_fill[0]) /V(".date('d', strtotime($array['service_date'])).") >>
+      << /T(".$field_path.".".$p."_dates_of_service_to_yy_fill[0]) /V(".date('y', strtotime($array['service_date'])).") >>
+    ";
+  }
+  $fdf .= "
   << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['place'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>

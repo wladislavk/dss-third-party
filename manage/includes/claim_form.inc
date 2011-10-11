@@ -239,7 +239,7 @@ if ($_POST['insurancesub'] == 1) {
 	$amount_paid = $_POST['amount_paid'];
 	$balance_due = $_POST['balance_due'];
 	$signature_physician = $_POST['signature_physician'];
-	$physician_signed_date = $_POST['physician_signed_date'];
+	$physician_signed_date = (($_POST['physician_signed_date']!=date('m/d/Y'))?$_POST['physician_signed_date']:'');
 	$service_facility_info_name = $_POST['service_facility_info_name'];
 	$service_facility_info_address = $_POST['service_facility_info_address'];
 	$service_facility_info_city = $_POST['service_facility_info_city'];
@@ -931,7 +931,7 @@ $total_charge = st($myarray['total_charge']);
 $amount_paid = st($myarray['amount_paid']);
 $balance_due = st($myarray['balance_due']);
 $signature_physician = st($myarray['signature_physician']);
-$physician_signed_date = st($myarray['physician_signed_date']);
+$physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
 $service_facility_info_name = st($myarray['service_facility_info_name']);
 $service_facility_info_address = st($myarray['service_facility_info_address']);
 $service_facility_info_city = st($myarray['service_facility_info_city']);
@@ -991,7 +991,7 @@ if($is_new_claim){
 	}
 	$patient_signature = 1;
 	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
-	
+        $physician_signed_date = date('m/d/Y');	
   }
 if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	

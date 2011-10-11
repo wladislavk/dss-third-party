@@ -552,7 +552,7 @@ if($numrows){
 						<input id="scheddate<?php echo $i; ?>" name="data[<?= $i ?>][scheddate]" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="cal_scheddate<?=$i?>.popup();" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
 						
 						<script id="js<?php echo $i; ?>" type="text/javascript">
-                var cal<?php echo $i; ?> = new CalendarPopup();
+                //var cal<?php echo $i; ?> = new CalendarPopup();
             </script>
 						
 						</td>
@@ -732,8 +732,8 @@ if($numrows){
 ?>
  <script type="text/javascript">
 	document.getElementById('scheddate<?php echo $i; ?>').style.visibility='hidden';
-	document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';`
-	autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]');
+	document.getElementById('sleeplabwheresched<?php echo $i; ?>').style.visibility='hidden';
+	autoselect(this,document.sleepstudy<?php echo $i; ?>.elements['data[<?= $i; ?>][completed]']);
  </script>
  <?php            
 } ?>

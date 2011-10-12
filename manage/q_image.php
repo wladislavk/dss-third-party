@@ -101,7 +101,7 @@ $itype_my = mysql_query($itype_sql);
 </select>
 <br />
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&flow=<?=$_GET['flow'];?>');" class="addButton">
+	<button onclick="Javascript: loadPopupRefer('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&flow=<?=$_GET['flow'];?>');" class="addButton">
 		Add New Image
 	</button>
 	&nbsp;&nbsp;
@@ -209,6 +209,12 @@ $itype_my = mysql_query($itype_sql);
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 
 <br /><br />	
 

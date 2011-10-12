@@ -37,7 +37,7 @@ $other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
 $insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
 $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']);
-
+$docid = st($pat_myarray['docid']);
 
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -59,6 +59,7 @@ $insured_address = st($myarray['insured_address']);
 $patient_city = st($myarray['patient_city']);
 $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
+$patient_status_array = split('~', $patient_status);
 $insured_city = st($myarray['insured_city']);
 $insured_state = st($myarray['insured_state']);
 $patient_zip = st($myarray['patient_zip']);
@@ -408,17 +409,17 @@ $fdf = "
   << /T(".$field_path.".insured_address_fill[0]) /V(".$insured_address.") >>
   << /T(".$field_path.".pt_city_fill[0]) /V(".$patient_city.") >>
   << /T(".$field_path.".pt_state_fill[0]) /V(".$patient_state.") >>
-  << /T(".$field_path.".pt_status_single_chkbox[0]) /V(".(($patient_status == "Single")?1:'').") >>
-  << /T(".$field_path.".pt_status_married_chkbox[0]) /V(".(($patient_status == "Married")?1:'').") >>
-  << /T(".$field_path.".pt_status_other[0]) /V(".(($patient_status == "Life Partner")?1:'').") >>
+  << /T(".$field_path.".pt_status_single_chkbox[0]) /V(".((in_array("Single", $patient_status_array))?1:'').") >>
+  << /T(".$field_path.".pt_status_married_chkbox[0]) /V(".((in_array("Married", $patient_status_array))?1:'').") >>
+  << /T(".$field_path.".pt_status_other_chkbox[0]) /V(".((in_array("Others", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".insured_city_fill[0]) /V(".$insured_city.") >>
   << /T(".$field_path.".insured_state_fill[0]) /V(".$insured_state.") >>
   << /T(".$field_path.".pt_zipcode_fill[0]) /V(".$patient_zip.") >>
   << /T(".$field_path.".pt_phone_areacode_fill[0]) /V(".substr($patient_phone,0,3).") >>
   << /T(".$field_path.".pt_phone_number_fill[0]) /V(".substr($patient_phone,3).") >>
-  << /T(".$field_path.".pt_status_employed_chkbox[0]) /V(".(($work_status == "Employed")?1:'').") >>
-  << /T(".$field_path.".pt_status_ftstudent_chkbox[0]) /V(".(($work_status == "Full Time Student")?1:'').") >>
-  << /T(".$field_path.".pt_status_ptstudent_chkbox[0]) /V(".(($work_status == "Part Time Student")?1:'').") >>
+  << /T(".$field_path.".pt_status_employed_chkbox[0]) /V(".((in_array("Employed", $patient_status_array))?1:'').") >>
+  << /T(".$field_path.".pt_status_ftstudent_chkbox[0]) /V(".((in_array("Full Time Student", $patient_status_array))?1:'').") >>
+  << /T(".$field_path.".pt_status_ptstudent_chkbox[0]) /V(".((in_array("Part Time Student", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".insured_zipcode_fill[0]) /V(".$insured_zip.") >>
   << /T(".$field_path.".insured_phone_areacode_fill[0]) /V(".$insured_phone_code.") >>
   << /T(".$field_path.".insured_phone_number_fill[0]) /V(".$insured_phone.") >>
@@ -430,8 +431,8 @@ $fdf = "
   << /T(".$field_path.".pt_condition_auto_yes_chkbox[0]) /V(".(($auto_accident == "YES")?1:'').") >>
   << /T(".$field_path.".pt_condition_auto_no_chkbox[0]) /V(".(($auto_accident == "NO")?1:'').") >>
   << /T(".$field_path.".pt_condition_place_fill[0]) /V(".$auto_accident_place.") >>
-  << /T(".$field_path.".pt_condition_other_yes_chkbox[0]) /V(".(($other_accident == "YES")?1:'').") >>
-  << /T(".$field_path.".pt_condition_other_no_chkbox[0]) /V(".(($other_accident == "NO")?1:'').") >>
+  << /T(".$field_path.".pt_condition_otheracc_yes_chkbox[0]) /V(".(($other_accident == "YES")?1:'').") >>
+  << /T(".$field_path.".pt_condition_otheracc_no_chkbox[0]) /V(".(($other_accident == "NO")?1:'').") >>
   ";
 
   if($insured_dob!=''){
@@ -499,7 +500,7 @@ $fdf = "
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$refname.") >>
+  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$ref_name.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
   << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$userinfo['npi'].") >>
   ";
@@ -553,8 +554,8 @@ $sql = "";
        . "WHERE "
        . "  ledger.primary_claim_id = " . $insuranceid . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
-       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -582,11 +583,11 @@ $c++;
   << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['place'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
-  << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V() >>
+  << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>
   << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V() >>
   << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V() >>
   << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V() >>
-  << /T(".$field_path.".".$p."_diagnosis_fill[0]) /V(".$array['diagnosispointer'].") >>
+  << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$array['diagnosispointer'].") >>
   << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0).") >>
   << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents($array['amount']-floor($array['amount'])).") >>
   << /T(".$field_path.".".$p."_days_or_units_fill[0]) /V(".$array['daysorunits'].") >>

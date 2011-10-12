@@ -751,6 +751,7 @@ $other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
 $insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
 $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']); 
+$docid = $pat_myarray['docid'];
 
 // if patient does not have an id, redirect to manage_patient.php to address the issue
 if ($pat_myarray['patientid'] == '') {
@@ -785,6 +786,7 @@ $insured_address = st($myarray['insured_address']);
 $patient_city = st($myarray['patient_city']);
 $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
+$patient_status_array = split('~',$patient_status);
 $insured_city = st($myarray['insured_city']);
 $insured_state = st($myarray['insured_state']);
 $patient_zip = st($myarray['patient_zip']);
@@ -1361,34 +1363,34 @@ if (empty($prior_authorization_number)) {
 								<td width="25%" align="left" valign="top">
 									<span class="small_cap">Single</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Single" <? if($patient_status == "Single") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Single" <? if(in_array("Single", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td width="40%" align="left" valign="top">
 									<span class="small_cap">Married</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Married" <? if($patient_status == "Married") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Married" <? if(in_array("Married", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td width="35%" align="left" valign="top">
 									<span class="small_cap">Others</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Others" <? if($patient_status == "Life Partner") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Others" <? if(in_array("Others",$patient_status_array)) { echo " checked";}?> />
 								</td>
 							</tr>
 							<tr>
 								<td align="left" valign="top">
 									<span class="small_cap">Employed</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Employed" <? if($work_status == "Employed") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Employed" <? if(in_array("Employed", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Full Time Student</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Full Time Student" <? if($work_status == "Full Time Student") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Full Time Student" <? if(in_array("Full Time Student", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Part Time Student</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Part Time Student" <?if($work_status == "Part Time Student") { echo " checked";}?> />
+									<input name="patient_status[]" type="checkbox" value="Part Time Student" <?if(in_array("Part Time Student", $patient_status_array)) { echo " checked";}?> />
 								</td>
 							</tr>
 						</table>
@@ -2102,8 +2104,8 @@ if ($is_new_claim) {
        . "WHERE "
        . "  ledger.primary_claim_id = " . $insuranceid . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
-       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND ledger.docid = '" . $docid . "' "
+       . "  AND trxn_code.docid = '" . $docid . "' "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2132,7 +2134,7 @@ if (!$query) {
             <option>Select One</option>
             <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
               <?php $selected = ($array['modcode'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']?></option>
+              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
             <?php } ?>
           </select>
         </td>

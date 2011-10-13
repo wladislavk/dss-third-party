@@ -226,7 +226,6 @@ if($_POST['insurancesub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_insurance set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',

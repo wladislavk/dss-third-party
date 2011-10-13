@@ -10,21 +10,7 @@ header("Expires: 0");
 
 include "admin/includes/config.php";
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	die();
-}
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -42,7 +28,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$ref_sql = "select * from dental_q_recipients where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$ref_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $ref_my = mysql_query($ref_sql);
 $ref_myarray = mysql_fetch_array($ref_my);
 
@@ -62,7 +48,7 @@ else
 	$age = 'N/A';
 }
 
-$q3_sql = "select * from dental_q_page3 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q3_sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
 $q3_my = mysql_query($q3_sql);
 $q3_myarray = mysql_fetch_array($q3_my);
 
@@ -109,7 +95,7 @@ foreach($medications_arr as $val)
 	}
 }
 
-$q2_sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 
@@ -129,7 +115,7 @@ $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 
 $sleeplab_name = st($sleeplab_myarray['company']);
 
-$sum_sql = "select * from dental_summary where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sum_sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
 $sum_my = mysql_query($sum_sql);
 $sum_myarray = mysql_fetch_array($sum_my);
 

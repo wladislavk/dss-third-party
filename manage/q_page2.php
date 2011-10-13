@@ -102,7 +102,6 @@ if($_POST['q_page2sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page2 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		polysomnographic = '".s_for($polysomnographic)."',
 		sleep_center_name = '".s_for($sleep_center_name)."',
@@ -134,7 +133,7 @@ if($_POST['q_page2sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -169,26 +168,11 @@ if($_POST['q_page2sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
-}
-
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-//	die();
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -206,7 +190,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -349,7 +333,7 @@ if($cpap == '')
 	}
 </script>
 
-<form id="q_page2frm" name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" onsubmit="return q_page2abc(this)">
+<form id="q_page2frm" name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" onsubmit="return q_page2abc(this)">
 <input type="hidden" name="q_page2sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page2id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

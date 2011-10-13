@@ -60,7 +60,6 @@ if($_POST['q_page4sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page4 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		family_had = '".s_for($family_had_arr)."',
 		family_diagnosed = '".s_for($family_diagnosed)."',
@@ -82,7 +81,7 @@ if($_POST['q_page4sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -108,27 +107,13 @@ if($_POST['q_page4sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	//die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -145,7 +130,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page4 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page4 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -180,7 +165,7 @@ $tobacco = st($myarray['tobacco']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="q_page4frm" name="q_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
+<form id="q_page4frm" name="q_page4frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="q_page4sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page4id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

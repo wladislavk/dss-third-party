@@ -1,6 +1,7 @@
 <?php
 
 function authorize($u, $p, $l){
+  return true;  //bypass for function until it is determined how this should work.
   if($_SESSION['user_access']==$l){
     return true;
   }else{

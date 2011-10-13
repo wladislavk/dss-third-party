@@ -1,5 +1,4 @@
 <?php
-if(!isset($_GET['fid'])){ $_GET['fid']=$_GET['pid']; }
 
 include 'includes/top.htm';
 require_once('includes/patient_info.php');
@@ -231,7 +230,6 @@ $ex_ins_sql = " insert dental_ex_page5 set
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_summary set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		patient_name = '".s_for($patient_name)."',
 		patient_dob = '".s_for($patient_dob)."',
@@ -427,7 +425,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -633,7 +631,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
     }?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?pg=2&fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pg=2&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -641,21 +639,6 @@ $ex_ins_sql = " insert dental_ex_page5 set
 }
 
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	//die();
-}
-
-//$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
@@ -680,7 +663,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$q1_sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $q1_my = mysql_query($q1_sql);
 $q1_myarray = mysql_fetch_array($q1_my);
 
@@ -698,7 +681,7 @@ $sleep_qual4 = st($myarray['sleep_qual4']);
 $sleep_qual5 = st($myarray['sleep_qual5']);
 $quit_breathing = st($q1_myarray['quit_breathing']);
 $hours_sleep = st($q1_myarray['hours_sleep']);
-$q2_sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 
@@ -709,7 +692,7 @@ $confirmed_diagnosis = st($q2_myarray['confirmed_diagnosis']);
 $other_treat_att = substr(st($q2_myarray['other']),1);
 $other_treat_att = str_replace("~","\n",$other_treat_att);
 
-$sqlex = "select * from dental_ex_page5 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $myex = mysql_query($sqlex);
 $myarrayex = mysql_fetch_array($myex);
 
@@ -721,7 +704,7 @@ $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 
 
-$sqlex8 = "select * from dental_ex_page8 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sqlex8 = "select * from dental_ex_page8 where patientid='".$_GET['pid']."'";
 $myex8 = mysql_query($sqlex8);
 $myarrayex8 = mysql_fetch_array($myex8);
 $dental_device_used = st($myarrayex8['device']);
@@ -733,7 +716,7 @@ $dental_device_name = st($myarrayex9['device']);
 
 
 
-$sql = "select * from dental_summary where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $patientid = st($myarray['summaryid']);
@@ -1035,13 +1018,13 @@ $currently_wearing = $nights_wear_cpap;
 $what_percentage = $percent_night_cpap;
 
 
-$rec_sql = "select * from dental_q_recipients where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$rec_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $rec_my = mysql_query($rec_sql);
 $rec_myarray = mysql_fetch_array($rec_my);
 
 $patient_photo = st($rec_myarray['q_file7']);
 
-$q1_sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $q1_my = mysql_query($q1_sql);
 $q1_myarray = mysql_fetch_array($q1_my);
 
@@ -1050,7 +1033,7 @@ $ep_w_1 = st($q1_myarray['wake_night']);
 $ep_el_1 = st($q1_myarray['energy_level']);
 $ep_h_1 = st($q1_myarray['morning_headaches']);
 $add_date = substr($q1_myarray['adddate'],0, -8);
-$qs_sql = "select * from dental_q_sleep where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$qs_sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
 $qs_my = mysql_query($qs_sql);
 $qs_myarray = mysql_fetch_array($qs_my);
 
@@ -1069,13 +1052,13 @@ if($epworthid <> '')
 }
 $ep_e_1 = $ep_total;
 
-$ts_sql = "select * from dental_thorton where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$ts_sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
 $ts_my = mysql_query($ts_sql);
 $ts_myarray = mysql_fetch_array($ts_my);
 
 $ep_ts_1 = st($ts_myarray['snore_1']) + st($ts_myarray['snore_2']) + st($ts_myarray['snore_3']) + st($ts_myarray['snore_4']) + st($ts_myarray['snore_5']);
 
-$q2_sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 
@@ -1137,7 +1120,7 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <!--
 <span class="admin_head">
-	<button onclick="Javascript: window.open('dss_summary_print.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>','Summary_print','width=800,height=600,scrollbars=1');">
+	<button onclick="Javascript: window.open('dss_summary_print.php?pid=<?=$_GET['pid']?>','Summary_print','width=800,height=600,scrollbars=1');">
 		Print
 	</button>
 </span>
@@ -1203,7 +1186,7 @@ $num_face = mysql_num_rows($p);
                 Add Patient Photo
         </button>
 <?php }else{ ?>
-        <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'" class="addButton">
+        <button onclick="Javascript: window.location='q_image.php?pid=<?= $_GET['pid']; ?>&addtopat=1'" class="addButton">
                 Add/Update Patient Photo
         </button>
  

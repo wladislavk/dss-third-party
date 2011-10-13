@@ -2,6 +2,7 @@
 session_start();
 include('includes/config.php');
 include_once('../manage/admin/includes/password.php');
+
 if($_POST["loginsub"] == 1)
 {
 	$salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."'";

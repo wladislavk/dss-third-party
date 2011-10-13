@@ -38,7 +38,6 @@ if($_POST['thortonsub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_thorton set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		snore_1 = '".s_for($snore_1)."',
 		snore_2 = '".s_for($snore_2)."',
@@ -57,7 +56,7 @@ if($_POST['thortonsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -79,14 +78,14 @@ if($_POST['thortonsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-$sql = "select * from dental_thorton where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -133,7 +132,7 @@ $snore_5 = st($myarray['snore_5']);
 </div>
 <br>
 
-<form id="selfrm" name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="selfrm" name="selfrm" action="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="thortonsub" value="1" />
 <input type="hidden" name="ed" value="<?=$thortonid;?>" />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >

@@ -33,7 +33,6 @@ if($_POST['missingsub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_missing set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		rec = '".s_for($rec)."',
 		pck = '".s_for($pck)."',
@@ -57,7 +56,7 @@ if($_POST['missingsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -84,7 +83,7 @@ if($_POST['missingsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_SERVER['PHP_SELF']?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>&msg=<?=$msg;?>';
+			window.location='<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -94,18 +93,14 @@ if($_POST['missingsub'] == 1)
 
 $mt_arr = explode(',',$_GET['mt']);
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
 
-$sql = "select * from dental_missing where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_missing where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -186,7 +181,7 @@ function updateTeeth(teeth){
 				<b><? echo $_GET['msg'];?></b>
 			</div>
 
-<form name="missingfrm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>" method="post" >
+<form name="missingfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>" method="post" >
 <input type="hidden" name="missingsub" value="1" />
 <input type="hidden" name="ed" value="<?=$missingid;?>" />
 			<table cellpadding="5" cellspacing="1" align="center" >

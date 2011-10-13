@@ -50,7 +50,6 @@ if($_POST['q_sleepsub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_sleep set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		epworthid = '".s_for($epworth_arr)."',
 		analysis = '".s_for($analysis)."',
@@ -61,7 +60,6 @@ if($_POST['q_sleepsub'] == 1)
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		$ins_sql = " insert into dental_thorton set 
-                formid = '".s_for($_GET['fid'])."',
                 patientid = '".s_for($_GET['pid'])."',
                 snore_1 = '".s_for($snore_1)."',
                 snore_2 = '".s_for($snore_2)."',
@@ -80,7 +78,7 @@ if($_POST['q_sleepsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -109,14 +107,14 @@ if($_POST['q_sleepsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
 	}
 }
 
-$sql = "select * from dental_thorton where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -126,20 +124,6 @@ $snore_2 = st($myarray['snore_2']);
 $snore_3 = st($myarray['snore_3']);
 $snore_4 = st($myarray['snore_4']);
 $snore_5 = st($myarray['snore_5']);
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	///die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -157,7 +141,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$sql = "select * from dental_q_sleep where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -199,7 +183,7 @@ if($epworthid <> '')
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="q_sleepfrm" name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="q_sleepfrm" name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="q_sleepsub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_sleepid;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

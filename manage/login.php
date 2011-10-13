@@ -13,15 +13,6 @@ $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate
 mysql_query($cur_ins_sql);
 }
 
-if($_GET['pid'] <> '' && $_GET['fid'] == '')
-{
-	$p_form_sql = "select * from dental_forms where patientid='".s_for($_GET['pid'])."'";
-	$p_form_my = mysql_query($p_form_sql);
-	$p_form_myarray = mysql_fetch_array($p_form_my);
-	
-	$_GET['fid'] = $p_form_myarray['formid'];
-}
-
 if(strpos($_SERVER['PHP_SELF'],'q_page') === false && strpos($_SERVER['PHP_SELF'],'ex_page') === false && strpos($_SERVER['PHP_SELF'],'q_sleep') === false && strpos($_SERVER['PHP_SELF'],'q_image') === false)
 {
 	$unload = 0 ;

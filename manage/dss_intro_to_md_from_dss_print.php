@@ -1,20 +1,6 @@
 <?php include "admin/includes/config.php";
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	die();
-}
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -57,7 +43,7 @@ if($pat_myarray['patientid'] == '')
 </span>
 <br />
 &nbsp;&nbsp;
-<a href="dss_letters.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+<a href="dss_letters.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
 	<b>&lt;&lt;Back</b></a>
 <br /><br>
 

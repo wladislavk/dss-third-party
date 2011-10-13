@@ -152,17 +152,17 @@ $num_users=mysql_num_rows($my);
                 	<?=st($myarray["formid"]);?>
                 </td>
 				<td valign="top">
-                	<a href="dss_summary.php?fid=<?=$myarray["formid"];?>&pid=<?=$_GET['pid'];?>" class="dellink" title="DELETE">
+                	<a href="dss_summary.php?pid=<?=$_GET['pid'];?>" class="dellink" title="DELETE">
 						Manage
 					</a>
                 </td>
 				<td valign="top">
-                	<a href="dss_letters.php?fid=<?=$myarray["formid"];?>&pid=<?=$_GET['pid'];?>" class="dellink" title="DELETE">
+                	<a href="dss_letters.php?pid=<?=$_GET['pid'];?>" class="dellink" title="DELETE">
 						Manage
 					</a>
                 </td>
 				<td valign="top">
-					<a href="q_page1.php?fid=<?=$myarray["formid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+					<a href="q_page1.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
 						Edit 
 					</a>
                     

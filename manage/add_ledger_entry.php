@@ -300,13 +300,13 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
 <input type="hidden" name="entrycount" value="javascript::readCookie();">
-<?php if($_SESSION['user_access']!=DSS_USER_TYPE_ADMIN){ ?>
+<?php /*  REMOVED UNTIL FIGURED OUT #####  if($_SESSION['user_access']!=DSS_USER_TYPE_ADMIN){ ?>
 <div id="auth_div" style="padding-left: 10px; color:#fff;">
 <p>You are not authorized to complete this transaction. Please have an authorized user enter their credentials.</p>
 Username: <input type="text" name="username" />
 Password: <input type="password" name="password" />
 </div>
-<?php } ?>
+<?php } */ ?>
 <div style="width:200px;float:left;margin-left:10px;text-align:left;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
 <div style="width:200px;margin-right:10px;float:right;text-align:right;" id="submitButton"><input type="submit" value="Submit Transactions" /></div>
 

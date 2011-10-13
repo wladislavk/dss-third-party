@@ -19,7 +19,6 @@ if($_POST['q_recipientssub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_recipients set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		referring_physician = '".s_for($referring_physician)."',
 		dentist = '".s_for($dentist)."',
@@ -65,21 +64,7 @@ if($_POST['q_recipientssub'] == 1)
 }
 
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	die();
-}
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -94,7 +79,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_recipients where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -164,7 +149,7 @@ $patient_info = $sel_val;
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form name="q_recipientsfrm" action="<?=$_SERVER['PHP_SELF'];?>?ex=<?=$_GET['ex']?>&fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" enctype="multipart/form-data" >
+<form name="q_recipientsfrm" action="<?=$_SERVER['PHP_SELF'];?>?ex=<?=$_GET['ex']?>&pid=<?=$_GET['pid']?>" method="post" enctype="multipart/form-data" >
 <input type="hidden" name="q_recipientssub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_recipientsid;?>" />
 

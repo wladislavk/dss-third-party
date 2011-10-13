@@ -85,7 +85,7 @@ if($_POST['ex_page6sub'] == 1)
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 

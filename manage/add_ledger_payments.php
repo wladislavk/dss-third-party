@@ -157,6 +157,7 @@ if(returnval){
     return true;
   }else{
     if(!authShown){
+      return true; //To bypass auth until figured out
       showAuthBox();
       authShown = true;
       return false;

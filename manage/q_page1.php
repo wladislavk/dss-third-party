@@ -103,7 +103,6 @@ if($_POST['q_page1sub'] == 1)
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_q_page1 set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
                 exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
@@ -138,7 +137,7 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
 		die();
@@ -176,35 +175,13 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
+			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
 		die();
 	}
 }
 
-if($p_form_myarray['formid'] == '' && $_GET['fid'] == '' )
-{
-	$ins_sql = "insert into dental_forms set docid='".$_SESSION['docid']."', patientid = '".s_for($_GET["pid"])."',adddate='".date('m/d/Y')."',ip_address='".$_SERVER['REMOTE_ADDR']."'";
-	mysql_query($ins_sql) or die($ins_sql . " | ".mysql_error());
-	
-	$ins_id = mysql_insert_id();
-	$_GET['fid'] = $ins_id;
-}
-
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		//window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	//die();
-}
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -221,7 +198,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -317,7 +294,7 @@ if($complaintid <> '')
 	}
 </script>
 
-<form id="q_page1frm" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post">
+<form id="q_page1frm" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="q_page1sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />

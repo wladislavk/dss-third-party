@@ -64,7 +64,6 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 if ($_POST['insurancesub'] == 1) {
       
     // Put POST values into variables
-	$_GET['fid'] = 0;
 	$pica1 = $_POST['pica1'];
 	$pica2 = $_POST['pica2'];
 	$pica3 = $_POST['pica3'];
@@ -285,7 +284,6 @@ if ($_POST['insurancesub'] == 1) {
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
 		$ins_sql = " insert into dental_insurance set 
-		formid = '".s_for($_GET['fid'])."',
 		patientid = '".s_for($_GET['pid'])."',
 		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',
@@ -1098,7 +1096,7 @@ if (empty($prior_authorization_number)) {
   <a href="manage_insurance.php?pid=<?=$_REQUEST['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
-  <a href="manage_claims.php?fid=<?=$_REQUEST['fid_filter']?>&pid=<?=$_REQUEST['pid_filter']?>">
+  <a href="manage_claims.php?pid=<?=$_REQUEST['pid_filter']?>">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
 

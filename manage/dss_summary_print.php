@@ -1,20 +1,6 @@
 <?php include "admin/includes/config.php";
 
-$form_sql = "select * from dental_forms where formid='".s_for($_GET['fid'])."'";
-$form_my = mysql_query($form_sql);
-$form_myarray = mysql_fetch_array($form_my);
-
-if($form_myarray['formid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_forms.php?pid=<?=$_GET['pid'];?>';
-	</script>
-	<?
-	die();
-}
-
-$pat_sql = "select * from dental_patients where patientid='".s_for($form_myarray['patientid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -32,7 +18,7 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$q1_sql = "select * from dental_q_page1 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q1_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $q1_my = mysql_query($q1_sql);
 $q1_myarray = mysql_fetch_array($q1_my);
 
@@ -41,7 +27,7 @@ $complaintid = st($q1_myarray['complaintid']);
 $bed_time_partner1 = st($q1_myarray['bed_time_partner']);
 $sleep_same_room1 = st($q1_myarray['sleep_same_room']);
 
-$q2_sql = "select * from dental_q_page2 where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$q2_sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 
@@ -50,7 +36,7 @@ $nights_wear_cpap = st($q2_myarray['nights_wear_cpap']);
 $percent_night_cpap = st($q2_myarray['percent_night_cpap']);
 
 
-$sql = "select * from dental_summary where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -317,7 +303,7 @@ if($what_percentage == "")
 	$what_percentage = $percent_night_cpap;
 }
 
-$rec_sql = "select * from dental_q_recipients where formid='".$_GET['fid']."' and patientid='".$_GET['pid']."'";
+$rec_sql = "select * from dental_q_recipients where patientid='".$_GET['pid']."'";
 $rec_my = mysql_query($rec_sql);
 $rec_myarray = mysql_fetch_array($rec_my);
 
@@ -344,7 +330,7 @@ $patient_photo = st($rec_myarray['q_file7']);
 </span>
 <br /><br>
 
-<form name="summaryfrm" action="<?=$_SERVER['PHP_SELF'];?>?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>" method="post" >
+<form name="summaryfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="summarysub" value="1" />
 <input type="hidden" name="ed" value="<?=$summaryid;?>" />
 

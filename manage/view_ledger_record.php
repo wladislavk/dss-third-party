@@ -17,7 +17,7 @@ include("includes/sescheck.php");
 <body>
 
 <?php
-$rec_qry = "SELECT `ledgerid`,`formid` ,`patientid`,`service_date` ,`entry_date`,`description` ,`producer` ,`amount` ,`transaction_type` ,`paid_amount` ,`userid` ,`docid` ,`status` ,`adddate` ,`ip_address`,`transaction_code` FROM dental_ledger_rec WHERE patientid='". $_GET['pid'] ."' ORDER BY service_date ASC";
+$rec_qry = "SELECT `ledgerid`,`patientid`,`service_date` ,`entry_date`,`description` ,`producer` ,`amount` ,`transaction_type` ,`paid_amount` ,`userid` ,`docid` ,`status` ,`adddate` ,`ip_address`,`transaction_code` FROM dental_ledger_rec WHERE patientid='". $_GET['pid'] ."' ORDER BY service_date ASC";
 $result = mysql_query($rec_qry);
 
 $num_rows = mysql_num_rows($result);

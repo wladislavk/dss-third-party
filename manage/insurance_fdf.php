@@ -615,7 +615,8 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".substr($userinfo['phone'], 0, 3).") >>
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".substr($userinfo['phone'], 3).") >>
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".$userinfo['name']."\n".$userinfo['address']."\n".$userinfo['city'].", ".$userinfo['state']." ".$userinfo['zipcode'].") >>
-  << /T(".$field_path.".signature_of_physician-supplier__date_fill[0]) /V(".date('m/d/Y').") >>
+  << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
+  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/Y').") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
   << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>

@@ -83,6 +83,7 @@ if ($_POST['insurancesub'] == 1) {
 	$patient_city = $_POST['patient_city'];
 	$patient_state = $_POST['patient_state'];
 	$patient_status = $_POST['patient_status'];
+	$work_status = $_POST['work_status'];
 	$insured_city = $_POST['insured_city'];
 	$insured_state = $_POST['insured_state'];
 	$patient_zip = $_POST['patient_zip'];
@@ -230,8 +231,8 @@ if ($_POST['insurancesub'] == 1) {
 	$id_qua6 = $_POST['id_qua6'];
 	$rendering_provider_id6 = $_POST['rendering_provider_id6'];
 	$federal_tax_id_number = $_POST['federal_tax_id_number'];
-	$ssn = $_POST['ssn'];
-	$ein = $_POST['ein'];
+	$ssn = ($_POST['ssnein']=="ssn")?'1':'';
+	$ein = ($_POST['ssnein']=="ein")?'1':'';
 	$patient_account_no = $_POST['patient_account_no'];
 	$accept_assignment = $_POST['accept_assignment'];
 	$total_charge = $_POST['total_charge'];
@@ -255,31 +256,13 @@ if ($_POST['insurancesub'] == 1) {
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
 	$status = $_POST['status'];
 	
-	$insurance_type_arr = '';
-	if (is_array($insurance_type)) {
-		foreach ($insurance_type as $val) {
-			if (trim($val) <> '') {
-				$insurance_type_arr .= trim($val).'~';
-            }
-		}
-	}
+	$insurance_type_arr = $insurance_type;
 	
 	if($insurance_type_arr != '') {
-		$insurance_type_arr = '~'.$insurance_type_arr;
+		$insurance_type_arr = '~'.$insurance_type_arr.'~';
     }
 
-	$patient_status_arr = '';
-	if (is_array($patient_status)) {
-		foreach ($patient_status as $val) {
-			if (trim($val) <> '') {
-				$patient_status_arr .= trim($val).'~';
-            }
-		}
-	}
-	
-	if ($patient_status_arr != '') {
-		$patient_status_arr = '~'.$patient_status_arr;
-    }
+	$patient_status_arr = '~'.$patient_status.'~'.$work_status.'~';
 	
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
@@ -990,6 +973,7 @@ if($is_new_claim){
 	  $insured_signature = 1;
 	}
 	$patient_signature = 1;
+	$signature_physician = "Signature on File";
 	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
         $physician_signed_date = date('m/d/Y');	
   }
@@ -1210,28 +1194,27 @@ if (empty($prior_authorization_number)) {
 							</tr>
 							<tr>
 								<td align="left" valign="top">
-								<?php echo $insurancetype; ?>
-									<input name="insurance_type[]" type="checkbox" value="Medicare" <? if($insurancetype == '1') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Medicare" <? if($insurancetype == '1') {echo " checked";}?> />
 									<span class="small_cap">(Medicare #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type[]" type="checkbox" value="MediCaID" <? if($insurancetype == '2') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="MediCaID" <? if($insurancetype == '2') {echo " checked";}?> />
 									<span class="small_cap">(Medicaid #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type[]" type="checkbox" value="Tricare Champus" <? if($insurancetype == '3') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Tricare Champus" <? if($insurancetype == '3') {echo " checked";}?> />
 									<span class="small_cap">(Sponsor's SSN)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type[]" type="checkbox" value="Chmapva" <? if($insurance_type == '4') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Chmapva" <? if($insurance_type == '4') {echo " checked";}?> />
 									<span class="small_cap">(Member ID #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type[]" type="checkbox" value="Group Health Plan" <? if($insurancetype == '5') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Group Health Plan" <? if($insurancetype == '5') {echo " checked";}?> />
 									<span class="small_cap">(SSN or ID)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type[]" type="checkbox" value="Feca blklung" <? if($insurancetype == '6') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Feca blklung" <? if($insurancetype == '6') {echo " checked";}?> />
 									<span class="small_cap">(SSN)</span>
 								</td>
 								
@@ -1361,34 +1344,34 @@ if (empty($prior_authorization_number)) {
 								<td width="25%" align="left" valign="top">
 									<span class="small_cap">Single</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Single" <? if(in_array("Single", $patient_status_array)) { echo " checked";}?> />
+									<input name="patient_status" type="radio" value="Single" <? if(in_array("Single", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td width="40%" align="left" valign="top">
 									<span class="small_cap">Married</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Married" <? if(in_array("Married", $patient_status_array)) { echo " checked";}?> />
+									<input name="patient_status" type="radio" value="Married" <? if(in_array("Married", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td width="35%" align="left" valign="top">
 									<span class="small_cap">Others</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Others" <? if(in_array("Others",$patient_status_array)) { echo " checked";}?> />
+									<input name="patient_status" type="radio" value="Others" <? if(in_array("Others",$patient_status_array)) { echo " checked";}?> />
 								</td>
 							</tr>
 							<tr>
 								<td align="left" valign="top">
 									<span class="small_cap">Employed</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Employed" <? if(in_array("Employed", $patient_status_array)) { echo " checked";}?> />
+									<input name="work_status" type="radio" value="Employed" <? if(in_array("Employed", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Full Time Student</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Full Time Student" <? if(in_array("Full Time Student", $patient_status_array)) { echo " checked";}?> />
+									<input name="work_status" type="radio" value="Full Time Student" <? if(in_array("Full Time Student", $patient_status_array)) { echo " checked";}?> />
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Part Time Student</span>
 									<br />
-									<input name="patient_status[]" type="checkbox" value="Part Time Student" <?if(in_array("Part Time Student", $patient_status_array)) { echo " checked";}?> />
+									<input name="work_status" type="radio" value="Part Time Student" <?if(in_array("Part Time Student", $patient_status_array)) { echo " checked";}?> />
 								</td>
 							</tr>
 						</table>
@@ -2170,12 +2153,12 @@ if (!$query) {
 											<td valign="top" width="10%" align="center">
 												SSN
 												<br />
-												<input type="checkbox" name="ssn" value="1" <? if($ssn == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
 											</td>
 											<td valign="top" width="10%" align="center">
 												EIN
 												<br />
-												<input type="checkbox" name="ein" value="1" <? if($ein == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
 											</td>
 										</tr>
 									</table>

@@ -1538,6 +1538,142 @@ Completed/Uploaded
 
 <!--sleep study table-->
 
+<div style="height:20px;"></div>
+<!-- SLEEP LAB SECTION START -->
+<style type="text/css">
+  .sleeplabstable tr{ height: 28px; }
+</style>
+<table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
+
+
+        <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                Date
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Sleep Test Type
+                </td></tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                Place
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Apnea
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                Hypopnia
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                AHI
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                AHI Supine
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                RDI
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                RDI Supine
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                O<sub>2</sub> Nadir
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                T &le; 90% O<sub>2</sub>
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Sleep Efficiency
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                CPAP Level
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Dental Device
+                </td>
+  </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                Device Setting
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Diagnosis
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #F9FFDF;">
+                File
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Notes
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Needed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Date Scheduled
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Completed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Interpretation
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Copy Requested
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+		Request From
+                </td>
+        </tr>
+  </table>
+
+
+        <div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 799px;">
+
+                    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+
+        </div>
+<!--
 <div style="width: 610px; margin: auto; display: table;" <?php print (!$sleepstudy  ? 'class="yellow"' : ''); ?> id="sleeplabtable">
 	
 	<div style="float: left; width: 170px;">
@@ -1649,13 +1785,14 @@ Completed/Uploaded
 		 <table width="700" style="overflow-x: auto;">
 		   <tr>
 		    <td>
+-->
 <!-- Begin repeat sleep study section -->
       
 
 
 
 
-
+<!--
 
 	<iframe src="manage_sleep_studies.php?pid=<?php echo $_GET['pid']; ?>" height="430" width="10000" style="border: medium none; overflow:hidden;">Iframes must be enabled to view this area.</iframe>
 
@@ -1666,19 +1803,19 @@ Completed/Uploaded
 
 
 
-
+-->
       
  
  
  
 <!-- End repeat sleep study section -->
-         </td>
+<!--   
+      </td>
       </tr>
 		 </table>
 	</div>
-	
 </div>
-
+-->
 
 <!--
 <table width="500px;" align="center" id="sleeplabtable">

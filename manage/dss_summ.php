@@ -1763,14 +1763,45 @@ Sleep Studies:
 		Notes
 		</td>
 	</tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Needed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Date Scheduled
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Completed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Interpretation
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Copy Requested
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                Request From
+                </td>
+        </tr>
+
   </table>
   
   
   
   
-	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 599px;">
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 899px;">
 		    
-		    <iframe height="592" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+		    <iframe height="892" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 	</div>
 <!-- SLEEP LAB SECTION END -->

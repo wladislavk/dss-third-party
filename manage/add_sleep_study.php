@@ -13,7 +13,6 @@ while ($row = mysql_fetch_array($result)) {
 }
 update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 
-
 ?>
 <html style="overflow-y:hidden;">
 <head>
@@ -52,6 +51,13 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
   $devicesetting = s_for($_POST['devicesetting']); 
   $diagnosis = s_for($_POST['diagnosis']); 
   $notes = s_for($_POST['notes']);
+  $testnumber = s_for($_POST['testnumber']);
+  $needed = s_for($_POST['needed']);
+  $scheddate = s_for($_POST['scheddate']);
+  $completed = s_for($_POST['completed']);
+  $interpolation = s_for($_POST['interpolation']);
+  $copyreqdate = s_for($_POST['copyreqdate']);
+  $sleeplab = s_for($_POST['sleeplab']);
   $patientid = $_GET['pid']; 
 	$s = "SELECT filename from dental_summ_sleeplab WHERE id='".$id."'";
 	$prevfile_result = mysql_query($s);
@@ -100,7 +106,14 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 `devicesetting`  = '".$devicesetting."',
 `diagnosis`  = '".$diagnosis."',
 `filename` = '".$banner1."',
-`notes`  = '".$notes."'
+`notes`  = '".$notes."',
+`testnumber` = '".$testnumber."',
+`needed` = '".$needed."',
+`scheddate` = '".$scheddate."',
+`completed` = '".$completed."',
+`interpolation` = '".$interpolation."',
+`copyreqdate` = '".$copyreqdate."',
+`sleeplab` = '".$sleeplab."'
 WHERE id='".$id."'
 ";
   $run_q = mysql_query($q);
@@ -142,6 +155,13 @@ if($uploaded){
   $devicesetting = s_for($_POST['devicesetting']);
   $diagnosis = s_for($_POST['diagnosis']);
   $notes = s_for($_POST['notes']);
+  $testnumber = s_for($_POST['testnumber']);
+  $needed = s_for($_POST['needed']);
+  $scheddate = s_for($_POST['scheddate']);
+  $completed = s_for($_POST['completed']);
+  $interpolation = s_for($_POST['interpolation']);
+  $copyreqdate = s_for($_POST['copyreqdate']);
+  $sleeplab = s_for($_POST['sleeplab']);
   $patientid = $_GET['pid'];
                 if($_FILES["ss_file"]["name"] <> '')
                 {
@@ -180,10 +200,17 @@ if($uploaded){
 `devicesetting` ,
 `diagnosis` ,
 `filename` ,
-`notes` ,
+`notes`,
+`testnumber`,
+`needed`,
+`scheddate`,
+`completed`,
+`interpolation`,
+`copyreqdate`,
+`sleeplab`,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."','".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
@@ -353,6 +380,51 @@ if(f.sleeptesttype.value == "HST"){
 		<input type="text" name="notes" />	
 		</td>
 	</tr>
+ <tr>
+		<td valign="top" style="background: #E4FFCF;">
+ <input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
+
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                <input name="scheddate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
+                
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                                <input type="radio" name="completed" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="completed" value="No"><span>No</span>
+                </td>
+        </tr>   
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                <input type="radio" name="interpolation" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="interpolation" value="No"><span>No</span>
+                </td>
+        </tr>   
+  <tr>
+	<td valign="top" style="background: #E4FFCF;">
+                                                <input name="copyreqdate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" />
+	</td>
+  </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">                                                                <select name="sleeplab">
+                                                <?php
+            $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
+            $sleeplabres = mysql_query($sleeplabquery);
+            while($sleeplab = mysql_fetch_array($sleeplabres)){
+            ?>
+
+                                                <option value="<?php echo $sleeplab['sleeplabid']; ?>"><?php echo $sleeplab['company']; ?></option>
+                                                <?php } ?>
+                                                </select>
+                                                
+                </td>
+        </tr> 
 	<tr>	
 		<td valign="top" style="background: #E4FFCF;">
 		<input type="submit" name="submitnewsleeplabsumm" value="Submit Study" />	
@@ -528,6 +600,54 @@ $device = mysql_result($device_result, 0);
 		<input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />	
 		</td>
 	</tr>
+ <tr>
+                <td valign="top" style="background: #E4FFCF;">
+ <input type="radio" name="needed" id="needed1" value="Yes" <?= ($s_lab['needed']=="Yes")?'checked="checked"':''; ?> /> 
+Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                <input type="radio" name="needed" id="needed2" value="No" <?= ($s_lab['needed']=="No")?'checked="checked"':''; ?> /> 
+No
+
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                <input name="scheddate" value="<?= $s_lab['scheddate']; ?>" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
+
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                                <input type="radio" name="completed" value="Yes" <?= ($s_lab['completed']=="Yes")?'checked="checked"':''; ?>><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="completed" value="No" <?= ($s_lab['completed']=="No")?'checked="checked"':''; ?>><span>No</span>
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">
+                                                <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="interpolation" value="No" <?= ($s_lab['interpolation']=="No")?'checked="checked"':''; ?>><span>No</span>
+                </td>
+        </tr>
+  <tr>
+        <td valign="top" style="background: #E4FFCF;">
+                                                <input name="copyreqdate" type="text" class="field text addr tbox" value="<?= $s_lab['copyreqdate']; ?>" style="width:100px;" maxlength="255" />
+        </td>
+  </tr>
+  <tr>
+                <td valign="top" style="background: #E4FFCF;">                                                                <select name="sleeplab">
+                                                <?php
+            $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
+            $sleeplabres = mysql_query($sleeplabquery);
+            while($sleeplab = mysql_fetch_array($sleeplabres)){
+            ?>
+
+                                                <option value="<?php echo $sleeplab['sleeplabid']; ?>" <?= ($s_lab['sleeplab']==$sleeplab['sleeplabid'])?'selected="selected"':''; ?>><?php echo $sleeplab['company']; ?></option>
+                                                <?php } ?>
+                                                </select>
+
+                </td>
+        </tr>
+
   <tr>
                 <td valign="top" style="background: #E4FFCF;">
                 <input type="submit" name="submitupdatesleeplabsumm" value="Save" />

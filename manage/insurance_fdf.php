@@ -350,22 +350,30 @@ $getuserinfo = "SELECT * FROM `dental_users` WHERE `username` = '".$_SESSION['us
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_1;
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);
-$diagnosis_1_fill = $ins_diag_myarray['ins_diagnosis'];
+$dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_1_left_fill = $dia[0];
+$diagnosis_1_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_2;
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
-$diagnosis_2_fill = $ins_diag_myarray['ins_diagnosis'];
+$dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_2_left_fill = $dia[0];
+$diagnosis_2_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_3;
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
-$diagnosis_3_fill = $ins_diag_myarray['ins_diagnosis'];
+$dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_3_left_fill = $dia[0];
+$diagnosis_3_right_fill = $dia[1];
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_4;
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
-$diagnosis_4_fill = $ins_diag_myarray['ins_diagnosis'];
+$dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_4_left_fill = $dia[0];
+$diagnosis_4_right_fill = $dia[1];
 
 $fdf = "
 %FDF-1.2
@@ -523,10 +531,14 @@ $fdf = "
   << /T(".$field_path.".outside_lab_yes_chkbox[0]) /V(".(($outside_lab == "YES")?1:'').") >>
   << /T(".$field_path.".outside_lab_no_chkbox[0]) /V(".(($outside_lab == "NO")?1:'').") >>
   << /T(".$field_path.".charges_fill[0]) /V(".$s_charges.") >>
-  << /T(".$field_path.".diagnosis_one_fill[0]) /V(".$diagnosis_1_fill.") >>
-  << /T(".$field_path.".diagnosis_two_fill[0]) /V(".$diagnosis_2_fill.") >>
-  << /T(".$field_path.".diagnosis_three_fill[0]) /V(".$diagnosis_3_fill.") >>
-  << /T(".$field_path.".diagnosis_four_fill[0]) /V(".$diagnosis_4_fill.") >>
+  << /T(".$field_path.".diagnosis_one_left_fill[0]) /V(".$diagnosis_1_left_fill.") >>
+  << /T(".$field_path.".diagnosis_one_right_fill[0]) /V(".$diagnosis_1_right_fill.") >>
+  << /T(".$field_path.".diagnosis_two_left_fill[0]) /V(".$diagnosis_2_left_fill.") >>
+  << /T(".$field_path.".diagnosis_two_right_fill[0]) /V(".$diagnosis_2_right_fill.") >>
+  << /T(".$field_path.".diagnosis_three_left_fill[0]) /V(".$diagnosis_3_left_fill.") >>
+  << /T(".$field_path.".diagnosis_three_right_fill[0]) /V(".$diagnosis_3_right_fill.") >>
+  << /T(".$field_path.".diagnosis_four_left_fill[0]) /V(".$diagnosis_4_left_fill.") >>
+  << /T(".$field_path.".diagnosis_four_right_fill[0]) /V(".$diagnosis_4_right_fill.") >>
   << /T(".$field_path.".medicaid_resubmission_code_fill[0]) /V(".$medicaid_resubmission_code.") >>
   << /T(".$field_path.".orignial_ref_no_fill[0]) /V(".$original_ref_no.") >>
   << /T(".$field_path.".prior_auth_number_fill[0]) /V(".$prior_authorization_number.") >>
@@ -584,9 +596,9 @@ $c++;
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
   << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>
-  << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V() >>
-  << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V() >>
-  << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V() >>
+  << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V(".$array['modcode2'].") >>
+  << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
+  << /T(".$field_path.".".$p."_modifier_four_fill[0]) /V(".$array['modcode4'].") >>
   << /T(".$field_path.".".$p."_diagnosis_pointer_fill[0]) /V(".$array['diagnosispointer'].") >>
   << /T(".$field_path.".".$p."_charges_dollars_fill[0]) /V(".number_format($array['amount'],0).") >>
   << /T(".$field_path.".".$p."_charges_cents_fill[0]) /V(".fill_cents($array['amount']-floor($array['amount'])).") >>

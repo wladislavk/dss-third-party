@@ -13,6 +13,9 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $idqualnum = 'idqual'.$num;
         $ledgeridnum = 'ledgerid'.$num;
         $modifiercodenum = 'modifiercode'.$num;
+        $modifiercode2_num = 'modifiercode2_'.$num;
+        $modifiercode3_num = 'modifiercode3_'.$num;
+        $modifiercode4_num = 'modifiercode4_'.$num;
         
         $placeofservice = $_POST[$placeofservicenum];
         $emg = $_POST[$emgnum];             
@@ -21,6 +24,9 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $epsdt = $_POST[$epsdtnum];
         $idqual = $_POST[$idqualnum];
         $modifiercode = $_POST[$modifiercodenum];
+        $modifiercode2 = $_POST[$modifiercode2_num];
+        $modifiercode3 = $_POST[$modifiercode3_num];
+        $modifiercode4 = $_POST[$modifiercode4_num];
         $ledgerid = $_POST[$ledgeridnum];
         
         $sql = "UPDATE "
@@ -33,6 +39,9 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
              . "  `epsdt` = '$epsdt', "
              . "  `idqual` = '$idqual', "
              . "  `modcode` = '$modifiercode', "
+             . "  `modcode2` = '$modifiercode2', "
+             . "  `modcode3` = '$modifiercode3', "
+             . "  `modcode4` = '$modifiercode4', "
              . "  `status` = '$trxn_status', "
              . "  `primary_claim_id` = '$primary_claim_id' "
              . "WHERE "
@@ -2112,14 +2121,42 @@ if (!$query) {
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">
           <select name="modifiercode<?=$li;?>" style="width:171px;">
-            <option>Select One</option>
+            <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
               <?php $selected = ($array['modcode'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
             <?php } ?>
           </select>
+          <select name="modifiercode2_<?=$li;?>" style="width:171px;">
+            <option value=''>Select One</option>
+            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
+              <?php $selected = ($array['modcode2'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
+              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
+            <?php } ?>
+          </select>
+          <select name="modifiercode3_<?=$li;?>" style="width:171px;">
+            <option value=''>Select One</option>
+            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
+              <?php $selected = ($array['modcode3'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
+              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
+            <?php } ?>
+          </select>
+          <select name="modifiercode4_<?=$li;?>" style="width:171px;">
+            <option value=''>Select One</option>
+            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
+              <?php $selected = ($array['modcode4'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
+              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
+            <?php } ?>
+          </select>
+
+
         </td>
-        <td width="92"><input style="width:77px;" type="text" name="diagnosispointer<?=$li;?>" value="<?php echo $array['diagnosispointer']; ?>"></td>
+        <td width="92">
+		<select name="diagnosispointer<?=$li;?>">
+			<?php for($i=1;$i<=4;$i++){ ?>
+				<option value="<?= $i; ?>" <?= ($i==$array['diagnosispointer'])?'selected="selected"':''; ?>><?= $i; ?></option>
+			<?php } ?>
+			</select>
         <td width="100" align="right" style="padding-right:15px;">$<?= number_format($array['amount'], 2); ?></td>
         <td width="54"><input style="width:39px;" type="text" name="daysorunits<?=$li;?>" value="<?php echo $array['daysorunits']; ?>"></td>
         <td width="60"><input style="width:45px;" type="text" name="epsdt<?=$li;?>" value="<?php echo $array['epsdt']; ?>"></td>

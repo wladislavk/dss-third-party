@@ -355,18 +355,19 @@ if(f.sleeptesttype.value == "HST"){
 		<td valign="top" style="background: #E4FFCF;">
                           <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
-                                <option value="327.23" >
-                                        327.23 - Obstructive Sleep Apnea
-                                </option>
-                                <option value="750.15" >
-                                        750.15 - Macroglossia Congenital Hypertrophy of Tongue
-                                </option>
-                                <option value="786.09" >
-                                        786.09 - UARS
-                                </option>
-                                <option value="519.80" >
-                                        519.80 - UARS
-                                </option>
+			<?php 
+				$ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
+                                                                           $ins_diag_my = mysql_query($ins_diag_sql);
+
+                                                                                while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
+                                                                                {
+                                                                                ?>
+                                                                                        <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" >
+                                                                                                <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                                                                                        </option>
+                                                                                <?
+                                                                                }?>
+
                             </select>
 		</td>
 	</tr>
@@ -565,18 +566,19 @@ $device = mysql_result($device_result, 0);
 		<td valign="top" style="background: #E4FFCF;">
                           <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
-                                <option value="327.23" <? if($s_lab['diagnosis'] == '327.23' ) echo " selected";?>>
-                                        327.23 - Obstructive Sleep Apnea
-                                </option>
-                                <option value="750.15" <? if($s_lab['diagnosis'] == '750.15' ) echo " selected";?>>
-                                        750.15 - Macroglossia Congenital Hypertrophy of Tongue
-                                </option>
-                                <option value="786.09" <? if($s_lab['diagnosis'] == '786.09' ) echo " selected";?>>
-                                        786.09 - UARS
-                                </option>
-                                <option value="519.80" <? if($s_lab['diagnosis'] == '519.80' ) echo " selected";?>>
-                                        519.80 - UARS
-                                </option>
+ <?php
+                                $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
+                                                                           $ins_diag_my = mysql_query($ins_diag_sql);
+
+                                                                                while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
+                                                                                {
+                                                                                ?>
+                                                                                        <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($s_lab['diagnosis'] == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
+                                                                                                <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                                                                                        </option>
+                                                                                <?
+                                                                                }?>
+
                             </select>
 
 		</td>

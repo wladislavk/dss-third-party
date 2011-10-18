@@ -667,7 +667,7 @@ if($_POST["patientsub"] == 1)
                             
                             <span class="left">
 								<?
-								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
+								$referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".$_SESSION['docid']."' order by firstname";
 								$referredby_my = mysql_query($referredby_sql);
 								?>
 								<select name="referred_by" class="field text addr tbox">
@@ -676,7 +676,7 @@ if($_POST["patientsub"] == 1)
 									{
 										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 									?>
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <? if($referred_by == st($referredby_myarray['referredbyid']) ) echo " selected";?>>
+										<option value="<?=st($referredby_myarray['contractid'])?>" <? if($referred_by == st($referredby_myarray['contactid']) ) echo " selected";?>>
 											<?=$ref_name;?>
 										</option>
 									<? }?>

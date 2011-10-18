@@ -100,7 +100,7 @@ $num_users=mysql_num_rows($my);
 				<?=$_POST['d_mm1'];?> - <?=$_POST['d_dd1'];?> - <?=$_POST['d_yy1'];?>
 			<? }?>
 			<? if($_POST['referred_by'] <> '') {
-				$referredby_sql = "select * from dental_referredby where referredbyid='".$_POST['referred_by']."'";
+				$referredby_sql = "select * from dental_contact where contactid='".$_POST['referred_by']."'";
 				$referredby_my = mysql_query($referredby_sql) or die(mysql_error()." | ".$referredby_sql);
 				$referredby_myarray = mysql_fetch_array($referredby_my);
 				$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
@@ -147,7 +147,7 @@ $num_users=mysql_num_rows($my);
 		{
 			$name = st($myarray['lastname'])." ".st($myarray['middlename'])." ".st($myarray['firstname']);
 			
-			$referredby_sql = "select * from dental_referredby where referredbyid='".$myarray['referred_by']."'";
+			$referredby_sql = "select * from dental_contact where contactid='".$myarray['referred_by']."'";
 			$referredby_my = mysql_query($referredby_sql) or die(mysql_error()." | ".$referredby_sql);
 			$referredby_myarray = mysql_fetch_array($referredby_my);
 			

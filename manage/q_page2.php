@@ -425,20 +425,21 @@ if($cpap == '')
 							
                             Diagnosis 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <select name="confirmed_diagnosis" class="field text addr tbox" >
-                            	<option value="">SELECT</option>
-                                <option value="327.23" <? if($confirmed_diagnosis == '327.23' ) echo " selected";?>>
-                                	327.23 - Obstructive Sleep Apnea
-                                </option>
-                                <option value="750.15" <? if($confirmed_diagnosis == '750.15' ) echo " selected";?>>
-                                	750.15 - Macroglossia Congenital Hypertrophy of Tongue
-                                </option>
-                                <option value="786.09" <? if($confirmed_diagnosis == '786.09' ) echo " selected";?>>
-                                	786.09 - UARS
-                                </option>
-                                <option value="519.80" <? if($confirmed_diagnosis == 'Severe Obstructive Sleep Apnea' ) echo " selected";?>>
-                                	519.80 - UARS
-                                </option>
+                          <select name="confirmed_diagnosis" style="width:150px;" class="field text addr tbox" >
+                                <option value="">SELECT</option>
+ <?php
+                                $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
+                                                                           $ins_diag_my = mysql_query($ins_diag_sql);
+
+                                                                                while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
+                                                                                {
+                                                                                ?>
+                                                                                        <option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($confirmed_diagnosis == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
+                                                                                                <?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
+                                                                                        </option>
+                                                                                <?
+                                                                                }?>
+
                             </select>
                             <span style="color:red; float:none">*</span>
 							

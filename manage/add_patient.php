@@ -973,7 +973,7 @@ $num_face = mysql_num_rows($p);
                            <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
 <label>Date</label>
 				</div><div style="float:left;"> 				<?
-								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
+								$referredby_sql = "select * from dental_contact where status=1 and referrer=1 and docid='".$_SESSION['docid']."' order by firstname";
 								$referredby_my = mysql_query($referredby_sql);
 								?>
 								<select name="referred_by" id="referred_by" class="field text addr tbox">
@@ -982,7 +982,7 @@ $num_face = mysql_num_rows($p);
 									{
 										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 									?>
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <? if($referred_by == st($referredby_myarray['referredbyid']) ) echo " selected";?>>
+										<option value="<?=st($referredby_myarray['contactid'])?>" <? if($referred_by == st($referredby_myarray['contactid']) ) echo " selected";?>>
 											<?=$ref_name;?>
 										</option>
 									<? }?>

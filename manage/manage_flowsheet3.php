@@ -153,7 +153,7 @@ function preauth_allowed(){
        . "  d.userid as 'doc_id'  "
        . "FROM "
        . "  dental_patients p  "
-       . "  JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  JOIN dental_contact r ON p.referred_by = r.contactid  "
        . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
        . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
@@ -216,7 +216,7 @@ function preauth_errors(){
   if(mysql_num_rows($pa)>0)
     array_push($errors, "Already has verification of benefits");
 
-  /* $sql = "SELECT * FROM dental_patients p JOIN dental_referredby r ON p.referred_by = r.referredbyid WHERE p.patientid=".$_GET['pid'];
+  /* $sql = "SELECT * FROM dental_patients p JOIN dental_contact r ON p.referred_by = r.contactid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
@@ -321,7 +321,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  d.userid as 'doc_id', p.home_phone as 'patient_phone'  "
        . "FROM "
        . "  dental_patients p  "
-       . "  LEFT JOIN dental_referredby r ON p.referred_by = r.referredbyid  "
+       . "  LEFT JOIN dental_contact r ON p.referred_by = r.contactid  "
        . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
        . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
@@ -757,7 +757,7 @@ if(isset($_POST['flowsubmit'])){
     }
 
     // Trigger Letter 24
-    /*$referral_query = "SELECT dental_referredby.referredbyid FROM dental_referredby JOIN dental_contacttype ON dental_referredby.referredbyid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_referredby.referredbyid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
+    /*$referral_query = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_contacttype ON dental_contact.contactid=dental_contacttype.contacttypeid WHERE (dental_contacttype.contacttype = 'Other' OR dental_contacttype.contacttype = 'Parent' OR dental_contacttype.contacttype = 'Patient' OR dental_contacttype.contacttype = 'Unknown') AND dental_contact.contactid IN('".$referred_by."') UNION SELECT letterid FROM dental_letters WHERE patientid = '".$_GET['pid']."' AND md_referral_list = '".$referred_by."' AND templateid = 24;";
     $referral_result = mysql_query($referral_query);
     $numrows = mysql_num_rows($referral_result);
     //print $numrows;
@@ -1156,7 +1156,7 @@ $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st(
 $referred_by = $pat_myarray['referred_by'];
 $referred_source = $pat_myarray['referred_source'];
 $copyreqdate = $pat_myarray['copyreqdate'];
-$referredby_sql = "select * from dental_referredby where `referredbyid` = '".$referred_by."';";
+$referredby_sql = "select * from dental_contact where `contactid` = '".$referred_by."';";
 $referredby_my = mysql_query($referredby_sql);
 $referrer_array = mysql_fetch_array($referredby_my);
 $referrer = $referrer_array['firstname']." ".$referrer_array['middlename']." ".$referrer_array['lastname'];
@@ -1313,7 +1313,7 @@ Referral Source
 
 <?php
 
-								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
+								$referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".$_SESSION['docid']."' order by firstname";
 
 								$referredby_my = mysql_query($referredby_sql);
 
@@ -1330,16 +1330,16 @@ Referral Source
 										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 										$selected = '';
 										if(isset($_GET['refid']) && $_GET['refid'] != ''){
-											if($_GET['refid'] == st($referredby_myarray['referredbyid'])){
+											if($_GET['refid'] == st($referredby_myarray['contactid'])){
 	                                                                                        $selected = ' selected="selected" ';
 											}
-										}elseif($referred_by == st($referredby_myarray['referredbyid'])){
+										}elseif($referred_by == st($referredby_myarray['contactid'])){
 											$selected = ' selected="selected" ';
 										}
 
 									?>
 
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <?= $selected; ?>>
+										<option value="<?=st($referredby_myarray['contactid'])?>" <?= $selected; ?>>
 
 											<?php echo $ref_name;?>
 

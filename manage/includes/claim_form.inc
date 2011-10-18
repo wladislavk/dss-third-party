@@ -1722,7 +1722,7 @@ if (empty($prior_authorization_number)) {
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
 							<?
-								$referredby_sql = "select * from dental_referredby where `referredbyid` = ".$referredby." LIMIT 1;";
+								$referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
 								$referredby_my = mysql_query($referredby_sql);
 								
 								$referredby_myarray = mysql_fetch_array($referredby_my);

@@ -332,7 +332,7 @@ $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray[
 $inscoarray = mysql_query($inscoquery);
 $inscoinfo = mysql_fetch_array($inscoarray);
 
-$referredby_sql = "select * from dental_referredby where `referredbyid` = ".$referredby." LIMIT 1;";
+$referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
 $referredby_my = mysql_query($referredby_sql);
 
 $referredby_myarray = mysql_fetch_array($referredby_my);

@@ -94,7 +94,7 @@
 		</td>
 		<td valign="top" class="frmdata">
 			<?
-			$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
+			$referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".$_SESSION['docid']."' order by firstname";
 			$referredby_my = mysql_query($referredby_sql);
 			?>
 			<select name="referred_by" class="field text addr tbox">
@@ -103,7 +103,7 @@
 				{
 					$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
 				?>
-					<option value="<?=st($referredby_myarray['referredbyid'])?>" >
+					<option value="<?=st($referredby_myarray['contactid'])?>" >
 						<?=$ref_name;?>
 					</option>
 				<? }?>

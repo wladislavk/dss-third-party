@@ -916,7 +916,7 @@ $referral_source = st($pat_myarray['referred_source']);
 
 if(st($pat_myarray['referred_by']) != '')
 {
-	$referredby_sql = "select * from dental_referredby where status=1 and referredbyid='".st($pat_myarray['referred_by'])."'";
+	$referredby_sql = "select * from dental_contact where status=1 and contactid='".st($pat_myarray['referred_by'])."'";
 	$referredby_my = mysql_query($referredby_sql);
 	$referredby_myarray = mysql_fetch_array($referredby_my);
 	
@@ -1429,7 +1429,7 @@ if($docmdother == $pcont_l5['contactid']){
 
 if(st($pat_myarray['referred_by']) <> '')
 {
-  $referredby_sql = "select * from dental_referredby where status=1 and referredbyid='".st($pat_myarray['referred_by'])."'";
+  $referredby_sql = "select * from dental_contact where referrer=1 and status=1 and contactid='".st($pat_myarray['referred_by'])."'";
 	$referredby_my = mysql_query($referredby_sql);
 	$referredby_myarray = mysql_fetch_array($referredby_my);
 	

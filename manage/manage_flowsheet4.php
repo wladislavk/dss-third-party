@@ -150,7 +150,7 @@ Contact Location
 
 <?php
 
-								$referredby_sql = "select * from dental_referredby where status=1 and docid='".$_SESSION['docid']."' order by firstname";
+								$referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".$_SESSION['docid']."' order by firstname";
 
 								$referredby_my = mysql_query($referredby_sql);
 
@@ -168,7 +168,7 @@ Contact Location
 
 									?>
 
-										<option value="<?=st($referredby_myarray['referredbyid'])?>" <? if($referred_by == st($referredby_myarray['referredbyid']) ) echo " selected";?>>
+										<option value="<?=st($referredby_myarray['contactid'])?>" <? if($referred_by == st($referredby_myarray['contactid']) ) echo " selected";?>>
 
 											<?php echo $ref_name;?>
 

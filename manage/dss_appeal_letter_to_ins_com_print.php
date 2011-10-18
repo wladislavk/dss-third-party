@@ -19,7 +19,7 @@ if($pat_myarray['patientid'] == '')
 }
 
 
-$ref_sql = "select * from dental_referredby where status=1 and referredbyid='".$pat_myarray['referred_by']."'";
+$ref_sql = "select * from dental_contact where status=1 and contactid='".$pat_myarray['referred_by']."'";
 $ref_my = mysql_query($ref_sql);
 $ref_myarray = mysql_fetch_array($ref_my);
 

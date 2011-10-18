@@ -178,3 +178,19 @@ $dss_appliance_labels[DSS_APPLIANCE_TRD2]["short"] = "";
 $dss_appliance_labels[DSS_APPLIANCE_TAP3] = "TAP 3";
 $dss_appliance_labels[DSS_APPLIANCE_TAP3]["short"] = "";
 */
+
+define('DSS_REFERRED_PATIENT', 1);
+define('DSS_REFERRED_PHYSICIAN', 2);
+define('DSS_REFERRED_MEDIA', 3);
+define('DSS_REFERRED_FRANCHISE', 4);
+define('DSS_REFERRED_DSSOFFICE', 5);
+define('DSS_REFERRED_OTHER', 6);
+
+$dss_referred_labels = array();
+$dss_referred_labels[DSS_REFERRED_PATIENT] = "Patient";
+$dss_referred_labels[DSS_REFERRED_PHYSICIAN] = "Physician";
+$dss_referred_labels[DSS_REFERRED_MEDIA] = "Media";
+$dss_referred_labels[DSS_REFERRED_FRANCHISE] = "Franchise";
+$dss_referred_labels[DSS_REFERRED_DSSOFFICE] = "DSS Office";
+$dss_referred_labels[DSS_REFERRED_OTHER] = "Other";
+

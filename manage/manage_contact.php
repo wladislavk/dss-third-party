@@ -114,13 +114,16 @@ Filter by type: <select name="myjumpbox"
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="35%">
 			Company
 		</td>
-		<td valign="top" class="col_head" width="30%">
+		<td valign="top" class="col_head" width="25%">
 			Contact Type
 		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="10%">
+			Referrer
+		</td>
+		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
 	 </table>
@@ -154,10 +157,10 @@ Filter by type: <select name="myjumpbox"
 				<td valign="top" width="20%">
 					<?=$name;?>
 				</td>
-				<td valign="top" width="40%">
+				<td valign="top" width="35%">
 					<?=st($myarray["company"]);?>
 				</td>
-				<td valign="top" width="30%">
+				<td valign="top" width="25%">
 				<?php print ($contact_type[$myarray["contacttypeid"]]) ? $contact_type[$myarray["contacttypeid"]] : "Contact Type Not Set"; ?>
 				<?php /*
 				<?php if($myarray["contacttypeid"] == '6'){echo "Attorney";} ?>
@@ -177,7 +180,10 @@ Filter by type: <select name="myjumpbox"
 				<?php if($myarray["contacttypeid"] == '0'){echo "Type Not Set";} ?>
 				*/ ?>
 	      </td>
-				<td valign="top" width="20%">
+				<td valign="top" width="10%">
+					<?= ($myarray['referrer']==1)?'X':''; ?>
+				</td>
+				<td valign="top" width="10%">
 					<a href="add_contact.php?ed=<?=$myarray["contactid"];?>" class="editlink" title="EDIT">
 						Edit 
 					</a>

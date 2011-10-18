@@ -75,10 +75,13 @@ $num_contact=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="70%">
+		<td valign="top" class="col_head" width="60%">
 			Company
 		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="10%">
+			Referrer
+		</td>
+		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
 	</tr>
@@ -112,6 +115,9 @@ $num_contact=mysql_num_rows($my);
 				</td>
 				<td valign="top">
 					<?=st($myarray["company"]);?>
+				</td>
+				<td valign="top">
+					<?= ($myarray['referrer']==1)?'X':''; ?>
 				</td>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&docid=<?=$_GET['docid']?>');" class="editlink" title="EDIT">

@@ -367,7 +367,7 @@ if($_POST["patientsub"] == 1)
 		?>
 		<script type="text/javascript">
 			alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?pid=<?= $pid; ?>&addtopat=1';
+			parent.window.location='add_patient.php?pid=<?= $pid; ?>&ed=<?=$pid; ?>&addtopat=1';
 		</script>
 		<?
 		die();
@@ -573,6 +573,18 @@ if($_POST["patientsub"] == 1)
 		$emergency_number = st($themyarray["emergency_number"]);
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
+		if($referred_source==DSS_REFERRED_PATIENT){
+		  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
+		  $rq = mysql_query($rsql);
+		  $r = mysql_fetch_assoc($rq);
+		  $referred_name = $r['lastname'].", ".$r['firstname'];
+		}elseif($referred_source==DSS_REFERRED_PHYSICIAN){
+                  $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referred_by;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $referred_name = $r['lastname'].", ".$r['firstname'];
+                }
+
 		$copyreqdate = st($themyarray["copyreqdate"]);
 		$preferredcontact = st($themyarray["preferredcontact"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
@@ -972,41 +984,107 @@ $num_face = mysql_num_rows($p);
 <div style="float:left;"> 
                            <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
 <label>Date</label>
-				</div><div style="float:left;"> 				<?
-								$referredby_sql = "select * from dental_contact where status=1 and referrer=1 and docid='".$_SESSION['docid']."' order by firstname";
-								$referredby_my = mysql_query($referredby_sql);
-								?>
-								<select name="referred_by" id="referred_by" class="field text addr tbox">
-									<option value=""></option>
-									<? while($referredby_myarray = mysql_fetch_array($referredby_my)) 
-									{
-										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-									?>
-										<option value="<?=st($referredby_myarray['contactid'])?>" <? if($referred_by == st($referredby_myarray['contactid']) ) echo " selected";?>>
-											<?=$ref_name;?>
-										</option>
-									<? }?>
-								</select>
-							
+				</div>
+				<div style="float:left;">
+				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person<br />
+				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+
+				<label for="referred_source">Referral Source</label>
+				</div>
+<script type="text/javascript">
+function show_referredby(t, rs){
+	if(t=='person'){
+                document.getElementById('referred_notes').style.display="none";
+                document.getElementById('referred_person').style.display="block";
+	}else{
+                document.getElementById('referred_notes').style.display="block";
+		document.getElementById('referred_person').style.display="none";
+	}
+                $('#referred_source').val(rs);
+}
+</script>
+				<div style="float:left;">
+					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>	
+					<input type="text" id="referredby_name" name="referredby_name" value="<?= $referred_name; ?>" />
+<br />
+        <div id="referredby_hints" style="display:none;">
+                <ul id="referredby_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+        </div>
+<script type="text/javascript">
+        var selection = 1;
+        var selectedUrl = '';
+        var searchVal = ""; // global variable to hold the last valid search string
+        $(document).ready(function() {
+                $('#referredby_name').keyup(function(e) {
+                                var a = e.which; // ascii decimal value
+                                //var c = String.fromCharCode(a);
+                                var listSize = $('#referredby_list li').size();
+                                var stringSize = $(this).val().length;
+                                if ($(this).val().trim() == "") {
+                                        $('#referredby_hints').css('display', 'none');
+                                } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
+                                        $('#referredby_hints').css("display", "inline");
+                                        sendValueRef($('#referredby_name').val());
+                                        if ($(this).val() > 2) {
+                                                window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
+                                        }
+                                }
+                });
+});
+        function sendValueRef(partial_name) {
+		$('#referred_by').val('');
+		$('#referred_source').val('');
+                $.post(
+                
+                "list_referrers.php",
+
+                { 
+                        "partial_name": partial_name 
+                },
+
+                function(data) {
+                        if (data.length == 0) {
+                                $('#referredby_hints').css('display', 'none');
+                        }
+                        if (data.error) {
+                                alert(data.error);
+                        } else {
+				$('.json_patient').remove();
+                                for(i in data) {
+					var name = data[i].lastname+", "+data[i].firstname;
+                                        var newLi = $('#referredby_list .template').clone(true).removeClass('template').addClass('json_patient').attr("onclick", "update_referredby('"+name+"', '"+data[i].patientid+"', '"+data[i].referral_type+"')");
+                                        template_list(newLi, data[i])
+                                              .appendTo('#referredby_list')
+                                            .fadeIn();
+                                }
+                        }
+                },
+
+                "json"
+                );
+        }
+function update_referredby(name, id, t){
+  $('#referredby_name').val(name);
+  $('#referred_by').val(id);
+  $('#referred_source').val(t);
+  $('#referredby_hints').css('display', 'none');
+}
+</script>
+					</div>
+					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
+						<input type="text" name="referred_notes" value="<?= $referred_notes; ?>" />	
+					</div>
+<input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
+<input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
+
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
                                <label for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
                             </div>
-      <div style="float:left;">                      
-                            
-								<select name="referred_source" id="referred_source" class="field text addr tbox" style="width:300px;" >
-                  <option value="">Select</option>
-                  <option value="Patient" <? if($referred_source == 'Patient') echo " selected";?>>Patient</option>
-                  <option value="Physician" <? if($referred_source == 'Physician') echo " selected";?>>Physician</option>
-									<option value="Media" <? if($referred_source == 'Media') echo " selected";?>>Media</option>
-									<option value="Franchise" <? if($referred_source == 'Franchise') echo " selected";?>>Franchise</option>
-									<option value="DSS Office" <? if($referred_source == 'DSS Office') echo " selected";?>>DSS Office</option>
-									<option value="Other" <? if($referred_source == 'Other') echo " selected";?>>Other</option>
-                                </select>
-                                <label for="referred_source">Referred Source</label>
-</div>
-                                                           <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
- 
-						</div>
                     </li>
 				</ul>
             </td>

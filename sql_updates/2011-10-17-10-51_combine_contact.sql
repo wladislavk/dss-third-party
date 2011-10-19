@@ -1,6 +1,6 @@
 ALTER TABLE dental_contact ADD COLUMN referredby_info int(1); 
 ALTER TABLE dental_contact ADD COLUMN old_referredbyid int(11);
-ALTER TABLE dental_contact ADD COLUMN referrer int(1);
+ALTER TABLE dental_patients ADD COLUMN referred_notes varchar(255);
 
 INSERT INTO dental_contact (
 	docid,
@@ -30,8 +30,7 @@ INSERT INTO dental_contact (
 	adddate,
 	ip_address,
 	referredby_info,
-	old_referredbyid,
-	referrer
+	old_referredbyid
 	)
       SELECT 
 	docid,
@@ -61,8 +60,7 @@ INSERT INTO dental_contact (
         adddate,
         ip_address,
         referredby_info,
-        referredbyid,
-	'1'
+        referredbyid
           FROM dental_referredby;
 
 

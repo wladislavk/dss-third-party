@@ -67,11 +67,4 @@ INSERT INTO dental_contact (
 UPDATE dental_patients set referred_by = (select dental_contact.contactid from dental_contact WHERE dental_contact.old_referredbyid=dental_patients.referred_by);
 
 
-
-
-
-
-
-
-
-ALTER TABLE dental_contact DROP COLUMN old_referredby_id;
+ALTER TABLE dental_contact DROP COLUMN old_referredbyid;

@@ -201,6 +201,7 @@ if($_POST["patientsub"] == 1)
 		emergency_number = '".s_for($_POST["emergency_number"])."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
+		referred_notes = '".s_for($_POST["referred_notes"])."',
 		copyreqdate = '".s_for($_POST["copyreqdate"])."',
 		status = '".s_for($_POST["status"])."',
 		preferredcontact = '".s_for($_POST["preferredcontact"])."'
@@ -347,6 +348,7 @@ if($_POST["patientsub"] == 1)
 		emergency_number = '".s_for($_POST["emergency_number"])."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
+		referred_notes = '".s_for($_POST["referred_notes"])."',
 		copyreqdate = '".s_for($_POST["copyreqdate"])."',
 		userid='".$_SESSION['userid']."', 
 		docid='".$_SESSION['docid']."', 
@@ -476,6 +478,7 @@ if($_POST["patientsub"] == 1)
 		$emergency_number = $_POST["emergency_number"];
 		$referred_source = $_POST["referred_source"];
 		$referred_by = $_POST["referred_by"];
+		$referred_notes = $_POST["referred_notes"];
 		$copyreqdate = $_POST["copyreqdate"];
 		$preferredcontact = $_POST["preferredcontact"];
 		
@@ -573,6 +576,7 @@ if($_POST["patientsub"] == 1)
 		$emergency_number = st($themyarray["emergency_number"]);
 		$referred_source = st($themyarray["referred_source"]);
 		$referred_by = st($themyarray["referred_by"]);
+		$referred_notes = st($themyarray["referred_notes"]);
 		if($referred_source==DSS_REFERRED_PATIENT){
 		  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
 		  $rq = mysql_query($rsql);
@@ -587,6 +591,7 @@ if($_POST["patientsub"] == 1)
 
 		$copyreqdate = st($themyarray["copyreqdate"]);
 		$preferredcontact = st($themyarray["preferredcontact"]);
+		$referred_notes = st($themyarray["referred_notes"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
 		
 		$but_text = "Add ";
@@ -1008,7 +1013,7 @@ function show_referredby(t, rs){
 </script>
 				<div style="float:left;">
 					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>	
-					<input type="text" id="referredby_name" name="referredby_name" value="<?= $referred_name; ?>" />
+					<input type="text" id="referredby_name" autocomplete="off" name="referredby_name" value="<?= $referred_name; ?>" />
 <br />
         <div id="referredby_hints" style="display:none;">
                 <ul id="referredby_list">
@@ -1058,7 +1063,7 @@ function show_referredby(t, rs){
                                 for(i in data) {
 					var name = data[i].lastname+", "+data[i].firstname;
                                         var newLi = $('#referredby_list .template').clone(true).removeClass('template').addClass('json_patient').attr("onclick", "update_referredby('"+name+"', '"+data[i].patientid+"', '"+data[i].referral_type+"')");
-                                        template_list(newLi, data[i])
+                                        template_list_ref(newLi, data[i])
                                               .appendTo('#referredby_list')
                                             .fadeIn();
                                 }
@@ -1067,6 +1072,16 @@ function show_referredby(t, rs){
 
                 "json"
                 );
+        }
+        function template_list_ref(li, patient) {
+					ext = '';
+                                        if(patient.referral_type==<?= DSS_REFERRED_PATIENT; ?>){
+                                                ext = " - patient";
+                                        }else if(patient.referral_type==<?= DSS_REFERRED_PHYSICIAN; ?>){
+                                                ext = " - contact";
+                                        }
+                li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + ext);
+                return li;
         }
 function update_referredby(name, id, t){
   $('#referredby_name').val(name);
@@ -1077,7 +1092,7 @@ function update_referredby(name, id, t){
 </script>
 					</div>
 					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
-						<input type="text" name="referred_notes" value="<?= $referred_notes; ?>" />	
+						<textarea name="referred_notes"><?= $referred_notes; ?></textarea> 	
 					</div>
 <input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
 <input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />

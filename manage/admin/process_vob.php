@@ -379,7 +379,6 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

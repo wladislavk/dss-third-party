@@ -340,6 +340,11 @@ function patientabc(fa)
 		fa.dob.focus();
 		return false;
 	}*/
+	if(trim(fa.referredby_name.value) != '' && trim(fa.referred_by.value) == ''){
+		alert("Invalid referred by.");
+		fa.referredby_name.focus();
+		return false;
+	}
 	if(trim(fa.dob.value) != "" && ! is_date(trim(fa.dob.value)))
 	{
 		alert("Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format");
@@ -495,6 +500,33 @@ function patientabc(fa)
 			return false;
 		}
 	}	
+        if(trim(fa.docsleep_name.value) != '' && trim(fa.docsleep.value) == ''){
+                alert("Invalid sleep md.");
+                fa.docsleep_name.focus();
+                return false;
+        }
+        if(trim(fa.docpcp_name.value) != '' && trim(fa.docpcp.value) == ''){
+                alert("Invalid primary care md.");
+                fa.docpcp_name.focus();
+                return false;
+        }
+        if(trim(fa.docdentist_name.value) != '' && trim(fa.docdentist.value) == ''){
+                alert("Invalid dentist");
+                fa.docdentist_name.focus();
+                return false;
+        }
+        if(trim(fa.docent_name.value) != '' && trim(fa.docent.value) == ''){
+                alert("Invalid ENT.");
+                fa.docent_name.focus();
+                return false;
+        }
+        if(trim(fa.docmdother_name.value) != '' && trim(fa.docmdother.value) == ''){
+                alert("Invalid other md.");
+                fa.docmdother_name.focus();
+                return false;
+        }
+
+
         return true;
 }
 

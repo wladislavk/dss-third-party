@@ -1538,130 +1538,135 @@ Completed/Uploaded
 
 <!--sleep study table-->
 
-<div style="height:20px;"></div>
 <!-- SLEEP LAB SECTION START -->
 <style type="text/css">
   .sleeplabstable tr{ height: 28px; }
+.yellow .odd, .yellow .even{
+background:#edeb46;
+}
+
+  .odd{ background: #F9FFDF; }
+  .even{ background: #e4ffcf; }
 </style>
-<table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
+<table class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
 
 
         <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 Date
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Sleep Test Type
                 </td></tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 Place
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Apnea
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 Hypopnia
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 AHI
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 AHI Supine
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 RDI
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 RDI Supine
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 O<sub>2</sub> Nadir
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 T &le; 90% O<sub>2</sub>
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Sleep Efficiency
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 CPAP Level
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Dental Device
                 </td>
   </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 Device Setting
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Diagnosis
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #F9FFDF;">
+                <td valign="top" class="odd">
                 File
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Notes
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
 		Needed
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
 		Date Scheduled
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
 		Completed
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
 		Interpretation
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
 		Copy Requested
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
 		Request From
                 </td>
         </tr>
@@ -2103,7 +2108,7 @@ if (end(explode('.', $lomnimgname)) == "pdf") $pdf2 = true;
 if (end(explode('.', $notesimgname)) == "pdf") $pdf3 = true;
 ?>
 
-<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
+<div style="width:600px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
 <table width="610px" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
 <tr style="vertical-align:middle;">
 <td>

@@ -565,10 +565,34 @@ if($_POST["patientsub"] == 1)
 		$medical_insurance = st($themyarray["medical_insurance"]);
 		$mark_yes = st($themyarray["mark_yes"]);
 		$docsleep = st($themyarray["docsleep"]);
+		  $dsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$docsleep;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docsleep_name = $d['lastname'].", ".$d['firstname'];
 		$docpcp = st($themyarray["docpcp"]);
+                  $dsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$docpcp;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docpcp_name = $d['lastname'].", ".$d['firstname'];
+
 		$docdentist = st($themyarray["docdentist"]);
+                  $dsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$docdentist;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docdentist_name = $d['lastname'].", ".$d['firstname'];
+
 		$docent = st($themyarray["docent"]);
+                  $dsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$docent;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docent_name = $d['lastname'].", ".$d['firstname'];
+
 		$docmdother = st($themyarray["docmdother"]);
+                  $dsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$docmdother;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docmdother_name = $d['lastname'].", ".$d['firstname'];
+
 		$inactive = st($themyarray["inactive"]);
 		$partner_name = st($themyarray["partner_name"]);
 		$emergency_name = st($themyarray["emergency_name"]);
@@ -1020,75 +1044,11 @@ function show_referredby(t, rs){
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
         </div>
+<script type="text/javascript" src="script/autocomplete.js"></script>
 <script type="text/javascript">
-        var selection = 1;
-        var selectedUrl = '';
-        var searchVal = ""; // global variable to hold the last valid search string
-        $(document).ready(function() {
-                $('#referredby_name').keyup(function(e) {
-                                var a = e.which; // ascii decimal value
-                                //var c = String.fromCharCode(a);
-                                var listSize = $('#referredby_list li').size();
-                                var stringSize = $(this).val().length;
-                                if ($(this).val().trim() == "") {
-                                        $('#referredby_hints').css('display', 'none');
-                                } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-                                        $('#referredby_hints').css("display", "inline");
-                                        sendValueRef($('#referredby_name').val());
-                                        if ($(this).val() > 2) {
-                                                window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
-                                        }
-                                }
-                });
+$(document).ready(function(){
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php');
 });
-        function sendValueRef(partial_name) {
-		$('#referred_by').val('');
-		$('#referred_source').val('');
-                $.post(
-                
-                "list_referrers.php",
-
-                { 
-                        "partial_name": partial_name 
-                },
-
-                function(data) {
-                        if (data.length == 0) {
-                                $('#referredby_hints').css('display', 'none');
-                        }
-                        if (data.error) {
-                                alert(data.error);
-                        } else {
-				$('.json_patient').remove();
-                                for(i in data) {
-					var name = data[i].lastname+", "+data[i].firstname;
-                                        var newLi = $('#referredby_list .template').clone(true).removeClass('template').addClass('json_patient').attr("onclick", "update_referredby('"+name+"', '"+data[i].patientid+"', '"+data[i].referral_type+"')");
-                                        template_list_ref(newLi, data[i])
-                                              .appendTo('#referredby_list')
-                                            .fadeIn();
-                                }
-                        }
-                },
-
-                "json"
-                );
-        }
-        function template_list_ref(li, patient) {
-					ext = '';
-                                        if(patient.referral_type==<?= DSS_REFERRED_PATIENT; ?>){
-                                                ext = " - patient";
-                                        }else if(patient.referral_type==<?= DSS_REFERRED_PHYSICIAN; ?>){
-                                                ext = " - contact";
-                                        }
-                li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename + ext);
-                return li;
-        }
-function update_referredby(name, id, t){
-  $('#referredby_name').val(name);
-  $('#referred_by').val(id);
-  $('#referred_source').val(t);
-  $('#referredby_hints').css('display', 'none');
-}
 </script>
 					</div>
 					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
@@ -1546,53 +1506,20 @@ function update_referredby(name, id, t){
             <ul>
 		        <li  id="foli8" class="complex">
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
-		        <select name="docsleep" id="textfield6" style="width:150px;" />
-<option>Not Set</option>
-<?php
-                $patid=$_GET['ed'];
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
 
 
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-?>
-
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-if($docsleep == $pcont_l['contactid']){
-$selected = "selected=\"selected\"";
-}else{
-$selected = " ";
-}
-
-
-
-echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</option>";
-?>
-
-<?php 
- }
-?>
-              
-      </select>
-      
-		
+                                        <input type="text" id="docsleep_name" autocomplete="off" name="docsleep_name" value="<?= $docsleep_name; ?>" />
+<br />        <div id="docsleep_hints" style="display:none;">
+                <ul id="docsleep_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docsleep" id="docsleep" value="<?=$docsleep;?>" />
 		         </li>
 		         </ul>
 		          </td>
@@ -1612,53 +1539,18 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-		        <select name="docpcp" id="textfield6" style="width:150px;" />
-<option>Not Set</option>
-<?php
-                $patid=$_GET['ed'];
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-?>
-
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-if($docpcp == $pcont_l['contactid']){
-$selected = "selected=\"selected\"";
-}else{
-$selected = " ";
-}
-
-
-
-echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</option>";
-?>
-
-<?php 
- }
-?>
-              
-      </select>
-      
-		
+                                        <input type="text" id="docpcp_name" autocomplete="off" name="docpcp_name" value="<?= $docpcp_name; ?>" />
+<br />        <div id="docpcp_hints" style="display:none;">
+                <ul id="docpcp_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
 		         </li>
 		         </ul>
 		         
@@ -1678,52 +1570,18 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
-		        <select name="docdentist" id="textfield6" style="width:150px;" />
-<option>Not Set</option>
-<?php
-                $patid=$_GET['ed'];
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-?>
-
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-if($docdentist == $pcont_l['contactid']){
-$selected = "selected=\"selected\"";
-}else{
-$selected = " ";
-}
-
-
-
-echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</option>";
-?>
-
-<?php 
- }
-?>
-              
-      </select>
-      
+                                        <input type="text" id="docdentist_name" autocomplete="off" name="docdentist_name" value="<?= $docdentist_name; ?>" />
+<br />        <div id="docdentist_hints" style="display:none;">
+                <ul id="docdentist_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docdentist" id="docdentist" value="<?=$docdentist;?>" />
 
 		         </li>
 		         </ul>
@@ -1753,52 +1611,19 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">ENT</label>
-		        <select name="docent" id="textfield6" style="width:150px;" />
-<option>Not Set</option>
-<?php
-                $patid=$_GET['ed'];
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
+                                        <input type="text" id="docent_name" autocomplete="off" name="docent_name" value="<?= $docent_name; ?>" />
+<br />        <div id="docent_hints" style="display:none;">
+                <ul id="docent_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
 
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-?>
-
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-if($docent == $pcont_l['contactid']){
-$selected = "selected=\"selected\"";
-}else{
-$selected = " ";
-}
-
-
-
-echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</option>";
-?>
-
-<?php 
- }
-?>
-              
-      </select>
-	
 		         </li>
 		         </ul>
 		         
@@ -1819,53 +1644,19 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Other MD</label>
-		        <select name="docmdother" id="textfield6" style="width:150px;" />
-<option>Not Set</option>
-<?php
-                $patid=$_GET['ed'];
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
+                                        <input type="text" id="docmdother_name" autocomplete="off" name="docmdother_name" value="<?= $docmdother_name; ?>" />
+<br />        <div id="docmdother_hints" style="display:none;">
+                <ul id="docmdother_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docmdother" id="docmdother" value="<?=$docmdother;?>" />
 
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-?>
-
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-if($docmdother == $pcont_l['contactid']){
-$selected = "selected=\"selected\"";
-}else{
-$selected = " ";
-}
-
-
-
-echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['firstname']." ".$pcont_l['lastname']." - ". $currentcontact_type ."</option>";
-?>
-
-<?php 
- }
-?>
-              
-      </select>
-      
-		
 		         </li>
 		         </ul>
 		          

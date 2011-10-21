@@ -232,19 +232,29 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
    $msg = "Successfully added sleep lab". $uploaded;
   }
  }
+$sleepstudies = "SELECT completed FROM dental_sleepstudy WHERE completed = 'Yes' AND filename IS NOT NULL AND patientid = '".$_GET['pid']."';";
+                $result = mysql_query($sleepstudies);
+                $numsleepstudy = mysql_num_rows($result);
+	$sleepstudy = ($numsleepstudy > 0)?true:false;
  ?>
 <style type="text/css">
 .sleeplabstable tr{height:28px; }
+.yellow .odd, .yellow .even{
+background:#edeb46;
+}
+
+  .odd{ background: #F9FFDF; }
+  .even{ background: #e4ffcf; }
 </style>
 <form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
-<table class="sleeplabstable" id="sleepstudyscrolltable">
+<table class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" onclick="cal1.popup();" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<select name="sleeptesttype">
       <option value="HST">HST</option>
       <option value="PSG">PSG</option>    
@@ -265,7 +275,7 @@ if(f.sleeptesttype.value == "HST"){
 		</td>
 </tr>
   <tr>		
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<select name="place">
 		<?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
@@ -280,57 +290,57 @@ if(f.sleeptesttype.value == "HST"){
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="apnea" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="hypopnea" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="ahi" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="ahisupine" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="rdi" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="rdisupine" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="o2nadir" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="t9002" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="sleepefficiency" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="cpaplevel" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF; height:25px;">
+		<td valign="top" class="even" style="height:25px;">
 		<select name="dentaldevice" style="width:150px;">
         <?php
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
@@ -347,12 +357,12 @@ if(f.sleeptesttype.value == "HST"){
 		</td>
   </tr>
   <tr>		
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="devicesetting" />	
 		</td>
 	</tr>
   <tr>
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
                           <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
 			<?php 
@@ -372,17 +382,17 @@ if(f.sleeptesttype.value == "HST"){
 		</td>
 	</tr>
   <tr>
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		  <input style="width:170px" size="8" type="file" name="ss_file" />
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="notes" />	
 		</td>
 	</tr>
  <tr>
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="odd">
  <input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                 <input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
@@ -390,19 +400,19 @@ if(f.sleeptesttype.value == "HST"){
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                                                 <input name="scheddate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
                 
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
                                                                 <input type="radio" name="completed" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="completed" value="No"><span>No</span>
                 </td>
         </tr>   
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
 				<div name="interpolationdiv">
                                                 <input type="radio" name="interpolation" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="interpolation" value="No"><span>No</span>
@@ -410,12 +420,12 @@ if(f.sleeptesttype.value == "HST"){
                 </td>
         </tr>   
   <tr>
-	<td valign="top" style="background: #E4FFCF;">
+	<td valign="top" class="odd">
                                                 <input name="copyreqdate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" />
 	</td>
   </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">                                                                <select name="sleeplab">
+                <td valign="top" class="even">                                                                <select name="sleeplab">
                                                 <?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -429,7 +439,7 @@ if(f.sleeptesttype.value == "HST"){
                 </td>
         </tr> 
 	<tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="odd">
 		<input type="submit" name="submitnewsleeplabsumm" value="Submit Study" />	
 		</td>
 	</tr>
@@ -460,14 +470,14 @@ $device = mysql_result($device_result, 0);
 ?>
 <form action="#" style="float:left;" method="post" enctype="multipart/form-data">
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
-<table id="sleepstudyscrolltable" class="sleeplabstable">
+<table id="sleepstudyscrolltable" class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="date" value="<?php echo $s_lab['date']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
                 <select name="sleeptesttype">
                    <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
@@ -476,7 +486,7 @@ $device = mysql_result($device_result, 0);
 		</td>
 </tr>
   <tr>		
-		<td valign="top" style="background: #F9FFDF;"> 
+		<td valign="top" class="odd"> 
                 <select name="place">
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
@@ -492,57 +502,57 @@ $device = mysql_result($device_result, 0);
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="apnea" value="<?php echo $s_lab['apnea']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="hypopnea" value="<?php echo $s_lab['hypopnea']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="ahi" value="<?php echo $s_lab['ahi']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="ahisupine" value="<?php echo $s_lab['ahisupine']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="rdi" value="<?php echo $s_lab['rdi']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="rdisupine" value="<?php echo $s_lab['rdisupine']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="o2nadir" value="<?php echo $s_lab['o2nadir']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="t9002" value="<?php echo $s_lab['t9002']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="sleepefficiency" value="<?php echo $s_lab['sleepefficiency']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="cpaplevel" value="<?php echo $s_lab['cpaplevel']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
                 <select name="dentaldevice" style="width:150px;">
         <?php
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
@@ -560,12 +570,12 @@ $device = mysql_result($device_result, 0);
 		</td>
   </tr>
   <tr>		
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		<input type="text" name="devicesetting" value="<?php echo $s_lab['devicesetting']; ?>" />	
 		</td>
 	</tr>
   <tr>
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
                           <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
  <?php
@@ -586,7 +596,7 @@ $device = mysql_result($device_result, 0);
 		</td>
 	</tr>
   <tr>
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 			<?php if($s_lab['filename']!=''){ ?>
 						<div id="file_edit_<?= $s_lab['id']; ?>">
 				<input type="button" id="view" value="View" title="View" onClick="window.open('q_file/<?= $s_lab['filename']; ?>','windowname1','width=400, height=400');return false;" />
@@ -600,7 +610,7 @@ $device = mysql_result($device_result, 0);
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		<input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />	
 		</td>
 	</tr>
@@ -639,7 +649,7 @@ function autoselect(selectedOption, f) {
 
 </script>
  <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
  <input type="radio" name="needed" id="needed1" onclick="update_needed('yes', this.form)" value="Yes" <?= ($s_lab['needed']=="Yes")?'checked="checked"':''; ?> /> 
 Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -649,30 +659,30 @@ No
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                                                 <input name="scheddate" value="<?= $s_lab['scheddate']; ?>" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
 
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
                                                                 <input type="radio" name="completed" value="Yes" <?= ($s_lab['completed']=="Yes")?'checked="checked"':''; ?>><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="completed" value="No" <?= ($s_lab['completed']=="No")?'checked="checked"':''; ?>><span>No</span>
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                                                 <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><label for="interpolation">Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="interpolation" value="No" <?= ($s_lab['interpolation']=="No")?'checked="checked"':''; ?>><label for="interpolation">No</label>
                 </td>
         </tr>
   <tr>
-        <td valign="top" style="background: #E4FFCF;">
+        <td valign="top" class="odd">
                                                 <input name="copyreqdate" type="text" class="field text addr tbox" value="<?= $s_lab['copyreqdate']; ?>" style="width:100px;" maxlength="255" />
         </td>
   </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">                                                                <select name="sleeplab">
+                <td valign="top" class="even">                                                                <select name="sleeplab">
                                                 <?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -687,7 +697,7 @@ No
         </tr>
 
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
                 <input type="submit" name="submitupdatesleeplabsumm" value="Save" />
 		<input type="submit" name="submitdeletesleeplabsumm" onclick='return confirm("Are you sure you want to delete this study?")' value="Delete" />
                 </td>

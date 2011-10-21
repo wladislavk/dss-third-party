@@ -105,9 +105,9 @@ function validatePreAuthForm(form) {
       errorMsg += "- Missing Franchisee's Code E0486 Amount\n";
     }
     
-    if (trim(form.diagnosis_code.value) == "") {
+    /*if (trim(form.diagnosis_code.value) == "") {
       errorMsg += "- Missing Patient's Diagnosis Code from Page 3 of Sleep Test Questionnaire\n";
-    }
+    }*/
     
     if (trim(form.date_of_call.value) == "") {
       errorMsg += "- Missing Date of Call\n";

@@ -1799,9 +1799,9 @@ Sleep Studies:
   
   
   
-	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 899px;">
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 799px;">
 		    
-		    <iframe height="892" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+		    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 	</div>
 <!-- SLEEP LAB SECTION END -->

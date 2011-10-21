@@ -1,11 +1,14 @@
 <? 
 include "includes/top.htm";
-
-$ref_sql = "select * from dental_referredby where docid='".$_SESSION['docid']."' and referredbyid='".s_for($_GET['rid'])."'";
+if($_GET['rsource']==DSS_REFERRED_PHYSICIAN){
+$ref_sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contactid='".s_for($_GET['rid'])."'";
+}elseif($_GET['rsource']==DSS_REFERRED_PATIENT){
+$ref_sql = "select * from dental_patient where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['rid'])."'";
+}
 $ref_my = mysql_query($ref_sql);
 $ref_myarray = mysql_fetch_array($ref_my);
 
-if(st($ref_myarray['referredbyid']) == '')
+/*if(st($ref_myarray['referredbyid']) == '')
 {
 	?>
 	<script type="text/javascript">
@@ -13,7 +16,7 @@ if(st($ref_myarray['referredbyid']) == '')
 	</script>
 	<?
 	die();
-}
+}*/
 $name = st($ref_myarray['salutation'])." ".st($ref_myarray['firstname'])." ".st($ref_myarray['middlename'])." ".st($ref_myarray['lastname']);
 
 
@@ -25,7 +28,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".s_for($_GET['rid'])."' order by adddate desc";
+$sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and referred_by='".s_for($_GET['rid'])."' AND referred_source='".s_for($_GET['rsource'])."' order by adddate desc";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

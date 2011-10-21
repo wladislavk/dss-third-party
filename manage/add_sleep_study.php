@@ -403,8 +403,10 @@ if(f.sleeptesttype.value == "HST"){
         </tr>   
   <tr>
                 <td valign="top" style="background: #E4FFCF;">
+				<div name="interpolationdiv">
                                                 <input type="radio" name="interpolation" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="interpolation" value="No"><span>No</span>
+				</div>
                 </td>
         </tr>   
   <tr>
@@ -602,12 +604,46 @@ $device = mysql_result($device_result, 0);
 		<input type="text" name="notes" value="<?php echo $s_lab['notes']; ?>" />	
 		</td>
 	</tr>
+<script type="text/javascript">
+function update_needed(v, f){
+	if(v=='yes'){
+		f.elements["scheddate"].style.visibility='visible';
+		showWhere(f);
+		autoselect(v,f);
+                f.elements['interpolation'][0].style.visibility='visible';
+                f.elements['interpolation'][1].style.visibility='visible';
+	}else{
+		f.elements["scheddate"].style.visibility='hidden';
+		hideWhere(f);
+		autoselect(v,f);
+		f.elements['interpolation'][0].style.visibility='hidden';
+		f.elements['interpolation'][1].style.visibility='hidden';
+	}
+}
+
+function showWhere(f){
+	f.elements["place"].style.display="block";
+}
+
+function hideWhere(f){
+	f.elements["place"].style.display='none';
+}
+
+function autoselect(selectedOption, f) {
+        if(selectedOption=="no") {
+                f.elements["completed"][0].checked=true;
+        } else {
+                f.elements["completed"][1].checked=true;
+        }
+}
+
+</script>
  <tr>
                 <td valign="top" style="background: #E4FFCF;">
- <input type="radio" name="needed" id="needed1" value="Yes" <?= ($s_lab['needed']=="Yes")?'checked="checked"':''; ?> /> 
+ <input type="radio" name="needed" id="needed1" onclick="update_needed('yes', this.form)" value="Yes" <?= ($s_lab['needed']=="Yes")?'checked="checked"':''; ?> /> 
 Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                <input type="radio" name="needed" id="needed2" value="No" <?= ($s_lab['needed']=="No")?'checked="checked"':''; ?> /> 
+                                                <input type="radio" name="needed" id="needed2" onclick="update_needed('no', this.form)" value="No" <?= ($s_lab['needed']=="No")?'checked="checked"':''; ?> /> 
 No
 
                 </td>
@@ -626,8 +662,8 @@ No
         </tr>
   <tr>
                 <td valign="top" style="background: #E4FFCF;">
-                                                <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="interpolation" value="No" <?= ($s_lab['interpolation']=="No")?'checked="checked"':''; ?>><span>No</span>
+                                                <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><label for="interpolation">Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="interpolation" value="No" <?= ($s_lab['interpolation']=="No")?'checked="checked"':''; ?>><label for="interpolation">No</label>
                 </td>
         </tr>
   <tr>

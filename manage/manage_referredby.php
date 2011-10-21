@@ -24,7 +24,36 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_referredby where docid='".$_SESSION['docid']."' order by firstname";
+//$sql = "select * from dental_referredby where docid='".$_SESSION['docid']."' order by firstname";
+$sql = "select 
+		dc.contactid,
+		dc.salutation,
+		dc.firstname,
+		dc.middlename,
+		dc.lastname, 
+		count(p.patientid) as num_ref, 
+		'".DSS_REFERRED_PHYSICIAN."' as referral_type
+	from dental_contact dc 
+		INNER JOIN dental_patients p on dc.contactid=p.referred_by
+	where dc.docid='".$_SESSION['docid']."'
+		AND p.referred_source=".DSS_REFERRED_PHYSICIAN."
+		GROUP BY dc.contactid
+  UNION
+	select
+		dp.patientid,
+		dp.salutation,
+		dp.firstname,
+		dp.middlename,
+		dp.lastname,
+		count(p.patientid),
+		'".DSS_REFERRED_PATIENT."'
+	from dental_patients dp
+		INNER JOIN dental_patients p ON dp.patientid=p.referred_by
+	where p.docid='".$_SESSION['docid']."'
+                AND p.referred_source=".DSS_REFERRED_PATIENT."
+		GROUP BY dp.patientid
+  ORDER BY lastname ASC, firstname ASC
+";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -83,13 +112,10 @@ background:#999999;
 			Name
 		</td>
 		<td valign="top" class="col_head" width="62%">
-			Company
+			User Type	
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Patients
-		</td>
-		<td valign="top" class="col_head" width="25%">
-			Action
 		</td>
 	</tr>
 	</table>
@@ -127,20 +153,11 @@ background:#999999;
 					<?=$name;?>
 				</td>
 				<td valign="top" width="62%">
-					<?=st($myarray["company"]);?>
+					<?=st($dss_referred_labels[$myarray["referral_type"]]);?>
 				</td>
 				<td valign="top" width="10%">
-					<a href="referredby_patient.php?rid=<?=$myarray["referredbyid"];?>" class="editlink">
-						<?=mysql_num_rows($pat_my);?>
-					</a>
-				</td>
-				<td valign="top" width="25%">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_referredby.php?ed=<?=$myarray["referredbyid"];?>');" class="editlink" title="EDIT">
-						Edit 
-					</a>
-                    
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["referredbyid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						 Delete 
+					<a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
+						<?=$myarray['num_ref'];?>
 					</a>
 				</td>
 			</tr>

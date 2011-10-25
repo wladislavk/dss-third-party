@@ -63,7 +63,6 @@
                 return li;
         }
 function update_referredby(in_field, name, id_field, id, source, t, hint){
-  alert('ddd');
   $('#'+in_field).val(name);
   $('#'+id_field).val(id);
   $('#'+source).val(t);
@@ -71,8 +70,14 @@ function update_referredby(in_field, name, id_field, id, source, t, hint){
 }
 
 
-function confirm_contact(t, id){
-	if(t.value.length > 0 && document.getElementById(id).value.length == 0){
-		alert('NO');
-	}
+                $('.autocomplete_search').click(function() {
+                        if ($(this).val() == 'Type referral name' || $(this).val() == 'Type contact name') {
+                                $(this).val('');
+                        }
+                });
+
+function updateval(t){
+  if(t.value == 'Type referral name' || t.value == 'Type contact name'){
+	t.value = '';
+  }
 }

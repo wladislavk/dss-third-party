@@ -613,6 +613,7 @@ if(isset($_POST['flowsubmit'])){
     $copyreqdate = s_for($_POST['copyreqdate']);
     $referred_by = s_for($_POST['referred_by']);
     $referred_source = s_for($_POST['referred_source']);
+    $referred_notes = s_for($_POST['referred_notes']);
     $referreddate = s_for($_POST['referreddate']);
     $thxletter = s_for($_POST['thxletter']);
     $queststartdate = s_for($_POST['queststartdate']);
@@ -701,7 +702,7 @@ if(isset($_POST['flowsubmit'])){
 		}
 
     if(mysql_num_rows($flowresult) <= 0){
-      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
+      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$notesimgid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -745,7 +746,7 @@ if(isset($_POST['flowsubmit'])){
       }*/
 
     }else{
-      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
+      $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
       $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$notesimgid."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -1155,6 +1156,18 @@ $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $referred_by = $pat_myarray['referred_by'];
 $referred_source = $pat_myarray['referred_source'];
+                if($referred_source==DSS_REFERRED_PATIENT){
+                  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $referred_name = $r['lastname'].", ".$r['firstname'];
+                }elseif($referred_source==DSS_REFERRED_PHYSICIAN){
+                  $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referred_by;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $referred_name = $r['lastname'].", ".$r['firstname'];
+                }
+$referred_notes = $pat_myarray['referred_notes'];
 $copyreqdate = $pat_myarray['copyreqdate'];
 $referredby_sql = "select * from dental_contact where `contactid` = '".$referred_by."';";
 $referredby_my = mysql_query($referredby_sql);
@@ -1195,6 +1208,7 @@ background:#edeb46;
 }
 
 </style>
+<script type="text/javascript" src="script/autocomplete.js"></script>
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
 
@@ -1288,13 +1302,13 @@ Date
 
 <td>
 
-Referred By
+Referral Source
 
 </td>
 
 <td>
 
-Referral Source
+Referred By
 
 </td>
 
@@ -1308,68 +1322,55 @@ Referral Source
 <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal1.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 
 </td>
-
 <td>
 
-<?php
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person<br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
 
-								$referredby_sql = "select * from dental_contact where referrer=1 and status=1 and docid='".$_SESSION['docid']."' order by firstname";
 
-								$referredby_my = mysql_query($referredby_sql);
-
-								?>
-
-								<select name="referred_by" class="field text addr tbox">
-
-									<option value=""></option>
-
-									<?php while($referredby_myarray = mysql_fetch_array($referredby_my)) 
-
-									{
-
-										$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-										$selected = '';
-										if(isset($_GET['refid']) && $_GET['refid'] != ''){
-											if($_GET['refid'] == st($referredby_myarray['contactid'])){
-	                                                                                        $selected = ' selected="selected" ';
-											}
-										}elseif($referred_by == st($referredby_myarray['contactid'])){
-											$selected = ' selected="selected" ';
-										}
-
-									?>
-
-										<option value="<?=st($referredby_myarray['contactid'])?>" <?= $selected; ?>>
-
-											<?php echo $ref_name;?>
-
-										</option>
-
-									<? }?>
-
-								</select>
-
-							
-
-                               <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-
-                <br /><!--<button class="addButton" onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');">Add New Referrer</button>-->
-											<!--<button class="addButton" onclick="Javascript: window.location='add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>';">Add New Referrer</button>-->
-											<!--<a onclick="Javascript: loadPopup('add_referredby.php?addtopat=<?php echo $_GET['pid']; ?>');" href="Javascript: ;">Add New Referrer</a>-->
-											<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" />
 </td>
 
 <td>
 
-                                        <select name="referred_source" id="referred_source" class="field text addr tbox" style="width:150px;" >
-                  <option value="">Select</option>
-                  <option value="Patient" <? if($referred_source == 'Patient') echo " selected";?>>Patient</option>
-                  <option value="Physician" <? if($referred_source == 'Physician') echo " selected";?>>Physician</option>
-                                                                        <option value="Media" <? if($referred_source == 'Media') echo " selected";?>>Media</option>
-                                                                        <option value="Franchise" <? if($referred_source == 'Franchise') echo " selected";?>>Franchise</option>
-                                                                        <option value="DSS Office" <? if($referred_source == 'DSS Office') echo " selected";?>>DSS Office</option>
-                                                                        <option value="Other" <? if($referred_source == 'Other') echo " selected";?>>Other</option>
-                                </select>
+
+<script type="text/javascript">
+function show_referredby(t, rs){
+        if(t=='person'){
+                document.getElementById('referred_notes').style.display="none";
+                document.getElementById('referred_person').style.display="block";
+        }else{
+                document.getElementById('referred_notes').style.display="block";
+                document.getElementById('referred_person').style.display="none";
+        }
+                $('#referred_source').val(rs);
+}
+</script>
+                                <div style="float:left;">
+                                        <div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>
+                                        <input type="text" id="referredby_name" class="autocomplete_search" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" />
+<br />
+        <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
+                <ul id="referredby_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+        </div>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php');
+});
+</script>
+                                        </div>
+                                        <div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
+                                                <textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea>
+                                        </div>
+<input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
+<input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
+
+
+
 
 
 </td>
@@ -1378,27 +1379,6 @@ Referral Source
 
 
 <!-- END INITIAL CONTACT TABLE -->
-
-<tr>
-<td colspan="2">
-<td>
-
-Contact Location
-</td>
-</tr>
-<tr>
-<td colspan="2"></td>
-<td>
-<select name="contact_location">
-
-<option value="DSS Franchisee"<?php if($contact_location == "DSS Franchisee"){echo " selected='selected'";} ?>>DSS Franchisee</option>
-
-<option value="Corporate Office"<?php if($contact_location == "Corporate Office"){echo " selected='selected'";} ?>>Corporate Office</option>
-
-</select>
-</td>
-</tr>
-
 
 
 <!-- START REFERRED TO DSS OFFICE TABLE -->

@@ -1198,213 +1198,58 @@ $num_face = mysql_num_rows($p);
       <br />
     </td>
     <td colspan="5" rowspan="4">
-    <?php
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-?>
 <strong><h3 style="margin-top:-5px;">Medical Caregivers:</h3></strong>
 <div style="margin-left:20px;">
-<?php 
- while($pcont_l = mysql_fetch_array($pcont_array)){
- 
-?>
 
-<?php
+    <?php
 
-if($pcont_l['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-
-if($docsleep == $pcont_l['contactid']){
- echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Sleep MD:</strong></span>".$pcont_l['firstname']." ".$pcont_l['lastname']." - ".$currentcontact_type."</label><br />";
-}else{
-
-}
+	$d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+		ON c.contactid=p.docsleep WHERE p.patientid=".$patid;
+	$d_q = mysql_query($d_sql);
+	if($d = mysql_fetch_assoc($d_q)){
+		echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Sleep MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+	}
+	
 
 
 
-?>
-
-<?php 
- }
-?>
-
-
-
-<?php 
-
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docpcp WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Primary Care:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
 
 
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
 
- while($pcont_l2 = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l2['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l2['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docdentist WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Dentist:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
 
 
-if($docpcp == $pcont_l2['contactid']){
- echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Primary Care:</strong></span>".$pcont_l2['firstname']." ".$pcont_l2['lastname']." - ".$currentcontact_type."</label><br />";
-}else{
 
-}
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docent WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>ENT:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+
+
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docmdother WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Other MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
 
 
 
 ?>
-
-<?php 
- }
-?>
-
-
-
-
-<?php 
-
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
- while($pcont_l3 = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l3['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l3['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-
-if($docdentist == $pcont_l3['contactid']){
- echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Dentist:</strong></span>".$pcont_l3['firstname']." ".$pcont_l3['lastname']." - ".$currentcontact_type."</label><br />";
-}else{
-
-}
-
-
-
-?>
-
-<?php 
- }
-?>
-
-
-
-<?php
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
- 
- while($pcont_l4 = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l4['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l4['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-
-if($docent == $pcont_l4['contactid']){
- echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>ENT:</strong></span>".$pcont_l4['firstname']." ".$pcont_l4['lastname']." - ".$currentcontact_type."</label><br />";
-}else{
-
-}
-
-
-
-?>
-
-<?php 
- }
-?>
-
-
-
-
-<?php 
-               $pcont_qry = "SELECT * FROM dental_pcont WHERE patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- $pcont_qry = "SELECT * FROM dental_pcont LEFT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid." UNION SELECT * FROM dental_pcont RIGHT JOIN dental_contact ON dental_pcont.contact_id = dental_contact.contactid WHERE dental_pcont.patient_id=".$patid;
- $pcont_array = mysql_query($pcont_qry);
-
-
- while($pcont_l5 = mysql_fetch_array($pcont_array)){
- 
-?>
-
-<?php
-
-if($pcont_l5['contacttypeid'] != '0'){
-$type_check = "SELECT contacttype FROM dental_contacttype WHERE contacttypeid=".$pcont_l5['contacttypeid'];
-$type_query = mysql_query($type_check);
-$type_array = mysql_fetch_array($type_query);
-$currentcontact_type = $type_array['contacttype'];
-}else{
-$currentcontact_type = "Type Not Set";
-}
-
-
-if($docmdother == $pcont_l5['contactid']){
- echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Other MD:</strong></span>".$pcont_l5['firstname']." ".$pcont_l5['lastname']." - ".$currentcontact_type."</label><br />";
-}else{
-
-}
-
-
-
-?>
-
-<?php 
- }
-?>
-
 </div>    
     
     

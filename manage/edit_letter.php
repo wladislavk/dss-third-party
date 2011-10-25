@@ -890,40 +890,40 @@ foreach ($letter_contacts as $key => $contact) {
 	} else {
 		$replace[] = "<strong>" . $pcp['zip'] . "</strong>";
 	}
-	$search[] = '%ptreferral_fullname%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptreferral_fullname%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
 	}
-	$search[] = '%ptreferral_firstname%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptreferral_firstname%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['firstname'] . "</strong>";
 	}
-	$search[] = '%ptreferral_lastname%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptreferral_lastname%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
 	}
-	$search[] = '%ptreferral_practice%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptreferral_practice%';
 		$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
 	}
-	$search[] = '%ptref_addr1%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptref_addr1%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['add1'] . "</strong>";
 	}
-	$search[] = '%ptref_addr2%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptref_addr2%';
 		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
 	} 
-	$search[] = '%ptref_city%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptref_city%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['city'] . "</strong>";
-	} 
-	$search[] = '%ptref_state%';
-	if (!empty($ptref_info['md_referrals'])) {
+	}
+        if (!empty($ptref_info['md_referrals'])) { 
+		$search[] = '%ptref_state%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['state'] . "</strong>";
 	} 
-	$search[] = '%ptref_zip%';
-	if (!empty($ptref_info['md_referrals'])) {
+        if (!empty($ptref_info['md_referrals'])) {
+		$search[] = '%ptref_zip%';
 		$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['zip'] . "</strong>";
 	} 
 	$search[] = "%franchisee_fullname%";

@@ -75,7 +75,14 @@ WHERE followupid='".$id."'
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 </head>
-<body style="width:10000px;background:none;">
+<?php
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
+$fuquery_array = mysql_query($fuquery_sql);
+$numf = mysql_num_rows($fuquery_array);
+$bodywidth = ($numf*185)+185;
+?>
+
+<body style="width:<?= $bodywidth; ?>px;background:none;">
 <form id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <style type="text/css">
 #sleepstudyscrolltable tr{ height:28px; }

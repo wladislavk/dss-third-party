@@ -325,7 +325,7 @@ if($complaintid <> '')
 				function cal_bmi()
 				{
 					fa = document.q_page1frm;
-					if(fa.feet.value != 0 && fa.inches.value != 0 && fa.weight.value != 0)
+					if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
 					{
 						var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
 						//alert(inc);
@@ -364,8 +364,8 @@ if($complaintid <> '')
                         
                         <span>
                             <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-                            	<option value="0">Inches</option>
-                            	<? for($i=1;$i<12;$i++)
+                            	<option value="-1">Inches</option>
+                            	<? for($i=0;$i<12;$i++)
 								{
 								?>
 									<option value="<?=$i?>" <? if($inches == $i) echo " selected";?>><?=$i?></option>

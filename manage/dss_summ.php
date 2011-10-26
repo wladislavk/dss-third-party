@@ -218,7 +218,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
                 protrusion_equal = '".s_for($ir_range)."',
                 i_opening_from = '".s_for($i_opening_from)."',
                 l_lateral_from = '".s_for($l_lateral_from)."',
-                r_lateral_from = '".s_for($r_lateral_from)."'
+                r_lateral_from = '".s_for($r_lateral_from)."',
 		userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = now(),
@@ -1514,131 +1514,132 @@ Sleep Studies:
 <!-- SLEEP LAB SECTION START -->  
 <style type="text/css">
   .sleeplabstable tr{ height: 28px; }
+  .odd{ background: #F9FFDF; }
+  .even{ background: #e4ffcf; }
 </style>
 <table class="sleeplabstable" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
 
 
 	<tr>
-		<td valign="top" style="background: #F9FFDF;">
+		<td valign="top" class="odd">
 		Date	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" style="background: #E4FFCF;">
+		<td valign="top" class="even">
 		Sleep Test Type	
 		</td>
 </tr>
-  <tr>		
-		<td valign="top" style="background: #F9FFDF;">
-		Place	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		Apnea	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #F9FFDF;">
-		Hypopnia
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		AHI	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #F9FFDF;">
-		AHI Supine
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		RDI	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #F9FFDF;">
-		RDI Supine	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		O<sub>2</sub> Nadir	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #F9FFDF;">
-		T &le; 90% O<sub>2</sub>
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		Sleep Efficiency	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #F9FFDF;">
-		CPAP Level	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		Dental Device
-		</td>
-  </tr>
-  <tr>		
-		<td valign="top" style="background: #F9FFDF;">
-		Device Setting	
-		</td>
-	</tr>
   <tr>
-		<td valign="top" style="background: #E4FFCF;">
-		Diagnosis	
-		</td>
-	</tr>
-  <tr>
-		<td valign="top" style="background: #F9FFDF;">
-		File
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" style="background: #E4FFCF;">
-		Notes
-		</td>
-	</tr>
-  <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
                 Needed
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Date Scheduled
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="odd">
                 Completed
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Interpretation
                 </td>
         </tr>
+  <tr>		
+		<td valign="top" class="odd">
+		Place	
+		</td>
+	</tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
+                Diagnosis
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
                 Copy Requested
                 </td>
         </tr>
   <tr>
-                <td valign="top" style="background: #E4FFCF;">
+                <td valign="top" class="even">
                 Request From
                 </td>
         </tr>
-
+  <tr>
+                <td valign="top" class="odd">
+                File
+                </td>
+        </tr>
+  <tr>	
+		<td valign="top" class="even">
+		Apnea	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="odd">
+		Hypopnia
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		AHI	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="odd">
+		AHI Supine
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		RDI	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="odd">
+		RDI Supine	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		O<sub>2</sub> Nadir	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="odd">
+		T &le; 90% O<sub>2</sub>
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		Sleep Efficiency	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="odd">
+		CPAP Level	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		Dental Device
+		</td>
+  </tr>
+  <tr>		
+		<td valign="top" class="odd">
+		Device Setting	
+		</td>
+	</tr>
+  <tr>	
+		<td valign="top" class="even">
+		Notes
+		</td>
+	</tr>
   </table>
   
   

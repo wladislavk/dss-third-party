@@ -1542,7 +1542,48 @@ background:#edeb46;
                 </td></tr>
   <tr>
                 <td valign="top" class="odd">
+                Needed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Date Scheduled
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Completed
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Interpretation
+                </td>
+        </tr>
+
+  <tr>
+                <td valign="top" class="odd">
                 Place
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Diagnosis
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Copy Requested
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Request From
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                File
                 </td>
         </tr>
   <tr>
@@ -1607,47 +1648,7 @@ background:#edeb46;
         </tr>
   <tr>
                 <td valign="top" class="even">
-                Diagnosis
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                File
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
                 Notes
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-		Needed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-		Date Scheduled
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-		Completed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-		Interpretation
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-		Copy Requested
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-		Request From
                 </td>
         </tr>
   </table>
@@ -1655,7 +1656,7 @@ background:#edeb46;
 
         <div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 799px;">
 
-                    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+                    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 <!--

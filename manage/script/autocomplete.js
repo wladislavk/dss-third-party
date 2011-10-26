@@ -1,7 +1,7 @@
 	var fff = 0;
-        var selection = 1;
-        var selectedUrl = '';
-        var searchVal = ""; // global variable to hold the last valid search string
+        var selectionref = 1;
+        var selectedrefUrl = '';
+        var searchrefVal = ""; // global variable to hold the last valid search string
 	function setup_autocomplete(in_field, hint, id_field, source, file){
                 $('#'+in_field).keyup(function(e) {
                                 var a = e.which; // ascii decimal value                                //var c = String.fromCharCode(a);
@@ -44,6 +44,8 @@
 						.clone(true)
 						.removeClass('template')
 						.addClass('json_patient')
+						.data('rowid', data[i].id)
+						.data('rowsource', data[i].id)
 						.attr("onclick", "update_referredby('"+in_field+"','"+name+"', '"+id_field+"', '"+data[i].id+"', '"+source+"', '"+data[i].source+"','"+hint+"')");
                                         template_list_ref(newLi, name)
                                               .appendTo('#'+hint+' ul')
@@ -80,4 +82,42 @@ function updateval(t){
   if(t.value == 'Type referral name' || t.value == 'Type contact name'){
 	t.value = '';
   }
-}
+} 
+/*
+                $(document).keyup(function(e) {
+                        switch (e.which) {
+                                case 38:
+                                        move_selectionref('up');
+                                        break;
+                                case 40:
+                                        move_selectionref('down');
+                                        break;
+                                case 13:
+                                        break;
+                        }
+                });
+
+        function move_selectionref(direction) {
+                if ($('#referredby_list > li.list_hover').size() == 0) {
+                        window.selectionref = 0;
+                }
+                if (direction == 'up' && window.selectionref != 0) {
+                        if (window.selectionref != 1) {
+                                window.selectionref--;
+                        }
+                } else if (direction == 'down') {
+                        if (window.selectionref != ($("#referredby_list li").size() -1)) {
+                                window.selectionref++;
+                        }
+                }
+                set_selectedref(window.selectionref);
+        }
+        function set_selectedref(menuitem) {
+                $('#referredby_list li').removeClass('list_hover');
+                $('#referredby_list li').eq(menuitem).addClass('list_hover');
+                var rowid = $('#referred_list li').eq(menuitem).data("rowid");
+                var rowsource = $('#referred_list li').eq(menuitem).data("rowsource");		
+                var rowname = $('#referred_list li').eq(menuitem).data("rowname");
+		$('#referred_name').val(rowname);
+        }
+*/

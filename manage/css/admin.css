@@ -302,7 +302,7 @@ font:Arial, Helvetica, sans-serif;
 text-decoration:none;
 color:#00457C;
 display:block;
-font-weight:bold;
+/*font-weight:bold;*/
 }
 
 .top_m A:hover, .top_m A:active{

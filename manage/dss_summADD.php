@@ -109,14 +109,14 @@ $fuquery_array = mysql_query($fuquery_sql);
 
 
 
-	<div style=" border: medium none;float: left;height: 560px;margin-bottom: 20px;margin-top: -4px;">
-		 <table width="700" style="overflow-x: hidden; height: 560px;">
+	<div style=" border: medium none;float: left;height: 570px;margin-bottom: 20px;margin-top: -4px;">
+		 <table width="700" style="overflow-x: hidden; height: 570px;">
 		   <tr>
 		    <td valign="top">
 
 <!-- IFRAME for FOLLOW UPS-->
 
-<iframe height="553" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+<iframe height="563" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 <!-- IFRAME for FOLLOW UPS-->
 

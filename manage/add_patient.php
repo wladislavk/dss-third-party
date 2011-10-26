@@ -1038,7 +1038,7 @@ function show_referredby(t, rs){
 </script>
 				<div style="float:left;">
 					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>	
-					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" />
+					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
 <br />
         <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="referredby_list" class="search_list">
@@ -1508,7 +1508,7 @@ $(document).ready(function(){
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
 
 
-                                        <input type="text" id="docsleep_name" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docsleep_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
 <br />        <div id="docsleep_hints" class="search_hints" style="display:none;">
                 <ul id="docsleep_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -1539,7 +1539,7 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                        <input type="text" id="docpcp_name" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
 <br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
                 <ul id="docpcp_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -1570,7 +1570,7 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
-                                        <input type="text" id="docdentist_name" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docdentist_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
 <br />        <div id="docdentist_hints" class="search_hints" style="display:none;">
                 <ul id="docdentist_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -1611,7 +1611,7 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">ENT</label>
-                                        <input type="text" id="docent_name" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
 <br />        <div id="docent_hints" class="search_hints" style="display:none;">
                 <ul id="docent_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -1644,7 +1644,7 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Other MD</label>
-                                        <input type="text" id="docmdother_name" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docmdother_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
 <br />        <div id="docmdother_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>

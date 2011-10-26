@@ -1686,7 +1686,7 @@ Subjective Findings:
 	
 </style>
 	
-<div id="hideshow2section2" style="width: 95%; margin: 0 auto; display: table;">
+<div id="hideshow2section2" style="width: 97%; margin: 0 auto; display: table;">
 	<!--The sumadd script generates divs and tabular data from a db-->
 	<?php include("dss_summADD.php"); ?>
 

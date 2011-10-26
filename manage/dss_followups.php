@@ -79,7 +79,7 @@ WHERE followupid='".$id."'
 $fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
 $fuquery_array = mysql_query($fuquery_sql);
 $numf = mysql_num_rows($fuquery_array);
-$bodywidth = ($numf*185)+185;
+$bodywidth = ($numf*160)+320;
 ?>
 
 <body style="width:<?= $bodywidth; ?>px;background:none;">

@@ -1519,6 +1519,7 @@ Completed/Uploaded
 <!--sleep study table-->
 
 <!-- SLEEP LAB SECTION START -->
+<div style="width:610px; margin:0 auto; ">
 <style type="text/css">
   .sleeplabstable tr{ height: 28px; }
 .yellow .odd, .yellow .even{
@@ -1528,7 +1529,7 @@ background:#edeb46;
   .odd{ background: #F9FFDF; }
   .even{ background: #e4ffcf; }
 </style>
-<table class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>" width="108" align="center" style="float:left; margin: 0 0 0 15px;line-height:22px;">
+<table class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>" width="108" align="center" style="float:left; margin: 0;line-height:22px;">
 
 
         <tr>
@@ -1654,11 +1655,12 @@ background:#edeb46;
   </table>
 
 
-        <div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 799px;">
+        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 799px;">
 
                     <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
+</div>
 <!--
 <div style="width: 610px; margin: auto; display: table;" <?php print (!$sleepstudy  ? 'class="yellow"' : ''); ?> id="sleeplabtable">
 	

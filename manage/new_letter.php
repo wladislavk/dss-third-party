@@ -4,8 +4,11 @@ function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_me
 	$letterid = '1';
 	$letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method);
 	if (!is_numeric($letter)) {
-		print "Can't send letter 1: " . $letter;
-		die();
+		?>
+		<script type="text/javascript">
+			alert("<?= $letter; ?>");
+		</script>
+		<?php
 	} else {
 		?>
 		<script type="text/javascript">
@@ -667,7 +670,7 @@ if (isset($_POST['submit'])) {
 <div style="padding-left:25px;">
 	<H1 class="blue">Create New Letter</H1>
 </div>
-<form name="create_letter" action="/manage/new_letter.php" method="post">
+<form name="create_letter" action="/manage/new_letter.php?pid=<?php print $_GET['pid']; ?>" method="post">
   <input name="patient" type="hidden" value="<?php print $_GET['pid']; ?>" />
 	<table style="margin-left:25px; width=100%;">
 		<tr>

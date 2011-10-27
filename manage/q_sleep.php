@@ -300,7 +300,7 @@ if($epworthid <> '')
             <td>
 <br />
 <span class="admin_head">
-        Thorton Snoring Scale
+        Thornton Snoring Scale
 </span>
 
 <br />

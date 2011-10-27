@@ -28,6 +28,11 @@
 		padding: 2px 10px;
     position:relative;
     list-style-type: none;
+    cursor:pointer;
+}
+
+.search_list li:hover {
+	background: #ddd;
 }
 
 .list_hover {

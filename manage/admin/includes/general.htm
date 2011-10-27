@@ -166,6 +166,10 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
 
+  /*if($topatient && !$md_referral_list && !$md_list){
+    return "Warning: No receipiant";
+  }*/
+
   $gen_date = date('Y-m-d H:i:s');
   if ($status == null) {
 		$status = '0';

@@ -4,6 +4,7 @@ require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 require_once('includes/general_functions.php');
 include("includes/sescheck.php");
+include("includes/calendarinc.php");
 ?>
 <html>
 <head>
@@ -380,7 +381,7 @@ if ($origfilename != '') {
 
 						<td>
 
-						<input id="sleepsched<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox" value="<?php echo $scheddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" onclick="cal_sleepsched<?=$i?>.popup();" value="example 11/11/1234" />
+						<input id="sleepsched<?php echo $i; ?>" name="scheddate" type="text" class="field text addr tbox calendar" value="<?php echo $scheddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
 						
 						</td>
 						
@@ -449,7 +450,7 @@ if ($origfilename != '') {
 						
 						<td>
 						
-						<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+						<input id="copyreqdate<?php echo $i; ?>" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" /><span id="req_0" class="req">*</span>
 						
 						</td>
 						
@@ -549,7 +550,7 @@ if($numrows){
 						<td>
             
             
-						<input id="scheddate<?php echo $i; ?>" name="data[<?= $i ?>][scheddate]" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onClick="cal_scheddate<?=$i?>.popup();" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
+						<input id="scheddate<?php echo $i; ?>" name="data[<?= $i ?>][scheddate]" type="text" class="field text addr tbox calendar" value="<?php echo $sleepstudy['scheddate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');"  value="example 11/11/1234" />
 						
 						<script id="js<?php echo $i; ?>" type="text/javascript">
                 //var cal<?php echo $i; ?> = new CalendarPopup();
@@ -656,7 +657,7 @@ if($numrows){
 						
 						<td name="copyreqdate">
 						
-						<input id="copyreqdate<?=$i?>" name="data[<?= $i ?>][copyreqdate]" type="text" class="field text addr tbox" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onclick="cal_copyreqdate<?=$i?>.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+						<input id="copyreqdate<?=$i?>" name="data[<?= $i ?>][copyreqdate]" type="text" class="field text addr tbox calendar" value="<?php echo $sleepstudy['copyreqdate']; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
 						
 						</td>
 						
@@ -739,7 +740,7 @@ if($numrows){
 } ?>
 
  <script type="text/javascript">
- <!--var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);-->
+// <!--var cal<?php echo($i); ?> = new calendar2(document.forms['sleepstudy<?php echo($i); ?>'].elements['scheddate']);-->
  </script>
  <?php
  
@@ -752,8 +753,8 @@ if($numrows){
 <script type="text/javascript">
 	<?php
 	foreach ($calendar_vars as $key => $calid) {
-		print "var cal_" . $calid['scheddate_id'] . " = new calendar2(document.getElementById('" . $calid['scheddate_id'] . "'));";
-		print "var cal_" . $calid['copyreqdate_id'] . " = new calendar2(document.getElementById('" . $calid['copyreqdate_id'] . "'));";
+		//print "var cal_" . $calid['scheddate_id'] . " = new calendar2(document.getElementById('" . $calid['scheddate_id'] . "'));";
+		//print "var cal_" . $calid['copyreqdate_id'] . " = new calendar2(document.getElementById('" . $calid['copyreqdate_id'] . "'));";
 	}
 	?>
 </script> 

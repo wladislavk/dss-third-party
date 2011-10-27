@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
-
+include("includes/calendarinc.php");
 $sql = "SELECT * FROM dental_ledger_note where id=".$_GET['ed'];
 $nq = mysql_query($sql);
 $n = mysql_fetch_assoc($nq);
@@ -36,7 +36,7 @@ parent.window.scroll(0, 0);
                                 Entry Date 
             </td>
                 <td valign="top" class="frmdata">
-                                <input onclick="cal1.popup();" id="entry_date" name="entry_date" type="text" class="tbox" value="<?= $n['entry_date']; ?>"  />
+                                <input id="entry_date" name="entry_date" type="text" class="tbox calendar" value="<?= $n['entry_date']; ?>"  />
                                 <span class="red">*</span>
             </td>
         </tr>

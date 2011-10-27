@@ -1012,7 +1012,7 @@ $num_face = mysql_num_rows($p);
                         </label>
                         <div>
 <div style="float:left;"> 
-                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal4.popup();"  value="example 11/11/1234" />
+                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
 <label>Date</label>
 				</div>
 				<div style="float:left;">

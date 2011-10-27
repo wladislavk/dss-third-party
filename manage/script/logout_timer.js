@@ -1,12 +1,12 @@
 lo_timer = '';
 function set_interval()
 {
-lo_timer=setInterval("auto_logout()",1800000);
+lo_timer=setInterval("auto_logout()",3600000);
 }
 function reset_interval()
 {
 clearInterval(lo_timer);
-lo_timer=setInterval("auto_logout()",1800000);
+lo_timer=setInterval("auto_logout()",3600000);
 }
 function auto_logout()
 {

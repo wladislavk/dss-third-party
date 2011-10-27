@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+include("includes/calendarinc.php");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -33,7 +34,7 @@ parent.window.scroll(0, 0);
                                 Entry Date 
             </td>
                 <td valign="top" class="frmdata">
-                                <input onclick="cal1.popup();" id="entry_date" name="entry_date" type="text" class="tbox" value="<?= date('m/d/Y'); ?>"  />
+                                <input id="entry_date" name="entry_date" type="text" class="tbox calendar" value="<?= date('m/d/Y'); ?>"  />
                                 <span class="red">*</span>
             </td>
         </tr>

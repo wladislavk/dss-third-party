@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+include("includes/calendarinc.php");
 $ids = $_GET['ids'];
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -215,7 +216,7 @@ $ed = ($a['entry_date']!='')?date('m/d/Y', strtotime($a['entry_date'])):'';
 ?>
 <div>
 <input type="hidden" name="form[<?= $a['ledgerid']; ?>][ledgerid]" value="<?= $a['ledgerid']; ?>" />
-<input type="text" name="form[<?= $a['ledgerid']; ?>][service_date]" id="ledger_entry_service_date" value="<?= $sd; ?>" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" onclick="cal<?= $a['ledgerid']; ?>.popup();">
+<input type="text" name="form[<?= $a['ledgerid']; ?>][service_date]" id="ledger_entry_service_date<?= $a['ledgerid']; ?>" class="calendar" value="<?= $sd; ?>" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" >
 <script type="text/javascript">
    var cal<?= $a['ledgerid']; ?> = new calendar2(document.forms['ledgerentryform'].elements['form[<?= $a['ledgerid']; ?>][service_date]']);
 </script>

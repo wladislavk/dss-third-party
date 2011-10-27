@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
-
+include("includes/calendarinc.php");
 if($_POST["notesub"] == 1)
 {
 	$notes = $_POST['notes'];
@@ -190,7 +190,7 @@ if($pat_myarray['patientid'] == '')
         </tr>
         <tr>
         	<td valign="top" class="frmdata">
-				Procedure Date: <input type="text" name="procedure_date" onclick="javascript:cal72.popup();" value="<?=$procedure_date ?>" /><a href="javascript:cal72.popup();"><img width="16" height="16" border="0" alt="Click Here to Pick up the date" src="img/cal.gif"></a>
+				Procedure Date: <input type="text" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
             </td>
         </tr>
         

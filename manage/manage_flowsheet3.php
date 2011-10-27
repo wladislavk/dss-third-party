@@ -1319,7 +1319,7 @@ Referred By
 <tr>
 
 <td>
-<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" onClick="cal1.popup();"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" /><span id="req_0" class="req">*</span>
 
 </td>
 <td>
@@ -1416,13 +1416,13 @@ echo $referrer;
 
 </td>
 <td>
-<input id="referreddate" name="referreddate" type="text" class="field text addr tbox" value="<?php echo $referreddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('referreddate');" onClick="cal2.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="referreddate" name="referreddate" type="text" class="field text addr tbox calendar" value="<?php echo $referreddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('referreddate');" /><span id="req_0" class="req">*</span>
 
 
 
 </td>
 <td>
-<input id="thxletter" name="thxletter" type="text" class="field text addr tbox" value="<?php echo $delivery_date; //$thxletter ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate('thxletter');" onClick="cal3.popup();" value="example 11/11/1234" disabled /><!--<span id="req_0" class="req">*</span>-->
+<input id="thxletter" name="thxletter" type="text" class="field text addr tbox calendar" value="<?php echo $delivery_date; //$thxletter ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate('thxletter');" disabled /><!--<span id="req_0" class="req">*</span>-->
 
 
 
@@ -1469,7 +1469,7 @@ Completed/Uploaded
 
 <tr>
 <td>
-<input id="queststartdate" name="queststartdate" type="text" class="field text addr tbox" value="<?php echo $queststartdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('queststartdate');" onClick="cal4.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="queststartdate" name="queststartdate" type="text" class="field text addr tbox calendar" value="<?php echo $queststartdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('queststartdate');"  /><span id="req_0" class="req">*</span>
 
 
 
@@ -1494,7 +1494,7 @@ Completed/Uploaded
 
 </td>
 <td>
-<input id="questcompdate" name="questcompdate" type="text" class="field text addr tbox" value="<?php echo $questcompdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('questcompdate');" onClick="cal5.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="questcompdate" name="questcompdate" type="text" class="field text addr tbox calendar" value="<?php echo $questcompdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('questcompdate');" /><span id="req_0" class="req">*</span>
 
 
 </td>
@@ -2131,10 +2131,10 @@ N/A
 Rx.
 </td>
 <td>
-<input id="rxreq" name="rxreq" type="text" class="field text addr tbox" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" onClick="cal7.popup();" value="example 11/11/1234" />
+<input id="rxreq" name="rxreq" type="text" class="field text addr tbox calendar" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" />
 </td>
 <td>
-<input id="rxrec" name="rxrec" type="text" class="field text addr tbox" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : "cal8.popup();"); ?>" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="rxrec" name="rxrec" type="text" class="field text addr tbox calendar" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
 </td>
 <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
 						<?php 
@@ -2157,10 +2157,10 @@ Rx.
 L.O.M.N.
 </td>
 <td>
-<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" onClick="cal9.popup();" value="example 11/11/1234" />
+<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox calendar" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" />
 </td>
 <td>
-<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="<?php print ($lomnimgid == "" ? "alert('You must upload an image before LOMN can be marked as received');" : "cal10.popup();"); ?>" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox calendar" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="<?php print ($lomnimgid == "" ? "alert('You must upload an image before LOMN can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
 </td>
 <td>
 						<?php 

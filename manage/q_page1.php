@@ -307,7 +307,7 @@ if($complaintid <> '')
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td colspan="2">
-           Exam date: <input onClick="cal_exam.popup();" type="text" id="exam_date" name="exam_date" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
+           Exam date: <input type="text" id="exam_date" name="exam_date" class="calendar" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
            <script type="text/javascript">
              var cal_exam = new calendar2(document.getElementById('exam_date'));
            </script>

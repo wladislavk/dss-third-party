@@ -5,6 +5,7 @@ include("includes/sescheck.php");
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/general_functions.php');
+include("includes/calendarinc.php");
 // Determine Type of Appliance
 $sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY date DESC LIMIT 1;";
 $result = mysql_query($sql);
@@ -288,7 +289,7 @@ background:#edeb46;
 <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" class="odd">
-		<input type="text" onclick="cal1.popup();" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
+		<input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
 		</td>
 	</tr>
   <tr>	
@@ -322,7 +323,7 @@ if(f.sleeptesttype.value == "HST"){
         </tr>
   <tr>
                 <td valign="top" class="even">
-                                                <input name="scheddate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
+                                                <input name="scheddate" id="scheddate" type="text" class="field text addr tbox calendar" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
 
                 </td>
         </tr>
@@ -377,7 +378,7 @@ if(f.sleeptesttype.value == "HST"){
         </tr>
   <tr>
         <td valign="top" class="odd">
-                                                <input name="copyreqdate" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" />
+                                                <input name="copyreqdate" id="copyreqdate" type="text" class="field text addr tbox calendar" style="width:100px;" maxlength="255" />
         </td>
   </tr>
   <tr>
@@ -511,7 +512,7 @@ $device = mysql_result($device_result, 0);
 <table id="sleepstudyscrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>
 		<td valign="top" class="odd">
-		<input type="text" name="date" value="<?php echo $s_lab['date']; ?>" />	
+		<input type="text" name="date" id="date<?= $s_lab['id']; ?>" class="calendar" value="<?php echo $s_lab['date']; ?>" />	
 		</td>
 	</tr>
   <tr>	
@@ -535,7 +536,7 @@ No
         </tr>
   <tr>
                 <td valign="top" class="even">
-                                                <input name="scheddate" value="<?= $s_lab['scheddate']; ?>" type="text" class="field text addr tbox" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
+                                                <input name="scheddate" value="<?= $s_lab['scheddate']; ?>" type="text" class="field text addr tbox calendar" id="scheddate<?= $s_lab['id']; ?>" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
 
                 </td>
         </tr>
@@ -591,7 +592,7 @@ No
         </tr>
   <tr>
         <td valign="top" class="odd">
-                                                <input name="copyreqdate" type="text" class="field text addr tbox" value="<?= $s_lab['copyreqdate']; ?>" style="width:100px;" maxlength="255" /
+                                                <input name="copyreqdate" id="copyreqdate<?= $s_lab['id']; ?>"  type="text" class="field text addr tbox calendar" value="<?= $s_lab['copyreqdate']; ?>" style="width:100px;" maxlength="255" /
 >
         </td>
   </tr>

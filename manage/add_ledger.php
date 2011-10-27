@@ -3,6 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
+include("includes/calendarinc.php");
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
     $flow = mysql_fetch_array($flowresult);
@@ -379,7 +380,7 @@ parent.window.scroll(0, 0);
 				Service Date
             </td>
         	<td valign="top" class="frmdata">
-				<input id="service_date" name="service_date" type="text" class="tbox" onclick="cal.popup()" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
+				<input id="service_date" name="service_date" type="text" class="tbox calendar" value="<?=$service_date;?>" style="width:100px;" maxlength="255"/> (mm/dd/yyyy)
                  <script type="text/javascript">
                      var cal = new calendar2(document.getElementById('service_date'));
                  </script>

@@ -1233,7 +1233,7 @@ background:#edeb46;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT completed FROM dental_sleepstudy WHERE completed = 'Yes' AND filename IS NOT NULL AND patientid = '".$_GET['pid']."';";
+		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
 		$numsleepstudy = mysql_num_rows($result);
 

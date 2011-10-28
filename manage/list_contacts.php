@@ -14,8 +14,9 @@ if (isset($_POST['partial_name'])) {
 
 $names = explode(" ", $partial);
 
-$sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERRED_PHYSICIAN."' as referral_type"
+$sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERRED_PHYSICIAN."' as referral_type, ct.contacttype"
   .			" FROM dental_contact c"
+  .             " LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
   .			" WHERE ((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
@@ -25,7 +26,7 @@ $patients = array();
 $i = 0;
 while ($row = mysql_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['contactid'];
-  $patients[$i]['name'] = $row['lastname'].", ".$row['firstname'];
+  $patients[$i]['name'] = $row['lastname'].", ".$row['firstname'] . " - " . $row['contacttype'];
   $patients[$i]['source'] = $row['referral_type'];
   $i++;
 }

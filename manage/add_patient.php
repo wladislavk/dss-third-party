@@ -1039,6 +1039,7 @@ function show_referredby(t, rs){
 				<div style="float:left;">
 					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>	
 					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="Add New Referrer" />
 <br />
         <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="referredby_list" class="search_list">

@@ -190,7 +190,7 @@ if($pat_myarray['patientid'] == '')
         </tr>
         <tr>
         	<td valign="top" class="frmdata">
-				Procedure Date: <input type="text" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
+				Procedure Date: <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
             </td>
         </tr>
         

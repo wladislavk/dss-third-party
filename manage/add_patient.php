@@ -908,7 +908,7 @@ $num_face = mysql_num_rows($p);
             		<li id="foli8" class="complex">	
                         <div>
                             <span>
-                                <input id="dob" name="dob" type="text" class="field text addr tbox" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
                                 <label for="dob">Birthday</label>
                             </span>
                             <span>

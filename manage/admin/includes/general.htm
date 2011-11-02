@@ -170,7 +170,7 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
 	?><script type="text/javascript">
-		alert('<?= $nrow['name']; ?> was unable to be created since no recipients were specified. To send, please undo last step and set recipients.');
+		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set.  To create the letter, delete the current flowsheet step and specify contacts in the Patient Info section.  Note that other letters with specified contacts may be created.');
 	</script>
 	<?php
     return 0;

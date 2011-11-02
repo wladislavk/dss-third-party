@@ -165,10 +165,16 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
 
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
-
-  /*if($topatient && !$md_referral_list && !$md_list){
-    return "Warning: No receipiant";
-  }*/
+  if(!$topatient && !$md_referral_list && !$md_list){
+	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
+	$nq = mysql_query($nsql);
+	$nrow = mysql_fetch_assoc($nq);
+	?><script type="text/javascript">
+		alert('<?= $nrow['name']; ?> was unable to be created since no recipients were specified. To send, please undo last step and set recipients.');
+	</script>
+	<?php
+    return 0;
+  }
 
   $gen_date = date('Y-m-d H:i:s');
   if ($status == null) {

@@ -410,7 +410,7 @@ function trigger_letter7($pid, $stepid) {
   $letterid = '7';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-	if ($md_referral_list != "") {
+	//if ($md_referral_list != "") {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 7: " . $letter;
@@ -418,7 +418,7 @@ function trigger_letter7($pid, $stepid) {
 		} else {
 			return $letter;
 		}
-	}
+	//}
 }
 
 function trigger_letter8($pid, $stepid) {
@@ -437,22 +437,23 @@ function trigger_letter9($pid, $stepid) {
   $letterid = '9';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-	if ($md_referral_list != "") {
+
+	//if ($md_referral_list != "") {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 9: " . $letter;
-			die();
+			//die();
 		} else {
 			return $letter;
 		}
-	}
+	//}
 }
 
 function trigger_letter10($pid, $stepid) {
   $letterid = '10';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-	if ($md_referral_list != "") {
+	//if ($md_referral_list != "") {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 10: " . $letter;
@@ -460,14 +461,14 @@ function trigger_letter10($pid, $stepid) {
 		} else {
 			return $letter;
 		}
-	}
+	//}
 }
 
 function trigger_letter11($pid, $stepid) {
   $letterid = '11';
   $md_list = get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
-	if ($md_referral_list != "") {
+	//if ($md_referral_list != "") {
 		$letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
 		if (!is_numeric($letter)) {
 			print "Can't send letter 11: " . $letter;
@@ -475,7 +476,7 @@ function trigger_letter11($pid, $stepid) {
 		} else {
 			return $letter;
 		}
-	}
+	//}
 }
 
 function trigger_letter13($pid, $stepid) {
@@ -2542,7 +2543,7 @@ Next Appointment
   }
 //print_r($letters);
   $letter_list = implode(",", $letters);
-  $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list."))ORDER BY stepid ASC;";
+  $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list."))ORDER BY stepid ASC;";
   $dental_letters_res = mysql_query($dental_letters_query);
   $dental_letters = array();
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
@@ -2609,7 +2610,10 @@ Next Appointment
 					$preferred = "(F)";
 				}
 				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
-				if ($letter['status'] == 0) {
+				if ($letter['deleted'] == 1) {
+					$letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
+				}
+				elseif ($letter['status'] == 0) {
 					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
 				}
 				elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
@@ -2848,7 +2852,7 @@ if ($pt_referralid) {
 	$result = mysql_query($sql);
 	$numrows = mysql_num_rows($result);
 	if ($numrows == 0) {
-		trigger_letter20($_GET['pid']);
+		//trigger_letter20($_GET['pid']);
 	}
 }
 

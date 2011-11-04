@@ -108,7 +108,7 @@ function get_mdcontactids ($pid) {
 }
 
 function get_mdreferralids ($pid) {
-  $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source IN('2');";
+  $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source IN('2') AND dental_contact.contacttypeid IN ('24');";
   $contact_res = mysql_query($contact_sql);
   $contactids = array();
   while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
@@ -121,7 +121,14 @@ function get_mdreferralids ($pid) {
 }
 
 function get_ptreferralids ($pid) {
-	$contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source NOT IN('2');";
+	$pt_sql = "SELECT referred_source FROM dental_patients WHERE patientid=".$pid." LIMIT 1";
+	$pq = mysql_query($pt_sql);
+	$prow = mysql_fetch_assoc($pq);
+	if($prow['referred_source']==1){
+		$contact_sql = "SELECT pr.patientid FROM dental_patients pr INNER JOIN dental_patients p ON p.referred_by = pr.patientid WHERE p.patientid IN('".s_for($pid)."')";
+	}elseif($prow['referred_source']==2){
+		$contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_contact.contacttypeid NOT IN('24');";
+	}
 	$contact_res = mysql_query($contact_sql);
   $contactids = array();
   while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
@@ -136,7 +143,7 @@ function get_ptreferralids ($pid) {
 
 // Retrieve Names Salutation and more from Database
 // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
-function get_contact_info ($patient, $md_list, $md_referral_list) {
+function get_contact_info ($patient, $md_list, $md_referral_list, $referral_source = null) {
   $contact_info = array();
   if (isset($patient)) {
     $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact FROM dental_patients WHERE patientid IN('".$patient."');";
@@ -153,7 +160,26 @@ function get_contact_info ($patient, $md_list, $md_referral_list) {
     }
   }
   if (isset($md_referral_list) && $md_referral_list != "") {
-    $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
+	if($referral_source==1){
+		$sql = "SELECT p.patientid AS id, 
+				p.salutation, 
+				p.lastname, 
+				p.middlename, 
+				p.firstname, 
+				'' as company, 
+				p.add1, 
+				p.add2, 
+				p.city, 
+				p.state, 
+				p.zip, 
+				p.email, 
+				'' as fax, 
+				p.preferredcontact, 
+				'' as contacttypeid 
+			FROM dental_patients p WHERE p.patientid IN(".$md_referral_list.");";
+	}else{
+    		$sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
+	}
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['md_referrals'][] = $row;

@@ -3,7 +3,7 @@ require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/patient_info.php');
 if ($patient_info) {
-?>
+ ?>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("[id^=delay_reason]").each(function() {
@@ -2847,12 +2847,13 @@ update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 
 // Trigger Letter 20 Thankyou
 $pt_referralid = get_ptreferralids($_GET['pid']);
+echo $pt_referralid;
 if ($pt_referralid) {
-	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."';";
+	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."' AND deleted!=1;";
 	$result = mysql_query($sql);
 	$numrows = mysql_num_rows($result);
 	if ($numrows == 0) {
-		//trigger_letter20($_GET['pid']);
+		trigger_letter20($_GET['pid']);
 	}
 }
 

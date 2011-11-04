@@ -137,7 +137,12 @@ foreach ($dental_letters as $key => $letter) {
 	}
 	$dental_letters[$key]['subject'] = $correspondance['name'];
 	// Get Recipients for Sent to Column
-	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
+$s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($letter['patientid'])." LIMIT 1";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
+$source = $r['referred_source'];
+
+	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source);
 	//print_r($contacts); print "<br />";
 	$total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
 	if ($total_contacts > 1) {

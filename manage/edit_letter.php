@@ -71,17 +71,21 @@ $title = mysql_result($template_result, 0);
 //print_r ($_POST);
 
 // Get Contact Info for Recipients
+$s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($_GET['pid'])." LIMIT 1";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
+$source = $r['referred_source'];
 if ($topatient) {
   $contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
 } else {
-  $contact_info = get_contact_info('', $md_list, $md_referral_list);
+  $contact_info = get_contact_info('', $md_list, $md_referral_list, $source);
 }
 
 $md_referral = get_mdreferralids($_GET['pid']);
 $ref_info = get_contact_info('', '', $md_referral);
 
 $pt_referral = get_ptreferralids($_GET['pid']);
-$ptref_info = get_contact_info('', '', $pt_referral);
+$ptref_info = get_contact_info('', '', $pt_referral, $source);
 
 $letter_contacts = array();
 foreach ($contact_info['patient'] as $contact) {

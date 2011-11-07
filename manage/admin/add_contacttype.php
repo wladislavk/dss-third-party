@@ -61,7 +61,7 @@ if($_POST["contacttypesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where contacttypeid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where contacttypeid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -76,7 +76,7 @@ if($_POST["contacttypesub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+			$ins_sql = "insert into dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -110,6 +110,7 @@ if($_POST["contacttypesub"] == 1)
 	if($msg != '')
 	{
 		$contacttype = $_POST['contacttype'];
+		$physician = $_POST['physician'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
@@ -117,6 +118,7 @@ if($_POST["contacttypesub"] == 1)
 	else
 	{
 		$contacttype = st($themyarray['contacttype']);
+		$physician = st($themyarray['physician']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
@@ -157,6 +159,14 @@ if($_POST["contacttypesub"] == 1)
             <td valign="top" class="frmdata">
                 <input type="text" name="contacttype" value="<?=$contacttype?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Physician 
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" name="physician" value="1" <?= ($physician)?'checked="checked"':''; ?> class="tbox" style="width:30px"/>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

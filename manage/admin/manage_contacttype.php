@@ -96,8 +96,11 @@ if($_POST['sortsub'] == 1)
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="80%">
+		<td valign="top" class="col_head" width="70%">
 			Contact Type		
+		</td>
+		<td valign="top" class="col_head" width="10%">
+			Physician
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Sort By 
@@ -132,7 +135,9 @@ if($_POST['sortsub'] == 1)
 				<td valign="top">
 					<?=st($myarray["contacttype"]);?>
 				</td>
-				
+				<td valign="top" align="center">
+					<?= ($myarray['physician'])?'X':''; ?>
+				</td>		
 				<td valign="top" align="center">
 					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
 				</td>	
@@ -147,7 +152,7 @@ if($_POST['sortsub'] == 1)
 	<? 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="1">&nbsp;
+			<td valign="top" class="col_head" colspan="2">&nbsp;
 				
 			</td>
 			<td valign="top" class="col_head" colspan="4">

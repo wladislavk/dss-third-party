@@ -219,7 +219,7 @@ if($_POST["patientsub"] == 1)
 		
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
 			if($_POST['referred_by']){
-			$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
+				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
 			}else{
 				$sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
 			}

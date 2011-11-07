@@ -4,6 +4,8 @@
         var searchrefVal = ""; // global variable to hold the last valid search string
 	function setup_autocomplete(in_field, hint, id_field, source, file){
                 $('#'+in_field).keyup(function(e) {
+				$('#'+id_field).val('');
+                		$('#'+source).val('');
                                 var a = e.which; // ascii decimal value                                //var c = String.fromCharCode(a);
                                 var listSize = $('#'+hint+' ul li').size();
                                 var stringSize = $(this).val().length;
@@ -21,8 +23,6 @@
 
 
         function sendValueRef(partial_name, in_field, hint, id_field, source, file) {
-                $('#'+id_field).val('');
-                $('#'+source).val('');
                 $.post(
                 
                 file,

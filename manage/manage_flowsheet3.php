@@ -703,7 +703,24 @@ if(isset($_POST['flowsubmit'])){
 		}
 
     if(mysql_num_rows($flowresult) <= 0){
+                $s_sql = "SELECT referred_by, referred_source FROM dental_patients
+                        WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+                $s_q = mysql_query($s_sql);
+                $s_r = mysql_fetch_assoc($s_q);
+	                $old_referred_by = $s_r['referred_by'];
+                $old_referred_source = $s_r['referred_source'];
+
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
+
+                if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
+                        if($_POST['referred_by']){
+                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
+                        }else{
+                                $sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+                        }
+                        mysql_query($sql);
+                }
+
       $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`referred_by`,`referreddate`,`thxletter`,`queststartdate`,`questcompdate`,`insinforec`,`rxreq`,`rxrec`,`lomnreq`,`lomnrec`,`contact_location`,`questsendmeth`,`questsender`,`refneed`,`refneeddate1`,`refneeddate2`,`preauth`,`preauth1`,`preauth2`,`insverbendate1`,`insverbendate2`,`pid`, `rx_imgid`, `lomn_imgid`, `notes_imgid`) VALUES (NULL,'".$copyreqdate."','".$referred_by."','".$referreddate."','".$thxletter."','".$queststartdate."','".$questcompdate."','".$insinforec."','".$rxreq."','".$rxrec."','".$lomnreq."','".$lomnrec."','".$contact_location."','".$questsendmeth."','".$questsender."','".$refneed."','".$refneeddate1."','".$refneeddate2."','".$preauth."','".$preauth1."','".$preauth2."','".$insverbendate1."','".$insverbendate2."','".$pid."','".$rximgid."','".$lomnimgid."','".$notesimgid."');";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -747,7 +764,23 @@ if(isset($_POST['flowsubmit'])){
       }*/
 
     }else{
+                $s_sql = "SELECT referred_by, referred_source FROM dental_patients
+                        WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+                $s_q = mysql_query($s_sql);
+                $s_r = mysql_fetch_assoc($s_q);
+                        $old_referred_by = $s_r['referred_by'];
+                $old_referred_source = $s_r['referred_source'];
+
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
+ if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
+                        if($referred_by){
+                                $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
+                        }else{
+                                $sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($pid)." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
+                        }
+                        mysql_query($sql);
+                }
+
       $flowinsertqry = "UPDATE dental_flow_pg1 SET `copyreqdate` = '".$copyreqdate."',`referred_by` = '".$referred_by."',`referreddate` = '".$referreddate."',`thxletter` = '".$thxletter."',`queststartdate` = '".$queststartdate."',`questcompdate` = '".$questcompdate."',`insinforec` = '".$insinforec."',`rxreq` = '".$rxreq."',`rxrec` = '".$rxrec."',`lomnreq` = '".$lomnreq."',`lomnrec` = '".$lomnrec."',`contact_location` = '".$contact_location."',`questsendmeth` = '".$questsender."',`questsender` = '".$questsendmeth."',`refneed` = '".$refneed."',`refneeddate1` = '".$refneeddate1."',`refneeddate2` = '".$refneeddate2."',`preauth` = '".$preauth."',`preauth1` = '".$preauth1."',`preauth2` = '".$preauth2."',`insverbendate1` = '".$insverbendate1."',`insverbendate2` = '".$insverbendate2."', `rx_imgid` = '".$rximgid."', `lomn_imgid` = '".$lomnimgid."', `notes_imgid` = '".$notesimgid."' WHERE `pid` = '".$_GET['pid']."';";
       $flowinsert = mysql_query($flowinsertqry);      
       if(!$flowinsert){
@@ -2847,7 +2880,6 @@ update_patient_summary($_GET['pid'], 'vob', $preauth['status']);
 
 // Trigger Letter 20 Thankyou
 $pt_referralid = get_ptreferralids($_GET['pid']);
-echo $pt_referralid;
 if ($pt_referralid) {
 	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."' AND deleted!=1;";
 	$result = mysql_query($sql);

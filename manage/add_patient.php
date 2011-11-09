@@ -1139,7 +1139,7 @@ $(document).ready(function(){
                                 function updateNumber(f){
                                    var selectBox = document.getElementById("p_m_ins_co");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                                   document.getElementById(f).value = insurance_nums[selectedValue];
+                                   document.getElementById(f).innerHTML = insurance_nums[selectedValue];
                                 }
                                 insurance_nums = [];
                             <?php
@@ -1169,8 +1169,8 @@ $(document).ready(function(){
                                  <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p_m_ins_plan?>" maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Plan Name</label>
                             </span>
-<span>                                                                 <input id="p_m_ins_phone" name="p_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;" />
-                                <label for="p_m_ins_phone">Phone Number</label>
+<span>                                                                 <textarea id="p_m_ins_phone" name="p_m_ins_phone" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
+                                <label for="p_m_ins_phone">Address</label>
                             </span>
 
 						</div>
@@ -1295,7 +1295,7 @@ $(document).ready(function(){
                                 function updateNumber2(f){
                                    var selectBox = document.getElementById("s_m_ins_co");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-                                   document.getElementById(f).value = insurance_nums[selectedValue];
+                                   document.getElementById(f).innerHTML = insurance_nums[selectedValue];
                                 }
                                 insurance_nums = []; 
                             <?php
@@ -1303,7 +1303,7 @@ $(document).ready(function(){
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
-					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['phone1']; ?>"
+					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['add1']; ?>\n<?= $ins_contact_res['add2']; ?><?= ($ins_contact_res['add2'])?'\n':''; ?><?= $ins_contact_res['city']; ?> <?= $ins_contact_res['state']; ?> <?= $ins_contact_res['zip']; ?>\n<?= $ins_contact_res['phone1']; ?>"
                                 document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo $ins_contact_res['company']; ?></option>');
                                 
                                 <?php } ?>
@@ -1327,8 +1327,8 @@ $(document).ready(function(){
                                 <label for="s_m_ins_plan">Plan Name</label>
                             </span>
 <span>
-                                                                 <input id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" maxlength="255" style="width:200px;background:#ccc;" />
-                                <label for="s_m_ins_phone">Phone Number</label>
+                                                                 <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
+                                <label for="s_m_ins_phone">Address</label>
                             </span>
 						</div>
 						<div>

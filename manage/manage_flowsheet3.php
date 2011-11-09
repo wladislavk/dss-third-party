@@ -2596,13 +2596,13 @@ Next Appointment
     echo "Error selecting segments from flowsheet"; 
   }
 	if ($order[$i] != 1 && $order[$i] != 5 && $order[$i] != 6 && $order[$i] != 9 && $order[$i] != 13 && $order[$i] != 14) {
-		$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
-		$calendar_vars[$i]['varsched'] = "cal_sched$i";
+		//$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
+		//$calendar_vars[$i]['varsched'] = "cal_sched$i";
 	}
-	$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
-	$calendar_vars[$i]['varcomp'] = "cal_comp$i";
-	$caldatesched = $calendar_vars[$i]['varsched'];
-	$caldatecomp = $calendar_vars[$i]['varcomp'];
+	//$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
+	//$calendar_vars[$i]['varcomp'] = "cal_comp$i";
+	//$caldatesched = $calendar_vars[$i]['varsched'];
+	//$caldatecomp = $calendar_vars[$i]['varcomp'];
 	$schedid = "datesched$i";
 	$compid = "datecomp$i";
 
@@ -2753,23 +2753,7 @@ Next Appointment
 
 
 <script type="text/javascript">
-var cal1 = new calendar2(document.getElementById('copyreqdate'));
-var cal2 = new calendar2(document.getElementById('referreddate'));
-var cal3 = new calendar2(document.getElementById('thxletter'));
-var cal4 = new calendar2(document.getElementById('queststartdate'));
-var cal5 = new calendar2(document.getElementById('questcompdate'));
-//var cal6 = new calendar2(document.getElementById('insinforec'));
-var cal7 = new calendar2(document.getElementById('rxreq'));
-var cal8 = new calendar2(document.getElementById('rxrec'));
-var cal9 = new calendar2(document.getElementById('lomnreq'));
-var cal10 = new calendar2(document.getElementById('lomnrec'));
-//var cal11 = new calendar2(document.getElementById('clinnotereq'));
-//var cal12 = new calendar2(document.getElementById('clinnoterec'));
-// var cal13 = new calendar2(document.getElementById('refneeddate1'));
-// var cal14 = new calendar2(document.getElementById('refneeddate2'));
-// var cal15 = new calendar2(document.getElementById('preautho1'));
-// var cal16 = new calendar2(document.getElementById('preautho2'));
-// var cal17 = new calendar2(document.getElementById('insverbendate'));
+$('.tbox').addClass('calendar');
 </script>
 
 <div id="popupRefer" style="width:750px;">

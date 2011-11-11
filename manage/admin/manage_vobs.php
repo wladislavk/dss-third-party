@@ -308,7 +308,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </form>
 
 
-<div id="popupContact" style="width:750px;">
+<div id="popupContact" style="width:750px;height:500px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>

@@ -18,12 +18,13 @@ $pid = mysql_result($result, 0);
 if (isset($_REQUEST['ed'])) {
     // load preauth
     $sql = "SELECT "
-         . "  preauth.*, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
+         . "  preauth.*, id.ins_diagnosis, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
          . "  pcp.lastname as 'pcp_lastname', pcp.phone1 as 'pcp_phone1', p.patientid as 'patientid' "
          . "FROM "
          . "  dental_insurance_preauth preauth "
          . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
          . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
+	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
          . "WHERE "
          . "  preauth.id = " . $_REQUEST['ed'];
 		$my = mysql_query($sql) or die(mysql_error());
@@ -378,7 +379,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 Diagnosis Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="diagnosis_code" value="<?=$preauth['diagnosis_code']?>" class="tbox readonly" readonly /> 
+                <input type="text" name="diagnosis_code" value="<?=$preauth['ins_diagnosis']?>" class="tbox readonly" readonly /> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

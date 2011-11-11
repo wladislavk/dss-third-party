@@ -222,6 +222,13 @@ function preauth_errors(){
   if( $num <= 0 ){
     array_push($errors, "Missing referral"); 
   }*/
+
+  $sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+  $result = mysql_query($sleepstudies);
+  $numsleepstudy = mysql_num_rows($result);
+  if($numsleepstudy == 0)
+	array_push($errors, "There are no completed sleep studies.");
+
   $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
@@ -331,6 +338,11 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
 
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
+
+  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosis = $d['diagnosis'];
   //print_r($my_array);exit;
   $sd = date('Y-m-d H:i:s');
   $sql = "INSERT INTO dental_insurance_preauth ("
@@ -363,7 +375,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  '" . $my_array['doc_npi'] . "', "
        . "  '" . $my_array['referring_doc_npi'] . "', "
        . "  '" . $my_array['trxn_code_amount'] . "', "
-       . "  '" . $my_array['diagnosis_code'] . "', "
+       . "  '" . $diagnosis . "', "
        . "  '" . $my_array['doc_medicare_npi'] . "', "
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
        . "  '" . $sd . "', "
@@ -1267,7 +1279,7 @@ background:#edeb46;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
 		$numsleepstudy = mysql_num_rows($result);
 

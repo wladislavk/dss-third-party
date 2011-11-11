@@ -57,6 +57,7 @@ $(function() {
   
   $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
     calc_amount_left_to_meet();
+    calc_expected_payments();
   });
   
   function calc_expected_payments() {

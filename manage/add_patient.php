@@ -674,18 +674,6 @@ if($_POST["patientsub"] == 1)
 <script type="text/javascript">
 
 function validate_add_patient(fa){
-if(document.getElementById('p_m_dss_file_yes').checked || document.getElementById('p_m_dss_file_no').checked){
-  //ok
-}else{
-  alert('Is DSS filing insurance?  Please select Yes or No.');
-  return false;
-}
-
-if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
-  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
-  return false;
-}
-
 p = patientabc(fa);
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){
@@ -701,16 +689,38 @@ if(p){
   /*d = validateDate('dob');*/
 }
 if(p){
+  result = true;
   if( /*d &&*/ i && i2){
 		var result = true;
 		info = required_info(fa);
-		if (info) {
+		if (info.length == 0) {
 			result = true;
 		} else {
-			result = confirm('Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?');
+			m = 'Warning! Patient info is incomplete. Software functionality will be disabled for this patient until all required fields are entered. Are you sure you want to continue?\n\n';
+			m += "Missing fields:";
+			for(i=0;i<info.length;i++){
+			  m += "\n"+info[i];
+			}
+			result = confirm(m);
 		}
-    return result;
+	if(!result){
+    		return result;
+	}
   }
+if(document.getElementById('p_m_dss_file_yes').checked || document.getElementById('p_m_dss_file_no').checked){
+  //ok
+}else{
+  alert('Is DSS filing insurance?  Please select Yes or No.');
+  return false;
+}
+
+if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
+  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
+  return false;
+}
+
+return result;
+
 //workaround for settimeout being called in conditionals even if not true
 var err = '';
 if(!d){

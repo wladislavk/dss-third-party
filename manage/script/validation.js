@@ -531,16 +531,23 @@ function patientabc(fa)
 }
 
 function required_info(fa) {
-	if (trim(fa.home_phone.value) != "" || trim(fa.work_phone.value) != "" || trim(fa.cell_phone.value) != "") {
-		var patientphone = true;
+	var errors = [];
+	if (trim(fa.home_phone.value) == "" && trim(fa.work_phone.value) == "" && trim(fa.cell_phone.value) == "") {
+		errors.push("Phone number");
 	}
-  if (fa.email.value != "") {
-		var patientemail = true;
+  if (fa.email.value == "") {
+		errors.push("Email");
 	}
-	if ((patientemail || patientphone) && trim(fa.add1.value) != "" && trim(fa.city.value) != "" && trim(fa.state.value) != "" && trim(fa.zip.value) != "" && trim(fa.dob.value) != "" && trim(fa.gender.value) != "") {
-		return true;
+	if(trim(fa.add1.value) == "" || trim(fa.city.value) == "" || trim(fa.state.value) == "" || trim(fa.zip.value) == ""){
+		errors.push("Address");
 	}
-	return false;
+	if (trim(fa.dob.value) == ""){
+		errors.push("Date of Birth");
+	}
+	if(trim(fa.gender.value) == "") {
+		errors.push("Gender");
+	}
+	return errors;
 }
 
 function contactabc(fa)

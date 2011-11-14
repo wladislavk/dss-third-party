@@ -729,7 +729,7 @@ if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementBy
   alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
   return false;
 }
-
+return false;
 return result;
 
 //workaround for settimeout being called in conditionals even if not true

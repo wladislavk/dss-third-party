@@ -296,50 +296,6 @@ function patientabc(fa)
 		fa.lastname.focus();
 		return false;
 	}
-	/*if(trim(fa.middlename.value) == "" )
-	{
-		alert("Middle Name is Required");
-		fa.middlename.focus();
-		return false;
-	}*/
-	/*if(trim(fa.salutation.value) == "" )
-	{
-		alert("Salutation is Required");
-		fa.salutation.focus();
-		return false;
-	}*/
-
-  /* 
-	if(trim(fa.add1.value) == "" )
-	{
-		alert("Address1 is Required");
-		fa.add1.focus();
-		return false;
-	}
-	if(trim(fa.city.value) == "" )
-	{
-		alert("City is Required");
-		fa.city.focus();
-		return false;
-	}
-	if(trim(fa.state.value) == "" )
-	{
-		alert("State is Required");
-		fa.state.focus();
-		return false;
-	}
-	if(trim(fa.zip.value) == "" )
-	{
-		alert("Zip is Required");
-		fa.zip.focus();
-		return false;
-	}
-	if(trim(fa.dob.value) == "" )
-	{
-		alert("Birthday is Required");
-		fa.dob.focus();
-		return false;
-	}*/
 	if(trim(fa.referredby_name.value) != 'Type referral name' && trim(fa.referredby_name.value) != '' && trim(fa.referred_by.value) == ''){
 		alert("Invalid referred by.");
 		fa.referredby_name.focus();
@@ -350,54 +306,19 @@ function patientabc(fa)
 		alert("Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format");
 		fa.dob.focus();
 		return false;
-	}/*
-	if(trim(fa.gender.value) == "" )
-	{
-		alert("Gender is Required");
-		fa.gender.focus();
-		return false;
-	}*/
+	}
 	if( trim(fa.home_phone.value) == "" && trim(fa.work_phone.value) == "" && trim(fa.cell_phone.value) == "" && trim(fa.email.value) == "" )
 	{
 		alert("Either a Phone Number or Email Address are required");
 		fa.home_phone.focus();
 		return false;
 	}
-
-	/*if(trim(fa.home_phone.value) == "" )
-	{
-		alert("Home Phone Number is Required");
-		fa.home_phone.focus();
-		return false;
-	}*/
 	if(trim(fa.preferredcontact.value) == "email" && fa.email.value == "")
 	{
 		alert("Email is Required if Preferred Contact Method is Email");
 		fa.email.focus();
 		return false;
 	}
-	/*if(trim(fa.marital_status.value) == "" )
-	{
-		alert("Marital Status is Required");
-		fa.marital_status.focus();
-		return false;
-	}*/
-	/*if(trim(fa.ssn.value) == "" )
-	{
-		alert("Patient's Soc Sec No. is Required");
-		fa.ssn.focus();
-		return false;
-	}*/
-	
-	/*if(trim(fa.email.value) != "" )
-	{
-		if(! is_email(trim(fa.email.value)))
-		{
-			alert("In-Valid Email");
-			fa.email.focus();
-			return false;
-		}
-	}*/
 	if(fa.p_m_dss_file[0].checked)
 	{
 		if(trim(fa.p_m_partyfname.value) == "") {
@@ -500,6 +421,7 @@ function patientabc(fa)
 			return false;
 		}
 	}	
+	if(fa.ed.value != ''){
         if(trim(fa.docsleep_name.value) != 'Type contact name' && trim(fa.docsleep_name.value) != '' && trim(fa.docsleep.value) == ''){
                 alert("Invalid sleep md.");
                 fa.docsleep_name.focus();
@@ -525,8 +447,7 @@ function patientabc(fa)
                 fa.docmdother_name.focus();
                 return false;
         }
-
-
+	}
         return true;
 }
 

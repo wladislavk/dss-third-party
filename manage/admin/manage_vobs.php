@@ -88,7 +88,7 @@ switch ($sort_by) {
     $sort_by_sql = "preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_PATIENT:
-    $sort_by_sql = "preauth.patient_lastname $sort_dir, preauth.patient_firstname $sort_dir";
+    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
     $sort_by_sql = "doc_name $sort_dir";

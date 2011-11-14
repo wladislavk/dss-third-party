@@ -84,7 +84,7 @@ if(isset($_REQUEST['sort'])){
 	$sort = "preauth.front_office_request_date";
 	break;
     case 'patient_name':
-	$sort = "preauth.patient_lastname";
+	$sort = "p.lastname";
 	break;
     case 'status':
 	$sort = 'preauth.status';
@@ -102,7 +102,7 @@ if(isset($_REQUEST['sortdir'])){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, preauth.patient_firstname, preauth.patient_lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth WHERE preauth.doc_id = ".$_SESSION['docid']." ";
+$sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth JOIN dental_patients p ON p.patientid=preauth.patient_id WHERE preauth.doc_id = ".$_SESSION['docid']." ";
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -175,8 +175,8 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_firstname"]);?>&nbsp;
-                    <?=st($myarray["patient_lastname"]);?> 
+					<?=st($myarray["firstname"]);?>&nbsp;
+                    <?=st($myarray["lastname"]);?> 
 				</td>
 				<td valign="top">
 					<?= ($myarray["status"]==1)?'completed':'pending';?>&nbsp;

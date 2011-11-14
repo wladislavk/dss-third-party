@@ -19,7 +19,7 @@ switch ($sort_by) {
     $sort_by_sql = "claim.adddate $sort_dir";
     break;
   case SORT_BY_PATIENT:
-    $sort_by_sql = "claim.patient_lastname $sort_dir, claim.patient_firstname $sort_dir";
+    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
     $sort_by_sql = "doc_name $sort_dir";
@@ -58,7 +58,7 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
-     . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
+     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      . "  CASE claim.status 
@@ -75,6 +75,7 @@ $sql = "SELECT "
        END AS status_order "
      . "FROM "
      . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 
@@ -228,7 +229,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
+					<?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

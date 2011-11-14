@@ -128,12 +128,13 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
-     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.id, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
 

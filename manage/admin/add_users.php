@@ -209,7 +209,7 @@ if($_POST["usersub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Medicare NPI Number
+                Medicare DME Number
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 

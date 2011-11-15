@@ -254,8 +254,19 @@ $e_text .= implode($errors, ', ');
   
 </script>
   <script type="text/javascript">
-function validate(f){
-  if(<?= ($_SESSION['user_access']==2)?1:0;?>){
+function validate(){
+  returnval = true;
+  $('#FormFields input').each( function(){
+	v = $(this).val();	
+	if(v==''||v=='Select Type First'){
+		if(returnval){
+		alert('Blank fields! You must select a value for all ledger fields in order to submit a transaction.');
+		returnval = false;
+		}
+	}
+  });
+  return returnval;
+/*  if(<?= ($_SESSION['user_access']==2)?1:0;?>){
     return true;
   }else{
     if(f.username.value=='' || f.password.value==''){  
@@ -264,7 +275,7 @@ function validate(f){
     }else{
       return true;
     }
-  }
+  }*/
 }
 </script>
 
@@ -277,7 +288,7 @@ function validate(f){
 
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_entries.php" method="POST" onsubmit="return validate(this);">
+<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_entries.php" method="POST" onsubmit="return validate()">
 
  
 <div style="width:200px; margin:0 auto; text-align:center;">

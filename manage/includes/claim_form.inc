@@ -1039,6 +1039,12 @@ if($insured_policy_group_feca == '')
 if($insured_insurance_plan == '')
 	$insured_insurance_plan = $pat_myarray['plan_name'];	
 
+if($diagnosis_1 == ''){
+	  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosis_1 = $d['diagnosis'];
+}
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
@@ -1780,7 +1786,7 @@ if (empty($prior_authorization_number)) {
 									NPI
 								</td>
 								<td valign="top" style="padding-top:3px;">
-									<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="field_17b" class="inbox_line3" size="30"/>
+									<input disabled="disabled" type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="field_17b" class="inbox_line3" size="30"/>
 								</td>
 							</tr>
 						</table>
@@ -2209,17 +2215,17 @@ if (!$query) {
 												<span class="num">25.</span> 
 												Federal Tax I.D.Number
 												<br />
-												<input type="text" value="<?=$userinfo['tax_id_or_ssn'];?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
+												<input disabled="disabled" type="text" value="<?=$userinfo['tax_id_or_ssn'];?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
 											<td valign="top" width="10%" align="center">
 												SSN
 												<br />
-												<input type="radio" name="ssnein" value="ssn" <? if($userinfo['ssn'] == "1") echo " checked";?> />
+												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($userinfo['ssn'] == "1") echo " checked";?> />
 											</td>
 											<td valign="top" width="10%" align="center">
 												EIN
 												<br />
-												<input type="radio" name="ssnein" value="ein" <? if($userinfo['ein'] == "1") echo " checked";?> />
+												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($userinfo['ein'] == "1") echo " checked";?> />
 											</td>
 										</tr>
 									</table>
@@ -2360,7 +2366,7 @@ if ($is_new_claim) {
 											</td>
 											                
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $userinfo['name'];?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+												<input disabled="disabled" type="text" value="<?php echo $userinfo['name'];?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2368,7 +2374,7 @@ if ($is_new_claim) {
 												<span class="small_cap">Address:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $userinfo['address'];?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $userinfo['address'];?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2376,14 +2382,14 @@ if ($is_new_claim) {
 												<span class="small_cap">City/State/Zip:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="service_facility_info_city" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 									</table>
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="service_info_a" class="inbox_line3" size="15" />
+									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -2423,7 +2429,7 @@ if ($is_new_claim) {
 									<span class="small_cap">Name:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $userinfo['name'];?>" name="billing_provider_name" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $userinfo['name'];?>" name="billing_provider_name" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2431,7 +2437,7 @@ if ($is_new_claim) {
 									<span class="small_cap">Address:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $userinfo['address'];?>" name="billing_provider_address" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $userinfo['address'];?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2439,14 +2445,14 @@ if ($is_new_claim) {
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="billing_provider_city" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="billing_provider_city" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 						</table>
 						<span class="num_a">
 							a.
 						</span>
-						<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
+						<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
 						
 						<span class="num_a">
 							b.

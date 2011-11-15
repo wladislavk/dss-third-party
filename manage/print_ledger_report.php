@@ -13,6 +13,7 @@ if(isset($_GET['pid'])){
                     while($myarray = mysql_fetch_array($my))
                                 {
                      $thename= $myarray['lastname'].", ".$myarray['firstname'];
+		     $theaddress = $myarray['add1']." ".$myarray['add2']." ".$myarray['city']." ".$myarray['state']." ".$myarray['zip'];
                     }
                     }
 
@@ -74,6 +75,8 @@ $num_users=mysql_num_rows($my);
         if($_GET['pid'] <> '')
         {?>
                 (<i><?=$thename;?></i>)
+		<br />
+		<?= $theaddress; ?>
         <? }?>
 
 </span>

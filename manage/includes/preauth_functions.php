@@ -3,7 +3,7 @@
 function claim_errors( $pid ){
   $errors = array();
 
-   $sql = "SELECT * FROM dental_patients p JOIN dental_contact r ON p.referred_by = r.contactid WHERE p.patientid=".$pid;
+   $sql = "SELECT * FROM dental_patients p WHERE p.referred_source IS NOT NULL AND p.referred_source != '' AND p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){

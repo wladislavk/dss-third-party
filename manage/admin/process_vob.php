@@ -164,7 +164,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
   margin-left: 20px;
 }
 </style>
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+  <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
 <script language="JavaScript" src="../calendar2.js"></script>
@@ -388,7 +388,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
             </td>
             <td valign="top" class="frmdata">
                 <?php if (empty($preauth['date_of_call'])) { $preauth['date_of_call'] = date('m/d/Y'); } ?>
-                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onclick="cal1.popup();" onchange="validateDate('date_of_call');" class="tbox" <?=$disabled?>/> 
+                <input id="date_of_call" type="text" name="date_of_call" value="<?=$preauth['date_of_call']?>" onchange="validateDate('date_of_call');" class="tbox calendar" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -415,7 +415,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 Insurance Effective Date
             </td>
             <td valign="top" class="frmdata">
-                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onclick="cal2.popup();" onchange="validateDate('ins_effective_date');" class="tbox" <?=$disabled?>/> 
+                <input id="ins_effective_date" type="text" name="ins_effective_date" value="<?=$preauth['ins_effective_date']?>" onchange="validateDate('ins_effective_date');" class="tbox calendar" <?=$disabled?>/> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -424,8 +424,8 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 Insurance Calendar Year
             </td>
             <td valign="top" class="frmdata">
-                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onclick="cal3.popup();" onchange="validateDate('ins_cal_year_start');" class="tbox" style="width:125px" <?=$disabled?>/>
-                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onclick="cal4.popup();" onchange="validateDate('ins_cal_year_end');" class="tbox" style="width:125px" <?=$disabled?>/>
+                from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onchange="validateDate('ins_cal_year_start');"class="tbox calendar" style="width:125px" <?=$disabled?>/>
+                to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onchange="validateDate('ins_cal_year_end');" class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -488,8 +488,8 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                     <?= $preauth['pcp_phone'] ?><br/>
                     <br/>
                     <?php if (empty($preauth['hmo_date_called'])) { $preauth['hmo_date_called'] = date('m/d/Y'); } ?>
-                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onclick="cal5.popup();" onchange="validateDate('hmo_date_called');" class="tbox covered" <?=$disabled?>/><br/>
-                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onclick="cal6.popup();" onchange="validateDate('hmo_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
+                    Date Called <input id="hmo_date_called" type="text" name="hmo_date_called" value="<?=$preauth['hmo_date_called']?>" onchange="validateDate('hmo_date_called');" class="tbox covered calendar" <?=$disabled?>/><br/>
+                    Date Received <input id="hmo_date_received" type="text" name="hmo_date_received" value="<?=$preauth['hmo_date_received']?>" onchange="validateDate('hmo_date_received');" class="tbox covered calendar" <?=$disabled?>/> <br/>
                     <br/>
                     
                   </div>
@@ -497,8 +497,8 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                   <div id="is_hmo_no" class="sub-question">
                     Appeal for in network benefits needed.
                     <br/><br/>
-                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onclick="cal9.popup();" onchange="validateDate('in_network_appeal_date_sent');" class="tbox covered" <?=$disabled?>/><br/>
-                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onclick="cal10.popup();" onchange="validateDate('in_network_appeal_date_received');" class="tbox covered" <?=$disabled?>/> 
+                    Date Requested <input id="in_network_appeal_date_sent" type="text" name="in_network_appeal_date_sent" value="<?=$preauth['in_network_appeal_date_sent']?>" onchange="validateDate('in_network_appeal_date_sent');" class="tbox covered calendar" <?=$disabled?>/><br/>
+                    Date Received <input id="in_network_appeal_date_received" type="text" name="in_network_appeal_date_received" value="<?=$preauth['in_network_appeal_date_received']?>" onchange="validateDate('in_network_appeal_date_received');" class="tbox covered calendar" <?=$disabled?>/> 
                   </div>
                   
                   <div class="question-indent">
@@ -526,7 +526,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                   Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
                   
                   <h3>Written</h3>
-                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onclick="cal11.popup();" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered" <?=$disabled?>/> <br/>
+                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered calendar" <?=$disabled?>/> <br/>
                   Pre-Authorization Number <input id="pre_auth_num" type="text" name="pre_auth_num" value="<?=$preauth['pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
                   Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>

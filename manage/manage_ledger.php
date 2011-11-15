@@ -492,7 +492,7 @@ return s;
 				<td valign="top" align="right"
                                 <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
-					<?php if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid')
+					<?php if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_payment')
 					 echo number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>

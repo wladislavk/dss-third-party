@@ -1,5 +1,17 @@
 <?php
 
+function format_phone($num, $a){
+	$num = ereg_replace("[^0-9]", "", $num);
+	preg_match('/([0-1]*)(.*)/',$num, $m);
+	$num = $m[2];
+  if($a){
+	return substr($num, 0, 3);
+  }else{
+	return substr($num,3);
+  }
+  return $num;
+}
+
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
@@ -1008,9 +1020,9 @@ if($insured_zip == '')
 	$insured_zip = $pat_myarray['zip'];
 
 if($insured_phone == '')
-	$insured_phone_code = substr($pat_myarray['home_phone'], 0, 4);
+	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
 
-$insured_phone = substr($pat_myarray['home_phone'], 3);
+$insured_phone = format_phone($pat_myarray['home_phone'], false);
 
 if($insured_dob == '')
 	$insured_dob = $pat_myarray['ins_dob'];	
@@ -1215,7 +1227,7 @@ if (empty($prior_authorization_number)) {
 									<span class="small_cap">(Sponsor's SSN)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Chmapva" <? if($insurance_type == '4') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="Chmapva" <? if($insurancetype == '4') {echo " checked";}?> />
 									<span class="small_cap">(Member ID #)</span>
 								</td>
 								<td align="left" valign="top">
@@ -1416,10 +1428,10 @@ if (empty($prior_authorization_number)) {
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
 									<span class="style1">(
-									<input type="text" value="<?=substr($patient_phone,0,3)?>" name="patient_phone_code" size="3" class="inbox_line3" />
+									<input type="text" value="<?= format_phone($patient_phone, true); ?>" name="patient_phone_code" size="3" class="inbox_line3" />
 									)</span>
 									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?=substr($patient_phone,3)?>" name="patient_phone" class="inbox_line3" size="13"  />
+									<input type="text" value="<?=format_phone($patient_phone, false)?>" name="patient_phone" class="inbox_line3" size="13"  />
 								</td>
 							</tr>
 						</table>
@@ -1760,7 +1772,7 @@ if (empty($prior_authorization_number)) {
 									<span class="num">17<span class="num_a">b.</span></span> 
 								</td>
 								<?php
-                      $getuserinfo = "SELECT * FROM `dental_users` WHERE `username` = '".$_SESSION['username']."'";
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
                       ?>  
@@ -1768,7 +1780,7 @@ if (empty($prior_authorization_number)) {
 									NPI
 								</td>
 								<td valign="top" style="padding-top:3px;">
-									<input type="text" value="<?=$userinfo['npi']?>" name="field_17b" class="inbox_line3" size="30"/>
+									<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="field_17b" class="inbox_line3" size="30"/>
 								</td>
 							</tr>
 						</table>
@@ -2069,7 +2081,13 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
+       . "  ledger.*, ";
+if($insurancetype == '1'){
+        $sql .= " user.medicare_npi ";
+}else{
+        $sql .= " user.npi ";
+}
+  $sql .= " as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
@@ -2085,7 +2103,13 @@ if ($is_new_claim) {
        . "  ledger.service_date ASC";
 } else {
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
+       . "  ledger.*, ";
+if($insurancetype == '1'){
+	$sql .= " user.medicare_npi ";
+}else{
+	$sql .= " user.npi ";
+}
+  $sql .= "  as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
@@ -2185,17 +2209,17 @@ if (!$query) {
 												<span class="num">25.</span> 
 												Federal Tax I.D.Number
 												<br />
-												<input type="text" value="<?=$federal_tax_id_number?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
+												<input type="text" value="<?=$userinfo['tax_id_or_ssn'];?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
 											<td valign="top" width="10%" align="center">
 												SSN
 												<br />
-												<input type="radio" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ssn" <? if($userinfo['ssn'] == "1") echo " checked";?> />
 											</td>
 											<td valign="top" width="10%" align="center">
 												EIN
 												<br />
-												<input type="radio" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
+												<input type="radio" name="ssnein" value="ein" <? if($userinfo['ein'] == "1") echo " checked";?> />
 											</td>
 										</tr>
 									</table>
@@ -2359,7 +2383,7 @@ if ($is_new_claim) {
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" value="<?=$userinfo['npi']?>" name="service_info_a" class="inbox_line3" size="15" />
+									<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -2389,10 +2413,10 @@ if ($is_new_claim) {
 						<span class="num">33.</span> 
 						Billing Provider Info & Ph#
 						<span class="style1">(
-						<input type="text" value="<?php echo substr($userinfo['phone'], 0, 3);?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
+						<input type="text" value="<?php echo format_phone($userinfo['phone'], true);?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
 						)</span>
 						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo substr($userinfo['phone'], 3);?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
+						<input type="text" value="<?php echo format_phone($userinfo['phone'], false);?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
 						<table width="100%" cellpadding="1" cellspacing="1" border="0">
 							<tr>
 								<td valign="top" width="10%">
@@ -2422,7 +2446,7 @@ if ($is_new_claim) {
 						<span class="num_a">
 							a.
 						</span>
-						<input type="text" value="<?=$userinfo['npi']?>" name="billing_provider_a" class="inbox_line3" size="15" />
+						<input type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
 						
 						<span class="num_a">
 							b.

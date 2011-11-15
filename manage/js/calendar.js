@@ -1,6 +1,5 @@
 
 $(document).ready( function(){
-
   $('input.calendar').each(function(){
 	var cid = $(this).attr("id");
 	if(cid){

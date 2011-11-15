@@ -156,6 +156,112 @@ $newquery = "select
                 p.name,
                 dl.description,
                 dl.amount,
+                '' as paid_amount,
+                dl.status,
+                dl.primary_claim_id,
+                '' as payer,
+                '' as payment_type,
+                di.status as claim_status
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                GROUP BY dl.ledgerid
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                p.name,
+                '',
+                '',
+                dlp.amount,
+                '',
+                dl.primary_claim_id,
+                dlp.payer,
+                dlp.payment_type,
+                ''
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND dlp.amount != 0
+  UNION
+        select 
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.primary_claim_id,
+                tc.type,
+                '',
+                ''      
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+  UNION
+        select 
+                'note',
+                n.id,
+                n.service_date,
+                n.entry_date,
+                concat('Note - ', p.name),
+                n.note,
+                '',
+                '',
+                n.private,
+                '',
+                '',
+                '',
+                ''      
+        from dental_ledger_note n
+                LEFT JOIN dental_users p on n.producerid=p.userid
+                        where (n.private IS NULL or n.private=0) AND n.patientid='".s_for($_GET['pid'])."'       
+  UNION
+        select
+                'claim',
+                i.insuranceid,
+                i.adddate,
+                i.adddate,
+                'Claim',
+                'Insurance Claim',
+                (select sum(dl2.amount) FROM dental_ledger dl2
+                                INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
+                                where i2.insuranceid=i.insuranceid),
+                sum(pay.amount),
+                i.status,
+                i.insuranceid,
+                '',
+                '',
+                ''
+        from dental_insurance i
+                LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
+                LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
+                where i.patientid='".s_for($_GET['pid'])."'
+        GROUP BY i.insuranceid
+ORDER BY service_date DESC
+";
+
+
+$newqueryid = "select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
                 sum(pay.amount) as paid_amount,
                 dl.status,
 		dl.patientid,
@@ -235,23 +341,32 @@ $newquery = "select
                 	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
-                	<?=st($myarray["description"]);?>
-			<?= ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';?>
+                        <?= (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
+                        <?= $myarray["description"]; ?>
+                        <?= (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
-          echo $myarray["amount"];
+if($myarray[0]!='claim'){
+          echo number_format($myarray["amount"],2);
           $tot_charge += $myarray["amount"];
+}
           ?>
 
 					&nbsp;
 				</td>
 				<td valign="top" align="right" width="10%">
+				<? if($myarray[0]!='claim') { ?>
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
 						$tot_credit += st($myarray["paid_amount"]);
 					}?>
+				<? } ?>
 					&nbsp;
 				</td>
 				<td valign="top" width="5%">&nbsp;

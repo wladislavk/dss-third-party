@@ -39,6 +39,8 @@ if($_POST["usersub"] == 1)
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
+                                ssn = '".s_for($_POST['ssn'])."',
+                                ein = '".s_for($_POST['ein'])."',
 				practice = '".s_for($_POST['practice'])."', 
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 
@@ -72,6 +74,8 @@ if($_POST["usersub"] == 1)
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
+				ssn = '".s_for($_POST['ssn'])."',
+				ein = '".s_for($_POST['ein'])."',
 				practice = '".s_for($_POST['practice'])."', 
 				password = '".$password."', 
 				salt = '".$salt."',
@@ -124,6 +128,8 @@ if($_POST["usersub"] == 1)
 		$npi = $_POST['npi'];
 		$medicare_npi = $_POST['medicare_npi'];
 		$tax_id_or_ssn = $_POST['tax_id_or_ssn'];
+		$ssn = $_POST['ssn'];
+		$ein = $_POST['ein'];
 		$practice = $_POST['practice'];
 		$password = $_POST['password'];
 		$name = $_POST['name'];
@@ -141,6 +147,8 @@ if($_POST["usersub"] == 1)
 		$npi = st($themyarray['npi']);
 		$medicare_npi = st($themyarray['medicare_npi']);
 		$tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
+		$ssn = st($themyarray['ssn']);
+		$ein = st($themyarray['ein']);
 		$practice = st($themyarray['practice']);
 		$password = st($themyarray['password']);
 		$name = st($themyarray['name']);
@@ -215,6 +223,17 @@ if($_POST["usersub"] == 1)
             <td valign="top" class="frmdata">
                 <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                EIN or SSN
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?> class="tbox" />
+		EIN
+		<input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?> class="tbox" />
+                SSN
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

@@ -453,11 +453,8 @@ function patientabc(fa)
 
 function required_info(fa) {
 	var errors = [];
-	if (trim(fa.home_phone.value) == "" && trim(fa.work_phone.value) == "" && trim(fa.cell_phone.value) == "") {
-		errors.push("Phone number");
-	}
-  if (fa.email.value == "") {
-		errors.push("Email");
+	if (trim(fa.email.value) == "" && trim(fa.home_phone.value) == "" && trim(fa.work_phone.value) == "" && trim(fa.cell_phone.value) == "") {
+		errors.push("Phone number or email");
 	}
 	if(trim(fa.add1.value) == "" || trim(fa.city.value) == "" || trim(fa.state.value) == "" || trim(fa.zip.value) == ""){
 		errors.push("Address");

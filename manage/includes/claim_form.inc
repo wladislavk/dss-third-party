@@ -1,5 +1,4 @@
 <?php
-
 function format_phone($num, $a){
 	$num = ereg_replace("[^0-9]", "", $num);
 	preg_match('/([0-1]*)(.*)/',$num, $m);
@@ -753,6 +752,7 @@ $other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
 $insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
 $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']); 
+$referred_source = st($pat_myarray['referred_source']);
 $docid = $pat_myarray['docid'];
 
 // if patient does not have an id, redirect to manage_patient.php to address the issue
@@ -983,8 +983,6 @@ if($patient_state == '')
 if($patient_zip == '')
 	$patient_zip = $pat_myarray['zip'];
 
-if($patient_phone == '')
-	$patient_phone = $pat_myarray['home_phone'];
 
 if($patient_dob == '')
 	$patient_dob = $pat_myarray['dob'];
@@ -997,6 +995,10 @@ if($is_new_claim){
 	$signature_physician = "Signature on File";
 	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
         $physician_signed_date = date('m/d/Y');	
+	$patient_phone_code = format_phone($pat_myarray['home_phone'], true);
+	$patient_phone = format_phone($pat_myarray['home_phone'], false);
+	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
+	$insured_phone = format_phone($pat_myarray['home_phone'], false);
   }
 if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
@@ -1019,10 +1021,6 @@ if($insured_state == '')
 if($insured_zip == '')
 	$insured_zip = $pat_myarray['zip'];
 
-if($insured_phone == '')
-	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
-
-$insured_phone = format_phone($pat_myarray['home_phone'], false);
 
 if($insured_dob == '')
 	$insured_dob = $pat_myarray['ins_dob'];	
@@ -1083,6 +1081,7 @@ if (empty($prior_authorization_number)) {
 <!--
 .style1 {font-size: 16px}
 -->
+input{text-transform:uppercase;}
 </style>
 <script language="javascript" type="text/javascript" src="<?=$manage_path?>script/validation.js"></script>
 </head>
@@ -1434,10 +1433,10 @@ if (empty($prior_authorization_number)) {
 									<span class="small_cap">(Include Area Code)</span>
 									<br />
 									<span class="style1">(
-									<input type="text" value="<?= format_phone($patient_phone, true); ?>" name="patient_phone_code" size="3" class="inbox_line3" />
+									<input type="text" value="<?= $patient_phone_code; ?>" name="patient_phone_code" size="3" class="inbox_line3" />
 									)</span>
 									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?=format_phone($patient_phone, false)?>" name="patient_phone" class="inbox_line3" size="13"  />
+									<input type="text" value="<?=$patient_phone?>" name="patient_phone" class="inbox_line3" size="13"  />
 								</td>
 							</tr>
 						</table>
@@ -1740,12 +1739,18 @@ if (empty($prior_authorization_number)) {
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
 							<?
-								$referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
-								$referredby_my = mysql_query($referredby_sql);
-								
-								$referredby_myarray = mysql_fetch_array($referredby_my);
-								$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-								echo "<br /><br />".$ref_name;
+                if($referred_source==1){
+                  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $referred_name = $r['firstname'].", ".$r['lastname'];
+                }elseif($referred_source==2){
+                  $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referredby;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $referred_name = $r['firstname']." ".$r['lastname'];
+                }
+								echo "<br /><br />".$referred_name;
 									?>
 								
 					</td>
@@ -1786,7 +1791,7 @@ if (empty($prior_authorization_number)) {
 									NPI
 								</td>
 								<td valign="top" style="padding-top:3px;">
-									<input disabled="disabled" type="text" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="field_17b" class="inbox_line3" size="30"/>
+									<input disabled="disabled" type="text" name="field_17b" class="inbox_line3" size="30"/>
 								</td>
 							</tr>
 						</table>

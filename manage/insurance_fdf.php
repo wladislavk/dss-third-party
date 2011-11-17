@@ -20,23 +20,24 @@ $fdf_file=time().'.fdf';
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
+$name = strtoupper(st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']));
 $insurancetype = st($pat_myarray['p_m_ins_type']);
-$insured_firstname = st($pat_myarray['p_m_partyfname']);
-$insured_lastname = st($pat_myarray['p_m_partylname']);
-$insured_middle = st($pat_myarray['p_m_partymname']);
-$other_insured_firstname = st($pat_myarray['s_m_partyfname']);
-$other_insured_lastname = st($pat_myarray['s_m_partymname']);
-$other_insured_middle = st($pat_myarray['s_m_partylname']);
+$insured_firstname = strtoupper(st($pat_myarray['p_m_partyfname']));
+$insured_lastname = strtoupper(st($pat_myarray['p_m_partylname']));
+$insured_middle = strtoupper(st($pat_myarray['p_m_partymname']));
+$other_insured_firstname = strtoupper(st($pat_myarray['s_m_partyfname']));
+$other_insured_lastname = strtoupper(st($pat_myarray['s_m_partymname']));
+$other_insured_middle = strtoupper(st($pat_myarray['s_m_partylname']));
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
 $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
 $other_insured_dob = st($pat_myarray['ins2_dob']);
-$insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
-$other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
-$insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
-$other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
+$insured_insurance_plan = strtoupper(st($pat_myarray['p_m_ins_plan']));
+$other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
+$insured_policy_group_feca = strtoupper(st($pat_myarray['p_m_ins_grp']));
+$other_insured_policy_group_feca = strtoupper(st($pat_myarray['s_m_ins_grp']));
 $referredby = st($pat_myarray['referred_by']);
+$referred_source = st($pat_myarray['referred_source']);
 $docid = st($pat_myarray['docid']);
 
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
@@ -47,21 +48,21 @@ $insuranceid = st($myarray['insuranceid']);
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurance_type = st($myarray['insurance_type']);
-$patient_lastname = st($myarray['patient_lastname']);
-$patient_firstname = st($myarray['patient_firstname']);
-$patient_middle = st($myarray['patient_middle']);
+$insurance_type = strtoupper(st($myarray['insurance_type']));
+$patient_lastname = strtoupper(st($myarray['patient_lastname']));
+$patient_firstname = strtoupper(st($myarray['patient_firstname']));
+$patient_middle = strtoupper(st($myarray['patient_middle']));
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
-$patient_address = st($myarray['patient_address']);
+$patient_address = strtoupper(st($myarray['patient_address']));
 $patient_relation_insured = st($myarray['patient_relation_insured']);
-$insured_address = st($myarray['insured_address']);
-$patient_city = st($myarray['patient_city']);
-$patient_state = st($myarray['patient_state']);
-$patient_status = st($myarray['patient_status']);
+$insured_address = strtoupper(st($myarray['insured_address']));
+$patient_city = strtoupper(st($myarray['patient_city']));
+$patient_state = strtoupper(st($myarray['patient_state']));
+$patient_status = strtoupper(st($myarray['patient_status']));
 $patient_status_array = split('~', $patient_status);
-$insured_city = st($myarray['insured_city']);
-$insured_state = st($myarray['insured_state']);
+$insured_city = strtoupper(st($myarray['insured_city']));
+$insured_state = strtoupper(st($myarray['insured_state']));
 $patient_zip = st($myarray['patient_zip']);
 $patient_phone_code = st($myarray['patient_phone_code']);
 $patient_phone = st($myarray['patient_phone']);
@@ -74,10 +75,10 @@ $auto_accident_place = st($myarray['auto_accident_place']);
 $other_accident = st($myarray['other_accident']);
 $insured_sex = st($myarray['insured_sex']);
 $other_insured_sex = st($myarray['other_insured_sex']);
-$insured_employer_school_name = st($myarray['insured_employer_school_name']);
-$other_insured_employer_school_name = st($myarray['other_insured_employer_school_name']);
-$reserved_local_use = st($myarray['reserved_local_use']);
-$another_plan = st($myarray['another_plan']);
+$insured_employer_school_name = strtoupper(st($myarray['insured_employer_school_name']));
+$other_insured_employer_school_name = strtoupper(st($myarray['other_insured_employer_school_name']));
+$reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
+$another_plan = strtoupper(st($myarray['another_plan']));
 $patient_signature = st($myarray['patient_signature']);
 $patient_signed_date = st($myarray['patient_signed_date']);
 $insured_signature = st($myarray['insured_signature']);
@@ -85,14 +86,14 @@ $date_current = st($myarray['date_current']);
 $date_same_illness = st($myarray['date_same_illness']);
 $unable_date_from = st($myarray['unable_date_from']);
 $unable_date_to = st($myarray['unable_date_to']);
-$referring_provider = st($myarray['referring_provider']);
+$referring_provider = strtoupper(st($myarray['referring_provider']));
 $field_17a_dd = st($myarray['field_17a_dd']);
 $field_17a = st($myarray['field_17a']);
 $field_17b = st($myarray['field_17b']);
 $hospitalization_date_from = st($myarray['hospitalization_date_from']);
 $hospitalization_date_to = st($myarray['hospitalization_date_to']);
-$reserved_local_use1 = st($myarray['reserved_local_use1']);
-$outside_lab = st($myarray['outside_lab']);
+$reserved_local_use1 = strtoupper(st($myarray['reserved_local_use1']));
+$outside_lab = strtoupper(st($myarray['outside_lab']));
 $s_charges = st($myarray['s_charges']);
 $diagnosis_1 = st($myarray['diagnosis_1']);
 $diagnosis_2 = st($myarray['diagnosis_2']);
@@ -103,8 +104,8 @@ $original_ref_no = st($myarray['original_ref_no']);
 $prior_authorization_number = st($myarray['prior_authorization_number']);
 $service_date1_from = st($myarray['service_date1_from']);
 $service_date1_to = st($myarray['service_date1_to']);
-$place_of_service1 = st($myarray['place_of_service1']);
-$emg1 = st($myarray['emg1']);
+$place_of_service1 = strtoupper(st($myarray['place_of_service1']));
+$emg1 = strtoupper(st($myarray['emg1']));
 $cpt_hcpcs1 = st($myarray['cpt_hcpcs1']);
 $modifier1_1 = st($myarray['modifier1_1']);
 $modifier1_2 = st($myarray['modifier1_2']);
@@ -114,12 +115,12 @@ $diagnosis_pointer1 = st($myarray['diagnosis_pointer1']);
 $s_charges1_1 = st($myarray['s_charges1_1']);
 $s_charges1_2 = st($myarray['s_charges1_2']);
 $days_or_units1 = st($myarray['days_or_units1']);
-$epsdt_family_plan1 = st($myarray['epsdt_family_plan1']);
+$epsdt_family_plan1 = strtoupper(st($myarray['epsdt_family_plan1']));
 $id_qua1 = st($myarray['id_qua1']);
 $rendering_provider_id1 = st($myarray['rendering_provider_id1']);
 $service_date2_from = st($myarray['service_date2_from']);
 $service_date2_to = st($myarray['service_date2_to']);
-$place_of_service2 = st($myarray['place_of_service2']);
+$place_of_service2 = strtoupper(st($myarray['place_of_service2']));
 $emg2 = st($myarray['emg2']);
 $cpt_hcpcs2 = st($myarray['cpt_hcpcs2']);
 $modifier2_1 = st($myarray['modifier2_1']);
@@ -135,7 +136,7 @@ $id_qua2 = st($myarray['id_qua2']);
 $rendering_provider_id2 = st($myarray['rendering_provider_id2']);
 $service_date3_from = st($myarray['service_date3_from']);
 $service_date3_to = st($myarray['service_date3_to']);
-$place_of_service3 = st($myarray['place_of_service3']);
+$place_of_service3 = strtoupper(st($myarray['place_of_service3']));
 $emg3 = st($myarray['emg3']);
 $cpt_hcpcs3 = st($myarray['cpt_hcpcs3']);
 $modifier3_1 = st($myarray['modifier3_1']);
@@ -151,7 +152,7 @@ $id_qua3 = st($myarray['id_qua3']);
 $rendering_provider_id3 = st($myarray['rendering_provider_id3']);
 $service_date4_from = st($myarray['service_date4_from']);
 $service_date4_to = st($myarray['service_date4_to']);
-$place_of_service4 = st($myarray['place_of_service4']);
+$place_of_service4 = strtoupper(st($myarray['place_of_service4']));
 $emg4 = st($myarray['emg4']);
 $cpt_hcpcs4 = st($myarray['cpt_hcpcs4']);
 $modifier4_1 = st($myarray['modifier4_1']);
@@ -207,20 +208,20 @@ $amount_paid = st($myarray['amount_paid']);
 $balance_due = st($myarray['balance_due']);
 $signature_physician = st($myarray['signature_physician']);
 $physician_signed_date = st($myarray['physician_signed_date']);
-$service_facility_info_name = st($myarray['service_facility_info_name']);
-$service_facility_info_address = st($myarray['service_facility_info_address']);
-$service_facility_info_city = st($myarray['service_facility_info_city']);
-$service_info_a = st($myarray['service_info_a']);
-$service_info_dd = st($myarray['service_info_dd']);
-$service_info_b_other = st($myarray['service_info_b_other']);
+$service_facility_info_name = strtoupper(st($myarray['service_facility_info_name']));
+$service_facility_info_address = strtoupper(st($myarray['service_facility_info_address']));
+$service_facility_info_city = strtoupper(st($myarray['service_facility_info_city']));
+$service_info_a = strtoupper(st($myarray['service_info_a']));
+$service_info_dd = strtoupper(st($myarray['service_info_dd']));
+$service_info_b_other = strtoupper(st($myarray['service_info_b_other']));
 $billing_provider_phone_code = st($myarray['billing_provider_phone_code']);
 $billing_provider_phone = st($myarray['billing_provider_phone']);
-$billing_provider_name = st($myarray['billing_provider_name']);
-$billing_provider_address = st($myarray['billing_provider_address']);
-$billing_provider_city = st($myarray['billing_provider_city']);
-$billing_provider_a = st($myarray['billing_provider_a']);
-$billing_provider_dd = st($myarray['billing_provider_dd']);
-$billing_provider_b_other = st($myarray['billing_provider_b_other']);
+$billing_provider_name = strtoupper(st($myarray['billing_provider_name']));
+$billing_provider_address = strtoupper(st($myarray['billing_provider_address']));
+$billing_provider_city = strtoupper(st($myarray['billing_provider_city']));
+$billing_provider_a = strtoupper(st($myarray['billing_provider_a']));
+$billing_provider_dd = strtoupper(st($myarray['billing_provider_dd']));
+$billing_provider_b_other = strtoupper(st($myarray['billing_provider_b_other']));
 $status = st($myarray['status']);
 
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
@@ -335,15 +336,24 @@ $inscoinfo = mysql_fetch_array($inscoarray);
 $referredby_sql = "select * from dental_contact where `contactid` = ".$referredby." LIMIT 1;";
 $referredby_my = mysql_query($referredby_sql);
 
-$referredby_myarray = mysql_fetch_array($referredby_my);
-$ref_name = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+                if($referred_source==1){
+                  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $ref_name = $r['firstname'].", ".$r['lastname'];                
+		}elseif($referred_source==2){
+                  $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referredby;
+                  $rq = mysql_query($rsql);
+                  $r = mysql_fetch_assoc($rq);
+                  $ref_name = $r['firstname']." ".$r['lastname'];
+                }
 
 $qua_sql = "select * from dental_qualifier where qualifierid=".$field_17a_dd;
 $qua_my = mysql_query($qua_sql);
 $qua_myarray = mysql_fetch_array($qua_my);
 $seventeenA = $qua_myarray['qualifier'];
 
-$getuserinfo = "SELECT * FROM `dental_users` WHERE `username` = '".$_SESSION['username']."'";
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
 
@@ -510,7 +520,7 @@ $fdf = "
   $fdf .= "
   << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$ref_name.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
-  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$userinfo['npi'].") >>
+  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V() >>
   ";
   if($hospitalization_date_from!=''){
     $fdf .= "
@@ -611,9 +621,9 @@ $c++;
   //$balance_due = $total_charge - $amount_paid;
 
 $fdf .= "
-  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".$federal_tax_id_number.") >>
-  << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($ssn == "1")?1:'').") >>
-  << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($ein == "1")?1:'').") >>
+  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".$userinfo['tax_id_or_ssn'].") >>
+  << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($userinfo['ssn'] == "1")?1:'').") >>
+  << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($userinfo['ein'] == "1")?1:'').") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".$patient_account_no.") >>
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".(($accept_assignment == "Yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
@@ -623,10 +633,10 @@ $fdf .= "
   << /T(".$field_path.".amount_paid_cents_fill[0]) /V(00) >>
   << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
-  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".$userinfo['name']."\n".$userinfo['address']."\n".$userinfo['city'].", ".$userinfo['state']." ".$userinfo['zipcode'].") >>
-  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".substr($userinfo['phone'], 0, 3).") >>
-  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".substr($userinfo['phone'], 3).") >>
-  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".$userinfo['name']."\n".$userinfo['address']."\n".$userinfo['city'].", ".$userinfo['state']." ".$userinfo['zipcode'].") >>
+  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".$userinfo['name']."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zipcode'].") >>
+  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($userinfo['phone'], true).") >>
+  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>
+  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zipcode'].") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/Y').") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
@@ -665,6 +675,18 @@ function fill_cents($v){
   }else{
 	return $v;
   }
+}
+
+function format_phone($num, $a){
+        $num = ereg_replace("[^0-9]", "", $num);
+        preg_match('/([0-1]*)(.*)/',$num, $m);
+        $num = $m[2];
+  if($a){
+        return substr($num, 0, 3);
+  }else{
+        return substr($num,3);
+  }
+  return $num;
 }
 
 ?>

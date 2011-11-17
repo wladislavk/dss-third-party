@@ -1342,7 +1342,7 @@ background:#edeb46;
 
 <td>
 
-Date
+Initial Contact Date
 
 </td>
 
@@ -1432,14 +1432,11 @@ $(document).ready(function(){
 <tr>
 
 <td>
-Contact Location
-Dentist Name/Office
 
 </td>
 
 <td>
 
-Date
 
 </td>
 
@@ -1456,13 +1453,9 @@ Thank You Sent
 <tr>
 <td>
 
-<?php
-echo $referrer;
-?> 
 
 </td>
 <td>
-<input id="referreddate" name="referreddate" type="text" class="field text addr tbox calendar" value="<?php echo $referreddate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('referreddate');" /><span id="req_0" class="req">*</span>
 
 
 

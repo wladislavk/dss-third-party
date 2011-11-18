@@ -75,6 +75,8 @@ function autoselect(selectedOption, f) {
   $date = s_for($_POST['date']);
   $sleeptesttype = s_for($_POST['sleeptesttype']);
   $place = s_for($_POST['place']);
+  $diagnosising_doc = s_for($_POST['diagnosising_doc']);
+  $diagnosising_npi = s_for($_POST['diagnosising_npi']);
   $apnea = s_for($_POST['apnea']);
   $hypopnea = s_for($_POST['hypopnea']); 
   $ahi = s_for($_POST['ahi']); 
@@ -130,6 +132,8 @@ function autoselect(selectedOption, f) {
 `date` = '".$date."',
 `sleeptesttype`  = '".$sleeptesttype."',
 `place`  = '".$place."',
+`diagnosising_doc` = '".$diagnosising_doc."',
+`diagnosising_npi` = '".$diagnosising_npi."',
 `apnea`  = '".$apnea."',
 `hypopnea`  = '".$hypopnea."',
 `ahi`  = '".$ahi."',
@@ -179,6 +183,8 @@ if($uploaded){
   $date = s_for($_POST['date']);
   $sleeptesttype = s_for($_POST['sleeptesttype']);
   $place = s_for($_POST['place']);
+  $diagnosising_doc = s_for($_POST['diagnosising_doc']);
+  $diagnosising_npi = s_for($_POST['diagnosising_npi']);
   $apnea = s_for($_POST['apnea']);
   $hypopnea = s_for($_POST['hypopnea']);
   $ahi = s_for($_POST['ahi']);
@@ -224,6 +230,8 @@ if($uploaded){
 `date` ,
 `sleeptesttype` ,
 `place` ,
+`diagnosising_doc`,
+`diagnosising_npi`,
 `apnea` ,
 `hypopnea` ,
 `ahi` ,
@@ -248,7 +256,7 @@ if($uploaded){
 `sleeplab`,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
@@ -270,7 +278,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$apnea."','".$hypo
    $msg = "Successfully added sleep lab". $uploaded;
   }
  }
-$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
 
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
@@ -396,6 +404,17 @@ if(f.sleeptesttype.value == "HST"){
 
                 </td>
         </tr>
+	<tr>
+                <td valign="top" class="odd">
+                  <input type="text" name="diagnosising_doc" />
+                </td>
+        </tr>
+	<tr>
+                <td valign="top" class="even">
+                  <input type="text" name="diagnosising_npi" />
+                </td>
+        </tr>
+
   <tr>
                 <td valign="top" class="odd">
                   <input style="width:170px" size="8" type="file" name="ss_file" />
@@ -611,6 +630,17 @@ No
 
                 </td>
         </tr>
+        <tr>
+                <td valign="top" class="odd">
+                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" />
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="even">
+                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" />
+                </td>
+        </tr>
+
   <tr>
                 <td valign="top" class="odd">
                         <?php if($s_lab['filename']!=''){ ?>

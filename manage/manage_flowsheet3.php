@@ -223,7 +223,7 @@ function preauth_errors(){
     array_push($errors, "Missing referral"); 
   }*/
 
-  $sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+  $sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
   $result = mysql_query($sleepstudies);
   $numsleepstudy = mysql_num_rows($result);
   if($numsleepstudy == 0)
@@ -1279,7 +1279,7 @@ background:#edeb46;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
 		$numsleepstudy = mysql_num_rows($result);
 
@@ -1623,6 +1623,16 @@ background:#edeb46;
         </tr>
   <tr>
                 <td valign="top" class="odd">
+                Diagnosing Phys.
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+		Diagnosing NPI#                
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
                 File
                 </td>
         </tr>
@@ -1694,9 +1704,9 @@ background:#edeb46;
   </table>
 
 
-        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 799px;">
+        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 849px;">
 
-                    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+                    <iframe height="842" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 </div>

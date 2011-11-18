@@ -307,6 +307,12 @@ if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
 
+          $sleepstudies = "SELECT diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosising_doc = $d['diagnosising_doc'];
+  $diagnosising_npi = $d['diagnosising_npi'];
+
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.
 if (empty($prior_authorization_number)) {
@@ -518,9 +524,9 @@ $fdf = "
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$ref_name.") >>
+  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$diagnosising_doc.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
-  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V() >>
+  << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$diagnosising_npi.") >>
   ";
   if($hospitalization_date_from!=''){
     $fdf .= "
@@ -639,10 +645,10 @@ $fdf .= "
   << /T(".$field_path.".amount_paid_cents_fill[0]) /V(00) >>
   << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
-  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".$userinfo['name']."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zipcode'].") >>
+  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($userinfo['phone'], true).") >>
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>
-  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zipcode'].") >>
+  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/Y').") >>
   << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>

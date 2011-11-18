@@ -1038,11 +1038,18 @@ if($insured_insurance_plan == '')
 	$insured_insurance_plan = $pat_myarray['plan_name'];	
 
 if($diagnosis_1 == ''){
-	  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+	  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
 }
+
+          $sleepstudies = "SELECT diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosising_doc = $d['diagnosising_doc'];
+  $diagnosising_npi = $d['diagnosising_npi'];
+
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
@@ -1739,18 +1746,7 @@ input{text-transform:uppercase;}
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
 							<?
-                if($referred_source==1){
-                  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referredby;
-                  $rq = mysql_query($rsql);
-                  $r = mysql_fetch_assoc($rq);
-                  $referred_name = $r['firstname'].", ".$r['lastname'];
-                }elseif($referred_source==2){
-                  $rsql = "SELECT lastname, firstname FROM dental_contact WHERE contactid=".$referredby;
-                  $rq = mysql_query($rsql);
-                  $r = mysql_fetch_assoc($rq);
-                  $referred_name = $r['firstname']." ".$r['lastname'];
-                }
-								echo "<br /><br />".$referred_name;
+								echo "<br /><br />".$diagnosising_doc;
 									?>
 								
 					</td>
@@ -1791,7 +1787,7 @@ input{text-transform:uppercase;}
 									NPI
 								</td>
 								<td valign="top" style="padding-top:3px;">
-									<input disabled="disabled" type="text" name="field_17b" class="inbox_line3" size="30"/>
+									<input disabled="disabled" type="text" value="<?= $diagnosising_npi; ?>" name="field_17b" class="inbox_line3" size="30"/>
 								</td>
 							</tr>
 						</table>

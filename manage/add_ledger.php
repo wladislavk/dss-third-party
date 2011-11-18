@@ -504,7 +504,7 @@ echo "</select>";
           </tr>		
         <tr>
             <td>
-              <a href="/manage/manage_ledger.php?delid=<?= $_GET['ed']; ?>&amp;pid=<?= $_GET['pid']; ?>&popup=1" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+              <a href="/manage/manage_ledger.php?delid=<?= $_GET['ed']; ?>&amp;pid=<?= $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
                                         </a>
  

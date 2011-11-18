@@ -171,6 +171,7 @@ background:#999999;
     <td class="appliance">TAP 3</td>
     <td class="appliance_since">63 days</td>
     <td class="vob">Complete</td>
+    <td class="rxlomn">N/A</td>
     <td class="ledger">($435.75)</td>
   </tr>
 <? if(mysql_num_rows($my) == 0)

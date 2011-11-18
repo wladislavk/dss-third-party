@@ -436,7 +436,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['trxn_code_covered'] == '1') ? 'CHECKED' : ''; ?>
                 <?php $no_checked  = ($preauth['trxn_code_covered'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
+                <input type="radio" id="trxn_code_covered_yes" name="trxn_code_covered" value="1" <?= $yes_checked ?> <?=$disabled?>/> Yes
                 <input type="radio" name="trxn_code_covered" value="0" <?= $no_checked ?> <?=$disabled?>/> No
                 <br/><br/>
                 Notes:<br/>

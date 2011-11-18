@@ -48,7 +48,7 @@ $insuranceid = st($myarray['insuranceid']);
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurance_type = strtoupper(st($myarray['insurance_type']));
+$insurance_type = st($myarray['insurance_type']);
 $patient_lastname = strtoupper(st($myarray['patient_lastname']));
 $patient_firstname = strtoupper(st($myarray['patient_firstname']));
 $patient_middle = strtoupper(st($myarray['patient_middle']));
@@ -391,10 +391,10 @@ $fdf = "
 << /FDF 
 << /Fields 
 [ 
-  << /T(".$field_path.".carrier_name_fill[0]) /V(".$inscoinfo['company'].") >>
-  << /T(".$field_path.".carrier_address1_fill[0]) /V(".$inscoinfo['add1'].") >>
-  << /T(".$field_path.".carrier_address2_fill[0]) /V(".$inscoinfo['add2'].") >>
-  << /T(".$field_path.".carrier_citystatezip_fill[0]) /V(".$inscoinfo['city']." ".$inscoinfo['state'].", ".$inscoinfo['zip'].") >>
+  << /T(".$field_path.".carrier_name_fill[0]) /V(".strtoupper($inscoinfo['company']).") >>
+  << /T(".$field_path.".carrier_address1_fill[0]) /V(".strtoupper($inscoinfo['add1']).") >>
+  << /T(".$field_path.".carrier_address2_fill[0]) /V(".strtoupper($inscoinfo['add2']).") >>
+  << /T(".$field_path.".carrier_citystatezip_fill[0]) /V(".strtoupper($inscoinfo['city'])." ".strtoupper($inscoinfo['state']).", ".$inscoinfo['zip'].") >>
   << /T(".$field_path.".pica_right_side_fill[0]) /V(".$pica1.$pica2.$pica3.") >>
 
   << /T(".$field_path.".medicare_chkbox[0]) /V(".(($insurancetype == '1')?1:'').") >>
@@ -567,7 +567,13 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
 $sql = "";
   $sql = "SELECT "
-       . "  ledger.*, user.tax_id_or_ssn as 'provider_id', ps.place_service as 'place' "
+       . "  ledger.*, ";
+if($insurancetype == '1'){
+        $sql .= " user.medicare_npi ";
+}else{
+        $sql .= " user.npi ";
+}
+  $sql .= " as 'provider_id', ps.place_service as 'place' "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "

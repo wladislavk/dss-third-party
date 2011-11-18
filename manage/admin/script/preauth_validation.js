@@ -132,11 +132,10 @@ function validatePreAuthForm(form) {
     if (trim(form.ins_cal_year_end.value) == "") {
       errorMsg += "- Missing Insurance Calendar Year End\n";
     }
-    
+    if(document.getElementById('trxn_code_covered_yes').checked){
     if (trim(form.how_often.value) == "") {
       errorMsg += "- Missing How Often You Will Pay for Another Device\n";
     }
-    
     if (trim(form.patient_deductible.value) == "") {
       errorMsg += "- Missing Patient Deductible\n";
     }
@@ -160,7 +159,7 @@ function validatePreAuthForm(form) {
     if (trim(form.deductible_reset_date.value) == "") {
       errorMsg += "- Missing Deductible Reset Date\n";
     }
-    
+    } 
     if (trim(form.trxn_code_amount.value) == "") {
       errorMsg += "- Missing Device Amount\n";
     }

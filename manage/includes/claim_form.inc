@@ -1295,12 +1295,12 @@ input{text-transform:uppercase;}
 					<td align="left" valign="top">
 						<span class="num">4.</span> 
 						Insured's Name &nbsp;
-						<span class="small_cap">(Fisrt Name, Last Name, Middle Initial)</span>
+						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
+                                                        <input type="text" value="<?=$insured_middle?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
+                                                        &nbsp;
 							<input type="text" value="<?=$insured_firstname?>" name="insured_firstname" class="inbox_line3" size="18" />
-							&nbsp;
-							<input type="text" value="<?=$insured_middle?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
 							&nbsp;
 							<input type="text" value="<?=$insured_lastname?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
 						</div>

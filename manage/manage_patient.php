@@ -156,7 +156,7 @@ background:#999999;
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.vob&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
 		</td>
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.vob')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.rx&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
+                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=fs.rxrec&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.ledger&sortdir=<?php echo ($_REQUEST['sort']=='s.ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>

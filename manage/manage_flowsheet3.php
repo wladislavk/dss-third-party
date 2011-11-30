@@ -1300,6 +1300,10 @@ background:#edeb46;
 		$medins = false;
 		$vob = false;
     
+  $sql2 = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
+  $my2 = mysql_query($sql2);
+  $row2 = mysql_fetch_array($my2);
+
 		//if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $delivery_date != '') $initialcontact = true;
 		if ($referred_by == '') {
 			if ($copyreqdate != '') $initialcontact = true;
@@ -1309,7 +1313,7 @@ background:#edeb46;
 	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
 		if ($rxrec != '' && $lomnrec != '') $medins = true;
-		if ($numvob > '0') $vob = true;
+		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
 
 		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
       print "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>"; 
@@ -2250,9 +2254,6 @@ $my = mysql_query($sql) or die(mysql_error());
 <div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
 <table width="610px" <?php print (!$vob ? 'class="yellow"' : ''); ?> align="center">
     <?php
-  $sql2 = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
-  $my2 = mysql_query($sql2);
-  $row2 = mysql_fetch_array($my2);
   if($row2['p_m_ins_type']==1){
     ?>
       <tr>

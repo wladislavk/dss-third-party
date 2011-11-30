@@ -14,6 +14,7 @@ if(isset($_GET['pid'])){
                                 {
                      $thename= $myarray['lastname'].", ".$myarray['firstname'];
 		     $theaddress = $myarray['add1']." ".$myarray['add2']." ".$myarray['city']." ".$myarray['state']." ".$myarray['zip'];
+		     $thephone = "H: ".$myarray['home_phone']." W: ".$myarray['work_phone']." C: ".$themyarray['cell_phone'];
                     }
                     }
 
@@ -77,6 +78,8 @@ $num_users=mysql_num_rows($my);
                 (<i><?=$thename;?></i>)
 		<br />
 		<?= $theaddress; ?>
+		<br />
+		<?= $thephone; ?>
         <? }?>
 
 </span>

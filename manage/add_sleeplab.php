@@ -67,8 +67,15 @@ if($_POST["sleeplabsub"] == 1)
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		
+		$id=20;
 		$msg = "Added Successfully";
+                if($_GET['r']=='flowsheet'){ ?>
+			<script type="text/javascript">
+			parent.updatelabs('<?= $id ?>', "<?= $_POST["company"]; ?>");
+
+			</script>
+		<?php
+		}else{
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
@@ -76,6 +83,7 @@ if($_POST["sleeplabsub"] == 1)
 		</script>
 		<?
 		die();
+		}
 	}
 }
 
@@ -160,7 +168,7 @@ if($_POST["sleeplabsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="sleeplabfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return sleeplababc(this)">
+    <form name="sleeplabfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&r=<?= $_GET['r']; ?>" method="post" onSubmit="return sleeplababc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

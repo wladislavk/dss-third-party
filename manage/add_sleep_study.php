@@ -23,6 +23,7 @@ $body_width = ($num_labs*185)+185;
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <link rel="stylesheet" href="css/form.css" />
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">
 function update_needed(v, f){
@@ -306,6 +307,9 @@ background:#edeb46;
 		<select name="sleeptesttype">
       <option value="HST">HST</option>
       <option value="PSG">PSG</option>    
+      <option value="PSG Baseline">PSG Baseline</option>
+      <option value="HST Baseline">HST Baseline</option>
+      <option value="HST Titration">HST Titration</option>
     </select>	
 <script type="text/javascript">
 
@@ -338,7 +342,7 @@ if(f.sleeptesttype.value == "HST"){
         </tr>
   <tr>
                 <td valign="top" class="odd">
-                                                                <input type="radio" name="completed" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="completed" value="Yes"><span>Yes</span> <span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="completed" value="No"><span>No</span>
                 </td>
         </tr>
@@ -352,7 +356,16 @@ if(f.sleeptesttype.value == "HST"){
         </tr>
   <tr>
                 <td valign="top" class="odd">
-                <select name="place">
+<script type="text/javascript">
+
+function addstudylab(v){
+  if(v == 'add'){
+    parent.loadPopupRefer('add_sleeplab.php?r=flowsheet');
+  }
+}
+
+</script>
+                <select name="place" class="place_select" onchange="addstudylab(this.value)">
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
@@ -362,6 +375,7 @@ if(f.sleeptesttype.value == "HST"){
     <?php
       }
     ?>
+		<option value="add">ADD SLEEP LAB</option>
     </select>
                 </td>
         </tr>
@@ -382,7 +396,7 @@ if(f.sleeptesttype.value == "HST"){
                                                                                 <?
                                                                                 }?>
 
-                            </select>
+                            </select> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
   <tr>
@@ -406,18 +420,18 @@ if(f.sleeptesttype.value == "HST"){
         </tr>
 	<tr>
                 <td valign="top" class="odd">
-                  <input type="text" name="diagnosising_doc" />
+                  <input style="width:100px;" type="text" name="diagnosising_doc" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
 	<tr>
                 <td valign="top" class="even">
-                  <input type="text" name="diagnosising_npi" />
+                  <input style="width:100px;" type="text" name="diagnosising_npi" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
 
   <tr>
                 <td valign="top" class="odd">
-                  <input style="width:170px" size="8" type="file" name="ss_file" />
+                  <input style="width:160px" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
   <tr>	
@@ -540,6 +554,10 @@ $device = mysql_result($device_result, 0);
                 <select name="sleeptesttype">
                    <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
+	           <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
+     		   <option <?= ($s_lab['sleeptesttype']=="HST Baseline")?'selected="selected"':''; ?> value="HST Baseline">HST Baseline</option>
+      		   <option <?= ($s_lab['sleeptesttype']=="HST Titration")?'selected="selected"':''; ?> value="HST Titration">HST Titration</option>
+
                 </select>
 
 		</td>
@@ -562,7 +580,7 @@ No
         </tr>
   <tr>
                 <td valign="top" class="odd">
-                                                                <input type="radio" name="completed" value="Yes" <?= ($s_lab['completed']=="Yes")?'checked="checked"':''; ?>><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <input type="radio" name="completed" value="Yes" <?= ($s_lab['completed']=="Yes")?'checked="checked"':''; ?>><span>Yes</span> <span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <input type="radio" name="completed" value="No" <?= ($s_lab['completed']=="No")?'checked="checked"':''; ?>><span>No</span>
                 </td>
         </tr>
@@ -606,7 +624,7 @@ No
                                                                                 <?
                                                                                 }?>
 
-                            </select>
+                            </select> <span id="req_0" class="req">*</span>
 
                 </td>
         </tr>
@@ -632,12 +650,12 @@ No
         </tr>
         <tr>
                 <td valign="top" class="odd">
-                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" />
+                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
         <tr>
                 <td valign="top" class="even">
-                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" />
+                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
 
@@ -651,7 +669,7 @@ No
                                                         <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
 
                         <?php }else{ ?>
-                          <input style="width:170px;" size="8" type="file" name="ss_file" />
+                          <input style="width:160px;" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
                         <?php } ?>
                 </td>
         </tr>

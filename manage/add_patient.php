@@ -783,11 +783,11 @@ $num_face = mysql_num_rows($p);
 <span align="right">
 <?php if($num_face==0){ ?>
         <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" class="addButton">
-                Add Patient Photo
+                + Add Patient Photo
         </button>
 <?php }else{ ?>
         <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'; return false;" class="addButton">
-                Add/Update Patient Photo
+                + Add/Update Patient Photo
         </button>
 
 <?php } ?>
@@ -1132,9 +1132,14 @@ $(document).ready(function(){
                                 <label for="p_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox" value="<?=$ins_dob?>" maxlength="255" style="width:200px;" onChange="validateDate('ins_dob');" />
+                                <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?=$ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
+			    <span>
+				        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+			    </span>
 						</div>
 						<div>
                             
@@ -1174,7 +1179,7 @@ $(document).ready(function(){
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
-<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="Add Insurance Company" />
+<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Add Insurance Company" />
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
@@ -1289,9 +1294,14 @@ $(document).ready(function(){
                                 <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                             </span>
                             <span>
-                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox" value="<?=$ins2_dob?>" maxlength="255" style="width:200px;" onChange="validateDate('ins2_dob');" />
+                                <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?=$ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
+			    <span>
+                                        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+			    </span>
 						</div>
 						<div>
                             
@@ -1330,7 +1340,7 @@ $(document).ready(function(){
 				</script>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="Add Insurance Company" />
+<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="+ Add Insurance Company" />
                             </span>
 
                             <span>
@@ -1518,28 +1528,16 @@ $(document).ready(function(){
 	  </tr>
         
 		    <tr>
-		        <td class="frmhead" colspan="1" valign="top">
-		        <ul>
-		        <li  id="foli8" class="complex">
-		        <label for="Field0" id="title0" class="desc">
-                            Contacts:
-                        </label>
-		         <div>
-		         <?php include('contact_includes.php'); ?>
-		         </div>
-		         </li>
-		         </ul>
-		        </td>
-		        
-		        <td class="frmhead" colspan="1">
+		        <td class="frmhead" colspan="2">
 		        
 		        
-		       <table id="contactmds">
+		       <table id="contactmds" style="float:left;">
            <tr height="35"> 
 		        
 		       <td>
-           <font style="padding-left:10px;">Add Contact to left then assign here:</font> 
+           <font style="padding-left:10px;">Add contacts below so they can receive correspondence about this patient.</font> 
 		        <p>&nbsp;</p>
+
             <ul>
 		        <li  id="foli8" class="complex">
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
@@ -1708,7 +1706,7 @@ $(document).ready(function(){
 		         
 		         
 		         </table>
-		         
+		        <input type="button" class="button" style="float:left; margin: 50px 0 0 20px; width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Add Contact" /> 
 		        </td>
 		        
 		        

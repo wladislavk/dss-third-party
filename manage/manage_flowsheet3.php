@@ -5,6 +5,13 @@ require_once('includes/patient_info.php');
 if ($patient_info) {
  ?>
 <script type="text/javascript">
+
+ function updatelabs(i,c){
+	$('#sleepstudies').contents().find('.place_select').append("<option value='"+i+"'>"+c+"</option>");
+	disablePopupRefClean();
+ }
+
+
 	$(document).ready(function() {
 		$("[id^=delay_reason]").each(function() {
 			var reason = $(this).attr('id');
@@ -447,7 +454,7 @@ function trigger_letter8($pid, $stepid) {
 
 function trigger_letter9($pid, $stepid) {
   $letterid = '9';
-  $md_list = get_mdcontactids($pid);
+  $md_list = '';//get_mdcontactids($pid);
   $md_referral_list = get_mdreferralids($pid);
 
 	//if ($md_referral_list != "") {
@@ -1316,7 +1323,7 @@ background:#edeb46;
 		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
 
 		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
-      print "<strong><h2>Page 1 Information NOT COMPLETE</h2></strong>"; 
+      print "<strong><h2>Pre-Treatment Information Below is NOT COMPLETE</h2></strong>"; 
 			update_patient_summary($_GET['pid'], 'fspage1_complete', false);
     } else {
 			update_patient_summary($_GET['pid'], 'fspage1_complete', true);
@@ -1710,7 +1717,7 @@ background:#edeb46;
 
         <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 849px;">
 
-                    <iframe height="842" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+                    <iframe id="sleepstudies" height="842" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 </div>

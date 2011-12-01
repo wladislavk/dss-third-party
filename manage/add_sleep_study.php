@@ -381,7 +381,7 @@ function addstudylab(v){
         </tr>
   <tr>
                 <td valign="top" class="even">
-                          <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
+                          <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
                         <?php
                                 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
@@ -431,7 +431,7 @@ function addstudylab(v){
 
   <tr>
                 <td valign="top" class="odd">
-                  <input style="width:160px" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
+                  <input style="width:140px" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
   <tr>	
@@ -593,7 +593,7 @@ No
 
   <tr>		
 		<td valign="top" class="odd"> 
-                <select name="place">
+                <select name="place" class="place_select" onchange="addstudylab(this.value)">
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
@@ -603,13 +603,14 @@ No
     <?php
       }
     ?>
+<option value="add">ADD SLEEP LAB</option>
     </select>
 
 		</td>
 	</tr>
   <tr>
                 <td valign="top" class="even">
-                          <select name="diagnosis" style="width:150px;" class="field text addr tbox" >
+                          <select name="diagnosis" style="width:140px;" class="field text addr tbox" >
                                 <option value="">SELECT</option>
  <?php
                                 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
@@ -669,7 +670,7 @@ No
                                                         <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
 
                         <?php }else{ ?>
-                          <input style="width:160px;" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
+                          <input style="width:140px;" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
                         <?php } ?>
                 </td>
         </tr>

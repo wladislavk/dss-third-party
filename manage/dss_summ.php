@@ -1572,6 +1572,17 @@ Sleep Studies:
         </tr>
   <tr>
                 <td valign="top" class="odd">
+                Diagnosing Phys.
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Diagnosing NPI#
+                </td>
+        </tr>
+
+  <tr>
+                <td valign="top" class="odd">
                 File
                 </td>
         </tr>
@@ -1645,9 +1656,9 @@ Sleep Studies:
   
   
   
-	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 799px;">
+	<div style="border: medium none; width: 800px;float: left; margin-bottom: 20px; height: 849px;">
 		    
-		    <iframe height="792" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+		    <iframe id="sleepstudies" height="842" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 	</div>
 <!-- SLEEP LAB SECTION END -->
@@ -1706,7 +1717,17 @@ Subjective Findings:
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
-
+<div id="popupRefer" style="width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
+<script type="text/javascript">
+ function updatelabs(i,c){
+        $('#sleepstudies').contents().find('.place_select').append("<option value='"+i+"'>"+c+"</option>");
+        disablePopupRefClean();
+ }
+</script>
 <?php
 
 } else {  // end pt info check

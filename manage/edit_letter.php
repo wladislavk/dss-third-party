@@ -114,22 +114,22 @@ foreach ($contact_info['mds'] as $contact) {
 // Get Date
 
 $todays_date = date('F d, Y');
+// Get Patient Information
+$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob, email, p_m_ins_id, docid FROM dental_patients WHERE patientid = '".$patientid."';";
+$patient_result = mysql_query($patient_query);
+$patient_info = array();
+while ($row = mysql_fetch_assoc($patient_result)) {
+        $patient_info = $row;
+}
+$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
+$did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$_SESSION['docid']."';";
+$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
-
-// Get Patient Information
-$patient_query = "SELECT salutation, firstname, middlename, lastname, gender, dob, email, p_m_ins_id FROM dental_patients WHERE patientid = '".$patientid."';";
-$patient_result = mysql_query($patient_query);
-$patient_info = array();
-while ($row = mysql_fetch_assoc($patient_result)) {
-	$patient_info = $row;
-}
-$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
 
 // Consult Appointment Date
 $consult_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";

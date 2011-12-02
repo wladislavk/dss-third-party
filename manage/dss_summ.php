@@ -1,5 +1,5 @@
 <?php
-
+include_once 'includes/constants.inc';
 include 'includes/top.htm';
 require_once('includes/patient_info.php');
 if ($patient_info) {
@@ -908,7 +908,7 @@ $wapn4 = st($myarray['wapn4']);
 $wapn5 = st($myarray['wapn5']);
 
 
-$patient_name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+$patient_name = st($pat_myarray['salutation'])." ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 
 $patient_dob = st($pat_myarray['dob']);
 
@@ -1271,15 +1271,26 @@ $num_face = mysql_num_rows($p);
     
     
     <?php 
-
+$rs = $pat_myarray['referred_source'];
 if(st($pat_myarray['referred_by']) <> '')
 {
-  $referredby_sql = "select * from dental_contact where referrer=1 and status=1 and contactid='".st($pat_myarray['referred_by'])."'";
+  if($rs == DSS_REFERRED_PHYSICIAN){
+  $referredby_sql = "select * from dental_contact where status=1 and contactid='".st($pat_myarray['referred_by'])."'";
 	$referredby_my = mysql_query($referredby_sql);
 	$referredby_myarray = mysql_fetch_array($referredby_my);
 	
 	$referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
   echo $referredbythis;
+  }elseif($rs == DSS_REFERRED_PATIENT){
+  $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
+        $referredby_my = mysql_query($referredby_sql);
+        $referredby_myarray = mysql_fetch_array($referredby_my);
+        
+        $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+  echo $referredbythis;
+  }else{
+   echo $dss_referred_labels[$rs].": ".$pat_myarray['referred_notes'];
+  }
   }else{
 echo "Not Set, Please set through patient info.";
 }

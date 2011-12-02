@@ -80,9 +80,32 @@ if ($topatient) {
 } else {
   $contact_info = get_contact_info('', $md_list, $md_referral_list, $source);
 }
-
+if($source == DSS_REFERRED_PHYSICIAN){
 $md_referral = get_mdreferralids($_GET['pid']);
 $ref_info = get_contact_info('', '', $md_referral);
+	if (!empty($ref_info['md_referrals'])) {                        
+		$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+        } else {
+        	$referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+        }
+
+}elseif($source == DSS_REFERRED_PATIENT){
+	$referral_fullname = '<strong>a patient</strong>';
+}elseif($source == DSS_REFERRED_MEDIA ){
+        $referral_fullname = '<strong>a media source</strong>';
+}elseif($source == DSS_REFERRED_FRANCHISE ){
+        $referral_fullname = '<strong>an internal source</strong>';
+}elseif($source == DSS_REFERRED_DSSOFFICE ){
+        $referral_fullname = "<strong>Dental Sleep Solutions' referral network</strong>";
+}elseif($source == DSS_REFERRED_OTHER ){
+        $referral_fullname = '<strong>an unspecified source</strong>';
+}else{
+        $referral_fullname = '';
+}
+
+
+
+ 
 
 $pt_referral = get_ptreferralids($_GET['pid']);
 $ptref_info = get_contact_info('', '', $pt_referral, $source);
@@ -532,11 +555,7 @@ if ($_POST != array()) {
 		$search[] = '%zip%';
 		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 		$search[] = '%referral_fullname%';
-		if (!empty($ref_info['md_referrals'])) {
-			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
-		} else {
-			$replace[] = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
-		}
+		$replace[] = $referral_fullname;
 		$search[] = '%referral_lastname%';
 		if (!empty($ref_info['md_referrals'])) {
 			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
@@ -907,11 +926,7 @@ foreach ($letter_contacts as $key => $contact) {
   $search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%referral_fullname%';
-	if (!empty($ref_info['md_referrals'])) {
-		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
-	} else {
-		$replace[] = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
-	}
+	$replace[] = $referral_fullname;
 	$search[] = '%referral_lastname%';
 	if (!empty($ref_info['md_referrals'])) {
 		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";

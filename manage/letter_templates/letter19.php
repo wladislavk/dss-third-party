@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%referral_fullname%<br />
-%referral_practice%
-%ref_addr1%<br />
-%ref_addr2%
-%ref_city%, %ref_state% %ref_zip%<br />
+%contact_fullname%<br />
+%practice%
+%addr1%<br />
+%addr2%
+%city%, %state% %zip%<br />
 </p>
 <table>
   <tr>
@@ -19,7 +19,7 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %referral_lastname%:</p>
+<p>Dear Dr. %contact_lastname%:</p>
 
 <p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% and/or RDI of %1stRDI% after undergoing a %type_study% done at the %1st_sleeplab_name%.   %He/She% spent %1stTO290% % of the night below 90% sp O2, and had an O2 nadir of %1stLowO2%.</p>
 

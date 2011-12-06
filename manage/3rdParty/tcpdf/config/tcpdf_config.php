@@ -156,22 +156,22 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * top margin
 	 */
-	define ('PDF_MARGIN_TOP', 53); // 27
+	define ('PDF_MARGIN_TOP', 12); // 27
 
 	/**
 	 * bottom margin
 	 */
-	define ('PDF_MARGIN_BOTTOM', 26);
+	define ('PDF_MARGIN_BOTTOM', 36);
 
 	/**
 	 * left margin
 	 */
-	define ('PDF_MARGIN_LEFT', 26);
+	define ('PDF_MARGIN_LEFT', 18);
 
 	/**
 	 * right margin
 	 */
-	define ('PDF_MARGIN_RIGHT', 26);
+	define ('PDF_MARGIN_RIGHT', 18);
 
 	/**
 	 * default main font name

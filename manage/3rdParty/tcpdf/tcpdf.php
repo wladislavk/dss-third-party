@@ -5412,6 +5412,7 @@ class TCPDF {
 			// avoid page breaking from checkPageBreak()
 			return false;
 		}
+		$this->setMargins(18,30,18);
 		return $this->AutoPageBreak;
 	}
 

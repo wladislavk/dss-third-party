@@ -2,13 +2,14 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%patient_fullname%<br />
+%contact_fullname%<br />
+%practice%
 %addr1%<br />
 %addr2%
 %city%, %state% %zip%<br />
 </p>
 
-<p>Dear %patient_firstname%:</p>
+<p>Dear %contact_firstname%:</p>
 
 <p>Thank you for choosing Dental Sleep Solutions&reg; and Dr. %franchisee_fullname% to treat your sleep disordered breathing.  As you are no doubt now aware, Dental Sleep Solutions&reg; dentists are some of the most highly trained and educated dentists in dental sleep medicine.  Our dentists are committed to helping you breathe better, sleep better, and feel better.</p>
 

@@ -2,13 +2,14 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%patient_fullname%<br />
+%contact_fullname%<br />
+%practice%
 %addr1%<br />
 %addr2%
 %city%, %state% %zip%<br />
 </p>
 
-<p>Dear %patient_firstname%:</p>
+<p>Dear %contact_firstname%:</p>
 
 <p>We delivered your %dental_device% dental device on %delivery_date% and our records show that you are not continuing with the treatment plan we created for you.  Please be aware that your decision not follow through on treatment has resulted in you being officially discharged from our sleep disorder program.</p>
 

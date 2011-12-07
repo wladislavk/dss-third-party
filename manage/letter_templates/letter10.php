@@ -2,11 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%referral_fullname%<br />
-%referral_practice%
-%ref_addr1%<br />
-%ref_addr2%
-%ref_city%, %ref_state% %ref_zip%<br />
+%contact_fullname%<br />
+%practice%
+%addr1%<br />
+%addr2%
+%city%, %state% %zip%<br />
 </p>
 <table>
   <tr>
@@ -19,7 +19,7 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %referral_lastname%:</p>
+<p>Dear Dr. %contact_lastname%:</p>
 
 <p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %type_study% done at the %1st_sleeplab_name% which showed an AHI of %ahi%; %he/she% was diagnosed with %diagnosis%.</p>
 

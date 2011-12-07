@@ -2,11 +2,12 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%referral_fullname%<br />
-%referral_practice%
-%ref_addr1%<br />
-%ref_addr2%
-%ref_city%, %ref_state% %ref_zip%</p>
+%contact_fullname%<br />
+%practice%
+%addr1%<br />
+%addr2%
+%city%, %state% %zip%<br />
+</p>
 <table>
   <tr>
 		<td width=\"50px\">Re:</td>
@@ -18,7 +19,7 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear Dr. %referral_lastname%:</p>
+<p>Dear Dr. %contact_lastname%:</p>
 
 <p>Thank you for referring %patient_fullname% to our office.</p>
 

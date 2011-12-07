@@ -1,13 +1,16 @@
 <?php
 
 $template = "<p>%todays_date%</p>
-
-<p>%patient_fullname%<br />
+<p>%todays_date%</p>
+<p>
+%contact_fullname%<br />
+%practice%
 %addr1%<br />
 %addr2%
-%city%, %state% %zip%</p>
+%city%, %state% %zip%<br />
+</p>
 <p>
-Dear %patient_firstname%:</p>
+Dear %contact_firstname%:</p>
 
 <p>Thank you for taking the time to come in and consult with us regarding your sleep disordered breathing problem.  I hope that you found it was worth your time. We work very hard to be the best we can be.</p>
 

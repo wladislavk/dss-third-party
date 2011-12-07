@@ -237,7 +237,7 @@ $first_o2nadir = st($q1_myarray['o2nadir']);
 $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 $first_center_name = st($q1_myarray['place']);
 
-$q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice,
+$q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice, sl.company, 
 CASE s.sleeptesttype
    WHEN 'PSG Baseline' THEN '1'
    WHEN 'HST Baseline' THEN '2'
@@ -248,7 +248,9 @@ END
 AS sort_order 
 FROM dental_summ_sleeplab s 
 JOIN dental_ins_diagnosis d
-ON s.diagnosis = d.ins_diagnosisid
+  ON s.diagnosis = d.ins_diagnosisid
+LEFT JOIN dental_sleeplab sl
+  ON s.place = sl.sleeplabid
 WHERE (s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND 
 (s.diagnosising_npi IS NOT NULL && s.diagnosising_npi != '') AND 
 (s.diagnosis IS NOT NULL && s.diagnosis != '') AND 
@@ -264,7 +266,7 @@ $completed_rdi = st($q1_myarray['rdi']);
 $completed_o2sat90 = st($q1_myarray['t9002']);
 $completed_o2nadir = st($q1_myarray['o2nadir']);
 $completed_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
-$completed_center_name = st($q1_myarray['place']);
+$completed_sleeplab_name = st($q1_myarray['company']);
 
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$first_center_name."';";

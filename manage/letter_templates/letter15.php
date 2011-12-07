@@ -1,6 +1,14 @@
 <?php
 
 $template = "<p>%todays_date%</p>
+<p>
+%contact_fullname%<br />
+%practice%
+%addr1%<br />
+%addr2%
+%city%, %state% %zip%<br />
+</p>
+
 <table>
   <tr>
 		<td width=\"50px\">Re:</td>

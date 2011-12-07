@@ -2,13 +2,14 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%patient_fullname%<br />
+%contact_fullname%<br />
+%practice%
 %addr1%<br />
 %addr2%
 %city%, %state% %zip%<br />
 </p>
 
-<p>Dear %patient_firstname%:</p>
+<p>Dear %contact_firstname%:</p>
 
 <p>Can you believe it was a year ago that we fabricated your %dental_device% dental sleep device?  We hope that you are continuing to do well.</p>
 

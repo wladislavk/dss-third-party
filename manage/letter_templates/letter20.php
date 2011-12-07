@@ -2,10 +2,11 @@
 
 $template = "<p>%todays_date%</p>
 <p>
-%ptreferral_fullname%<br />
-%ptref_addr1%<br />
-%ptref_addr2%
-%ptref_city%, %ptref_state% %ptref_zip%<br />
+%contact_fullname%<br />
+%practice%
+%addr1%<br />
+%addr2%
+%city%, %state% %zip%<br />
 </p>
 <table>
   <tr>
@@ -18,7 +19,7 @@ $template = "<p>%todays_date%</p>
 	</tr>
 </table>
 
-<p>Dear %ptreferral_firstname% %ptreferral_lastname%:</p>
+<p>Dear %contact_firstname% %contact_lastname%:</p>
 
 <p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  There is no greater compliment than for someone such as you to refer a colleague, friend, or family member.</p>
 

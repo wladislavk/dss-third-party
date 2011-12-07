@@ -82,7 +82,7 @@ if ($topatient) {
 }
 if($source == DSS_REFERRED_PHYSICIAN){
 $md_referral = get_mdreferralids($_GET['pid']);
-$ref_info = get_contact_info('', '', $md_referral);
+$ref_info = get_contact_info('', '', $md_referral_list, $source);
 	if (!empty($ref_info['md_referrals'])) {                        
 		$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
         } else {

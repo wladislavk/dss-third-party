@@ -366,6 +366,7 @@ function addstudylab(v){
 
 </script>
                 <select name="place" class="place_select" onchange="addstudylab(this.value)">
+<option>SELECT</option>
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);
@@ -594,6 +595,7 @@ No
   <tr>		
 		<td valign="top" class="odd"> 
                 <select name="place" class="place_select" onchange="addstudylab(this.value)">
+<option>SELECT</option>
                 <?php
      $lab_place_q = "SELECT sleeplabid, company FROM dental_sleeplab WHERE `status` = '1' AND docid = '".$_SESSION['docid']."' ORDER BY sleeplabid DESC";
      $lab_place_r = mysql_query($lab_place_q);

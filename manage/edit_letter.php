@@ -557,7 +557,15 @@ if ($_POST != array()) {
 		$search[] = '%zip%';
 		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 		$search[] = '%referral_fullname%';
-		$replace[] = $referral_fullname;
+                if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
+                        $replace[] = "<strong>YOU</strong>";
+                }elseif($contact['type']=='patient' && $contact['id'] == $ref_info['md_referrals'][0]['id']){
+                        print_r($contact);
+                        $replace[] = "<strong>YOU</strong>";
+                }else{
+                        $replace[] = $referral_fullname;
+                }
+
 		$search[] = '%referral_lastname%';
 		if (!empty($ref_info['md_referrals'])) {
 			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
@@ -928,7 +936,15 @@ foreach ($letter_contacts as $key => $contact) {
   $search[] = '%zip%';
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%referral_fullname%';
-	$replace[] = $referral_fullname;
+                if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
+                        $replace[] = "<strong>YOU</strong>";
+                }elseif($contact['type']=='patient' && $contact['id'] == $ref_info['md_referrals'][0]['id']){
+                        print_r($contact);
+                        $replace[] = "<strong>YOU</strong>";
+                }else{
+                        $replace[] = $referral_fullname;
+                }
+
 	$search[] = '%referral_lastname%';
 	if (!empty($ref_info['md_referrals'])) {
 		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";

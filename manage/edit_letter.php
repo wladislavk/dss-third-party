@@ -558,7 +558,7 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 		$search[] = '%referral_fullname%';
                 if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
-                        $replace[] = "<strong>YOU</strong>";
+                        $replace[] = "<strong>you</strong>";
                 }else{
                         $replace[] = $referral_fullname;
                 }
@@ -934,7 +934,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
 	$search[] = '%referral_fullname%';
                 if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
-                        $replace[] = "<strong>YOU</strong>";
+                        $replace[] = "<strong>you</strong>";
                 }else{
                         $replace[] = $referral_fullname;
                 }

@@ -365,6 +365,8 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		}
   }
 }
+
+
 // Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {
 	if (!isset($letterid)) {
@@ -434,13 +436,15 @@ function deliver_letter($letterid, $message) {
 		// Create PDF
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
-		/*$header_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_header.jpg";
-		$footer_path = $_SERVER['DOCUMENT_ROOT'] . "/manage/admin/images/email/dss_footer.jpg";
-		$header_html = "<img src=\"" . $header_path . "\" alt=\"Dental Sleep Solutions\">";
-		$footer_html = "<img src=\"" . $footer_path . "\" alt=\"Dental Sleep Solutions\">";
-		$html = $header_html . $message . $footer_html;*/
 		$html = $message;
-		create_pdf($title, $filename, $html);
+
+		$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$docid."';";
+		$franchisee_result = mysql_query($franchisee_query);
+		while ($row = mysql_fetch_assoc($franchisee_result)) {
+        		$fi = $row;
+		}
+		$footerText = $fi['name'].' '.$fi['practice'].' '.$fi['address'].' '.$fi['city'].' '.$fi['state'].' '.$fi['zip'];
+		create_pdf($title, $filename, $html, null, '', $footerText);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
 	
@@ -610,6 +614,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 
+		public $footerText = '';
+
 		//Page header
 		public function Header() {
 				// Logo
@@ -620,10 +626,27 @@ class MYPDF extends TCPDF {
 			// Page footer
 			public function Footer() {
 				// Position at 26 mm from bottom
-				$this->SetY(-26);
-				$image_file = K_PATH_IMAGES.'dss_print_footer.jpg';
-				//$this->Image($image_file, 0, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);					
+				$this->SetY(-36);
+				$this->Cell(0, 10, $this->footerText, 0, false, 'C', 0, '', 0, false, 'T', 'M');
 		}
+        public function AcceptPageBreak() {
+                if ($this->num_columns > 1) {
+                        // multi column mode
+                        if ($this->current_column < ($this->num_columns - 1)) {
+                                // go to next column
+                                $this->selectColumn($this->current_column + 1);
+                        } else {
+                                // add a new page
+                                $this->AddPage();
+                                // set first column
+                                $this->selectColumn(0);
+                        }
+                        // avoid page breaking from checkPageBreak()
+                        return false;
+                }
+                $this->setMargins(18,40,18);
+                return $this->AutoPageBreak;
+        }
 }
 
 function create_pdf($title, $filename, $html, $fax = null, $header, $footer) {	
@@ -656,6 +679,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer) {
 		$pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
   } else {
 		$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->footerText = $footer;
 	}
 
 	// set document information

@@ -17,6 +17,7 @@ update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 $s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
 $s_lab_result = mysql_query($s_lab_query);
 $num_labs = mysql_num_rows($s_lab_result);
+if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
 $body_width = ($num_labs*185)+185;
 ?>
 <html style="overflow-y:hidden;">

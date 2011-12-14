@@ -7,7 +7,7 @@ $template = "
 %franchisee_addr%
 </p>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
+<p>%todays_date%</p>
 <p>&nbsp;</p>
 <table border=\"0\">
 <tr>

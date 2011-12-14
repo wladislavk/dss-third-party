@@ -1,10 +1,26 @@
 <?php
-$template = "<p>%todays_date%</p>
-
-<p>%contact_fullname%<br />
-%addr1%<br />
-%addr2%
-%city%, %state% %zip%</p>
+$template = "
+<p>
+%franchisee_fullname%<br />
+%franchisee_practice%<br />
+%franchisee_addr%
+</p>
+<p>&nbsp;</p>
+<p>%todays_date%</p>
+<p>&nbsp;</p>
+<table border=\"0\">
+<tr>
+<td width=\"70\"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%
+%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+<p>&nbsp;</p>
 
 <p>Dear %contact_firstname%:</p>
 

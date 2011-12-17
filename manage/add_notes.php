@@ -89,11 +89,11 @@ if($pat_myarray['patientid'] == '')
                         while($myarray = mysql_fetch_array($my))
                         {?>
                                 title_arr[<?=$i;?>] = "<?=st(addslashes($myarray['title']));?>";
-                                desc_arr[<?=$i;?>] = "<?=st(trim( preg_replace( '/\n\r|\r\n/',' ',addslashes($myarray['description']))));?>";
+                                desc_arr[<?=$i;?>] = "<?=st(trim( preg_replace( '/\n\r|\r\n/','%n%',addslashes($myarray['description']))));?>";
                         <?
                                 $i++;
                         }?>
-                        document.getElementById("notes").value = desc_arr[fa];
+                        document.getElementById("notes").value = desc_arr[fa].replace(/\%n\%/g,'\r\n');
                 }
                 else
                 {

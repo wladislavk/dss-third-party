@@ -20,7 +20,7 @@ $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
 $body_width = ($num_labs*185)+185;
 ?>
-<html style="overflow-y:hidden;">
+<html style="overflow:hidden;">
 <head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->

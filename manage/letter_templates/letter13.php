@@ -34,7 +34,7 @@ $template = "
 
 <p>Dear Dr. %contact_lastname%:</p>
 
-<p>We have a mutual patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% after undergoing a %type_study% done at the %sleeplab_name%. %He/She% was referred to me by %referral_fullname% for treatment of %his/her% sleep disordered breathing with a Mandibular Advancement Device.</p>
+<p>We have a mutual patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %completed_ahi% after undergoing a %completed_type_study% done at the %completed_sleeplab_name%. %He/She% was referred to me by %referral_fullname% for treatment of %his/her% sleep disordered breathing with a Mandibular Advancement Device.</p>
 
 <p>Oral evaluation of %patient_firstname% revealed no contraindications to wearing a dental sleep device.  %He/She% is scheduled to begin treatment very soon.</p>
 

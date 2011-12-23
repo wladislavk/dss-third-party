@@ -237,7 +237,7 @@ $first_o2nadir = st($q1_myarray['o2nadir']);
 $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 $first_center_name = st($q1_myarray['place']);
 
-$q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice, sl.company, 
+$q2_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice, sl.company, 
 CASE s.sleeptesttype
    WHEN 'PSG Baseline' THEN '1'
    WHEN 'HST Baseline' THEN '2'
@@ -257,16 +257,16 @@ WHERE (s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND
 s.completed = 'Yes' AND 
 s.filename IS NOT NULL AND 
 s.patiendid='".$patientid."' AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST') ORDER BY sort_order ASC, s.date DESC, s.id DESC LIMIT 1;";
-$q1_my = mysql_query($q1_sql);
-$q1_myarray = mysql_fetch_array($q1_my);
-$completed_study_date = st($q1_myarray['date']);
-$completed_diagnosis = st($q1_myarray['ins_diagnosis']." ".$q1_myarray['description']);
-$completed_ahi = st($q1_myarray['ahi']);
-$completed_rdi = st($q1_myarray['rdi']);
-$completed_o2sat90 = st($q1_myarray['t9002']);
-$completed_o2nadir = st($q1_myarray['o2nadir']);
-$completed_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
-$completed_sleeplab_name = st($q1_myarray['company']);
+$q2_my = mysql_query($q2_sql);
+$q2_myarray = mysql_fetch_array($q2_my);
+$completed_study_date = st($q2_myarray['date']);
+$completed_diagnosis = st($q2_myarray['ins_diagnosis']." ".$q1_myarray['description']);
+$completed_ahi = st($q2_myarray['ahi']);
+$completed_rdi = st($q2_myarray['rdi']);
+$completed_o2sat90 = st($q2_myarray['t9002']);
+$completed_o2nadir = st($q2_myarray['o2nadir']);
+$completed_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
+$completed_sleeplab_name = st($q2_myarray['company']);
 
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$first_center_name."';";

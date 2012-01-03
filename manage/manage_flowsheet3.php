@@ -1713,6 +1713,11 @@ background:#edeb46;
                 </td>
         </tr>
   </table>
+<script type="text/javascript">
+function updateiframe(w){
+$('#sleepstudies').css('width', ((w+1)*185)+'px');
+}
+</script>
 <?php
 $s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
 $s_lab_result = mysql_query($s_lab_query);
@@ -1722,7 +1727,6 @@ $body_width = ($num_labs*185)+185;
 ?>
 
         <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">
-
                     <iframe id="sleepstudies" height="842" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>

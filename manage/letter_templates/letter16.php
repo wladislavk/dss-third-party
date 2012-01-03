@@ -33,13 +33,13 @@ $template = "
 	</tr>
 </table>
 
-<p>Dear Dr. %contact_lastname%:</p>
+<p>Dear %contact_salutation% %contact_lastname%:</p>
 
 <p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% after undergoing a %type_study% done at the %1st_sleeplab_name%.
 
 <p>We delivered a %dental_device% dental device on %delivery_date%.  We are now seeing %patient_firstname% for follow up.</p>
 
-<p>The patient reports wearing the device %nightsperweek% nights. %His/Her% ESS/TSS has changed from %initESS/TSS% to %currESS/TSS%.  Additionally, %he/she% reports less snoring, improved daytime functioning, and more refereshing sleep.</p>
+<p>The patient reports wearing the device %nightsperweek% nights. %His/Her% Epworth Sleepiness Scale / Thornton Snoring Scale has changed from %initESS/TSS% to %currESS/TSS%.  Additionally, %he/she% reports less snoring, improved daytime functioning, and more refreshing sleep.</p>
 
 <p>We will continue to update you on %his/her% progress.  Thank you for the opportunity to participate in this patient's treatment.</p>
 

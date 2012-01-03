@@ -269,7 +269,7 @@ if($_POST["patientsub"] == 1)
 	}
 	else
 	{
-        echo('in');
+        //echo('in');
 		$ins_sql = "insert 
 		into 
 		dental_patients 
@@ -381,6 +381,31 @@ if($_POST["patientsub"] == 1)
 		if($_POST['introletter'] == 1) {
 		  trigger_letter3($pid);
 		}
+      $flowinsertqry = "INSERT INTO dental_flow_pg1 (`id`,`copyreqdate`,`pid`) VALUES (NULL,'".s_for($_POST["copyreqdate"])."','".$pid."');";
+      $flowinsert = mysql_query($flowinsertqry);
+      if(!$flowinsert){
+        //$message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting flowsheet record, please try again!1";
+      }else{
+        $referred_result = mysql_query($referredbyqry);
+        $message = "Successfully updated flowsheet!2";
+      }
+
+
+      $stepid = '1';
+      $segmentid = '1';
+      $scheduled = strtotime($copyreqdate);
+      $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
+      $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
+      $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
+      $steparray_insert = mysql_query($steparray_query);
+      if (!$steparray_insert) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact to Flowsheet Page 2";
+      }
+      $flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
+      if (!$flow_pg2_info_insert) {
+        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
+      }
+
 
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
 		?>
@@ -1062,7 +1087,8 @@ $num_face = mysql_num_rows($p);
                            &nbsp;
                         </label>
                         <div>
-<div style="float:left;"> 
+<div style="float:left;">
+<?php if(!isset($pid)){ $copyreqdate = date('m/d/Y'); } ?>
                            <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
 <label>Date</label>
 				</div>

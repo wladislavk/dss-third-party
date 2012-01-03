@@ -25,8 +25,8 @@ function format_date($date = null, $past = false) {
   }
 
   if ($years > 0 && !$past && $neg) {
-    $value = "<span class=\"red\">($years yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
-  } if ($months > 0 && !$past && $neg) {
+    $value = "<span class=\"red\">(".$years." yr" . ($months > 0 ? " $months mo" : "") . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
+  } else if ($months > 0 && !$past && $neg) {
     $value = "<span class=\"red\">($months mo" . ($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day")) . ")</span>";
   } else if ($totaldays > 0 && !$past && $neg) {
     $value = "<span class=\"red\">(" . ($totaldays > 1 ? "$totaldays days" : "$totaldays day") . ")</span>";

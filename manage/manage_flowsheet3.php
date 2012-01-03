@@ -730,7 +730,8 @@ if(isset($_POST['flowsubmit'])){
                 $old_referred_source = $s_r['referred_source'];
 
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';"; 
-
+$s1 = "UPDATE dental_flow_pg2_info SET copyreqdate = '".$copyreqdate."' WHERE patientid='".$pid."' AND stepid='1';";
+mysql_query($s1);
                 if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
                         if($_POST['referred_by']){
                                 $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
@@ -791,6 +792,9 @@ if(isset($_POST['flowsubmit'])){
                 $old_referred_source = $s_r['referred_source'];
 
       $referredbyqry = "UPDATE dental_patients SET copyreqdate = '".$copyreqdate."', referred_notes='".$referred_notes."', referred_source = '".$referred_source."', referred_by = '".$referred_by."' WHERE patientid = '".$pid."';";  
+$s1 = "UPDATE dental_flow_pg2_info SET date_completed = '".date('Y-m-d', strtotime($copyreqdate))."' WHERE patientid='".$pid."' AND stepid='1';";
+mysql_query($s1);
+
  if($old_referred_by != $referred_by || $old_referred_source != $referred_source){
                         if($referred_by){
                                 $sql = "UPDATE dental_letters SET md_referral_list=".$referred_by." WHERE patientid=".mysql_real_escape_string($pid)."";
@@ -965,6 +969,11 @@ print $datesched . " " . $letter ? "true":"false" . " " . $topstep . " " . $last
 			if(!$result) {
 				print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error updating new information into flowsheet during update.";
 				die();
+			}
+			if($i==1){
+				$d = date('m/d/Y', strtotime($_POST['data'][$i]['datecomp']));
+				$s1 = "UPDATE dental_patients SET copyreqdate = '".$d."' where patientid='".$pid."';";
+				mysql_query($s1);
 			}
 		}
 		$i++;

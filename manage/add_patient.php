@@ -1,3 +1,4 @@
+
 <?php
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
@@ -101,8 +102,21 @@ function trigger_letter3($pid) {
   }
 }
 
+function sendRegEmail($id, $e){
+  $m = "Goto http://".$_SERVER['HTTP_HOST']."/reg/register.php?id=".$id;
+
+$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "Dental Sleep Solutions Registration";
+
+                mail($e, $subject, $m, $headers);
+}
+
 if($_POST["patientsub"] == 1)
 {
+
 	if($_POST["ed"] != "")
 	{
 		$s_sql = "SELECT referred_by, referred_source FROM dental_patients
@@ -217,6 +231,9 @@ if($_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
+
+		sendRegEmail($_POST['ed'], $_POST['email']);
+
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
 			if($_POST['referred_by']){
 				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
@@ -377,6 +394,8 @@ if($_POST["patientsub"] == 1)
 		
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
+
+		sendRegEmail($pid, $_POST['email']);
 
 		if($_POST['introletter'] == 1) {
 		  trigger_letter3($pid);
@@ -803,6 +822,7 @@ return false;
 	<tr>
 		<td colspan="2" align="right">
 			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
+			<input type="submit" name="sendReg" value="Send Registration Email" class="button" />
 		</td>
 	</tr>
 	<tr>

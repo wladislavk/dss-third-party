@@ -13,11 +13,13 @@ function format_date($date = null, $past = false) {
     $totaldays = abs($totaldays);
   }
   $years = floor($totaldays / 365);
-  $months = floor(($totaldays % 365) / 30);
-  $days = floor(($totaldays % 365) % 30);
+  $months = floor(($totaldays % 365) / 31);
+  $days = floor(($totaldays % 365) % 31);
 
 	if ($years > 0 && $past) {
     return $years . " yr" . ($months > 0 ? " " . $months . " mo" : "");
+  } else if ($months > 0 && $past){
+	return $months . " mo" .($days > 1 ? " $days days" : ($days == 0 ? "" : " $days day"));
   } else if ($totaldays > 0 && $past) {
 		return $totaldays . ($totaldays > 1 ? " days" : " day");
   } else if ($past) {

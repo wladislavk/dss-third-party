@@ -1,4 +1,15 @@
 <?php include 'includes/header.php'; ?>
+<?php
+
+if(isset($_POST['login']){
+  $sql = "SELECT * FROM dental_patients 
+	WHERE patientid='".mysql_real_escape_string($_POST['id'])."'
+		AND lastname='".mysql_real_escape_string($_POST['lastname'])."'
+		AND email='".mysql_real_escape_string($_POST['email'])."'";
+  $q = mysql_query($sql); 
+}
+
+?>
 
 <h2>Login</h2>
 

@@ -1,3 +1,4 @@
+<?php include '../../manage/admin/includes/config.php'; ?>
 <html>
   <head>
     <title>Dental Sleep Solutions :: Registration</title>

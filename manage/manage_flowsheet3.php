@@ -1732,7 +1732,7 @@ $s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pi
 $s_lab_result = mysql_query($s_lab_query);
 $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
-$body_width = ($num_labs*185)+185;
+$body_width = ($num_labs*185)+215;
 ?>
 
         <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">

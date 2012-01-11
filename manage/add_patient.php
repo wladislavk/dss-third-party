@@ -1,8 +1,7 @@
-
 <?php
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
-
+require_once('admin/includes/password.php');
 function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
@@ -102,8 +101,8 @@ function trigger_letter3($pid) {
   }
 }
 
-function sendRegEmail($id, $e){
-  $m = "Goto http://".$_SERVER['HTTP_HOST']."/reg/register.php?id=".$id;
+function sendRegEmail($id, $e, $l){
+  $m = "Your login is ".$l.". Goto http://".$_SERVER['HTTP_HOST']."/reg/login.php?id=".$id;
 
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
@@ -231,9 +230,46 @@ if($_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
+		$lsql = "SELECT login, password FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
+		$lq = mysql_query($lsql);
+		$l = mysql_fetch_assoc($lq);
+		$login = $l['login'];
+		$pass = $l['password'];
+		if($login == ''){
+	                $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+        	        $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
+                	$cq = mysql_query($csql);
+	                $carray = array();
+        	        while($c = mysql_fetch_assoc($cq)){
+                	        array_push($carray, $c['login']);
+                	}
+                	if(in_array($clogin, $carray)){
+                  	  	$count = 1;
+                  		while(in_array($clogin.$count, $carray)){
+                    			$count++;
+                 	 	}
+                  		$login = strtolower($clogin.$count);
+                	}else{
+                  		$login = strtolower($clogin);
+                	}
+			$ilsql = "UPDATE dental_patients set login='".mysql_real_escape_string($login)."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
+			mysql_query($ilsql);
+		}
 
-		sendRegEmail($_POST['ed'], $_POST['email']);
-
+		if($pass == '' && $_POST['ssn']!=''){
+                        $salt = create_salt();
+                        $p = preg_replace('/\D/', '', $_POST['ssn']);
+                        $password = gen_password($p , $salt);
+                	$psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
+			mysql_query($psql);
+		}
+		if(isset($_POST['sendReg'])){
+		if($pass != '' || $_POST['ssn']!=''){
+			sendRegEmail($_POST['ed'], $_POST['email'], $login); 
+		}else{
+			?><script type="text/javascript">alert('Unable to send registration email because no password is set. Please enter a Social Security Number and try again.');</script><?php
+		}
+		}
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
 			if($_POST['referred_by']){
 				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
@@ -287,6 +323,31 @@ if($_POST["patientsub"] == 1)
 	else
 	{
         //echo('in');
+		$clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+		$csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
+		$cq = mysql_query($csql);
+		$carray = array();
+		while($c = mysql_fetch_assoc($cq)){
+			array_push($carray, $c['login']);
+		}
+		if(in_array($clogin, $carray)){
+		  $count = 1;
+		  while(in_array($clogin.$count, $carray)){
+		    $count++;
+		  }
+		  $login = strtolower($clogin.$count);
+		}else{
+		  $login = strtolower($clogin);
+		}
+		
+		if($_POST['ssn']!=''){
+			$salt = create_salt();
+			$p = preg_replace('/\D/', '', $_POST['ssn']);
+                	$password = gen_password($p , $salt);
+		}else{
+			$salt = '';
+			$password = '';
+		}
 		$ins_sql = "insert 
 		into 
 		dental_patients 
@@ -294,6 +355,9 @@ if($_POST["patientsub"] == 1)
 		firstname = '".s_for($_POST["firstname"])."', 
 		lastname = '".s_for($_POST["lastname"])."', 
 		middlename = '".s_for($_POST["middlename"])."', 
+		login = '".$login."',
+		salt = '".$salt."',
+		password = '".$password."',
 		salutation = '".s_for($_POST["salutation"])."',
     member_no = '".s_for($_POST['member_no'])."',
 	  group_no = '".s_for($_POST['group_no'])."',
@@ -395,7 +459,7 @@ if($_POST["patientsub"] == 1)
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
-		sendRegEmail($pid, $_POST['email']);
+		if(isset($_POST['sendReg'])){ sendRegEmail($pid, $_POST['email'], $login); }
 
 		if($_POST['introletter'] == 1) {
 		  trigger_letter3($pid);
@@ -452,6 +516,7 @@ if($_POST["patientsub"] == 1)
 		$middlename = $_POST['middlename'];
 		$lastname = $_POST['lastname'];
 		$salutation = $_POST['salutation'];
+		$login = $_POST['login'];
 		$member_no = $_POST['member_no'];
 	  $group_no = $_POST['group_no'];
 	  $plan_no = $_POST['plan_no'];
@@ -550,6 +615,7 @@ if($_POST["patientsub"] == 1)
 		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
 		$salutation = st($themyarray['salutation']);
+		$login = st($themyarray['login']);
 			$member_no = st($themyarray['member_no']);
 	$group_no = st($themyarray['group_no']);
 	$plan_no = st($themyarray['plan_no']);
@@ -822,7 +888,7 @@ return false;
 	<tr>
 		<td colspan="2" align="right">
 			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
-			<input type="submit" name="sendReg" value="Send Registration Email" class="button" />
+			<input type="submit" name="sendReg" onclick="return regabc(this.form)" value="Send Registration Email" class="button" />
 		</td>
 	</tr>
 	<tr>
@@ -893,6 +959,10 @@ $num_face = mysql_num_rows($p);
                                 </select>
                                 <label for="salutation">Salutation</label>
                             </span>
+			    <span>
+				<input type="text" name="login" class="field text addr tbox" style="width:100px;" value="<?=$login?>" disabled="disabled" />
+				<label for"login">Login</label>
+			    </span>
                        </div>   
                         <div>
                             <span>
@@ -1020,7 +1090,7 @@ $num_face = mysql_num_rows($p);
                             	<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                 	<option value="">Select</option>
                                     <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Un-Married</option>
+                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
 									<option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
                                 </select>
                                 <label for="marital_status">Marital Status</label>

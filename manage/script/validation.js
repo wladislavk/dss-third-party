@@ -281,7 +281,13 @@ function userabc(fa)
 		return false;
 	}
 }
-
+function regabc(fa){
+        if(trim(fa.email.value)==""){
+                alert("Email is required to send registration email.");
+                fa.email.focus();
+                return false;
+        }
+}
 function patientabc(fa)
 {
 	if(trim(fa.firstname.value) == "" )

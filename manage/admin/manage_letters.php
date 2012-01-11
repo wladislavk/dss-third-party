@@ -149,7 +149,11 @@ $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
 $seconds_per_day = 86400;
+if($generated_date){
 $oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
+}else{
+$oldest_letter = '0';
+}
 // Select Letters into Array
 if ($status == 'pending') {
   $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";

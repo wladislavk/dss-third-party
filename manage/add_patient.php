@@ -102,7 +102,7 @@ function trigger_letter3($pid) {
 }
 
 function sendRegEmail($id, $e, $l){
-  $m = "Your login is ".$l.". Goto http://".$_SERVER['HTTP_HOST']."/reg/login.php?id=".$id;
+  $m = "Your login is ".$l.". Goto http://".$_SERVER['HTTP_HOST']."/reg/login.php";
 
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .

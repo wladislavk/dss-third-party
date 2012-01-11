@@ -5,7 +5,9 @@
   }
 
 include 'includes/header.php';
-
+?>
+<script type="text/javascript" src="../manage/js/patient_dob.js"></script>
+<?php
   if(isset($_POST['update'])){
 
 	$sql = "UPDATE dental_patients set
@@ -104,9 +106,9 @@ $('document').ready( function(){
 	<form action="register.php" method="post">
 		<div id="sect1" class="sect">
 		<h3>Contact information</h3>
-		<label>First Name:</label><input type="text" name="firstname" value="<?= $p['firstname']; ?>" />
-                <label>Middle Init:</label><input type="text" maxlength="1" name="middlename" value="<?= $p['middlename']; ?>" />
-		<label>Last Name:</label><input type="text" name="lastname" value="<?= $p['lastname']; ?>" />
+		<label>First Name:</label><input type="text" name="firstname" id="firstname" value="<?= $p['firstname']; ?>" />
+                <label>Middle Init:</label><input type="text" maxlength="1" name="middlename" id="middlename" value="<?= $p['middlename']; ?>" />
+		<label>Last Name:</label><input type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
                 <label>Email:</label><input type="text" name="email" value="<?= $p['email']; ?>" />
                 <label>Home Phone:</label><input type="text" name="home_phone" value="<?= $p['home_phone']; ?>" />
                 <label>Work Phone:</label><input type="text" name="work_phone" value="<?= $p['work_phone']; ?>" />
@@ -123,7 +125,7 @@ $('document').ready( function(){
 
 		<div id="sect2" class="sect hidden">
 		<h3>Personal Information</h3>
-                <label>Birthday:</label><input type="text" name="dob" value="<?= $p['dob']; ?>" />
+                <label>Birthday:</label><input type="text" name="dob" id="dob" value="<?= $p['dob']; ?>" />
                 <label>Gender:</label><select name="gender">
 				<option>Select</option>
 				<option value="Male" <?= ($p['gender']=="Male")?'selected="selected"':'';?>>Male</option>

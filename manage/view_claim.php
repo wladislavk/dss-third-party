@@ -106,7 +106,7 @@ $sql = "select
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
                         AND primary_claim_id IS NOT NULL
-
+			AND dlp.amount != 0
   UNION
 	SELECT
 		'eob',

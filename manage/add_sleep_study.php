@@ -22,7 +22,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++;
 <script type="text/javascript">parent.updateiframe(<?= $num_labs; ?>);</script>
 <?php
 }
-$body_width = ($num_labs*185)+185;
+$body_width = ($num_labs*185)+215;
 ?>
 <html style="overflow:hidden;">
 <head>
@@ -299,6 +299,7 @@ background:#edeb46;
 
   .odd{ background: #F9FFDF; }
   .even{ background: #e4ffcf; }
+  select{width:140px;}
 </style>
 <form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
 <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">

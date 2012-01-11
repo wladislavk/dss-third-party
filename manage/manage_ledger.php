@@ -61,7 +61,7 @@ if($_REQUEST["delclaimid"] != "")
         $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
         if(mysql_query($del_sql)){
 
-	  $up_sql = "UPDATE dental_ledger set primary_claim_id=NULL WHERE primary_claim_id='".$_REQUEST["delclaimid"]."'";
+	  $up_sql = "UPDATE dental_ledger set primary_claim_id=NULL, status='".DSS_TRXN_NA."' WHERE primary_claim_id='".$_REQUEST["delclaimid"]."'";
           mysql_query($up_sql);
 
           $msg= "Deleted Successfully";
@@ -428,13 +428,14 @@ return s;
 			}
 			$tr_class = "tr_active";
                         if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row'; }
-			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id']){ $tr_class .= ' claimless clickable_row'; }
+			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
+			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }
 		?>
 			<tr 
 			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; } ?>
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
 				<td valign="top"
-				<?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+				<?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
 				>
 					<?php if($myarray["service_date"]!=$last_sd){
 						$last_sd = $myarray["service_date"];
@@ -442,7 +443,7 @@ return s;
                                         } ?>
 				</td>
 				<td valign="top"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
 					<?php if($myarray["entry_date"]!=$last_ed){
                                                 $last_ed = $myarray["entry_date"];
@@ -450,13 +451,13 @@ return s;
                                         } ?>
 				</td>
                                 <td valign="top"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
                         <?=st($myarray["name"]);?>
                                 </td>
 
 				<td valign="top"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
 			<?= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; ?>
                         <?= (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
@@ -468,7 +469,7 @@ return s;
 				</td>
 
 				<td valign="top" align="right"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
 					<? if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
@@ -479,7 +480,7 @@ return s;
 					&nbsp;
 				</td>
 				<td valign="top" align="right"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
 					<? if(st($myarray["paid_amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
@@ -490,14 +491,14 @@ return s;
 					&nbsp;
 				</td>
 				<td valign="top" align="right"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
 					<?php if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_paid' || $myarray[0] == 'ledger_payment')
 					 echo number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
 				<td valign="top"
-                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id']){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
+                                <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
           <?php
 		if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid'){

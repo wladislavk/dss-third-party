@@ -406,13 +406,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                        <?php
 							$uvula_sql = "select * from dental_uvula where status=1 order by sortby";
 							$uvula_my = mysql_query($uvula_sql);
-							$uvula_prearray = mysql_fetch_array($uvula_my);
+							//$uvula_prearray = mysql_fetch_array($uvula_my);
 							
 							?>
-                      <input type="checkbox" name="uvula[]" id="uvula" onclick="showMe('uvuladiv')" value="1" <?php if(in_array("1", $uvula_prearray)){ echo "checked=\"checked\""; }?> >&nbsp;&nbsp;&nbsp;&nbsp;Not Clinically Present<br />
+                      <!--<input type="checkbox" name="uvula[]" id="uvula" onclick="showMe('uvuladiv')" value="1" <?php if(in_array("1", $uvula_prearray)){ echo "checked=\"checked\""; }?> >&nbsp;&nbsp;&nbsp;&nbsp;Not Clinically Present<br />
                       
                       <div id="uvuladiv" <?php if(in_array("1", $uvula_prearray)){ echo "style=\"display:none;\""; }?>> 
-                      
+                      -->
                         	<?
 							  
 							while($uvula_myarray = mysql_fetch_array($uvula_my))
@@ -423,7 +423,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                                 <?=st($uvula_myarray['uvula']);?><br />
 							<?
 							}
-							?> </div>
+							?> <!--</div>-->
 						
                         </span>
                    	</div>

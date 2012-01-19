@@ -34,6 +34,8 @@ if($_POST['q_page1sub'] == 1)
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
 	$bmi = $_POST['bmi'];
+	$ess = $_POST['ess'];
+	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
 	$complaint_my = mysql_query($complaint_sql);
@@ -109,6 +111,8 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+		ess = '".s_for($ess)."',
+		tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		sleep_qual = '".s_for($sleep_qual)."',
 		complaintid = '".s_for($comp_arr)."',
@@ -150,6 +154,8 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+                ess = '".s_for($ess)."',
+                tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		complaintid = '".s_for($comp_arr)."',
 		sleep_qual = '".s_for($sleep_qual)."',
@@ -208,6 +214,8 @@ $feet = st($myarray['feet']);
 $inches = st($myarray['inches']);
 $weight = st($myarray['weight']);
 $bmi = st($myarray['bmi']);
+$ess = st($myarray['ess']);
+$tss = st($myarray['tss']);
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
@@ -410,6 +418,13 @@ if($complaintid <> '')
             </ul>
             
         </td>
+    </tr>
+    <tr>
+	<td valign="top" class="frmhead">
+	  Baseline Epworth Sleepiness Score: <input type="text" name="ess" value="<?= $ess; ?>" />
+	  <br />
+	  Baseline Thornton Snoring Scale: <input type="text" name="tss" value="<?= $tss; ?>" />
+	</td>
     </tr>
     <tr>
 	<td valign="top" class="frmhead">

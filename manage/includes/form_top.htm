@@ -44,8 +44,9 @@ if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1)
                     <!--<a href="q_page1.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
 					<a href="Javascript:;" onclick="Javascript: change_page('q_page1');">
                 <? }?>
-                BMI/Symptoms</a>
+                Symptoms</a>
             </td>
+	<?php /*
             <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_sleep.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
                 <? if($cur_f == 0) {?>
                     <!--<a href="q_sleep.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
@@ -53,20 +54,22 @@ if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1)
                 <? }?>
                     Sleepiness Test</a>
             </td>
+            */ ?>
             <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page2.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
                 <? if($cur_f == 0) {?>
                    <!-- <a href="q_page2.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
 				   <a href="Javascript:;" onclick="Javascript: change_page('q_page2');">
                 <? }?>
-                    Sleep Study/CPAP</a>
+                    Previous Treatments</a>
             </td>
             <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page3.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
                 <? if($cur_f == 0) {?>
                    <!-- <a href="q_page3.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
 				   <a href="Javascript:;" onclick="Javascript: change_page('q_page3');">
                 <? }?>
-                    Medical Hx.</a>
+                    Social Health Hx.</a>
             </td>
+		<?php /*
             <td valign="top" class="<? if(strpos($_SERVER['PHP_SELF'],'q_page4.php') === false) {echo "top_m"; $cur_f = 0;} else {echo "top_m_active"; $cur_f = 1;} ?>">
                 <? if($cur_f == 0) {?>
                    <!-- <a href="q_page4.php?fid=<?=$_GET['fid'];?>&pid=<?=$_GET['pid'];?>#form"> -->
@@ -74,7 +77,7 @@ if(strpos($_SERVER['PHP_SELF'],'ex_') === false && $_GET['ex'] <> 1)
                 <? }?>
                     Family/Social Hx.</a>
             </td>
-            
+            */ ?>
         </tr>
     </table>
 <?

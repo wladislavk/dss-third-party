@@ -501,14 +501,14 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
         </tr>
 
   <tr>
-            <td style="background: #E4FFCF;">      <input type="text" size="12" name="ep_eadd" value="<?php echo $ep;?>" />
+            <td style="background: #E4FFCF;">      <input type="text" size="12" name="ep_eadd" value="<?php echo $r['ess'];?>" />
 
     </td>
   </tr>
 
   <tr>
             <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="tot_score" value="<?php echo $t_row['tot_score'];?>" />
+      <input type="text" size="12" name="tot_score" value="<?php echo $r['tss'];?>" />
 
     </td>
   </tr>

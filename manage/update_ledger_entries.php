@@ -18,7 +18,7 @@ echo $sql;
 ?>
 <script type="text/javascript">
 //history.go(-1);
-parent.location.reload();
+parent.window.location = parent.window.location;
 </script>
 
 

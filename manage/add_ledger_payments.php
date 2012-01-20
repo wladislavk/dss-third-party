@@ -294,10 +294,10 @@ while($row = mysql_fetch_assoc($lq)){
 <br />
 <input type="checkbox" name="dispute" onclick=" if(this.checked){ $('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label style="color:#fff;">Dispute</label>
 <div id="dispute_reason_div" style="display: none">
-<label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
+<label style="color:#fff;">Reason for dispute:</label> <input type="text" name="dispute_reason" />
 </div>
 <div id="ins_attach" style="display: none">
-<label>Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
+<label style="color:#fff;">Explanation of Benefits:</label> <input style="color:#fff;" type="file" name="attachment" /><br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">

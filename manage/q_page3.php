@@ -625,7 +625,7 @@ label {
                         <span class="full">
 							How would you describe your dental health?
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <select name="dental_health" class="field text addr tbox">
+                            <select name="dental_health" style="width:250px;">
                             	<option value=""></option>
                                 <option value="Excellent" <? if($dental_health == 'Excellent' ) echo " selected";?>>
                                 	Excellent

@@ -49,6 +49,10 @@ if($_POST['q_page1sub'] == 1)
 			$comp_arr .= $complaint_myarray['complaintid'].'|'.$_POST['complaint_'.$complaint_myarray['complaintid']].'~';
 		}
 	}
+		if($_POST['complaint_0'] <> '')
+                {
+                        $comp_arr .= '0|'.$_POST['complaint_0'].'~';
+                }
 	
 	$other_complaint = $_POST['other_complaint'];
 	$additional_paragraph = $_POST['additional_paragraph'];
@@ -505,20 +509,38 @@ function in_array(needle, haystack)
 
                     <div style="width:48%;float:left;">
                         <span>
-                        	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
+                    <!--    	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
                             	<option value=""></option>
                             	<? 
 								for($i=1;$i<=$complaint_number;$i++)
 								{?>
                             		<option value="<?=$i;?>" <? if($chk == $i) echo " selected";?>><?=$i;?></option>
                                 <? }?>
-                            </select>
+                            </select>-->
+			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
                             &nbsp;&nbsp;
                             <?=st($complaint_myarray['complaint']);?><br />&nbsp;
                         </span>
                     </div>
                     <? }?>
-                    <div>
+                    <div style="width:48%;float:left;">
+                        <span>
+				<?php
+                                                if(@array_search(0,$compid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else                                                {
+                                                        $chk = $compseq[@array_search(0,$compid)];
+                                                }
+				?>
+                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+                            &nbsp;&nbsp;
+                            Other<br />&nbsp;
+                        </span>
+                    </div>
+
+                    <div id="other_complaints">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Additional Complaints<br />
@@ -530,6 +552,17 @@ function in_array(needle, haystack)
                     <br />
                 </li>
            	</ul>
+		<script type="text/javascript">
+			function chk_other_comp(){
+				if($('#complaint_0').is(':checked')){
+					$('#other_complaints').show();
+				}else{
+					$('#other_complaints').hide();
+				}			
+			}
+
+			chk_other_comp();
+		</script>
 		</td>
 	</tr>
     

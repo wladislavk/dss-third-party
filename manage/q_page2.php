@@ -502,7 +502,7 @@ if($cpap == '')
 
                    	<div id="cpap_options" class="cpap_options">
                         <span>
-                   			The Patient has attempted treatment with a CPAP but they could not tolerate its use due to:	
+				What are your chief complaints about CPAP?
                             <br />
                             
                             <?
@@ -629,26 +629,28 @@ if($cpap == '')
                         <span>
 Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
 	<table id="surgery_table">
-	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th></tr>	
+	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>	
 		<?php
 		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
 		  $s_q = mysql_query($s_sql);
 		  $s_count = 0;
 		  while($s_row = mysql_fetch_assoc($s_q)){
 		?>
-	  <tr>
-		<td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" /><input type="text" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" /></td>
-		<td><input type="text" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
-		<td><input type="text" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
+	  <tr id="surgery_row_<?= $s_count; ?>">
+		<td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" /></td>
+		<td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
+		<td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
+		<td><input type="button" name="delete_<?= $s_count; ?>" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
 	  </tr>
 		<?php
 			$s_count++;
 			}
 		?>
-          <tr>
-                <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" name="surgery_date_<?= $s_count; ?>" /></td>
-                <td><input type="text" name="surgeon_<?= $s_count; ?>" /></td>
-                <td><input type="text" name="surgery_<?= $s_count; ?>" /></td>
+          <tr id="surgery_row_<?= $s_count; ?>">
+                <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" /></td>
+                <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" /></td>
+                <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" /></td>
+		<td><input type="button" name="delete_<?= $s_count; ?>" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
           </tr>
 	</table>
 		<input type="hidden" id="num_surgery" name="num_surgery" value="<?= $s_count+1; ?>" />
@@ -659,8 +661,14 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 			chk_s();
 			function add_surgery(){
 				n = $('#num_surgery').attr('value');
-				$('#surgery_table').append('<tr><td><input type="hidden" name="surgery_id_'+n+'" value="0" /><input type="text" name="surgery_date_'+n+'" /></td><td><input type="text" name="surgeon_'+n+'" /></td><td><input type="text" name="surgery_'+n+'" /></td></tr>');				
+				$('#surgery_table').append('<tr id="surgery_row_'+n+'"><td><input type="hidden" id="surgery_id_'+n+'" name="surgery_id_'+n+'" value="0" /><input type="text" id="surgery_date_'+n+'" name="surgery_date_'+n+'" /></td><td><input type="text" id="surgeon_'+n+'" name="surgeon_'+n+'" /></td><td><input type="text" id="surgery_'+n+'" name="surgery_'+n+'" /></td><td><input type="button" name="delete_'+n+'" value="Delete" onclick="delete_surgery(\''+n+'\'); return false;" /></td></tr>');				
 				$('#num_surgery').attr('value', (parseInt(n,10)+1));
+			}
+			function delete_surgery(n){
+				$('#surgery_date_'+n).val('');
+				$('#surgeon_'+n).val('');
+				$('#surgery_'+n).val('');
+				$('#surgery_row_'+n).hide();
 			}
 		    </script>
 	</td>

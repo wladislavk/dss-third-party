@@ -487,19 +487,20 @@ echo "</select>";
                               File
              </td>
                 <td valign="top" class="frmdata">
-                   <?php if ($status == DSS_TRXN_PENDING) { ?>
+                   <?php /*if ($status == DSS_TRXN_PENDING) { ?>
                        <?= $dss_trxn_status_labels[DSS_TRXN_PENDING] ?>
                        <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
-                   <?php } else { ?>
+                   <?php } else { */ ?>
                      <?php
                      if ( $rxrec == '' 
                              || $lomnrec == '' ) {
                      ?>
 		                 <input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
                      <?php } else { ?> 
-                         <input type="checkbox" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+                         <input type="checkbox" name="status" <?= ($status == DSS_TRXN_PENDING)?'checked="checked"':''; ?> value="<?= DSS_TRXN_PENDING ?>" />
                      <?php } ?>
-                   <?php } ?>
+                   <?php // } ?>
+			<span class="pend"><?= ($status == DSS_TRXN_PENDING)?'Pending':''; ?></span>
                 </td>
           </tr>		
         <tr>

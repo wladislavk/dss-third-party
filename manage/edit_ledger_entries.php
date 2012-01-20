@@ -3,6 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
+include("includes/preauth_functions.php");
 $ids = $_GET['ids'];
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -221,6 +222,7 @@ $ed = ($a['entry_date']!='')?date('m/d/Y', strtotime($a['entry_date'])):'';
    var cal<?= $a['ledgerid']; ?> = new calendar2(document.forms['ledgerentryform'].elements['form[<?= $a['ledgerid']; ?>][service_date]']);
 </script>
 <input type="text" name="form[<?= $a['ledgerid']; ?>][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="<?= $ed; ?>" readonly="readonly">
+<span style="color:#fff;">
        <?php $tsql = "SELECT type from dental_transaction_code where transaction_code=".$a['transaction_code']." AND docid=".$_SESSION['docid'];
         $tmy = mysql_query($tsql);
         $trow = mysql_fetch_row($tmy);
@@ -253,16 +255,18 @@ $ed = ($a['entry_date']!='')?date('m/d/Y', strtotime($a['entry_date'])):'';
               <?php
               break;
        }
-
 echo $a['transaction_code'];
-?>
+?></span>
 <div style="float:right;color:#fff;">
 
 <?= $a['amount']; ?>
 </span>
 <?php
-if($insinforec == '' || $rxrec == '' || $lomnrec == '' ){
-$onc = 'onclick="alert(\'Insurance information needs completed\'); return false;"';
+$errors = claim_errors($_GET['pid']);
+if(count($errors)>0){
+$e_text = 'Unable to file claim: ';
+$e_text .= implode($errors, ', ');
+$onc = 'onclick="alert(\''.$e_text.'\'); return false;"';
 }else{
 $onc = '';
 }

@@ -35,6 +35,7 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update dental_users set 
+				username = '".s_for($_POST["username"])."',
 				user_access=2,
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
@@ -245,7 +246,7 @@ if($_POST["usersub"] == 1)
                 <span class="red">*</span>				
             </td>
         </tr>
-	<?php if(!isset($_GET['ed'])){ ?>
+	<?php if(!isset($_REQUEST['ed'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Password

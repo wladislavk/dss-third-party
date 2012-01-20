@@ -643,16 +643,31 @@ label {
 						</span>
 					</div>
 					<br />
-					
+					<script type="text/javascript">
+
+						$('document').ready( function(){
+
+							$('.extra').each(function(){
+								//alert('sdf');	
+							});
+
+						});
+						$(function(){
+						$('.extra').click(function(e){
+							alert('dsaf');
+						});
+						})
+
+					</script>
 					<div>
                         <span>
 							<label>Have you ever had teeth extracted?</label>
 							
-							<input type="radio" name="wisdom_extraction" value="Yes" <? if($wisdom_extraction == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="wisdom_extraction" value="Yes" <? if($wisdom_extraction == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" name="wisdom_extraction" value="No" <? if($wisdom_extraction == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
+							<input type="radio" class="extra" name="wisdom_extraction" value="No" <? if($wisdom_extraction == 'No') echo " checked";?> />No
+                                                        <span id="wisdom_extraction_extra"><input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
 						</span>
 					</div>
 					<br />

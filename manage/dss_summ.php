@@ -1348,20 +1348,6 @@ echo "Not Set, Please set through patient info.";
 							<input type="text" style="width: 50px;" maxlength="50" value="<?php echo $percent_night_cpap; ?>" class="field text addr tbox" name="percent_night_cpap" id="percent_night_cpap">
 							<br>
 						</span>
-      
-      
-      <span>
-							How many times have you tried CPAP for a period of time, quit and then tried CPAP again?
-              <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $tried_quit_tried; ?>" class="field text addr tbox" name="triedquittried" id="triedquittried">
-							<br>
-						</span>
-      
-      
-      <span>
-							On average how long of time period did you try the CPAP during each of these time periods?
-              <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $timesovertime; ?>" class="field text addr tbox" name="timesovertime" id="timesovertime">
-							<br>
-						</span>
     
     <div style="height:10px;"></div>
     

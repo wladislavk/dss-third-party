@@ -648,13 +648,29 @@ label {
 						$('document').ready( function(){
 
 							$('.extra').each(function(){
-								//alert('sdf');	
+								var v = $(this).val();
+								var n = $(this).attr('name');
+								var c = $(this).attr('checked');
+								if(v=="Yes"){
+									if(c){
+										$('#'+n+'_extra').css('display', 'inline');
+									}else{
+										$('#'+n+'_extra').css('display', 'none');
+									}
+								}
+										
 							});
 
 						});
 						$(function(){
 						$('.extra').click(function(e){
-							alert('dsaf');
+							var v = e.target.value;
+							var n = e.target.name;
+							if(v=="Yes"){
+								$('#'+n+'_extra').css('display', 'inline');
+							}else{
+                                                                $('#'+n+'_extra').css('display', 'none');
+							}
 						});
 						})
 
@@ -667,7 +683,7 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="wisdom_extraction" value="No" <? if($wisdom_extraction == 'No') echo " checked";?> />No
-                                                        <span id="wisdom_extraction_extra"><input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
+                                                        <span id="wisdom_extraction_extra">Please describe: <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
 						</span>
 					</div>
 					<br />
@@ -676,23 +692,23 @@ label {
                         <span>
 							<label>Do you wear removable partials?</label>
 							
-							<input type="radio" name="removable" value="Yes" <? if($removable == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="removable" value="Yes" <? if($removable == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" name="removable" value="No" <? if($removable == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" />
+							<input type="radio" class="extra" name="removable" value="No" <? if($removable == 'No') echo " checked";?> />No
+                                                        <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" /></span>
 						</span>
 					</div>
 					<br />
                                        <div>
                         <span>
-                                                        <label>Dentures?</label>
+                                                        <label>Do you wear dentures?</label>
 
-                                                        <input type="radio" name="dentures" value="Yes" <? if($dentures == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="dentures" value="Yes" <? if($dentures == 'Yes') echo " checked";?> />Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" name="dentures" value="No" <? if($dentures == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" />
+                                                        <input type="radio" class="extra" name="dentures" value="No" <? if($dentures == 'No') echo " checked";?> />No
+                                                        <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" /></span>
                                                 </span>
                                         </div>
                                         <br />
@@ -700,15 +716,13 @@ label {
 					
 					<div>
                         <span>
-							<label>Orthodontics (Braces)</label>
+							<label>Have you worn orthodontics (braces)?</label>
 							
-							<input type="radio" name="orthodontics" value="Yes" <? if($orthodontics == 'Yes') echo " checked";?>  onclick="chk_ortho()"  />Yes
+							<input type="radio" class="extra" name="orthodontics" value="Yes" <? if($orthodontics == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" name="orthodontics" value="No" <? if($orthodontics == 'No') echo " checked";?>  onclick="chk_ortho()" />No
-							<br />
-							<label>Year completed</label>
-                            <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" /> 
+							<input type="radio" class="extra" name="orthodontics" value="No" <? if($orthodontics == 'No') echo " checked";?>  />No
+                            				<span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" /></span> 
 						</span>
 					</div>
 					<br />
@@ -716,20 +730,22 @@ label {
                                         <div>
                         <span>
                                                         <label>Does your TMJ (jaw joint) click or pop?</label>
-                                                        <input type="radio" name="tmj_cp" value="Yes" <? if($tmj_cp == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="tmj_cp" value="Yes" <? if($tmj_cp == 'Yes') echo " checked";?> />Yes
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" name="tmj_cp" value="No" <? if($tmj_cp == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" />
+                                                        <input type="radio" class="extra" name="tmj_cp" value="No" <? if($tmj_cp == 'No') echo " checked";?> />No
+                                                        <span id="tmj_cp_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" /></span>
                                                 </span>
                                         </div>
                                         <br />
                                         <div>
                         <span>
 							<label>Do you have pain In this joint?</label>
-                                                        <input type="radio" name="tmj_pain" value="Yes" <? if($tmj_pain == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="tmj_pain" value="Yes" <? if($tmj_pain == 'Yes') echo " checked";?> />Yes
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" />
+                                                        <input type="radio" class="extra" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
+                                                        <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" /></span>
                                                 </span>
                                         </div>
                                         <br />
@@ -737,10 +753,11 @@ label {
 					<div>
                         <span>
 							<label>Have you had TMJ (jaw joint) surgery?</label>
-							<input type="radio" name="tmj_surgery" value="Yes" <? if($tmj_surgery == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="tmj_surgery" value="Yes" <? if($tmj_surgery == 'Yes') echo " checked";?> />Yes
 							
-							<input type="radio" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> />No
-							<input type="text" class="field text addr tbox" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" />
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" class="extra" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> />No
+							<span id="tmj_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" /></span>
 
 						</span>
 					</div>
@@ -749,11 +766,11 @@ label {
                         <span>
                                                         <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
 
-                                                        <input type="radio" name="injury" value="Yes" <? if($injury == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="injury" value="Yes" <? if($injury == 'Yes') echo " checked";?> />Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
-							<input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" />
+                                                        <input type="radio" class="extra" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
+							<span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" /></span>
                                                 </span>
                                         </div>
                                         <br />	
@@ -761,11 +778,11 @@ label {
                         <span>
 							<label>Do you have morning dry mouth?</label>
 							
-							<input type="radio" name="drymouth" value="Yes" <? if($drymouth == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="drymouth" value="Yes" <? if($drymouth == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" name="drymouth" value="No" <? if($drymouth == 'No') echo " checked";?> />No
-                                                        <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" />							
+							<input type="radio" class="extra" name="drymouth" value="No" <? if($drymouth == 'No') echo " checked";?> />No
+                                                        <span id="drymouth_extra">Please describe: <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" /></span>							
 						</span>
 					</div>
 					<br />
@@ -773,9 +790,10 @@ label {
 					<div>
                         <span>
 							<label>Have you ever had gum problems?</label>
-                            <input id="gum_prob" name="gum_prob" type="radio" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
-                            <input id="gum_prob" name="gum_prob" type="radio" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No 
-                                                        <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /> 
+                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No 
+                                                        <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /></span> 
 						</span>
 					</div>
 					<br />
@@ -785,12 +803,12 @@ label {
                         <span>
                                                         <label>Have you ever had gum surgery?</label>
 
-                                                        <input type="radio" name="gum_surgery" value="Yes" <? if($gum_surgery == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="gum_surgery" value="Yes" <? if($gum_surgery == 'Yes') echo " checked";?> />Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
-							<input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /> 
-                                                <span>
+                                                        <input type="radio" class="extra" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
+							<span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /></span>
+                                                </span>
                                         </div>
                                         <br />
 
@@ -800,12 +818,12 @@ label {
 							<label>Are you planning to have dental work done in the near future?</label>
 							
 	
-							<input type="radio" onclick="display();" name="completed_future" value="Yes" <? if($completed_future == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="completed_future" value="Yes" <? if($completed_future == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" onclick="hide();" name="completed_future" value="No" <? if($completed_future == 'No') echo " checked";?> />No
+							<input type="radio" class="extra" name="completed_future" value="No" <? if($completed_future == 'No') echo " checked";?> />No
 							
-<input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" />
+<span id="completed_future_extra">Please describe: <input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" /></span>
 						</span>
 					</div>
 					<br />
@@ -814,11 +832,11 @@ label {
                         <span>
 							<label>Do you clinch or grind your teeth?</label>
 							
-							<input type="radio" name="clinch_grind" value="Yes" <? if($clinch_grind == 'Yes') echo " checked";?> />Yes
+							<input type="radio" class="extra" name="clinch_grind" value="Yes" <? if($clinch_grind == 'Yes') echo " checked";?> />Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="radio" name="clinch_grind" value="No" <? if($clinch_grind == 'No') echo " checked";?> />No
-							<input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" />
+							<input type="radio" class="extra" name="clinch_grind" value="No" <? if($clinch_grind == 'No') echo " checked";?> />No
+							<span id="clinch_grind_extra">Please describe: <input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" /></span>
 						</span>
 					</div>
 					<br />

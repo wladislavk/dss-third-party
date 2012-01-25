@@ -451,7 +451,11 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
   <tr style="background: #444;height: 30px;">
         <td colspan="4"><span style="color: #ccc;">Baseline</span></td>
   </tr>
-
+<?php
+  $s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+  ?>
   <tr>
     <td style="background: #F9FFDF;">
       <input type="text" size="12" style="width:75px;" name="exam_date" value="<?php echo ($q_row['exam_date'])?date('m/d/Y', strtotime($q_row['exam_date'])):''; ?>" />
@@ -573,7 +577,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 
     <tr>
             <td style="background: #E4FFCF;">
-      <input type="text" size="12" style="width:90px;" name="wapnadd" value="<?php echo $fuquery['wapnadd'];?>" />
+      <input type="text" size="12" style="width:90px;" name="wapnadd" value="<?php echo $r['quit_breathing'];?>" />
 
     </td>
   </tr>

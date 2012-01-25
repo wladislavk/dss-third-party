@@ -288,7 +288,7 @@ if($cpap == '')
 		
 		if(fa.cpap[1].checked)
 		{
-			$('#cpap_options').hide();
+			$('.cpap_options').hide();
 			/*
 			for(var i=0; i<chk_l; i++)
 			{
@@ -300,7 +300,7 @@ if($cpap == '')
 		}
 		else
 		{
-			$('#cpap_options').show();
+			$('.cpap_options').show();
 			/*
 			for(var i=0; i<chk_l; i++)
 			{
@@ -494,7 +494,7 @@ if($cpap == '')
                    	</div>
                    
                    	<br />
-                   	<div id="cpap_options">
+                   	<div id="cpap_options" class="cpap_options">
                         <span>
                    			The Patient has attempted treatment with a CPAP but they could not tolerate it's use due to:	
                             <br />
@@ -517,7 +517,7 @@ if($cpap == '')
                     <br />
                     
                     
-                    <div>
+                    <div class="cpap_options">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Other Items<br />
@@ -528,7 +528,7 @@ if($cpap == '')
                         </span>
                     </div>
                    						
-					<div>
+					<div class="cpap_options">
                         <span>
 							On average how many nights per week do you wear your CPAP?
 							<input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
@@ -536,31 +536,31 @@ if($cpap == '')
 						</span>
 					</div>
 					
-					<div>
+					<div class="cpap_options">
                         <span>
 							On average how many hours each night do you wear your CPAP?
 							<input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
 							<br />&nbsp;
 						</span>
 					</div>
-					<div>
+					<div class="cpap_options">
                         <span>
 							How many times have you tried CPAP for a period of time, quit and then tried CPAP again?<input id="triedquittried" name="triedquittried" type="text" class="field text addr tbox" value="<?=$triedquittried;?>" maxlength="255" style="width:225px;" />
 							<br />&nbsp;
 						</span>
 					</div>
 					
-					<div>
+					<div class="cpap_options">
                         <span>
 							On average how long of time period did you try the CPAP during each of these time periods?<input id="timesovertime" name="timesovertime" type="text" class="field text addr tbox" value="<?=$timesovertime;?>" maxlength="255" style="width:225px;" />
 							<br />&nbsp;
 						</span>
 					</div>
 					
-                    
+                    			<div class="cpap_options">	
 					<input type="checkbox" name="affidavit" value="1" <? if($affidavit == 1) echo " checked";?> />
 					I have enclosed a signed affidavit by the patient attesting to CPAP intolerance 
-					
+					</div>
 					<script type="text/javascript">
 						chk_cpap();
 					</script>

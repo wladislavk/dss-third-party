@@ -1321,8 +1321,17 @@ echo "Not Set, Please set through patient info.";
    <td width="15%" height="5">CPAP</td>
     <td colspan="6">
     <div style="width:80%;"> 
-  
+	<?php
+ 	  $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+ 	  $pat_my = mysql_query($pat_sql);
+ 	  $pat_myarray = mysql_fetch_array($pat_my);
+ 	  if($pat_myarray['cpap']=="No"){
+ 
+	    ?>Patient has not previously attempted CPAP therapy.<?php
       
+	  }else{ 
+	echo $pat_myarray['cpap'];
+	?>
     <label>
        
     
@@ -1368,7 +1377,7 @@ echo "Not Set, Please set through patient info.";
       
       
     
-      
+     <?php } ?> 
       
      </div> 
     </td>

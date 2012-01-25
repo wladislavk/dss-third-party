@@ -23,8 +23,6 @@ if($_POST["sleeplabsub"] == 1)
 		phone2 = '".s_for($_POST["phone2"])."', 
 		fax = '".s_for($_POST["fax"])."', 
 		email = '".s_for($_POST["email"])."',  
-		greeting = '".s_for($_POST["greeting"])."', 
-		sincerely = '".s_for($_POST["sincerely"])."', 
 		notes = '".s_for($_POST["notes"])."', 
 		status = '".s_for($_POST["status"])."' 
 		where 
@@ -59,8 +57,6 @@ if($_POST["sleeplabsub"] == 1)
 		phone2 = '".s_for($_POST["phone2"])."', 
 		fax = '".s_for($_POST["fax"])."', 
 		email = '".s_for($_POST["email"])."',  
-		greeting = '".s_for($_POST["greeting"])."', 
-		sincerely = '".s_for($_POST["sincerely"])."', 
 		notes = '".s_for($_POST["notes"])."', 
 		status = '".s_for($_POST["status"])."', 
 		docid='".$_SESSION['docid']."', 
@@ -122,8 +118,6 @@ if($_POST["sleeplabsub"] == 1)
 		$phone2 = $_POST['phone2'];
 		$fax = $_POST['fax'];
 		$email = $_POST['email'];
-		$greeting = $_POST['greeting'];
-		$sincerely = $_POST['sincerely'];
 		$notes = $_POST['notes'];
 	}
 	else
@@ -142,8 +136,6 @@ if($_POST["sleeplabsub"] == 1)
 		$phone2 = st($themyarray['phone2']);
 		$fax = st($themyarray['fax']);
 		$email = st($themyarray['email']);
-		$greeting = st($themyarray['greeting']);
-		$sincerely = st($themyarray['sincerely']);
 		$notes = st($themyarray['notes']);
 		
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
@@ -293,30 +285,6 @@ if($_POST["sleeplabsub"] == 1)
 				</ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                                <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?=$greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
-                                <label for="greeting">Greeting</label>
-                            </span>
-                            
-                            
-                    	</div>
-                        
-                        <div>
-                        	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
-                                <label for="sincerely">Sincerely</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        
          <tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

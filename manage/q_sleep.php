@@ -189,28 +189,41 @@ if($epworthid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Reset Values to Zero" />
 	<input type="submit" name="q_sleepbtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-    <tr>
-        <td colspan="2" class="sub_head">
-           Epworth Sleep Questionnaire
-        </td>
-    </tr>
     
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
+    <tr>
+        <td valign="top" class="frmhead" style="text-align:center;">
+<table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
+    <tr bgcolor="#FFFFFF">
+            <td>
+<br />
+<span class="admin_head">
+Epworth Sleep Questionnaire
+</span>
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr>
+                <td valign="top" colspan="2" >
+                        Using the following scale, choose the most appropriate number for each situation.
+
+                        <br />
+                        0 = No chance of dozing<br />
+                        1 = Slight chance of dozing<br />
+                        2 = Moderate chance of dozing<br />
+                        3 = High chance of dozing<br />
+                </td>
+        </tr>
                     <? 
 					$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
 					$epworth_my = mysql_query($epworth_sql);
 					$epworth_number = mysql_num_rows($epworth_my);
 					?>
                     
-                    <br />
                     <? 
 					while($epworth_myarray = mysql_fetch_array($epworth_my))
 					{
@@ -224,8 +237,6 @@ if($epworthid <> '')
 						}
 						
 					?>
-                    <div>
-                        <span>
                         	<script type="text/javascript">
 								function cal_analaysis(fa)
 								{
@@ -265,34 +276,32 @@ if($epworthid <> '')
 									//alert("Tot: " + an_tot+"\nText: "+an_text);
 								}
 							</script>
-                            
-                        	<select id="epworth_<?=st($epworth_myarray['epworthid']);?>" name="epworth_<?=st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:225px;" onchange="cal_analaysis(this.value);">
-                            	<option value="" <? if($chk == '') echo " selected";?>></option>
-                                <option value="0" <? if($chk == '0') echo " selected";?>>0 - No chance of dozing</option>
-                                <option value="1" <? if($chk == 1) echo " selected";?>>1 - Slight chance of dozing</option>
-                                <option value="2" <? if($chk == 2) echo " selected";?>>2 - Moderate chance of dozing</option>
-                                <option value="3" <? if($chk == 3) echo " selected";?>>3 - High chance of dozing</option>
+                            <tr>
+                <td valign="top" width="60%" class="frmhead">        
+			<?=st($epworth_myarray['epworth']);?><br />&nbsp;
+		</td>
+                <td valign="top" class="frmdata">
+                        	<select id="epworth_<?=st($epworth_myarray['epworthid']);?>" name="epworth_<?=st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
+                                <option value="0" <? if($chk == '0') echo " selected";?>>0</option>
+                                <option value="1" <? if($chk == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($chk == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($chk == 3) echo " selected";?>>3</option>
                             </select>
-                            &nbsp;&nbsp;
-                            <?=st($epworth_myarray['epworth']);?><br />&nbsp;
-                        </span>
-                    </div>
+                        </td>
+                    </tr>
                     <? }?>
-                    <div>
-                        <span>
+                    <tr>
+                        <td colspan="2">
                         	<span style="color:#000000; padding-top:0px;">
                             	Analysis
                             </span>
                             <br />
                             <textarea name="analysis" class="field text addr tbox" style="width:650px; height:100px;"><?=$analysis;?></textarea>
-                        </span>
-                    </div>
-                    <br />
-                </li>
-           	</ul>
-		</td>
-	</tr>
-    
+                        </td>
+                    </tr>
+</table>
+</td></tr> 
+</table>
 	<tr>
         <td valign="top" class="frmhead" style="text-align:center;">
 <table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
@@ -434,7 +443,7 @@ if($epworthid <> '')
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Reset Values to Zero" />
     <input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>

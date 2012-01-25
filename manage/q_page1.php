@@ -654,7 +654,7 @@ function in_array(needle, haystack)
                                 
                                                                 <tr>
                                 	<td valign="top">
-                                    	Rate your sleep quality (10 being the highest)
+                                    	Rate your sleep quality 0-10 (10 being the highest)
                                     </td>
                                     <td valign="top">
                                     	<select name="sleep_qual" class="field text addr tbox" style="width:150px;">

@@ -40,7 +40,7 @@ $template = "
 </table>
 <br />
 
-<p>If you did not receive our patient forms at your last appointment, please plan on arriving 20 minutes before your scheduled appointment time to complete them.  If you have already filled them out, please remember to bring them with you.</p>
+<p>If you have not already completed our patient forms, please plan on arriving 20 minutes before your scheduled appointment time to complete them.  If you have already filled them out, please remember to bring them with you.</p>
 
 <p>If you have any questions that need to be answered prior to your appointment, please call us.  Our office staff will assist you in every way possible.  We look forward to meeting you!</p>
 

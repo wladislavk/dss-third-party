@@ -4,6 +4,7 @@ require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
+include("includes/preauth_functions.php");
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
     $flow = mysql_fetch_array($flowresult);
@@ -487,19 +488,23 @@ echo "</select>";
                               File
              </td>
                 <td valign="top" class="frmdata">
-                   <?php if ($status == DSS_TRXN_PENDING) { ?>
+                   <?php /*if ($status == DSS_TRXN_PENDING) { ?>
                        <?= $dss_trxn_status_labels[DSS_TRXN_PENDING] ?>
                        <input type="hidden" name="status" value="<?= DSS_TRXN_PENDING ?>" />
-                   <?php } else { ?>
+                   <?php } else { */ ?>
                      <?php
-                     if ( $rxrec == '' 
-                             || $lomnrec == '' ) {
+$errors = claim_errors($_GET['pid']);
+if(count($errors)>0){
+$e_text = 'Unable to file claim: ';
+$e_text .= implode($errors, ', ');
+
                      ?>
-		                 <input type="checkbox" onclick="alert('Insurance information needs completed'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+		                 <input type="checkbox" onclick="alert('<?= $e_text; ?>'); return false;" name="status" value="<?= DSS_TRXN_PENDING ?>" />
                      <?php } else { ?> 
-                         <input type="checkbox" name="status" value="<?= DSS_TRXN_PENDING ?>" />
+                         <input type="checkbox" name="status" <?= ($status == DSS_TRXN_PENDING)?'checked="checked"':''; ?> value="<?= DSS_TRXN_PENDING ?>" />
                      <?php } ?>
-                   <?php } ?>
+                   <?php // } ?>
+			<span class="pend"><?= ($status == DSS_TRXN_PENDING)?'Pending':''; ?></span>
                 </td>
           </tr>		
         <tr>

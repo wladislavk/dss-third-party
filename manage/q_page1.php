@@ -34,6 +34,8 @@ if($_POST['q_page1sub'] == 1)
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
 	$bmi = $_POST['bmi'];
+	$ess = $_POST['ess'];
+	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
 	$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
 	$complaint_my = mysql_query($complaint_sql);
@@ -47,6 +49,10 @@ if($_POST['q_page1sub'] == 1)
 			$comp_arr .= $complaint_myarray['complaintid'].'|'.$_POST['complaint_'.$complaint_myarray['complaintid']].'~';
 		}
 	}
+		if($_POST['complaint_0'] <> '')
+                {
+                        $comp_arr .= '0|'.$_POST['complaint_0'].'~';
+                }
 	
 	$other_complaint = $_POST['other_complaint'];
 	$additional_paragraph = $_POST['additional_paragraph'];
@@ -109,6 +115,8 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+		ess = '".s_for($ess)."',
+		tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		sleep_qual = '".s_for($sleep_qual)."',
 		complaintid = '".s_for($comp_arr)."',
@@ -150,6 +158,8 @@ if($_POST['q_page1sub'] == 1)
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
 		bmi = '".s_for($bmi)."',
+                ess = '".s_for($ess)."',
+                tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		complaintid = '".s_for($comp_arr)."',
 		sleep_qual = '".s_for($sleep_qual)."',
@@ -208,6 +218,8 @@ $feet = st($myarray['feet']);
 $inches = st($myarray['inches']);
 $weight = st($myarray['weight']);
 $bmi = st($myarray['bmi']);
+$ess = st($myarray['ess']);
+$tss = st($myarray['tss']);
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
@@ -413,6 +425,13 @@ if($complaintid <> '')
     </tr>
     <tr>
 	<td valign="top" class="frmhead">
+	  Baseline Epworth Sleepiness Score: <input type="text" name="ess" value="<?= $ess; ?>" />
+	  <br />
+	  Baseline Thornton Snoring Scale: <input type="text" name="tss" value="<?= $tss; ?>" />
+	</td>
+    </tr>
+    <tr>
+	<td valign="top" class="frmhead">
                     <label style="display:block;">
                         What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
                     </label>
@@ -490,20 +509,38 @@ function in_array(needle, haystack)
 
                     <div style="width:48%;float:left;">
                         <span>
-                        	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
+                    <!--    	<select id="complaint_<?=st($complaint_myarray['complaintid']);?>" name="complaint_<?=st($complaint_myarray['complaintid']);?>" class="complaint_chb field text addr tbox" style="width:50px;" onchange="update_c_chb(); chk_chief(this.value,<?=st($complaint_myarray['complaintid']);?>)">
                             	<option value=""></option>
                             	<? 
 								for($i=1;$i<=$complaint_number;$i++)
 								{?>
                             		<option value="<?=$i;?>" <? if($chk == $i) echo " selected";?>><?=$i;?></option>
                                 <? }?>
-                            </select>
+                            </select>-->
+			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
                             &nbsp;&nbsp;
                             <?=st($complaint_myarray['complaint']);?><br />&nbsp;
                         </span>
                     </div>
                     <? }?>
-                    <div>
+                    <div style="width:48%;float:left;">
+                        <span>
+				<?php
+                                                if(@array_search(0,$compid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else                                                {
+                                                        $chk = $compseq[@array_search(0,$compid)];
+                                                }
+				?>
+                            <input type="checkbox" id="complaint_0" onclick="chk_other_comp()" name="complaint_0" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+                            &nbsp;&nbsp;
+                            Other<br />&nbsp;
+                        </span>
+                    </div>
+
+                    <div id="other_complaints">
                         <span>
                         	<span style="color:#000000; padding-top:0px;">
                             	Additional Complaints<br />
@@ -515,6 +552,17 @@ function in_array(needle, haystack)
                     <br />
                 </li>
            	</ul>
+		<script type="text/javascript">
+			function chk_other_comp(){
+				if($('#complaint_0').is(':checked')){
+					$('#other_complaints').show();
+				}else{
+					$('#other_complaints').hide();
+				}			
+			}
+
+			chk_other_comp();
+		</script>
 		</td>
 	</tr>
     

@@ -410,11 +410,7 @@ label {
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
-&nbsp;&nbsp;
-
-
-<br />
-<br>
+<?php include 'includes/questionnaire_header.php'; ?>
 
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>

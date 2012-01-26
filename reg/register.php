@@ -6,170 +6,186 @@
 
 include 'includes/header.php';
 ?>
+<script type="text/javascript" src="js/register.js"></script>
 <script type="text/javascript" src="../manage/js/patient_dob.js"></script>
 <?php
-  if(isset($_POST['update'])){
-
-	$sql = "UPDATE dental_patients set
-		firstname = '".mysql_real_escape_string($_POST['firstname'])."',
-		middlename= '".mysql_real_escape_string($_POST['middlename'])."',
-                lastname= '".mysql_real_escape_string($_POST['lastname'])."',
-                email= '".mysql_real_escape_string($_POST['email'])."',
-                home_phone = '".mysql_real_escape_string($_POST['home_phone'])."',
-                work_phone = '".mysql_real_escape_string($_POST['work_phone'])."',
-                cell_phone = '".mysql_real_escape_string($_POST['cell_phone'])."',
-                add1 = '".mysql_real_escape_string($_POST['add1'])."',
-                add2 = '".mysql_real_escape_string($_POST['add2'])."',
-                city = '".mysql_real_escape_string($_POST['city'])."',
-                state = '".mysql_real_escape_string($_POST['state'])."',
-                zip = '".mysql_real_escape_string($_POST['zip'])."',
-                dob = '".mysql_real_escape_string($_POST['dob'])."',
-                gender = '".mysql_real_escape_string($_POST['gender'])."',
-                marital_status = '".mysql_real_escape_string($_POST['marital_status'])."',
-                partner_name = '".mysql_real_escape_string($_POST['partner_name'])."',
-                ssn = '".mysql_real_escape_string($_POST['ssn'])."',
-                patient_notes = '".mysql_real_escape_string($_POST['patient_notes'])."',
-                preferredcontact = '".mysql_real_escape_string($_POST['preferredcontact'])."',
-                emergency_name = '".mysql_real_escape_string($_POST['emergency_name'])."',
-                emergency_relationship = '".mysql_real_escape_string($_POST['emergency_relationship'])."',
-                emergency_number = '".mysql_real_escape_string($_POST['emergency_number'])."',
-                p_m_relation = '".mysql_real_escape_string($_POST['p_m_relation'])."',
-                p_m_partyfname = '".mysql_real_escape_string($_POST['p_m_partyfname'])."',
-                p_m_partymname = '".mysql_real_escape_string($_POST['p_m_partymname'])."',
-                p_m_partylname = '".mysql_real_escape_string($_POST['p_m_partylname'])."',
-                ins_dob = '".mysql_real_escape_string($_POST['ins_dob'])."',
-                p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_co'])."',
-                p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
-                p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
-                p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',
-                p_m_ins_type = '".mysql_real_escape_string($_POST['p_m_ins_type'])."',
-                p_m_ins_ass = '".mysql_real_escape_string($_POST['p_m_ins_ass'])."',
-		has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
-                s_m_relation = '".mysql_real_escape_string($_POST['s_m_relation'])."',
-                s_m_partyfname = '".mysql_real_escape_string($_POST['s_m_partyfname'])."',
-                s_m_partymname = '".mysql_real_escape_string($_POST['s_m_partymname'])."',
-                s_m_partylname = '".mysql_real_escape_string($_POST['s_m_partylname'])."',
-                ins2_dob = '".mysql_real_escape_string($_POST['ins2_dob'])."',
-                s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_co'])."',
-                s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
-                s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
-                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',
-                s_m_ins_type = '".mysql_real_escape_string($_POST['s_m_ins_type'])."',
-                s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
-                employer = '".mysql_real_escape_string($_POST['employer'])."',
-                emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
-                emp_add2 = '".mysql_real_escape_string($_POST['emp_add2'])."',
-                emp_city = '".mysql_real_escape_string($_POST['emp_city'])."',
-                emp_state = '".mysql_real_escape_string($_POST['emp_state'])."',
-                emp_zip = '".mysql_real_escape_string($_POST['emp_zip'])."',
-                emp_phone = '".mysql_real_escape_string($_POST['emp_phone'])."',
-                emp_fax = '".mysql_real_escape_string($_POST['emp_fax'])."',
-		registered = '1'
-		WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'
-		";
-	mysql_query($sql);
-	//                 = '".mysql_real_escape_string($_POST[''])."',
-	?>
-	<script type="text/javascript">
-	  window.location = "home.php";
-	</script>
-	<?php
-  }
-
   $sql = "SELECT * from dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
   $q = mysql_query($sql);
   $p = mysql_fetch_assoc($q);
 ?>
+				<div id="content_wrapper">
+					<div id="main_content" class="cf">
 
-<style type="text/css">
-label{display:block; padding:2px 5px 0 0; width: 120px; text-align:right; float:left; clear:both;}
-input, select, textarea{float:left; }
-input[type=radio]{float:none;}
-input[type=text]{ width: 250px; }
-h4{ clear:both; }
-.hidden{display:none;}
-</style>
-<script type="text/javascript">
-function showSect(s){
-	if(s==4 && $('#has_s_m_ins_no').attr('checked')=="checked"){ s=5; }
-	$('.sect').css('display', 'none');
-	$('#sect'+s).css('display', 'block');
-}
-
-$('document').ready( function(){
-  //showSect(4);
-});
-
-</script>
-      <h2>Patient Registration</h2>
-
-	<form action="register.php" method="post">
-		<div id="sect1" class="sect">
-		<h3>Contact information</h3>
-		<label>First Name:</label><input type="text" name="firstname" id="firstname" value="<?= $p['firstname']; ?>" />
-                <label>Middle Init:</label><input type="text" maxlength="1" name="middlename" id="middlename" value="<?= $p['middlename']; ?>" />
-		<label>Last Name:</label><input type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
-                <label>Email:</label><input type="text" name="email" value="<?= $p['email']; ?>" />
-                <label>Home Phone:</label><input type="text" name="home_phone" value="<?= $p['home_phone']; ?>" />
-                <label>Work Phone:</label><input type="text" name="work_phone" value="<?= $p['work_phone']; ?>" />
-                <label>Cell Phone:</label><input type="text" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
-                <label>Address 1:</label><input type="text" name="add1" value="<?= $p['add1']; ?>" />
-                <label>Address 2:</label><input type="text" name="add2" value="<?= $p['add2']; ?>" />
-                <label>City:</label><input type="text" name="city" value="<?= $p['city']; ?>" />
-                <label>State:</label><input type="text" name="state" value="<?= $p['state']; ?>" />
-                <label>Zip:</label><input type="text" name="zip" value="<?= $p['zip']; ?>" />
-
-
-		<label></label><input type="button" value="Next" onclick="showSect(2)" />
+						<h2 class="sepH_c">Patient Registration</h2>
+	<form action="register.php" id="register_form" method="post">
+							<ul id="status" class="cf">
+								<li class="active"><span class="large">1. Contact Information</span></li>
+								<li><span class="large">2. Personal Information</span></li>
+								<li><span class="large">3. Insurance</span></li>
+								<li><span class="large">4. 2nd Insurance</span></li>
+								<li><span class="large">5. Employer</span></li>
+								<li><span class="large">6. Contacts</span></li>
+							</ul>
+							<div id="register" class="wizard" style="height:800px;">
+								<div class="items formEl_a">
+									<div class="page">
+										<div class="pageInside">
+											<div class="cf">
+												<div class="dp25">
+													<h3 class="sepH_a">Contact Information</h3>
+													<p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+												</div>
+												<div class="dp75">
+													<div class="w_main_col">
+														<div class="form_errors" style="display:none"></div>
+		<div class="sepH_b">
+			<label class="lbl_a"><strong>1.</strong> First Name <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" name="firstname" id="firstname" value="<?= $p['firstname']; ?>" />
 		</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Middle Init</label>
+			<input class="inpt_a" type="text" maxlength="1" name="middlename" id="middlename" value="<?= $p['middlename']; ?>" />
+		</div>
+		<div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Last Name <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
+		</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" name="email" value="<?= $p['email']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a" type="text" name="home_phone" value="<?= $p['home_phone']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a" type="text" name="work_phone" value="<?= $p['work_phone']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a" type="text" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>8.</strong> Address 1:</label><input class="inpt_a" type="text" name="add1" value="<?= $p['add1']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>9.</strong> Address 2:</label><input class="inpt_a" type="text" name="add2" value="<?= $p['add2']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>10.</strong> City:</label><input class="inpt_a" type="text" name="city" value="<?= $p['city']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>11.</strong> State:</label><input class="inpt_a" type="text" name="state" value="<?= $p['state']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a" type="text" name="zip" value="<?= $p['zip']; ?>" />
+                </div>
+														<div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+															<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 
-		<div id="sect2" class="sect hidden">
-		<h3>Personal Information</h3>
-                <label>Birthday:</label><input type="text" name="dob" id="dob" value="<?= $p['dob']; ?>" />
-                <label>Gender:</label><select name="gender">
+									<div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Personal Information</h3>
+                                                                                                        <p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipisci
+ng elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div class="w_main_col">
+                                                                                                                <div class="form_errors" style="display:none"></div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Birthday:</label><input class="inpt_a" type="text" name="dob" id="dob" value="<?= $p['dob']; ?>" />
+		</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Gender:</label><select class="inpt_a" name="gender">
 				<option>Select</option>
 				<option value="Male" <?= ($p['gender']=="Male")?'selected="selected"':'';?>>Male</option>
                                 <option value="Female" <?= ($p['gender']=="Female")?'selected="selected"':'';?>>Female</option>
 				</select>
-                <label>Marital Status:</label><select name="marital_status">
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Marital Status:</label><select class="inpt_a" name="marital_status">
                                 <option>Select</option>
                                 <option value="Married" <?= ($p['marital_status']=="Married")?'selected="selected"':'';?>>Married</option>
                                 <option value="Single" <?= ($p['marital_status']=="Single")?'selected="selected"':'';?>>Single</option>
                                 <option value="Life Partner" <?= ($p['marital_status']=="Life Partner")?'selected="selected"':'';?>>Life Partner</option>
                                 </select>
-                <label>Partner Name:</label><input type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
-                <label>Social Security #:</label><input type="text" name="ssn" value="<?= $p['ssn']; ?>" />
-                <label>Patient Notes:</label><textarea name="patient_notes"><?= $p['patient_notes']; ?></textarea>
-                <label>Prefered Method of Contact:</label><select name="preferredcontact">
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Patient Notes:</label><textarea class="inpt_a" name="patient_notes"><?= $p['patient_notes']; ?></textarea>
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Prefered Method of Contact:</label><select class="inpt_a" name="preferredcontact">
                                 <option value="paper" <?= ($p['preferredcontact']=="paper")?'selected="selected"':'';?>>Paper Mail</option>
                                 <option value="email" <?= ($p['preferredcontact']=="email")?'selected="selected"':'';?>>Email</option>
                                 </select>
-		<h4>In Case of Emergency</h4>
-                <label>Name:</label><input type="text" name="emergency_name" value="<?= $p['emergency_name']; ?>" />
-                <label>Relationship:</label><input type="text" name="emergency_relationship" value="<?= $p['emergency_relationship']; ?>" />
-                <label>Number:</label><input type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
-
-		<label></label><input type="button" value="Next" onclick="showSect(3)" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>8.</strong> Emergency Contact Name:</label><input class="inpt_a" type="text" name="emergency_name" value="<?= $p['emergency_name']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>9.</strong> Emergency Contact Relationship:</label><input class="inpt_a" type="text" name="emergency_relationship" value="<?= $p['emergency_relationship']; ?>" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>10.</strong> Emergency Contact Number:</label><input class="inpt_a" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
 		</div>
-		<!--
-		<label>:</label><input type="text" name="" value="<?= $p['']; ?>" />
--->
+                                                                                                                <div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
 
-		<div id="sect3" class="sect hidden">
-		<h3>Insurance</h3>
-                <label>Relationship to primary insured:</label><select id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
+
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Insurance</h3>
+                                                                                                        <p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipisci
+ng elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div class="w_main_col">
+                                                                                                                <div class="form_errors" style="display:none"></div>
+ 
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Relationship to primary insured:</label><select class="inpt_a" id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
                                                                         <option value="" <? if($p['p_m_relation'] == '') echo " selected";?>>None</option>
                                                                         <option value="Self" <? if($p['p_m_relation'] == 'Self') echo " selected";?>>Self</option>      
                                             				<option value="Spouse" <? if($p['p_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
                                                                         <option value="Child" <? if($p['p_m_relation'] == 'Child') echo " selected";?>>Child</option>
                                                                         <option value="Other" <? if($p['p_m_relation'] == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
-                <label>First Name:</label><input id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
-		<label>Middle Name:</label><input id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
-		<label>Last Name:</label><input id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
-                <label>Date of Birth:</label><input id="ins_dob" name="ins_dob" type="text" value="<?=$p['ins_dob']?>" maxlength="255" />
-<br />
-       	  	<label>Insurance Company</label><select id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
+		</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
+		</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> Date of Birth:</label><input class="inpt_a" id="ins_dob" name="ins_dob" type="text" value="<?=$p['ins_dob']?>" maxlength="255" />
+       	  	</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Insurance Company</label><select class="inpt_a" id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" />
                                                 <option value="">Select Insurance Company</option>
 			<?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
@@ -180,11 +196,19 @@ $('document').ready( function(){
                                 
                                 <?php } ?>
                                 </select>
-           	<label>Insurance ID.</label><input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
-                <label>Group #</label><input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
-                <label>Plan Name</label><input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
+           	</div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
 <br />
-                <label>Insurance Type</label><select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>10.</strong> Insurance Type</label><select class="inpt_a" id="p_m_ins_type" name="p_m_ins_type" maxlength="255" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($p['p_m_ins_type'] == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p['p_m_ins_type'] == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -194,24 +218,61 @@ $('document').ready( function(){
                                      <option value="6" <?php if($p['p_m_ins_type'] == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
                                      <option value="7" <?php if($p['p_m_ins_type'] == '7'){ echo " selected='selected'";} ?>>Other</option>
                                 </select>
-		<span style="clear:both;display:block;float:left">Does patient have secondary insurance?<input type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes <input type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
-		<label></label><input type="button" onclick="showSect(4)" value="Next" />
 		</div>
-		<div class="sect hidden" id="sect4">
-                <h3>Secondary Insurance</h3>  
-                <label>Relationship to primary insured:</label><select id="s_m_relation" name="s_m_relation" class="field text addr tbox" style="width:200px;">
+		<div class="sepH_b">
+			<label class="lbl_a"><strong>11.</strong> Does patient have secondary insurance?</label><input onclick="updateNext('Yes');" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes <input onclick="updateNext('No');" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
+		</div>
+                                                                                                                <div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+<?php if($p['has_s_m_ins']=="No"){ ?>
+                                                                                                                        <a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</a>
+ <a href="javascript:void(0)" id="insNext" class="fr next btn btn_d" style="display:none;">Proceed &raquo;</a>
+<?php }else{ ?>
+															<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
+ <a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d" style="display:none">Proceed &raquo;</a>
+<?php } ?>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Secondary Insurance</h3>
+                                                                                                        <p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipisci
+ng elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div class="w_main_col">
+                                                                                                                <div class="form_errors" style="display:none"></div>
+
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Relationship to primary insured:</label><select class="inpt_a" id="s_m_relation" name="s_m_relation" >
                                                                         <option value="" <? if($p['s_m_relation'] == '') echo " selected";?>>None</option>
                                                                         <option value="Self" <? if($p['s_m_relation'] == 'Self') echo " selected";?>>Self</option>
                                                                         <option value="Spouse" <? if($p['s_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
                                                                         <option value="Child" <? if($p['s_m_relation'] == 'Child') echo " selected";?>>Child</option>
                                                                         <option value="Other" <? if($p['s_m_relation'] == 'Other') echo " selected";?>>Other</option>
                                                                 </select>
-                <label>First Name:</label><input id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
-                <label>Middle Name:</label><input id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
-                <label>Last Name:</label><input id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
-                <label>Date of Birth:</label><input id="ins2_dob" name="ins2_dob" type="text" value="<?=$p['ins2_dob']?>" maxlength="255" />
-<br />
-                <label>Insurance Company</label><select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Middle Name:</label><input class="inpt_a" id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> Date of Birth:</label><input class="inpt_a" id="ins2_dob" name="ins2_dob" type="text" value="<?=$p['ins2_dob']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Insurance Company</label><select class="inpt_a" id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" />
                                                 <option value="">Select Insurance Company</option>
                         <?php
                             $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
@@ -221,11 +282,18 @@ $('document').ready( function(){
 
                                 <?php } ?>
                                 </select>
-                <label>Insurance ID.</label><input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
-                <label>Group #</label><input id="s_m_ins_grp" name="s_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['s_m_ins_grp']?>" maxlength="255" />
-                <label>Plan Name</label><input id="s_m_ins_plan" name="s_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
-<br />
-                <label>Insurance Type</label><select id="s_m_ins_type" name="s_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a" id="s_m_ins_grp" name="s_m_ins_grp" type="text" value="<?=$p['s_m_ins_grp']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a" id="s_m_ins_plan" name="s_m_ins_plan" type="text" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>10.</strong> Insurance Type</label><select class="inpt_a" id="s_m_ins_type" name="s_m_ins_type" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($p['s_m_ins_type'] == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p['s_m_ins_type'] == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -235,29 +303,106 @@ $('document').ready( function(){
                                      <option value="6" <?php if($p['s_m_ins_type'] == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
                                      <option value="7" <?php if($p['s_m_ins_type'] == '7'){ echo " selected='selected'";} ?>>Other</option>
                                 </select>
-                <label></label><input type="button" onclick="showSect(5)" value="Next" />
-		</div>
-		<div class="sect hidden" id="sect5">
-		<h3>Employer</h3>
+				</div>
+                                                                                                                <div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
 
 
-                <label>Employer:</label><input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $p['employer']; ?>" style="width:525px;"  maxlength="255"/>
-                <label>Address 1:</label><input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$p['emp_add1']?>" style="width:325px;"  maxlength="255"/>
-                <label>Address 2:</label><input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$p['emp_add2']?>" style="width:325px;" maxlength="255" />
-                <label>City:</label><input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$p['emp_city']?>" style="width:200px;" maxlength="255" />
-                <label>State:</label><input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$p['emp_state']?>"  style="width:80px;" maxlength="255" />
-                <label>Zip Code:</label><input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$p['emp_zip']?>" style="width:80px;" maxlength="255" />
-                <label>Phone:</label><input id="emp_phone" name="emp_phone" type="text" class="field text addr tbox" value="<?=$p['emp_phone']?>"  style="width:120px;" maxlength="255" />
-                <label>Fax:</label><input id="emp_fax" name="emp_fax" type="text" class="field text addr tbox" value="<?=$p['emp_fax']?>"  style="width:120px;" maxlength="255" />
+
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Employer</h3>
+                                                                                                        <p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipisci
+ng elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div class="w_main_col">
+                                                                                                                <div class="form_errors" style="display:none"></div>
 
 
-		                <label></label><input type="button" onclick="showSect(6)" value="Next" />
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Employer:</label><input class="inpt_a" id="employer" name="employer" type="text" value="<?php echo $p['employer']; ?>" maxlength="255"/>
                 </div>
-                <div class="sect hidden" id="sect6">
-		<h3>Contacts</h3>
-		<label></label>
-		<input type="submit" name="update" value="Update" />
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Address 1:</label><input class="inpt_a" id="emp_add1" name="emp_add1" type="text" value="<?=$p['emp_add1']?>" maxlength="255"/>
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Address 2:</label><input class="inpt_a" id="emp_add2" name="emp_add2" type="text" value="<?=$p['emp_add2']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> City:</label><input class="inpt_a" id="emp_city" name="emp_city" type="text" value="<?=$p['emp_city']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> State:</label><input class="inpt_a" id="emp_state" name="emp_state" type="text" value="<?=$p['emp_state']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Zip Code:</label><input class="inpt_a" id="emp_zip" name="emp_zip" type="text" value="<?=$p['emp_zip']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Phone:</label><input class="inpt_a" id="emp_phone" name="emp_phone" type="text" value="<?=$p['emp_phone']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>8.</strong> Fax:</label><input class="inpt_a" id="emp_fax" name="emp_fax" type="text" value="<?=$p['emp_fax']?>"   maxlength="255" />
 		</div>
-	</form>  
 
+                                                                                                                <div class="cf">
+			<a href="javascript:void(0)" id="insPrev" class="fl prev btn btn_a" <?= ($p['has_s_m_ins']=="No")?'style="display:none;"':''; ?>>&laquo; Back</a>
+			<a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($p['has_s_m_ins']=="No")?'':'style="display:none;"'; ?>>&laquo; Back</a>
+                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Contacts</h3>
+                                                                                                        <p class="s_color small">Lorem ipsum dolor sit amet, consectetur adipisci
+ng elit. Duis vel justo a enim cursus ultrices ac id enim.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div class="w_main_col">
+                                                                                                                <div class="form_errors" style="display:none"></div>
+
+		<label></label>
+                                                                                                                <div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+                                                                                                                        <button type="submit" name="update" class="fr next btn btn_d">Submit &raquo;</button>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+<div class="page">
+										<div class="pageInside">
+											<div class="last sepH_c">
+												<h3 class="sepH_b">Congratulations!</h3>
+												<p  class="sepH_b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer diam quam, lobortis eget ornare sit amet, sollicitudin at sapien. Suspendisse nec lectus ut arcu mattis mattis vel ut mi. Donec congue tincidunt sollicitudin. Phasellus varius euismod nisl, at blandit nibh suscipit suscipit. Morbi quis nisl sem. Praesent malesuada leo enim. Praesent est lectus, commodo at accumsan varius, bibendum ac nisi. Nulla eu erat sit amet enim consequat condimentum. Nam nulla neque, sagittis ut fringilla sed, vestibulum sit amet libero.</p>
+												<pre id="form_summary"></pre>
+											</div>
+
+											<div class="cf">
+												<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+												<a href="index.php?uid=0" class="fr btn btn_d">Log In</a>
+											</div>
+										</div>
+									</div>
+								</div>
+			</div></div>
+	</form>  
+<div style="clear:both;"></div>
 <?php include 'includes/footer.php'; ?>

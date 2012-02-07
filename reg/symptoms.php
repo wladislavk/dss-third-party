@@ -2,26 +2,7 @@
 include "includes/header.php";
 
 ?>
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
-
-<script type="text/javascript">
-	edited = false;
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			//window.onbeforeunload = confirmExit;
-			//window.onunload = submitForm;
-			edited = true;
-		});
-		$('#q_page1frm').submit(function() {
-			window.onbeforeunload = null;
-		});
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
-</script>
+<link rel="stylesheet" href="css/questionnaire.css" />
 <?php
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
@@ -140,7 +121,7 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='symptoms.php?msg=<?=$msg;?>#form';
+			window.location='sleep.php?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -178,7 +159,7 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='symptoms.php?msg=<?=$msg;?>#form';
+			window.location='sleep.php?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -245,13 +226,6 @@ if($complaintid <> '')
 
 ?>
 
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<script src="admin/popup/popup.js" type="text/javascript"></script>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
-
 <a name="top"></a>
 <?php include 'includes/questionnaire_header.php'; ?>
 
@@ -296,29 +270,16 @@ if($complaintid <> '')
 <input type="hidden" name="q_page1sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
-
+<div class="formEl_a">
 <div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" id="save_but" name="q_pagebtn" value="Save" />
+	<input type="reset" class="next btn btn_b" value="Reset" />
+	<input type="submit" id="save_but" name="q_pagebtn" class="next btn btn_d" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-    <tr>
-        <td colspan="2">
-           Exam date: <input type="text" id="exam_date" name="exam_date" class="calendar" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
-           <script type="text/javascript">
-             var cal_exam = new calendar2(document.getElementById('exam_date'));
-           </script>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" class="sub_head">
-           Additional Patient Information
-        </td>
-    </tr>
-    
-    <tr>
-        <td valign="top" class="frmhead">
+	<div class="sepH_b">
+           	<label class="lbl_a">Exam date:</label>
+		<input type="text" id="exam_date" name="exam_date" class="inpt_a" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
+     	</div>
         	<script type="text/javascript">
 				function cal_bmi()
 				{
@@ -341,14 +302,10 @@ if($complaintid <> '')
 					}
 				}
 			</script>
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        Body Mass Index Calculation
-                    </label>
-                    <div>
-                        <span>
-                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
+  	<h3>Body Mass Index Calculation</h3>
+	<div class="sepH_b fifth">
+		<label class="lbl_a">Feet</label>
+                            <select name="feet" id="feet" class="inpt_a" tabindex="5" onchange="cal_bmi();" >
                             	<option value="0">Feet</option>
                             	<? for($i=1;$i<9;$i++)
 								{
@@ -357,11 +314,10 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
-                            <label for="feet">Feet</label>
-                        </span>
-                        
-                        <span>
-                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
+  	</div>
+	<div class="sepH_b fifth">
+		<label class="lbl_a">Inches</label>
+                <select name="inches" id="inches" class="inpt_a" tabindex="6" onchange="cal_bmi();">
                             	<option value="-1">Inches</option>
                             	<? for($i=0;$i<12;$i++)
 								{
@@ -370,11 +326,10 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
-                            <label for="inches">Inches</label>
-                        </span>
-                        
-                        <span>
-                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
+   	</div>
+	<div class="sepH_b fifth">                     
+		<label class="lbl_a">Weight</label>
+                <select name="weight" id="weight" class="inpt_a" tabindex="7" onchange="cal_bmi();">
                             	<option value="0">Weight</option>
                             	<? for($i=80;$i<=500;$i++)
 								{
@@ -383,14 +338,12 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
-                            <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        </span>
-                        
-                        <span>
-                        	<span style="color:#000000; padding-top:2px;">BMI</span>
-                           	<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
-                        </span>
-                        <span>
+     	</div> 
+	<div class="sepH_b fifth">
+		<label class="lbl_a">BMI</label>
+                <input id="bmi" name="bmi" type="text" class="inpt_a" value="<?=$bmi?>" tabindex="8" maxlength="255" readonly="readonly" />
+	</div>
+	<div class="sepH_b fifth">
                         	<label for="inches"> 
                             	&lt; 18.5 is Underweight
                                 <br />
@@ -402,29 +355,15 @@ if($complaintid <> '')
                                 <br />
                                 &gt; 30 is Obese
                             </label>
-                        </span>
-                   </div>   
-                </li>
-            </ul>
-            
-        </td>
-    </tr>
-    <tr>
-	<td valign="top" class="frmhead">
-                    <label style="display:block;">
+         </div>
+	<div class="sepH_b clear">
+                    <label class="lbl_a">
                         What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
                     </label>
-                        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
-
-	</td>
-    </tr>
-    <tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-					<span class="form_info">Subjective</span>
-                    <br />
-                    <label class="desc" id="title0" for="Field0">
+                        <textarea class="inpt_a" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
+	</div>
+	<h3>Subjective</h3>
+                    <label class="lbl_a" id="title0" for="Field0">
                         Other Complaints
                     </label>
                     <? 
@@ -433,7 +372,7 @@ if($complaintid <> '')
 					$complaint_number = mysql_num_rows($complaint_my);
 					?>
                     <span class="form_info">
-                    	Select Complaint Sequence from the DropDown or leave it Blank.
+			Please check any other complaints below.
                     </span>
                     <br />
 		   <script type="text/javascript">
@@ -519,18 +458,12 @@ function in_array(needle, haystack)
                         </span>
                     </div>
 
-                    <div id="other_complaints">
-                        <span>
-                        	<span style="color:#000000; padding-top:0px;">
-                            	Additional Complaints<br />
-                            </span>
+                    <div class="sepH_b clear" id="other_complaints">
+                            	<label class="lbl_a">Additional Complaints</label>
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>
                         </span>
                     </div>
-                    <br />
-                </li>
-           	</ul>
 		<script type="text/javascript">
 			function chk_other_comp(){
 				if($('#complaint_0').is(':checked')){
@@ -542,62 +475,35 @@ function in_array(needle, haystack)
 
 			chk_other_comp();
 		</script>
-		</td>
-	</tr>
-    
-    <tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        <!--Other Options
-                        (**One or Other) -->
-						Subjective Signs/Symptoms
-                    </label>
-                    
-                    <div>
-                    	<span class="full">
-                        	<table width="100%" cellpadding="3" cellspacing="1" border="0"> 
-                            	<tr>
-                                	<td valign="top" width="60%">
-                                    	Rate your overall energy level 0 -10 (10 being the highest) 
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="energy_level" class="field text addr tbox" style="width:150px;">
+		<h3 class="clear">Subjective Signs/Symptoms</h3>
+                    <div class="sepH_b half num">
+                                    	<label class="lbl_in">Rate your overall energy level 0 -10 (10 being the highest)</label>
+                                    	<select name="energy_level" class="inpt_in">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
-                                    </td>
-                                </tr>
-                                 								<tr>
-                                	<td valign="top">
-                                    	Have you been told you snore?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="told_you_snore" class="field text addr tbox" style="width:150px;">
+		    </div>
+		<div class="sepH_b half string">
+             		<label class="lbl_in">Have you been told you snore?</label>
+                        <select name="told_you_snore" class="inpt_in">
                                             <option value=""></option>
                                             <option value="Yes" <? if($told_you_snore== 'Yes') echo " selected";?>>
-                                            	Yes
+                                                Yes
                                             </option>
                                             <option value="No" <? if($told_you_snore == 'No') echo " selected";?>>
-                                            	No
+                                                No
                                             </option>
                                             <option value="Sometimes" <? if($told_you_snore == 'Sometimes') echo " selected";?>>
-                                            	Sometimes
+                                                Sometimes
                                             </option>
                                         </select>
-                                    </td>
-                                </tr>
-								
-                                <tr>
-                                	<td valign="top">
-                                    	Rate the sound of your snoring 0 -10 (10 being the highest) 
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="snoring_sound" class="field text addr tbox" style="width:150px;">
+		</div>
+		<div class="sepH_b half num">
+                	<label class="lbl_in">Rate the sound of your snoring 0 -10 (10 being the highest)</label>
+                                        <select name="snoring_sound" class="inpt_in">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
@@ -605,42 +511,10 @@ function in_array(needle, haystack)
                                             <? }?>
                                             <option value="Don't know">Don't know</option>
                                         </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                	<td valign="top">
-                                    	On average how many times per night do you wake up?  
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="wake_night" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
-                                            {?>
-                                                <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <!--<tr>
-                                	<td valign="top">
-                                    	On average how many times per night does your bed time partner notice you quick breathing per night?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="breathing_night" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
-                                            {?>
-                                                <option value="<?=$i;?>" <? if($breathing_night == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
-                                        </select>
-                                    </td>
-                                </tr> -->
-                                <tr>
-                                	<td valign="top">
-                                    	How often do you wake up with morning headaches?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="morning_headaches" class="field text addr tbox" style="width:150px;">
+		</div>
+		<div class="sepH_b half string">
+                	<label class="lbl_in">How often do you wake up with morning headaches?</label>
+                                    	<select name="morning_headaches" class="inpt_in">
                                             <option value=""></option>
                                             <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
                                             	Most Mornings
@@ -661,45 +535,20 @@ function in_array(needle, haystack)
                                             	Never
                                             </option>
                                         </select>
-                                    </td>
-                                </tr>
-								
-                                <tr>
-                                	<td valign="top">
-                                    	On average how many hours of sleep do you get per night?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="hours_sleep" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <? for($i=0;$i<16;$i++)
-                                            {?>
-                                                <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
-                                        </select>
-                                    </td>
-                                </tr>
-                                
-                                                                <tr>
-                                	<td valign="top">
-                                    	Rate your sleep quality 0-10 (10 being the highest)
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="sleep_qual" class="field text addr tbox" style="width:150px;">
+		</div>
+		<div class="sepH_b half num">
+                	<label class="lbl_in">On average how many times per night do you wake up?</label>
+                                        <select name="wake_night" class="inpt_in">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
-                                    </td>
-                                </tr>
-                                
-                                								<tr>
-                                	<td valign="top">
-                                    	Do you have a bed time partner?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
+		</div>
+		<div class="sepH_b half string">
+                   	<label class="lbl_in">Do you have a bed time partner?</label>
+                                    	<select name="bed_time_partner" class="inpt_in" onchange="disableenable()">
                                             <option value=""></option>
                                             <option value="Yes" <? if($bed_time_partner== 'Yes') echo " selected";?>>
                                             	Yes
@@ -711,18 +560,20 @@ function in_array(needle, haystack)
                                             	Sometimes
                                             </option>
                                         </select>
-                                    </td>
-                                </tr>
-								
-								
-
-								
-								<tr>
-                                	<td valign="top">
-                                    	If yes do they sleep in the same room?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="sleep_same_room" class="field text addr tbox" style="width:150px;">
+		</div>
+		<div class="sepH_b half num">
+                   	<label class="lbl_in">On average how many hours of sleep do you get per night?</label>
+                                        <select name="hours_sleep" class="inpt_in">
+                                            <option value=""></option>
+                                            <? for($i=0;$i<16;$i++)
+                                            {?>
+                                                <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
+                                            <? }?>
+                                        </select>
+		</div>
+		<div class="sepH_b half string">
+                    	<label class="lbl_in">If yes do they sleep in the same room?</label>
+                                    	<select name="sleep_same_room" class="inpt_in">
                                             <option value=""></option>
                                             <option value="Yes" <? if($sleep_same_room== 'Yes') echo " selected";?>>
                                             	Yes
@@ -734,15 +585,20 @@ function in_array(needle, haystack)
                                             	Sometimes
                                             </option>
                                         </select>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                	<td valign="top">
-                                    	How many times per night does your bedtime partner notice you quit breathing?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="quit_breathing" class="field text addr tbox" style="width:150px;">
+		</div>
+		<div class="sepH_b half num">
+                   	<label class="lbl_in">Rate your sleep quality 0-10 (10 being the highest)</label>
+                                        <select name="sleep_qual" class="inpt_in">
+                                            <option value=""></option>
+                                            <? for($i=0;$i<11;$i++)
+                                            {?>
+                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
+                                            <? }?>
+                                        </select>
+		</div>
+		<div class="sepH_b half string">
+                    	<label class="lbl_in">How many times per night does your bedtime partner notice you quit breathing?</label>
+                                    	<select name="quit_breathing" class="inpt_in">
                                             <option value=""></option>
                                             <option value="Several times per night" <? if($quit_breathing== 'Several times per night') echo " selected";?>>
                                             	Several times per night
@@ -763,20 +619,7 @@ function in_array(needle, haystack)
                                             	Never
                                             </option>
                                         </select>
-                                    </td>
-                                </tr>
-								
-
-                            </table>
-                        	
-                        </span>
                     </div>
-                    <br />
-                    
-                </li>
-			</ul>
-		</td>
-	</tr>  
 <!--	
 	<tr>
         <td valign="top" class="frmhead">
@@ -843,9 +686,10 @@ $('document').ready( function(){
 </script>
 
 <div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+	<input type="reset" class="next btn btn_b" value="Reset" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
     &nbsp;&nbsp;&nbsp;
+</div>
 </div>
 </form>
 

@@ -147,7 +147,7 @@ if($_POST['q_page2sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='treatments.php?msg=<?=$msg;?>';
+			window.location='history.php?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -186,25 +186,26 @@ if($_POST['q_page2sub'] == 1)
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
-		for($i=0;$i<$num_surgery;$i++){
-			if($_POST['surgery_id_'.$i]==0){
-				if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-					$s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
-				}
-			}else{
-				if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-					$s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'"; 
-				}else{
-					$s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
-				}
-			}	
-			mysql_query($s);
-		}	
+                for($i=0;$i<$num_surgery;$i++){
+                        if($_POST['surgery_id_'.$i]==0){
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_REQUEST['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                }
+                        }else{
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }else{
+                                        $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }
+                        }
+                        mysql_query($s);
+                }
+
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='treatments.php?msg=<?=$msg;?>';
+			window.location='history.php?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -263,14 +264,7 @@ $surgery = st($myarray['surgery']);
 if($cpap == '')
 	$cpap = 'No';
 ?>
-
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<script src="admin/popup/popup.js" type="text/javascript"></script>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
-
+<link rel="stylesheet" href="css/questionnaire.css" />
 <a name="top"></a>
 <?php include 'includes/questionnaire_header.php'; ?>
 
@@ -393,30 +387,16 @@ if($cpap == '')
 <input type="hidden" name="ed" value="<?=$q_page2id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
+<div class="formEl_a">
 <div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="q_pagebtn" value="Save" />
+	<input type="reset" class="next btn btn_b" value="Reset" />
+	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-    <tr>
-        <td colspan="2" class="sub_head">
-           Sleep Center Evaluation
-        </td>
-    </tr>
-    <tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-<label class="desc" id="title0" for="Field0">
-                        Sleep Studies
-                    </label>
-
-                    <div>
-                        <span>
-							Have you had a sleep study
-							
-							<input type="radio" id="polysomnographic_yes" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
+           <h3>Sleep Studies</h3>
+                    <div class="sepH_b">
+			<label class="lbl_a">Have you had a sleep study</label>
+			<input type="radio" id="polysomnographic_yes" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
                             Yes
                             
                             <input type="radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
@@ -424,78 +404,48 @@ if($cpap == '')
 							
                         	<!--<input type="checkbox" name="polysomnographic" value="1" class="tbox" style="width:10px;"  onclick="chk_poly()" <? if($polysomnographic == 1) echo " checked";?> />
                             A polysomnographic evaluation was performed at a sleep disorder center -->
-                        </span>
-                    </div>
-                    
                     <br />
                     <div class="poly_options">
-                    	<span>
-                        	If yes where 
-							
-                            <input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="field text addr tbox" value="<?=$sleep_center_name_text;?>"  maxlength="255" style="width:225px;" /> 
+                        <label class="lbl_in">If yes where:</label> 
+                        <input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="inpt_a" value="<?=$sleep_center_name_text;?>"  maxlength="255" /> 
 						
-							Date
-                            &nbsp;&nbsp;
-                            <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox" value="<?=$sleep_study_on;?>"  maxlength="10" style="width:75px;" /> 
-                        </span>
+			<label class="lbl_in">Date:</label>
+                            <input id="sleep_study_on" name="sleep_study_on" type="text" class="inpt_a" value="<?=$sleep_study_on;?>"  maxlength="10" style="width:75px;" /> 
                     </div>
-					<br />
+			</div>
 					
-                    <br />
-                    
-                </li>
-            </ul>
            <script>
 				chk_poly();
 		   </script>
-        </td>
-    </tr>
-    
-    <tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        CPAP Intolerance
-                    </label>
-                    <div>
-                        <span>
-                        	Have you tried CPAP?
+          <h3>CPAP Intolerance</h3>
+                    <div class="sepH_b">
+                        <label class="lbl_a">Have you tried CPAP?</label>
                             <input type="radio" name="cpap" value="Yes" <? if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
                             Yes
                             
                             <input type="radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
-                        </span>
-                   	</div>
-                    <div class="cpap_options">
-                        <span>
-                                Are you currently using CPAP?
+		    </div>
+                    <div class="sepH_b cpap_options">
+                            <label class="lbl_a">Are you currently using CPAP?</label>
                             <input type="radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
 
                             <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
-                        </span>
                         </div>
-
                    
-                                        <div class="cpap_options2">                        <span>
-                                                        If currently using CPAP, how many nights / week do you wear it? <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
-                                                        <br />&nbsp;
+                                        <div class="sepH_b half cpap_options2">                     
+                                            <label class="lbl_a">If currently using CPAP, how many nights / week do you wear it?</label>
+						<input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="inpt_a" value="<?=$nights_wear_cpap;?>" maxlength="255" />
+                                        </div>
+
+                                        <div class="sepH_b half cpap_options2">
+                                            <label class="lbl_a">How many hours each night do you wear it?</label>
+						<input id="percent_night_cpap" name="percent_night_cpap" type="text" class="inpt_a" value="<?=$percent_night_cpap;?>" maxlength="255" />
                                                 </span>
                                         </div>
 
-                                        <div class="cpap_options2">
-                        <span>
-                                                        How many hours each night do you wear it? <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
-                                                        <br />&nbsp;
-                                                </span>
-                                        </div>
-
-                   	<div id="cpap_options" class="cpap_options">
-                        <span>
-                   			The Patient has attempted treatment with a CPAP but they could not tolerate its use due to:	
-                            <br />
+                   			<h5>The Patient has attempted treatment with a CPAP but they could not tolerate its use due to:</h5>	
                             
                             <?
 							$intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
@@ -504,21 +454,19 @@ if($cpap == '')
 							while($intolerance_myarray = mysql_fetch_array($intolerance_my))
 							{
 							?>
+							<div class="sepH_b half">
 								<input type="checkbox" id="intolerance" name="intolerance[]" value="<?=st($intolerance_myarray['intoleranceid'])?>" <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
-                                <?=st($intolerance_myarray['intolerance']);?><br />
+                                <label><?=st($intolerance_myarray['intolerance']);?></label>
+							</div>
 							<?
 							}
 							?>
-					<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> &nbsp;&nbsp; Other<br />
-                       	</span>
+					<div class="sepH_b half">
+					<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> &nbsp;&nbsp; Other
 					</div>
-                    <br />
-                    <div class="cpap_options">
+                    <div class="sepH_b cpap_options">
                         <span class="cpap_other_text">
-                        	<span style="color:#000000; padding-top:0px;">
-                            	Other Items<br />
-                            </span>
+                            	<label class="lbl_a">Other Items</label>
                             (Enter Each on Different Line)<br />
                             <textarea name="other_intolerance" class="field text addr tbox" style="width:650px; height:100px;" ><?=$other_intolerance;?></textarea>
 							<br />&nbsp;
@@ -529,33 +477,18 @@ if($cpap == '')
 						chk_cpap();
 						chk_cpap_other();
 					</script>
-                </li>
-            </ul>
-           
-        </td>
-    </tr>
-    
-        <tr>
-        <td valign="top" class="frmhead">
-                <ul>
-                <li id="foli8" class="complex">
-                    <label class="desc" id="title0" for="Field0">
-                      	Dental Devices 
-                    </label>
-                    <div>
-			<span>
-				Are you currently wearing a dental device?
+                      	<h3>Dental Devices</h3> 
+			<div class="sepH_b half">
+				<label class="lbl_a">Are you currently wearing a dental device?</label>
                             <input type="radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
                             <input type="radio" name="dd_wearing" value="No" <? if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
 
-			</span>
 		    </div>
-		    <div>
-			<span>
- 				Have you previously tried a dental device?	
+		    <div class="sepH_b half">
+ 				<label class="lbl_a">Have you previously tried a dental device?</label>
                             <input type="radio" name="dd_prev" value="Yes" <? if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
@@ -564,126 +497,101 @@ if($cpap == '')
 
 			</span>
 		    </div>
-		    <div class="dd_options">
-			<span>
-				Was it over-the-counter (OTC)? 	
+		    <div class="dd_options sepH_b half">
+			<label class="lbl_a">Was it over-the-counter (OTC)?</label> 	
                             <input type="radio" name="dd_otc" value="Yes" <? if($dd_otc == 'Yes') echo " checked";?> />
                             Yes
 
                             <input type="radio" name="dd_otc" value="No" <? if($dd_otc == 'No') echo " checked";?> />
                             No
-			</span>
 		    </div>
-		    <div class="dd_options">
-			<span>
-				Was it fabricated by a dentist?
+		    <div class="dd_options sepH_b half">
+			<label class="lbl_a">Was it fabricated by a dentist?</label>
                             <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> />
                             Yes
 
                             <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
                             No
-			<span>
-		    </div>
-		    <div class="dd_options">
-			<span>
-				Who <input type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
-			</span>
+				<br /><br />
+				<label class="lbl_a">Who?</label>
+				<input class="inpt_a" type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
 	 	    </div>
 		    <div class="dd_options">
-			<span>
-				Describe your experience<br />
+			<label class="lbl_a">Describe your experience</label>
 				<textarea id="dd_experience" name="dd_experience"><?= $dd_experience; ?></textarea>
-			</span>
 		    </div>
 			<script type="text/javascript">
 				chk_dd();
 			</script>
-		</td>
-        </tr>
-        <tr>
-        <td valign="top" class="frmhead">
-                <ul>
-                <li id="foli8" class="complex">
-                    <label class="desc" id="title0" for="Field0">
-                        Surgery
-                    </label>
-                    <div>
-                        <span>
-				Have you had surgery for snoring or sleep apnea?
+                        <h3>Surgery</h3>
+			<div class="sepH_b">
+				<label class="lbl_a">Have you had surgery for snoring or sleep apnea?</label>
                             <input type="radio" name="surgery" value="Yes" <? if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
                             Yes
 
                             <input type="radio" name="surgery" value="No" <? if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
                             No
-			</span>
 		    </div>
-		    <div class="s_options">
-                        <span>
-Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
+		    <div class="sepH_b s_options">
+			<label class="lbl_a">Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)</label>
 	<table id="surgery_table">
-	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th></tr>	
+	<tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>	
 		<?php
 		  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 		  $s_q = mysql_query($s_sql);
 		  $s_count = 0;
 		  while($s_row = mysql_fetch_assoc($s_q)){
 		?>
-	  <tr>
-		<td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" /><input type="text" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" /></td>
-		<td><input type="text" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
-		<td><input type="text" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
+	  <tr id="surgery_row_<?= $s_count; ?>">
+		<td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="<?= $s_row['id']; ?>" />
+			<input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" value="<?= $s_row['surgery_date']; ?>" /></td>
+		<td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" value="<?= $s_row['surgeon']; ?>" /></td>
+		<td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" value="<?= $s_row['surgery']; ?>" /></td>
+		<td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
 	  </tr>
 		<?php
 			$s_count++;
 			}
 		?>
-          <tr>
-                <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" name="surgery_date_<?= $s_count; ?>" /></td>
-                <td><input type="text" name="surgeon_<?= $s_count; ?>" /></td>
-                <td><input type="text" name="surgery_<?= $s_count; ?>" /></td>
+          <tr id="surgery_row_<?= $s_count; ?>">
+                <td><input type="hidden" name="surgery_id_<?= $s_count; ?>" value="0" /><input type="text" id="surgery_date_<?= $s_count; ?>" name="surgery_date_<?= $s_count; ?>" /></td>
+                <td><input type="text" id="surgeon_<?= $s_count; ?>" name="surgeon_<?= $s_count; ?>" /></td>
+                <td><input type="text" id="surgery_<?= $s_count; ?>" name="surgery_<?= $s_count; ?>" /></td>
+		<td><input type="button" name="delete_<?= $s_count; ?>" class="next btn btn_b" value="Delete" onclick="delete_surgery('<?= $s_count; ?>'); return false;" /></td>
           </tr>
 	</table>
 		<input type="hidden" id="num_surgery" name="num_surgery" value="<?= $s_count+1; ?>" />
-		<input type="button" onclick="add_surgery(); return false;" value="Add Surgery" />
+		<input type="button" onclick="add_surgery(); return false;" class="next btn btn_d" value="Add Surgery" />
 			</span>
 		    </div>
 		    <script type="text/javascript">
 			chk_s();
 			function add_surgery(){
 				n = $('#num_surgery').attr('value');
-				$('#surgery_table').append('<tr><td><input type="hidden" name="surgery_id_'+n+'" value="0" /><input type="text" name="surgery_date_'+n+'" /></td><td><input type="text" name="surgeon_'+n+'" /></td><td><input type="text" name="surgery_'+n+'" /></td></tr>');				
+				$('#surgery_table').append('<tr id="surgery_row_'+n+'"><td><input type="hidden" name="surgery_id_'+n+'" value="0" /><input type="text" id="surgery_date_'+n+'" name="surgery_date_'+n+'" /></td><td><input type="text" id="surgeon_'+n+'" name="surgeon_'+n+'" /></td><td><input type="text" id="surgery_'+n+'" name="surgery_'+n+'" /></td><td><input type="button" class="next btn btn_b" name="delete_'+n+'" value="Delete" onclick="delete_surgery(\''+n+'\'); return false;" /></td></tr>');				
 				$('#num_surgery').attr('value', (parseInt(n,10)+1));
 			}
+                        function delete_surgery(n){
+                                $('#surgery_date_'+n).val('');
+                                $('#surgeon_'+n).val('');
+                                $('#surgery_'+n).val('');
+                                $('#surgery_row_'+n).hide();
+                        }
 		    </script>
-	</td>
-	</tr> 
-        <tr>        <td valign="top" class="frmhead">
-                <ul>                <li id="foli8" class="complex">
-                    <label class="desc" id="title0" for="Field0">
-                        OTHER ATTEMPTED THERAPIES
-                    </label>
-                    <div>
-                        <span>
-			    Please comment about other therapy attempts and how each impacted your snoring and apnea and sleep quality.
-                            <br />
+                        <h3>OTHER ATTEMPTED THERAPIES</h3>
+			<div class="sepH_b">
+			    <label clas="lbl_a">Please comment about other therapy attempts and how each impacted your snoring and apnea and sleep quality.</label>
                             <textarea name="other_therapy" class="field text addr tbox" style="width:650px; height:100px;" ><?=$other_therapy;?></textarea>
-                        </span>
                                                         <script>
                                                                 other_chk1();
                                                    </script>
                         </div>
-                    <br />
-                                </li>
-                        </ul>
-                </td>
-        </tr>
-
-</table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save"  />
+	<input type="reset" class="next btn btn_b" value="Reset" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save"  />
     &nbsp;&nbsp;&nbsp;
+</div>
 </div>
 </form>
 

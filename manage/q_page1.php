@@ -454,7 +454,7 @@ if($complaintid <> '')
 					$complaint_number = mysql_num_rows($complaint_my);
 					?>
                     <span class="form_info">
-                    	Select Complaint Sequence from the DropDown or leave it Blank.
+			Please check any other complaints below.
                     </span>
                     <br />
 		   <script type="text/javascript">

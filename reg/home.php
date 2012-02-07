@@ -5,13 +5,17 @@
   }
 
 include 'includes/header.php';
+include 'includes/completed.php';
 ?>
-Patient Home
+Patient Home <?= $_SESSION['pid']; ?>
 
+<div style="font-size:20px;"><?= $comp_perc; ?>% completed</div>
 <ul>
-  <li><a href="symptoms.php">Symptoms</a></li>
-  <li><a href="treatments.php">Previous Treatments</a></li>
-  <li><a href="history.php">Social Health History</a></li>
+  <li><a href="register.php" <?= ($comp['registered'])?'':'class="incomplete"'; ?>>Registration</a></li>
+  <li><a href="symptoms.php" <?= ($comp['symptoms'])?'':'class="incomplete"'; ?>>Symptoms</a></li>
+  <li><a href="sleep.php" <?= ($comp['epworth'])?'':'class="incomplete"'; ?>>Epworth/Thornton Scale</a></li>
+  <li><a href="treatments.php" <?= ($comp['treatments'])?'':'class="incomplete"'; ?>>Previous Treatments</a></li>
+  <li><a href="history.php" <?= ($comp['history'])?'':'class="incomplete"'; ?>>Social Health History</a></li>
 </ul>
 
 <?php

@@ -1,0 +1,6 @@
+.third{ width:32%; float:left;  display:block;}
+.half{width:49%; float:left; display:block;}
+.formel_a .third .inpt_a{ width:200px; }
+.formel_a .half .inpt_a{ width: 300px; }
+
+

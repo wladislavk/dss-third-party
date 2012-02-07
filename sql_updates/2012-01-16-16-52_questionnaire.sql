@@ -10,7 +10,7 @@ ALTER TABLE dental_q_page2 ADD COLUMN dd_fab varchar(50);
 ALTER TABLE dental_q_page2 ADD COLUMN dd_who varchar(255);
 ALTER TABLE dental_q_page2 ADD COLUMN dd_experience text;
 
-
+/*
 CREATE TABLE `dental_insurance_preauth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `patient_amount_left_to_meet` decimal(11,2) DEFAULT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `dental_insurance_preauth` (
   `network_benefits` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
-
+*/
 
 
 ALTER TABLE dental_q_page3 ADD COLUMN  wisdom_extraction_text varchar(255);
@@ -53,3 +53,5 @@ ALTER TABLE dental_q_page3 ADD COLUMN smoke varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN smoke_packs varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN tobacco varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN additional_paragraph varchar(50);
+
+

@@ -70,7 +70,8 @@
 	/* header */
 		#header {padding:20px 0 10px;border-top:1px solid #f7f7fa}
 		#header .wrapper {position:relative}
-		.logo {position:relative;left:18px;top:10px}
+		.logo {position:relative;left:18px;top:0px; background: url(../images/dss_logo.gif) no-repeat 0 0; width:322px;height:60px; display:block;}
+		.logo h1 {text-indent:-100000px;}
 
 	/* footer */
 		.ftr_content {font-size:11px;padding:10px 10px 0;position:relative}
@@ -196,7 +197,7 @@
 		.square_x_11 {background-position:0 -50px;width:11px;height:11px}
 
 	/* forms */
-		.formEl_a input,.formEl_a textarea, .formEl_a select {background:#fff;font-family:Helvetica, Arial, sans-serif;font-size:13px}
+		.formEl_a input,.formEl_a textarea, .formEl_a select {font-family:Helvetica, Arial, sans-serif;font-size:13px}
 		.formEl_a input:focus,.formEl_a textarea:focus,.formEl_a input:active,.formEl_a textarea:active {background:#ebfdd7}
 		.formEl_a label {cursor:pointer}
 		.formEl_a .lbl_a {display:block;margin-bottom:4px;color:#666;font-weight:700}

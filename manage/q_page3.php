@@ -51,6 +51,9 @@ $injurytohead = $_POST['injurytohead'];
 	$no_history = $_POST['no_history'];
 	$orthodontics = $_POST['orthodontics'];
         $premedcheck = $_POST["premedcheck"];
+	$allergenscheck = $_POST["allergenscheck"];
+	$medicationscheck = $_POST["medicationscheck"];
+	$historycheck = $_POST["historycheck"];
  	$premed = $_POST["premeddet"];
 	$family_hd = $_POST['family_hd'];
 	$family_bp = $_POST['family_bp'];
@@ -157,6 +160,9 @@ $injurytohead = $_POST['injurytohead'];
 		other_medications = '".s_for($other_medications)."',
 		history = '".s_for($history_arr)."',
 		other_history = '".s_for($other_history)."',
+                allergenscheck = '".s_for($allergenscheck)."',
+                medicationscheck = '".s_for($medicationscheck)."',
+                historycheck = '".s_for($historycheck)."',
 		dental_health = '".s_for($dental_health)."',
 		removable = '".s_for($removable)."',
 		injurytohead = '".s_for($injurytohead)."',
@@ -241,6 +247,9 @@ $injurytohead = $_POST['injurytohead'];
 		other_medications = '".s_for($other_medications)."',
 		history = '".s_for($history_arr)."',
 		other_history = '".s_for($other_history)."',
+                allergenscheck = '".s_for($allergenscheck)."',
+                medicationscheck = '".s_for($medicationscheck)."',
+                historycheck = '".s_for($historycheck)."',
 		dental_health = '".s_for($dental_health)."',
 		injurytohead = '".$injurytohead."',
 		injurytoface = '".s_for($injurytoface)."',
@@ -366,6 +375,9 @@ $psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_stri
 $pmy = mysql_query($psql);
 $pmyarray = mysql_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
+$allergenscheck = st($myarray["allergenscheck"]);
+$medicationscheck = st($myarray["medicationscheck"]);
+$historycheck = st($myarray["historycheck"]);
 $premeddet = st($pmyarray["premed"]);
 $family_hd = st($myarray["family_hd"]);
 $family_bp = st($myarray["family_bp"]);
@@ -552,15 +564,21 @@ label {
         <td valign="top" class="frmhead">
         	<ul>
 				<li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
+                    <label class="desc" id="title0" for="Field0" style="width:90%">
                         Allergens
-                    </label>
+                    </label><br />
                     <div>
-                        <span class="full">
-                        	<span style="color:#000000; padding-top:0px;">
+                        <span>
+                            <span>
+                                Do you have any known allergens?
+                                <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='block'" value="1" /> Yes
+                                <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none'" value="0" /> No
+
+                            </span>
+                            <span id="a_det" <?php if($allergenscheck == 0){ echo 'style="display:none;"';} ?>>
                             	Please list everything you are allergic to: <br />
-                            </span><br />
-                            <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
+                               <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
+			    </span>
                         </span>
                     </div>
                    	<br />
@@ -574,16 +592,23 @@ label {
         <td valign="top" class="frmhead">
         	<ul>
 				<li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
+                    <label class="desc" id="title0" for="Field0" style="width:90%">
                         Medications currently being taken
-                    </label>
+                    </label><br />
                     <div>
-                        <span class="full">
-                        	<span style="color:#000000; padding-top:0px;">
+			<span>
+                            <span>
+                                Are you currently taking any medications?
+                                <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='block'" value="1" /> Yes
+                                <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='none'" value="0" /> No
+
+                            </span>
+
+                        <span id="m_det" <?php if($medicationscheck == 0){ echo 'style="display:none;"';} ?>>
                             	Please list all medication you are currently taking: <br />
-                            </span><br />
                             <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
                         </span>
+			</span>
                     </div>
                    	<br />
                     
@@ -596,15 +621,22 @@ label {
         <td valign="top" class="frmhead">
         	<ul>
 				<li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
+                    <label class="desc" id="title0" for="Field0" style="width:90%;">
                         Medical History
                     </label>
                     <div>
-                        <span class="full">
-                        	<span style="color:#000000; padding-top:0px;">
+                        <span>
+			    <span>
+                                Did you have any other medical diagnoses and surgeries?
+                                <input id="historycheck" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='block'" value="1" /> Yes
+                                <input id="historycheck" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='none'" value="0" /> No
+                        
+                            </span>
+
+                             <span id="h_det" <?php if($historycheck == 0){ echo 'style="display:none;"';} ?>>
                             	List all other medical diagnoses and surgeries from birth until now:<br />
-                            </span><br />
-                            <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
+                                <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
+			     </span>
                         </span>
                     </div>
                    	<br />
@@ -642,7 +674,6 @@ label {
                             </select>
 						</span>
 					</div>
-					<br />
 					<script type="text/javascript">
 
 						$('document').ready( function(){
@@ -686,7 +717,6 @@ label {
                                                         <span id="wisdom_extraction_extra">Please describe: <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
 						</span>
 					</div>
-					<br />
 					
 					<div>
                         <span>
@@ -699,7 +729,6 @@ label {
                                                         <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" /></span>
 						</span>
 					</div>
-					<br />
                                        <div>
                         <span>
                                                         <label>Do you wear dentures?</label>
@@ -711,7 +740,6 @@ label {
                                                         <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" /></span>
                                                 </span>
                                         </div>
-                                        <br />
 
 					
 					<div>
@@ -725,7 +753,6 @@ label {
                             				<span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" /></span> 
 						</span>
 					</div>
-					<br />
 					
                                         <div>
                         <span>
@@ -737,18 +764,6 @@ label {
                                                         <span id="tmj_cp_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" /></span>
                                                 </span>
                                         </div>
-                                        <br />
-                                        <div>
-                        <span>
-							<label>Do you have pain In this joint?</label>
-                                                        <input type="radio" class="extra" name="tmj_pain" value="Yes" <? if($tmj_pain == 'Yes') echo " checked";?> />Yes
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <input type="radio" class="extra" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
-                                                        <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" /></span>
-                                                </span>
-                                        </div>
-                                        <br />
 
 					<div>
                         <span>
@@ -761,7 +776,6 @@ label {
 
 						</span>
 					</div>
-					<br />
 				                                        <div>
                         <span>
                                                         <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
@@ -773,7 +787,6 @@ label {
 							<span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" /></span>
                                                 </span>
                                         </div>
-                                        <br />	
 					<div>
                         <span>
 							<label>Do you have morning dry mouth?</label>
@@ -785,7 +798,6 @@ label {
                                                         <span id="drymouth_extra">Please describe: <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" /></span>							
 						</span>
 					</div>
-					<br />
 					
 					<div>
                         <span>
@@ -796,7 +808,6 @@ label {
                                                         <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /></span> 
 						</span>
 					</div>
-					<br />
 					
 					                                        
                                         <div>
@@ -810,7 +821,6 @@ label {
 							<span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /></span>
                                                 </span>
                                         </div>
-                                        <br />
 
 					
 					<div>
@@ -826,7 +836,6 @@ label {
 <span id="completed_future_extra">Please describe: <input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" /></span>
 						</span>
 					</div>
-					<br />
 					
 					<div>
                         <span>
@@ -839,9 +848,7 @@ label {
 							<span id="clinch_grind_extra">Please describe: <input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" /></span>
 						</span>
 					</div>
-					<br />
 
-					<br />
 					
 				</li>
 			</ul>
@@ -903,14 +910,6 @@ label {
                             Daily
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                            <input type="radio" name="alcohol" value="1/day" class="tbox" style="width:10px;" <? if($alcohol == '1/day')  echo " checked";?> />
-                            1/Day
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                            <input type="radio" name="alcohol" value="several days/week" class="tbox" style="width:10px;" <? if($alcohol == 'several days/week')  echo " checked";?> />
-                            Several Days/Week
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
                             <input type="radio" name="alcohol" value="occasionally" class="tbox" style="width:10px;" <? if($alcohol == 'occasionally')  echo " checked";?> />
                             Occasionally
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -925,13 +924,6 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="radio" name="sedative" value="Daily" class="tbox" style="width:10px;" <? if($sedative == 'Daily')  echo " checked";?> />
                             Daily
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="sedative" value="1/day" class="tbox" style="width:10px;" <? if($sedative == '1/day')  echo " checked";?> />
-                            1/Day
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                            <input type="radio" name="sedative" value="several days/week" class="tbox" style="width:10px;" <? if($sedative == 'several days/week')  echo " checked";?> />
-                            Several Days/Week
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <input type="radio" name="sedative" value="occasionally" class="tbox" style="width:10px;" <? if($sedative == 'occasionally')  echo " checked";?> />
@@ -949,14 +941,6 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="radio" name="caffeine" value="Daily" class="tbox" style="width:10px;" <? if($caffeine == 'Daily')  echo " checked";?> />
                             Daily
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                            <input type="radio" name="caffeine" value="1/day" class="tbox" style="width:10px;" <? if($caffeine == '1/day')  echo " checked";?> />
-                            1/Day
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                            <input type="radio" name="caffeine" value="several days/week" class="tbox" style="width:10px;" <? if($caffeine == 'several days/week')  echo " checked";?> />
-                            Several Days/Week
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <input type="radio" name="caffeine" value="occasionally" class="tbox" style="width:10px;" <? if($caffeine == 'occasionally')  echo " checked";?> />

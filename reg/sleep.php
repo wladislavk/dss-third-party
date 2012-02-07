@@ -1,6 +1,7 @@
 <?php 
 include "includes/header.php";
 ?>
+<link rel="stylesheet" href="css/questionnaire.css" />
 <script type="text/javascript">
 edited = false;
 	$(document).ready(function() {
@@ -44,6 +45,47 @@ if($_POST['q_sleepsub'] == 1)
 	/*echo "epworthid - ".$epworth_arr."<br>";
 	echo "analysis - ".$analysis."<br>";*/
 	
+
+        if($_POST['ed'] == '')
+        {
+                $ins_sql = " insert into dental_q_sleep set 
+                patientid = '".s_for($_SESSION['pid'])."',
+                epworthid = '".s_for($epworth_arr)."',
+                analysis = '".s_for($analysis)."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                $ins_sql = " insert into dental_thorton set 
+                patientid = '".s_for($_SESSION['pid'])."',
+                snore_1 = '".s_for($snore_1)."',
+                snore_2 = '".s_for($snore_2)."',
+                snore_3 = '".s_for($snore_3)."',
+                snore_4 = '".s_for($snore_4)."',
+                snore_5 = '".s_for($snore_5)."',
+                tot_score = '".s_for($tot_score)."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                $ed_sql = "update dental_q_page1 set
+                        ess='".mysql_real_escape_string($_POST['epTot'])."',
+                        tss='".s_for($tot_score)."'
+                        WHERE patientid='".$_SESSION['pid']."'";
+                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+
+
+                $msg = "Added Successfully";
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='treatments.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                die();
+        }
+        else
+        {
 	
 		$ed_sql = " update dental_q_sleep set 
 		epworthid = '".s_for($epworth_arr)."',
@@ -72,10 +114,11 @@ if($_POST['q_sleepsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='sleep.php?msg=<?=$msg;?>';
+			window.location='treatments.php?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
+	}
 }
 
 $sql = "select * from dental_thorton where patientid='".$_SESSION['pid']."'";
@@ -142,35 +185,21 @@ if($epworthid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
-	<input type="submit" name="q_sleepbtn" value="Save" />
+	<input type="reset" class="next btn btn_b" value="Reset Values to Zero" />
+	<input type="submit" name="q_sleepbtn" class="next btn btn_d" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-    
-    <tr>
-        <td valign="top" class="frmhead">
-    <tr>
-        <td valign="top" class="frmhead" style="text-align:center;">
-<table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
-    <tr bgcolor="#FFFFFF">
-            <td>
-<br />
-<span class="admin_head">
-Epworth Sleep Questionnaire
-</span>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-        <tr>
-                <td valign="top" colspan="2" >
+<div class="formEl_a">
+<h3>Epworth Sleep Questionnaire</h3>
+	<div class="legend">
                         Using the following scale, choose the most appropriate number for each situation.
 
                         <br />
-                        0 = No chance of dozing<br />
-                        1 = Slight chance of dozing<br />
-                        2 = Moderate chance of dozing<br />
-                        3 = High chance of dozing<br />
-                </td>
-        </tr>
+                        <strong>0</strong> = No chance of dozing<br />
+                        <strong>1</strong> = Slight chance of dozing<br />
+                        <strong>2</strong> = Moderate chance of dozing<br />
+                        <strong>3</strong> = High chance of dozing<br />
+	</div>
                     <? 
 					$epworth_sql = "select * from dental_epworth where status=1 order by sortby";
 					$epworth_my = mysql_query($epworth_sql);
@@ -238,48 +267,24 @@ Epworth Sleep Questionnaire
                                                         $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];                                                }
 
                                         ?>
-
-                            <tr>
-                <td valign="top" width="60%" class="frmhead">        
-			<?=st($epworth_myarray['epworth']);?><br />&nbsp;
-		</td>
-                <td valign="top" class="frmdata">
-                        	<select id="epworth_<?=st($epworth_myarray['epworthid']);?>" name="epworth_<?=st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
+	<div class="sepH_b half">
+		<label class="lbl_in"><?=st($epworth_myarray['epworth']);?></label>
+                        	<select id="epworth_<?=st($epworth_myarray['epworthid']);?>" name="epworth_<?=st($epworth_myarray['epworthid']);?>" class="inpt_in" onchange="cal_analaysis(this.value);">
                                 <option value="0" <? if($chk == '0') echo " selected";?>>0</option>
                                 <option value="1" <? if($chk == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($chk == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($chk == 3) echo " selected";?>>3</option>
                             </select>
-                        </td>
-                    </tr>
+                    </div>
                     <? }?>
-                    <tr>
-                        <td colspan="2">
-                        	<span style="color:#000000; padding-top:0px;">
-                            	Analysis
-                            </span>
-                            <br />
+                            	<h5 class="clear">Analysis</h5>
                             <textarea name="analysis" class="field text addr tbox" style="width:650px; height:100px;"><?=$analysis;?></textarea>
 			    <input type="hidden" name="epTot" />
-                        </td>
-                    </tr>
-</table>
 <script type="text/javascript">
 cal_analaysis(0);
 </script>
-</td></tr> 
-</table>
-	<tr>
-        <td valign="top" class="frmhead" style="text-align:center;">
-<table width="100%" border="0" bgcolor="#929B70" cellpadding="1" cellspacing="1" align="center">
-    <tr bgcolor="#FFFFFF">
-            <td>
-<br />
-<span class="admin_head">
-        Thornton Snoring Scale
-</span>
-
-<br />
+<br /><br />
+        <h3>Thornton Snoring Scale</h3>
 <script type="text/javascript">
         function cal_snore()
         {
@@ -290,111 +295,71 @@ cal_analaysis(0);
                 fa.tot_score.value = tot;
         }
 </script>
-<br>
 
 <input type="hidden" name="thortonsub" value="1" />
 <input type="hidden" name="ted" value="<?=$thortonid;?>" />
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-        <tr>
-                <td valign="top" colspan="2" >
+<div class="legend">
                         Using the following scale, choose the most appropriate number for each situation.
 
                         <br />
-                        0 = Never<br />
-                        1 = Infrequently (1 night per week)<br />
-                        2 = Frequently (2-3 nights per week)<br />
-                        3 = Most of the time (4 or more nights)<br />
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" width="60%" class="frmhead">
-                        1. My snoring affects my relationship with my partner:
-                </td>
-                <td valign="top" class="frmdata">
-                        <select name="snore_1" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                        <strong>0</strong> = Never<br />
+                        <strong>1</strong> = Infrequently (1 night per week)<br />
+                        <strong>2</strong> = Frequently (2-3 nights per week)<br />
+                        <strong>3</strong> = Most of the time (4 or more nights)<br />
+</div>
+                <div class="sepH_b half">        
+			<label class="lbl_in">1. My snoring affects my relationship with my partner:</label>
+                        <select name="snore_1" onchange="Javascript: cal_snore()" class="inpt_in">
                                 <option value="0" <? if($snore_1 == 0) echo " selected";?>>0</option>
                                 <option value="1" <? if($snore_1 == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($snore_1 == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($snore_1 == 3) echo " selected";?>>3</option>
                         </select>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                        2. My snoring causes my partner to be irritable or tired:
-                </td>
-                <td valign="top" class="frmdata">
-                        <select name="snore_2" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		</div>
+		<div class="sepH_b half">
+                        <label class="lbl_in">2. My snoring causes my partner to be irritable or tired:</label>
+                        <select name="snore_2" onchange="Javascript: cal_snore()" class="inpt_in">
                                 <option value="0" <? if($snore_2 == 0) echo " selected";?>>0</option>
                                 <option value="1" <? if($snore_2 == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($snore_2 == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($snore_2 == 3) echo " selected";?>>3</option>
                         </select>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                        3. My snoring requires us to sleep in separate rooms:
-                </td>
-                <td valign="top" class="frmdata">
-                        <select name="snore_3" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		</div>
+		<div class="sepH_b half">
+                        <label class="lbl_in">3. My snoring requires us to sleep in separate rooms:</label>
+                        <select name="snore_3" onchange="Javascript: cal_snore()" class="inpt_in">
                                 <option value="0" <? if($snore_3 == 0) echo " selected";?>>0</option>
                                 <option value="1" <? if($snore_3 == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($snore_3 == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($snore_3 == 3) echo " selected";?>>3</option>
                         </select>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                        4. My snoring is loud:
-                </td>
-                <td valign="top" class="frmdata">
-                        <select name="snore_4" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		</div>
+		<div class="sepH_b half">
+                        <label class="lbl_in">4. My snoring is loud:</label>
+                        <select name="snore_4" onchange="Javascript: cal_snore()" class="inpt_in">
                                 <option value="0" <? if($snore_4 == 0) echo " selected";?>>0</option>
                                 <option value="1" <? if($snore_4 == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($snore_4 == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($snore_4 == 3) echo " selected";?>>3</option>
                         </select>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                        5. My snoring affects people when I am sleeping away from home:
-                </td>
-                <td valign="top" class="frmdata">
-                        <select name="snore_5" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		</div>
+		<div class="sepH_b half">
+                        <label class="lbl_in">5. My snoring affects people when I am sleeping away from home:</label>
+                        <select name="snore_5" onchange="Javascript: cal_snore()" class="inpt_in">
                                 <option value="0" <? if($snore_5 == 0) echo " selected";?>>0</option>
                                 <option value="1" <? if($snore_5 == 1) echo " selected";?>>1</option>
                                 <option value="2" <? if($snore_5 == 2) echo " selected";?>>2</option>
                                 <option value="3" <? if($snore_5 == 3) echo " selected";?>>3</option>
                         </select>
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                        Your Score:
-                </td>
-                <td valign="top" class="frmdata">
+		</div>
+                        <h5 class="clear">Your Score:</h5>
                         <input type="text" name="tot_score" value="<?= $tot_score; ?>" class="tbox" style="width:80px;" readonly="readonly" >
-                </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmdata" colspan="2" style="text-align:right;">
                         <b>A score of 5 or greater indicates your snoring may be significantly affecting your quality of life.  </b>
-                </td>
-        </tr>
-</table>
 <script type="text/javascript">
   $('document').ready( function(){
         cal_snore();
  });
 </script>
-<br /><br />
-
-                        </td>
-                </tr>
-        </table>
 
 
 
@@ -404,14 +369,10 @@ cal_analaysis(0);
 
 
 
-
-		</td>
-	</tr>    
-</table>
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+	<input type="reset" class="next btn btn_b" value="Reset Values to Zero" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

@@ -16,7 +16,7 @@ require_once('includes/general_functions.php');
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
-<body>
+<body class="solid">
 
 <?php
 $psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -111,19 +111,22 @@ parent.window.location = parent.window.location;
 ?>
 <style type="text/css">
 .duplicate{ display:none; }
-table {  width: 600px; margin:0 auto; }
+table {  width: 700px; margin:0 auto; }
 table, td{ color:#fff;}
 input.selected { background-color:#0f3; border:solid 1px #0f3;}
+input.button1 { font-size:20px; background:#fff; }
 </style>
 <form action="patient_changes.php" method="post">
 <table>
   <tr>
-    <th>Field</th>
-    <th>Your Data</th>
+    <th style>Field</th>
+    <th><input type="button" value="Select All" onclick="updateAll('doc');return false;" /><br />Your Data</th>
     <th></th>
-    <th>Patient Data</th>
+    <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br />Patient Data</th>
   </tr>
-
+</table>
+<div style="overflow:auto; height:300px;">
+<table >
 <?php
   foreach($fields as $field => $label){
     if(trim($p[$field])==trim($c[$field])){ 
@@ -132,20 +135,21 @@ input.selected { background-color:#0f3; border:solid 1px #0f3;}
     	<input type="hidden" id="value_<?= $field; ?>" name="value_<?= $field; ?>" />
 	<?php
     }else{
-      ?><tr>
-	<input type="hidden" id="accepted_<?= $field; ?>"  name="accepted_<?= $field; ?>" />
-    	<input type="hidden" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
+      ?><tr class="change_row">
+	<input type="hidden" class="accepted" id="accepted_<?= $field; ?>"  name="accepted_<?= $field; ?>" />
+    	<input type="hidden" class="value" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
 	<?php
     }
   ?>
     <td><?= $label; ?>:</td>
-    <td><input type="text" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
-    <td><input type="button" value="&laquo; Keep Old" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-	<input type="button" value="Use Patient's &raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
-    <td><input type="text" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
+    <td><input type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
+    <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+	<input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
+    <td><input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
   </tr>
 <?php } ?>
 </table>
+</div>
 <input type="submit" name="submit" value="Submit" />
 <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
 </form>
@@ -162,6 +166,16 @@ function updateField(f, v){
     $('#value_'+f).val($('#pat_'+f).val());
   }
     $('#accepted_'+f).val(v);
+}
+function updateAll(v){
+  $('.change_row').each(function(){
+    $(this).find('.doc_field').removeClass('selected');
+    $(this).find('.pat_field').removeClass('selected');
+    $(this).find('.'+v+'_field').addClass('selected');
+    val = $(this).find('.'+v+'_field').val();
+    $(this).find('.value').val(val);
+    $(this).find('.accepted').val(v);
+  });
 }
 </script>
 

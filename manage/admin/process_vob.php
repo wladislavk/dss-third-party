@@ -40,7 +40,7 @@ if (isset($_REQUEST['ed'])) {
 		 . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
 		 . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
 		 . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-		 . "  p.home_phone as 'patient_phone'  "
+		 . "  p.home_phone as 'patient_phone', p.work_phone, p.cell_phone  "
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_contact r ON p.referred_by = r.contactid  "
@@ -228,7 +228,16 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 Patient's Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_phone" value="<?=$preauth['patient_phone']?>" class="tbox readonly" readonly /> 
+		<?php
+		   if($preauth['patient_phone']!=''){
+			$patient_phone = $preauth['patient_phone'];
+		   }elseif($preauth['cell_phone']!=''){
+                        $patient_phone = $preauth['cell_phone'];
+                   }else{
+                        $patient_phone = $preauth['work_phone'];
+                   }
+		?>
+                <input type="text" name="patient_phone" value="<?=$patient_phone?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

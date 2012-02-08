@@ -13,7 +13,7 @@ foreach($_POST[form] as $form){
 $sql = "UPDATE dental_ledger SET service_date = '".date('Y-m-d', strtotime($form['service_date']))."', status='".$form['status']."' WHERE ledgerid=".$form['ledgerid']; 
 
 mysql_query($sql);
-echo $sql;
+//echo $sql;
 }
 ?>
 <script type="text/javascript">

@@ -255,9 +255,10 @@ if($patient_state == '')
 if($patient_zip == '')
 	$patient_zip = $pat_myarray['zip'];
 
-if($patient_phone == '')
-	$patient_phone = $pat_myarray['home_phone'];
-
+if($patient_phone == ''){
+	$patient_phone_code = substr($pat_myarray['home_phone'],0,3);
+	$patient_phone = substr($pat_myarray['home_phone'],3);
+}
 if($patient_dob == '')
 	$patient_dob = $pat_myarray['dob'];
 
@@ -359,7 +360,14 @@ $qua_my = mysql_query($qua_sql);
 $qua_myarray = mysql_fetch_array($qua_my);
 $seventeenA = $qua_myarray['qualifier'];
 
-                      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+                      $getuserinfo = "SELECT *, ";
+			if($insurancetype == '1'){
+        			$getuserinfo .= " dental_users.medicare_npi ";
+			}else{
+        			$getuserinfo .= " dental_users.npi ";
+			}
+  			$getuserinfo .= " as 'provider_id' ";
+			$getuserinfo .= " FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
 
@@ -412,7 +420,7 @@ $fdf = "
   << /T(".$field_path.".otherins_chkbox[0]) /V(".(($insurancetype == '7')?1:'').") >>
 
   << /T(".$field_path.".insured_id_number_fill[0]) /V(".$insured_id_number.") >>
-  << /T(".$field_path.".pt_name_fill[0]) /V(".$patient_lastname.", ".$patient_firstname.", ".$patient_middle.") >>
+  << /T(".$field_path.".pt_name_fill[0]) /V(".$patient_lastname.", ".$patient_firstname.((trim($patient_middle)!='')?", ".$patient_middle:'').") >>
   ";
   if($patient_dob!=''){
     $fdf .= "
@@ -424,7 +432,7 @@ $fdf = "
   $fdf .= "
   << /T(".$field_path.".pt_sex_m_chkbox[0]) /V(".(($patient_sex == "M" || $patient_sex == "Male")?1:'').") >>
   << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
-  << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.", ".$insured_middle.") >>
+  << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.((trim($insured_middle)!='')?", ".$insured_middle:'').") >>
   << /T(".$field_path.".pt_address_fill[0]) /V(".$patient_address.") >>
   << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "Self")?1:'').") >>
   << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "Spouse")?1:'').") >>
@@ -439,8 +447,8 @@ $fdf = "
   << /T(".$field_path.".insured_city_fill[0]) /V(".$insured_city.") >>
   << /T(".$field_path.".insured_state_fill[0]) /V(".$insured_state.") >>
   << /T(".$field_path.".pt_zipcode_fill[0]) /V(".$patient_zip.") >>
-  << /T(".$field_path.".pt_phone_areacode_fill[0]) /V(".substr($patient_phone,0,3).") >>
-  << /T(".$field_path.".pt_phone_number_fill[0]) /V(".substr($patient_phone,3).") >>
+  << /T(".$field_path.".pt_phone_areacode_fill[0]) /V(".$patient_phone_code.") >>
+  << /T(".$field_path.".pt_phone_number_fill[0]) /V(".$patient_phone.") >>
   << /T(".$field_path.".pt_status_employed_chkbox[0]) /V(".((in_array("Employed", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".pt_status_ftstudent_chkbox[0]) /V(".((in_array("Full Time Student", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".pt_status_ptstudent_chkbox[0]) /V(".((in_array("Part Time Student", $patient_status_array))?1:'').") >>
@@ -650,10 +658,10 @@ $fdf .= "
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>
   << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
-  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/Y').") >>
-  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
+  << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
+  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['provider_id'].") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
-  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".$userinfo['npi'].") >>
+  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".$userinfo['provider_id'].") >>
   << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".$billing_provider_b_other.") >>
 ";
 

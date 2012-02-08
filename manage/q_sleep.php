@@ -241,6 +241,7 @@ Epworth Sleep Questionnaire
 								function cal_analaysis(fa)
 								{
 									var an_tot = 0;
+									/*
 									for(i=0; i<document.q_sleepfrm.elements.length; i++)
 									{
 										if(document.q_sleepfrm.elements[i].type == 'select-one')
@@ -251,7 +252,15 @@ Epworth Sleep Questionnaire
 											}
 										}
 									}
-									
+									*/
+									an_tot += parseInt($('#epworth_1').val());
+                                                                        an_tot += parseInt($('#epworth_3').val());
+                                                                        an_tot += parseInt($('#epworth_4').val());
+                                                                        an_tot += parseInt($('#epworth_5').val());
+                                                                        an_tot += parseInt($('#epworth_6').val());
+                                                                        an_tot += parseInt($('#epworth_7').val());
+                                                                        an_tot += parseInt($('#epworth_8').val());
+
 									if(an_tot < 8)
 									{
 										an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';

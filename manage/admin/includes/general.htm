@@ -626,7 +626,7 @@ class MYPDF extends TCPDF {
 			// Page footer
 			public function Footer() {
 				// Position at 26 mm from bottom
-				$this->SetY(-26);
+				$this->SetY(-17);
 				$this->Cell(0, 10, $this->footerText, 0, false, 'C', 0, '', 0, false, 'T', 'M');
 		}
         public function AcceptPageBreak() {

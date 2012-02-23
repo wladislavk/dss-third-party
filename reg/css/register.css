@@ -3,4 +3,9 @@
 .formel_a .third .inpt_a{ width:200px; }
 .formel_a .half .inpt_a{ width: 300px; }
 
-
+.inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
+.json_patient { font-weight: bold; }
+.json_patient span{ padding-left: 5px; font-size:12px; color:#666; font-weight: normal;}
+.json_patient:hover { cursor: pointer; background-color:#D6ECF4;}
+.search_list { padding:3px; width:500px; border-right:solid 1px #446696;border-left:solid 1px #446696;border-bottom:solid 1px #446696; }
+.contact_add { font-size:14px; padding-left:20px; background: url(../images/icons/user2.png) no-repeat 0 0; }

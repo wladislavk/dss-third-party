@@ -198,7 +198,7 @@
 
 	/* forms */
 		.formEl_a input,.formEl_a textarea, .formEl_a select {font-family:Helvetica, Arial, sans-serif;font-size:13px}
-		.formEl_a input:focus,.formEl_a textarea:focus,.formEl_a input:active,.formEl_a textarea:active {background:#ebfdd7}
+		.formEl_a input:focus,.formEl_a textarea:focus,.formEl_a input:active,.formEl_a textarea:active {background-color:#ebfdd7}
 		.formEl_a label {cursor:pointer}
 		.formEl_a .lbl_a {display:block;margin-bottom:4px;color:#666;font-weight:700}
 		.formEl_a .lbl_c {font-size:13px;vertical-align:middle;color:#666}

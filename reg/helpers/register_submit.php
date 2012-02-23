@@ -1,4 +1,7 @@
 <?php include '../../manage/admin/includes/config.php'; ?>
+<?php include '../../manage/includes/constants.inc'; ?>
+<?php require_once '../../manage/includes/general_functions.php'; ?>
+<?php require_once '../../manage/includes/notifications.php'; ?>
 <?php
         $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysql_escape_string($_SESSION['pid'])."'";
         $chkq = mysql_query($chksql);
@@ -61,6 +64,11 @@
                 emp_zip = '".mysql_real_escape_string($_POST['emp_zip'])."',
                 emp_phone = '".mysql_real_escape_string($_POST['emp_phone'])."',
                 emp_fax = '".mysql_real_escape_string($_POST['emp_fax'])."',
+		docsleep = '".mysql_real_escape_string($_POST['pc_1_contactid'])."',
+                docpcp = '".mysql_real_escape_string($_POST['pc_2_contactid'])."',
+                docdentist = '".mysql_real_escape_string($_POST['pc_3_contactid'])."',
+                docent = '".mysql_real_escape_string($_POST['pc_4_contactid'])."',
+                docmdother = '".mysql_real_escape_string($_POST['pc_5_contactid'])."',
                 registered = '1',
                 parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'
                 ";
@@ -121,6 +129,11 @@
                 emp_zip = '".mysql_real_escape_string($_POST['emp_zip'])."',
                 emp_phone = '".mysql_real_escape_string($_POST['emp_phone'])."',
                 emp_fax = '".mysql_real_escape_string($_POST['emp_fax'])."',
+                docsleep = '".mysql_real_escape_string($_POST['pc_1_contactid'])."',
+                docpcp = '".mysql_real_escape_string($_POST['pc_2_contactid'])."',
+                docdentist = '".mysql_real_escape_string($_POST['pc_3_contactid'])."',
+                docent = '".mysql_real_escape_string($_POST['pc_4_contactid'])."',
+                docmdother = '".mysql_real_escape_string($_POST['pc_5_contactid'])."',
                 registered = '1'
                 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'
                 ";
@@ -132,6 +145,118 @@
 	}else{
 		echo "Error";
 	}
+
+		$s_sql = "SELECT email FROM dental_patients
+                        WHERE patientid=".mysql_real_escape_string($_SESSION['pid']);
+                $s_q = mysql_query($s_sql);
+                $s_r = mysql_fetch_assoc($s_q);
+                sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'pat');
+		if(trim($_POST['email']) != trim($s_r['email'])){
+			echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
+		}
+		
+		$s = "UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
+		mysql_query($s);
+
+                $types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
+                foreach($types as $t){
+                        if(trim($_POST['pc_'.$t.'_contactid']) ==''){
+                                if($_POST['pc_'.$t.'_firstname'] != ''){
+				   if($_POST['pc_'.$t.'_patient_contactid'] == ''){
+                                        $insql = "INSERT INTO dental_patient_contacts SET " .
+                                                "contacttype = '" . $t . "', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "firstname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_firstname'])) . "', " .
+                                                "lastname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_lastname'])) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['pc_'.$t.'_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['pc_'.$t.'_phone']) . "';";
+				    }else{
+                                        $insql = "UPDATE dental_patient_contacts SET " .
+                                                "contacttype = '" . $t . "', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "firstname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_firstname'])) . "', " .
+                                                "lastname = '" . mysql_real_escape_string(trim($_POST['pc_'.$t.'_lastname'])) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['pc_'.$t.'_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['pc_'.$t.'_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['pc_'.$t.'_phone']) . "' " .
+						" WHERE id = '" . mysql_real_escape_string($_POST['pc_'.$t.'_patient_contactid']) . "'";
+				    }
+                                        mysql_query($insql);
+                                }
+                        }
+                }
+
+				if(trim($_POST['p_m_ins_company'])!=''){
+				    if($_POST['p_m_patient_insuranceid'] == ''){
+					$insql = "INSERT INTO dental_patient_insurance SET " .
+                                                "insurancetype = '1', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "company = '" . mysql_real_escape_string($_POST['p_m_ins_company']) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['p_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['p_m_ins_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['p_m_ins_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['p_m_ins_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['p_m_ins_zip']) . "', " .
+                                                "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
+                                                "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['p_m_ins_phone']) . "';";
+				    }else{
+                                        $insql = "UPDATE dental_patient_insurance SET " .
+                                                "insurancetype = '1', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "company = '" . mysql_real_escape_string($_POST['p_m_ins_company']) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['p_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['p_m_ins_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['p_m_ins_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['p_m_ins_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['p_m_ins_zip']) . "', " .
+                                                "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
+                                                "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['p_m_ins_phone']) . "' " .
+						"WHERE id = '". mysql_real_escape_string($_POST['p_m_patient_insuranceid']) ."'";
+				    }
+					mysql_query($insql);
+				}
+
+                                if(trim($_POST['s_m_ins_company'])!=''){
+                                    if($_POST['s_m_patient_insuranceid'] == ''){
+                                        $insql = "INSERT INTO dental_patient_insurance SET " .
+                                                "insurancetype = '2', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "company = '" . mysql_real_escape_string($_POST['s_m_ins_company']) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['s_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['s_m_ins_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['s_m_ins_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['s_m_ins_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['s_m_ins_zip']) . "', " .
+                                                "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
+                                                "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['s_m_ins_phone']) . "';";
+                                    }else{
+                                        $insql = "UPDATE dental_patient_insurance SET " .
+                                                "insurancetype = '2', " .
+                                                "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
+                                                "company = '" . mysql_real_escape_string($_POST['s_m_ins_company']) . "', " .
+                                                "address1 = '" . mysql_real_escape_string($_POST['s_m_ins_address1']) . "', " .
+                                                "address2 = '" . mysql_real_escape_string($_POST['s_m_ins_address2']) . "', " .
+                                                "city = '" . mysql_real_escape_string($_POST['s_m_ins_city']) . "', " .
+                                                "state = '" . mysql_real_escape_string($_POST['s_m_ins_state']) . "', " .
+                                                "zip = '" . mysql_real_escape_string($_POST['s_m_ins_zip']) . "', " .
+                                                "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
+                                                "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
+                                                "phone = '" . mysql_real_escape_string($_POST['s_m_ins_phone']) . "' " .
+                                                "WHERE id = '". mysql_real_escape_string($_POST['s_m_patient_insuranceid']) ."'";
+                                    }
+                                        mysql_query($insql);
+                                }
+
 
 
 ?>

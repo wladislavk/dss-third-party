@@ -194,3 +194,18 @@ $dss_referred_labels[DSS_REFERRED_FRANCHISE] = "Franchise";
 $dss_referred_labels[DSS_REFERRED_DSSOFFICE] = "DSS Office";
 $dss_referred_labels[DSS_REFERRED_OTHER] = "Other";
 
+
+define('DSS_PATIENT_CONTACT_SLEEP', 1);
+define('DSS_PATIENT_CONTACT_PRIMARY', 2);
+define('DSS_PATIENT_CONTACT_DENTIST', 3);
+define('DSS_PATIENT_CONTACT_ENT', 4);
+define('DSS_PATIENT_CONTACT_OTHER', 5);
+
+$dss_patient_contact_labels = array();
+$dss_patient_contact_labels[DSS_PATIENT_CONTACT_SLEEP] = "Sleep MD";
+$dss_patient_contact_labels[DSS_PATIENT_CONTACT_PRIMARY] = "Primary Care MD";
+$dss_patient_contact_labels[DSS_PATIENT_CONTACT_DENTIST] = "Dentist";
+$dss_patient_contact_labels[DSS_PATIENT_CONTACT_ENT] = "ENT";
+$dss_patient_contact_labels[DSS_PATIENT_CONTACT_OTHER] = "Other MD";
+
+

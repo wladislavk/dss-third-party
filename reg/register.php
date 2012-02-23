@@ -9,6 +9,7 @@ include 'includes/header.php';
 <link rel="stylesheet" href="css/register.css" />
 <script type="text/javascript" src="js/register.js"></script>
 <script type="text/javascript" src="../manage/js/patient_dob.js"></script>
+<script type="text/javascript" src="js/autocomplete.js"></script>
         <script type="text/javascript">
                 $(document).ready(function(){
                                 //lga_fusionCharts.chart_k();
@@ -17,15 +18,22 @@ include 'includes/header.php';
         </script>
 
 <?php
-  $sql = "SELECT * from dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+  $sql = "SELECT * from dental_patients WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
   $q = mysql_query($sql);
-  $p = mysql_fetch_assoc($q);
+  if(mysql_num_rows($q) > 0){
+      $p = mysql_fetch_assoc($q);
+  }else{
+      $sql = "SELECT * from dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+      $q = mysql_query($sql);
+      $p = mysql_fetch_assoc($q);
+  }
 ?>
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
 
 						<h2 class="sepH_c">Patient Registration</h2>
 	<form action="register.php" id="register_form" method="post">
+		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
 							<ul id="status" class="cf">
 								<li class="active"><span class="large">1. Contact Information</span></li>
 								<li><span class="large">2. Personal Information</span></li>
@@ -34,7 +42,7 @@ include 'includes/header.php';
 								<li><span class="large">5. Employer</span></li>
 								<li><span class="large">6. Contacts</span></li>
 							</ul>
-							<div id="register" class="wizard" style="height:450px;">
+							<div id="register" class="wizard" style="height:1400px;">
 								<div class="items formEl_a">
 									<div class="page">
 										<div class="pageInside">
@@ -45,7 +53,7 @@ include 'includes/header.php';
 												</div>
 												<div class="dp75">
 													<div>
-														<div class="form_errors" style="display:none"></div>
+														<div id="welcome_errors" class="form_errors" style="display:none"></div>
 		<div class="sepH_b third">
 			<label class="lbl_a"><strong>1.</strong> First Name <span class="req">*</span></label>
 			<input class="inpt_a validate" type="text" name="firstname" id="firstname" value="<?= $p['firstname']; ?>" />
@@ -59,7 +67,7 @@ include 'includes/header.php';
 			<input class="inpt_a validate" type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
 		</div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" name="email" value="<?= $p['email']; ?>" />
+                        <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a" type="text" name="home_phone" value="<?= $p['home_phone']; ?>" />
@@ -137,14 +145,14 @@ include 'includes/header.php';
                                 <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
                         </select>
 
-		<!--<input class="inpt_a" type="text" name="state" value="<?= $p['state']; ?>" />-->
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a" type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-															<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+<button type="submit" name="update" class="fr email_next btn btn_d">Proceed &raquo;</button>
+
 														</div>
 													</div>
 												</div>
@@ -194,7 +202,6 @@ include 'includes/header.php';
                                         ?>
                                 </select>
 
-<!--<input class="inpt_a" type="text" name="dob" id="dob" value="<?= $p['dob']; ?>" />-->
 		</div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>2.</strong> Gender:</label><select class="inpt_a" name="gender">
@@ -237,7 +244,8 @@ include 'includes/header.php';
 		</div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+
+<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -307,21 +315,56 @@ include 'includes/header.php';
                                         ?>
                                 </select>
 
-<!--<input class="inpt_a" id="ins_dob" name="ins_dob" type="text" value="<?=$p['ins_dob']?>" maxlength="255" />-->
        	  	</div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>6.</strong> Insurance Company</label><select class="inpt_a" id="p_m_ins_co" name="p_m_ins_co" class="field text addr tbox" maxlength="255" />
-                                                <option value="">Select Insurance Company</option>
 			<?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
-                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
-                            ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo $ins_contact_res['company']; ?></option>
-                                
-                                <?php } ?>
-                                </select>
+				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+				$p_m_q = mysql_query($p_m_sql);
+				$p_m_r = mysql_fetch_assoc($p_m_q);
+                                if(mysql_num_rows($p_m_q)=='0'){
+                                        $p_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+                                        $p_m_q = mysql_query($p_m_sql);
+                                        $p_m_r = mysql_fetch_assoc($p_m_q);
+                                }
+
+			?>
+			<input type="hidden" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
+			<input class="inpt_a" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
            	</div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6b.</strong> Address 1</label>
+                        <input class="inpt_a" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6c.</strong> Address 2</label>
+                        <input class="inpt_a" id="p_m_ins_address2" name="p_m_ins_address2" type="text" value="<?= $p_m_r['address2']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6d.</strong> City</label>
+                        <input class="inpt_a" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6e.</strong> State</label>
+                        <input class="inpt_a" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6f.</strong> Zip</label>
+                        <input class="inpt_a" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6g.</strong> Phone</label>
+                        <input class="inpt_a" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6h.</strong> Fax</label>
+                        <input class="inpt_a" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6i.</strong> Email</label>
+                        <input class="inpt_a" id="p_m_ins_email" name="p_m_ins_email" type="text" value="<?= $p_m_r['email']; ?>" />
+                </div>
+
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
                 </div>
@@ -350,11 +393,12 @@ include 'includes/header.php';
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 <?php if($p['has_s_m_ins']=="No"){ ?>
-                                                                                                                        <a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</a>
- <a href="javascript:void(0)" id="insNext" class="fr next btn btn_d" style="display:none;">Proceed &raquo;</a>
+
+<button type="submit" name="update" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</button>
+<button type="submit" name="update" id="insNext" class="fr next btn btn_d" style="display:none;">Proceed &raquo;</button>
 <?php }else{ ?>
-															<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
- <a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d" style="display:none">Proceed &raquo;</a>
+<button type="submit" name="update" id="insNext" class="fr next btn btn_d">Proceed &raquo;</button>
+<button type="submit" name="update" id="insNext2" class="fr next2 btn btn_d" style="display:none;">Proceed &raquo;</button>
 <?php } ?>
                                                                                                                 </div>
                                                                                                         </div>
@@ -425,17 +469,52 @@ include 'includes/header.php';
                                 </select>
 
                 </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>6.</strong> Insurance Company</label><select class="inpt_a" id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" />
-                                                <option value="">Select Insurance Company</option>
                         <?php
-                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
-                            $ins_contact_qry_run = mysql_query($ins_contact_qry);                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
-                            ?>
-                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($p['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo $ins_contact_res['company']; ?></option>
-
-                                <?php } ?>
-                                </select>
+                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+                                $s_m_q = mysql_query($s_m_sql);
+                                $s_m_r = mysql_fetch_assoc($s_m_q);
+				if(mysql_num_rows($s_m_q)=='0'){
+					$s_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+					$s_m_q = mysql_query($s_m_sql);
+					$s_m_r = mysql_fetch_assoc($s_m_q);
+				}
+                        ?>
+                        <input type="hidden" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
+                        <input class="inpt_a" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6b.</strong> Address 1</label>
+                        <input class="inpt_a" id="s_m_ins_address1" name="s_m_ins_address1" type="text" value="<?= $s_m_r['address1']; ?>" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6c.</strong> Address 2</label>
+                        <input class="inpt_a" id="s_m_ins_address2" name="s_m_ins_address2" type="text" value="<?= $s_m_r['address2']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6d.</strong> City</label>
+                        <input class="inpt_a" id="s_m_ins_city" name="s_m_ins_city" type="text" value="<?= $s_m_r['city']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6e.</strong> State</label>
+                        <input class="inpt_a" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6f.</strong> Zip</label>
+                        <input class="inpt_a" id="s_m_ins_zip" name="s_m_ins_zip" type="text" value="<?= $s_m_r['zip']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6g.</strong> Phone</label>
+                        <input class="inpt_a" id="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6h.</strong> Fax</label>
+                        <input class="inpt_a" id="s_m_ins_fax" name="s_m_ins_fax" type="text" value="<?= $s_m_r['fax']; ?>" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6i.</strong> Email</label>
+                        <input class="inpt_a" id="s_m_ins_email" name="s_m_ins_email" type="text" value="<?= $s_m_r['email']; ?>" />     
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
@@ -460,7 +539,8 @@ include 'includes/header.php';
 				</div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+
+<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -553,7 +633,6 @@ include 'includes/header.php';
 			</select>
 
 
-<!--<input class="inpt_a" id="emp_state" name="emp_state" type="text" value="<?=$p['emp_state']?>" maxlength="255" />-->
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6.</strong> Zip Code:</label><input class="inpt_a" id="emp_zip" name="emp_zip" type="text" value="<?=$p['emp_zip']?>" maxlength="255" />
@@ -568,14 +647,14 @@ include 'includes/header.php';
                                                                                                                 <div class="cf">
 			<a href="javascript:void(0)" id="insPrev" class="fl prev btn btn_a" <?= ($p['has_s_m_ins']=="No")?'style="display:none;"':''; ?>>&laquo; Back</a>
 			<a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($p['has_s_m_ins']=="No")?'':'style="display:none;"'; ?>>&laquo; Back</a>
-                                                                                                                        <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+
+<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
                                                                                         </div>
                                                                                 </div>
                                                                         </div>
-
                                                                         <div class="page">
                                                                                 <div class="pageInside">
                                                                                         <div class="cf">
@@ -586,8 +665,94 @@ include 'includes/header.php';
                                                                                                 <div class="dp75">
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
+<?php 
+$types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
+foreach($types as $t){
+                switch($t){
+                        case '1':
+                                $cid = $p['docsleep'];
+                                break;
+                        case '2':
+                                $cid = $p['docpcp'];
+                                break;
+                        case '3':
+                                $cid = $p['docdentist'];
+                                break;
+                        case '4':
+                                $cid = $p['docent'];
+                                break;
+                        case '5':
+                                $cid = $p['docmdother'];
+                                break;
+			default:
+				$cid = 0;
+				break;
 
-		<label></label>
+                }
+		$pcnum = 0;
+		if($cid == 0){
+			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+			$pcq = mysql_query($pcsql);
+			$pc = mysql_fetch_assoc($pcq);
+			$pcnum = mysql_num_rows($pcq);
+		}
+
+                                $csql = "SELECT firstname, lastname FROM dental_contact WHERE contactid='".$cid."'";
+                                $cq = mysql_query($csql);
+				$cr = mysql_fetch_assoc($cq);
+                                $cname = $cr['firstname']. " ".$cr['lastname'];
+?>
+		<h5 class="clear"><?= $dss_patient_contact_labels[$t]; ?></h5>
+                                        <div id="pc_<?= $t; ?>_person" <?= ($pcnum!=0)?'style="display:none;"':''; ?>>
+			<label class="lbl_a"><strong>1.</strong> Name:</label>
+			
+
+                                        <input type="text" class="inpt_a dr" id="pc_<?= $t; ?>_name" onclick="updateval(this)" autocomplete="off" name="pc_<?= $t; ?>_name" value="<?= ($cname!=' ')?$cname:'Type doctor name'; ?>" style="width:300px;" />
+<br />
+        <div id="pc_<?= $t; ?>_hints" class="search_hints" style="margin-top:20px; display:none;">
+                <ul id="pc_<?= $t; ?>_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+        </div><script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('pc_<?= $t; ?>_name', 'pc_<?= $t; ?>_hints', 'pc_<?= $t; ?>_referred_by', 'pc_<?= $t; ?>_referred_source', 'list_referrers.php', '<?= $t; ?>');
+});
+</script>
+
+                            </div>
+        <input type="hidden" id="pc_<?= $t; ?>_contactid" name="pc_<?= $t; ?>_contactid" value="<?= $cid; ?>" /> 
+	<input type="hidden" id="pc_<?= $t; ?>_patient_contactid" name="pc_<?= $t; ?>_patient_contactid" value="<?= $pc['id']; ?>" />
+	<div id="pc_<?= $t; ?>_input_div" <?= ($pcnum>0)?'':'style="display:none;"'; ?>>
+		<div class="sepHb half">
+                        <label class="lbl_a"><strong>1.</strong> First Name:</label><input class="inpt_a" id="pc_<?= $t; ?>_firstname" name="pc_<?= $t; ?>_firstname" type="text" value="<?=$pc['firstname']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>2.</strong> Last Name:</label><input class="inpt_a" id="pc_<?= $t; ?>_lastname" name="pc_<?= $t; ?>_lastname" type="text" value="<?=$pc['lastname']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>3.</strong> Address 1:</label><input class="inpt_a" id="pc_<?= $t; ?>_address1" name="pc_<?= $t; ?>_address1" type="text" value="<?=$pc['address1']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>4.</strong> Address 2:</label><input class="inpt_a" id="pc_<?= $t; ?>_address2" name="pc_<?= $t; ?>_address2" type="text" value="<?=$pc['address2']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>5.</strong> City:</label><input class="inpt_a" id="pc_<?= $t; ?>_city" name="pc_<?= $t; ?>_city" type="text" value="<?=$pc['city']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>6.</strong> State:</label><input class="inpt_a" id="pc_<?= $t; ?>_state" name="pc_<?= $t; ?>_state" type="text" value="<?=$pc['state']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b third">
+                        <label class="lbl_a"><strong>7.</strong> Zip:</label><input class="inpt_a" id="pc_<?= $t; ?>_zip" name="pc_<?= $t; ?>_zip" type="text" value="<?=$pc['zip']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b half clear">
+                        <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
+                </div>
+                <div class="sepH_b half">
+                        <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>
+                </div>
+	</div>
+
+<?php } ?>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
                                                                                                                         <button type="submit" name="update" class="fr next btn btn_d">Submit &raquo;</button>
@@ -619,5 +784,13 @@ include 'includes/header.php';
 $(document).ready(function(){
 $(".chzn-select").chosen({no_results_text: "No results matched"});
 });
+
+function cancel(n){
+  $('#pc_'+n+'_input_div').hide();
+  $('#pc_'+n+'_person').show();
+  $('#pc_'+n+'_input_div input').val('');
+}
+
+
 </script>
 <?php include 'includes/footer.php'; ?>

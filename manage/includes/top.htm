@@ -5,7 +5,7 @@ include("includes/sescheck.php");
 require_once('includes/constants.inc');
 require_once('includes/authorization_functions.php');
 require_once('includes/general_functions.php');
-
+require_once('includes/notifications.php');
 if($_SESSION['userid'] == '')
 {
 	?>
@@ -75,6 +75,18 @@ $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$doci
 $preauth_res = mysql_query($preauth_query);
 $num_pending_preauth = mysql_num_rows($preauth_res);
 
+$pc_query = "SELECT * FROM dental_patient_contacts pc inner join dental_patients p on p.patientid=pc.patientid WHERE p.docid = '".$docid."'";
+$pc_res = mysql_query($pc_query);
+$num_pc = mysql_num_rows($pc_res);
+
+$pi_query = "SELECT * FROM dental_patient_insurance pi inner join dental_patients p on p.patientid=pi.patientid WHERE p.docid = '".$docid."'";
+$pi_res = mysql_query($pi_query);
+$num_pi = mysql_num_rows($pi_res);
+
+$c_query = "SELECT * FROM dental_patients p2 inner join dental_patients p on p.patientid=p2.parent_patientid WHERE p.docid = '".$docid."'";
+$c_res = mysql_query($c_query);
+$num_c = mysql_num_rows($c_res);
+
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -83,6 +95,7 @@ $num_pending_preauth = mysql_num_rows($preauth_res);
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/notifications.css" rel="stylesheet" type="text/css" />
 <link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <link href="css/top.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="script/logout_timer.js"></script>
@@ -770,6 +783,7 @@ display:none;
 <li><a href="manage_patient.php">PATIENT</a>
   <ul>
               <li><a href="manage_patient.php">Manage Patients</a></li>
+	      <li><a href="pending_patient.php">Pending Patients</a></li>
               <li><a href="#">Directory</a>
                   <ul>
                      <li><a href="manage_contact.php">Contacts</a></li>
@@ -791,16 +805,17 @@ display:none;
 </li>
 
 <?php
-  $mess_count = $pending_letters + $num_pending_claims + $num_preauth;
+  $mess_count = $pending_letters + $num_pending_claims + $num_preauth + $num_pc + $num_pi + $num_c;
 ?>
 <li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
   <ul>
       <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
       <li><a <?php {echo "href='manage_claims.php'";} ?>>Claims (<?= $num_pending_claims; ?>)</a></li>
       <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
-
-
-  </ul>
+      <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
+</ul>
 </li>
 
 </ul>

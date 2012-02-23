@@ -80,6 +80,16 @@ $fields['emp_zip'] = "Employer Zip";
 $fields['emp_phone'] = "Employer Phone";
 $fields['emp_fax'] = "Employer Fax";
 
+$fields['docsleep'] = "Sleep MD";
+$fields['docpcp'] = "Primary Care Physician";
+$fields['docdentist'] = "Dentist";
+$fields['docent'] = "ENT";
+$fields['docmdother'] = "Other MD";
+$doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
+
+/**************************************
+** SUBMITTING
+***************************************/
 if(isset($_POST['submit'])){
 $docchange = $patchange = false;
 $completed = true;
@@ -90,6 +100,7 @@ foreach($fields as $field => $label){
   	$docsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
 	$docchange = true;
   }elseif($_POST['accepted_'.$field]=='pat'){
+	if($field == "email"){ sendUpdatedEmail($_POST['patientid'], $_POST['pat_email'], $_POST['doc_email']); }
         if($patchange){ $patsql .= ", "; }
         $patsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
 	$patchange = true;
@@ -140,12 +151,35 @@ input.button1 { font-size:20px; background:#fff; }
     	<input type="hidden" class="value" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
 	<?php
     }
+
+    if(in_array($field, $doc_fields)){ ?>
+    <td><?= $label; ?>:</td>
+	<?php 
+		$docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$p[$field]."'";
+		$docq = mysql_query($docsql);
+		$docr = mysql_fetch_assoc($docq);
+	?>
+    <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+	<input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
+    <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+        <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
+        <?php 
+                $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$c[$field]."'";
+                $docq = mysql_query($docsql);
+                $docr = mysql_fetch_assoc($docq);
+        ?>
+
+    <td><input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+	<input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
+	<?php
+    }else{
   ?>
     <td><?= $label; ?>:</td>
     <td><input type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
     <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
 	<input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
     <td><input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
+  <?php } ?>
   </tr>
 <?php } ?>
 </table>
@@ -159,10 +193,14 @@ function updateField(f, v){
   if(v=='doc'){
     $('#doc_'+f).addClass('selected');
     $('#pat_'+f).removeClass('selected');
+    $('#doc_'+f+'_extra').addClass('selected');
+    $('#pat_'+f+'_extra').removeClass('selected');
     $('#value_'+f).val($('#doc_'+f).val());
   }else if(v=='pat'){
     $('#pat_'+f).addClass('selected');
     $('#doc_'+f).removeClass('selected');
+    $('#pat_'+f+'_extra').addClass('selected');
+    $('#doc_'+f+'_extra').removeClass('selected');
     $('#value_'+f).val($('#pat_'+f).val());
   }
     $('#accepted_'+f).val(v);

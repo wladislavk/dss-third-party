@@ -148,12 +148,14 @@ if($_POST["patientsub"] == 1)
 
 	if($_POST["ed"] != "")
 	{
-		$s_sql = "SELECT referred_by, referred_source FROM dental_patients
+		$s_sql = "SELECT referred_by, referred_source, email FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 		$s_q = mysql_query($s_sql);
 		$s_r = mysql_fetch_assoc($s_q);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
+
+		sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
 
 		$ed_sql = "update dental_patients 
 		set 
@@ -911,6 +913,38 @@ return false;
 
 </script>
 
+<?php
+
+$notifications = find_patient_notifications($_GET['pid']);
+foreach($notifications AS $not){
+?>
+<div id="not_<?= $not['id']; ?>" class="warning <?= $not['notification_type']; ?>">
+<span><?= $not['notification']; ?></span>
+<a href="#" class="close_but" onclick="remove_notification('<?= $not['id']; ?>');return false;">X</a>
+</div>
+<?php
+}
+?>
+<script type="text/javascript">
+function remove_notification(id){
+  $.ajax({
+    url: 'includes/notifications_remove.php',
+    type: 'post',
+    data: 'id='+id,
+    success: function( data ) {
+        var r = $.parseJSON(data);
+        if(r.success){
+           $('#not_'+id).hide('slow');
+        }else{
+		//alert('Error');
+        }
+    }
+  });
+
+
+}
+</script>
+
     <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
     
@@ -1000,7 +1034,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="salutation">Salutation</label>
                             </span>
 			    <span>
-				<input type="text" name="login" class="field text addr tbox" style="width:100px;" value="<?=$login?>" disabled="disabled" />
+				<input type="text" name="login" class="field text addr tbox" style="width:100px;" value="<?=$email?>" disabled="disabled" />
 				<label for"login">Login</label>
 			    </span>
                        </div>   

@@ -6,6 +6,7 @@ lga_wizard = {
 			var post = $(this).serializeObject();
 			$.post('helpers/register_submit.php', post, function(data) {
 				$('#form_summary').html(data);
+				alert(data);
 			});
 			return false;
 		});
@@ -68,6 +69,25 @@ lga_wizard = {
 				e.preventDefault();
 			}
 		});
+                root.find("a.email_next,button.email_next").click(function(e) {
+  var m = $('#email').val();
+  var p = $('#patientid').val();
+  $.ajax({
+    url: 'includes/check_email.php',
+    type: 'post',
+    data: 'email='+m+'&id='+p,
+    success: function( data ) {
+        var r = $.parseJSON(data);
+        if(r.success){ 
+          api.next(); 
+        }else{
+	  $('#welcome_errors').html("Email is in use or invalid.");          
+	  $('#welcome_errors').show('slow');
+        }
+    }
+  });
+});
+
 	        root.find("a.next2,button.next2").click(function(e) {
                                 api.move(2);
                 });	

@@ -1,4 +1,5 @@
 <?php include '../manage/admin/includes/config.php'; ?>
+<?php include '../manage/includes/constants.inc'; ?>
 <html>
   <head>
     <title>Dental Sleep Solutions :: Registration</title>
@@ -22,12 +23,12 @@
 	lo_timer = '';
 function set_interval()
 {
-lo_timer=setInterval("auto_logout()",900000);
+lo_timer=setInterval("auto_logout()",1800000);
 }
 function reset_interval()
 {
 clearInterval(lo_timer);
-lo_timer=setInterval("auto_logout()",900000);
+lo_timer=setInterval("auto_logout()",1800000);
 }
 function auto_logout()
 {

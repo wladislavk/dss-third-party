@@ -255,10 +255,13 @@ if($complaintid <> '')
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+<!--<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>-->
+
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 <link rel="stylesheet" href="css/form.css" type="text/css" />
+<script type="text/javascript" src="script/questionnaire.js" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
@@ -316,6 +319,14 @@ if($complaintid <> '')
 	<input type="submit" id="save_but" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
+<?php
+        $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";    
+        $patient_q = mysql_query($patient_sql);
+	$pat_row = mysql_fetch_assoc($patient_q);
+        if(mysql_num_rows($patient_q) == 0){
+		echo "Patient edits.";
+	}
+?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td colspan="2">
@@ -371,6 +382,9 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
+			    <?php 
+				showPatientValue('dental_q_page1', $_GET['pid'], 'feet', $pat_row['feet'], $feet);
+			    ?>
                             <label for="feet">Feet</label>
                         </span>
                         
@@ -384,6 +398,9 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'inches', $pat_row['inches'], $inches);
+                            ?>
                             <label for="inches">Inches</label>
                         </span>
                         
@@ -397,6 +414,10 @@ if($complaintid <> '')
 								<?
 								}?>
                             </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'weight', $pat_row['weight'], $weight);
+                            ?>
+
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         </span>
                         
@@ -425,9 +446,17 @@ if($complaintid <> '')
     </tr>
     <tr>
 	<td valign="top" class="frmhead">
-	  Baseline Epworth Sleepiness Score: <input type="text" name="ess" value="<?= $ess; ?>" />
+	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess);
+                            ?>
+
 	  <br />
-	  Baseline Thornton Snoring Scale: <input type="text" name="tss" value="<?= $tss; ?>" />
+	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss);
+                            ?>
+
 	</td>
     </tr>
     <tr>
@@ -436,6 +465,9 @@ if($complaintid <> '')
                         What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
                     </label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text);
+                            ?>
 
 	</td>
     </tr>
@@ -447,6 +479,9 @@ if($complaintid <> '')
                     <br />
                     <label class="desc" id="title0" for="Field0">
                         Other Complaints
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false);
+                            ?>
                     </label>
                     <? 
 					$complaint_sql = "select * from dental_complaint where status=1 order by sortby";
@@ -494,6 +529,17 @@ function in_array(needle, haystack)
 			});
 		    </script>
                     <? 
+
+        $patcomp_arr1 = split('~',$pat_row['complaintid']);
+
+        foreach($patcomp_arr1 as $i => $val)
+        {
+                $patcomp_arr2 = explode('|',$val);
+
+                $patcompid[$i] = $patcomp_arr2[0];
+                $patcompseq[$i] = $patcomp_arr2[1];
+        }
+
 					while($complaint_myarray = mysql_fetch_array($complaint_my))
 					{
 						if(@array_search($complaint_myarray['complaintid'],$compid) === false)
@@ -502,9 +548,16 @@ function in_array(needle, haystack)
 						}
 						else
 						{
-							$chk = $compseq[@array_search($complaint_myarray['complaintid'],$compid)];
+							$chk = 1;//$compseq[@array_search($complaint_myarray['complaintid'],$compid)];
 						}
-						
+					        if(@array_search($complaint_myarray['complaintid'],$patcompid) === false)
+                                                {
+                                                        $patchk = '';
+                                                }
+                                                else
+                                                {
+                                                        $patchk = 1;//$compseq[@array_search($complaint_myarray['complaintid'],$pat_row['compid'])];
+                                                }	
 					?>
 
                     <div style="width:48%;float:left;">
@@ -517,9 +570,14 @@ function in_array(needle, haystack)
                             		<option value="<?=$i;?>" <? if($chk == $i) echo " selected";?>><?=$i;?></option>
                                 <? }?>
                             </select>-->
-			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" id="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
+<?php if($pat_row['complaintid'] !=  $complaintid){ ?>
+<input type="checkbox" <? if($patchk == 1) echo 'checked="checked"'; ?> disabled="disabled" style="background:#c333;" />
+<?php } ?>
                             &nbsp;&nbsp;
-                            <?=st($complaint_myarray['complaint']);?><br />&nbsp;
+                            <?=st($complaint_myarray['complaint']);?>
+
+				<br />&nbsp;
                         </span>
                     </div>
                     <? }?>
@@ -547,6 +605,9 @@ function in_array(needle, haystack)
                             </span>
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint);
+                            ?>
                         </span>
                     </div>
                     <br />
@@ -584,13 +645,17 @@ function in_array(needle, haystack)
                                     	Rate your overall energy level 0 -10 (10 being the highest) 
                                     </td>
                                     <td valign="top">
-                                    	<select name="energy_level" class="field text addr tbox" style="width:150px;">
+                                    	<select name="energy_level" id="energy_level" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level);
+                            ?>
+
                                     </td>
                                 </tr>
                                  								<tr>
@@ -598,7 +663,7 @@ function in_array(needle, haystack)
                                     	Have you been told you snore?
                                     </td>
                                     <td valign="top">
-                                    	<select name="told_you_snore" class="field text addr tbox" style="width:150px;">
+                                    	<select name="told_you_snore" id="told_you_snore" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Yes" <? if($told_you_snore== 'Yes') echo " selected";?>>
                                             	Yes
@@ -610,6 +675,9 @@ function in_array(needle, haystack)
                                             	Sometimes
                                             </option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore);
+                            ?>
                                     </td>
                                 </tr>
 								
@@ -618,7 +686,7 @@ function in_array(needle, haystack)
                                     	Rate the sound of your snoring 0 -10 (10 being the highest) 
                                     </td>
                                     <td valign="top">
-                                    	<select name="snoring_sound" class="field text addr tbox" style="width:150px;">
+                                    	<select name="snoring_sound" id="snoring_sound" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
@@ -626,6 +694,9 @@ function in_array(needle, haystack)
                                             <? }?>
                                             <option value="Don't know">Don't know</option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound);
+                            ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -633,13 +704,17 @@ function in_array(needle, haystack)
                                     	On average how many times per night do you wake up?  
                                     </td>
                                     <td valign="top">
-                                    	<select name="wake_night" class="field text addr tbox" style="width:150px;">
+                                    	<select name="wake_night" id="wake_night" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night);
+                            ?>
+
                                     </td>
                                 </tr>
                                 <!--<tr>
@@ -661,7 +736,7 @@ function in_array(needle, haystack)
                                     	How often do you wake up with morning headaches?
                                     </td>
                                     <td valign="top">
-                                    	<select name="morning_headaches" class="field text addr tbox" style="width:150px;">
+                                    	<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
                                             	Most Mornings
@@ -682,6 +757,9 @@ function in_array(needle, haystack)
                                             	Never
                                             </option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches);
+                            ?>
                                     </td>
                                 </tr>
 								
@@ -690,13 +768,16 @@ function in_array(needle, haystack)
                                     	On average how many hours of sleep do you get per night?
                                     </td>
                                     <td valign="top">
-                                    	<select name="hours_sleep" class="field text addr tbox" style="width:150px;">
+                                    	<select name="hours_sleep" id="hours_sleep" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <? for($i=0;$i<16;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep);
+                            ?>
                                     </td>
                                 </tr>
                                 
@@ -705,13 +786,16 @@ function in_array(needle, haystack)
                                     	Rate your sleep quality 0-10 (10 being the highest)
                                     </td>
                                     <td valign="top">
-                                    	<select name="sleep_qual" class="field text addr tbox" style="width:150px;">
+                                    	<select name="sleep_qual" id="sleep_qual" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
                                                 <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual);
+                            ?>
                                     </td>
                                 </tr>
                                 
@@ -720,7 +804,7 @@ function in_array(needle, haystack)
                                     	Do you have a bed time partner?
                                     </td>
                                     <td valign="top">
-                                    	<select name="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
+                                    	<select name="bed_time_partner" id="bed_time_partner" class="field text addr tbox" style="width:150px;" onchange="disableenable()">
                                             <option value=""></option>
                                             <option value="Yes" <? if($bed_time_partner== 'Yes') echo " selected";?>>
                                             	Yes
@@ -732,6 +816,10 @@ function in_array(needle, haystack)
                                             	Sometimes
                                             </option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner);
+                            ?>
+
                                     </td>
                                 </tr>
 								
@@ -743,7 +831,7 @@ function in_array(needle, haystack)
                                     	If yes do they sleep in the same room?
                                     </td>
                                     <td valign="top">
-                                    	<select name="sleep_same_room" class="field text addr tbox" style="width:150px;">
+                                    	<select name="sleep_same_room" id="sleep_same_room" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Yes" <? if($sleep_same_room== 'Yes') echo " selected";?>>
                                             	Yes
@@ -755,6 +843,9 @@ function in_array(needle, haystack)
                                             	Sometimes
                                             </option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room);
+                            ?>
                                     </td>
                                 </tr>
                                 
@@ -763,7 +854,7 @@ function in_array(needle, haystack)
                                     	How many times per night does your bedtime partner notice you quit breathing?
                                     </td>
                                     <td valign="top">
-                                    	<select name="quit_breathing" class="field text addr tbox" style="width:150px;">
+                                    	<select name="quit_breathing" id="quit_breathing" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Several times per night" <? if($quit_breathing== 'Several times per night') echo " selected";?>>
                                             	Several times per night
@@ -784,6 +875,10 @@ function in_array(needle, haystack)
                                             	Never
                                             </option>
                                         </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing);
+                            ?>
+
                                     </td>
                                 </tr>
 								

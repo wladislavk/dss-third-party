@@ -82,12 +82,12 @@ if($_POST['q_page1sub'] == 1)
 	echo "told_you_snore - ".$told_you_snore ."<br>";
 	echo "main_reason - ".$main_reason_arr ."<br>";
 	echo "main_reason_other - ".$main_reason_other."<br>";*/
-	
-	
-	if($_POST['ed'] == '')
+ 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
+	$exist_q = mysql_query($exist_sql);
+	if(mysql_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page1 set 
-		patientid = '".s_for($_SESSION['pid'])."',
+		parent_patientid = '".s_for($_SESSION['pid'])."',
                 exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
@@ -151,7 +151,7 @@ if($_POST['q_page1sub'] == 1)
 		told_you_snore = '".s_for($told_you_snore)."',
 		main_reason = '".s_for($main_reason_arr)."',
 		main_reason_other = '".s_for($main_reason_other)."'
-		where q_page1id = '".s_for($_POST['ed'])."'";
+		where parent_patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
@@ -167,7 +167,7 @@ if($_POST['q_page1sub'] == 1)
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
+$pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -182,7 +182,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_page1 where parent_patientid='".$_SESSION['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 

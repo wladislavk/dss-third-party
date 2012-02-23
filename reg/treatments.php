@@ -105,10 +105,12 @@ if($_POST['q_page2sub'] == 1)
 	echo "sleep_study_by - ".$sleep_study_by."<br>";*/
 	
 	
-	if($_POST['ed'] == '')
+        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        if(mysql_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page2 set 
-		patientid = '".s_for($_SESSION['pid'])."',
+		parent_patientid = '".s_for($_SESSION['pid'])."',
 		polysomnographic = '".s_for($polysomnographic)."',
 		sleep_center_name_text = '".s_for($sleep_center_name_text)."',
 		sleep_study_on = '".s_for($sleep_study_on)."',
@@ -182,7 +184,7 @@ if($_POST['q_page2sub'] == 1)
                 dd_who = '".s_for($dd_who)."',
                 dd_experience = '".s_for($dd_experience)."',
 		surgery = '".s_for($surgery)."'
-		where q_page2id = '".s_for($_POST['ed'])."'";
+		where parent_patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -212,7 +214,7 @@ if($_POST['q_page2sub'] == 1)
 	}
 }
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
+$pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -227,7 +229,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_page2 where parent_patientid='".$_SESSION['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 

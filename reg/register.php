@@ -70,27 +70,27 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a" type="text" name="home_phone" value="<?= $p['home_phone']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a" type="text" name="work_phone" value="<?= $p['work_phone']; ?>" />
+                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a" type="text" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a validate" type="text" id="cell_phone" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
                 </div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>8.</strong> Address 1:</label><input class="inpt_a" type="text" name="add1" value="<?= $p['add1']; ?>" />
+                        <label class="lbl_a"><strong>8.</strong> Address 1:</label><input class="inpt_a validate" type="text" name="add1" value="<?= $p['add1']; ?>" />
                 </div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>9.</strong> Address 2:</label><input class="inpt_a" type="text" name="add2" value="<?= $p['add2']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>10.</strong> City:</label><input class="inpt_a" type="text" name="city" value="<?= $p['city']; ?>" />
+                        <label class="lbl_a"><strong>10.</strong> City:</label><input class="inpt_a validate" type="text" name="city" value="<?= $p['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
 			<?php $s = $p['state']; ?>
                         <label class="lbl_a"><strong>11.</strong> State:</label>
-	<select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select" id="state" name="state">
+	<select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
                                 <option <?= ($s=='AL')?'selected="selected"':'' ?> value="AL">AL - Alabama</option>
@@ -147,12 +147,11 @@ include 'includes/header.php';
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a" type="text" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<button type="submit" name="update" class="fr email_next btn btn_d">Proceed &raquo;</button>
-
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
 														</div>
 													</div>
 												</div>
@@ -170,31 +169,31 @@ include 'includes/header.php';
                                                                                                 <div class="dp75">
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
-                <div class="sepH_b half">
+                <div class="sepH_b half" id="dob_div">
                         <label class="lbl_a"><strong>1.</strong> Birthday:</label>
 				<?php
 					$dob_month = date('m', strtotime($p['dob']));
                                         $dob_day = date('j', strtotime($p['dob']));
                                         $dob_year = date('Y', strtotime($p['dob']));
 				?>
-                                <select name="dob_month">
-                                        <option>Month</option>
+                                <select class="validate" id="dob_month" name="dob_month">
+                                        <option value=''>Month</option>
                                         <?php
-                                                for($i=0;$i<=12;$i++){ ?>
+                                                for($i=1;$i<=12;$i++){ ?>
                                                         <option <?= (($dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }
                                         ?>
                                 </select>
-                                <select name="dob_day">
-                                        <option>Day</option>
+                                <select class="validate" id="dob_day" name="dob_day">
+                                        <option value=''>Day</option>
                                         <?php
-                                                for($i=0;$i<=31;$i++){ ?> 
+                                                for($i=1;$i<=31;$i++){ ?> 
                                                      <option <?= (($dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }                                        
                                         ?>
                                 </select>
-                                <select name="dob_year">
-                                        <option>Year</option>
+                                <select class="validate" id="dob_year" name="dob_year">
+                                        <option value=''>Year</option>
                                         <?php               
                                         for($i=(date('Y'))-12;$i>=1915;$i--){ ?>                                                                                                                
 						<option <?= (($dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>                                 
@@ -204,8 +203,8 @@ include 'includes/header.php';
 
 		</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Gender:</label><select class="inpt_a" name="gender">
-				<option>Select</option>
+                        <label class="lbl_a"><strong>2.</strong> Gender:</label><select class="inpt_a validate" name="gender">
+				<option value=''>Select</option>
 				<option value="Male" <?= ($p['gender']=="Male")?'selected="selected"':'';?>>Male</option>
                                 <option value="Female" <?= ($p['gender']=="Female")?'selected="selected"':'';?>>Female</option>
 				</select>
@@ -219,16 +218,16 @@ include 'includes/header.php';
                                 </select>
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
+                        <label class="lbl_a"><strong>4.</strong> Spouse/Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
                 </div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a validate" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
                 </div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>6.</strong> Patient Notes:</label><textarea class="inpt_a" name="patient_notes"><?= $p['patient_notes']; ?></textarea>
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>7.</strong> Prefered Method of Contact:</label><select class="inpt_a" name="preferredcontact">
+                        <label class="lbl_a"><strong>7.</strong> Prefered Method of Contact:</label><select class="inpt_a validate" name="preferredcontact">
                                 <option value="paper" <?= ($p['preferredcontact']=="paper")?'selected="selected"':'';?>>Paper Mail</option>
                                 <option value="email" <?= ($p['preferredcontact']=="email")?'selected="selected"':'';?>>Email</option>
                                 </select>
@@ -245,7 +244,7 @@ include 'includes/header.php';
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 
-<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -265,8 +264,16 @@ include 'includes/header.php';
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
  
+                <div class="sepH_b clear">
+                        <label class="lbl_a"><strong>1.</strong> Do you have Medicare Insurance</label>
+				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
+				<input type="radio" name="p_m_ins_type" class="validate" value="" <?= ($p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
+                </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>1.</strong> Relationship to primary insured:</label><select class="inpt_a" id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
+                        <label id='p_m_ins_description' class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your <?= ($p['p_m_ins_type'] == '1')?'MEDICARE ':'';?>insurance card.</label>
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Your relationship to primary insured:</label><select class="inpt_a validate" id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
                                                                         <option value="" <? if($p['p_m_relation'] == '') echo " selected";?>>None</option>
                                                                         <option value="Self" <? if($p['p_m_relation'] == 'Self') echo " selected";?>>Self</option>      
                                             				<option value="Spouse" <? if($p['p_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
@@ -275,39 +282,39 @@ include 'includes/header.php';
                                                                 </select>
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>3.</strong> First Name:</label><input class="inpt_a validate" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>3.</strong> Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>4.</strong> Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>5.</strong> Last Name:</label><input class="inpt_a validate" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
                 </div>
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>5.</strong> Date of Birth:</label>
+                <div class="sepH_b clear" id="ins_dob_div">
+                        <label class="lbl_a"><strong>6.</strong> Date of Birth:</label>
                                 <?php
                                         $ins_dob_month = date('m', strtotime($p['ins_dob']));
                                         $ins_dob_day = date('j', strtotime($p['ins_dob']));
                                         $ins_dob_year = date('Y', strtotime($p['ins_dob']));
                                 ?>
-                                <select name="ins_dob_month">
-                                        <option>Month</option>
+                                <select id="ins_dob_month" name="ins_dob_month" class="validate">
+                                        <option value=''>Month</option>
                                         <?php
-                                                for($i=0;$i<=12;$i++){ ?>
+                                                for($i=1;$i<=12;$i++){ ?>
                                                         <option <?= (($ins_dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }
                                         ?>
                                 </select>
-                                <select name="ins_dob_day">
-                                        <option>Day</option>
+                                <select id="ins_dob_day" name="ins_dob_day" class="validate">
+                                        <option value=''>Day</option>
                                         <?php
-                                                for($i=0;$i<=31;$i++){ ?>
+                                                for($i=1;$i<=31;$i++){ ?>
                                                      <option <?= (($ins_dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }
                                         ?>
                                 </select>
-                                <select name="ins_dob_year">
-                                        <option>Year</option>
+                                <select id="ins_dob_year" name="ins_dob_year" class="validate">
+                                        <option value=''>Year</option>
                                         <?php
                                         for($i=(date('Y'))-12;$i>=1915;$i--){ ?>                                                                                                    
                                                 <option <?= (($ins_dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -329,76 +336,65 @@ include 'includes/header.php';
 			?>
 			<input type="hidden" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
-			<input class="inpt_a" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
+                        <label class="lbl_a"><strong>7a.</strong> Insurance Company</label>
+			<input class="inpt_a validate" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
            	</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6b.</strong> Address 1</label>
+                        <label class="lbl_a"><strong>7b.</strong> Address 1</label>
                         <input class="inpt_a" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6c.</strong> Address 2</label>
+                        <label class="lbl_a"><strong>7c.</strong> Address 2</label>
                         <input class="inpt_a" id="p_m_ins_address2" name="p_m_ins_address2" type="text" value="<?= $p_m_r['address2']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6d.</strong> City</label>
+                        <label class="lbl_a"><strong>7d.</strong> City</label>
                         <input class="inpt_a" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6e.</strong> State</label>
+                        <label class="lbl_a"><strong>7e.</strong> State</label>
                         <input class="inpt_a" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6f.</strong> Zip</label>
+                        <label class="lbl_a"><strong>7f.</strong> Zip</label>
                         <input class="inpt_a" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6g.</strong> Phone</label>
+                        <label class="lbl_a"><strong>7g.</strong> Phone</label>
                         <input class="inpt_a" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6h.</strong> Fax</label>
+                        <label class="lbl_a"><strong>7h.</strong> Fax</label>
                         <input class="inpt_a" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6i.</strong> Email</label>
+                        <label class="lbl_a"><strong>7i.</strong> Email</label>
                         <input class="inpt_a" id="p_m_ins_email" name="p_m_ins_email" type="text" value="<?= $p_m_r['email']; ?>" />
                 </div>
 
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>8.</strong> Insurance ID.</label><input class="inpt_a validate" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>9.</strong> Group #</label><input class="inpt_a validate" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>10.</strong> Plan Name</label><input class="inpt_a validate" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
 <br />
                 </div>
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>10.</strong> Insurance Type</label><select class="inpt_a" id="p_m_ins_type" name="p_m_ins_type" maxlength="255" />
-                                     <option>Select Type</option>
-                                     <option value="1" <?php if($p['p_m_ins_type'] == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                     <option value="2" <?php if($p['p_m_ins_type'] == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                     <option value="3" <?php if($p['p_m_ins_type'] == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                     <option value="4" <?php if($p['p_m_ins_type'] == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                     <option value="5" <?php if($p['p_m_ins_type'] == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                     <option value="6" <?php if($p['p_m_ins_type'] == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                     <option value="7" <?php if($p['p_m_ins_type'] == '7'){ echo " selected='selected'";} ?>>Other</option>
-                                </select>
-		</div>
-		<div class="sepH_b">
-			<label class="lbl_a"><strong>11.</strong> Does patient have secondary insurance?</label><input onclick="updateNext('Yes');" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes <input onclick="updateNext('No');" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
+		<div class="sepH_b clear">
+			<label class="lbl_a"><strong>11.</strong> Do you have secondary insurance?</label>
+			<input class="validate" onclick="updateNext('Yes');" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Ydes")?'checked="checked"':''; ?> value="Yes" />Yes 
+			<input onclick="updateNext('No');" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
 		</div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 <?php if($p['has_s_m_ins']=="No"){ ?>
-
-<button type="submit" name="update" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</button>
-<button type="submit" name="update" id="insNext" class="fr next btn btn_d" style="display:none;">Proceed &raquo;</button>
+<a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d" style="display:none">Proceed &raquo;</a>
 <?php }else{ ?>
-<button type="submit" name="update" id="insNext" class="fr next btn btn_d">Proceed &raquo;</button>
-<button type="submit" name="update" id="insNext2" class="fr next2 btn btn_d" style="display:none;">Proceed &raquo;</button>
+<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d" style="display:none">Proceed &raquo;</a>
 <?php } ?>
                                                                                                                 </div>
                                                                                                         </div>
@@ -419,7 +415,10 @@ include 'includes/header.php';
                                                                                                                 <div class="form_errors" style="display:none"></div>
 
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>1.</strong> Relationship to primary insured:</label><select class="inpt_a" id="s_m_relation" name="s_m_relation" >
+                        <label class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your SECONDARY insurance card.</label>
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Your relationship to primary insured:</label><select class="inpt_a validate" id="s_m_relation" name="s_m_relation" >
                                                                         <option value="" <? if($p['s_m_relation'] == '') echo " selected";?>>None</option>
                                                                         <option value="Self" <? if($p['s_m_relation'] == 'Self') echo " selected";?>>Self</option>
                                                                         <option value="Spouse" <? if($p['s_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
@@ -428,39 +427,39 @@ include 'includes/header.php';
                                                                 </select>
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a validate" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>3.</strong> Middle Name:</label><input class="inpt_a" id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a validate" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
                 </div>
-                <div class="sepH_b clear">
+                <div class="sepH_b clear" id="ins2_dob_div">
                         <label class="lbl_a"><strong>5.</strong> Date of Birth:</label>
                                 <?php
                                         $ins2_dob_month = date('m', strtotime($p['ins2_dob']));
                                         $ins2_dob_day = date('j', strtotime($p['ins2_dob']));
                                         $ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
                                 ?>
-                                <select name="ins2_dob_month">
-                                        <option>Month</option>
+                                <select name="ins2_dob_month" id="ins2_dob_month" class="validate">
+                                        <option value=''>Month</option>
                                         <?php
-                                                for($i=0;$i<=12;$i++){ ?>
+                                                for($i=1;$i<=12;$i++){ ?>
                                                         <option <?= (($ins2_dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }
                                         ?>
                                 </select>
-                                <select name="ins2_dob_day">
-                                        <option>Day</option>
+                                <select name="ins2_dob_day" id="ins2_dob_day" class="validate">
+                                        <option value=''>Day</option>
                                         <?php
-                                                for($i=0;$i<=31;$i++){ ?>
+                                                for($i=1;$i<=31;$i++){ ?>
                                                      <option <?= (($ins2_dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                                                 <?php }
                                         ?>
                                 </select>
-                                <select name="ins2_dob_year">
-                                        <option>Year</option>
+                                <select name="ins2_dob_year" id="ins2_dob_year" class="validate">
+                                        <option value=''>Year</option>
                                         <?php
                                         for($i=(date('Y'))-12;$i>=1915;$i--){ ?>                                                                                                    
                                                 <option <?= (($ins2_dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -482,7 +481,7 @@ include 'includes/header.php';
                         <input type="hidden" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
-                        <input class="inpt_a" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>6b.</strong> Address 1</label>
@@ -517,30 +516,18 @@ include 'includes/header.php';
                         <input class="inpt_a" id="s_m_ins_email" name="s_m_ins_email" type="text" value="<?= $s_m_r['email']; ?>" />     
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a validate" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a" id="s_m_ins_grp" name="s_m_ins_grp" type="text" value="<?=$p['s_m_ins_grp']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a validate" id="s_m_ins_grp" name="s_m_ins_grp" type="text" value="<?=$p['s_m_ins_grp']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a" id="s_m_ins_plan" name="s_m_ins_plan" type="text" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a validate" id="s_m_ins_plan" name="s_m_ins_plan" type="text" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
                 </div>
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>10.</strong> Insurance Type</label><select class="inpt_a" id="s_m_ins_type" name="s_m_ins_type" />
-                                     <option>Select Type</option>
-                                     <option value="1" <?php if($p['s_m_ins_type'] == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                     <option value="2" <?php if($p['s_m_ins_type'] == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                     <option value="3" <?php if($p['s_m_ins_type'] == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                     <option value="4" <?php if($p['s_m_ins_type'] == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                     <option value="5" <?php if($p['s_m_ins_type'] == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                     <option value="6" <?php if($p['s_m_ins_type'] == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                     <option value="7" <?php if($p['s_m_ins_type'] == '7'){ echo " selected='selected'";} ?>>Other</option>
-                                </select>
-				</div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 
-<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
+<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -648,7 +635,7 @@ include 'includes/header.php';
 			<a href="javascript:void(0)" id="insPrev" class="fl prev btn btn_a" <?= ($p['has_s_m_ins']=="No")?'style="display:none;"':''; ?>>&laquo; Back</a>
 			<a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($p['has_s_m_ins']=="No")?'':'style="display:none;"'; ?>>&laquo; Back</a>
 
-<button type="submit" name="update" class="fr next btn btn_d">Proceed &raquo;</button>
+<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>

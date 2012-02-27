@@ -4,7 +4,7 @@ require_once '../../manage/admin/includes/password.php';
 
     $s = "SELECT * FROM dental_patients WHERE 
 	email='".mysql_real_escape_string($_POST['email'])."' AND
-	recover_hash='".mysql_real_escape_string($_POST['code'])."'";
+	access_code='".mysql_real_escape_string($_POST['code'])."'";
 
     $q = mysql_query($s);
     if(mysql_num_rows($q)>0){

@@ -141,16 +141,16 @@
    	}
        $q = mysql_query($sql);
 	if($q){
-		echo "Successfully updated!";
+		//echo "Successfully updated!";
 	}else{
-		echo "Error";
+		//echo "Error";
 	}
 
 		$s_sql = "SELECT email FROM dental_patients
                         WHERE patientid=".mysql_real_escape_string($_SESSION['pid']);
                 $s_q = mysql_query($s_sql);
                 $s_r = mysql_fetch_assoc($s_q);
-                sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'pat');
+                sendUpdatedEmail($_SESSION['pid'], $_POST['email'], $s_r['email'], 'pat');
 		if(trim($_POST['email']) != trim($s_r['email'])){
 			echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
 		}

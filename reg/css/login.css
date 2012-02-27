@@ -1,6 +1,7 @@
 .fr {float:right;}
 .fl {float:left;}
 .clear{ clear:both; }
+.hide { display: none; }
 body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
 #login_container{ height:300px; width:960px; margin:100px auto 0 auto;}
 #login_container h1{ text-indent:-99999px;background: url(../images/login_logo.gif) no-repeat 0 0; height:278px; width:343px; display:block; float:left; }
@@ -23,4 +24,4 @@ body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
 .pass_valid{ background-image: url(../images/ok_ico.png); background-position:480px 13px; background-repeat: no-repeat;}
 .pass_invalid{ background-image: url(../images/error_ico.png); background-position:480px 13px; background-repeat: no-repeat;}
  
-.error{ display:none; color:#900; font-weight:bold;}
+.error{ color:#900; font-weight:bold;}

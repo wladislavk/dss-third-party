@@ -185,8 +185,7 @@ if($epworthid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset Values to Zero" />
-	<input type="submit" name="q_sleepbtn" class="next btn btn_d" value="Save" />
+	<input type="submit" name="q_sleepbtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 <div class="formEl_a">
@@ -371,8 +370,7 @@ cal_analaysis(0);
 
 
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset Values to Zero" />
-    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

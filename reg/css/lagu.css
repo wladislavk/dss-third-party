@@ -77,8 +77,8 @@
 		.ftr_content {font-size:11px;padding:10px 10px 0;position:relative}
 
 	/* grid */
-		.dp20,.dp25,.dp33,.dp50,.dp75,.dp100{float:left;display:inline;margin:0 1%;min-height:1px}
-		.dp20{width:18%}.dp25{width:23%}.dp33{width:31.33%}.dp50{width:48%}.dp75{width:73%}.dp100{width:98%}
+		.dp20,.dp25,.dp33,.dp40,.dp50,.dp60,.dp66,.dp75,.dp100{float:left;display:inline;margin:0 1%;min-height:1px}
+		.dp20{width:18%}.dp25{width:23%}.dp33{width:31.33%}.dp40{width:38%}.dp60{width:58%}.dp66{width:62.66%}.dp50{width:48%}.dp75{width:73%}.dp100{width:98%}
 		.row{margin-bottom:16px}
 		.row:before,.row:after{display:table;content:""}
 		.row:after{clear:both}
@@ -199,7 +199,6 @@
 	/* forms */
 		.formEl_a input,.formEl_a textarea, .formEl_a select {font-family:Helvetica, Arial, sans-serif;font-size:13px}
 		.formEl_a input:focus,.formEl_a textarea:focus,.formEl_a input:active,.formEl_a textarea:active {background-color:#ebfdd7}
-		.formEl_a label {cursor:pointer}
 		.formEl_a .lbl_a {display:block;margin-bottom:4px;color:#666;font-weight:700}
 		.formEl_a .lbl_c {font-size:13px;vertical-align:middle;color:#666}
 		.formEl_a .inpt_a {padding:5px 8px;width:380px;border:1px;border-color:#b8b8b8 #e2e2e2 #e2e2e2 #b8b8b8;border-style:solid}

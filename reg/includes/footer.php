@@ -7,7 +7,7 @@
     <!-- footer section -->
     <div id="footer">
         <div class="wrapper">
-            [footer content]
+            <span class="fr">Copyright Dental Sleep Solutions 2012</span> 
         </div>
     </div>
 

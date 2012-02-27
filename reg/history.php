@@ -225,7 +225,7 @@ $injurytohead = $_POST['injurytohead'];
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='history.php?msg=<?=$msg;?>';
+			window.location='index.php';
 		</script>
 		<?
 		die();
@@ -305,7 +305,7 @@ $injurytohead = $_POST['injurytohead'];
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='history.php?msg=<?=$msg;?>';
+			window.location='index.php';
 		</script>
 		<?
 		die();
@@ -412,8 +412,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 <div class="formEl_a">
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
+	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
                             <h3>Premedication<span id="req_0" class="req">*</span></h3>
@@ -679,8 +678,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
 
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" tabindex="12" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" tabindex="12" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </div>

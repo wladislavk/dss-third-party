@@ -37,7 +37,7 @@ window.location = 'logout.php';
 }
     </script>
   </head>
-  <body class="fixed stD" onload="set_interval()">
+  <body class="fixed" onload="set_interval()">
     <!-- quick access sliding panel -->
     <div id="slide_wrapper">
         <div class="wrapper" id="slide_panel">
@@ -55,7 +55,7 @@ window.location = 'logout.php';
 		<h1>Dental Sleep Solutions</h1>
             </div>
             <ul id="main_nav" class="fr">
-				<li class="nav_item active lgutipL" title="Home"><a href="home.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/home.png)" alt="" src="images/blank.gif"/><span>Dashboard</span></a><img class="tick tick_a" alt="" src="images/blank.gif" /></li>
+				<li class="nav_item active lgutipL" title="Home"><a href="index.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/home.png)" alt="" src="images/blank.gif"/><span>Dashboard</span></a><img class="tick tick_a" alt="" src="images/blank.gif" /></li>
 				<li class="nav_item lgutipR" title="Register"><a href="register.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/user2.png)" alt="" src="images/blank.gif"/><span>Registration</span></a></li>
 				<li class="nav_item lgutipT" title="Questionnaire"><a href="symptoms.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/clipboard.png)" alt="" src="images/blank.gif"/><span>Questionnaire</span></a></li>
                                 <li class="nav_item lgutipT" title="Log Out"><a href="logout.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/locked2.png)" alt="" src="images/blank.gif"/><span>Log Out</span></a></li>

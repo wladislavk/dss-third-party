@@ -272,8 +272,7 @@ if($complaintid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 <div class="formEl_a">
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-	<input type="submit" id="save_but" name="q_pagebtn" class="next btn btn_d" value="Save" />
+	<input type="submit" id="save_but" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 	<div class="sepH_b">
@@ -686,8 +685,7 @@ $('document').ready( function(){
 </script>
 
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </div>

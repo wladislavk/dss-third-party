@@ -4,3 +4,4 @@ ALTER TABLE dental_patients ADD COLUMN salt varchar(100);
 ALTER TABLE dental_patients ADD COLUMN recover_hash varchar(100);
 ALTER TABLE dental_patients ADD COLUMN recover_time datetime;
 ALTER TABLE dental_patients ADD COLUMN registered tinyint(1);
+ALTER TABLE dental_patients ADD COLUMN access_code varchar(100);

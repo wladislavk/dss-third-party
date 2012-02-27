@@ -391,8 +391,7 @@ if($cpap == '')
 
 <div class="formEl_a">
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save" />
+	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
            <h3>Sleep Studies</h3>
@@ -590,8 +589,7 @@ if($cpap == '')
                         </div>
 
 <div align="right">
-	<input type="reset" class="next btn btn_b" value="Reset" />
-    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save"  />
+    <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed"  />
     &nbsp;&nbsp;&nbsp;
 </div>
 </div>

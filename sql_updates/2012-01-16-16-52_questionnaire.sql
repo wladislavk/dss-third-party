@@ -9,6 +9,17 @@ ALTER TABLE dental_q_page2 ADD COLUMN dd_otc varchar(50);
 ALTER TABLE dental_q_page2 ADD COLUMN dd_fab varchar(50);
 ALTER TABLE dental_q_page2 ADD COLUMN dd_who varchar(255);
 ALTER TABLE dental_q_page2 ADD COLUMN dd_experience text;
+ALTER TABLE dental_q_page2 ADD COLUMN surgery varchar(50);
+
+
+CREATE TABLE `dental_q_page2_surgery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patientid` int(11) DEFAULT NULL,
+  `surgery_date` datetime DEFAULT NULL,
+  `surgery` varchar(255) DEFAULT NULL,
+  `surgeon` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 /*
 CREATE TABLE `dental_insurance_preauth` (

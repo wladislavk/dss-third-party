@@ -77,6 +77,7 @@ define('SORT_BY_STATUS', 1);
 define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
+define('SORT_BY_INSURANCE', 5);
 
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
@@ -89,6 +90,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_PATIENT:
     $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
+    break;
+  case SORT_BY_INSURANCE:
+    $sort_by_sql = "ins_co $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
     $sort_by_sql = "doc_name $sort_dir";
@@ -128,13 +132,14 @@ else
 	
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
-     . "  preauth.id, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
 
@@ -253,6 +258,9 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_INSURANCE, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_INSURANCE, get_sort_dir($sort_by, SORT_BY_INSURANCE, $sort_dir))?>">Insurance</a>
+                </td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee</a>
 		</td>
@@ -289,6 +297,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
+				</td>
+				<td valign="top">
+					<?=st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

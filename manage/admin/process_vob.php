@@ -109,6 +109,7 @@ if (isset($_REQUEST['ed'])) {
          . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
          . "pre_auth_num = '".s_for($_POST["pre_auth_num"])."', "
          . "network_benefits = '" . $_POST["network_benefits"] . "', "
+         . "deductible_from = '" . $_POST["deductible_from"] . "', "
          . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
          . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
          . "family_deductible = '" . $_POST["family_deductible"] . "', "
@@ -116,6 +117,7 @@ if (isset($_REQUEST['ed'])) {
          . "deductible_reset_date = '".s_for($_POST["deductible_reset_date"])."', "
          . "out_of_pocket_met = '" . $_POST["out_of_pocket_met"] . "', "
          . "patient_amount_left_to_meet = '" . $_POST["patient_amount_left_to_meet"] . "', "
+         . "family_amount_left_to_meet = '" . $_POST["family_amount_left_to_meet"] . "', "
          . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
          . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "' ";
     
@@ -436,6 +438,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onchange="validateDate('ins_cal_year_start');"class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onchange="validateDate('ins_cal_year_end');" class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
+		<span><a href="#" onclick="$('#ins_cal_year_start').val('1/1/'+(new Date).getFullYear());$('#ins_cal_year_end').val('12/31/'+(new Date).getFullYear());return false;">Jan1-Dec31</a></span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -555,6 +558,17 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
+                Deductible Calculated From
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $patient_checked = ($preauth['deductible_from'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $family_checked  = ($preauth['deductible_from'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="deductible_from" value="1" <?= $patient_checked ?> <?=$disabled?> class="covered"/> Patient Deductible 
+                <input type="radio" name="deductible_from" value="0" <?= $family_checked ?> <?=$disabled?> class="covered"/> Family Deductible
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
+            <td valign="top" class="frmhead" width="30%">
                 Patient Deductible
             </td>
             <td valign="top" class="frmdata">
@@ -598,6 +612,16 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
+            <td valign="top" class="frmhead" width="30%">
+                Family amount left to meet
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="family_amount_left_to_meet" name="family_amount_left_to_meet" value="<?=$preauth['family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 When does the deductible reset?

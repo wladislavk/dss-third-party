@@ -137,6 +137,7 @@ $('#email_code').keyup(function(){
 });
 
 function showSect(s){
+  $('.error').html('');
   $('.login_content').hide();
   $('#'+s+'_sect').show();
 }

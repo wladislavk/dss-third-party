@@ -658,6 +658,24 @@ function in_array(needle, haystack)
 
                                     </td>
                                 </tr>
+                                                                <tr>
+                                        <td valign="top">
+                                        Rate your sleep quality 0-10 (10 being the highest)
+                                    </td>
+                                    <td valign="top">
+                                        <select name="sleep_qual" id="sleep_qual" class="field text addr tbox" style="width:150px;">
+                                            <option value=""></option>
+                                            <? for($i=0;$i<11;$i++)
+                                            {?>
+                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
+                                            <? }?>
+                                        </select>
+                            <?php
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual);
+                            ?>
+                                    </td>
+                                </tr>
+
                                  								<tr>
                                 	<td valign="top">
                                     	Have you been told you snore?
@@ -733,38 +751,6 @@ function in_array(needle, haystack)
                                 </tr> -->
                                 <tr>
                                 	<td valign="top">
-                                    	How often do you wake up with morning headaches?
-                                    </td>
-                                    <td valign="top">
-                                    	<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
-                                            <option value=""></option>
-                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
-                                            	Most Mornings
-                                            </option>
-                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
-                                            	Several times per week
-                                            </option>
-                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
-                                            	Several times per month
-                                            </option>
-                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
-                                            	Occasionally
-                                            </option>
-                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
-                                            	Rarely
-                                            </option>
-                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
-                                            	Never
-                                            </option>
-                                        </select>
-                            <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches);
-                            ?>
-                                    </td>
-                                </tr>
-								
-                                <tr>
-                                	<td valign="top">
                                     	On average how many hours of sleep do you get per night?
                                     </td>
                                     <td valign="top">
@@ -780,25 +766,38 @@ function in_array(needle, haystack)
                             ?>
                                     </td>
                                 </tr>
-                                
-                                                                <tr>
-                                	<td valign="top">
-                                    	Rate your sleep quality 0-10 (10 being the highest)
+                                                               <tr>
+                                        <td valign="top">
+                                        How often do you wake up with morning headaches?
                                     </td>
                                     <td valign="top">
-                                    	<select name="sleep_qual" id="sleep_qual" class="field text addr tbox" style="width:150px;">
+                                        <select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
-                                            <? for($i=0;$i<11;$i++)
-                                            {?>
-                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
-                                            <? }?>
+                                            <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
+                                                Most Mornings
+                                            </option>
+                                            <option value="Several times per week" <? if($morning_headaches == 'Several times per week') echo " selected";?>>
+                                                Several times per week
+                                            </option>
+                                            <option value="Several times per month" <? if($morning_headaches == 'Several times per month') echo " selected";?>>
+                                                Several times per month
+                                            </option>
+                                            <option value="Occasionally" <? if($morning_headaches == 'Occasionally') echo " selected";?>>
+                                                Occasionally
+                                            </option>
+                                            <option value="Rarely" <? if($morning_headaches == 'Rarely') echo " selected";?>>
+                                                Rarely
+                                            </option>
+                                            <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
+                                                Never
+                                            </option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches);
                             ?>
                                     </td>
                                 </tr>
-                                
+ 
                                 								<tr>
                                 	<td valign="top">
                                     	Do you have a bed time partner?

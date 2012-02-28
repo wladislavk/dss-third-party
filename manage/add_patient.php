@@ -1011,6 +1011,17 @@ $num_face = mysql_num_rows($p);
                         </label>
                         <div>
                             <span>
+                                <select name="salutation" style="width:80px;" >
+                                  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
+                                  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
+                                  <option value="Miss." <?php if($salutation == "Miss."){echo "selected='selected'";} ?>>Miss.</option>
+                                  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
+                                  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
+                                  <option value="Prof." <?php if($salutation == "Prof."){echo "selected='selected'";} ?>>Prof.</option>
+                                </select>
+                                <label for="salutation">Salutation</label>
+                            </span>
+                            <span>
                                 <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" />
                                 <label for="firstname">First Name</label>
                             </span>
@@ -1021,17 +1032,6 @@ $num_face = mysql_num_rows($p);
                             <span>
                                 <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:50px;" maxlength="1" />
                                 <label for="middlename">Middle <br />Init</label>
-                            </span>
-                            <span>
-                                <select name="salutation" style="width:80px;" >
-                                  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
-                                  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-                                  <option value="Miss." <?php if($salutation == "Miss."){echo "selected='selected'";} ?>>Miss.</option>
-                                  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
-                                  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
-                                  <option value="Prof." <?php if($salutation == "Prof."){echo "selected='selected'";} ?>>Prof.</option>                                
-                                </select>
-                                <label for="salutation">Salutation</label>
                             </span>
 			    <span>
 				<input type="text" name="login" class="field text addr tbox" style="width:100px;" value="<?=$email?>" disabled="disabled" />
@@ -1046,12 +1046,12 @@ $num_face = mysql_num_rows($p);
                                                                                                                                 </label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
-                                <label for="work_phone">Work Phone</label>
-                            </span>
-                            <span>
                                 <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="cell_phone">Cell Phone</label>
+                            </span>
+                            <span>
+                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
+                                <label for="work_phone">Work Phone</label>
                             </span>
                                                 </div>
 			<div>
@@ -1159,25 +1159,25 @@ $num_face = mysql_num_rows($p);
                                 </select><span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
-                            
-                            <span>
-                            	<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
-                                	<option value="">Select</option>
-                                    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
-									<option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
-                                </select>
-                                <label for="marital_status">Marital Status</label>
-                            </span>
-							<span>
-                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
-                                <label for="partner_name">Partner Name</label>
-                            </span>
-						</div>
-						<div>
                             <span>
                                 <input id="ssn" name="ssn" type="text" class="field text addr tbox" value="<?=$ssn?>"  maxlength="255" />
                                 <label for="ssn">Patient's Soc Sec No.</label>
+                            </span>
+ 
+						</div>
+						<div>
+                            <span>
+                                <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
+                                        <option value="">Select</option>
+                                    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
+                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
+                                                                        <option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
+                                </select>
+                                <label for="marital_status">Marital Status</label>
+                            </span>
+                                                        <span>
+                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
+                                <label for="partner_name">Partner Name</label>
                             </span>
                         </div>
                     </li>
@@ -1306,7 +1306,71 @@ $(document).ready(function(){
 				</ul>
             </td>
         </tr>
-            
+           
+
+                          <tr>
+              <td colspan="2">
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</font>
+              </td>
+          </tr>
+                <tr>
+                <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                        <li id="foli8" class="complex">
+                        <label class="desc" id="title0" for="Field0">
+                            Employer Information
+                        </label>
+                                                <div>
+                            <span>
+                                <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:525px;"  maxlength="255"/>
+                                <label for="add1">Employer</label>
+                            </span>
+                                                        <span>
+                                <input id="emp_phone" name="emp_phone" type="text" class="field text addr tbox" value="<?=$emp_phone?>"  style="width:120px;" maxlength="255" />
+                                <label for="state">&nbsp;&nbsp;Phone</label>
+                            </span>
+                                                        <span>
+                                <input id="emp_fax" name="emp_fax" type="text" class="field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
+                                <label for="state">Fax</label>
+                            </span>
+
+                        </div>
+                        <div>
+                            <span>
+                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:325px;"  maxlength="255"/>
+                                <label for="add1">Address1</label>
+                            </span>
+                            <span>
+                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:325px;" maxlength="255" />
+                                <label for="add2">Address2</label>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
+                                <label for="city">City</label>
+                            </span>
+                            <span>
+                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
+                                <label for="state">State</label>
+                            </span>
+                            <span>
+                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
+                                <label for="zip">Zip Code </label>
+                            </span>
+                        </div>
+                    </li>
+                                </ul>
+            </td>
+        </tr>
+
+
+
+
+
+
+
+ 
 	  <tr>
 	      <td colspan="2">
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>	      
@@ -1643,87 +1707,6 @@ $(document).ready(function(){
         
         
         
-		   	  <tr>
-	      <td colspan="2">
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</font>	      
-	      </td>
-	  </tr>
-		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                            Employer Information
-                        </label>
-						<div>
-                            <span>
-                                <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:525px;"  maxlength="255"/>
-                                <label for="add1">Employer</label>
-                            </span>
-                        </div>
-                        <div>
-                            <span>
-                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:325px;"  maxlength="255"/>
-                                <label for="add1">Address1</label>
-                            </span>
-                            <span>
-                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:325px;" maxlength="255" />
-                                <label for="add2">Address2</label>
-                            </span>
-                        </div>
-                        <div>
-                            <span>
-                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
-                                <label for="city">City</label>
-                            </span>
-                            <span>
-                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
-                                <label for="state">State</label>
-                            </span>
-                            <span>
-                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
-                                <label for="zip">Zip Code </label>
-                            </span>
-							<span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="field text addr tbox" value="<?=$emp_phone?>"  style="width:120px;" maxlength="255" />
-                                <label for="state">&nbsp;&nbsp;Phone</label>
-                            </span>
-							<span>
-                                <input id="emp_fax" name="emp_fax" type="text" class="field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
-                                <label for="state">Fax</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		      <?php if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
 		    	  <tr>
@@ -1737,12 +1720,70 @@ $(document).ready(function(){
 		        
 		        
 		       <table id="contactmds" style="float:left;">
+
+
+
+                         <tr height="35">
+
+                       <td>
+           <font style="padding-left:10px;">Add contacts below so they can receive correspondence about this patient.</font>
+                        <p>&nbsp;</p>
+
+                       <ul>
+                        <li  id="foli8" class="complex">
+                         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
+                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+<br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
+                <ul id="docpcp_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
+                         </li>
+                         </ul>
+
+                         </td>
+                         </tr>
+
+
+
+
+              <tr height="35">
+
+                       <td>
+
+                       <ul>
+                        <li  id="foli8" class="complex">
+                         <label style="display: block; float: left; width: 110px;">ENT</label>
+                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+<br />        <div id="docent_hints" class="search_hints" style="display:none;">
+                <ul id="docent_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
+
+                         </li>
+                         </ul>
+
+                         </td>
+                         </tr>
+
+
+
            <tr height="35"> 
 		        
 		       <td>
-           <font style="padding-left:10px;">Add contacts below so they can receive correspondence about this patient.</font> 
-		        <p>&nbsp;</p>
-
             <ul>
 		        <li  id="foli8" class="complex">
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
@@ -1765,37 +1806,6 @@ $(document).ready(function(){
 		          </td>
 		         </tr>
 		         
-		         
-		         
-		         
-		         
-		         
-		         
-		         
-		         <tr height="35"> 
-		        
-		       <td> 
-		        
-		       <ul>
-		        <li  id="foli8" class="complex">
-		         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
-<br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
-                <ul id="docpcp_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
-		         </li>
-		         </ul>
-		         
-		         </td>
-		         </tr>
 		         
 		         
 		         
@@ -1844,39 +1854,6 @@ $(document).ready(function(){
              
              
              
-              <tr height="35"> 
-		        
-		       <td> 
-		        
-		       <ul>
-		        <li  id="foli8" class="complex">
-		         <label style="display: block; float: left; width: 110px;">ENT</label>
-                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
-<br />        <div id="docent_hints" class="search_hints" style="display:none;">
-                <ul id="docent_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
-});
-</script>
-                                        </div>
-<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
-
-		         </li>
-		         </ul>
-		         
-		         </td>
-		         </tr>
-		         
-		         
-		         
-		         
-		         
-		         
-		         
-		         
 		         <tr height="35"> 
 		        
 		       <td> 

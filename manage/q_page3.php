@@ -776,17 +776,31 @@ label {
 
 						</span>
 					</div>
-				                                        <div>
+                                        <div>
                         <span>
-                                                        <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
-
-                                                        <input type="radio" class="extra" name="injury" value="Yes" <? if($injury == 'Yes') echo " checked";?> />Yes
+                                                        <label>Have you ever had gum problems?</label>
+                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <input type="radio" class="extra" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
-							<span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" /></span>
+                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No
+                                                        <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /></span>
                                                 </span>
                                         </div>
+
+
+                                        <div>
+                        <span>
+                                                        <label>Have you ever had gum surgery?</label>
+
+                                                        <input type="radio" class="extra" name="gum_surgery" value="Yes" <? if($gum_surgery == 'Yes') echo " checked";?> />Yes
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                        <input type="radio" class="extra" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
+                                                        <span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /></span>
+                                                </span>
+                                        </div>
+
+
+
 					<div>
                         <span>
 							<label>Do you have morning dry mouth?</label>
@@ -799,30 +813,18 @@ label {
 						</span>
 					</div>
 					
-					<div>
-                        <span>
-							<label>Have you ever had gum problems?</label>
-                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No 
-                                                        <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /></span> 
-						</span>
-					</div>
-					
-					                                        
-                                        <div>
-                        <span>
-                                                        <label>Have you ever had gum surgery?</label>
+				 <div>                        <span>
+                                                        <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
 
-                                                        <input type="radio" class="extra" name="gum_surgery" value="Yes" <? if($gum_surgery == 'Yes') echo " checked";?> />Yes
+                                                        <input type="radio" class="extra" name="injury" value="Yes" <? if($injury == 'Yes') echo " checked";?> />Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                                        <input type="radio" class="extra" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
-							<span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /></span>
+                                                        <input type="radio" class="extra" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
+                                                        <span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="
+<?= $injury_text; ?>" /></span>
                                                 </span>
                                         </div>
-
-					
+	
 					<div>
                         <span>
 							<label>Are you planning to have dental work done in the near future?</label>

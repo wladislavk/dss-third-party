@@ -126,6 +126,7 @@ if (isset($_REQUEST['ed'])) {
         $sql .= ", date_completed = NOW() ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } else {
+	if($_POST['']){ }
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }

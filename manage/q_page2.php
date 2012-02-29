@@ -412,8 +412,11 @@ if($cpap == '')
         $patient_q = mysql_query($patient_sql);
         $pat_row = mysql_fetch_assoc($patient_q);
         if(mysql_num_rows($patient_q) == 0){
+		$showEdits = false;
                 //echo "Patient edits.";
-        }
+        }else{
+		$showEdits = true;
+	}
 ?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
@@ -439,7 +442,7 @@ if($cpap == '')
                             <input type="radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
                             No
 						                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits);
                             ?>
 	
                         	<!--<input type="checkbox" name="polysomnographic" value="1" class="tbox" style="width:10px;"  onclick="chk_poly()" <? if($polysomnographic == 1) echo " checked";?> />
@@ -454,14 +457,14 @@ if($cpap == '')
 							
                             <input id="sleep_center_name_text" name="sleep_center_name_text" type="text" class="field text addr tbox" value="<?=$sleep_center_name_text;?>"  maxlength="255" style="width:225px;" /> 
                             <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_center_name_text', $pat_row['sleep_center_name_text'], $sleep_center_name_text, true, $showEdits);
                             ?>
 	
 							Date
                             &nbsp;&nbsp;
                             <input id="sleep_study_on" name="sleep_study_on" type="text" class="field text addr tbox" value="<?=$sleep_study_on;?>"  maxlength="10" style="width:75px;" /> 
                             <?php   
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'sleep_study_on', $pat_row['sleep_study_on'], $sleep_study_on, true, $showEdits);
                             ?>
 
                         </span>
@@ -494,7 +497,7 @@ if($cpap == '')
                             <input type="radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
                             <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits);
                             ?>
 
                         </span>
@@ -507,7 +510,7 @@ if($cpap == '')
                             <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
                             <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits);
                             ?>
 
                         </span>

@@ -142,11 +142,11 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
 
 
 
-function showPatientValue($table, $pid, $f, $pv, $fv, $show = true){
-  if($pv != $fv){
+function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show){
+  if($pv != $fv && $show){
 	?>
 	<span id="patient_<?= $f; ?>" class="patient_change">
-		<?php if($show){ ?>
+		<?php if($showValues){ ?>
 			> <?= $pv; ?>
 		<?php } ?>
                 <a href="#" title="Reject" class="reject" onclick="updateQuestionnaire('<?= $table; ?>', '<?= $pid; ?>', '<?= $f; ?>', '<?= $fv; ?>'); return false;"></a>

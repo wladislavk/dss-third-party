@@ -324,7 +324,10 @@ if($complaintid <> '')
         $patient_q = mysql_query($patient_sql);
 	$pat_row = mysql_fetch_assoc($patient_q);
         if(mysql_num_rows($patient_q) == 0){
+		$showEdits = false;
 		echo "Patient edits.";
+	}else{
+		$showEdits = true;
 	}
 ?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -383,7 +386,7 @@ if($complaintid <> '')
 								}?>
                             </select>
 			    <?php 
-				showPatientValue('dental_q_page1', $_GET['pid'], 'feet', $pat_row['feet'], $feet);
+				showPatientValue('dental_q_page1', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
 			    ?>
                             <label for="feet">Feet</label>
                         </span>
@@ -399,7 +402,7 @@ if($complaintid <> '')
 								}?>
                             </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'inches', $pat_row['inches'], $inches);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
                             ?>
                             <label for="inches">Inches</label>
                         </span>
@@ -415,7 +418,7 @@ if($complaintid <> '')
 								}?>
                             </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'weight', $pat_row['weight'], $weight);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
                             ?>
 
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -448,13 +451,13 @@ if($complaintid <> '')
 	<td valign="top" class="frmhead">
 	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
                             ?>
 
 	  <br />
 	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
                             ?>
 
 	</td>
@@ -466,7 +469,7 @@ if($complaintid <> '')
                     </label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'chief_complaint_text', $pat_row['chief_complaint_text'], $chief_complaint_text, true, $showEdits);
                             ?>
 
 	</td>
@@ -480,7 +483,7 @@ if($complaintid <> '')
                     <label class="desc" id="title0" for="Field0">
                         Other Complaints
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'complaintid', $pat_row['complaintid'], $complaintid, false, $showEdits);
                             ?>
                     </label>
                     <? 
@@ -606,7 +609,7 @@ function in_array(needle, haystack)
                             (Enter Each Complaint on Different Line)<br />
                             <textarea name="other_complaint" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_complaint;?></textarea>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'other_complaint', $pat_row['other_complaint'], $other_complaint, true, $showEdits);
                             ?>
                         </span>
                     </div>
@@ -653,7 +656,7 @@ function in_array(needle, haystack)
                                             <? }?>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'energy_level', $pat_row['energy_level'], $energy_level, true, $showEdits);
                             ?>
 
                                     </td>
@@ -671,7 +674,7 @@ function in_array(needle, haystack)
                                             <? }?>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_qual', $pat_row['sleep_qual'], $sleep_qual, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -694,7 +697,7 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -713,7 +716,7 @@ function in_array(needle, haystack)
                                             <option value="Don't know">Don't know</option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'snoring_sound', $pat_row['snoring_sound'], $snoring_sound, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -730,7 +733,7 @@ function in_array(needle, haystack)
                                             <? }?>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'wake_night', $pat_row['wake_night'], $wake_night, true, $showEdits);
                             ?>
 
                                     </td>
@@ -762,7 +765,7 @@ function in_array(needle, haystack)
                                             <? }?>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'hours_sleep', $pat_row['hours_sleep'], $hours_sleep, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -811,7 +814,7 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>-->
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -834,7 +837,7 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'bed_time_partner', $pat_row['bed_time_partner'], $bed_time_partner, true, $showEdits);
                             ?>
 
                                     </td>
@@ -861,7 +864,7 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'sleep_same_room', $pat_row['sleep_same_room'], $sleep_same_room, true, $showEdits);
                             ?>
                                     </td>
                                 </tr>
@@ -893,7 +896,7 @@ function in_array(needle, haystack)
                                             </option>
                                         </select>
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing);
+                                showPatientValue('dental_q_page1', $_GET['pid'], 'quit_breathing', $pat_row['quit_breathing'], $quit_breathing, true, $showEdits);
                             ?>
 
                                     </td>

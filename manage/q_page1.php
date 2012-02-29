@@ -325,7 +325,7 @@ if($complaintid <> '')
 	$pat_row = mysql_fetch_assoc($patient_q);
         if(mysql_num_rows($patient_q) == 0){
 		$showEdits = false;
-		echo "Patient edits.";
+		//echo "Patient edits.";
 	}else{
 		$showEdits = true;
 	}

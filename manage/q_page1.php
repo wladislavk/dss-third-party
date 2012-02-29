@@ -771,7 +771,25 @@ function in_array(needle, haystack)
                                         How often do you wake up with morning headaches?
                                     </td>
                                     <td valign="top">
-                                        <select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
+					<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
+                                            <option value=""></option>
+                                            <option value="0" <? if($morning_headaches == '0') echo " selected";?>>
+                                                Everyday
+                                            </option>
+                                            <option value="1" <? if($morning_headaches == '1') echo " selected";?>>
+                                                Often
+                                            </option>
+                                            <option value="2" <? if($morning_headaches == '2') echo " selected";?>>
+                                                Sometimes
+                                            </option>
+                                            <option value="3" <? if($morning_headaches == '3') echo " selected";?>>
+                                                Rarely
+                                            </option>
+                                            <option value="4" <? if($morning_headaches == '4') echo " selected";?>>
+                                                Never
+                                            </option>
+                                        </select>
+                                        <!--<select name="morning_headaches" id="morning_headaches" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
                                             <option value="Most Mornings" <? if($morning_headaches == 'Most Mornings') echo " selected";?>>
                                                 Most Mornings
@@ -791,7 +809,7 @@ function in_array(needle, haystack)
                                             <option value="Never" <? if($morning_headaches == 'Never') echo " selected";?>>
                                                 Never
                                             </option>
-                                        </select>
+                                        </select>-->
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'morning_headaches', $pat_row['morning_headaches'], $morning_headaches);
                             ?>

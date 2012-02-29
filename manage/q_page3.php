@@ -765,6 +765,18 @@ label {
                                                 </span>
                                         </div>
 
+                                        <div>
+                        <span>
+                                                        <label>Do you have pain in this joint?</label>
+                                                        <input type="radio" class="extra" name="tmj_pain" value="Yes" <? if($tmj_pain == 'Yes') echo " checked";?> />Yes
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                        <input type="radio" class="extra" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
+                                                        <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" /></span>
+                                                </span>
+                                        </div>
+
+
 					<div>
                         <span>
 							<label>Have you had TMJ (jaw joint) surgery?</label>
@@ -917,7 +929,7 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <input type="radio" name="alcohol" value="never" class="tbox" style="width:10px;" <? if($alcohol == 'never')  echo " checked";?> />
-                            Never
+                            Rarely/Never
                             <br /><br />
 
                             Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
@@ -933,7 +945,7 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <input type="radio" name="sedative" value="never" class="tbox" style="width:10px;" <? if($sedative == 'never')  echo " checked";?> />
-                            Never
+                            Rarely/Never
                             <br /><br />
 
 
@@ -950,7 +962,7 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <input type="radio" name="caffeine" value="never" class="tbox" style="width:10px;" <? if($caffeine == 'never')  echo " checked";?> />
-                            Never
+                            Rarely/Never
                             <br /><br />
                             Do you Smoke?
 

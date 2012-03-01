@@ -274,8 +274,13 @@ if ($_POST['insurancesub'] == 1) {
 	$billing_provider_a = $_POST['billing_provider_a'];
 	$billing_provider_dd = $_POST['billing_provider_dd'];
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
-	$status = $_POST['status'];
-	
+	$reject_reason = $_POST['reject_reason'];
+	if(isset($_POST['reject_but'])){
+		$status = DSS_CLAIM_REJECTED;
+	}else{
+		$status = $_POST['status'];
+	}
+
 	$insurance_type_arr = $insurance_type;
 	
 	if($insurance_type_arr != '') {
@@ -711,7 +716,10 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."'";
-                if($u_status){
+		if(isset($_POST['reject_but'])){
+		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
+                  $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
+		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
 		$ed_sql .= "where insuranceid = '".s_for($_POST['ed'])."'";
@@ -950,6 +958,7 @@ $billing_provider_city = st($myarray['billing_provider_city']);
 $billing_provider_a = st($myarray['billing_provider_a']);
 $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
+$reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
@@ -2479,20 +2488,24 @@ if ($is_new_claim) {
 	</tr>
 </table>
 
-</form>
-                                <?php if($myarray['status']==DSS_CLAIM_PENDING){ ?>
+                                <?php if($myarray['status']==DSS_CLAIM_PENDING || $myarray['status']==DSS_CLAIM_REJECTED){ ?>
 			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
                     <a href="manage_claims.php?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
-                                        </a>
+                                        </a> 
+			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
+			<div id="reject_reason_div" <?= ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
+				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $reject_reason; ?></textarea>
+				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
+			</div>
 			<?php }else{ ?>
                     <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
 			<?php } ?>
                                 <?php } ?>
-
-<br />
+</form>
+<br /><br /><br /><br /><br /><br />
 
 
 <div id="popupContact" style="width:750px;">

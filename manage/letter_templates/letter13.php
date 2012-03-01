@@ -15,7 +15,7 @@ $template = "
 %contact_fullname%<br />
 %practice%
 %addr1%
-%addr2%<br />
+%addr2%
 %city%, %state% %zip%<br />
 </td>
 </tr>

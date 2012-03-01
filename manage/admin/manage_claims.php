@@ -238,7 +238,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
-				    <?php if($myarray["status"] == DSS_CLAIM_PENDING){ ?>
+				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
 				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
 						Edit
 					</a> 

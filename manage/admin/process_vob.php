@@ -125,10 +125,12 @@ if (isset($_REQUEST['ed'])) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
+    } elseif($_POST['is_pre_auth_required']==1){ 
+        $sql .= ", status = " . DSS_PREAUTH_PREAUTH_PENDING . " ";
+				update_patient_summary($pid, 'vob', DSS_PREAUTH_PREAUTH_PENDING);
     } else {
-	if($_POST['']){ }
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
-				update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
+                                update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());

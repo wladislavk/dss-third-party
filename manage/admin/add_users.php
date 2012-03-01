@@ -94,6 +94,9 @@ if($_POST["usersub"] == 1)
                         $userid = mysql_insert_id();			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, type, sortby, docid) SELECT transaction_code, description, place, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
                         mysql_query($code_sql) or die($code_sql.mysql_error());
+                        $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
+                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+
 
 			$msg = "Added Successfully";
 			?>

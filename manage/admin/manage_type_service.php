@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
+if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_type_service where type_serviceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);

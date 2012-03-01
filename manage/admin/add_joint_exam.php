@@ -194,7 +194,7 @@ if($_POST["joint_examsub"] == 1)
                 <input type="hidden" name="joint_examsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["joint_examid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Joint Examination" class="button" />
-		<?php if($themyarray["joint_examid"] != ''){ ?>
+		<?php if($themyarray["joint_examid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_joint_exam.php?delid=<?=$themyarray["joint_examid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

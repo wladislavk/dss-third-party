@@ -1503,7 +1503,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 <input type="hidden" name="patientsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["patientid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Patient" class="button" />
-<?php if($themyarray["userid"] != ''){ ?>
+<?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_patient.php?delid=<?=$themyarray["patientid"];?>&docid=<?=$_GET['docid']?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

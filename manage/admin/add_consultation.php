@@ -194,7 +194,7 @@ if($_POST["consultationsub"] == 1)
                 <input type="hidden" name="consultationsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["consultationid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Assessment Addition" class="button" />
-		<?php if($themyarray["consultationid"] != ''){ ?>
+		<?php if($themyarray["consultationid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_consultation.php?delid=<?=$themyarray["consultationid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

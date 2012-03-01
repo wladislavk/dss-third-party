@@ -194,7 +194,7 @@ if($_POST["cpt_codesub"] == 1)
                 <input type="hidden" name="cpt_codesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["cpt_codeid"]?>" />
                 <input type="submit" value=" <?=$but_text?> CPT Code" class="button" />
-		<?php if($themyarray["cpt_codeid"] != ''){ ?>
+		<?php if($themyarray["cpt_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_cpt_code.php?delid=<?=$themyarray["cpt_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

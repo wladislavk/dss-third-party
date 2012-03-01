@@ -194,7 +194,7 @@ if($_POST["allergenssub"] == 1)
                 <input type="hidden" name="allergenssub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["allergensid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Allergens" class="button" />
-		<?php if($themyarray["allergensid"] != ''){ ?>
+		<?php if($themyarray["allergensid"] != ''  && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_allergens.php?delid=<?=$themyarray["allergensid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

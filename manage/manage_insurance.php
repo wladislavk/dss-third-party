@@ -243,7 +243,7 @@ $my = mysql_query($sql) or die(mysql_error());
 	<?php } else { ?> 
       <?php while ($preauth = mysql_fetch_array($my)) { ?>
 
-	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
+	<?php if($preauth['status']==DSS_PREAUTH_PENDING || $preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>
 
       <tr class="tr_bg">
         <td valign="top" align="center">
@@ -253,7 +253,17 @@ $my = mysql_query($sql) or die(mysql_error());
 
 
 
-	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
+	<?php } elseif($preauth['status']==DSS_PREAUTH_REJECTED){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+        </td>
+      </tr>
+
+
+
+        <?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="2" align="center">
 		    Verification of benefits completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>

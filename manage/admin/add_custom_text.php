@@ -123,7 +123,7 @@ if($_POST["custom_textsub"] == 1)
                 <input type="hidden" name="custom_textsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["customid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Custom Text" class="button" />
-		<?php if($themyarray["customid"] != ''){ ?>
+		<?php if($themyarray["customid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_custom_text.php?delid=<?=$themyarray["customid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

@@ -243,7 +243,7 @@ if($_POST["transaction_codesub"] == 1)
                 <input type="hidden" name="transaction_codesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["transaction_codeid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Transaction Code" class="button" />
-		<?php if($themyarray["transaction_codeid"] != ''){ ?>
+		<?php if($themyarray["transaction_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_doctor_transaction_code.php?delid=<?=$themyarray["transaction_codeid"];?>&docid=<?= $_GET['docid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

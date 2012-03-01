@@ -1,21 +1,6 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "")
-{
-	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
-	</script>
-	<?
-	die();
-}
-
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")

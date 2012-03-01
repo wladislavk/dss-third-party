@@ -121,7 +121,10 @@ if (isset($_REQUEST['ed'])) {
          . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
          . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "' ";
     
-    if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
+    if(isset($_POST['reject_but'])){
+        $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
+	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+    }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
@@ -677,12 +680,18 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">
                     * Required Fields					
                 </span><br />
+                        <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
+                        <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
+                                <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
+                                <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
+                        </div>
+<br />
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="button" />
                 <?php } ?>
-		<?php if($preauth["status"] == DSS_PREAUTH_PENDING){ ?>
+		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>
                     <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

@@ -76,6 +76,7 @@ $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
 define('DSS_PREAUTH_PENDING', 0);
 define('DSS_PREAUTH_COMPLETE', 1);
 define('DSS_PREAUTH_PREAUTH_PENDING', 2);
+define('DSS_PREAUTH_REJECTED', 3);
 
 // A convenience array to get pre-auth labels
 $dss_preauth_status_labels = array();
@@ -85,6 +86,8 @@ $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE] = 'Complete';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
 $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] = 'Pre-Auth Pending';
 $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pend.';
+$dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
+$dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
 //Transaction Payers (ledger)
 define('DSS_TRXN_PAYER_PRIMARY', 0);

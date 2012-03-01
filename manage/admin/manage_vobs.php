@@ -108,7 +108,7 @@ switch ($sort_by) {
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if($_REQUEST["delid"] != "")
+if($_REQUEST["delid"] != "" && $_SESSION['admin_access'] == 1)
 {
 	$del_sql = "delete from dental_insurance_preauth where id='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);

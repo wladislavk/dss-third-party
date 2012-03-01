@@ -1300,8 +1300,10 @@ foreach ($letter_contacts as $key => $contact) {
 	<div align="right">
 		<input type="submit" name="reset_letter[<?=$key?>]" class="addButton" value="Reset" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
+		<? if(!($_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)){ ?>
 		<input type="submit" name="delete_letter[<?=$key?>]" class="addButton" value="Delete" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
+		<? } ?>
 	</div>
 	</div>
 <br><br>

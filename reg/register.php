@@ -241,10 +241,15 @@ include 'includes/header.php';
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>10.</strong> Emergency Contact Number:</label><input class="inpt_a" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
 		</div>
+                <div class="sepH_b clear">
+                        <label class="lbl_a"><strong>11.</strong> Do you have insurance?</label>
+                        <input class="validate" onclick="updateNext('Yes', 1);" type="radio" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes
+                        <input onclick="updateNext('No', 1);" type="radio" id="has_p_m_ins_no" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
+                </div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" id="ins1Next1" class="fr next btn btn_d" <?= ($p['has_p_m_ins']=="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
+<a href="javascript:void(0)" id="ins1Next3" class="fr next3 btn btn_d" <?= ($p['has_p_m_ins']!="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -282,16 +287,16 @@ include 'includes/header.php';
                                                                 </select>
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>3.</strong> First Name:</label><input class="inpt_a validate" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>3.</strong> Insured First Name:</label><input class="inpt_a validate" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>4.</strong> Insured Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> Last Name:</label><input class="inpt_a validate" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>5.</strong> Insured Last Name:</label><input class="inpt_a validate" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b clear" id="ins_dob_div">
-                        <label class="lbl_a"><strong>6.</strong> Date of Birth:</label>
+                        <label class="lbl_a"><strong>6.</strong> Insured Date of Birth:</label>
                                 <?php
                                         $ins_dob_month = date('m', strtotime($p['ins_dob']));
                                         $ins_dob_day = date('j', strtotime($p['ins_dob']));
@@ -384,18 +389,13 @@ include 'includes/header.php';
                 </div>
 		<div class="sepH_b clear">
 			<label class="lbl_a"><strong>11.</strong> Do you have secondary insurance?</label>
-			<input class="validate" onclick="updateNext('Yes');" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Ydes")?'checked="checked"':''; ?> value="Yes" />Yes 
-			<input onclick="updateNext('No');" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
+			<input class="validate" onclick="updateNext('Yes', 2);" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes 
+			<input onclick="updateNext('No', 2);" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
 		</div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<?php if($p['has_s_m_ins']=="No"){ ?>
-<a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d">Proceed &raquo;</a>
-<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d" style="display:none">Proceed &raquo;</a>
-<?php }else{ ?>
-<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
-<a href="javascript:void(0)" id="insNext2" class="fr next2 btn btn_d" style="display:none">Proceed &raquo;</a>
-<?php } ?>
+<a href="javascript:void(0)" id="ins2Next1" class="fr next btn btn_d" <?=($p['has_s_m_ins']=="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
+<a href="javascript:void(0)" id="ins2Next2" class="fr next2 btn btn_d" <?=($p['has_s_m_ins']!="No")?'style="display:none;"':'';?> >Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -427,16 +427,16 @@ include 'includes/header.php';
                                                                 </select>
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>2.</strong> First Name:</label><input class="inpt_a validate" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>2.</strong> Insured First Name:</label><input class="inpt_a validate" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>3.</strong> Middle Name:</label><input class="inpt_a" id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>3.</strong> Insured Middle Name:</label><input class="inpt_a" id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Last Name:</label><input class="inpt_a validate" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>4.</strong> Insured Last Name:</label><input class="inpt_a validate" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b clear" id="ins2_dob_div">
-                        <label class="lbl_a"><strong>5.</strong> Date of Birth:</label>
+                        <label class="lbl_a"><strong>5.</strong> Insured Date of Birth:</label>
                                 <?php
                                         $ins2_dob_month = date('m', strtotime($p['ins2_dob']));
                                         $ins2_dob_day = date('j', strtotime($p['ins2_dob']));
@@ -632,10 +632,21 @@ include 'includes/header.php';
 		</div>
 
                                                                                                                 <div class="cf">
-			<a href="javascript:void(0)" id="insPrev" class="fl prev btn btn_a" <?= ($p['has_s_m_ins']=="No")?'style="display:none;"':''; ?>>&laquo; Back</a>
-			<a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($p['has_s_m_ins']=="No")?'':'style="display:none;"'; ?>>&laquo; Back</a>
+	<? if($p['has_p_m_ins']=="No"){
+		$showPrev = "prev3";
+	}else{
+	  if($p['has_s_m_ins']=="No"){
+		$showPrev = "prev2";
+	  }else{
+		$showPrev = "prev1";
+	  }
+	}
+	?>
+			<a href="javascript:void(0)" id="insPrev1" class="fl prev btn btn_a" <?= ($showPrev!='prev1')?'style="display:none;"':''; ?>>&laquo; Back</a>
+                        <a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($showPrev!='prev2')?'style="display:none;"':''; ?>>&laquo; Back</a>
+                        <a href="javascript:void(0)" id="insPrev3" class="fl prev3 btn btn_a" <?= ($showPrev!='prev3')?'style="display:none;"':''; ?>>&laquo; Back</a>
 
-<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>

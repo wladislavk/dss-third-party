@@ -115,7 +115,7 @@ lga_wizard = {
 			    lastname: "This field is required",
 			    email: {
 				required: "This field is required",			
-				remote: "Email is taken",
+				remote: "Error: The email address you have entered is either invalid or already in use. Please enter a different email address.",
 				email: "The field requires a valid email address"
 				},
                             cell_phone: "One phone number is required",
@@ -206,6 +206,12 @@ lga_wizard = {
                 root.find("a.prev2,button.prev2").click(function(e) {
                                 api.move(-2);
                 });
+                root.find("a.next3,button.next3").click(function(e) {
+                                api.move(3);
+                });
+                root.find("a.prev3,button.prev3").click(function(e) {
+                                api.move(-3);
+                });
 		//disable enter key for wizard
 			//Bind this keypress function to all of the input tags
 			root.find("input").keypress(function (evt) {
@@ -220,20 +226,58 @@ lga_wizard = {
 };
 
 
-function updateNext(v){
+function updateNext(v, i){
+  if(i==1){
+	ins2 = $('input:radio[name=has_s_m_ins]:checked').val();
+	if(v=="Yes"){
+	  $('#ins1Next1').show();
+          $('#ins1Next3').hide();
+	  if(ins2=="Yes"){
+            $('#insPrev1').show();
+	    $('#insPrev2').hide();
+            $('#insPrev3').hide();
+	  }else{
+	    $('#insPrev1').hide();
+            $('#insPrev2').show();
+            $('#insPrev3').hide();	
+	  }
+	}else{
+          $('#ins1Next1').hide();
+          $('#ins1Next3').show();
+          $('#insPrev1').hide();
+          $('#insPrev2').hide();
+          $('#insPrev3').show();
+	}
+  }else if(i==2){
+        if(v=="Yes"){
+          $('#ins2Next1').show();
+          $('#ins2Next2').hide();
+          $('#insPrev1').show();
+          $('#insPrev2').hide();
+          $('#insPrev3').hide();
+        }else{
+          $('#ins2Next1').hide();
+          $('#ins2Next2').show();
+          $('#insPrev1').hide();
+          $('#insPrev2').show();
+          $('#insPrev3').hide();
+        }
+  }
+}
+
+/*
   if(v=='No'){
-	$('#insNext').hide();
+        $('#insNext').hide();
         $('#insNext2').show();
         $('#insPrev').hide();
         $('#insPrev2').show();
   }else{
         $('#insNext').show();
-	$('#insNext2').hide();
-	$('#insPrev').show();
-	$('#insPrev2').hide();
+        $('#insNext2').hide();
+        $('#insPrev').show();
+        $('#insPrev2').hide();
   }
-}
-
+*/
 
 $( document ).ready( function() { 
 

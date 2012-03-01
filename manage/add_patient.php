@@ -102,19 +102,42 @@ function trigger_letter3($pid) {
 }
 
 function sendRegEmail($id, $e, $l){
-  $sql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
-  $n = $r['phone'];
+    $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
+    $q = mysql_query($s);
+      $r = mysql_fetch_assoc($q);
+                $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
+                $ins_sql = "UPDATE dental_patients set recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                mysql_query($ins_sql);
+  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+  $uq = mysql_query($usql);
+  $ur = mysql_fetch_assoc($uq);
+  $n = $ur['phone'];
+  $m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td width='400'>
+<h2>Your Account Activation</h2>
+<p>Please click the following link to activate your account.</p>
+<p><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
+</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td>
+<h3>Didn't request this change or need assistance?</h3>
+<p><b>Contact us at ".$n." or at<br>
+patient@dentalsleepsolutions.com</b></p>
+</td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+</table>
+</center></body></html>
+";
 
+/*
   $m = "<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
-<p><b>Username:</b> ".$l."<br>
-<b>Email:</b> ".$e."</p>
+<p><b>Email:</b> ".$e."</p>
 </td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td colspan='2'>
 <center>
@@ -132,7 +155,7 @@ patient@dentalsleepsolutions.com</b></p>
 </table>
 </center></body></html>
 ";
-
+*/
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
     		    'Content-type: text/html' ."\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
@@ -288,18 +311,11 @@ if($_POST["patientsub"] == 1)
 			mysql_query($ilsql);
 		}
 
-		if($pass == '' && $_POST['ssn']!=''){
-                        $salt = create_salt();
-                        $p = preg_replace('/\D/', '', $_POST['ssn']);
-                        $password = gen_password($p , $salt);
-                	$psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
-			mysql_query($psql);
-		}
 		if(isset($_POST['sendReg'])){
-		if($pass != '' || $_POST['ssn']!=''){
+		if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
 			sendRegEmail($_POST['ed'], $_POST['email'], $login); 
 		}else{
-			?><script type="text/javascript">alert('Unable to send registration email because no password is set. Please enter a Social Security Number and try again.');</script><?php
+			?><script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
 		}
 		}
 
@@ -495,7 +511,13 @@ mysql_query($s1);
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
-		if(isset($_POST['sendReg'])){ sendRegEmail($pid, $_POST['email'], $login); }
+                if(isset($_POST['sendReg'])){
+                if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
+                        sendRegEmail($_POST['ed'], $_POST['email'], $login);
+                }else{
+                        ?><script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
+                }
+                }
 
 		if($_POST['introletter'] == 1) {
 		  trigger_letter3($pid);
@@ -836,6 +858,24 @@ mysql_query($s1);
 
 function validate_add_patient(fa){
 p = patientabc(fa);
+var valid = true;
+                                  $.ajax({
+                                        url: "includes/check_email.php",
+                                        type: "post",
+                                        data: "email="+fa.email.value+"&id="+<?=$_GET['pid']; ?>,
+                                        async: false,
+                                        success: function(data){
+						var r = $.parseJSON(data);
+                                                if(r.error){
+                                                  alert("Error: The email address you entered is already associated with another patient. Please enter a different email address.");
+						  valid = false; 
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+if(!valid){ return false; }
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){
     i2 = validateDate('ins2_dob');
@@ -1034,8 +1074,8 @@ $num_face = mysql_num_rows($p);
                                 <label for="middlename">Middle <br />Init</label>
                             </span>
 			    <span>
-				<input type="text" name="login" class="field text addr tbox" style="width:100px;" value="<?=$email?>" disabled="disabled" />
-				<label for"login">Login</label>
+				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=$email?>" disabled="disabled" />
+				<label for"login">Pt Portal Login</label>
 			    </span>
                        </div>   
                         <div>

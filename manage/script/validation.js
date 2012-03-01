@@ -287,6 +287,11 @@ function regabc(fa){
                 fa.email.focus();
                 return false;
         }
+        if(trim(fa.cell_phone.value)==""){
+                alert("Cell phone is required to send registration email.");
+                fa.cell_phone.focus();
+                return false;
+        }
 }
 function patientabc(fa)
 {

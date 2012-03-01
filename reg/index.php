@@ -19,7 +19,7 @@ $pat = mysql_fetch_assoc($q);
 ?>
 <div class="dp60">
 
-<h3 style="margin-bottom:20px;">Welcome <?= $pat['firstname']; ?></h3>
+<h3 style="margin-bottom:20px;">Welcome, <?= $pat['firstname']; ?>!</h3>
 
 <ul class="tabsB cf">
 								<li><a href="#tab-1" class="current">Welcome</a></li>

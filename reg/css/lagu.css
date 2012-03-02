@@ -78,7 +78,7 @@
 
 	/* grid */
 		.dp20,.dp25,.dp33,.dp40,.dp50,.dp60,.dp66,.dp75,.dp100{float:left;display:inline;margin:0 1%;min-height:1px}
-		.dp20{width:18%}.dp25{width:23%}.dp33{width:31.33%}.dp40{width:38%}.dp60{width:58%}.dp66{width:62.66%}.dp50{width:48%}.dp75{width:73%}.dp100{width:98%}
+		.dp20{width:18%}.dp25{width:23%}.dp33{width:31.33%}.dp40{width:37%}.dp60{width:57%}.dp66{width:62.66%}.dp50{width:48%}.dp75{width:73%}.dp100{width:98%}
 		.row{margin-bottom:16px}
 		.row:before,.row:after{display:table;content:""}
 		.row:after{clear:both}
@@ -340,7 +340,7 @@
 
 	/* large tabs */
 		.tabsB {border-bottom:1px solid #ccc;margin-bottom:20px}
-		.tabsB li {float:left}
+		.tabsB li {float:left; width:100px;}
 		.tabsB a {position:relative;top:1px;line-height:26px;height:26px;display:block;padding:0 14px;margin-right:2px;border-width:1px 1px 0 1px;border-style:solid;border-color: transparent;-moz-border-radius-topleft: 4px;-moz-border-radius-topright: 4px;-moz-border-radius-bottomright: 0px;-moz-border-radius-bottomleft: 0px;-webkit-border-radius: 4px 4px 0px 0px;border-radius: 4px 4px 0px 0px}
 		.tabsB a:hover {text-decoration:none;background:#eee}
 		.tabsB a.current {color:#222;background:#fff;border-color:#ccc;font-weight:700;line-height:28px;height:28px}

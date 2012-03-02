@@ -23,7 +23,7 @@ if($t == 'activate'){
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
 <tr><td width='400'>
-<h2>Your Account Activation</h2>
+<h2>Your New Account - A new patient account has been created for you</h2>
 <p>Please click the following link to activate your account.</p>
 <p><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
 </td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>

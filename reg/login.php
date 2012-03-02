@@ -155,7 +155,8 @@ function sendInstructions(type){
    $.ajax({
     url: 'includes/send_instructions.php',
     type: 'post',
-    data: 'email='+e+'&type='+type,
+    //data: 'email='+e+'&type='+type,
+    data: {email: e, type: type},
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
@@ -192,7 +193,7 @@ function sendAccessCode(){
    $.ajax({
     url: 'includes/send_access.php',
     type: 'post',
-    data: 'email='+e,
+    data: {email: e},
     success: function( data ) {
 	var r = $.parseJSON(data);
 	if(r.success){	
@@ -225,7 +226,7 @@ function createPassword(){
   $.ajax({
     url: 'includes/setup_user.php',
     type: 'post',
-    data: 'email='+e+'&code='+c+'&p='+p1,
+    data: {email: e, code: c, p: p1},
     success: function( data ) {
 	var r = $.parseJSON(data);
         if(r.success){  
@@ -250,7 +251,7 @@ function recover_password(){
   $.ajax({
     url: 'includes/recover_password.php',
     type: 'post',
-    data: 'email='+e,
+    data: {email: e},
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  

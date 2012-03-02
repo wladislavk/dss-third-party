@@ -60,7 +60,7 @@ $q = mysql_query($s);
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />
      </div>
      <div class="field">
-       <label>Access Code</label>
+       <label>Text Message Access Code</label>
        <input type="text" id="code" name="code" />
      </div>
      <div class="field">
@@ -121,6 +121,13 @@ function createPassword(){
 function checkPass(){
   var p1 = $('#password1').val();
   var p2 = $('#password2').val();
+if(p1.length < 8){
+  $('#password1').addClass('pass_invalid');
+  $('#password1').removeClass('pass_valid');
+}else{
+  $('#password1').addClass('pass_valid');
+  $('#password1').removeClass('pass_invalid');
+}
 if(p1!='' || p2!=''){
 if(p1!=p2){
   $('#password2').addClass('pass_invalid');

@@ -32,7 +32,7 @@ lga_wizard = {
 				  $.ajax({
 					url: "includes/check_email.php",
                                         type: "post",
-                                        data: "email="+$("#email").val()+"&id="+$("#patientid").val(),
+                                        data: {email: $("#email").val(), id: $("#patientid").val()},
 					async: false,
 					success: function(data){
 						if(data == 'false'){	
@@ -98,6 +98,7 @@ lga_wizard = {
                             p_m_ins_id: "required",
                             p_m_ins_grp: "required",
                             p_m_ins_plan: "required",
+			    has_p_m_ins: "required",
 			    has_s_m_ins: "required",
                             s_m_relation: "required",
                             s_m_partyfname: "required",

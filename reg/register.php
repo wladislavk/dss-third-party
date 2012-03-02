@@ -242,7 +242,7 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>10.</strong> Emergency Contact Number:</label><input class="inpt_a" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
 		</div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>11.</strong> Do you have insurance?</label>
+                        <label class="lbl_a"><strong>11.</strong> Do you have medical insurance?</label>
                         <input class="validate" onclick="updateNext('Yes', 1);" type="radio" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes
                         <input onclick="updateNext('No', 1);" type="radio" id="has_p_m_ins_no" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
                 </div>
@@ -270,7 +270,7 @@ include 'includes/header.php';
                                                                                                                 <div class="form_errors" style="display:none"></div>
  
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>1.</strong> Do you have Medicare Insurance</label>
+                        <label class="lbl_a"><strong>1.</strong> Do you have Medicare Insurance?</label>
 				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
 				<input type="radio" name="p_m_ins_type" class="validate" value="" <?= ($p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
                 </div>
@@ -388,7 +388,7 @@ include 'includes/header.php';
 <br />
                 </div>
 		<div class="sepH_b clear">
-			<label class="lbl_a"><strong>11.</strong> Do you have secondary insurance?</label>
+			<label class="lbl_a"><strong>11.</strong> Do you have secondary medical insurance?</label>
 			<input class="validate" onclick="updateNext('Yes', 2);" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes 
 			<input onclick="updateNext('No', 2);" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
 		</div>

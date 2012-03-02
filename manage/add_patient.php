@@ -116,7 +116,7 @@ function sendRegEmail($id, $e, $l){
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
 <tr><td width='400'>
-<h2>Your Account Activation</h2>
+<h2>Your New Account - A new patient account has been created for you</h2>
 <p>Please click the following link to activate your account.</p>
 <p><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
 </td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
@@ -171,15 +171,15 @@ if($_POST["patientsub"] == 1)
 
 	if($_POST["ed"] != "")
 	{
-		$s_sql = "SELECT referred_by, referred_source, email FROM dental_patients
+		$s_sql = "SELECT referred_by, referred_source, email, password FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 		$s_q = mysql_query($s_sql);
 		$s_r = mysql_fetch_assoc($s_q);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
-
-		sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
-
+		if($s_r['password']!=''){
+			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
+		}
 		$ed_sql = "update dental_patients 
 		set 
 		firstname = '".s_for($_POST["firstname"])."', 
@@ -862,7 +862,7 @@ var valid = true;
                                   $.ajax({
                                         url: "includes/check_email.php",
                                         type: "post",
-                                        data: "email="+fa.email.value+"&id="+<?=$_GET['pid']; ?>,
+                                        data: {email: fa.email.value, id: <?=$_GET['pid']; ?>},
                                         async: false,
                                         success: function(data){
 						var r = $.parseJSON(data);

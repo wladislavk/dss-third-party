@@ -202,7 +202,7 @@ while($q4r = mysql_fetch_assoc($q4q)){
       $al = 'occasionally';
       break;
     case 'never':
-      $al = 'never'
+      $al = 'never';
       break;
     default:
       $al = '';
@@ -219,7 +219,7 @@ while($q4r = mysql_fetch_assoc($q4q)){
       $sed = 'occasionally';
       break;
     case 'never':
-      $sed = 'never'
+      $sed = 'never';
       break;
     default:
       $sed = '';
@@ -236,7 +236,7 @@ while($q4r = mysql_fetch_assoc($q4q)){
       $caf = 'occasionally';
       break;
     case 'never':
-      $caf = 'never'
+      $caf = 'never';
       break;
     default:
       $caf = '';

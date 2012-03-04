@@ -36,7 +36,7 @@ if($_FILES['csv']['error'] == 0){
             $fields[] = ""; //responsible party
             $fields[] = "";
             $fields[] = "";
-            $fields[] = ""; //status
+            $fields[] = "status";
             $fields[] = "gender"; //gender
             $fields[] = "marital_status"; 
             $fields[] = ""; //responsible party status
@@ -51,6 +51,13 @@ if($_FILES['csv']['error'] == 0){
 			$s = "INSERT INTO dental_patients SET ";
 		foreach($fields AS $id => $field){
 		  switch($field){
+                        case 'status':
+                                if($data[$id]=="A"){
+                                        $s .= $field . " = '3', ";
+                                }elseif($data[$id]=="I"){
+                                        $s .= $field . " = '4', ";
+                                }
+                                break;
 			case 'gender':
                                 if($data[$id]=="F"){
                                         $s .= $field . " = 'Female', ";

@@ -590,7 +590,12 @@ function popitup(url) {
 		}
 	}
 	function template_list(li, patient) {
-		li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename);
+		if(patient.middlename != null){
+		var mid = patient.middlename
+		}else{
+			var mid = '';
+		}
+		li.html(patient.lastname + ", " + patient.firstname + " " + mid);
 		return li;
 	}
 	function template_table(row, patient) {
@@ -598,8 +603,12 @@ function popitup(url) {
 		if (patient.premedcheck == "1") {
 			var pm = "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM";
 		}
+                if(patient.middlename != null){                        var mid = patient.middlename
+                }else{
+                        var mid = '';
+                }
 		if (patient.patient_info == 1) {
-			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm);
 			row.find('.flowsheet').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.fspage1_complete + "</a>");
 			row.find('.next_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.next_visit + "</a>");
 			row.find('.last_visit').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "&page=page2\">" + patient.last_visit + "</a>");
@@ -610,7 +619,7 @@ function popitup(url) {
 			row.find('.rxlomn').html("<a href=\"manage_flowsheet3.php?pid=" + patient.patientid + "\">" + patient.rxlomn + "</a>");
 			row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
 		} else {
-			row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
+			row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
 			/*
 			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
 			row.find('.flowsheet').html(patient.fspage1_complete);

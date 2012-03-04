@@ -8,7 +8,7 @@ include 'includes/header.php';
 ?>
 <link rel="stylesheet" href="css/register.css" />
 <script type="text/javascript" src="js/register.js"></script>
-<script type="text/javascript" src="../manage/js/patient_dob.js"></script>
+<script type="text/javascript" src="js/patient_dob.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
         <script type="text/javascript">
                 $(document).ready(function(){
@@ -339,7 +339,7 @@ include 'includes/header.php';
                                 }
 
 			?>
-			<input type="hidden" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
+			<input type="hidden" id="p_m_patient_insuranceid" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>7a.</strong> Insurance Company</label>
 			<input class="inpt_a validate" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
@@ -478,7 +478,7 @@ include 'includes/header.php';
 					$s_m_r = mysql_fetch_assoc($s_m_q);
 				}
                         ?>
-                        <input type="hidden" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
+                        <input type="hidden" id="s_m_patient_insuranceid" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
                         <input class="inpt_a validate" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />

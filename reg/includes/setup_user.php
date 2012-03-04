@@ -12,7 +12,7 @@ require_once '../../manage/admin/includes/password.php';
 			$p = $_POST['p'];
                         $salt = create_salt();
                         $password = gen_password($p , $salt);
-                        $psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."'  WHERE patientid='".mysql_real_escape_string($r['patientid'])."'";
+                        $psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."', recover_hash='', access_code='', registration_status=2  WHERE patientid='".mysql_real_escape_string($r['patientid'])."'";
                         mysql_query($psql);
 	echo '{"success":true}';
     }else{

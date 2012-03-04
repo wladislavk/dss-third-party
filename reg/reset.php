@@ -6,32 +6,6 @@ $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string(
 $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);
-	
-                mysql_query("UPDATE dental_patients SET recover_hash='' WHERE patientid='".$r['patientid']."'");
-
-                $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
-                $ins_sql = "UPDATE dental_patients set access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
-                mysql_query($ins_sql);
-
-        // iterate over all our friends. $number is a phone number above, and $name 
-        // is the name next to it
-        if($r['cell_phone']!='') {
-    // instantiate a new Twilio Rest Client
-    $client = new Services_Twilio($AccountSid, $AuthToken);
-          // Send a new outgoing SMS 
-          if($send_texts){
-            $sms = $client->account->sms_messages->create(
-              // the number we are sending from, must be a valid Twilio number
-              $twilio_number,
-
-              // the number we are sending to - Any phone number
-              $r['cell_phone'],
-
-              // the sms body 
-              "Your access code is ".$recover_hash
-            );
-          }
-        }
       }else{
 	?>
 		<script type="text/javascript">
@@ -43,6 +17,32 @@ $q = mysql_query($s);
 ?>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+
+function send_text(){
+
+  $.ajax({
+    url: 'includes/send_access_text.php',
+    type: 'post',
+    data: {id: <?= $_GET['id']; ?>, hash: '<?= $_GET['hash']; ?>'},
+    success: function( data ) {
+        var r = $.parseJSON(data);
+        if(r.success){  
+          $('#sent_text').html("Text sent").show('slow');
+        }else{
+          if(r.error == "cell"){
+                $('#sent_text').html("Error: Cell phone not found.").show('slow');   
+          }else if(r.error == "inactive"){
+                $('#sent_text').html("Error: Text feature disabled.").show('slow');   
+          }else{
+                $('#sent_text').html("Error.").show('slow');
+          }
+        }
+    }
+  });
+}
+
+</script>
 
 
 <div id="login_container">
@@ -53,8 +53,9 @@ $q = mysql_query($s);
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
-     <p>We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.</p>
-     <p id="first2_error" class="error"><?= $error; ?></p>
+        <button onclick="send_text()">Text Access Code</button>
+
+     <p id="send_text" class="error"><?= $error; ?></p>
      <div class="field">
        <label>Email Address</label>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />

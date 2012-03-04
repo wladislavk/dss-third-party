@@ -10,9 +10,16 @@ $t = $_POST['type'];
       }elseif($r['password']=='' && $t=='reset'){
 	echo '{"error":"activate"}';
       }else{
+
+    if($r['recover_hash'] == ''){
+
                 $recover_hash = hash('sha256', $r['patientid'].$_POST['email'].rand());
                 $ins_sql = "UPDATE dental_patients set recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
+
+    }else{
+      $recover_hash = $r['recover_hash'];
+    }
   $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);

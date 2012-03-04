@@ -8,6 +8,7 @@ include "includes/similar.php";
 </style>
 <?php
  
+//SQL to search for possible duplicates
 $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND 
 		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
 		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
@@ -22,25 +23,36 @@ mysql_query($dsql);
   </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
-	$sql = "UPDATE dental_patients SET status=1 WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['createid'])."'";
+	$sql = "UPDATE dental_patients SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['createid'])."'";
 	mysql_query($sql);
-?>  <script type="text/javascript">        window.location = "pending_patient.php";
+?>  <script type="text/javascript">
+        window.location = "pending_patient.php";
   </script>
 <?php
 
 }elseif(isset($_REQUEST['createtype'])){
+	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-$sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+$sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+$sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
 	}elseif($_REQUEST['createtype']=='no'){
-$sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+$sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+$sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
 	}
-        $q = mysql_query($sql);
-	$ids = array();
-	while($r = mysql_fetch_assoc($q)){
-		array_push($ids, $r['patientid']);
+        $q3 = mysql_query($sql3);
+	$ids3 = array();
+	while($r3 = mysql_fetch_assoc($q3)){
+		array_push($ids3, $r3['patientid']);
 	}
-	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN(".implode($ids, ',').")";
+        $q4 = mysql_query($sql4);
+        $ids4 = array();
+        while($r4 = mysql_fetch_assoc($q4)){
+                array_push($ids4, $r4['patientid']);
+        }
+	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN(".implode($ids3, ',').")";
 	mysql_query($s);
+	$s = "UPDATE dental_patients SET status=2 WHERE patientid IN(".implode($ids4, ',').")";
+        mysql_query($s);
 ?>  <script type="text/javascript">
         window.location = "pending_patient.php";
   </script>
@@ -48,9 +60,9 @@ $sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".
 
 }elseif(isset($_REQUEST['deletetype'])){
         if($_REQUEST['deletetype']=='yes'){
-$sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+$sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
         }elseif($_REQUEST['deletetype']=='no'){
-$sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
+$sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
         }
         $q = mysql_query($sql);
         $ids = array();
@@ -68,7 +80,7 @@ $sql = "SELECT p.patientid FROM dental_patients p WHERE status='2' AND docid='".
 
 
 	
-$sql = "SELECT p.* FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
+$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
   $sql .= "ORDER BY p.lastname ASC"; 
 $my = mysql_query($sql);
 $my=mysql_query($sql) or die(mysql_error());
@@ -179,7 +191,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </table>
 
 <?php
-$sql = "SELECT p.* FROM dental_patients p WHERE status='2' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0 ";
+$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0 ";
   $sql .= "ORDER BY p.lastname ASC";
 $my = mysql_query($sql);
 $my=mysql_query($sql) or die(mysql_error());

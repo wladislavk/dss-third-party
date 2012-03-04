@@ -50,6 +50,7 @@ if($_POST["usersub"] == 1)
 				state = '".s_for($_POST["state"])."', 
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for($_POST["phone"])."', 
+				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -87,6 +88,7 @@ if($_POST["usersub"] == 1)
 				state = '".s_for($_POST["state"])."', 
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for($_POST["phone"])."', 
+				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				status = '".s_for($_POST["status"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -141,6 +143,7 @@ if($_POST["usersub"] == 1)
 		$zip = $_POST['zip'];
 		$phone = $_POST['phone'];
 		$status = $_POST['status'];
+		$use_patient_portal = $_POST['use_patient_portal'];
 	}
 	else
 	{
@@ -160,6 +163,7 @@ if($_POST["usersub"] == 1)
 		$zip = st($themyarray['zip']);
 		$phone = st($themyarray['phone']);
 		$status = st($themyarray['status']);
+		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$but_text = "Add ";
 	}
 	
@@ -327,6 +331,14 @@ if($_POST["usersub"] == 1)
             <td valign="top" class="frmdata">
                 <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Patient Portal Active? 
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_patient_portal" value="1" <? if($use_patient_portal == 1) echo " checked='checked'";?> />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

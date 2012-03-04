@@ -2,6 +2,12 @@
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
+
+$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$docq = mysql_query($docsql);
+$docr = mysql_fetch_assoc($docq);
+$use_patient_portal = $docr['use_patient_portal'];
+
 function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
@@ -105,9 +111,13 @@ function sendRegEmail($id, $e, $l){
     $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
     $q = mysql_query($s);
       $r = mysql_fetch_assoc($q);
+	if($r['recover_hash']==''){
                 $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
+	}else{
+		$recover_hash = $r['recover_hash'];
+	}
   $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
@@ -171,14 +181,18 @@ if($_POST["patientsub"] == 1)
 
 	if($_POST["ed"] != "")
 	{
-		$s_sql = "SELECT referred_by, referred_source, email, password FROM dental_patients
+		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 		$s_q = mysql_query($s_sql);
 		$s_r = mysql_fetch_assoc($s_q);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
-		if($s_r['password']!=''){
+		if($s_r['registration_status']==2){
 			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
+		}elseif(!isset($_POST['sendReg']) && $s_r['registration_status']==1 && trim($_POST['email']) != trim($s_r['email'])){
+			if($use_patient_portal){
+			sendRegEmail($_POST['ed'], $_POST['email'], '');
+			}
 		}
 		$ed_sql = "update dental_patients 
 		set 
@@ -285,7 +299,7 @@ if($_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
-		$lsql = "SELECT login, password FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
+		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
 		$lq = mysql_query($lsql);
 		$l = mysql_fetch_assoc($lq);
 		$login = $l['login'];
@@ -311,7 +325,7 @@ if($_POST["patientsub"] == 1)
 			mysql_query($ilsql);
 		}
 
-		if(isset($_POST['sendReg'])){
+		if(isset($_POST['sendReg']) && $use_patient_portal){
 		if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
 			sendRegEmail($_POST['ed'], $_POST['email'], $login); 
 		}else{
@@ -511,7 +525,7 @@ mysql_query($s1);
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
-                if(isset($_POST['sendReg'])){
+                if(isset($_POST['sendReg'])&& $use_patient_portal){
                 if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
                         sendRegEmail($_POST['ed'], $_POST['email'], $login);
                 }else{
@@ -651,6 +665,7 @@ mysql_query($s1);
 		$plan_name = $_POST["plan_name"];
 		$group_number = $_POST["group_number"];
 		$ins_type = $_POST["ins_type"];
+		$status = $_POST["status"];
 		$accept_assignment = $_POST["accept_assignment"];
 		$print_signature = $_POST["print_signature"];
 		$medical_insurance = $_POST["medical_insurance"];
@@ -745,6 +760,8 @@ mysql_query($s1);
 		$plan_name = st($themyarray["plan_name"]);
 		$group_number = st($themyarray["group_number"]);
 		$ins_type = st($themyarray["ins_type"]);
+		$status = st($themyarray["status"]);
+		$status = st($themyarray["status"]);
 		$accept_assignment = st($themyarray["accept_assignment"]);
 		$print_signature = st($themyarray["print_signature"]);
 		$medical_insurance = st($themyarray["medical_insurance"]);
@@ -998,11 +1015,14 @@ function remove_notification(id){
 			<?php $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
 				$q = mysql_query($s);
 				$n = mysql_num_rows($q);
+				$pat = mysql_fetch_assoc($q);
 				if($n>0){ ?>
 					<input type="button" class="button" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;" value="View edits" />
 				<? } ?>
 			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
+			<?php if(($themyarray['registration_status']==1 || $themyarray['registration_status']==0) && $use_patient_portal){  ?>
 			<input type="submit" name="sendReg" onclick="return regabc(this.form)" value="Send Registration Email" class="button" />
+			<?php } ?>
 		</td>
 	</tr>
 	<tr>

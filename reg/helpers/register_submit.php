@@ -209,6 +209,13 @@
                                                 "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
                                                 "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string($_POST['p_m_ins_phone']) . "';";
+					mysql_query($insql);
+					$id = mysql_insert_id();
+					?>
+					  <script type="text/javascript">
+					    $('#p_m_patient_insuranceid').val('<?= $id; ?>');
+					  </script>
+					<?php
 				    }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
@@ -223,8 +230,8 @@
                                                 "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string($_POST['p_m_ins_phone']) . "' " .
 						"WHERE id = '". mysql_real_escape_string($_POST['p_m_patient_insuranceid']) ."'";
-				    }
 					mysql_query($insql);
+				    }
 				}
 
                                 if(trim($_POST['s_m_ins_company'])!=''){
@@ -241,6 +248,13 @@
                                                 "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
                                                 "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string($_POST['s_m_ins_phone']) . "';";
+                                        mysql_query($insql);
+                                        $id = mysql_insert_id();
+                                        ?>
+                                          <script type="text/javascript">
+                                            $('#s_m_patient_insuranceid').val('<?= $id; ?>');
+                                          </script>
+                                        <?php
                                     }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .
@@ -255,8 +269,8 @@
                                                 "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string($_POST['s_m_ins_phone']) . "' " .
                                                 "WHERE id = '". mysql_real_escape_string($_POST['s_m_patient_insuranceid']) ."'";
-                                    }
                                         mysql_query($insql);
+				    }
                                 }
 
 

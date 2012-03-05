@@ -41,13 +41,35 @@ if($_FILES['csv']['error'] == 0){
             $fields[] = "marital_status"; 
             $fields[] = ""; //responsible party status
             $fields[] = "dob";
-
+	    $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "copyreqdate";//first visit
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";//next appointment
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "add2";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "email";
+            $fields[] = "";
+            $fields[] = "";
+            $fields[] = "middlename";
 
             while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                 // number of fields in the csv
                 $num = count($data);
                 // get the values from the csv
 		if($row != 0){
+			$copyreqdate = '';
 			$s = "INSERT INTO dental_patients SET ";
 		foreach($fields AS $id => $field){
 		  switch($field){
@@ -73,8 +95,16 @@ if($_FILES['csv']['error'] == 0){
                                 }
 				break;
 			case 'dob':
-				$d = date('m/d/Y', strtotime($data[$id]));
-				$s .= $field . " = '" .$d."', ";	
+				if($data[$id]!=''){
+				  $d = date('m/d/Y', strtotime($data[$id]));
+				  $s .= $field . " = '" .$d."', ";	
+				}
+				break;
+			case 'copyreqdate':
+				if($field!=''){
+				  $copyreqdate = $data[$id];
+                                  $s .= $field . " = '" .$data[$id]."', ";
+				}
 				break;
 			default:
 				if($field!=''){
@@ -83,10 +113,23 @@ if($_FILES['csv']['error'] == 0){
 				break;
 		   }
 		}
-			$s .= " status = '2', ";
 			$s .= " docid = '".$_SESSION[docid]."'";
 			//echo $s;
 			mysql_query($s);
+			$pid = mysql_insert_id();
+			if($copyreqdate!=''){
+			   mysql_query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");
+      				$stepid = '1';
+      				$segmentid = '1';
+      				$scheduled = date('Y-m-d', strtotime($copyreqdate));
+      				$gen_date = date('Y-m-d H:i:s');
+      				$steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
+      				$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
+      				$steparray_insert = mysql_query($steparray_query);
+      				$flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
+				echo $steparray_query;
+				echo $flow_pg2_info_query;
+			}
 		}
                 //$csv[$row]['lastname'] = $data[0];
                 //$csv[$row]['firstname'] = $data[1];

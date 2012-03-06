@@ -37,7 +37,9 @@ if(in_array($d, $compid)){
 }
 }
 $upsql = "UPDATE dental_q_page1 SET other_complaint='".$othercomp."' WHERE patientid='".$pid."'";
-//mysql_query($upsql);
+if($run_updates){
+  mysql_query($upsql);
+}
 echo $pid . " - ";
 echo $upsql."<br />";
 //print_r($compseq);
@@ -59,7 +61,9 @@ $ot = $sr['other_therapy'];
 $ot .= (trim($ot)!=''&&trim($o)!='')?', ':'';
 $ot .= str_replace('~',', ',substr($o, 1, strlen($o)-2));
 $upssql = "UPDATE dental_q_page2 SET other_therapy='".$ot."' WHERE patientid='".$sr['patientid']."'";
-//mysql_query($upssql);
+if($run_updates){
+  mysql_query($upssql);
+}
 echo $sr['patientid']." - ".$upssql."<br />";
 }
 
@@ -249,6 +253,54 @@ while($q4r = mysql_fetch_assoc($q4q)){
   if($run_updates){
     mysql_query($upsql);
   }
+}
+
+
+
+$sql = "select * from dental_q_sleep";
+$my = mysql_query($sql);
+while($myarray = mysql_fetch_array($my)){
+
+$q_sleepid = st($myarray['q_sleepid']);
+$epworthid = st($myarray['epworthid']);
+$analysis = st($myarray['analysis']);
+$eptotal = 0;
+if($epworthid <> '')
+{
+        $epworth_arr1 = split('~',$epworthid);
+
+        foreach($epworth_arr1 as $i => $val)
+        {
+                $epworth_arr2 = explode('|',$val);
+
+                $epid[$i] = $epworth_arr2[0];
+                $eptotal += $epworth_arr2[1];
+        }
+}
+
+  $epsql = "UPDATE dental_q_page1 SET ess='".$eptotal."' WHERE patientid='".$myarray['patientid']."'";
+  echo $epsql."<br />";
+  if($run_updates){
+    mysql_query($epsql);
+  }
+}
+
+
+$sql = "select * from dental_thorton";
+$my = mysql_query($sql);
+while($myarray = mysql_fetch_array($my)){
+$ttotal = 0;
+$ttotal += $myarray['snore_1'];
+$ttotal += $myarray['snore_2'];
+$ttotal += $myarray['snore_3'];
+$ttotal += $myarray['snore_4'];
+$ttotal += $myarray['snore_5'];
+  $tsql = "UPDATE dental_q_page1 SET tss='".$ttotal."' WHERE patientid='".$myarray['patientid']."'";
+  echo $tsql."<br />";
+  if($run_updates){
+    mysql_query($tsql);
+  }
+
 }
 
 

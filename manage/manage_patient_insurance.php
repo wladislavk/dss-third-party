@@ -129,7 +129,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Patient Contacts
+	Manage Patient Insurance 
 </span>
 <br />
 <br />

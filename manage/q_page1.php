@@ -574,7 +574,7 @@ function in_array(needle, haystack)
                                 <? }?>
                             </select>-->
 			    <input type="checkbox" name="complaint_<?=st($complaint_myarray['complaintid']);?>" id="complaint_<?=st($complaint_myarray['complaintid']);?>" value="1" <? if($chk == 1) echo 'checked="checked"'; ?> />
-<?php if($pat_row['complaintid'] !=  $complaintid){ ?>
+<?php if($pat_row['complaintid'] !=  $complaintid && $showEdits){ ?>
 <input type="checkbox" <? if($patchk == 1) echo 'checked="checked"'; ?> disabled="disabled" style="background:#c333;" />
 <?php } ?>
                             &nbsp;&nbsp;

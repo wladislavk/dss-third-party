@@ -41,10 +41,29 @@ $(function() {
   $("input[name='is_pre_auth_required']:checked").click();
   
   $("#ins_cal_year_end").bind("focus blur click", function() {
-    $("#deductible_reset_date").val($(this).val());
+	if($(this).val()!=''){
+	myDate = new Date($(this).val());
+	myDate.setDate(myDate.getDate()+1);
+    $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+	}else{
+	  $("#deductible_reset_date").val('');
+	}
   });
   $("#ins_cal_year_end").blur();
-  
+ 
+  $("#ins_cal_year").bind("click", function() {
+        if($("#ins_cal_year_end").val()!=''){
+        myDate = new Date($("#ins_cal_year_end").val());
+        myDate.setDate(myDate.getDate()+1);
+    $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+        }else{
+          $("#deductible_reset_date").val('');
+        }
+
+  });
+
+
+ 
   function calc_amount_left_to_meet() {
     var deductible = $('#patient_deductible').val();
     var amountMet  = $('#patient_amount_met').val();

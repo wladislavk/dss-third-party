@@ -444,7 +444,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onchange="validateDate('ins_cal_year_start');"class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onchange="validateDate('ins_cal_year_end');" class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
-		<span><a href="#" onclick="$('#ins_cal_year_start').val('1/1/'+(new Date).getFullYear());$('#ins_cal_year_end').val('12/31/'+(new Date).getFullYear());return false;">Jan1-Dec31</a></span>
+		<span><a href="#" id="ins_cal_year" onclick="$('#ins_cal_year_start').val('1/1/'+(new Date).getFullYear());$('#ins_cal_year_end').val('12/31/'+(new Date).getFullYear());return false;">Jan1-Dec31</a></span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

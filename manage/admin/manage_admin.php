@@ -113,7 +113,8 @@ $num_users=mysql_num_rows($my);
 					<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["admin_access"]); ?>
+					<?=st($myarray["admin_access"]); ?> -
+					<?= $dss_admin_access_labels[$myarray["admin_access"]]; ?>
 				</td>
 				
 				<td valign="top">

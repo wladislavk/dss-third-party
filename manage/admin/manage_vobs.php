@@ -150,7 +150,9 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
 	if($_REQUEST['status']==DSS_PREAUTH_PENDING){
 	  $sql .= " (preauth.status = " . $_REQUEST['status'] . " OR preauth.status = ".DSS_PREAUTH_PREAUTH_PENDING.") ";
-	}else{
+	}elseif($_REQUEST['status']==DSS_PREAUTH_COMPLETE){
+          $sql .= " (preauth.status = " . $_REQUEST['status'] . " OR preauth.status = ".DSS_PREAUTH_REJECTED.") ";
+        }else{
           $sql .= "  preauth.status = " . $_REQUEST['status'] . " ";
 	}
     }

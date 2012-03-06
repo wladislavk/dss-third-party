@@ -200,3 +200,9 @@ $dss_referred_labels[DSS_REFERRED_FRANCHISE] = "Franchise";
 $dss_referred_labels[DSS_REFERRED_DSSOFFICE] = "DSS Office";
 $dss_referred_labels[DSS_REFERRED_OTHER] = "Other";
 
+define('DSS_ADMIN_ACCESS_SUPER', 1);
+define('DSS_ADMIN_ACCESS_BASIC', 2);
+
+$dss_admin_access_labels = array();
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";

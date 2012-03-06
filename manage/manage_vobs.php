@@ -103,6 +103,9 @@ if(isset($_REQUEST['sortdir'])){
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth JOIN dental_patients p ON p.patientid=preauth.patient_id WHERE preauth.doc_id = ".$_SESSION['docid']." ";
+if(isset($_GET['status'])){
+  $sql .= " AND preauth.status = '".mysql_real_escape_string($_GET['status'])."' ";
+}
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -179,7 +182,7 @@ $my=mysql_query($sql) or die(mysql_error());
                     <?=st($myarray["lastname"]);?> 
 				</td>
 				<td valign="top">
-					<?= ($myarray["status"]==1)?'completed':'pending';?>&nbsp;
+					<?= $dss_preauth_status_labels[$myarray["status"]];?>&nbsp;
 				</td>
 				<td valign="top">
 					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&vob_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">

@@ -549,7 +549,7 @@ if ($_POST != array()) {
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $contact['add1'] . "</strong>";
 		$search[] = '%addr2%';
-		$replace[] = ($contact['add2']) ? "<strong>" . $contact['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "<!--%addr2%-->";
 		$search[] = '%insurance_id%';
 		$replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
 		$search[] = '%city%';
@@ -585,9 +585,9 @@ if ($_POST != array()) {
 		}
 		$search[] = '%ref_addr2%';
 		if (!empty($ref_info['md_referrals'])) {
-			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
 		} else {
-			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong><br />" : "<!--%addr2%-->";
+			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "<!--%addr2%-->";
 		}
 		$search[] = '%ref_city%';
 		if (!empty($ref_info['md_referrals'])) {
@@ -639,7 +639,7 @@ if ($_POST != array()) {
                 }
 		$search[] = '%ptref_addr2%';
 		if (!empty($ptref_info['md_referrals'])) {
-			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
 		}else{
                        $replace[] = "";
                 } 
@@ -929,7 +929,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';
-	$replace[] = ($contact['add2']) ? "<strong>" . $contact['add2'] . "</strong><br />" : "<!--%addr2%-->";
+	$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "<!--%addr2%-->";
   $search[] = '%city%';
 	$replace[] = "<strong>" . $contact['city'] . "</strong>";
   $search[] = '%state%';
@@ -963,9 +963,9 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$search[] = '%ref_addr2%';
 	if (!empty($ref_info['md_referrals'])) {
-		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
 	} else {
-		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "<!--%addr2%-->";
 	}
 	$search[] = '%ref_city%';
 	if (!empty($ref_info['md_referrals'])) {
@@ -1017,7 +1017,7 @@ foreach ($letter_contacts as $key => $contact) {
         }
 		$search[] = '%ptref_addr2%';
         if (!empty($ptref_info['md_referrals'])) {
-		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong><br />" : "<!--%addr2%-->";
+		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
 	}else{
                 $replace[] = "";
         } 

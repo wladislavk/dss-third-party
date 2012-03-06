@@ -292,7 +292,8 @@ if($_POST["usersub"] == 1)
                 Address
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="address" class="tbox"><?=$address;?></textarea>
+		<input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
                 <span class="red">*</span>				
             </td>
         </tr>

@@ -72,12 +72,13 @@ $sql = "SELECT "
 $my = mysql_query($sql);
 $num_pending_preauth = mysql_num_rows($my);
 
-$sql = "SELECT "
+ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
      . "FROM "
      . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . " WHERE claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.")";

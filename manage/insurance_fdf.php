@@ -679,15 +679,26 @@ trailer
 >>
 %%EOF
 ";
-
-
-
+$d = date('YmdHms');
+$file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
+if($_REQUEST['type']=="secondary"){
+  $fdf_field = "secondary_fdf";
+}else{
+  $fdf_field = "primary_fdf";
+}
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+mysql_query($sql);
             // this is where you'd do any custom handling of the data
             // if you wanted to put it in a database, email the
             // FDF data, push ti back to the user with a header() call, etc.
 
             // write the file out
-              echo  $fdf;
+            //echo  $fdf;
+	$handle = fopen("./q_file/".$file, 'x+');
+	fwrite($handle, $fdf);
+	fclose($handle);
+
+echo $fdf;
 
 function fill_cents($v){
   if($v<10){

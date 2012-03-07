@@ -512,18 +512,21 @@ if ($_POST['insurancesub'] == 1) {
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
              $u_status = $status;
              if($status == DSS_CLAIM_SENT){
+		$fdf_type="primary";
                 if($p_m_ins_ass == 'No'){
                    $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
                    $u_status = DSS_CLAIM_SENT;
                 }
              }elseif($status == DSS_CLAIM_SEC_SENT){
+		$fdf_type="secondary";
                 if($s_m_ins_ass == 'No'){
                   $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
                   $u_status = DSS_CLAIM_SEC_SENT;
                 }
              }else{
+		$fdf_type="primary";
                $u_status = false;
              }
 
@@ -732,7 +735,7 @@ if ($_POST['insurancesub'] == 1) {
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';
-        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
 
 		die(); // already did a javascript redirect...just die

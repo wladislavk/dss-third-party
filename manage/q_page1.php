@@ -551,7 +551,7 @@ function in_array(needle, haystack)
 						}
 						else
 						{
-							$chk = 1;//$compseq[@array_search($complaint_myarray['complaintid'],$compid)];
+							$chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
 						}
 					        if(@array_search($complaint_myarray['complaintid'],$patcompid) === false)
                                                 {
@@ -559,7 +559,7 @@ function in_array(needle, haystack)
                                                 }
                                                 else
                                                 {
-                                                        $patchk = 1;//$compseq[@array_search($complaint_myarray['complaintid'],$pat_row['compid'])];
+                                                        $patchk = ($compseq[@array_search($complaint_myarray['complaintid'],$pat_row['compid'])])?1:0;
                                                 }	
 					?>
 
@@ -652,7 +652,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($energy_level == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($enery_level!='' && $energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                             <?php
@@ -670,7 +670,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($sleep_qual!=''&&$sleep_qual == $i){echo " selected";}?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                             <?php
@@ -711,7 +711,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($snoring_sound == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($snoring_sound == $i && $snoring_sound!='') echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                             <option value="Don't know">Don't know</option>
                                         </select>
@@ -729,7 +729,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($wake_night!='' && $wake_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                             <?php
@@ -747,7 +747,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($breathing_night == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($breathing_night!='' && $breathing_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                                     </td>
@@ -761,7 +761,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<16;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($hours_sleep == $i && $hours_sleep != '') echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                             <?php

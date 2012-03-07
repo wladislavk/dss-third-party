@@ -47,12 +47,18 @@ if(isset($_POST['loginbut'])){
 	Error! Wrong email address or password.
       </span>
     <?php } ?>
+    <?php if($_GET['activated']==1){ ?>
+      <span class="success">
+        Account created! Please login below.
+      </span>
+
+    <?php } ?>
       <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
 
     <div class="field">
       <label>Email Address</label>
       <span><a href="javascript:showSect('email');">Forgot Email</a></span>
-      <input type="text" tabindex="1" name="login">
+      <input type="text" tabindex="1" name="login" value="<?=$_GET['email'];?>">
     </div>
 
     <div class="field">
@@ -62,7 +68,7 @@ if(isset($_POST['loginbut'])){
     </div>
 
     <div class="field">
-      <button type="submit" name="loginbut">Log In</button>
+      <button type="submit" name="loginbut" class="large">Log In</button>
       <button onclick="showSect('first1');return false;" class="fr">First time user?</button>
     </div>
 	</form>

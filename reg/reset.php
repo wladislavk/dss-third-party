@@ -99,7 +99,7 @@ function createPassword(){
   $.ajax({
     url: 'includes/setup_user.php',
     type: 'post',
-    data: 'email='+e+'&code='+c+'&p='+p1,
+    data: {email: e, code: c, p: p1},
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  

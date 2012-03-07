@@ -5,6 +5,7 @@ $t = $_POST['type'];
     $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);
+	if($r['registration_status']==1 && $r['password']==''){ $t = 'activate'; }
       if($r['password']!='' && $t=='activate'){
         echo '{"error":"existing"}';
       }elseif($r['password']=='' && $t=='reset'){

@@ -44,16 +44,20 @@ $q = mysql_query($s);
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 
-function send_text(){
-
+function send_text(from){
+  $('#text_instructions').hide('slow');
   $.ajax({
     url: 'includes/send_access_text.php',
     type: 'post',
     data: {id: <?= $_GET['id']; ?>, hash: '<?= $_GET['hash']; ?>'},
     success: function( data ) {
         var r = $.parseJSON(data);
-        if(r.success){  
-          $('#sent_text').html("Text sent").show('slow');
+        if(r.success){ 
+	  if(from=="button"){
+	    $('#sent_text').html("Text message sent! Please allow up to 1 minute to receive the message, then enter your access code on this page.")
+	  }else{ 
+            $('#sent_text').html("We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.").show('slow');
+	  }
         }else{
           if(r.error == "cell"){
                 $('#sent_text').html("Error: Cell phone not found.").show('slow');   
@@ -67,6 +71,9 @@ function send_text(){
   });
 }
 
+$(document).ready(function(){
+  send_text("load");
+});
 </script>
 
 <div id="login_container">
@@ -77,11 +84,17 @@ function send_text(){
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
-	<button onclick="send_text()">Text Access Code</button>
      <!--<p>We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.</p>-->
      <p id="sent_text" class="error"><?= $error; ?></p>
      <div class="field">
        <label>Email Address</label>
+       <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a text message?</a></span>
+       <div style="display:none;" id="text_instructions">
+          <p>
+		Didn't receive a text message from us? Don't worry. Click here and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
+	  </p>
+          <button class="fr" onclick="send_text('button')">Text Access Code</button>
+       </div>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />
      </div>
      <div class="field">
@@ -123,22 +136,22 @@ function createPassword(){
   $.ajax({
     url: 'includes/setup_user.php',
     type: 'post',
-    data: 'email='+e+'&code='+c+'&p='+p1,
+    data: {email: e, code: c, p: p1},
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
-          window.location = "login.php"; 
+          window.location = "login.php?email="+escape(e).replace('+', '%2B')+"&activated=1"; 
         }else{
           if(r.error == "code"){
-                $('#first2_error').html("Access code is incorrect.  Please try again.").show('slow');   
+                $('#sent_text').html("Incorrect text message code!").show('slow');   
           }else{
-                $('#first2_error').html("Error.").show('slow');
+                $('#sent_text').html("Error.").show('slow');
           }
         }
     }
   });
   }else{
-                   $('#first2_error').html("The passwords you entered don't match. Please re-enter your password.").show('slow'); 
+                   $('#sent_text').html("Passwords don't match!").show('slow'); 
   }
 
 }
@@ -167,7 +180,6 @@ if(p1!=p2){
 }
 
 }
-
 
 </script>
 

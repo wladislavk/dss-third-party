@@ -16,6 +16,7 @@ body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
 .field span a:hover { color:#fff; }
 .field input { padding:10px; width: 500px; -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:none 0px #fff; font-size: 16px; color:#00457c; }
 .login_content button { padding:10px; -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:none 0px #fff; font-size: 16px; cursor: pointer; background:#00457c; color:#fff;}
+.login_content button.large{ font-size:18px; padding: 15px; }
 .login_content button:hover { background:#fff; color:#00457c; }
 
 .login_content a { text-decoration: none; color:#fff; }

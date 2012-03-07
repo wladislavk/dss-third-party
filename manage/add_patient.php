@@ -520,7 +520,7 @@ mysql_query($s1);
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."',
 		preferredcontact='".s_for($_POST["preferredcontact"])."';";
-		//mysql_query($ins_sql) or die($ins_sql.mysql_error());
+		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);

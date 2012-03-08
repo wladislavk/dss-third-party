@@ -877,6 +877,24 @@ mysql_query($s1);
 <script type="text/javascript">
 
 function validate_add_patient(fa){
+var sendEmail = false;
+                                  $.ajax({
+                                        url: "includes/check_send.php",
+                                        type: "post",
+                                        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
+                                        async: false,
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.success){
+							  c = confirm('You are about to send the patient an email. Are you sure you want to continue?');
+  							if(!c){ sendEmail = true; }
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+if(sendEmail){ return false; }
 p = patientabc(fa);
 var valid = true;
                                   $.ajax({

@@ -292,7 +292,14 @@ function regabc(fa){
                 fa.cell_phone.focus();
                 return false;
         }
+	return confirm('You are about to send the patient an email. Are you sure you want to continue?');
 }
+
+function sendEmail(fa){
+
+  return true;
+}
+
 function patientabc(fa)
 {
 	if(trim(fa.firstname.value) == "" )

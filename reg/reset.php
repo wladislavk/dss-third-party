@@ -32,6 +32,8 @@ function send_text(){
         }else{
           if(r.error == "cell"){
                 $('#sent_text').html("Error: Cell phone not found.").show('slow');   
+          }else if(r.error == "limit"){
+                $('#sent_text').html("Error: You have exceeded the maximum number of text message access code attempts for phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>. Please wait one hour and try again.").show('slow');   
           }else if(r.error == "inactive"){
                 $('#sent_text').html("Error: Text feature disabled.").show('slow');   
           }else{
@@ -55,7 +57,7 @@ function send_text(){
      <h3>Enter your access code</h3>
         <button onclick="send_text()">Text Access Code</button>
 
-     <p id="send_text" class="error"><?= $error; ?></p>
+     <p id="sent_text" class="error"><?= $error; ?></p>
      <div class="field">
        <label>Email Address</label>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />

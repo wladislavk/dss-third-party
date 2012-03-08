@@ -61,6 +61,8 @@ function send_text(from){
         }else{
           if(r.error == "cell"){
                 $('#sent_text').html("Error: Cell phone not found.").show('slow');   
+          }else if(r.error == "limit"){
+                $('#sent_text').html("Error: You have exceeded the maximum number of text message access code attempts for phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>. Please wait one hour and try again.").show('slow');   
           }else if(r.error == "inactive"){
                 $('#sent_text').html("Error: Text feature disabled.").show('slow');   
           }else{

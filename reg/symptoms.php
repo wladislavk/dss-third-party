@@ -177,12 +177,12 @@ if($pat_myarray['patientid'] == '')
 {
 	?>
 	<script type="text/javascript">
-		window.location = 'manage_patient.php';
+		//window.location = 'manage_patient.php';
 	</script>
 	<?
-	die();
+	//die();
 }
-$sql = "select * from dental_q_page1 where parent_patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -321,7 +321,7 @@ if($complaintid <> '')
                             	<? for($i=0;$i<12;$i++)
 								{
 								?>
-									<option value="<?=$i?>" <? if($inches == $i) echo " selected";?>><?=$i?></option>
+									<option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
 								<?
 								}?>
                             </select>

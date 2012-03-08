@@ -328,7 +328,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page3 where patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_page3 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 

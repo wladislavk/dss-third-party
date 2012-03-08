@@ -220,16 +220,7 @@ $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-if($pat_myarray['patientid'] == '')
-{
-	?>
-	<script type="text/javascript">
-		window.location = 'manage_patient.php';
-	</script>
-	<?
-	die();
-}
-$sql = "select * from dental_q_page2 where parent_patientid='".$_SESSION['pid']."'";
+$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 

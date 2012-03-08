@@ -12,7 +12,7 @@ if(isset($_POST['loginbut'])){
         $salt_row = mysql_fetch_assoc($salt_q);
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-        $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where du.use_patient_portal=1 AND dp.email='".mysql_real_escape_string($_POST['login'])."' and dp.password='".$pass."' ";
+        $check_sql = "SELECT dp.patientid, dp.email, dp.registered, du.use_patient_portal  FROM dental_patients dp INNER JOIN dental_users du ON du.userid = dp.docid where du.use_patient_portal=1 AND dp.use_patient_portal =1 AND dp.email='".mysql_real_escape_string($_POST['login'])."' and dp.password='".$pass."' ";
         $check_my = mysql_query($check_sql);
   if(mysql_num_rows($check_my) > 0){
                 session_register("pid");

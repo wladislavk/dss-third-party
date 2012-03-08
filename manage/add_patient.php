@@ -122,7 +122,7 @@ function sendRegEmail($id, $e, $l){
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['phone'];
-  $m = "<html><body><center>
+/*  $m = "<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
 <tr><td width='400'>
@@ -139,8 +139,8 @@ patient@dentalsleepsolutions.com</b></p>
 </table>
 </center></body></html>
 ";
+*/
 
-/*
   $m = "<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
@@ -154,7 +154,7 @@ patient@dentalsleepsolutions.com</b></p>
 <h2>Save Time - Complete Your Paperwork Online</h2>
 </center>
 <p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tress is good too!</p>
-<center><a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php'>Click Here to Complete Your Forms Online</a></center>
+<center><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></center>
 </td></tr>
 <tr><td>
 <h3>Need Assistance?</h3>
@@ -165,7 +165,7 @@ patient@dentalsleepsolutions.com</b></p>
 </table>
 </center></body></html>
 ";
-*/
+
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
     		    'Content-type: text/html' ."\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
@@ -294,6 +294,7 @@ if($_POST["patientsub"] == 1)
 		referred_notes = '".s_for($_POST["referred_notes"])."',
 		copyreqdate = '".s_for($_POST["copyreqdate"])."',
 		status = '".s_for($_POST["status"])."',
+		use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
 		preferredcontact = '".s_for($_POST["preferredcontact"])."'
 		where 
 		patientid='".$_POST["ed"]."'";
@@ -517,6 +518,7 @@ mysql_query($s1);
 		userid='".$_SESSION['userid']."', 
 		docid='".$_SESSION['docid']."', 
 		status = '".s_for($_POST["status"])."',
+		use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
 		adddate=now(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."',
 		preferredcontact='".s_for($_POST["preferredcontact"])."';";
@@ -666,6 +668,7 @@ mysql_query($s1);
 		$group_number = $_POST["group_number"];
 		$ins_type = $_POST["ins_type"];
 		$status = $_POST["status"];
+		$use_patient_portal = $_POST["use_patient_portal"];
 		$accept_assignment = $_POST["accept_assignment"];
 		$print_signature = $_POST["print_signature"];
 		$medical_insurance = $_POST["medical_insurance"];
@@ -761,7 +764,7 @@ mysql_query($s1);
 		$group_number = st($themyarray["group_number"]);
 		$ins_type = st($themyarray["ins_type"]);
 		$status = st($themyarray["status"]);
-		$status = st($themyarray["status"]);
+		$use_patient_portal = st($themyarray["use_patient_portal"]);
 		$accept_assignment = st($themyarray["accept_assignment"]);
 		$print_signature = st($themyarray["print_signature"]);
 		$medical_insurance = st($themyarray["medical_insurance"]);
@@ -1981,6 +1984,18 @@ $(document).ready(function(){
             	<select name="status" class="tbox" >
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                </select>
+                <br />&nbsp;
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Portal Status
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="use_patient_portal" class="tbox" >
+                        <option value="1" <? if($use_patient_portal == 1) echo " selected";?>>Active</option>
+                        <option value="0" <? if($use_patient_portal == 0) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>

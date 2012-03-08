@@ -397,7 +397,7 @@ if($complaintid <> '')
                             	<? for($i=0;$i<12;$i++)
 								{
 								?>
-									<option value="<?=$i?>" <? if($inches == $i) echo " selected";?>><?=$i?></option>
+									<option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
 								<?
 								}?>
                             </select>

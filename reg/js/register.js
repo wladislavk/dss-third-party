@@ -111,6 +111,9 @@ lga_wizard = {
                             s_m_ins_grp: "required",
                             s_m_ins_plan: "required"
                         },
+    errorPlacement: function(error, element) {
+        error.appendTo(element.parent());
+    },
                         messages: {
                             firstname: "This field is required",
 			    lastname: "This field is required",

@@ -10,6 +10,10 @@ require_once '../../manage/admin/includes/config.php';
 	recover_hash='".mysql_real_escape_string($hash)."'";
   $q = mysql_query($s);
   $r = mysql_fetch_assoc($q);
+  if($r['text_num'] >= 5 && strtotime($r['text_date'])>(time()-3600)){
+    echo '{"error":"limit"}';
+    die();
+  }
   if($r['access_code']==''){
                 $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
                 $ins_sql = "UPDATE dental_patients set registration_status=1, access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
@@ -34,6 +38,11 @@ require_once '../../manage/admin/includes/config.php';
               // the sms body 
               "Your access code is ".$recover_hash
             );
+		if(strtotime($r['text_date'])<(time()-3600) || $r['text_num']==0){
+		  mysql_query("UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");
+		}else{
+                  mysql_query("UPDATE dental_patients SET text_num=text_num+1 WHERE patientid='".$r['patientid']."'");
+		}
 		echo '{"success":true}';
           }else{
 		echo '{"error":"inactive"}';

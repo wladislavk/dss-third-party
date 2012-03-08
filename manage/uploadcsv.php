@@ -45,7 +45,7 @@ if($_FILES['csv']['error'] == 0){
             $fields[] = "";
             $fields[] = "";
             $fields[] = "copyreqdate";//first visit
-            $fields[] = "";
+            $fields[] = "last_visit";
             $fields[] = "";
             $fields[] = "";
             $fields[] = "";//next appointment
@@ -106,6 +106,12 @@ if($_FILES['csv']['error'] == 0){
                                   $s .= $field . " = '" .$data[$id]."', ";
 				}
 				break;
+                        case 'last_visit':
+                                if($field!=''){
+                                  $last_visit = $data[$id];
+                                }
+                                break;
+
 			default:
 				if($field!=''){
 		  			$s .= $field . " = '" .$data[$id]."', ";
@@ -117,6 +123,9 @@ if($_FILES['csv']['error'] == 0){
 			//echo $s;
 			mysql_query($s);
 			$pid = mysql_insert_id();
+			if($copyreqdate=='' && $last_visit!=''){
+				$copyreqdate = $last_visit;
+			}
 			if($copyreqdate!=''){
 			   mysql_query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");
       				$stepid = '1';
@@ -127,6 +136,14 @@ if($_FILES['csv']['error'] == 0){
       				$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
       				$steparray_insert = mysql_query($steparray_query);
       				$flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
+
+				if($last_visit != ''){
+					$visit_date = date('Y-m-d', strtotime($last_visit));
+					$steparray_query = "UPDATE dental_flow_pg2 SET steparray = '1,2' WHERE patientid='".$pid."'";
+					$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '2', '2', '".$visit_date."', '".$visit_date."');";
+                                	$steparray_insert = mysql_query($steparray_query);
+                                	$flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
+				}
 				//echo $steparray_query;
 				//echo $flow_pg2_info_query;
 			}

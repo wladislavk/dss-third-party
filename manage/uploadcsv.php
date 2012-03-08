@@ -127,8 +127,8 @@ if($_FILES['csv']['error'] == 0){
       				$flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$scheduled."');";
       				$steparray_insert = mysql_query($steparray_query);
       				$flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
-				echo $steparray_query;
-				echo $flow_pg2_info_query;
+				//echo $steparray_query;
+				//echo $flow_pg2_info_query;
 			}
 		}
                 //$csv[$row]['lastname'] = $data[0];

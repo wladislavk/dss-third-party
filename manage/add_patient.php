@@ -527,7 +527,7 @@ mysql_query($s1);
 
                 if(isset($_POST['sendReg'])&& $use_patient_portal){
                 if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-                        sendRegEmail($_POST['ed'], $_POST['email'], $login);
+                        sendRegEmail($pid, $_POST['email'], $login);
                 }else{
                         ?><script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
                 }

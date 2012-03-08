@@ -116,7 +116,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			Phone
                 </td>
                 <td valign="top" class="col_head" width="45%">
-			Similar Doctors
+			Similar Patients 
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action

@@ -3,6 +3,9 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 require_once('includes/checkemail.php');
+?>
+<div style="width:90%; margin-left:5%;">
+<?php
 if(isset($_POST['submitbut'])){
 $csv = array();
 
@@ -63,7 +66,8 @@ if($_FILES['csv']['error'] == 0){
             $fields[] = "";
             $fields[] = "";
             $fields[] = "middlename";
-
+		$error_count = 0;
+		$error_array = array();
             while(($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                 // number of fields in the csv
                 $num = count($data);
@@ -129,7 +133,8 @@ if($_FILES['csv']['error'] == 0){
 			$s .= " docid = '".$_SESSION[docid]."'";
 			//echo $s;
 		if(checkEmail($email, 0)>0){
-                            echo("Email address ".$email."  already in use in the DSS software were found in the uploaded file. These email addresses will not be imported.<br />");
+                            array_push($error_array, $data[1]." ".$data[0]." - ".$email);
+			    $error_count++;
 		}else{	
 			mysql_query($s);
 			$pid = mysql_insert_id();
@@ -168,9 +173,14 @@ if($_FILES['csv']['error'] == 0){
 		}
             }
             fclose($handle);
-		?><script type="text/javascript">
-		   window.location="pending_patient.php?msg=<?= "Inserted ".($row-1)." rows.";?>";
-		</script><?php
+		echo "<h4>Inserted ".($row-1)." rows.</h4>";
+		if($error_count){
+		  ?><p><?= $error_count; ?> errors. Emails are already assigned to existing patients.</p><ul><?php
+		  foreach($error_array as $e){
+		    ?><li><?= $e; ?></li><?php
+		  }
+		  ?></ul><?php
+		}
         }
     }
 }
@@ -185,7 +195,7 @@ if($_FILES['csv']['error'] == 0){
 <br />
 <input type="submit" name="submitbut" value="Upload" />
 </form>
-
+</div>
 <br /><br />
 <? include "includes/bottom.htm";?>
 

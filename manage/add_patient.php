@@ -886,7 +886,7 @@ var sendEmail = false;
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.success){
-							  c = confirm('You are about to send the patient an email. Are you sure you want to continue?');
+							  c = confirm("You have changed the patient's email address. Because this patient has access to the Patient Portal, the patient will be sent an email notifying them of this change to allow them to access the DSS Patient Portal.");
   							if(!c){ sendEmail = true; }
                                                 }
                                         },
@@ -1996,7 +1996,7 @@ $(document).ready(function(){
 		    
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Status
+                Patient Status
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox" >

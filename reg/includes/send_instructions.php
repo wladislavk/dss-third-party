@@ -10,6 +10,8 @@ $t = $_POST['type'];
         echo '{"error":"existing"}';
       }elseif($r['password']=='' && $t=='reset'){
 	echo '{"error":"activate"}';
+      }elseif($t == 'activate' && $r['registration_status']==0){
+	echo '{"error":"restricted"}';
       }else{
 
     if($r['recover_hash'] == ''){

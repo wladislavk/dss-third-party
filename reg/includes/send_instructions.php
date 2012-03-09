@@ -31,7 +31,7 @@ $t = $_POST['type'];
 if($t == 'activate'){
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account - A new patient account has been created for you</h2>
 <p>Please click the following link to activate your account.</p>
@@ -42,14 +42,14 @@ if($t == 'activate'){
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";
 }else{
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Reset your password</h2><p>Please click the following link to reset your password.</p>
 <p><a href='http://".$_SERVER['HTTP_HOST']."/reg/reset.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/reset.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
@@ -58,7 +58,7 @@ patient@dentalsleepsolutions.com</b></p>
 <h3>Didn't request this change or need assistance?</h3>
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p></td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";

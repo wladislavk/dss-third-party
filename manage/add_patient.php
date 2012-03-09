@@ -124,7 +124,7 @@ function sendRegEmail($id, $e, $l){
   $n = $ur['phone'];
 /*  $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account - A new patient account has been created for you</h2>
 <p>Please click the following link to activate your account.</p>
@@ -135,7 +135,7 @@ function sendRegEmail($id, $e, $l){
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";
@@ -143,7 +143,7 @@ patient@dentalsleepsolutions.com</b></p>
 
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
@@ -161,7 +161,7 @@ patient@dentalsleepsolutions.com</b></p>
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";
@@ -886,7 +886,7 @@ var sendEmail = false;
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.success){
-							  c = confirm("You have changed the patient's email address. Because this patient has access to the Patient Portal, the patient will be sent an email notifying them of this change to allow them to access the DSS Patient Portal.");
+							  c = confirm("You have changed the patient's email address. In order to proceed, the patient will be sent an email to allow them to continue to access the Patient Portal.");
   							if(!c){ sendEmail = true; }
                                                 }
                                         },
@@ -1117,6 +1117,20 @@ $num_face = mysql_num_rows($p);
 			    <span>
 				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=$email?>" disabled="disabled" />
 				<label for"login">Pt Portal Login</label>
+				<span style="color:#933;">
+				  <?php switch($themyarray['registration_status']){
+					case 0:
+						echo 'Unregistered';
+						break;
+					case 1:
+						echo 'Registration sent';
+						break;
+					case 2:
+						echo 'Registered';
+						break;
+					}
+				  ?>
+				</span>
 			    </span>
                        </div>   
                         <div>
@@ -1999,16 +2013,27 @@ $(document).ready(function(){
                 Patient Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" >
+            	<select name="status" id="status" class="tbox" onchange="updatePPAlert()";>
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
         </tr>
+<script type="text/javascript">
+function updatePPAlert(){
+  if($('#status').val()==2){
+	$('#ppAlert').show();
+  }else{
+	$('#ppAlert').hide();
+  }
+}
+</script>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Portal Status
+		<br />
+		<span id="ppAlert" style="font-weight:normal;font-size:12px; <?= ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
             </td>
             <td valign="top" class="frmdata">
                 <select name="use_patient_portal" class="tbox" >

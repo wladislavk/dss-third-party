@@ -44,7 +44,8 @@ $q = mysql_query($s);
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 
-function send_text(from){
+function send_text(from, but){
+  but.disabled = true;
   $('#text_instructions').hide('slow');
   $.ajax({
     url: 'includes/send_access_text.php',
@@ -70,11 +71,12 @@ function send_text(from){
           }
         }
     }
+    but.disabled = false;
   });
 }
 
 $(document).ready(function(){
-  send_text("load");
+  send_text("load", false);
 });
 </script>
 
@@ -95,7 +97,7 @@ $(document).ready(function(){
           <p>
 		Didn't receive a text message from us? Don't worry. Click here and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
 	  </p>
-          <button class="fr" onclick="send_text('button')">Text Access Code</button>
+          <button class="fr" onclick="send_text('button', this)">Text Access Code</button>
        </div>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />
      </div>

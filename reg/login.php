@@ -92,7 +92,7 @@ if(isset($_POST['loginbut'])){
        <input type="text" name="email_reset" id="email_reset" />
      </div>
      <div class="field">
-       <button onclick="sendInstructions('reset')" name="passwordbut">Send Password</button>
+       <button onclick="sendInstructions('reset', this)" name="passwordbut">Send Password</button>
      </div>
      <a href="javascript:showSect('login');">&laquo; Return to Login Screen</a>
   </div>
@@ -112,7 +112,7 @@ if(isset($_POST['loginbut'])){
        <input type="text" id="email_activate" name="email_activate" />
      </div>
      <div class="field">
-       <button onclick="sendInstructions('activate')">Send Instructions</button>
+       <button onclick="sendInstructions('activate', this)">Send Instructions</button>
      </div>
      <a href="javascript:showSect('login');">&laquo; Return to Login Screen</a>
   </div>
@@ -148,7 +148,8 @@ function showSect(s){
   $('#'+s+'_sect').show();
 }
 
-function sendInstructions(type){
+function sendInstructions(type, but){
+  but.disabled = true;
   if(type == 'activate'){
     var e = $('#email_activate').val();
   }else{
@@ -157,6 +158,7 @@ function sendInstructions(type){
   if(e == ''){
     $('#first1_error').html("You must enter an email address.").show('slow');
     $('#reset_error').html("You must enter an email address.").show('slow');
+    but.disabled = false;
   }else{ 
    $.ajax({
     url: 'includes/send_instructions.php',
@@ -188,10 +190,10 @@ function sendInstructions(type){
                 $('#reset_error').html("Error finding email.").show('slow');
           }
         }
+	but.disabled = false;
     }
    });
   }
-
 }
 
 function sendAccessCode(){

@@ -19,8 +19,8 @@ $q = mysql_query($s);
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 
-function send_text(){
-
+function send_text(but){
+  but.disabled = true;
   $.ajax({
     url: 'includes/send_access_text.php',
     type: 'post',
@@ -40,6 +40,7 @@ function send_text(){
                 $('#sent_text').html("Error.").show('slow');
           }
         }
+	but.disabled = false;
     }
   });
 }
@@ -55,7 +56,7 @@ function send_text(){
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
-        <button onclick="send_text()">Text Access Code</button>
+        <button onclick="send_text(this)">Text Access Code</button>
 
      <p id="sent_text" class="error"><?= $error; ?></p>
      <div class="field">

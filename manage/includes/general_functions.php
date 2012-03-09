@@ -85,7 +85,7 @@ if(trim($new) != trim($old)){
 if($by=='doc'){
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>An update has been made to your account.<br />Please use the updated email address below to login:</p>
@@ -99,14 +99,14 @@ if($by=='doc'){
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";
 }else{
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_header.gif' /></td></tr>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>You have updated your account.<br />Please use the updated email address below to login:</p>
@@ -120,7 +120,7 @@ patient@dentalsleepsolutions.com</b></p>
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_footer.gif' /></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";

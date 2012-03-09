@@ -2,7 +2,7 @@
 include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
-
+require_once('includes/checkemail.php');
 if(isset($_POST['submitbut'])){
 $csv = array();
 
@@ -112,6 +112,13 @@ if($_FILES['csv']['error'] == 0){
                                 }
                                 break;
 
+                        case 'email':
+                                if($field!=''){
+					$email = $data[$id];
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+
 			default:
 				if($field!=''){
 		  			$s .= $field . " = '" .$data[$id]."', ";
@@ -121,6 +128,9 @@ if($_FILES['csv']['error'] == 0){
 		}
 			$s .= " docid = '".$_SESSION[docid]."'";
 			//echo $s;
+		if(checkEmail($email, 0)>0){
+                            echo("Email address ".$email."  already in use in the DSS software were found in the uploaded file. These email addresses will not be imported.<br />");
+		}else{	
 			mysql_query($s);
 			$pid = mysql_insert_id();
 			if($copyreqdate=='' && $last_visit!=''){
@@ -147,15 +157,20 @@ if($_FILES['csv']['error'] == 0){
 				//echo $steparray_query;
 				//echo $flow_pg2_info_query;
 			}
-		}
                 //$csv[$row]['lastname'] = $data[0];
                 //$csv[$row]['firstname'] = $data[1];
 
                 // inc the row
-                $row++;
+               		$row++;
+		}
+		}else{
+		  $row++;
+		}
             }
             fclose($handle);
-		echo "Inserted ".($row-1)." rows.";
+		?><script type="text/javascript">
+		   window.location="pending_patient.php?msg=<?= "Inserted ".($row-1)." rows.";?>";
+		</script><?php
         }
     }
 }

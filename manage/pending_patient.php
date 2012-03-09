@@ -86,8 +86,17 @@ $my = mysql_query($sql);
 $my=mysql_query($sql) or die(mysql_error());
 
 ?>
-
-        <button style="float:right;margin-right:20px;" onclick="javascript: window.location = 'uploadcsv.php';" class="addButton">
+<script type="text/javascript">
+function redirect(){
+if(prompt('Enter the password to use this function:')=='1234'){
+  window.location = 'uploadcsv.php';
+}else{
+  alert('Incorrect password');
+}
+return false;
+}
+</script>
+        <button style="float:right;margin-right:20px;" onclick="return redirect();" class="addButton">
               Upload 
         </button>
 <br />

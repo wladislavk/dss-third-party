@@ -114,14 +114,15 @@ $sql = "select
 		dif.adddate,
 		dif.adddate,
 		'EOB',
-		dif.description,
+		CONCAT('EOB - ', dif.claimtype),
 		'',
 		'',
-		dif.status,
+		di.status,
 		dif.filename,
 		'',
 		''
 	from dental_insurance_file dif
+		JOIN dental_insurance di ON di.insuranceid=dif.claimid
 		where dif.claimid=".mysql_real_escape_string($_GET['claimid'])."
 ";
 

@@ -2268,8 +2268,8 @@ if (!$query) {
 					
 <?php
 $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-$amount_paid = (empty($amount_paid)) ? 0.00 : $amount_paid;
-$balance_due = (empty($balance_due)) ? 0.00 : $balance_due;
+$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
+$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
@@ -2323,7 +2323,7 @@ if ($is_new_claim) {
   // format calculations
   $total_charge = number_format($total_charge, 2);
   $amount_paid = number_format($amount_paid, 2);
-  $balance_due = number_format($balance_due, 2);
+  $balance_due = number_format($balance_due, 2, '.','');
 
 }
 ?>
@@ -2337,11 +2337,11 @@ if ($is_new_claim) {
     </td>
     <td valign="top" width="33%">
       <span class="num">29.</span> Amount Paid<br/>
-      $ <input type="text" value="0.00" name="amount_paid" class="inbox_line3" size="15"/>
+      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3" size="15"/>
     </td>
     <td valign="top" width="33%">
       <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$total_charge;?>" name="balance_due" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3" size="15" />
       <br/>
       <span class="small_cap">&nbsp;</span>
     </td>
@@ -2498,11 +2498,13 @@ if ($is_new_claim) {
                                                 Delete
                                         </a>
 				<? } ?> 
+			<!--
 			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
 			<div id="reject_reason_div" <?= ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
 				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $reject_reason; ?></textarea>
 				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
 			</div>
+			-->
 			<?php }else{ ?>
                     <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete

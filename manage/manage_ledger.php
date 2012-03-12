@@ -122,6 +122,7 @@ $sql = "        select
                 LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
                 LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
                 where i.patientid='".s_for($_GET['pid'])."'
+		AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
         GROUP BY i.insuranceid
 ";
 

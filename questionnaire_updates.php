@@ -181,17 +181,23 @@ while($q4r = mysql_fetch_assoc($q4q)){
   
 
   $family_had = $q4r['family_had'];
-  if(strpos($family_had,'~Heart disease~') === false){}else{
-    $upsql .= " familyhd='Yes', ";  
+  if(strpos($family_had,'~Heart disease~') === false){
+    $upsql .= " family_hd='No', ";
+  }else{
+    $upsql .= " family_hd='Yes', ";  
   }
-  if(strpos($family_had,'~High Blood Pressure~') === false){}else{
-    $upsql .= " familybp='Yes', ";
+  if(strpos($family_had,'~High Blood Pressure~') === false){
+    $upsql .= " family_bp='No', ";
+  }else{
+    $upsql .= " family_bp='Yes', ";
   }
-  if(strpos($family_had,'~Diabetes~') === false){}else{
-    $upsql .= " familydia='Yes', ";
+  if(strpos($family_had,'~Diabetes~') === false){
+    $upsql .= " family_dia='No', ";
+  }else{
+    $upsql .= " family_dia='Yes', ";
   }
 	
-  $upsql .= " familysd='".$q4r['family_diagnosed']."', ";
+  $upsql .= " family_sd='".$q4r['family_diagnosed']."', ";
   $upsql .= " smoke='".$q4r['smoke']."', ";
   $upsql .= " smoke_packs='".$q4r['smoke_packs']."', ";
   $upsql .= " tobacco='".$q4r['tobacco']."', ";

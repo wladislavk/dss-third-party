@@ -21,18 +21,6 @@ CREATE TABLE `dental_q_page2_surgery` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
-/*
-CREATE TABLE `dental_insurance_preauth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `patient_amount_left_to_meet` decimal(11,2) DEFAULT NULL,
-  `expected_insurance_payment` decimal(11,2) DEFAULT NULL,
-  `expected_patient_payment` decimal(11,2) DEFAULT NULL,
-  `network_benefits` int(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
-*/
-
-
 ALTER TABLE dental_q_page3 ADD COLUMN  wisdom_extraction_text varchar(255);
 ALTER TABLE dental_q_page3 ADD COLUMN  removable_text varchar(255);
 ALTER TABLE dental_q_page3 ADD COLUMN  dentures varchar(50);

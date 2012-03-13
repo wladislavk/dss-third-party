@@ -51,6 +51,6 @@ ALTER TABLE dental_q_page3 ADD COLUMN caffeine varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN smoke varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN smoke_packs varchar(50);
 ALTER TABLE dental_q_page3 ADD COLUMN tobacco varchar(50);
-ALTER TABLE dental_q_page3 ADD COLUMN additional_paragraph varchar(50);
+ALTER TABLE dental_q_page3 ADD COLUMN additional_paragraph text;
 
 

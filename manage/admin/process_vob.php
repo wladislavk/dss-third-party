@@ -147,7 +147,8 @@ if (isset($_REQUEST['ed'])) {
 }
 
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
-$disabled = ($is_complete) ? 'DISABLED' : '';
+$is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
+$disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -680,15 +681,18 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">
                     * Required Fields					
                 </span><br />
+		<?php if(!$is_complete && !$is_rejected){ ?>
                         <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
                         <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
                                 <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
                                 <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
+				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel" />
                         </div>
 <br />
+		<?php } ?>
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
-                <?php if (!$is_complete) { ?>
+                <?php if (!$is_complete && !$is_rejected ) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="button" />
                 <?php } ?>
 		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>

@@ -2308,6 +2308,25 @@ $my = mysql_query($sql) or die(mysql_error());
       </tr>
 
 
+ <?php } elseif($preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently awaiting pre-authorization.
+        </td>
+      </tr>
+
+
+
+        <?php } elseif($preauth['status']==DSS_PREAUTH_REJECTED){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+        </td>
+      </tr>
+
+
 
 	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">

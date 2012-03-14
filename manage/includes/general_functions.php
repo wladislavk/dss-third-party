@@ -89,8 +89,8 @@ if($by=='doc'){
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>An update has been made to your account.<br />Please use the updated email address below to login:</p>
-<p><b>New Email:</b> ".$new."<br>
-<b>Old Email:</b> ".$old."</p>
+<h3>New Email: ".$new."</h3>
+<p><b>Old Email:</b> ".$old."</p>
 </td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td>
 <p>Click the link below to login with your new email address:<br />
@@ -110,8 +110,8 @@ patient@dentalsleepsolutions.com</b></p>
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>You have updated your account.<br />Please use the updated email address below to login:</p>
-<p><b>New Email:</b> ".$new."<br>
-<b>Old Email:</b> ".$old."</p>
+<h3>New Email: ".$new."</h3>
+<p><b>Old Email:</b> ".$old."</p>
 </td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td>
 <p>Click the link below to login with your new email address:<br />

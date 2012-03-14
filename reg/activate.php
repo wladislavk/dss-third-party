@@ -70,8 +70,8 @@ function send_text(from, but){
                 $('#sent_text').html("Error.").show('slow');
           }
         }
+      but.disabled = false;
     }
-    but.disabled = false;
   });
 }
 

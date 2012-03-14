@@ -149,7 +149,7 @@ if($_POST['q_page2sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='history.php?msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p'];?>?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -207,7 +207,7 @@ if($_POST['q_page2sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='history.php?msg=<?=$msg;?>';
+			window.location='<?=$_POST['goto_p'];?>?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -357,7 +357,7 @@ if($cpap == '')
 	function q_page2abc(fa) {
 	    var errorMsg = '';
 	    
-		if (trim(fa.sleep_study_on.value) != '') { 
+		if (fa.sleep_study_on.value != '') { 
 			if (is_date(trim(fa.sleep_study_on.value)) == -1 ||  is_date(trim(fa.sleep_study_on.value)) == false) {
 				errorMsg += "- Invalid Date Format, Valid Format : (mm/dd/YYYY);\n";
 				fa.sleep_study_on.focus();
@@ -375,16 +375,12 @@ if($cpap == '')
 	}
 </script>
 
-<form id="q_page2frm" name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onsubmit="return q_page2abc(this)">
+<form id="q_page2frm" class="q_form" name="q_page2frm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" >
 <input type="hidden" name="q_page2sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page2id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" id="goto_p" name="goto_p" value="history.php" />
 
 <div class="formEl_a">
-<div align="right">
-	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
-    &nbsp;&nbsp;&nbsp;
-</div>
            <h3>Sleep Studies</h3>
                     <div class="sepH_b">
 			<label class="lbl_a">Have you had a sleep study</label>
@@ -437,7 +433,7 @@ if($cpap == '')
                                                 </span>
                                         </div>
 
-                   			<h5>The Patient has attempted treatment with a CPAP but they could not tolerate its use due to:</h5>	
+                   			<h5>What are your chief complaints about CPAP?</h5>	
                             
                             <?
 							$intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
@@ -469,7 +465,7 @@ if($cpap == '')
 						chk_cpap();
 						chk_cpap_other();
 					</script>
-                      	<h3>Dental Devices</h3> 
+                      	<h3 class="clear">Dental Devices</h3> 
 			<div class="sepH_b half">
 				<label class="lbl_a">Are you currently wearing a dental device?</label>
                             <input type="radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
@@ -515,7 +511,7 @@ if($cpap == '')
 			<script type="text/javascript">
 				chk_dd();
 			</script>
-                        <h3>Surgery</h3>
+                        <h3 class="clear">Surgery</h3>
 			<div class="sepH_b">
 				<label class="lbl_a">Have you had surgery for snoring or sleep apnea?</label>
                             <input type="radio" name="surgery" value="Yes" <? if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />

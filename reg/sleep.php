@@ -68,18 +68,28 @@ if($_POST['q_sleepsub'] == 1)
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        if(mysql_num_rows($exist_q) == 0)
+        {
+		$ed_sql = "insert into dental_q_page1 set
+                        ess='".mysql_real_escape_string($_POST['epTot'])."',
+                        tss='".s_for($tot_score)."',
+                        parent_patientid='".$_SESSION['pid']."'";
+                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+        }else{
                 $ed_sql = "update dental_q_page1 set
                         ess='".mysql_real_escape_string($_POST['epTot'])."',
                         tss='".s_for($tot_score)."'
-                        WHERE patientid='".$_SESSION['pid']."'";
+                        WHERE parent_patientid='".$_SESSION['pid']."'";
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-
+	}
 
                 $msg = "Added Successfully";
                 ?>
                 <script type="text/javascript">
                         //alert("<?=$msg;?>");
-                        window.location='treatments.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                        window.location='<?=$_POST['goto_p']; ?>?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
                 </script>
                 <?
                 die();
@@ -103,18 +113,29 @@ if($_POST['q_sleepsub'] == 1)
                 where thortonid = '".s_for($_POST['ted'])."'";
 
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        if(mysql_num_rows($exist_q) == 0)
+        {
+                $ed_sql = "insert into dental_q_page1 set
+                        ess='".mysql_real_escape_string($_POST['epTot'])."',
+                        tss='".s_for($tot_score)."',
+                        parent_patientid='".$_SESSION['pid']."'";
+                mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+        }else{
 
 		$ed_sql = "update dental_q_page1 set
 			ess='".mysql_real_escape_string($_POST['epTot'])."',
 			tss='".s_for($tot_score)."'
-			WHERE patientid='".$_SESSION['pid']."'";
+			WHERE parent_patientid='".$_SESSION['pid']."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		//echo $ed_sql;
+	}
 		$msg = " Edited Successfully";
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='treatments.php?msg=<?=$msg;?>';
+			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -179,15 +200,11 @@ if($epworthid <> '')
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="q_sleepfrm" name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
+<form id="q_sleepfrm" class="q_form" name="q_sleepfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
 <input type="hidden" name="q_sleepsub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_sleepid;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" id="goto_p" name="goto_p" value="treatments.php" />
 
-<div align="right">
-	<input type="submit" name="q_sleepbtn" class="next btn btn_d" value="Save and Proceed" />
-    &nbsp;&nbsp;&nbsp;
-</div>
 <div class="formEl_a">
 <h3>Epworth Sleep Questionnaire</h3>
 	<div class="legend">

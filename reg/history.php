@@ -22,7 +22,9 @@ edited = false;
 if($_POST['q_page3sub'] == 1)
 {
 	$allergens = $_POST['allergens'];
+	$allergenscheck = $_POST['allergenscheck'];
 	$other_allergens = $_POST['other_allergens'];
+	$medicationscheck = $_POST['medicationscheck'];
 	$medications = $_POST['medications'];
 	$other_medications = $_POST['other_medications'];
 	$history = $_POST['history'];
@@ -145,13 +147,18 @@ $injurytohead = $_POST['injurytohead'];
 	echo "orthodontics - ".$orthodontics."<br>";*/
 	
 	
-	if($_POST['ed'] == '')
-	{
+        $exist_sql = "SELECT patientid FROM dental_q_page3 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        if(mysql_num_rows($exist_q) == 0)
+        {
+
 		$ins_sql = " insert into dental_q_page3 set 
-		patientid = '".s_for($_SESSION['pid'])."',
+		parent_patientid = '".s_for($_SESSION['pid'])."',
 		allergens = '".s_for($allergens_arr)."',
+		allergenscheck = '".s_for($allergenscheck)."',
 		other_allergens = '".s_for($other_allergens)."',
 		medications = '".s_for($medications_arr)."',
+		medicationscheck = '".s_for($medicationscheck)."',
 		other_medications = '".s_for($other_medications)."',
 		history = '".s_for($history_arr)."',
 		other_history = '".s_for($other_history)."',
@@ -218,14 +225,14 @@ $injurytohead = $_POST['injurytohead'];
 			premedcheck = '".s_for($_POST["premedcheck"])."',
                 	premed = '".s_for($_POST["premeddet"])."'
                 	where 
-                	patientid='".$_SESSION["pid"]."'";
+                	parent_patientid='".$_SESSION["pid"]."'";
                 mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
 
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='index.php';
+			window.location='<?= $_POST['goto_p']; ?>';
 		</script>
 		<?
 		die();
@@ -234,8 +241,10 @@ $injurytohead = $_POST['injurytohead'];
 	{
 		$ed_sql = " update dental_q_page3 set 
 		allergens = '".s_for($allergens_arr)."',
+		allergenscheck = '".s_for($allergenscheck)."',
 		other_allergens = '".s_for($other_allergens)."',
 		medications = '".s_for($medications_arr)."',
+		medicationscheck = '".s_for($medicationscheck)."',
 		other_medications = '".s_for($other_medications)."',
 		history = '".s_for($history_arr)."',
 		other_history = '".s_for($other_history)."',
@@ -290,7 +299,7 @@ $injurytohead = $_POST['injurytohead'];
                 clinch_grind_text  = '".s_for($clinch_grind_text)."',
                 future_dental_det = '".s_for($future_dental_det)."',
                 drymouth_text = '".s_for($drymouth_text)."'
-		where q_page3id = '".s_for($_POST['ed'])."'";
+		where parent_patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		$ped_sql = "update dental_patients 
@@ -298,14 +307,14 @@ $injurytohead = $_POST['injurytohead'];
                         premedcheck = '".s_for($_POST["premedcheck"])."',
                         premed = '".s_for($_POST["premeddet"])."' 
                         where 
-                        patientid='".$_SESSION["pid"]."'";
+                        parent_patientid='".$_SESSION["pid"]."'";
                 mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='index.php';
+			window.location='<?= $_POST['goto_p']; ?>';
 		</script>
 		<?
 		die();
@@ -313,7 +322,7 @@ $injurytohead = $_POST['injurytohead'];
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."' OR parent_patientid='".s_for($_SESSION['pid'])."' ORDER BY parent_patientid DESC";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -334,8 +343,10 @@ $myarray = mysql_fetch_array($my);
 
 $q_page3id = st($myarray['q_page3id']);
 $allergens = st($myarray['allergens']);
+$allergenscheck = st($myarray['allergenscheck']);
 $other_allergens = st($myarray['other_allergens']);
 $medications = st($myarray['medications']);
+$medicationscheck = st($myarray['medicationscheck']);
 $other_medications = st($myarray['other_medications']);
 $history = st($myarray['history']);
 $other_history = st($myarray['other_history']);
@@ -360,7 +371,7 @@ $no_allergens = st($myarray['no_allergens']);
 $no_medications = st($myarray['no_medications']);
 $no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
-$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."' ORDER BY parent_patientid DESC";
 $pmy = mysql_query($psql);
 $pmyarray = mysql_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);
@@ -406,15 +417,11 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="q_page3frm" name="q_page3frm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" >
+<form id="q_page3frm" class="q_form" name="q_page3frm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" >
 <input type="hidden" name="q_page3sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page3id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" id="goto_p" name="goto_p" value="index.php" />
 <div class="formEl_a">
-<div align="right">
-	<input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
-    &nbsp;&nbsp;&nbsp;
-</div>
                             <h3>Premedication<span id="req_0" class="req">*</span></h3>
                         <div class="sepH_b">
                                 <label class="lbl_a">Have you been told you should receive pre medication before dental procedures?</label>
@@ -422,20 +429,31 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 				<input id="premedcheck" name="premedcheck" tabindex="5" type="radio"  <?php if($premedcheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('pm_det').style.display='none'" value="0" /> No 
                                 
                             <span id="pm_det" <?php if($premedcheck == 0){ echo 'style="display:none;"';} ?>>
-				<label class="lbl_a">I require pre-medication due to:</label>
+				<label class="lbl_a">What medication(s) and why do you require it?</label>
                                 <textarea name="premeddet" id="premeddet" class="inpt_a" style="width:610px;" tabindex="18" ><?=$premeddet;?></textarea>
                             </span>
                           
                        </div>   
                         <h3>Allergens</h3>
 			<div class="sepH_b">
+				<label class="lbl_a">Do you have any known allergens (for example: aspirin, latex, penicillin, etc)?</label>
+                                <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('all_det').style.display='block'" value="1" /> Yes
+                                <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('all_det').style.display='none'" value="0" /> No
+			<span id="all_det" <?php if($allergenscheck == 0){ echo 'style="display:none;"';} ?>>
                             	<label class="lbl_a">Please list everything you are allergic to:</label> 
                             <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
+			</span>
                     </div>
                         <h3>Medications currently being taken</h3>
                     <div class="sepH_b">
-                            	<label class="lbl_a">Please list all medication you are currently taking:</label> 
+                                <label class="lbl_a">Are you currently taking any medications?</label>
+                                <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('med_det').style.display='block'" value="1" /> Yes
+                                <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('med_det').style.display='none'" value="0" /> No
+                        <span id="med_det" <?php if($medicationscheck == 0){ echo 'style="display:none;"';} ?>>
+
+                            	<label class="lbl_a">Please list all medications you are currently taking:</label> 
                             <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
+			</span>
                     </div>
                     
                         <h3>Medical History</h3>

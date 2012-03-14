@@ -67,6 +67,7 @@ include 'includes/header.php';
 			<input class="inpt_a validate" type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
 		</div>
                 <div class="sepH_b clear">
+			<input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?= $p['email']; ?>" />
                         <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b third">
@@ -150,7 +151,6 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
 														</div>
 													</div>
@@ -761,8 +761,9 @@ $(document).ready(function(){
 										<div class="pageInside">
 											<div class="last sepH_c">
 												<h3 class="sepH_b">Congratulations!</h3>
-												<p  class="sepH_b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer diam quam, lobortis eget ornare sit amet, sollicitudin at sapien. Suspendisse nec lectus ut arcu mattis mattis vel ut mi. Donec congue tincidunt sollicitudin. Phasellus varius euismod nisl, at blandit nibh suscipit suscipit. Morbi quis nisl sem. Praesent malesuada leo enim. Praesent est lectus, commodo at accumsan varius, bibendum ac nisi. Nulla eu erat sit amet enim consequat condimentum. Nam nulla neque, sagittis ut fringilla sed, vestibulum sit amet libero.</p>
-												<pre id="form_summary"></pre>
+												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
+
+												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next Dental Sleep Solutions visit!</p>
 											</div>
 
 											<div class="cf">

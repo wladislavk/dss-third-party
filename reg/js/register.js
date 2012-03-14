@@ -43,8 +43,12 @@ lga_wizard = {
 						//alert('fail');
 					}
                                   });
+				  if($("#email").val()!=$("#oldemail").val()){
+					if(!confirm('You have changed your email from '+$("#oldemail").val()+' to '+$("#email").val()+'.  You will be sent an email reminder of this change.')){
+						return false;
+					}
+				  }
 				}
-
 				page.find('.validate').each(function(){
 					//assign validator to single element
 					validator = $("#register_form").validate({
@@ -122,7 +126,7 @@ lga_wizard = {
 				remote: "Error: The email address you have entered is either invalid or already in use. Please enter a different email address.",
 				email: "The field requires a valid email address"
 				},
-                            cell_phone: "One phone number is required",
+                            cell_phone: "Cell phone required for security verification.",
 			    add1: "This field is required",
                             city: "This field is required",
                             state: "This field is required",
@@ -185,6 +189,7 @@ lga_wizard = {
 
 				if(notValid == true){ return false; }
 			}
+			
 	                        var post = $('#register_form').serializeObject();
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {

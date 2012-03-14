@@ -559,7 +559,7 @@ function in_array(needle, haystack)
                                                 }
                                                 else
                                                 {
-                                                        $patchk = ($compseq[@array_search($complaint_myarray['complaintid'],$pat_row['compid'])])?1:0;
+                                                        $patchk = 1;//($compseq[@array_search($complaint_myarray['complaintid'],$pat_row['complaintid'])])?1:0;
                                                 }	
 					?>
 

@@ -6,7 +6,7 @@ require_once('admin/includes/password.php');
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
-$use_patient_portal = $docr['use_patient_portal'];
+$doc_patient_portal = $docr['use_patient_portal'];
 
 function trigger_letter20($pid) {
   $letterid = '20';
@@ -107,15 +107,17 @@ function trigger_letter3($pid) {
   }
 }
 
-function sendRegEmail($id, $e, $l){
+function sendRegEmail($id, $e, $l, $old_email=''){
     $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
     $q = mysql_query($s);
       $r = mysql_fetch_assoc($q);
-	if($r['recover_hash']==''){
+	if($r['recover_hash']=='' || $e!=$old_email){
                 $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
 	}else{
+		$ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
+                mysql_query($ins_sql);
 		$recover_hash = $r['recover_hash'];
 	}
   $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
@@ -143,7 +145,7 @@ patient@dentalsleepsolutions.com</b></p>
 
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
@@ -154,7 +156,7 @@ patient@dentalsleepsolutions.com</b></p>
 <h2>Save Time - Complete Your Paperwork Online</h2>
 </center>
 <p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tress is good too!</p>
-<center><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></center>
+<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
 </td></tr>
 <tr><td>
 <h3>Need Assistance?</h3>
@@ -178,7 +180,6 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
 
 if($_POST["patientsub"] == 1)
 {
-
 	if($_POST["ed"] != "")
 	{
 		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
@@ -190,7 +191,7 @@ if($_POST["patientsub"] == 1)
 		if($s_r['registration_status']==2){
 			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
 		}elseif(!isset($_POST['sendReg']) && $s_r['registration_status']==1 && trim($_POST['email']) != trim($s_r['email'])){
-			if($use_patient_portal){
+			if($doc_patient_portal && $use_patient_portal){
 			sendRegEmail($_POST['ed'], $_POST['email'], '');
 			}
 		}
@@ -325,10 +326,9 @@ if($_POST["patientsub"] == 1)
 			$ilsql = "UPDATE dental_patients set login='".mysql_real_escape_string($login)."'  WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
 			mysql_query($ilsql);
 		}
-
-		if(isset($_POST['sendReg']) && $use_patient_portal){
+		if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
 		if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-			sendRegEmail($_POST['ed'], $_POST['email'], $login); 
+			sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']); 
 		}else{
 			?><script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
 		}
@@ -527,7 +527,7 @@ mysql_query($s1);
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
-                if(isset($_POST['sendReg'])&& $use_patient_portal){
+                if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
                 if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
                         sendRegEmail($pid, $_POST['email'], $login);
                 }else{
@@ -875,26 +875,13 @@ mysql_query($s1);
     <? }?>
 
 <script type="text/javascript">
-
+var clickedBut;
+$(document).ready(function() {
+$('#patientfrm :submit').click(function() { 
+clickedBut = $(this).attr("name");  
+}); 
+});
 function validate_add_patient(fa){
-var sendEmail = false;
-                                  $.ajax({
-                                        url: "includes/check_send.php",
-                                        type: "post",
-                                        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
-                                        async: false,
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.success){
-							  c = confirm("You have changed the patient's email address. In order to proceed, the patient will be sent an email to allow them to continue to access the Patient Portal.");
-  							if(!c){ sendEmail = true; }
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-if(sendEmail){ return false; }
 p = patientabc(fa);
 var valid = true;
                                   $.ajax({
@@ -914,6 +901,29 @@ var valid = true;
                                         }
                                   });
 if(!valid){ return false; }
+var sendEmail = false;
+var emailConfirm = false;
+                                  $.ajax({
+                                        url: "includes/check_send.php",
+                                        type: "post",
+                                        data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},
+                                        async: false,
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.success){                                                          
+							emailConfirm = true;
+							c = confirm("You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?");
+                                                        if(!c){ sendEmail = true; }
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+if(sendEmail){ return false; }
+if(clickedBut == "sendReg" && !emailConfirm){
+    if(!regabc(fa)){ return false; }
+}
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){
     i2 = validateDate('ins2_dob');
@@ -986,7 +996,6 @@ setTimeout("el.focus()", 0);
 }
 return false;
 
-
 }
 
 </script>
@@ -1041,8 +1050,8 @@ function remove_notification(id){
 					<input type="button" class="button" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;" value="View edits" />
 				<? } ?>
 			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
-			<?php if(($themyarray['registration_status']==1 || $themyarray['registration_status']==0) && $use_patient_portal){  ?>
-			<input type="submit" name="sendReg" onclick="return regabc(this.form)" value="Send Registration Email" class="button" />
+			<?php if(($themyarray['registration_status']==1 || $themyarray['registration_status']==0) && $doc_patient_portal && $use_patient_portal){  ?>
+			<input type="submit" name="sendReg" value="Send Registration Email" class="button" />
 			<?php } ?>
 		</td>
 	</tr>
@@ -1115,7 +1124,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="middlename">Middle <br />Init</label>
                             </span>
 			    <span>
-				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=$email?>" disabled="disabled" />
+				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=($themyarray['registration_status']!=0)?$email:'none'; ?>" disabled="disabled" />
 				<label for"login">Pt Portal Login</label>
 				<span style="color:#933;">
 				  <?php switch($themyarray['registration_status']){
@@ -1123,7 +1132,7 @@ $num_face = mysql_num_rows($p);
 						echo 'Unregistered';
 						break;
 					case 1:
-						echo 'Registration sent';
+						echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
 						break;
 					case 2:
 						echo 'Registered';

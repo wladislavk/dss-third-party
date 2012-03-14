@@ -15,7 +15,7 @@ require_once '../../manage/admin/includes/config.php';
     die();
   }
   if($r['access_code']==''){
-                $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
+                $recover_hash = rand(100000, 999999);//substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
                 $ins_sql = "UPDATE dental_patients set registration_status=1, access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
   }else{

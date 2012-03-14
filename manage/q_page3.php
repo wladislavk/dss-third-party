@@ -339,6 +339,10 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
+$sqldpp = "select * from dental_patients where parent_patientid='".$_GET['pid']."'";
+$mydpp = mysql_query($sqldpp);
+$dpp_row = mysql_fetch_array($mydpp);
+
 $sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
@@ -421,7 +425,9 @@ label {
   float:left;
 }
 </style>
+<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 <link rel="stylesheet" href="css/form.css" type="text/css" />
+<script type="text/javascript" src="script/questionnaire.js" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
@@ -534,6 +540,17 @@ label {
 	<input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
+<?php
+        $patient_sql = "SELECT * FROM dental_q_page3 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
+        $patient_q = mysql_query($patient_sql);
+        $pat_row = mysql_fetch_assoc($patient_q);
+        if(mysql_num_rows($patient_q) == 0){
+                $showEdits = false;
+                //echo "Patient edits.";
+        }else{
+                $showEdits = true;
+        }
+?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 <tr>
                 <td valign="top" colspan="2" class="frmhead">
@@ -548,11 +565,18 @@ label {
                                 Have you been told you should receive pre medication before dental procedures?
 				<input id="premedcheck" name="premedcheck" tabindex="5" type="radio"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('pm_det').style.display='block'" value="1" /> Yes 
 				<input id="premedcheck" name="premedcheck" tabindex="5" type="radio"  <?php if($premedcheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('pm_det').style.display='none'" value="0" /> No 
-                                
+                            <?php                                
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'premedcheck', $dpp_row['premedcheck'], $premedcheck, true, $showEdits);
+                            ?>
+    
                             </span>
                             <span id="pm_det" <?php if($premedcheck == 0){ echo 'style="display:none;"';} ?>>
 				I require pre-medication due to:<br />
                                 <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" ><?=$premeddet;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'premeddet', $dpp_row['premeddet'], $premeddet, true, $showEdits);
+                            ?>
+
                             </span>
                           
                        </div>   
@@ -572,12 +596,19 @@ label {
                             <span>
                                 Do you have any known allergens?
                                 <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='block'" value="1" /> Yes
-                                <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none'" value="0" /> No
+			<input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none'" value="0" /> No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'allergenscheck', $pat_row['allergenscheck'], $allergenscheck, true, $showEdits);
+                            ?>
 
-                            </span>
+		    </span>
                             <span id="a_det" <?php if($allergenscheck == 0){ echo 'style="display:none;"';} ?>>
                             	Please list everything you are allergic to: <br />
                                <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_allergens', $pat_row['other_allergens'], $other_allergens, true, $showEdits);
+                            ?>
+
 			    </span>
                         </span>
                     </div>
@@ -601,12 +632,19 @@ label {
                                 Are you currently taking any medications?
                                 <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='block'" value="1" /> Yes
                                 <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='none'" value="0" /> No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'medicationscheck', $pat_row['medicationscheck'], $medicationscheck, true, $showEdits);
+                            ?>
 
                             </span>
 
                         <span id="m_det" <?php if($medicationscheck == 0){ echo 'style="display:none;"';} ?>>
                             	Please list all medication you are currently taking: <br />
                             <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_medications', $pat_row['other_medications'], $other_medications, true, $showEdits);
+                            ?>
+
                         </span>
 			</span>
                     </div>
@@ -630,12 +668,19 @@ label {
                                 Did you have any other medical diagnoses and surgeries?
                                 <input id="historycheck" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='block'" value="1" /> Yes
                                 <input id="historycheck" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='none'" value="0" /> No
-                        
+                             <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'historycheck', $pat_row['hisorycheck'], $historycheck, true, $showEdits);
+                            ?>
+  
                             </span>
 
                              <span id="h_det" <?php if($historycheck == 0){ echo 'style="display:none;"';} ?>>
                             	List all other medical diagnoses and surgeries from birth until now:<br />
                                 <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_history', $pat_row['other_history'], $other_history, true, $showEdits);
+                            ?>
+
 			     </span>
                         </span>
                     </div>
@@ -672,6 +717,10 @@ label {
                                 	Poor
                                 </option>
                             </select>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'dental_health', $pat_row['dental_health'], $dental_health, true, $showEdits);
+                            ?>
+
 						</span>
 					</div>
 					<script type="text/javascript">
@@ -714,7 +763,15 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="wisdom_extraction" value="No" <? if($wisdom_extraction == 'No') echo " checked";?> />No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction', $pat_row['wisdom_extraction'], $wisdom_extraction, true, $showEdits);
+                            ?>
+
                                                         <span id="wisdom_extraction_extra">Please describe: <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction_extra', $pat_row['wisdom_extraction_extra'], $wisdom_extraction_extra, true, $showEdits);
+                            ?>
+
 						</span>
 					</div>
 					
@@ -726,7 +783,16 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="removable" value="No" <? if($removable == 'No') echo " checked";?> />No
-                                                        <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'removable', $pat_row['removable'], $removable, true, $showEdits);
+                            ?>
+
+                                                        <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'removable_extra', $pat_row['removable_extra'], $removable_extra, true, $showEdits);
+                            ?>
+
+</span>
 						</span>
 					</div>
                                        <div>
@@ -737,7 +803,17 @@ label {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra" name="dentures" value="No" <? if($dentures == 'No') echo " checked";?> />No
-                                                        <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures', $pat_row['dentures'], $dentures, true, $showEdits);
+                            ?>
+
+                                                        <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" />
+
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures_extra', $pat_row['dentures_extra'], $dentures_extra, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 

@@ -7,7 +7,6 @@ include "includes/header.php";
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
 {
-        $exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
 	$feet = $_POST['feet'];
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
@@ -88,7 +87,6 @@ if($_POST['q_page1sub'] == 1)
 	{
 		$ins_sql = " insert into dental_q_page1 set 
 		parent_patientid = '".s_for($_SESSION['pid'])."',
-                exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -121,7 +119,7 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='sleep.php?msg=<?=$msg;?>';
+			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -129,7 +127,6 @@ if($_POST['q_page1sub'] == 1)
 	else
 	{
 		$ed_sql = " update dental_q_page1 set 
-                exam_date = '".s_for($exam_date)."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -159,7 +156,7 @@ if($_POST['q_page1sub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='sleep.php?msg=<?=$msg;?>';
+			window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -187,7 +184,6 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
 $feet = st($myarray['feet']);
 $inches = st($myarray['inches']);
 $weight = st($myarray['weight']);
@@ -266,19 +262,11 @@ if($complaintid <> '')
 	}
 </script>
 
-<form id="q_page1frm" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="q_page1frm" class="q_form" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="q_page1sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
-<input type="hidden" name="goto_p" value="<?=$cur_page?>" />
+<input type="hidden" id="goto_p" name="goto_p" value="sleep.php" />
 <div class="formEl_a">
-<div align="right">
-	<input type="submit" id="save_but" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
-    &nbsp;&nbsp;&nbsp;
-</div>
-	<div class="sepH_b">
-           	<label class="lbl_a">Exam date:</label>
-		<input type="text" id="exam_date" name="exam_date" class="inpt_a" value="<?= ($exam_date!='')?date('m/d/Y', strtotime($exam_date)):date('m/d/Y'); ?>" />
-     	</div>
         	<script type="text/javascript">
 				function cal_bmi()
 				{
@@ -344,9 +332,6 @@ if($complaintid <> '')
 	</div>
 	<div class="sepH_b fifth">
                         	<label for="inches"> 
-                            	&lt; 18.5 is Underweight
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
                                 18.5 - 24.9 is Normal 
                                 <br />
                                 &nbsp;&nbsp;&nbsp;
@@ -481,7 +466,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($energy_level == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($energy_level!='' && $energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
 		    </div>
@@ -506,7 +491,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($snoring_sound == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($snoring_sound!='' && $snoring_sound == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                             <option value="Don't know">Don't know</option>
                                         </select>
@@ -515,7 +500,7 @@ function in_array(needle, haystack)
                 	<label class="lbl_in">How often do you wake up with morning headaches?</label>
                                     	<select name="morning_headaches" class="inpt_in">
                                             <option value=""></option>
-                                            <option value="0" <? if($morning_headaches == '0') echo " selected";?>>
+                                            <option value="0" <? if($morning_headaches != '' && $morning_headaches == '0') echo " selected";?>>
                                                 Everyday
                                             </option>
                                             <option value="1" <? if($morning_headaches == '1') echo " selected";?>>
@@ -539,7 +524,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($wake_night == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($wake_night!='' && $wake_night == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
 		</div>
@@ -564,7 +549,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<16;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($hours_sleep == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($hours_sleep!='' && $hours_sleep == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
 		</div>
@@ -589,7 +574,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($sleep_qual == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($sleep_qual!='' && $sleep_qual == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
 		</div>

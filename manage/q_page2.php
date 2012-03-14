@@ -496,11 +496,11 @@ if($cpap == '')
                             
                             <input type="radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits);
-                            ?>
+		    <?php
+			showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits);
+		    ?>
 
-                        </span>
+		</span>
                    	</div>
                     <div class="cpap_options">
                         <span>
@@ -519,6 +519,10 @@ if($cpap == '')
                    
                                         <div class="cpap_options2">                        <span>
                                                         If currently using CPAP, how many nights / week do you wear it? <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
+                            <?php
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'nights_wear_cpap', $pat_row['nights_wear_cpap'], $nights_wear_cpap, true, $showEdits);
+                            ?>
+
                                                         <br />&nbsp;
                                                 </span>
                                         </div>
@@ -526,6 +530,10 @@ if($cpap == '')
                                         <div class="cpap_options2">
                         <span>
                                                         How many hours each night do you wear it? <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
+				                            <?php
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'percent_night_cpap', $pat_row['percent_night_cpap'], $percent_night_cpap, true, $showEdits);
+                            ?>
+
                                                         <br />&nbsp;
                                                 </span>
                                         </div>
@@ -533,6 +541,10 @@ if($cpap == '')
                    	<div id="cpap_options" class="cpap_options">
                         <span>
 				What are your chief complaints about CPAP?
+                            <?php
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'intolerance', $pat_row['intolerance'], $intolerance, false, $showEdits);
+                            ?>
+
                             <br />
                             
                             <?
@@ -543,12 +555,20 @@ if($cpap == '')
 							{
 							?>
 								<input type="checkbox" id="intolerance" name="intolerance[]" value="<?=st($intolerance_myarray['intoleranceid'])?>" <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
+				<?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
+  								<input type="checkbox" disabled="disabled" <? if(strpos($pat_row['intolerance'],'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
+				<?php } ?>
                                 &nbsp;&nbsp;
                                 <?=st($intolerance_myarray['intolerance']);?><br />
 							<?
 							}
 							?>
-					<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> &nbsp;&nbsp; Other<br />
+					<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> 
+                                <?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
+                                                                <input type="checkbox" disabled="disabled" <? if(strpos($pat_row['intolerance'],'~'.st('0~')) === false) {} else { echo " checked";}?> />
+                                <?php } ?>
+
+&nbsp;&nbsp; Other<br />
                        	</span>
 					</div>
                     <br />
@@ -588,6 +608,9 @@ if($cpap == '')
 
                             <input type="radio" name="dd_wearing" value="No" <? if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
+                            <?php
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits);
+                            ?>
 
 			</span>
 		    </div>
@@ -599,6 +622,9 @@ if($cpap == '')
 
                             <input type="radio" name="dd_prev" value="No" <? if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits);
+                            ?>
 
 			</span>
 		    </div>
@@ -610,6 +636,10 @@ if($cpap == '')
 
                             <input type="radio" name="dd_otc" value="No" <? if($dd_otc == 'No') echo " checked";?> />
                             No
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits);
+                            ?>
+
 			</span>
 		    </div>
 		    <div class="dd_options">
@@ -620,17 +650,29 @@ if($cpap == '')
 
                             <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
                             No
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits);
+                            ?>
+
 			<span>
 		    </div>
 		    <div class="dd_options">
 			<span>
 				Who <input type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
+                            ?>
+
 			</span>
 	 	    </div>
 		    <div class="dd_options">
 			<span>
 				Describe your experience<br />
 				<textarea id="dd_experience" name="dd_experience"><?= $dd_experience; ?></textarea>
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
+                            ?>
+
 			</span>
 		    </div>
 			<script type="text/javascript">
@@ -653,6 +695,10 @@ if($cpap == '')
 
                             <input type="radio" name="surgery" value="No" <? if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
                             No
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits);
+                            ?>
+
 			</span>
 		    </div>
 		    <div class="s_options">
@@ -713,6 +759,10 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 			    Please comment about other therapy attempts and how each impacted your snoring and apnea and sleep quality.
                             <br />
                             <textarea name="other_therapy" class="field text addr tbox" style="width:650px; height:100px;" ><?=$other_therapy;?></textarea>
+                            <?php                                
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
+                            ?>
+
                         </span>
                                                         <script>
                                                                 other_chk1();

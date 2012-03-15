@@ -769,7 +769,7 @@ label {
 
                                                         <span id="wisdom_extraction_extra">Please describe: <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
                             <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction_extra', $pat_row['wisdom_extraction_extra'], $wisdom_extraction_extra, true, $showEdits);
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction_text', $pat_row['wisdom_extraction_text'], $wisdom_extraction_text, true, $showEdits);
                             ?>
 
 						</span>
@@ -789,7 +789,7 @@ label {
 
                                                         <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" />
                             <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'removable_extra', $pat_row['removable_extra'], $removable_extra, true, $showEdits);
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'removable_text', $pat_row['removable_text'], $removable_text, true, $showEdits);
                             ?>
 
 </span>
@@ -810,7 +810,7 @@ label {
                                                         <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" />
 
                             <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures_extra', $pat_row['dentures_extra'], $dentures_extra, true, $showEdits);
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures_text', $pat_row['dentures_text'], $dentures_text, true, $showEdits);
                             ?>
 
 </span>
@@ -826,7 +826,16 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="orthodontics" value="No" <? if($orthodontics == 'No') echo " checked";?>  />No
-                            				<span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" /></span> 
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'orthodontics', $pat_row['orthodontics'], $orthodontics, true, $showEdits);
+                            ?>
+
+                            				<span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'year_completed', $pat_row['year_completed'], $dentures_extra, true, $showEdits);
+                            ?>
+
+			</span> 
 						</span>
 					</div>
 					
@@ -837,7 +846,16 @@ label {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra" name="tmj_cp" value="No" <? if($tmj_cp == 'No') echo " checked";?> />No
-                                                        <span id="tmj_cp_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_cp', $pat_row['tmj_cp'], $tmj_cp, true, $showEdits);
+                            ?>
+
+                                                        <span id="tmj_cp_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_cp_text', $pat_row['tmj_cp_text'], $tmj_cp_text, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 
@@ -848,7 +866,16 @@ label {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
-                                                        <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_pain', $pat_row['tmj_pain'], $tmj_pain, true, $showEdits);
+                            ?>
+
+                                                        <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_pain_text', $pat_row['tmj_pain_text'], $tmj_pain_text, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 
@@ -860,7 +887,16 @@ label {
 							
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="radio" class="extra" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> />No
-							<span id="tmj_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_surgery', $pat_row['tmj_surgery'], $tmj_surgery, true, $showEdits);
+                            ?>
+
+							<span id="tmj_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_surgery_text', $pat_row['tmj_surgery_text'], $tmj_surgery_text, true, $showEdits);
+                            ?>
+
+</span>
 
 						</span>
 					</div>
@@ -870,7 +906,16 @@ label {
                             <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input id="gum_prob" name="gum_prob" type="radio" class="extra" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No
-                                                        <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_prob', $pat_row['gum_prob'], $gum_prob, true, $showEdits);
+                            ?>
+
+                                                        <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_prob_text', $pat_row['gum_prob_text'], $gum_prob_text, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 
@@ -883,7 +928,16 @@ label {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
-                                                        <span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_surgery', $pat_row['gum_surgery'], $gum_surgery, true, $showEdits);
+                            ?>
+
+                                                        <span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_surgery_text', $pat_row['gum_surgery_text'], $gum_surgery_text, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 
@@ -897,7 +951,16 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="drymouth" value="No" <? if($drymouth == 'No') echo " checked";?> />No
-                                                        <span id="drymouth_extra">Please describe: <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" /></span>							
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'drymouth', $pat_row['drymouth'], $drymouth, true, $showEdits);
+                            ?>
+
+                                                        <span id="drymouth_extra">Please describe: <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'drymouth_text', $pat_row['drymouth_text'], $drymouth_text, true, $showEdits);
+                            ?>
+
+</span>							
 						</span>
 					</div>
 					
@@ -908,8 +971,16 @@ label {
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
-                                                        <span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="
-<?= $injury_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'injury', $pat_row['injury'], $injury, true, $showEdits);
+                            ?>
+
+                                                        <span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'injury_text', $pat_row['injury_text'], $injury_text, true, $showEdits);
+                            ?>
+
+</span>
                                                 </span>
                                         </div>
 	
@@ -922,8 +993,15 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="completed_future" value="No" <? if($completed_future == 'No') echo " checked";?> />No
-							
-<span id="completed_future_extra">Please describe: <input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" /></span>
+							                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'completed_future', $pat_row['completed_future'], $completed_future, true, $showEdits);
+                            ?>
+
+<span id="completed_future_extra">Please describe: <input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'future_dental_det', $pat_row['future_dental_det'], $future_dental_det, true, $showEdits);
+                            ?>
+</span>
 						</span>
 					</div>
 					
@@ -935,7 +1013,15 @@ label {
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="radio" class="extra" name="clinch_grind" value="No" <? if($clinch_grind == 'No') echo " checked";?> />No
-							<span id="clinch_grind_extra">Please describe: <input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" /></span>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'clinch_grind', $pat_row['clinch_grind'], $clinch_grind, true, $showEdits);
+                            ?>
+
+							<span id="clinch_grind_extra">Please describe: <input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'clinch_grind_text', $pat_row['clinch_grind_text'], $clinch_grind_text, true, $showEdits);
+                            ?>
+</span>
 						</span>
 					</div>
 
@@ -956,6 +1042,10 @@ label {
 				<label>Have genetic members of your family had Heart Disease?</label>
                                                 <input type="radio" name="family_hd" value="Yes" style="width:10px;" <?= ($family_hd == "Yes")?'checked="checked"':''; ?> /> Yes
 						<input type="radio" name="family_hd" value="No" style="width:10px;" <?= ($family_hd == "No")?'checked="checked"':''; ?> /> No
+					                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'family_hd', $pat_row['family_hd'], $family_hd, true, $showEdits);
+                            ?>
+
 			</span>
 		    </div>
 		    <div>
@@ -963,6 +1053,10 @@ label {
 				<label>High Blood Pressure?</label>
                                                 <input type="radio" name="family_bp" value="Yes" style="width:10px;" <?= ($family_bp == "Yes")?'checked="checked"':''; ?> /> Yes
                                                 <input type="radio" name="family_bp" value="No" style="width:10px;" <?= ($family_bp == "No")?'checked="checked"':''; ?> /> No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'family_bp', $pat_row['family_bp'], $family_bp, true, $showEdits);
+                            ?>
+
 			</span>
 		    </div>
 		    <div>
@@ -970,6 +1064,10 @@ label {
 			     <label>Diabetes?</label>
                                                 <input type="radio" name="family_dia" value="Yes" style="width:10px;" <?= ($family_dia == "Yes")?'checked="checked"':''; ?> /> Yes
                                                 <input type="radio" name="family_dia" value="No" style="width:10px;" <?= ($family_dia == "No")?'checked="checked"':''; ?> /> No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'family_dia', $pat_row['family_dia'], $family_dia, true, $showEdits);
+                            ?>
+
                                         </span>
 		</div>
 		<div>
@@ -977,6 +1075,10 @@ label {
 				<label>Have any genetic members of your family been diagnosed or treated for a sleep disorder?</label>
 				<input type="radio" name="family_sd" value="Yes" style="width:10px;" <?= ($family_sd == "Yes")?'checked="checked"':''; ?> /> Yes
                                 <input type="radio" name="family_sd" value="No" style="width:10px;" <?= ($family_sd == "No")?'checked="checked"':''; ?> /> No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'family_sd', $pat_row['family_sd'], $family_sd, true, $showEdits);
+                            ?>
+
                         </span>
 
     </li>
@@ -1006,6 +1108,10 @@ label {
 
                             <input type="radio" name="alcohol" value="never" class="tbox" style="width:10px;" <? if($alcohol == 'never')  echo " checked";?> />
                             Rarely/Never
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'alcohol', $pat_row['alcohol'], $alcohol, true, $showEdits);
+                            ?>
+
                             <br /><br />
 
                             Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
@@ -1022,6 +1128,10 @@ label {
 
                             <input type="radio" name="sedative" value="never" class="tbox" style="width:10px;" <? if($sedative == 'never')  echo " checked";?> />
                             Rarely/Never
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'sedative', $pat_row['sedative'], $sedative, true, $showEdits);
+                            ?>
+
                             <br /><br />
 
 
@@ -1039,6 +1149,10 @@ label {
 
                             <input type="radio" name="caffeine" value="never" class="tbox" style="width:10px;" <? if($caffeine == 'never')  echo " checked";?> />
                             Rarely/Never
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'caffeine', $pat_row['caffeine'], $caffeine, true, $showEdits);
+                            ?>
+
                             <br /><br />
                             Do you Smoke?
 
@@ -1049,6 +1163,10 @@ label {
 
                             <input type="radio" name="smoke" value="No" class="tbox" style="width:10px;" <? if($smoke == 'No')  echo " checked";?> onclick="hidesmoke();" />
                             No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'smoke', $pat_row['smoke'], $smoke, true, $showEdits);
+                            ?>
+
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <br />
@@ -1056,6 +1174,10 @@ label {
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <div id="smoke">If Yes, number of packs per day
                             <input type="text" name="smoke_packs" value="<?=$smoke_packs?>" class="tbox" style="width:50px;" />
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'smoke_packs', $pat_row['smoke_packs'], $smoke_packs, true, $showEdits);
+                            ?>
+
                             </div>
                             <br /><br />
 
@@ -1068,6 +1190,9 @@ label {
 
                             <input type="radio" name="tobacco" value="No" class="tbox" style="width:10px;" <? if($tobacco == 'No')  echo " checked";?> />
                             No
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'tobacco', $pat_row['tobacco'], $tobacco, true, $showEdits);
+                            ?>
 
                         </span>
                                         </div>
@@ -1076,6 +1201,10 @@ label {
                         <span>
 				Additional Paragraph<br />
                             <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
+                            <?php
+                                showPatientValue('dental_q_page3', $_GET['pid'], 'additional_paragraph', $pat_row['additional_paragraph'], $additional_paragraph, true, $showEdits);
+                            ?>
+
                         </span>
                     </div>
 

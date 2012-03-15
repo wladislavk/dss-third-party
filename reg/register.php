@@ -10,6 +10,7 @@ include 'includes/header.php';
 <script type="text/javascript" src="js/register.js"></script>
 <script type="text/javascript" src="js/patient_dob.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
+<script type="text/javascript" src="js/register_masks.js"></script>
         <script type="text/javascript">
                 $(document).ready(function(){
                                 //lga_fusionCharts.chart_k();
@@ -71,7 +72,7 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a phonemask" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
@@ -221,7 +222,7 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>4.</strong> Spouse/Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
                 </div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a validate" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a validate ssnmask" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
                 </div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>6.</strong> Prefered Method of Contact:</label><select class="inpt_a validate" name="preferredcontact">

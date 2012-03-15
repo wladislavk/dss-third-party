@@ -300,7 +300,7 @@ if($_POST["patientsub"] == 1)
 		where 
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
+	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
 		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
 		$lq = mysql_query($lsql);
 		$l = mysql_fetch_assoc($lq);
@@ -1127,7 +1127,9 @@ $num_face = mysql_num_rows($p);
 				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=($themyarray['registration_status']!=0)?$email:'none'; ?>" disabled="disabled" />
 				<label for"login">Pt Portal Login</label>
 				<span style="color:#933;">
-				  <?php switch($themyarray['registration_status']){
+				  <?php 
+				    if($themyarray['use_patient_portal']==1){
+					switch($themyarray['registration_status']){
 					case 0:
 						echo 'Unregistered';
 						break;
@@ -1138,6 +1140,9 @@ $num_face = mysql_num_rows($p);
 						echo 'Registered';
 						break;
 					}
+				    }else{
+						echo 'Patient Portal In-active';
+				    }
 				  ?>
 				</span>
 			    </span>

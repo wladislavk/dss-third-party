@@ -19,6 +19,7 @@
     <script type="text/javascript" src="lib/jquery-validation/jquery.validate.js"></script>
     <script type="text/javascript" src="js/lagu.js"></script>
     <script type="text/javascript" src="lib/harvesthq-chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript">
 	lo_timer = '';
 function set_interval()

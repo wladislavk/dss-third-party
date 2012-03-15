@@ -75,10 +75,10 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a phonemask" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
+                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a workphonemask" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a validate" type="text" id="cell_phone" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a validate phonemask" type="text" id="cell_phone" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
                 </div>
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>8.</strong> Address 1:</label><input class="inpt_a validate" type="text" name="add1" value="<?= $p['add1']; ?>" />

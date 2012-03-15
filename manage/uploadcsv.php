@@ -119,7 +119,13 @@ if($_FILES['csv']['error'] == 0){
                         case 'email':
                                 if($field!=''){
 					$email = $data[$id];
-                                        $s .= $field . " = '" .$data[$id]."', ";
+				        if(checkEmail($email, 0)>0){
+                            			array_push($error_array, $data[1]." ".$data[0]." - ".$email);
+                            			$error_count++;
+
+                			}else{
+                                        	$s .= $field . " = '" .$data[$id]."', ";
+					}
                                 }
                                 break;
 
@@ -132,10 +138,6 @@ if($_FILES['csv']['error'] == 0){
 		}
 			$s .= " docid = '".$_SESSION[docid]."'";
 			//echo $s;
-		if(checkEmail($email, 0)>0){
-                            array_push($error_array, $data[1]." ".$data[0]." - ".$email);
-			    $error_count++;
-		}else{	
 			mysql_query($s);
 			$pid = mysql_insert_id();
 			if($copyreqdate=='' && $last_visit!=''){
@@ -167,20 +169,25 @@ if($_FILES['csv']['error'] == 0){
 
                 // inc the row
                		$row++;
-		}
+		
 		}else{
 		  $row++;
 		}
             }
             fclose($handle);
-		echo "<h4>Inserted ".($row-1)." rows.</h4>";
+		$msg = "<h4>Inserted ".($row-1)." rows.</h4>";
 		if($error_count){
-		  ?><p><?= $error_count; ?> errors. Emails are already assigned to existing patients.</p><ul><?php
+		  $msg .= "<p>".$error_count." errors. Imported emails already assigned to existing patients. The following email addresses will not be imported:</p><ul>";
 		  foreach($error_array as $e){
-		    ?><li><?= $e; ?></li><?php
+		    $msg .= "<li>".$e."</li>";
 		  }
-		  ?></ul><?php
+		  $msg .= "</ul>";
 		}
+		?>
+		<script type="text/javascript">
+			window.location = "pending_patient.php?msg=<?= $msg; ?>";
+		</script>
+		<?php
         }
     }
 }

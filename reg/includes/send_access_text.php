@@ -36,7 +36,7 @@ require_once '../../manage/admin/includes/config.php';
               $r['cell_phone'],
 
               // the sms body 
-              "Your access code is ".$recover_hash
+              "Your Dental Sleep Solutions access code is ".$recover_hash
             );
 		if(strtotime($r['text_date'])<(time()-3600) || $r['text_num']==0){
 		  mysql_query("UPDATE dental_patients SET text_num=1, text_date = NOW() WHERE patientid='".$r['patientid']."'");

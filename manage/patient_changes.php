@@ -97,12 +97,24 @@ $docsql = $patsql = "UPDATE dental_patients SET ";
 foreach($fields as $field => $label){
   if($_POST['accepted_'.$field]=='doc'){
   	if($docchange){ $docsql .= ", "; }
-  	$docsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+	if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
+                $docsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field]))."'";
+	}elseif($field=='ssn'){
+                $docsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field], false))."'";
+        }else{
+  		$docsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+	}
 	$docchange = true;
   }elseif($_POST['accepted_'.$field]=='pat'){
 	if($field == "email"){ sendUpdatedEmail($_POST['patientid'], $_POST['pat_email'], $_POST['doc_email']); }
         if($patchange){ $patsql .= ", "; }
-        $patsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+        if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
+                $patsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field]))."'";
+        }elseif($field=='ssn'){
+                $patsql .= $field . " = '" . mysql_real_escape_string(num($_POST['value_'.$field], false))."'";
+        }else{
+         	$patsql .= $field . " = '" . mysql_real_escape_string($_POST['value_'.$field])."'";
+	}
 	$patchange = true;
   }elseif($_POST['accepted_'.$field]!='none'){
     $completed = false;

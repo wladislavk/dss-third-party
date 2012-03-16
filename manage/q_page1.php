@@ -451,13 +451,17 @@ if($complaintid <> '')
 	<td valign="top" class="frmhead">
 	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
+				if($pat_row['ess']!=''){
+                                  showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
+				}
                             ?>
 
 	  <br />
 	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
                             <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
+				if($pat_row['tss']!=''){
+                                  showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
+				}
                             ?>
 
 	</td>

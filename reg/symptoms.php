@@ -330,16 +330,6 @@ if($complaintid <> '')
 		<label class="lbl_a">BMI</label>
                 <input id="bmi" name="bmi" type="text" class="inpt_a" value="<?=$bmi?>" tabindex="8" maxlength="255" readonly="readonly" />
 	</div>
-	<div class="sepH_b fifth">
-                        	<label for="inches"> 
-                                18.5 - 24.9 is Normal 
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
-                                25 - 29.9 is Overweight
-                                <br />
-                                &gt; 30 is Obese
-                            </label>
-         </div>
 	<div class="sepH_b clear">
                     <label class="lbl_a">
                         What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?

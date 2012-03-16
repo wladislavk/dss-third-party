@@ -1,8 +1,12 @@
 <?php include '../manage/admin/includes/config.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
-$s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['id'])."' AND
-	recover_hash='".mysql_real_escape_string($_GET['hash'])."'";
+$s = "SELECT * FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
+        WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
+                dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
+                dp.use_patient_portal='1' AND
+                du.use_patient_portal='1'";
+
 $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);

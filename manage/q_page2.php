@@ -436,13 +436,13 @@ if($cpap == '')
                         <span>
 							Have you had a sleep study
 							
-							<input type="radio" id="polysomnographic_yes" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
+							<input type="radio" class="polysomnographic_radio" id="polysomnographic_yes" name="polysomnographic" value="1" <? if($polysomnographic == '1') echo " checked";?> onclick="chk_poly()" />
                             Yes
                             
-                            <input type="radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
+                            <input type="radio" class="polysomnographic_radio" name="polysomnographic" value="0" <? if($polysomnographic == '0') echo " checked";?> onclick="chk_poly()"  />
                             No
 						                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'polysomnographic', $pat_row['polysomnographic'], $polysomnographic, true, $showEdits, 'radio');
                             ?>
 	
                         	<!--<input type="checkbox" name="polysomnographic" value="1" class="tbox" style="width:10px;"  onclick="chk_poly()" <? if($polysomnographic == 1) echo " checked";?> />
@@ -491,13 +491,13 @@ if($cpap == '')
                     <div>
                         <span>
                         	Have you tried CPAP?
-                            <input type="radio" name="cpap" value="Yes" <? if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" class="cpap_radio" name="cpap" value="Yes" <? if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
                             Yes
                             
-                            <input type="radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" class="cpap_radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
 		    <?php
-			showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits);
+			showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
 		    ?>
 
 		</span>
@@ -505,12 +505,12 @@ if($cpap == '')
                     <div class="cpap_options">
                         <span>
                                 Are you currently using CPAP?
-                            <input type="radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
+                            <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
 
-                            <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
                             <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'cur_cpap', $pat_row['cur_cpap'], $cur_cpap, true, $showEdits, 'radio');
                             ?>
 
                         </span>
@@ -603,13 +603,13 @@ if($cpap == '')
                     <div>
 			<span>
 				Are you currently wearing a dental device?
-                            <input type="radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
+                            <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
-                            <input type="radio" name="dd_wearing" value="No" <? if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
+                            <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="No" <? if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
                             <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
                             ?>
 
 			</span>
@@ -617,13 +617,13 @@ if($cpap == '')
 		    <div>
 			<span>
  				Have you previously tried a dental device?	
-                            <input type="radio" name="dd_prev" value="Yes" <? if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
+                            <input type="radio" class="dd_prev_radio" name="dd_prev" value="Yes" <? if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
-                            <input type="radio" name="dd_prev" value="No" <? if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
+                            <input type="radio" class="dd_prev_radio" name="dd_prev" value="No" <? if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
                             <?php                                
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
                             ?>
 
 			</span>
@@ -631,13 +631,13 @@ if($cpap == '')
 		    <div class="dd_options">
 			<span>
 				Was it over-the-counter (OTC)? 	
-                            <input type="radio" name="dd_otc" value="Yes" <? if($dd_otc == 'Yes') echo " checked";?> />
+                            <input type="radio" class="dd_otc_radio" name="dd_otc" value="Yes" <? if($dd_otc == 'Yes') echo " checked";?> />
                             Yes
 
-                            <input type="radio" name="dd_otc" value="No" <? if($dd_otc == 'No') echo " checked";?> />
+                            <input type="radio" class="dd_otc_radio" name="dd_otc" value="No" <? if($dd_otc == 'No') echo " checked";?> />
                             No
                             <?php                                
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_otc', $pat_row['dd_otc'], $dd_otc, true, $showEdits, 'radio');
                             ?>
 
 			</span>
@@ -645,13 +645,13 @@ if($cpap == '')
 		    <div class="dd_options">
 			<span>
 				Was it fabricated by a dentist?
-                            <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> />
+                            <input type="radio" class="dd_fab_radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> />
                             Yes
 
-                            <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
+                            <input type="radio" class="dd_fab_radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
                             No
                             <?php                                
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
                             ?>
 
 			<span>
@@ -690,13 +690,13 @@ if($cpap == '')
                     <div>
                         <span>
 				Have you had surgery for snoring or sleep apnea?
-                            <input type="radio" name="surgery" value="Yes" <? if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
+                            <input type="radio" class="surgery_radio" name="surgery" value="Yes" <? if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
                             Yes
 
-                            <input type="radio" name="surgery" value="No" <? if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
+                            <input type="radio" class="surgery_radio" name="surgery" value="No" <? if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
                             No
                             <?php                                
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits);
+                                showPatientValue('dental_q_page2', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
                             ?>
 
 			</span>

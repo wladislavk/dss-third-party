@@ -3,6 +3,7 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 require_once('includes/checkemail.php');
+require_once('includes/general_functions.php');
 ?>
 <div style="width:90%; margin-left:5%;">
 <?php
@@ -115,7 +116,12 @@ if($_FILES['csv']['error'] == 0){
                                   $last_visit = $data[$id];
                                 }
                                 break;
-
+                        case 'work_phone':
+			case 'home_phone':
+                                if($field!=''){
+					$s .= $field . " = '" .num($data[$id])."', ";
+                                }
+                                break;
                         case 'email':
                                 if($field!=''){
 					$email = $data[$id];

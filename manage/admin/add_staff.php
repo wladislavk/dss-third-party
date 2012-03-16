@@ -35,7 +35,7 @@ if($_POST["staffsub"] == 1)
 		if($_POST["ed"] != "")
 		{
                         $p = ($_POST['producer']==1)?1:0;
-			$ed_sql = "update dental_users set user_access=1, docid='".$_GET['docid']."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."', producer=".$p." where userid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_users set user_access=1, docid='".$_GET['docid']."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p." where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -54,7 +54,7 @@ if($_POST["staffsub"] == 1)
                         $password = gen_password($_POST['password'], $salt);
 
                         $p = ($_POST['producer']==1)?1:0;
-			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".$password."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for($_POST["phone"])."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', producer=".$p;
+			$ins_sql = "insert into dental_users set user_access=1, docid='".$_GET['docid']."', username = '".s_for($_POST["username"])."', password = '".$password."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', producer=".$p;
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";

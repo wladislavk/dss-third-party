@@ -113,7 +113,7 @@ function sendRegEmail($id, $e, $l, $old_email=''){
       $r = mysql_fetch_assoc($q);
 	if($r['recover_hash']=='' || $e!=$old_email){
                 $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
 	}else{
 		$ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
@@ -212,10 +212,10 @@ if($_POST["patientsub"] == 1)
 		dob = '".s_for($_POST["dob"])."', 
 		gender = '".s_for($_POST["gender"])."', 
 		marital_status = '".s_for($_POST["marital_status"])."', 
-		ssn = '".s_for($_POST["ssn"])."', 
-		home_phone = '".s_for($_POST["home_phone"])."', 
-		work_phone = '".s_for($_POST["work_phone"])."', 
-		cell_phone = '".s_for($_POST["cell_phone"])."', 
+		ssn = '".s_for(num($_POST["ssn"], false))."', 
+		home_phone = '".s_for(num($_POST["home_phone"]))."', 
+		work_phone = '".s_for(num($_POST["work_phone"]))."', 
+		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
 		best_time = '".s_for($_POST["best_time"])."',
 		best_number = '".s_for($_POST["best_number"])."',
 		email = '".s_for($_POST["email"])."', 
@@ -267,8 +267,8 @@ if($_POST["patientsub"] == 1)
 		emp_city = '".s_for($_POST["emp_city"])."', 
 		emp_state = '".s_for($_POST["emp_state"])."', 
 		emp_zip = '".s_for($_POST["emp_zip"])."', 
-		emp_phone = '".s_for($_POST["emp_phone"])."', 
-		emp_fax = '".s_for($_POST["emp_fax"])."', 
+		emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
+		emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
 		plan_name = '".s_for($_POST["plan_name"])."', 
 		group_number = '".s_for($_POST["group_number"])."', 
 		ins_type = '".s_for($_POST["ins_type"])."', 
@@ -286,10 +286,10 @@ if($_POST["patientsub"] == 1)
     docmdother = '".s_for($_POST["docmdother"])."',
     emergency_name = '".s_for($_POST["emergency_name"])."',
     emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
-    emergency_number = '".s_for($_POST["emergency_number"])."',
+    emergency_number = '".s_for(num($_POST["emergency_number"]))."',
     docent = '".s_for($_POST["docent"])."',
 		emergency_name = '".s_for($_POST["emergency_name"])."',
-		emergency_number = '".s_for($_POST["emergency_number"])."',
+		emergency_number = '".s_for(num($_POST["emergency_number"]))."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
 		referred_notes = '".s_for($_POST["referred_notes"])."',
@@ -437,10 +437,10 @@ mysql_query($s1);
 		dob = '".s_for($_POST["dob"])."', 
 		gender = '".s_for($_POST["gender"])."', 
 		marital_status = '".s_for($_POST["marital_status"])."', 
-		ssn = '".s_for($_POST["ssn"])."', 
-		home_phone = '".s_for($_POST["home_phone"])."', 
-		work_phone = '".s_for($_POST["work_phone"])."', 
-		cell_phone = '".s_for($_POST["cell_phone"])."', 
+		ssn = '".s_for(num($_POST["ssn"], false))."', 
+		home_phone = '".s_for(num($_POST["home_phone"]))."', 
+		work_phone = '".s_for(num($_POST["work_phone"]))."', 
+		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
                 best_time = '".s_for($_POST["best_time"])."',
                 best_number = '".s_for($_POST["best_number"])."',
 		email = '".s_for($_POST["email"])."', 
@@ -492,8 +492,8 @@ mysql_query($s1);
 		emp_city = '".s_for($_POST["emp_city"])."', 
 		emp_state = '".s_for($_POST["emp_state"])."', 
 		emp_zip = '".s_for($_POST["emp_zip"])."', 
-		emp_phone = '".s_for($_POST["emp_phone"])."', 
-		emp_fax = '".s_for($_POST["emp_fax"])."', 
+		emp_phone = '".s_for(num($_POST["emp_phone"]))."', 
+		emp_fax = '".s_for(num($_POST["emp_fax"]))."', 
 		plan_name = '".s_for($_POST["plan_name"])."', 
 		group_number = '".s_for($_POST["group_number"])."', 
 		ins_type = '".s_for($_POST["ins_type"])."', 
@@ -510,7 +510,7 @@ mysql_query($s1);
 		partner_name = '".s_for($_POST["partner_name"])."', 
 		emergency_name = '".s_for($_POST["emergency_name"])."',
     emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
-		emergency_number = '".s_for($_POST["emergency_number"])."',
+		emergency_number = '".s_for(num($_POST["emergency_number"]))."',
 		referred_source = '".s_for($_POST["referred_source"])."',
 		referred_by = '".s_for($_POST["referred_by"])."',
 		referred_notes = '".s_for($_POST["referred_notes"])."',
@@ -1006,7 +1006,7 @@ $notifications = find_patient_notifications($_GET['pid']);
 foreach($notifications AS $not){
 ?>
 <div id="not_<?= $not['id']; ?>" class="warning <?= $not['notification_type']; ?>">
-<span><?= $not['notification']; ?></span>
+<span><?= $not['notification']; ?> <?= ($not['notification_date'])?"- ".date('m/d/Y h:i a', strtotime($not['notification_date'])):''; ?></span>
 <a href="#" class="close_but" onclick="remove_notification('<?= $not['id']; ?>');return false;">X</a>
 </div>
 <?php
@@ -2043,6 +2043,7 @@ function updatePPAlert(){
   }
 }
 </script>
+<?php if($doc_patient_portal){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Portal Status
@@ -2052,11 +2053,12 @@ function updatePPAlert(){
             <td valign="top" class="frmdata">
                 <select name="use_patient_portal" class="tbox" >
                         <option value="1" <? if($use_patient_portal == 1) echo " selected";?>>Active</option>
-                        <option value="0" <? if($use_patient_portal == 0) echo " selected";?>>In-Active</option>
+                        <option value="0" <? if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
                 </select>
                 <br />&nbsp;
             </td>
         </tr>
+<?php } ?>
        <tr>
        <td valign="top">
 				<?php

@@ -142,15 +142,21 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
 
 
 
-function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show){
+function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){
   if($pv != $fv && $show){
 	?>
 	<span id="patient_<?= $f; ?>" class="patient_change">
 		<?php if($showValues){ ?>
-			> <?= $pv; ?>
+		   <?php if($type=="radio" && $pv=='0'){ ?>
+			> No
+		   <?php }elseif($type=="radio" && $pv=='1'){ ?>
+			> Yes
+		   <?php }else{ ?>
+			 > <?= $pv; ?>
+		   <?php } ?>
 		<?php } ?>
-                <a href="#" title="Reject" class="reject" onclick="updateQuestionnaire('<?= $table; ?>', '<?= $pid; ?>', '<?= $f; ?>', '<?= $fv; ?>'); return false;"></a>
-		<a href="#" title="Accept" class="accept" onclick="updateQuestionnaire('<?= $table; ?>', '<?= $pid; ?>', '<?= $f; ?>', '<?= $pv; ?>'); return false;"></a>
+                <a href="#" title="Reject" class="reject" onclick="updateQuestionnaire('<?= $table; ?>', '<?= $pid; ?>', '<?= $f; ?>', '<?= $fv; ?>', '<?= $type; ?>'); return false;"></a>
+		<a href="#" title="Accept" class="accept" onclick="updateQuestionnaire('<?= $table; ?>', '<?= $pid; ?>', '<?= $f; ?>', '<?= $pv; ?>', '<?= $type; ?>'); return false;"></a>
 	</span>
 	<script type="text/javascript">
 		$('#<?= $f; ?>').addClass('edits');
@@ -158,5 +164,15 @@ function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show)
 	<?php
   }
 }
+
+
+function num($n, $phone=true){
+$n = preg_replace('/\D/', '', $n);
+if(!$phone){return $n; }
+$pattern = '/([1]*)(.*)/';
+preg_match($pattern, $n, $matches);
+return $matches[2];
+}
+
 
 ?>

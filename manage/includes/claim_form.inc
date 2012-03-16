@@ -107,11 +107,11 @@ if ($_POST['insurancesub'] == 1) {
 	$insured_city = $_POST['insured_city'];
 	$insured_state = $_POST['insured_state'];
 	$patient_zip = $_POST['patient_zip'];
-	$patient_phone_code = $_POST['patient_phone_code'];
-	$patient_phone = $_POST['patient_phone'];
+	$patient_phone_code = num($_POST['patient_phone_code']);
+	$patient_phone = num($_POST['patient_phone'], false);
 	$insured_zip = $_POST['insured_zip'];
-	$insured_phone_code = $_POST['insured_phone_code'];
-	$insured_phone = $_POST['insured_phone'];
+	$insured_phone_code = num($_POST['insured_phone_code']);
+	$insured_phone = num($_POST['insured_phone'], false);
 	$other_insured_firstname = $_POST['other_insured_firstname'];
 	$other_insured_lastname = $_POST['other_insured_lastname'];
 	$other_insured_middle = $_POST['other_insured_middle'];
@@ -250,7 +250,7 @@ if ($_POST['insurancesub'] == 1) {
 	$epsdt_family_plan6 = $_POST['epsdt_family_plan6'];
 	$id_qua6 = $_POST['id_qua6'];
 	$rendering_provider_id6 = $_POST['rendering_provider_id6'];
-	$federal_tax_id_number = $_POST['federal_tax_id_number'];
+	$federal_tax_id_number = num($_POST['federal_tax_id_number'], false);
 	$ssn = ($_POST['ssnein']=="ssn")?'1':'';
 	$ein = ($_POST['ssnein']=="ein")?'1':'';
 	$patient_account_no = $_POST['patient_account_no'];

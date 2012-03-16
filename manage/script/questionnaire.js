@@ -1,4 +1,4 @@
-function updateQuestionnaire(table, pid, field, val){
+function updateQuestionnaire(table, pid, field, val, type){
   $.ajax({
     url: 'includes/updateQuestionnaire.php',
     type: 'post',
@@ -6,7 +6,11 @@ function updateQuestionnaire(table, pid, field, val){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){
-	  $('#'+field).val(val);
+	  if(type=='text'){
+	    $('#'+field).val(val);
+	  }else if(type=="radio"){
+	    $('.'+field+'_radio:radio[value='+val+']').attr("checked", "checked");
+	  }
 	  $('#'+field).removeClass('edits');
 	  $('#patient_'+field).html('Updated');
 	  $('#patient_'+field).delay(2000).hide(1000);	

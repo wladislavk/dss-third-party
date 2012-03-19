@@ -62,7 +62,7 @@ $sql = "SELECT "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
-     . "  dif.filename as eob, " 
+     //. "  dif.filename as eob, " 
      . "  CASE claim.status 
 		WHEN ".DSS_CLAIM_PENDING." THEN 1
                 WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
@@ -79,8 +79,9 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
-     . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+    
+// . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
@@ -260,7 +261,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                                 Edit Secondary
                                         </a><br />
 					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>
-                                <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT){ ?>
+                                <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
                                     <a href="<?= $secondary_link; ?>" class="editlink" title="EDIT">
                                                 View Secondary
                                         </a><br />
@@ -268,8 +269,11 @@ $my=mysql_query($sql) or die(mysql_error());
                                 <?php }else{ ?>
 					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View</a>
 				<?php } ?>
-				<?php if($myarray['eob']!=''){ ?>
-						<br /><a href="../q_file/<?= $myarray['eob']; ?>" class="editlink" title="EDIT">View EOB</a>
+				<?php 
+					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+					$eobq = mysql_query($eobsql);
+					while($eobr = mysql_fetch_assoc($eobq)){
+						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" class="editlink" title="EDIT">View <?= $eobr['claimtype']; ?> EOB</a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";

@@ -65,6 +65,8 @@ $sql = "SELECT "
      . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
      . " WHERE preauth.status = " . DSS_PREAUTH_PENDING;

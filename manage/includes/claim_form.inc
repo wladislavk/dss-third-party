@@ -2506,9 +2506,13 @@ if ($is_new_claim) {
 			</div>
 			-->
 			<?php }else{ ?>
-                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
+        <?php if (!$is_sent) { ?>
+          <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
+        <?php } ?>
+
 			<?php } ?>
                                 <?php } ?>
 </form>

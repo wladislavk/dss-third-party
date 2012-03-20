@@ -95,6 +95,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
 	  $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
           $new_status = DSS_CLAIM_SEC_SENT;
         }else{
+	  $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
           $new_status = DSS_CLAIM_SEC_PENDING;
         }
 	          $secsql = "UPDATE dental_insurance SET 
@@ -103,9 +104,8 @@ $image_sql = "INSERT INTO dental_insurance_file (
                                 JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid 
                         WHERE dl.primary_claim_id='".$_POST['claimid']."' 
                                 AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'),
-                balance_due = CAST(REPLACE(total_charge,',','')-amount_paid) AS DECIMAL(6,2))
+                balance_due = CAST((REPLACE(total_charge,',','')-amount_paid) AS DECIMAL(6,2))
                 WHERE insuranceid='".$_POST['claimid']."'";
-
 
       }else{
         $new_status = DSS_CLAIM_PAID_INSURANCE;
@@ -214,10 +214,12 @@ $paysql = "SELECT SUM(lp.amount) as payment
 $payq = mysql_query($paysql);
 $payr = mysql_fetch_assoc($payq);
 if($payr['payment']>=$claim['amount_due']){
+  $new_status = DSS_CLAIM_PAID_INSURANCE;
+  $msg = 'Payment Successfully Added';
   $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x); 
 }
-  mysql($secsql);
+  mysql_query($secsql);
 }
 
 

@@ -114,7 +114,7 @@ $sql = "select
 		dif.adddate,
 		dif.adddate,
 		'EOB',
-		CONCAT('EOB - ', dif.claimtype),
+		CONCAT('EOB - ', dif.claimtype, ' Insurance'),
 		'',
 		'',
 		di.status,
@@ -361,7 +361,7 @@ return s;
                                 </td>
 
 				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
-                	<?=st($myarray["description"]);?>
+                	<?=st(ucWords($myarray["description"]));?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
 

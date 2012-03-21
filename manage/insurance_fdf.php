@@ -649,10 +649,10 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(0) >>
-  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(00) >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
-  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0).") >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents($amount_paid-floor($amount_paid)).") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0).") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($balance_due-floor($balance_due)).") >>
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($userinfo['phone'], true).") >>
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>

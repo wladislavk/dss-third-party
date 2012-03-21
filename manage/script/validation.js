@@ -295,6 +295,10 @@ function regabc(fa){
 	return confirm('You are about to send the patient an email. Are you sure you want to continue?');
 }
 
+function remabc(fa){
+  	return confirm('You are about to send the patient an email. Are you sure you want to continue?');
+}
+
 function sendEmail(fa){
 
   return true;

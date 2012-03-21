@@ -1,4 +1,3 @@
-  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script src="/manage/3rdParty/JSCal/src/js/jscal2.js"></script>
     <script src="/manage/3rdParty/JSCal/src/js/lang/en.js"></script>
     <link rel="stylesheet" type="text/css" href="/manage/3rdParty/JSCal/src/css/jscal2.css" />

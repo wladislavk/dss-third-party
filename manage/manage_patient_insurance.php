@@ -164,7 +164,7 @@ $my=mysql_query($sql) or die(mysql_error());
                         <a href="manage_patient_insurance.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
                 </td>
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
-                        <a href="manage_patient_insurance.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Doctors</a>
+                        <a href="manage_patient_insurance.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Insurance</a>
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -197,7 +197,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= st($myarray["zip"]); ?>
 				</td>
                                 <td valign="top">
-					<?= st($myarray["phone"]); ?>
+					<span class="phonemask"><?= st($myarray["phone"]); ?></span>
                                 </td>
 				<td valign="top">
 					<a href="#" onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>

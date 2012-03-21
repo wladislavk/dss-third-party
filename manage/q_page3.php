@@ -666,16 +666,15 @@ label {
                         <span>
 			    <span>
                                 Please list all medical diagnoses and surgeries from birth until now (for example: heart attack, high blood pressure, asthma, stroke, hip replacement, HIV, diabetes, etc):
-                                <input id="historycheck" class="history_check_radio" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='block'" value="1" /> Yes
+    <!--                            <input id="historycheck" class="history_check_radio" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='block'" value="1" /> Yes
                                 <input id="historycheck" class="history_check_radio" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='none'" value="0" /> No
                              <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'historycheck', $pat_row['hisorycheck'], $historycheck, true, $showEdits, 'radio');
                             ?>
-  
+ --> 
                             </span>
 
-                             <span id="h_det" <?php if($historycheck == 0){ echo 'style="display:none;"';} ?>>
-                            	List all other medical diagnoses and surgeries from birth until now:<br />
+                             <span id="h_det" >
                                 <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'other_history', $pat_row['other_history'], $other_history, true, $showEdits);

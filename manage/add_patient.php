@@ -55,6 +55,9 @@ updateNumber2('s_m_ins_phone');
   }
 </script>
 <?php
+  /*=======================================================
+	TRIGGERING LETTERS
+  =======================================================*/
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
     $letter1id = "1";
@@ -107,13 +110,18 @@ function trigger_letter3($pid) {
   }
 }
 
+/*///////////////////////////
+// sendRegEmail
+//
+// Sends registration email to patient
+*/
 function sendRegEmail($id, $e, $l, $old_email=''){
     $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
     $q = mysql_query($s);
       $r = mysql_fetch_assoc($q);
 	if($r['recover_hash']=='' || $e!=$old_email){
                 $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set text_num=0, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
 	}else{
 		$ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
@@ -124,24 +132,6 @@ function sendRegEmail($id, $e, $l, $old_email=''){
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['phone'];
-/*  $m = "<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your New Account - A new patient account has been created for you</h2>
-<p>Please click the following link to activate your account.</p>
-<p><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
-<tr><td>
-<h3>Didn't request this change or need assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
-</table>
-</center></body></html>
-";
-*/
 
   $m = "<html><body><center>
 <table width='600'>
@@ -155,7 +145,7 @@ patient@dentalsleepsolutions.com</b></p>
 <center>
 <h2>Save Time - Complete Your Paperwork Online</h2>
 </center>
-<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tress is good too!</p>
+<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving trees is good too!</p>
 <center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
 </td></tr>
 <tr><td>
@@ -178,9 +168,62 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                 mail($e, $subject, $m, $headers);
 }
 
+/*///////////////////////////
+// sendRemEmail
+//
+// Sends reminder email to patient
+*/
+function sendRemEmail($id, $e){
+  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
+  $uq = mysql_query($usql);
+  $ur = mysql_fetch_assoc($uq);
+  $n = $ur['phone'];
+  $m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td width='400'>
+<h2>Your New Account</h2>
+<p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
+<p><b>Email:</b> ".$e."</p>
+</td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td colspan='2'>
+<center>
+<h2>Save Time - Complete Your Paperwork Online</h2>
+</center>
+<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving
+ trees is good too!</p>
+<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php?email=".str_replace('+', '%2B', $e)."'>Click Here to Complete Your Forms Online</a></h3></center>
+</td></tr>
+<tr><td>
+<h3>Need Assistance?</h3>
+<p><b>Contact us at ".$n." or at<br>
+patient@dentalsleepsolutions.com</b></p>
+</td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+</table>
+</center></body></html>
+";
+
+
+$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Content-type: text/html' ."\r\n" .
+                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "Dental Sleep Solutions Registration";
+
+                mail($e, $subject, $m, $headers);
+}
+
+
+
+/*==========================================
+  	FORM SUBMISSION
+==========================================*/
 if($_POST["patientsub"] == 1)
 {
-	if($_POST["ed"] != "")
+	$use_patient_portal = $_POST['use_patient_portal'];
+	if($_POST["ed"] != "") //existing patient (update)
 	{
 		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
@@ -188,11 +231,13 @@ if($_POST["patientsub"] == 1)
 		$s_r = mysql_fetch_assoc($s_q);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
-		if($s_r['registration_status']==2){
+		if($s_r['registration_status']==2 && $_POST['email'] != $s_r['email']){ //if registered attempt to send update email
 			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
+		}elseif(isset($_POST['sendRem'])){ 
+			  sendRemEmail($_POST['ed'], $_POST['email']); //send reminder email
 		}elseif(!isset($_POST['sendReg']) && $s_r['registration_status']==1 && trim($_POST['email']) != trim($s_r['email'])){
 			if($doc_patient_portal && $use_patient_portal){
-			sendRegEmail($_POST['ed'], $_POST['email'], '');
+			  sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered 
 			}
 		}
 		$ed_sql = "update dental_patients 
@@ -923,6 +968,8 @@ var emailConfirm = false;
 if(sendEmail){ return false; }
 if(clickedBut == "sendReg" && !emailConfirm){
     if(!regabc(fa)){ return false; }
+}else if(clickedBut == "sendRem" && !emailConfirm){
+    if(!remabc(fa)){ return false; }
 }
 if(p){
   if(document.getElementById('s_m_dss_file_yes').checked){
@@ -1050,9 +1097,16 @@ function remove_notification(id){
 					<input type="button" class="button" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;" value="View edits" />
 				<? } ?>
 			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
-			<?php if(($themyarray['registration_status']==1 || $themyarray['registration_status']==0) && $doc_patient_portal && $use_patient_portal){  ?>
-			<input type="submit" name="sendReg" value="Send Registration Email" class="button" />
-			<?php } ?>
+			<?php 
+			if($doc_patient_portal && $use_patient_portal){
+			  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
+		 	    <input type="submit" name="sendReg" value="Send Registration Email" class="button" />
+			<?php 
+			  }else{ ?>
+			    <input type="submit" name="sendRem" value="Send Reminder Email" class="button" />
+			<?php
+			  }	
+			} ?>
 		</td>
 	</tr>
 	<tr>
@@ -1149,17 +1203,17 @@ $num_face = mysql_num_rows($p);
                        </div>   
                         <div>
                             <span>
-                                <input id="home_phone" name="home_phone" type="text" class="field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
+                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Home Phone
                                                                                                                                 <span id="req_0" class="req">*</span>
                                                                                                                                 </label>
                             </span>
                             <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
+                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="cell_phone">Cell Phone</label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
+                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
                                                 </div>
@@ -1269,7 +1323,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="gender">Gender</label>
                             </span>
                             <span>
-                                <input id="ssn" name="ssn" type="text" class="field text addr tbox" value="<?=$ssn?>"  maxlength="255" />
+                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" />
                                 <label for="ssn">Patient's Soc Sec No.</label>
                             </span>
  
@@ -1339,7 +1393,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="home_phone">Relationship</label>
                             </span>
                             <span>
-                                <input id="emergency_number" name="emergency_number" type="text" class="field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:200px;" />
+                                <input id="emergency_number" name="emergency_number" type="text" class="phonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:200px;" />
                                 <label for="emergency_number">Number</label>
                             </span>
 						</div>
@@ -1435,11 +1489,11 @@ $(document).ready(function(){
                                 <label for="add1">Employer</label>
                             </span>
                                                         <span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="field text addr tbox" value="<?=$emp_phone?>"  style="width:120px;" maxlength="255" />
+                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:120px;" maxlength="255" />
                                 <label for="state">&nbsp;&nbsp;Phone</label>
                             </span>
                                                         <span>
-                                <input id="emp_fax" name="emp_fax" type="text" class="field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
+                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
                                 <label for="state">Fax</label>
                             </span>
 

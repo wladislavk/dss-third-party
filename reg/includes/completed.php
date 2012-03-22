@@ -9,21 +9,21 @@ if($r['registered']==1){
 	$qp=0;
 }
 
-$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+$s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $q = mysql_query($s);
-$q1 = mysql_num_rows($q);
+$q1 = (mysql_num_rows($q)>0)?1:0;
 
-$s = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+$s = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $q = mysql_query($s);
-$qs = mysql_num_rows($q);
+$qs = (mysql_num_rows($q)>0)?1:0;
 
-$s = "SELECT * FROM dental_q_page2 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+$s = "SELECT * FROM dental_q_page2 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $q = mysql_query($s);
-$q2 = mysql_num_rows($q);
+$q2 = (mysql_num_rows($q)>0)?1:0;
 
-$s = "SELECT * FROM dental_q_page3 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+$s = "SELECT * FROM dental_q_page3 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $q = mysql_query($s);
-$q3 = mysql_num_rows($q);
+$q3 = (mysql_num_rows($q)>0)?1:0;
 
 $comp = array();
 $comp['symptoms'] = $q1;

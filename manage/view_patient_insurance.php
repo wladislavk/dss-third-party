@@ -13,7 +13,6 @@ include "includes/general_functions.php";
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
@@ -23,59 +22,31 @@ include "includes/general_functions.php";
 <?php
 if($_POST["contactsub"] == 1)
 {
-	if($_POST["ed"] != "")
-	{
-		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
-		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
-		//echo $ed_sql.mysql_error();
-		$msg = "Edited Successfully";
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_contact.php?msg=<?=$msg;?>';
-		</script>
-		<?
-		die();
-	}
-	else
-	{
 		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		$rid = mysql_insert_id();	
-		$msg = "Added Successfully";
-		
-		if(isset($_GET['from']) && $_GET['from']=='add_patient'){
-                  ?>
-                  <script type="text/javascript">
-			<?php if($_POST['contacttypeid']==11){ ?>
-                    parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
-			<?php } ?>
-
-			
-                    parent.disablePopupRefClean();
-                  </script>
-                <?php
-                }elseif(isset($_GET['activePat'])){
-		?>
-    <script type="text/javascript">
-			//alert("<?=$msg;?>");
-			<?php
-      echo("window.location.href='add_patient.php?ed=".$_GET['activePat']."&preview=1&addtopat=1&pid=".$_GET['activePat']."'");
-      ?>
-      // -->
-		</script>
-		<?php
-    }else{
-		?>
-		<script type="text/javascript">
-			//alert("<?=$msg;?>");
-			parent.window.location='manage_contact.php?msg=<?=$msg;?>';
-		</script>
-		<?
-		}
-		die();
-	}
+$pc_id = mysql_insert_id();
+$pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysql_real_escape_string($_REQUEST['id'])."'";
+$pcq = mysql_query($pcsql);
+$pcr = mysql_fetch_assoc($pcq);
+$psql = "UPDATE dental_patients SET ";
+switch($pcr['insurancetype']){
+        case '1':
+                $psql .= " p_m_ins_co ";
+                break;
+        case '2':
+                $psql .= " s_m_ins_co ";
+                break;
+}
+$psql .= " = '".$pc_id."' WHERE patientid='".$pcr['patientid']."' OR parent_patientid='".$pcr['patientid']."'";
+//echo $psql;
+mysql_query($psql);
+    $d = "DELETE FROM dental_patient_insurance where id='".mysql_real_escape_string($_REQUEST['id'])."'";
+  mysql_query($d);
+  ?>
+  <script type="text/javascript">
+        window.location = "manage_patient_insurance.php";
+  </script>
+	<?php	
 }
 
 ?>
@@ -93,48 +64,21 @@ if($_POST["contactsub"] == 1)
 <body width="98%"> */ ?>
 
     <?
-    $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
+    $thesql = "select * from dental_patient_insurance where id='".mysql_real_escape_string($_REQUEST["id"])."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
-	if($msg != '')
-	{
-		$salutation = $_POST['salutation'];
-		$firstname = $_POST['firstname'];
-		$middlename = $_POST['middlename'];
-		$lastname = $_POST['lastname'];
-		$company = $_POST['company'];
-		$add1 = $_POST['add1'];
-		$add2= $_POST['add2'];
-		$city = $_POST['city'];
-		$state = $_POST['state'];
-		$zip = $_POST['zip'];
-		$phone1 = $_POST['phone1'];
-		$phone2 = $_POST['phone2'];
-		$fax = $_POST['fax'];
-		$email = $_POST['email'];
-		$national_provider_id = $_POST['national_provider_id'];
-		$qualifier = $_POST['qualifier'];
-		$qualifierid = $_POST['qualifierid'];
-		$greeting = $_POST['greeting'];
-		$sincerely = $_POST['sincerely'];
-		$contacttypeid = $_POST['contacttypeid'];
-		$notes = $_POST['notes'];
-		$preferredcontact = $_POST['preferredcontact'];
-	}
-	else
-	{
 		$salutation = st($themyarray['salutation']);
 		$firstname = st($themyarray['firstname']);
 		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
 		$company = st($themyarray['company']);
-		$add1 = st($themyarray['add1']);
-		$add2 = st($themyarray['add2']);
+		$add1 = st($themyarray['address1']);
+		$add2 = st($themyarray['address2']);
 		$city = st($themyarray['city']);
 		$state = st($themyarray['state']);
 		$zip = st($themyarray['zip']);
-		$phone1 = st($themyarray['phone1']);
+		$phone1 = st($themyarray['phone']);
 		$phone2 = st($themyarray['phone2']);
 		$fax = st($themyarray['fax']);
 		$email = st($themyarray['email']);
@@ -149,16 +93,7 @@ if($_POST["contactsub"] == 1)
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
 		
 		$but_text = "Add ";
-	}
 	
-	if($themyarray["contactid"] != '')
-	{
-		$but_text = "Edit ";
-	}
-	else
-	{
-		$but_text = "Add ";
-	}
 	?>
 	
 	<br /><br />
@@ -168,19 +103,12 @@ if($_POST["contactsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;">
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
-               <?php if($_GET['ctype']=='ins'){ ?>
 		Add Insurance Company
-               <?php }else{ ?>
-               <?=$but_text?> <?php echo $_GET['heading']; ?> Contact
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
-               <?php } ?>
             </td>
         </tr>
         <tr>
@@ -361,25 +289,15 @@ if($_POST["contactsub"] == 1)
                             <span>
                             	<? 
 								
-								if(isset($_GET['ed'])){
-                $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
-                $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
-                
-                $ctid = mysql_fetch_array($ctype_myquerymyarray);
-                
                 $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
                 $ctype_my = mysql_query($ctype_sql);
-                }else{
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }
                 ?>
                             	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
                               	<option value="">Select a contact type</option>  	 
                                     <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
                   ?>
                   
-                  <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
+                  <option <?php if($ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
 
                                         	<?=st($ctype_myarray['contacttype']);?>
                                         </option>
@@ -443,13 +361,8 @@ if($_POST["contactsub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
+                <input type="hidden" name="id" value="<?=$themyarray["id"]?>" />
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
-		<?php if($themyarray["contactid"] != ''){ ?>
-		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                                 Delete 
-                                        </a>
-		<?php } ?>
             </td>
         </tr>
     </table>

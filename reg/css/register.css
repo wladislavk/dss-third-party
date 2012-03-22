@@ -3,7 +3,7 @@
 .formel_a .third .inpt_a{ width:200px; }
 .formel_a .half .inpt_a{ width: 300px; }
 
-.inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
+.formel_a .inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
 .json_patient { font-weight: bold; }
 .json_patient span{ padding-left: 5px; font-size:12px; color:#666; font-weight: normal;}
 .json_patient:hover { cursor: pointer; background-color:#D6ECF4;}

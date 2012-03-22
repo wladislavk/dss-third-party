@@ -132,8 +132,96 @@ function sendRegEmail($id, $e, $l, $old_email=''){
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['phone'];
+  $from = "SWsupport@dentalsleepsolutions.com";
+$mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
+	$headers  = "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\r\n";
+	$headers .= "Content-Transfer-Encoding: 7bit\r\n";
+	$body	=  "";
+	$body	.= "--$mime_boundary\n";
+	$body	.= "Content-Type: text/plain; charset=\"charset=us-ascii\"\n";
+	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
+	$body	.= "A message from Dental Sleep Solutions
 
-  $m = "<html><body><center>
+Your New Account
+A new patient account has been created for you.
+Your Patient Portal login information is:
+Email: ".$e."
+
+Save Time - Complete Your Paperwork Online
+
+Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tre
+es is good too!
+
+Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
+
+Need Assistance?
+Contact us at ".$n." or at patient@dentalsleepsolutions.com
+"; 
+	$body	.= "\n\n";
+
+	$body	.= "--$mime_boundary\n";
+	$body	.= "Content-Type: text/html; charset=\"UTF-8\"\n";
+	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
+	$body	.= "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td width='400'>
+<h2>Your New Account</h2>
+<p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
+<p><b>Email:</b> ".$e."</p>
+</td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td colspan='2'>
+<center>
+<h2>Save Time - Complete Your Paperwork Online</h2>
+</center>
+<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving trees is good too!</p>
+<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
+</td></tr>
+<tr><td>
+<h3>Need Assistance?</h3>
+<p><b>Contact us at ".$n." or at<br>
+patient@dentalsleepsolutions.com</b></p>
+</td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+</table>
+</center></body></html>";
+	$body	.= "\n\n";
+	// End email
+	$body	.= "--$mime_boundary--\n";
+
+	# Finish off headers
+	$headers .= "From: $from\r\n";
+	$headers .= "X-Sender-IP: $_SERVER[SERVER_ADDR]\r\n";
+	$headers .= 'Date: '.date('n/d/Y g:i A')."\r\n";
+
+  $m = "
+--PHP-alt-". $random_hash ."
+Content-Type: text/plain; charset=\"iso-8859-1\"
+Content-Transfer-Encoding: 7bit
+
+A message from Dental Sleep Solutions
+
+Your New Account
+A new patient account has been created for you.
+Your Patient Portal login information is:
+Email: ".$e."
+
+Save Time - Complete Your Paperwork Online
+
+Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tre
+es is good too!
+
+Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
+
+Need Assistance?
+Contact us at ".$n." or at patient@dentalsleepsolutions.com
+
+--PHP-alt-". $random_hash ."  
+Content-Type: text/html; charset=\"iso-8859-1\" 
+Content-Transfer-Encoding: 7bit
+
+<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
@@ -156,16 +244,20 @@ patient@dentalsleepsolutions.com</b></p>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
-";
 
+--PHP-alt-".$random_hash."--
+";
+/*
+$headers = "MIME-Version: 1.0\r\nFrom: SWsupport@dentalsleepsolutions.com\r\nReply-To: SWsupport@dentalsleepsolutions.com";
+//add boundary string and mime type specification
+$headers .= "\r\nContent-Type: multipart/alternative; boundary=\"PHP-alt-".$random_hash."\"";
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
-    		    'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
-                     'X-Mailer: PHP/' . phpversion();
+		'Content-Type: multipart/alternative; boundary="PHP-alt-'.$random_hash.'"' .
+                     'X-Mailer: PHP/' . phpversion();*/
 
                 $subject = "Dental Sleep Solutions Registration";
 
-                mail($e, $subject, $m, $headers);
+                mail($e, $subject, $body, $headers);
 }
 
 /*///////////////////////////
@@ -245,6 +337,7 @@ if($_POST["patientsub"] == 1)
 		firstname = '".s_for($_POST["firstname"])."', 
 		lastname = '".s_for($_POST["lastname"])."', 
 		middlename = '".s_for($_POST["middlename"])."', 
+                preferred_name = '".s_for($_POST["preferred_name"])."',
 		salutation = '".s_for($_POST["salutation"])."',
     member_no = '".s_for($_POST['member_no'])."',
 	  group_no = '".s_for($_POST['group_no'])."',
@@ -467,6 +560,7 @@ mysql_query($s1);
 		firstname = '".s_for($_POST["firstname"])."', 
 		lastname = '".s_for($_POST["lastname"])."', 
 		middlename = '".s_for($_POST["middlename"])."', 
+                preferred_name = '".s_for($_POST["preferred_name"])."',
 		login = '".$login."',
 		salt = '".$salt."',
 		password = '".$password."',
@@ -634,6 +728,7 @@ mysql_query($s1);
 		$firstname = $_POST['firstname'];
 		$middlename = $_POST['middlename'];
 		$lastname = $_POST['lastname'];
+                $preferred_name = $_POST['preferred_name'];
 		$salutation = $_POST['salutation'];
 		$login = $_POST['login'];
 		$member_no = $_POST['member_no'];
@@ -735,6 +830,7 @@ mysql_query($s1);
 		$firstname = st($themyarray['firstname']);
 		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
+                $preferred_name = st($themyarray['preferred_name']);
 		$salutation = st($themyarray['salutation']);
 		$login = st($themyarray['login']);
 			$member_no = st($themyarray['member_no']);
@@ -1201,6 +1297,12 @@ $num_face = mysql_num_rows($p);
 				</span>
 			    </span>
                        </div>   
+		        <div>
+                            <span>
+                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" />
+                                <label for="preferred_name">Preferred Name</label>
+                            </span>
+			</div>
                         <div>
                             <span>
                                 <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />

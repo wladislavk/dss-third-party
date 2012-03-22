@@ -223,8 +223,8 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="#" onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>
 				</td>
 				<td valign="top">
-					<a href="manage_patient_contacts.php?createid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-					        Create
+					<a href="view_patient_contact.php?id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+					        View
 					</a> 
                                         <a href="http://google.com/search?q=<?= $myarray["firstname"]; ?>+<?= $myarray["lastname"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="EDIT">
                                                Confirm 
@@ -248,6 +248,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td>
 				</td>
 				<td valign="top">
+					<a href="add_contact.php?ed=<?= $s['id']; ?>" class="editlink">
+                                                View
+                                        </a>
 					<a href="manage_patient_contacts.php?useid=<?= $s['id']; ?>&pcid=<?= $myarray['id']; ?>" class="editlink">
 						Use
 					</a>

@@ -7,6 +7,9 @@
 include 'includes/header.php';
 ?>
 <link rel="stylesheet" href="css/register.css" />
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/register_ie.css" />
+<![endif]-->
 <script type="text/javascript" src="js/register.js"></script>
 <script type="text/javascript" src="js/patient_dob.js"></script>
 <script type="text/javascript" src="js/autocomplete.js"></script>
@@ -32,7 +35,7 @@ include 'includes/header.php';
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
 
-						<h2 class="sepH_c">Patient Registration</h2>
+						<h2 class="sepH_c">Step-by-Step Patient Registration</h2>
 	<form action="register.php" id="register_form" method="post">
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
 							<ul id="status" class="cf">
@@ -67,31 +70,35 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>3.</strong> Last Name <span class="req">*</span></label>
 			<input class="inpt_a validate" type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
 		</div>
+		<div class="sepH_b third">
+                        <label class="lbl_a"><strong>4.</strong> Preferred Name</label>
+                        <input class="inpt_a" type="text" name="preferred_name" id="preferred_name" value="<?= $p['preferred_name']; ?>" />
+                </div>
                 <div class="sepH_b clear">
 			<input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?= $p['email']; ?>" />
-                        <label class="lbl_a"><strong>4.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> Home Phone:</label><input class="inpt_a phonemask" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
+                        <label class="lbl_a"><strong>6.</strong> Home Phone:</label><input class="inpt_a phonemask" type="text" id="home_phone" name="home_phone" value="<?= $p['home_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6.</strong> Work Phone:</label><input class="inpt_a extphonemask" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Work Phone:</label><input class="inpt_a extphonemask" type="text" id="work_phone" name="work_phone" value="<?= $p['work_phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Cell Phone:</label><input class="inpt_a validate phonemask" type="text" id="cell_phone" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
+                        <label class="lbl_a"><strong>8.</strong> Cell Phone:</label><input class="inpt_a validate phonemask" type="text" id="cell_phone" name="cell_phone" value="<?= $p['cell_phone']; ?>" />
                 </div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>8.</strong> Address 1:</label><input class="inpt_a validate" type="text" name="add1" value="<?= $p['add1']; ?>" />
+                        <label class="lbl_a"><strong>9.</strong> Address 1:</label><input class="inpt_a validate" type="text" name="add1" value="<?= $p['add1']; ?>" />
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>9.</strong> Address 2:</label><input class="inpt_a" type="text" name="add2" value="<?= $p['add2']; ?>" />
+                        <label class="lbl_a"><strong>10.</strong> Address 2:</label><input class="inpt_a" type="text" name="add2" value="<?= $p['add2']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>10.</strong> City:</label><input class="inpt_a validate" type="text" name="city" value="<?= $p['city']; ?>" />
+                        <label class="lbl_a"><strong>11.</strong> City:</label><input class="inpt_a validate" type="text" name="city" value="<?= $p['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
 			<?php $s = $p['state']; ?>
-                        <label class="lbl_a"><strong>11.</strong> State:</label>
+                        <label class="lbl_a"><strong>12.</strong> State:</label>
 	<select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
@@ -149,7 +156,7 @@ include 'includes/header.php';
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>12.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>13.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>

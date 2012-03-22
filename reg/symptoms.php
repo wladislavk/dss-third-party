@@ -3,6 +3,9 @@ include "includes/header.php";
 
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/questionnaire_ie.css" />
+<![endif]-->
 <?php
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)

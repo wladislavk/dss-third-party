@@ -1,7 +1,7 @@
 <?php
 include 'manage/admin/includes/config.php';
 $run_updates = false;
-
+if(true){ //to prevent output if set to false
 /*****************************
 ** Update Complaints q page1
 *****************************/
@@ -35,6 +35,11 @@ if(in_array($d, $compid)){
   $othercomp .= (trim($othercomp!=''))?", ":''; 
   $othercomp .= $c['complaint'];
 }
+}
+if(trim($other_complaint)!=''){
+  if($run_updates){
+    mysql_query("UPDATE dental_q_page1 SET complaintid=CONCAT(complaintid,'0|1~') WHERE patientid='".$pid."'");
+  }
 }
 $upsql = "UPDATE dental_q_page1 SET other_complaint='".$othercomp."' WHERE patientid='".$pid."'";
 if($run_updates){
@@ -88,6 +93,18 @@ $cpapsql = "UPDATE dental_q_page2 SET cur_cpap='Yes', cpap='Yes' WHERE percent_n
 if($run_updates){
   mysql_query($cpapsql);
 }
+
+/*****************************************
+** Gum Problems
+******************************************/
+$gp_sql = "SELECT gum_problems, q_page3id from dental_q_page3";
+$gp_q = mysql_query($gp_sql);
+while($gp_r = mysql_fetch_assoc($gp_q)){
+  if($run_updates && trim($gp_r['gum_problems']) != ''){
+	mysql_query("UPDATE dental_q_page3 set gum_prob='Yes', gum_prob_text=gum_problems WHERE q_page3id='".$gp_r['q_page3id']."'");
+  }
+}
+
 
 /*****************************************
 ** Health History
@@ -311,7 +328,7 @@ $ttotal += $myarray['snore_5'];
 
 
 
-
+}
 
 
 ?>

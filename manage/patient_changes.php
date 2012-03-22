@@ -31,6 +31,7 @@ $fields = array();
 $fields['firstname'] = "First Name";
 $fields['middlename'] = "Middle Name";
 $fields['lastname'] = "Last Name";
+$fields['preferred_name'] = "Preferred Name";
 $fields['email'] = "email";
 $fields['home_phone'] = "Home Phone";
 $fields['work_phone'] = "Work Phone";

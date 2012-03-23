@@ -11,6 +11,9 @@ $i_val = $index_val * $rec_disp;
 
 
 $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date limit 0, 10;";
+        if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){
+$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' AND dl.service_date=CURDATE() order by dl.service_date;";
+        }
 $my = mysql_query($sql);
 /*
 $sql .= " order by service_date";
@@ -150,6 +153,7 @@ background:#999999;
 				<td valign="top" align="right" width="10%">
           <?php
           echo $myarray["amount"];
+	  $tot_charges += $myarray["amount"];
           ?>
 
 					&nbsp;
@@ -171,13 +175,32 @@ background:#999999;
              echo "Pend";
             }
 				
-						$tot_credit += st($myarray["paid_amount"]);
+						//$tot_credit += st($myarray["paid_amount"]);
 					}?>       	
 				</td>
 			</tr>
 	<? 	}
 	?> 
-	  
+<tr>
+                        <td valign="top" colspan="5" align="right">
+                                <b>Daily Balance</b>
+                        </td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_charges,2); ?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_credit,2);?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top">&nbsp;
+
+                        </td>
+                </tr>
 	
 
 </table>

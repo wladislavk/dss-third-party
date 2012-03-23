@@ -1,7 +1,7 @@
 <?php
 include "includes/top.htm";
 require_once('includes/dental_patient_summary.php');
-
+include "includes/similar.php";
 function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
@@ -408,7 +408,16 @@ mysql_query($s1);
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
       }
 
+		$sim = similar_patients($pid);
+                        if(count($sim) > 0){
+                ?>
+                <script type="text/javascript">
+                        parent.window.location='duplicate_patients.php?pid=<?= $pid; ?>';
+                </script>
+                <?
+                die();
 
+		}else{
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
 		?>
 		<script type="text/javascript">
@@ -417,6 +426,7 @@ mysql_query($s1);
 		</script>
 		<?
 		die();
+		}
 	}
 
 }

@@ -13,10 +13,14 @@ else
 $i_val = $index_val * $rec_disp;
 
 
-$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' order by dl.service_date;";
-        if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ 
-$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' AND dl.service_date=CURDATE() order by dl.service_date;";
-        }
+$sql = "SELECT  "
+                 . "  sum(dl.amount) as amount, sum(pay.amount) as paid_amount, "
+     . "p.firstname, p.lastname, p.patientid "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+     . "WHERE dl.docid='".$_SESSION['docid']."'  "
+     . "GROUP BY dl.patientid";
 
 $my = mysql_query($sql);
 /*
@@ -73,21 +77,6 @@ background:#cccccc;
 background:#999999;
 }
 </style>
-<div align="right">
-	<button onclick="Javascript: loadPopup('print_ledger_reportfull.php?dailysub=<?=$_POST['dailysub'];?>&monthlysub=<?=$_POST['monthlysub'];?>&d_mm=<?=$_POST['d_mm'];?>&d_dd=<?=$_POST['d_dd'];?>&d_yy=<?=$_POST['d_yy'];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
-		Print Ledger
-	</button>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-<button onclick="Javascript:window.location='ledger.php';" class="addButton"> 
-                Other Reports
-        </button>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-<button onclick="Javascript:window.location='unpaid_patient.php';" class="addButton">
-               Unpaid Pt. 
-        </button>
-
-        &nbsp;&nbsp;
-</div>
 
 <br />
 <div align="center" class="red">
@@ -113,12 +102,6 @@ background:#999999;
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Patient
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Producer
-		</td>
-		<td valign="top" class="col_head" width="30%">
-			Description
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Charges
@@ -150,6 +133,7 @@ background:#999999;
 		
 		while($myarray = mysql_fetch_array($my))
 		{
+			if($myarray['amount']>$myarray['paid_amount']){
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 			$pat_my = mysql_query($pat_sql);
 			$pat_myarray = mysql_fetch_array($pat_my);
@@ -167,30 +151,24 @@ background:#999999;
 			$tr_class = "tr_active";
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="10%">
-                	<?=date('m-d-Y',strtotime(st($myarray["service_date"])));?>
+				<td valign="top" width="18%">
+                	<?date('m-d-Y',strtotime(st($myarray["service_date"])));?>
 				</td>
-				<td valign="top" width="10%">
-                	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
+				<td valign="top" width="18%">
+                	<?date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
-				<td valign="top" width="10%">
-                	<?=st($name);?>
+				<td valign="top" width="18%">
+                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['firstname']." ".$myarray['lastname']);?></a>
 				</td>
-				<td valign="top" width="10%">
-                	<?=st($myarray["name"]);?>
-				</td>
-				<td valign="top" width="30%">
-                	<?=st($myarray["description"]);?>
-				</td>
-				<td valign="top" align="right" width="10%">
+				<td valign="top" align="right" width="18%">
           <?php
-          echo $myarray["amount"];
+          echo "$".number_format($myarray["amount"],2);
 	  $tot_charges += $myarray["amount"];
           ?>
 
 					&nbsp;
 				</td>
-				<td valign="top" align="right" width="10%">
+				<td valign="top" align="right" width="18%">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
@@ -199,56 +177,19 @@ background:#999999;
 					&nbsp;
 	
 				</td>
-				<td valign="top" width="5%">&nbsp;
-         <? if($myarray["status"] == 1){
-	           echo "Sent";
-	          }elseif($myarray["status"] == 2){
-             echo "Filed";
-            }else{
-             echo "Pend";
-            }
-				
-						//$tot_credit += st($myarray["paid_amount"]);
-					}?>       	
+				<td valign="top" width="10%">&nbsp;
+					<?php }?>       	
 				</td>
 			</tr>
-	<? 	}
+	<? 	} }
 	?> 
 	  
 		<tr>
-			<td valign="top" colspan="5" align="right">
+			<td valign="top" colspan="3" align="right">
 				<b>Daily Balance</b>
 			</td>
 			<td valign="top" align="right">
 			
-			<?php
-			            if(isset($_GET['pid'])){
-                  $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." AND `transaction_type` = 'Charge'";
-                  }else{
-                  $ledgerquery = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." AND `transaction_type` = 'Charge'";
-                  }
-                  $ledgerres = mysql_query($ledgerquery);
-                  $myarray = mysql_fetch_array($ledgerres);
-                  if(isset($_GET['pid'])){
-                  $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." and `transaction_type`='Credit'";
-                  }else{
-                  $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." and `transaction_type`='Credit'";
-                  }
-                  $ledgerres2 = mysql_query($ledgerquery2);
-                  $myarray2 = mysql_fetch_array($ledgerres2);
-                  if(st($myarray["amount"]) <> 0) {
-          						$cur_bal += st($myarray["amount"]);
-          					}
-          					
-          					$i = 0;
-                    
-          						if($i < mysql_num_rows($ledgerres2)){
-                        $cur_bal2 = $myarray2['paid_amount'];
-                      }
-                      $i++;
-          			
-                    $cur_balfinal = $cur_bal - $cur_bal2;
-                    ?>
                     
                     
 				<b>

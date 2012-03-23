@@ -414,7 +414,7 @@ return s;
 	}
 	else
 	{
-		$cur_bal = 0;
+		$cur_bal = $cur_cha = $cur_pay = 0;
 		$last_sd = '';
 		$last_ed = '';
 		while($myarray = mysql_fetch_array($my))
@@ -476,8 +476,10 @@ return s;
 					<? if(st($myarray["amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
-					 	if($myarray[0]!='claim')
+					 	if($myarray[0]!='claim'){
 						$cur_bal += st($myarray["amount"]);
+						$cur_cha += st($myarray["amount"]);	
+						}
 					}?>
 					&nbsp;
 				</td>
@@ -487,8 +489,10 @@ return s;
 					<? if(st($myarray["paid_amount"]) <> 0 && $myarray[0]!='claim') {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
-						if($myarray[0]!='claim')
+						if($myarray[0]!='claim'){
 						$cur_bal -= st($myarray["paid_amount"]);
+						$cur_pay += st($myarray["paid_amount"]);
+						}
 					}?>
 					&nbsp;
 				</td>
@@ -544,7 +548,17 @@ return s;
 			</tr>
 	<? 	}
 	}?>
-  
+<tr class="tr_bg_h" style="color:#fff; font-weight: bold">
+<td></td>  
+<td></td>
+<td></td>
+<td style="color:#fff;" >Totals</td>
+<td style="color:#fff;"><?php echo number_format(st($cur_cha),2); ?></td>
+<td style="color:#fff;"><?php echo number_format(st($cur_pay),2); ?></td>
+<td style="color:#fff;"><?php echo number_format(st($cur_bal),2); ?></td>
+<td></td>
+<td></td>
+</tr>
   <tr>
       <td colspan="8">
           <center><button class="addButton" onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');">

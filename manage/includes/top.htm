@@ -548,6 +548,10 @@ function popitup(url) {
 						.fadeIn();
 					<?php } ?>
 				}
+                                        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').click("alert('test')");
+                                        template_list_new(newLi, "Create New")
+                                                .appendTo('#patient_list')
+                                                .fadeIn();
 			}
 		},
 
@@ -584,6 +588,11 @@ function popitup(url) {
 		li.html(patient.lastname + ", " + patient.firstname + " " + patient.middlename);
 		return li;
 	}
+        function template_list_new(li, str) {
+                li.html(str);
+                return li;
+        }
+
 	function template_table(row, patient) {
 		var pm = "";
 		if (patient.premedcheck == "1") {

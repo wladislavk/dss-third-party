@@ -193,6 +193,19 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $referral_sour
   return $contact_info;
 }
 
+//To remove referral source from md list
+class MDReferralFilter {
+        private $num;
+
+        function __construct($num) {
+                $this->num = $num;
+        }
+
+        function isReferrer($i) {
+                return $i != $this->num;
+        }
+}
+
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
   if((!$topatient && !$md_referral_list && !$md_list) || (!$md_referral_list && !$md_list && $templateid==16)){
@@ -205,6 +218,11 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 	<?php
     return 0;
   }
+
+  //To remove referral source from md list if exists
+  $md_array = explode(',', $md_list);
+  $md_array = array_filter($md_array, array(new MDReferralFilter($md_referral_list), 'isReferrer'));
+  $md_list = implode(',', $md_array);
 
   $gen_date = date('Y-m-d H:i:s');
   if ($status == null) {

@@ -225,11 +225,14 @@ foreach($medications_arr as $key => $val)
 }
 
 // Oldest Sleepstudy Results
-$q1_sql = "SELECT date, sleeptesttype, ahi, rdi, t9002, o2nadir, diagnosis, place, dentaldevice FROM dental_summ_sleeplab WHERE patiendid='".$patientid."' ORDER BY id ASC LIMIT 1;";
+$q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, s.diagnosis, s.place, s.dentaldevice, d.ins_diagnosis, d.description FROM dental_summ_sleeplab s 
+LEFT JOIN dental_ins_diagnosis d
+  ON s.diagnosis = d.ins_diagnosisid
+WHERE patiendid='".$patientid."' ORDER BY id ASC LIMIT 1;";
 $q1_my = mysql_query($q1_sql);
 $q1_myarray = mysql_fetch_array($q1_my);
 $first_study_date = st($q1_myarray['date']);
-$first_diagnosis = st($q1_myarray['diagnosis']);
+$first_diagnosis = st($q1_myarray['ins_diagnosis']." ".$q1_myarray['description']); //st($q1_myarray['diagnosis']);
 $first_ahi = st($q1_myarray['ahi']);
 $first_rdi = st($q1_myarray['rdi']);
 $first_o2sat90 = st($q1_myarray['t9002']);
@@ -260,7 +263,7 @@ s.patiendid='".$patientid."' AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseli
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $completed_study_date = st($q2_myarray['date']);
-$completed_diagnosis = st($q2_myarray['ins_diagnosis']." ".$q1_myarray['description']);
+$completed_diagnosis = st($q2_myarray['ins_diagnosis']." ".$q2_myarray['description']);
 $completed_ahi = st($q2_myarray['ahi']);
 $completed_rdi = st($q2_myarray['rdi']);
 $completed_o2sat90 = st($q2_myarray['t9002']);
@@ -697,8 +700,20 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
 		$search[] = "%history%";
 		$replace[] = "<strong>" . $history_disp . "</strong>";
+                $search[] = "%historysentence%";
+		if($history_disp != ''){
+                	$replace[] = " with a PMH that includes <strong>" . $history_disp . "</strong>";
+		}else{
+			$replace[] = '';
+		}
 		$search[] = "%medications%";
 		$replace[] = "<strong>" . $medications_disp . "</strong>";
+	        $search[] = "%medicationssentence%";
+        	if($medications_disp!=''){
+                	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+        	}else{
+                	$replace[] = "";
+        	}
 		$search[] = "%1st_sleeplab_name%";
 		$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
 		$search[] = "%2nd_sleeplab_name%";
@@ -775,10 +790,28 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $bmi . "</strong>";
 		$search[] = "%reason_seeking_tx%";
 		$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+        	$search[] = "%patprogress%";
+        	if($contact['type']=='patient'){
+                	$replace[] = "<p>At Dental Sleep Solutions we work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians.  We appreciate your cooperation and patronage.  Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
+        	}else{
+                	$replace[] = '';
+        	}
+		$search[] = "%tyreferred%";
+		if($contact['type']=='md_referral'){
+                        $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
+		}else{
+			$replace[] = "Our mutual patient, <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>, was referred to our office for treatment with a dental sleep device.";
+		}
 		$search[] = "%symptoms%";
 		$replace[] = "<strong>" . $symptom_list . "</strong>";
 		$search[] = "%nightsperweek%";
 		$replace[] = "<strong>" . $followup['nightsperweek'] . "</strong>";
+		$search[] = "%esstssupdate%";
+        	if($followup['ep_eadd']!='' || $followup['ep_tsadd']!=''){
+                	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
+        	}else{
+                	$replace[] = '';
+        	}
 		$search[] = "%currESS/TSS%";
 		$replace[] = "<strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>";
 		$search[] = "%initESS/TSS%";
@@ -1075,8 +1108,21 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
 	$search[] = "%history%";
 	$replace[] = "<strong>" . $history_disp . "</strong>";
+                $search[] = "%historysentence%";
+                if($history_disp != ''){
+                        $replace[] = " with a PMH that includes <strong>" . $history_disp . "</strong>";
+                }else{
+                        $replace[] = '';
+                }
+
 	$search[] = "%medications%";
 	$replace[] = "<strong>" . $medications_disp . "</strong>";
+        $search[] = "%medicationssentence%";
+	if($medications_disp!=''){
+        	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+	}else{
+		$replace[] = "";
+	}
 	$search[] = "%sleeplab_name%";
         $replace[] = "<strong>" . $sleeplab_name . "</strong>";
 	$search[] = "%1st_sleeplab_name%";
@@ -1153,10 +1199,29 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $bmi . "</strong>";
 	$search[] = "%reason_seeking_tx%";
 	$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+	$search[] = "%patprogress%";
+	if($contact['type']=='patient'){
+		$replace[] = "<p>At Dental Sleep Solutions we work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians.  We appreciate your cooperation and patronage.  Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
+	}else{
+		$replace[] = '';
+	}
+                $search[] = "%tyreferred%";
+                if($contact['type']=='md_referral'){
+                        $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
+                }else{
+                        $replace[] = "Our mutual patient, <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>, was referred to our office for treatment with a dental sleep device.";
+                }
+
 	$search[] = "%symptoms%";
 	$replace[] = "<strong>" . $symptom_list . "</strong>";
 	$search[] = "%nightsperweek%";
 	$replace[] = "<strong>" . $followup['nightsperweek'] . "</strong>";
+        $search[] = "%esstssupdate%";
+	if($followup['ep_eadd']!='' || $followup['ep_tsadd']!=''){	
+        	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
+	}else{
+		$replace[] = '';
+	}
 	$search[] = "%currESS/TSS%";
 	$replace[] = "<strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>";
 	$search[] = "%initESS/TSS%";

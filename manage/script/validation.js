@@ -470,89 +470,137 @@ function required_info(fa) {
 
 function contactabc(fa)
 {
-	if(fa.contact_type.value != 'ins'){
-	if(trim(fa.firstname.value) == "" )
-	{
-		alert("First Name is Required");
-		fa.firstname.focus();
-		return false;
-	}
-	if(trim(fa.lastname.value) == "" )
-	{
-		alert("Last Name is Required");
-		fa.lastname.focus();
-		return false;
-	}
-	}
-	/*if(trim(fa.middlename.value) == "" )
-	{
-		alert("Middle Name is Required");
-		fa.middlename.focus();
-		return false;
-	}*/
+  pt = $('#physician_types').val();
+  pta = pt.split(',');
+
+  if(fa.contacttypeid.value == '11'){ //INSURANCE
         if(trim(fa.company.value) == "" && fa.contact_type.value == 'ins')
         {
                 alert("Company is Required");
                 fa.company.focus();
                 return false;
         }
-	if(trim(fa.add1.value) == "" )
-	{
-		alert("Address1 is Required");
-		fa.add1.focus();
-		return false;
-	}
-	if(trim(fa.city.value) == "" )
-	{
-		alert("City is Required");
-		fa.city.focus();
-		return false;
-	}
-	if(trim(fa.state.value) == "" )
-	{
-		alert("State is Required");
-		fa.state.focus();
-		return false;
-	}
-	if(trim(fa.zip.value) == "" )
-	{
-		alert("Zip is Required");
-		fa.zip.focus();
-		return false;
-	}
-	
-	if(trim(fa.email.value) != "" )
-	{
-		if(! is_email(trim(fa.email.value)))
-		{
-			alert("In-Valid Email");
-			fa.email.focus();
-			return false;
-		}
-	}
-	if(trim(fa.contacttypeid.value) == ""){
-		alert("Contact type is Required");
-		fa.contacttypeid.focus();
-		return false;
-	}
-	if(trim(fa.contacttypeid.value) == "11" && trim(fa.phone1.value) == "")
-	{
-		alert("Phone number is a required field for Insurance Companies");
-		fa.phone1.focus();
-		return false;
-	}
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }	  
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone number is a required field for Insurance Companies");
+                fa.phone1.focus();
+                return false;
+        }
+  }else if($.inArray(fa.contacttypeid.value, pta)!=-1){ //physician
+        if(trim(fa.salutation.value) == "" )
+        {
+                alert("Salutation is Required");
+                fa.salutation.focus();
+                return false;
+        }
+        if(trim(fa.firstname.value) == "" )
+        {
+                alert("First Name is Required");
+                fa.firstname.focus();
+                return false;
+        }
+        if(trim(fa.lastname.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.lastname.focus();
+                return false;
+        }
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone number is a required field for Insurance Companies");
+                fa.phone1.focus();
+                return false;
+        }
 
-	if(fa.preferredcontact.value=="email" && trim(fa.email.value)==''){
-		alert("An email address must be entered if preferred contact method is email");
-		return false;
-	}
+  }else if(fa.contacttypeid.value != ''){ //other
+        if((trim(fa.firstname.value) == "" || trim(fa.lastname.value) == "") && trim(fa.company.value) == "" )
+        {
+                alert("First Name, Last Name or Company is Required");
+                fa.lastname.focus();
+                return false;
+        }
 
-        if(fa.preferredcontact.value=="fax" && trim(fa.fax.value)==''){
-                alert("A fax number must be entered if preferred contact method is fax");
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone number is a required field");
+                fa.phone1.focus();
                 return false;
         }
 
 
+  }
 }
 
 function referredbyabc(fa)

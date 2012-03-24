@@ -25,7 +25,7 @@ if($_GET['ed'] <> '')
 {
 	$sql .= " and notesid = '".$_GET['ed']."' ";
 }
-$sql .= " order by adddate";
+$sql .= " order by adddate DESC";
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 ?>

@@ -292,7 +292,13 @@ $second_o2sat90 = st($q2_myarray['t9002']);
 $second_o2nadir = st($q2_myarray['o2nadir']);
 $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
-$dentaldevice = st($q2_myarray['device']);
+//$dentaldevice = st($q2_myarray['device']);
+
+$dd_sql = "select dd.device FROM dental_ex_page5 ex LEFT JOIN dental_device dd ON dd.deviceid=ex.dentaldevice WHERE ex.patientid='".$patientid."'";
+$dd_q = mysql_query($dd_sql);
+$dd_r = mysql_fetch_assoc($dd_q);
+$dentaldevice = $dd_r['device'];
+
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);

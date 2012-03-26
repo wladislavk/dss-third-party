@@ -28,7 +28,6 @@ if ($pt_referralid) {
 
 
 ?>
-<script type="text/javascript" src="script/autocomplete.js"></script>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript">
@@ -803,7 +802,17 @@ return false;
 }
 
 </script>
+<?php
+        if($_GET['search'] != ''){
+	  if(strpos($_GET['search'], ' ')){
+            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
+            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+	  }else{
+	    $firstname = $_GET['search'];	
+	  }
+        }
 
+?>
     <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
     

@@ -464,6 +464,7 @@ function popitup(url) {
 				if ($(this).val().trim() == "") {
 					$('#search_hints').css('display', 'none');
 					$('.json_patient').remove();
+					$('.create_new').remove();
 					$('.initial_list').css("display", "table-row");
 				} else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
 					$('.initial_list').css("display", "none");
@@ -504,11 +505,16 @@ function popitup(url) {
 			window.selectedUrl = '';
 		});
 		$('#patient_list > li').click(function() {
+		    if($(this).data("pattype")=="new"){
+			n = $('#patient_search').val();
+			window.location = "add_patient.php?search="+n;
+		    }else{
 			if (selectedUrl != '') {
 				window.location = window.selectedUrl;
 			}
 			$('#patient_search').val($(this).html());
 			sendValue($(this).html());
+		    }
 		});
 		$('*').click(function() {
 			$('#search_hints').css('display', 'none');
@@ -525,12 +531,13 @@ function popitup(url) {
 
 		function(data) {
 			if (data.length == 0) {
-				$('#search_hints').css('display', 'none');
+				//$('#search_hints').css('display', 'none');
 			}
 			if (data.error) {
 				alert(data.error);
 			} else {
 				$('.json_patient').remove();
+				$('.create_new').remove();
 				for (i in data) {
 					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
 					template_list(newLi, data[i])
@@ -548,7 +555,7 @@ function popitup(url) {
 						.fadeIn();
 					<?php } ?>
 				}
-                                        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').click("alert('test')");
+                                        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
                                         template_list_new(newLi, "Create New")
                                                 .appendTo('#patient_list')
                                                 .fadeIn();
@@ -730,7 +737,8 @@ display:none;
   </div>
   
   
-  
+ <script type="text/javascript" src="script/autocomplete.js"></script>
+ 
   <div style="height:89px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
      
     <div style="margin-top:10px; margin-left:20px; float:left;">
@@ -746,7 +754,7 @@ display:none;
 		</ul>
 	</div>
    </div> 
-  
+
    <button onclick="window.location='add_patient.php'" style="margin-top:27px;">+ Add Patient</button>
 
 <!--</form>-->

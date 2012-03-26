@@ -250,12 +250,15 @@ CASE s.sleeptesttype
 END
 AS sort_order 
 FROM dental_summ_sleeplab s 
+JOIN dental_patients p
+  ON p.patientid=s.patiendid
 JOIN dental_ins_diagnosis d
   ON s.diagnosis = d.ins_diagnosisid
 LEFT JOIN dental_sleeplab sl
   ON s.place = sl.sleeplabid
-WHERE (s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND 
-(s.diagnosising_npi IS NOT NULL && s.diagnosising_npi != '') AND 
+WHERE 
+(p.p_m_ins_type!='1' OR ((s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND 
+(s.diagnosising_npi IS NOT NULL && s.diagnosising_npi != ''))) AND 
 (s.diagnosis IS NOT NULL && s.diagnosis != '') AND 
 s.completed = 'Yes' AND 
 s.filename IS NOT NULL AND 

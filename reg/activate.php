@@ -147,7 +147,7 @@ function createPassword(){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
-          window.location = "login.php?email="+escape(e).replace('+', '%2B')+"&activated=1"; 
+          window.location = "register.php"; 
         }else{
           if(r.error == "code"){
                 $('#sent_text').html("Incorrect text message code!").show('slow');   

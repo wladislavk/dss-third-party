@@ -46,7 +46,6 @@ $fields['dob'] = "Date of Birth";
 $fields['gender'] = "Gender";
 $fields['marital_status'] = "Marital Status";
 $fields['ssn'] = "Social Security #";
-$fields['patient_notes'] = "Patient Notes";
 $fields['preferredcontact'] = "Preferred Contact";
 $fields['emergency_name'] = "Emergency Name";
 $fields['emergency_relationship'] = "Emergency Relationship";

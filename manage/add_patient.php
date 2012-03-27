@@ -1437,6 +1437,7 @@ $num_face = mysql_num_rows($p);
                                     <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
                                     <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
                                                                         <option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
+                                    <option value="Minor" <? if($marital_status == 'Minor') echo " selected";?>>Minor</option>
                                 </select>
                                 <label for="marital_status">Marital Status</label>
                             </span>

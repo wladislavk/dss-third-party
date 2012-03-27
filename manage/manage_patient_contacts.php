@@ -99,6 +99,13 @@ mysql_query($psql);
 	//window.location = "add_contact.php?ed=<?= $pc_id; ?>";
   </script>
   <?php
+}elseif(isset($_REQUEST['delid'])){
+$dsql = "DELETE FROM dental_patient_contacts WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+mysql_query($dsql);
+?>  <script type="text/javascript">
+        window.location = "manage_patient_contacts.php";
+  </script>
+<?php
 }
 
 $rec_disp = 20;
@@ -223,11 +230,14 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="#" onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>
 				</td>
 				<td valign="top">
-					<a href="view_patient_contact.php?id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+					<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">
 					        View
 					</a> 
-                                        <a href="http://google.com/search?q=<?= $myarray["firstname"]; ?>+<?= $myarray["lastname"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="EDIT">
-                                               Confirm 
+                                        <a href="http://google.com/search?q=<?= $myarray["firstname"]; ?>+<?= $myarray["lastname"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="SEARCH">
+                                               Search 
+                                        </a>
+                                        <a href="manage_patient_contacts.php?delid=<?= $myarray["id"]; ?>" onclick="return confirm('Are you sure you want to delete this contact?')" class="dellink" title="DELETE">
+                                                Delete 
                                         </a>
 
 				</td>

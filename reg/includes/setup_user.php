@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../../manage/admin/includes/config.php';
 require_once '../../manage/admin/includes/password.php';
 
@@ -14,6 +15,8 @@ require_once '../../manage/admin/includes/password.php';
                         $password = gen_password($p , $salt);
                         $psql = "UPDATE dental_patients set password='".$password."', salt='".$salt."', recover_hash='', access_code='', registration_status=2  WHERE patientid='".mysql_real_escape_string($r['patientid'])."'";
                         mysql_query($psql);
+                session_register("pid");
+                $_SESSION['pid']=$r['patientid'];
 	echo '{"success":true}';
     }else{
 	echo '{"error":"code"}';

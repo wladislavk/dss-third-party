@@ -4,12 +4,53 @@ require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/general_functions.php');
+?>
+<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+<?php
 if($_POST["imagesub"] == 1)
 {
+
 	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
-		
+	
+
+	  if($imagetypeid == '0'){
+
+		// Get new sizes
+		$newwidth = 1500;
+		$newheight = 1500;
+
+		// Load
+		$thumb = imagecreatetruecolor($newwidth, $newheight);
+		for($i=1;$i<=9;$i++){
+			$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
+			list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
+			$x = (($i-1)%3)*500;
+			$y = floor(($i-1)/3)*500;	
+			// Resize
+			imagecopyresized($thumb, $source, $x, $y, 0, 0, 500, 500, $width, $height);
+
+		}
+			$fname = $_FILES["image_file_1"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+		// Output
+		imagejpeg($thumb, "q_file/".$banner1);
+		@chmod("q_file/".$banner1,0777);
+		// Free up memory
+		//imagedestroy($thumb);
+		$uploaded = true;
+
+	  }else{
+
+	
 		if($_FILES["image_file"]["name"] <> '')
 		{
 			$fname = $_FILES["image_file"]["name"];
@@ -31,7 +72,7 @@ if($_POST["imagesub"] == 1)
 		{
 			$banner1 = $_POST['image_file_old'];
 		}
-		
+	}	
 if($uploaded){		
 		if($_POST["ed"] != "")
 		{
@@ -151,6 +192,7 @@ if($uploaded){
     </div>
     <? }?>
     <form name="imagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>" method="post" onSubmit="return imageabc(this)" enctype="multipart/form-data">
+ 
 		<input name="flow" type="hidden" value="<?=$_GET['flow'];?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
@@ -180,6 +222,7 @@ if($uploaded){
 										<?=st($itype_myarray['imagetype']);?>
 									</option>
 								<? }?>
+								<option value="0">Clinical Photos (Pre-Tx)</option>
 							</select>
 						</span> 
 						<span id="req_0" class="req">*</span>
@@ -187,6 +230,15 @@ if($uploaded){
                 </ul>
             </td>
         </tr>
+<script type="text/javascript">
+  $('#imagetypeid').change(function(){
+	if($(this).val() == '0'){
+		$('#extra_files').show();
+	}else{
+		$('#extra_files').hide();
+	}
+  });
+</script>
         <tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
@@ -222,6 +274,13 @@ if($uploaded){
 				</ul>
             </td>
         </tr>
+	<tr id="extra_files" style="display:none;">
+		<td colspan="2" class="frmhead">
+			<?php for($i=1;$i<=9;$i++){ ?>
+				<input type="file" name="image_file_<?= $i; ?>" value="" size="26" /><br />
+			<?php } ?>
+		</td>
+	</tr>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

@@ -530,7 +530,7 @@ switch ($templateid) {
 if (!empty($altered_template)) $template = html_entity_decode($altered_template);
 
 ?>
-<form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$letterid?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+<form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$letterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -575,6 +575,16 @@ if ($_POST != array()) {
                         $replace[] = "<strong>you</strong>";
                 }else{
                         $replace[] = $referral_fullname;
+                }
+                $search[] = '%by_referral_fullname%';
+                if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
+                        $replace[] = "by <strong>you</strong>";
+                }else{
+                        if($referral_fullname!=''){
+                                $replace[] = "by ".$referral_fullname;
+                        }else{
+                                $replace[] = '';
+                        }
                 }
 
 		$search[] = '%referral_lastname%';
@@ -984,7 +994,16 @@ foreach ($letter_contacts as $key => $contact) {
                 }else{
                         $replace[] = $referral_fullname;
                 }
-
+                $search[] = '%by_referral_fullname%';
+                if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
+                        $replace[] = "by <strong>you</strong>";
+                }else{
+			if($referral_fullname!=''){
+                        	$replace[] = "by ".$referral_fullname;
+			}else{
+				$replace[] = '';
+			}
+                }
 	$search[] = '%referral_lastname%';
 	if (!empty($ref_info['md_referrals'])) {
 		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
@@ -1432,11 +1451,23 @@ foreach ($letter_contacts as $key => $contact) {
 		$recipientid = $contact['id'];
     delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		if ($parent) {
+			if(isset($_REQUEST['goto'])){
+				if($_REQUEST['goto']=='flowsheet'){
+					$page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+				}
+                        ?>
+                        <script type="text/javascript">
+                                window.location = '<?= $page ?>';
+                        </script>
+                        <?php
+
+			}else{
 			?>
 			<script type="text/javascript">
 				window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 			</script>
 			<?php
+			}
 		}else{
                         ?>
                         <script type="text/javascript">

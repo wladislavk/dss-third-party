@@ -31,7 +31,6 @@
                         "partial_name": partial_name 
                 },
                 function(data) {
-			alert(data.length);
                         if (data.length == 0) {
                                 $('#'+hint).css('display', 'none');
                         }

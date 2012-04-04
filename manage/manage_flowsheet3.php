@@ -2717,7 +2717,7 @@ Next Appointment
 					$letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
 				}
 				elseif ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				}
 				elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
@@ -2738,8 +2738,10 @@ Next Appointment
 					$preferred = "(F)";
 				}
 				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
-				if ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				if ($letter['deleted'] == 1) {
+                                        $letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
+                                }elseif ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
 				}
@@ -2759,8 +2761,10 @@ Next Appointment
 					$preferred = "(F)";
 				}
 				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
-				if ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+                                if ($letter['deleted'] == 1) {
+                                        $letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
+                                }elseif ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
 				} elseif ($letter['status'] == 1) {

@@ -46,7 +46,7 @@ include 'includes/header.php';
 								<li><span class="large">5. Employer</span></li>
 								<li><span class="large">6. Contacts</span></li>
 							</ul>
-							<div id="register" class="wizard" style="height:1400px;">
+							<div id="register" class="wizard" style="height:665px;">
 								<div class="items formEl_a">
 									<div class="page">
 										<div class="pageInside">
@@ -223,6 +223,7 @@ include 'includes/header.php';
                                 <option value="Married" <?= ($p['marital_status']=="Married")?'selected="selected"':'';?>>Married</option>
                                 <option value="Single" <?= ($p['marital_status']=="Single")?'selected="selected"':'';?>>Single</option>
                                 <option value="Life Partner" <?= ($p['marital_status']=="Life Partner")?'selected="selected"':'';?>>Life Partner</option>
+				<option value="Minor" <?= ($p['marital_status']=="Minor")?'selected="selected"':'';?>>Minor</option>
                                 </select>
                 </div>
                 <div class="sepH_b half">

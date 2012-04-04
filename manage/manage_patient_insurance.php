@@ -240,7 +240,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="manage_patient_insurance.php?useid=<?= $s['id']; ?>&pcid=<?= $myarray['id']; ?>" class="editlink">
 						Use
 					</a>
-                                        <a href="add_contact.php?ed=<?= $s['id']; ?>" class="editlink">
+                                        <a href="#" onclick="loadPopup('add_contact.php?ed=<?= $s['id']; ?>')" class="editlink">
                                                 View
                                         </a>
 				</td>

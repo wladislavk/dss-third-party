@@ -1411,6 +1411,8 @@ foreach ($letter_contacts as $key => $contact) {
   if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
+    }else{
+		$parent = false;
     }
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
@@ -1439,6 +1441,14 @@ foreach ($letter_contacts as $key => $contact) {
 		} else {
 	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		}
+	if(!$parent){
+		?>
+                        <script type="text/javascript">
+                                window.location.reload();
+                        </script>
+                        <?php
+
+	}
   }
 	// Catch Post Delete Button and Delete letters Here
   if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
@@ -1451,10 +1461,13 @@ foreach ($letter_contacts as $key => $contact) {
 		$recipientid = $contact['id'];
     delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
 		if ($parent) {
-			if(isset($_REQUEST['goto'])){
+			if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
 				if($_REQUEST['goto']=='flowsheet'){
 					$page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
-				}
+				}elseif($_REQUEST['goto']=='letter'){
+                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }
+
                         ?>
                         <script type="text/javascript">
                                 window.location = '<?= $page ?>';
@@ -1483,11 +1496,26 @@ foreach ($letter_contacts as $key => $contact) {
 
 <?php
 if ($parent) {
+if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
+                                if($_REQUEST['goto']=='flowsheet'){
+                                        $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='letter'){
+                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }
+
+                        ?>
+                        <script type="text/javascript">
+                                window.location = '<?= $page ?>';
+                        </script>
+                        <?php
+
+                        }else{
 	?>
 	<script type="text/javascript">
 		window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
 	</script>
 	<?php
+			}
 }
 
 continue;

@@ -46,7 +46,7 @@ include 'includes/header.php';
 								<li><span class="large">5. Employer</span></li>
 								<li><span class="large">6. Contacts</span></li>
 							</ul>
-							<div id="register" class="wizard" style="height:665px;">
+							<div id="register" class="wizard" style="height:1400px;">
 								<div class="items formEl_a">
 									<div class="page">
 										<div class="pageInside">

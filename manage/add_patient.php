@@ -1208,14 +1208,6 @@ function remove_notification(id){
 	<tr>
 		<td colspan="2">
 <?php
-			        $pid = $_GET['pid'];
-  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid;
-  $itype_my = mysql_query($itype_sql);
-  while($image = mysql_fetch_array($itype_my)){
-   echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
-  }
-?>
-<?php
 $sql = "SELECT imageid FROM dental_q_image WHERE patientid='".$_GET['pid']."' AND imagetypeid=4";
 $p = mysql_query($sql);
 $num_face = mysql_num_rows($p);
@@ -1245,11 +1237,22 @@ $num_face = mysql_num_rows($p);
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>
                     <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
+<div style="float:right; width:270px;">
+<?php
+                                $pid = $_GET['pid'];
+  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+  while($image = mysql_fetch_array($itype_my)){
+   echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
+  }
+?>
+</div>
+                        <label class="desc" id="title0" for="Field0" style="float:left;">
                             Name
                             <span id="req_0" class="req">*</span>
                         </label>
-                        <div>
+
+                        <div style="float:left; clear:left;">
                             <span>
                                 <select name="salutation" style="width:80px;" >
                                   <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
@@ -1262,46 +1265,23 @@ $num_face = mysql_num_rows($p);
                                 <label for="salutation">Salutation</label>
                             </span>
                             <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" />
+                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" style="width:150px;" />
                                 <label for="firstname">First Name</label>
                             </span>
                             <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" />
+                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" style="width:190px;" />
                                 <label for="lastname">Last Name</label>
                             </span>
                             <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:50px;" maxlength="1" />
-                                <label for="middlename">Middle <br />Init</label>
+                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:30px;" maxlength="1" />
+                                <label for="middlename">MI</label>
                             </span>
-			    <span>
-				<input type="text" name="login" class="field text addr tbox" style="width:250px;" value="<?=($themyarray['registration_status']!=0)?$email:'none'; ?>" disabled="disabled" />
-				<label for"login">Pt Portal Login</label>
-				<span style="color:#933;">
-				  <?php 
-				    if($themyarray['use_patient_portal']==1){
-					switch($themyarray['registration_status']){
-					case 0:
-						echo 'Unregistered';
-						break;
-					case 1:
-						echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
-						break;
-					case 2:
-						echo 'Registered';
-						break;
-					}
-				    }else{
-						echo 'Patient Portal In-active';
-				    }
-				  ?>
-				</span>
-			    </span>
-                       </div>   
-		        <div>
                             <span>
-                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" />
+                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" style="width:150px" />
                                 <label for="preferred_name">Preferred Name</label>
                             </span>
+                       </div>   
+		        <div style="float:left">
                             <span>
                                 <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Home Phone
@@ -1317,7 +1297,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="work_phone">Work Phone</label>
                             </span>
                                                 </div>
-			<div>
+			<div style="clear:both">
 			    <span style="width:200px;">
 				<select id="best_time" name="best_time">
 					<option value="">Please Select</option>
@@ -1345,7 +1325,27 @@ $num_face = mysql_num_rows($p);
 			    </span>
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
-                                <label for="email">Email</label>
+                                <label for="email">Email/Pt. Portal Login</label>
+<span style="color:#933;">
+                                  <?php
+                                    if($themyarray['use_patient_portal']==1){
+                                        switch($themyarray['registration_status']){
+                                        case 0:
+                                                echo 'Unregistered';
+                                                break;
+                                        case 1:
+                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
+                                                break;
+                                        case 2:
+                                                echo 'Registered';
+                                                break;
+                                        }
+                                    }else{
+                                                echo 'Patient Portal In-active';
+                                    }
+                                  ?>
+                                </span>
+
                             </span>
                         </div>
                     </li>

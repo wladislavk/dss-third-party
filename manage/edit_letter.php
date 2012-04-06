@@ -63,7 +63,18 @@ $title = mysql_result($template_result, 0);
 </span>
 <br />
 &nbsp;&nbsp;
+<?php 
+if($_REQUEST['goto']!=''){
+                                if($_REQUEST['goto']=='flowsheet'){
+                                        $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='letter'){
+                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }
+?> <a href="<?=$page; ?>" class="editlink" title="Pending Letters"><?php
+}else{
+?>
 <a href="<?php print ($_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+<?php } ?>
 	<b>&lt;&lt;Back</b></a>
 <br /><br>
 
@@ -85,9 +96,11 @@ $md_referral = get_mdreferralids($_GET['pid']);
 $ref_info = get_contact_info('', '', $md_referral_list, $source);
 	if (!empty($ref_info['md_referrals'])) {                        
 		$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
-        } else {
+        } elseif(!empty($pcp)) {
         	$referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
-        }
+        }else{
+		$referral_fullname = '';
+	}
 
 }elseif($source == DSS_REFERRED_PATIENT){
 	$referral_fullname = '<strong>a patient</strong>';
@@ -580,7 +593,7 @@ if ($_POST != array()) {
                 if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
                         $replace[] = "by <strong>you</strong>";
                 }else{
-                        if($referral_fullname!=''){
+                        if(trim($referral_fullname)!=''){
                                 $replace[] = "by ".$referral_fullname;
                         }else{
                                 $replace[] = '';
@@ -998,7 +1011,7 @@ foreach ($letter_contacts as $key => $contact) {
                 if($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
                         $replace[] = "by <strong>you</strong>";
                 }else{
-			if($referral_fullname!=''){
+			if(trim($referral_fullname)!=''){
                         	$replace[] = "by ".$referral_fullname;
 			}else{
 				$replace[] = '';
@@ -1484,7 +1497,7 @@ foreach ($letter_contacts as $key => $contact) {
 		}else{
                         ?>
                         <script type="text/javascript">
-                                window.location.reload();
+                                window.location = window.location;
                         </script>
                         <?php
 

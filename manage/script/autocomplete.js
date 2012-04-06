@@ -2,7 +2,7 @@
         var selectionref = 1;
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
-	function setup_autocomplete(in_field, hint, id_field, source, file){
+	function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pid){
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');
                 		$('#'+source).val('');
@@ -13,7 +13,7 @@
                                         $('#'+hint).css('display', 'none');
                                 } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
                                         $('#'+hint).css("display", "inline");
-                                        sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, file);
+                                        sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid);
                                         if ($(this).val() > 2) {
                                                 window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                                         }
@@ -22,7 +22,7 @@
 	}
 
 
-        function sendValueRef(partial_name, in_field, hint, id_field, source, file) {
+        function sendValueRef(partial_name, in_field, hint, id_field, source, file, hinttype, pid) {
                 $.post(
                 
                 file,
@@ -32,12 +32,34 @@
                 },
                 function(data) {
                         if (data.length == 0) {
-                                $('#'+hint).css('display', 'none');
-                        }
+                                $('.json_patient').remove();
+                                $('.create_new').remove();
+                                $('.no_matches').remove();
+                                //$('#search_hints').css('display', 'none');
+                               var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('no_matches');
+                                        template_list_ref(newLi, "No Matches")
+                                                .appendTo('#'+hint+' ul')
+                                                .fadeIn();
+				if(hinttype=='referrer'){
+					var label = "referrer";
+				}else if(hinttype=='contact'){
+					var label = "contact";
+				}else{
+					var label = "person";
+				}
+                                var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
+					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient')");
+                                        template_list_ref(newLi, "Add "+label+" with this name&#8230;")
+                                                .appendTo('#'+hint+' ul')
+                                                .fadeIn();
+
+                        }else{
                         if (data.error) {
                                 alert(data.error);
                         } else {
                                 $('.json_patient').remove();
+                                $('.create_new').remove();
+                                $('.no_matches').remove();
                                 for(i in data) {
                                         var name = data[i].name;
                                         var newLi = $('#'+hint+' ul .template')
@@ -51,6 +73,7 @@
                                               .appendTo('#'+hint+' ul')
                                             .fadeIn();
                                 }
+			    }
                         }
                 },
 

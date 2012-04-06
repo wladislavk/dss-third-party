@@ -1146,7 +1146,7 @@ function show_referredby(t, rs){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php');
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', <?= $_GET['pid']; ?>);
 });
 </script>
 					</div>
@@ -1612,7 +1612,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php');
+  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -1643,7 +1643,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
+  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -1674,7 +1674,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php');
+  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -1715,7 +1715,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
+  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -1748,7 +1748,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php');
+  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>

@@ -496,11 +496,15 @@ function popitup(url) {
 			}
 		});
 		$('#patient_list > li').hover(function() {
-			$(this).css('cursor','pointer');
+			if($(this).data("pattype")!="no"){
+			  $(this).css('cursor','pointer');
+			}
 			window.selection = $(this).data("number");
 			set_selected(window.selection);
 		}, function() {
-			$(this).css('cursor','auto');
+			if($(this).data("pattype")!="no"){
+			  $(this).css('cursor','auto');
+			}
 			$('#patient_list li').removeClass('list_hover');
 			window.selectedUrl = '';
 		});
@@ -508,7 +512,9 @@ function popitup(url) {
 		    if($(this).data("pattype")=="new"){
 			n = $('#patient_search').val();
 			window.location = "add_patient.php?search="+n;
-		    }else{
+		    }else if($(this).data("pattype")=="no"){
+			//do nothing
+                    }else{
 			if (selectedUrl != '') {
 				window.location = window.selectedUrl;
 			}
@@ -531,13 +537,26 @@ function popitup(url) {
 
 		function(data) {
 			if (data.length == 0) {
+				$('.json_patient').remove();
+                                $('.create_new').remove();
+				$('.no_matches').remove();
 				//$('#search_hints').css('display', 'none');
-			}
+                               var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('no_matches').data("pattype", "no");
+                                        template_list_new(newLi, "No Matches")
+                                                .appendTo('#patient_list')
+                                                .fadeIn();
+				var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
+                                        template_list_new(newLi, "Add patient with this name&#8230;")
+                                                .appendTo('#patient_list')
+                                                .fadeIn();
+			}else{
 			if (data.error) {
 				alert(data.error);
 			} else {
 				$('.json_patient').remove();
 				$('.create_new').remove();
+                               $('.no_matches').remove();
+ 
 				for (i in data) {
 					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
 					template_list(newLi, data[i])
@@ -555,10 +574,7 @@ function popitup(url) {
 						.fadeIn();
 					<?php } ?>
 				}
-                                        var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
-                                        template_list_new(newLi, "Create New")
-                                                .appendTo('#patient_list')
-                                                .fadeIn();
+			   }
 			}
 		},
 

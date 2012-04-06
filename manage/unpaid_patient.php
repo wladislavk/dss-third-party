@@ -158,7 +158,7 @@ background:#999999;
                 	<?date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
 				<td valign="top" width="18%">
-                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['firstname']." ".$myarray['lastname']);?></a>
+                	<a href="manage_ledger.php?addtopat=1&pid=<?=$myarray['patientid'];?>"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
 				</td>
 				<td valign="top" align="right" width="18%">
           <?php

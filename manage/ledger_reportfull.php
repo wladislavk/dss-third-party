@@ -13,12 +13,63 @@ else
 $i_val = $index_val * $rec_disp;
 
 
-$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' order by dl.service_date;";
+$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
         if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ 
-$sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' AND dl.service_date=CURDATE() order by dl.service_date;";
+$sql = "
+select 
+		'ledger'
+		dl.ledgerid,
+		dl.service_date,
+		dl.entry_date,
+		dl.amount,
+		dl.status, 
+		p.name, 
+		pat.firstname, 
+		pat.lastname 
+	from dental_ledger dl 
+		JOIN dental_patients as pat ON dl.patientid = pat.patientid
+		LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+	where dl.docid='".$_SESSION['docid']."' 
+	AND dl.service_date=CURDATE()
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+		dlp.amount,
+		'',
+                p.name,
+                pat.firstname,
+		pat.lastname,
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND dlp.amount != 0
+
         }
 
+if(!isset($_REQUEST['sort'])){
+  $_REQUEST['sort'] = 'service_date';
+  $_REQUEST['sortdir'] = 'desc';
+} 
+
+if(isset($_REQUEST['sort'])){
+  if($_REQUEST['sort']=='producer'){
+    $sql .= " ORDER BY name ".$_REQUEST['sortdir'];
+  }elseif($_REQUEST['sort']=='patient'){
+    $sql .= " ORDER BY pat.lastname ".$_REQUEST['sortdir'];
+  }elseif($_REQUEST['sort']=='producer'){
+    $sql .= " ORDER BY name ".$_REQUEST['sortdir'];
+  }elseif($_REQUEST['sort']=='producer'){
+    $sql .= " ORDER BY name ".$_REQUEST['sortdir'];
+  }else{
+    $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+  }
+}
 $my = mysql_query($sql);
+
 /*
 $sql .= " order by service_date";
 
@@ -74,9 +125,9 @@ background:#999999;
 }
 </style>
 <div align="right">
-	<button onclick="Javascript: loadPopup('print_ledger_reportfull.php?dailysub=<?=$_POST['dailysub'];?>&monthlysub=<?=$_POST['monthlysub'];?>&d_mm=<?=$_POST['d_mm'];?>&d_dd=<?=$_POST['d_dd'];?>&d_yy=<?=$_POST['d_yy'];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
+	<a href="print_ledger_reportfull.php?dailysub=<?=$_POST['dailysub'];?>&monthlysub=<?=$_POST['monthlysub'];?>&d_mm=<?=$_POST['d_mm'];?>&d_dd=<?=$_POST['d_dd'];?>&d_yy=<?=$_POST['d_yy'];?>&pid=<?=$_GET['pid'];?>" target="_blank" class="addButton">
 		Print Ledger
-	</button>
+	</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
 <button onclick="Javascript:window.location='ledger.php';" class="addButton"> 
                 Other Reports
@@ -105,29 +156,29 @@ background:#999999;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
-			Svc Date
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'service_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=service_date&sortdir=<?php echo ($_REQUEST['sort']=='service_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Svc Date</a>
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Entry Date
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'entry_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=entry_date&sortdir=<?php echo ($_REQUEST['sort']=='entry_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Entry Date
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Patient
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Producer
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'producer')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=producer&sortdir=<?php echo ($_REQUEST['sort']=='producer'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Producer
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Description
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="ledger_reportfull.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Charges
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=amount&sortdir=<?php echo ($_REQUEST['sort']=='amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Charges
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Credits
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_reportfull.php?sort=credits&sortdir=<?php echo ($_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits
 		</td>
-		<td valign="top" class="col_head" width="5%">
-			Ins
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
+			<a href="ledger_reportfull.php?sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
 	</tr>
 	</table>
@@ -177,7 +228,7 @@ background:#999999;
                 	<?=st($name);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray["name"]);?>
+                	<?=st($patname);?>
 				</td>
 				<td valign="top" width="30%">
                 	<?=st($myarray["description"]);?>

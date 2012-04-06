@@ -330,9 +330,9 @@ return s;
                Claims Outstanding 
         </button>
 <?php } ?>	&nbsp;&nbsp;
-        <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
+        <a href='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>' class="addButton">
                 Print Ledger
-        </button>
+        </a>
 &nbsp;&nbsp;
 	
 	<button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?=$_GET['pid'];?>');" class="addButton">
@@ -553,6 +553,17 @@ return s;
 <td></td>
 <td></td>
 <td style="color:#fff;" >Totals</td>
+<td style="color:#fff;">Charges</td>
+<td style="color:#fff;">Credits</td>
+<td style="color:#fff;">Balance</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="tr_bg_h" style="color:#fff; font-weight: bold">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td style="color:#fff;"><?php echo number_format(st($cur_cha),2); ?></td>
 <td style="color:#fff;"><?php echo number_format(st($cur_pay),2); ?></td>
 <td style="color:#fff;"><?php echo number_format(st($cur_bal),2); ?></td>

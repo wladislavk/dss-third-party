@@ -17,15 +17,18 @@ $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p
         if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ 
 $sql = "
 select 
-		'ledger'
+		'ledger',
 		dl.ledgerid,
 		dl.service_date,
 		dl.entry_date,
 		dl.amount,
 		dl.status, 
+		dl.description,
 		p.name, 
 		pat.firstname, 
-		pat.lastname 
+		pat.lastname,
+		'' as payer,
+		'' as payment_type
 	from dental_ledger dl 
 		JOIN dental_patients as pat ON dl.patientid = pat.patientid
 		LEFT JOIN dental_users as p ON dl.producerid=p.userid 
@@ -39,14 +42,20 @@ select
                 dlp.entry_date,
 		dlp.amount,
 		'',
+		'',
                 p.name,
                 pat.firstname,
 		pat.lastname,
+                dlp.payer,
+                dlp.payment_type
         from dental_ledger dl 
+		JOIN dental_patients pat on dl.patientid = pat.patientid
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        where dl.docid='".$_SESSION['docid']."' 
                         AND dlp.amount != 0
+			AND dl.service_date=CURDATE()
+";
 
         }
 
@@ -225,30 +234,35 @@ background:#999999;
                 	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($name);?>
+                	<?=st($myarray['lastname'].", ".$myarray['firstname']);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($patname);?>
+                	<?=st($myarray['name']);?>
 				</td>
 				<td valign="top" width="30%">
-                	<?=st($myarray["description"]);?>
+<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+                	<?= (($myarray[0] == 'ledger'))?$myarray["description"]:'';?>
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
+	if($myarray[0] == 'ledger'){
           echo $myarray["amount"];
 	  $tot_charges += $myarray["amount"];
+	}
           ?>
 
 					&nbsp;
 				</td>
 				<td valign="top" align="right" width="10%">
-					<? if(st($myarray["paid_amount"]) <> 0) {?>
-	                	<?=number_format(st($myarray["paid_amount"]),2);?>
+				<?php if($myarray[0]=='ledger_payment'){ ?>
+					<? if(st($myarray["amount"]) <> 0) {?>
+	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["paid_amount"]);
+						$tot_credit += st($myarray["amount"]);
 					}?>
 					&nbsp;
-	
+					<?php } ?>
 				</td>
 				<td valign="top" width="5%">&nbsp;
          <? if($myarray["status"] == 1){
@@ -268,7 +282,7 @@ background:#999999;
 	  
 		<tr>
 			<td valign="top" colspan="5" align="right">
-				<b>Daily Balance</b>
+				<b>Totals</b>
 			</td>
 			<td valign="top" align="right">
 			
@@ -317,7 +331,19 @@ background:#999999;
 				
 			</td>
 		</tr>
-
+		<tr>
+                        <td valign="top" colspan="5" align="right">
+                                <b>Daily Balance</b>
+                        </td>
+			<td align="right">
+				<b>                                <b>
+                                <?php echo "$".number_format(($tot_charges - $tot_credit),2);?>
+                                &nbsp;
+                                </b>
+			</td>
+			<td colspan="2">
+			</td>
+		</tr>
 </table>
  </div>
 

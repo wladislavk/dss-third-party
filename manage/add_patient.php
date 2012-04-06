@@ -1226,14 +1226,14 @@ function remove_notification(id){
   $itype_my = mysql_query($itype_sql);
 $num_face = mysql_num_rows($itype_my);
 ?>
-<span align="right">
+<span style="float:right">
 <?php if($num_face==0){ ?>
         <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" >
 		<img src="images/add_patient_photo.png" />
         </a>
 <?php }else{ 
   while($image = mysql_fetch_array($itype_my)){
-   echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
+   echo "<img src='q_file/".$image['image_file']."' height='150' style='float:right;' />";
   }
 
 } ?>
@@ -1288,6 +1288,31 @@ $num_face = mysql_num_rows($itype_my);
                                 <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
+                            <span>
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
+                                <label for="email">Email/Pt. Portal Login</label>
+<span style="color:#933;">
+                                  <?php
+                                    if($themyarray['use_patient_portal']==1){
+                                        switch($themyarray['registration_status']){
+                                        case 0:
+                                                echo 'Unregistered';
+                                                break;
+                                        case 1:
+                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
+                                                break;
+                                        case 2:
+                                                echo 'Registered';
+                                                break;
+                                        }
+                                    }else{
+                                                echo 'Patient Portal In-active';
+                                    }
+                                  ?>
+                                </span>
+
+                            </span>
+
                                                 </div>
 			<div style="clear:both">
 			    <span style="width:200px;">
@@ -1315,30 +1340,6 @@ $num_face = mysql_num_rows($itype_my);
                 </select>
 				<label>Preferred Contact Method</label>
 			    </span>
-                            <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
-                                <label for="email">Email/Pt. Portal Login</label>
-<span style="color:#933;">
-                                  <?php
-                                    if($themyarray['use_patient_portal']==1){
-                                        switch($themyarray['registration_status']){
-                                        case 0:
-                                                echo 'Unregistered';
-                                                break;
-                                        case 1:
-                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
-                                                break;
-                                        case 2:
-                                                echo 'Registered';
-                                                break;
-                                        }
-                                    }else{
-                                                echo 'Patient Portal In-active';
-                                    }
-                                  ?>
-                                </span>
-
-                            </span>
                         </div>
                     </li>
                 </ul>

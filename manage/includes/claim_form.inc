@@ -71,9 +71,12 @@ if ($_REQUEST["delid"] != "") {
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
-    print '<script type="text/javascript">';
-    print '  window.location="' . $_SERVER['PHP_SELF'] . '?pid=' . $_GET['pid'] . '&insid=' . $_GET['insid'] . '&msg=' . $msg . '";';
-    print '</script>';
+        ?>
+        <script type="text/javascript">
+                //alert("Deleted Successfully");
+                window.location="delete_insurance.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&delid=<?=$_REQUEST['delid'];?>";
+        </script>
+        <?
 
 	die(); // already did a javascript redirect...just die
 }

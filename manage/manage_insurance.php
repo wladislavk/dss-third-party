@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+		window.location="delete_insurance.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&delid=<?=$_REQUEST['delid'];?>";
 	</script>
 	<?
 	die();
@@ -50,7 +50,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
+$sql = "select * from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
 $sqlid = "select card from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' LIMIT 1";
 
 $total_rec = mysql_num_rows($my);
@@ -157,14 +157,21 @@ $num_users=mysql_num_rows($my);
 				    <?=$dss_claim_status_labels[$myarray['status']];?>
 				</td>
 				<td valign="top">
-					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-						Edit 
-					</a>
                     <?php if($myarray['status'] == DSS_CLAIM_PENDING){ ?>
+					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                Edit 
+                                        </a>
+
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
-			<?php } ?>
+			<?php }else{
+				?>
+                                        <a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                View 
+                                        </a>
+				<?php
+				} ?>
 				</td>
 			</tr>
 	  <? } ?>

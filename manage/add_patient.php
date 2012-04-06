@@ -1302,8 +1302,6 @@ $num_face = mysql_num_rows($p);
                                 <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" />
                                 <label for="preferred_name">Preferred Name</label>
                             </span>
-			</div>
-                        <div>
                             <span>
                                 <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Home Phone
@@ -1329,7 +1327,7 @@ $num_face = mysql_num_rows($p);
 				</select>
 				<label for="best_time">Best time to contact patient</label>
 			    </span>
-			    <span>
+			    <span style="width:200px;">
                                 <select id="best_number" name="best_number">
                                         <option value="">Please Select</option>
                                         <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
@@ -1338,10 +1336,15 @@ $num_face = mysql_num_rows($p);
                                 </select>
                                 <label for="best_number">Best number to contact patient</label>
 			    </span>
-			</div>
-                        <div>
+			    <span style="width:200px;">
+                <select id="preferredcontact" name="preferredcontact" >
+                        <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                        <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                </select>
+				<label>Preferred Contact Method</label>
+			    </span>
                             <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:325px;" />
+                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
                                 <label for="email">Email</label>
                             </span>
                         </div>
@@ -1385,11 +1388,9 @@ $num_face = mysql_num_rows($p);
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:325px;" maxlength="255" />
+                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:225px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
-                        </div>
-                        <div>
                             <span>
                                 <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>
@@ -1429,8 +1430,6 @@ $num_face = mysql_num_rows($p);
                                 <label for="ssn">Patient's Soc Sec No.</label>
                             </span>
  
-						</div>
-						<div>
                             <span>
                                 <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                         <option value="">Select</option>
@@ -1443,7 +1442,7 @@ $num_face = mysql_num_rows($p);
                             </span>
                                                         <span>
                                 <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
-                                <label for="partner_name">Partner Name</label>
+                                <label for="partner_name">Partner/Guardian Name</label>
                             </span>
                         </div>
                     </li>
@@ -1465,18 +1464,6 @@ $num_face = mysql_num_rows($p);
                         </div>
                     </li>
 				</ul>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="20%">
-                Preferred Contact Method
-            </td>
-            <td valign="top" class="frmdata" width="80%">
-            	<select id="preferredcontact" name="preferredcontact" class="tbox" >
-                	<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                	<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
-                </select>
-                <br />&nbsp;
             </td>
         </tr>
 		<tr> 
@@ -1607,11 +1594,9 @@ $(document).ready(function(){
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:325px;" maxlength="255" />
+                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:175px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
-                        </div>
-                        <div>
                             <span>
                                 <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
                                 <label for="city">City</label>

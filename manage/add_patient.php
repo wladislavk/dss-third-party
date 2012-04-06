@@ -1207,24 +1207,6 @@ function remove_notification(id){
 	</tr>
 	<tr>
 		<td colspan="2">
-<?php
-$sql = "SELECT imageid FROM dental_q_image WHERE patientid='".$_GET['pid']."' AND imagetypeid=4";
-$p = mysql_query($sql);
-$num_face = mysql_num_rows($p);
-?>
-<span align="right">
-<?php if($num_face==0){ ?>
-        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" class="addButton">
-                + Add Patient Photo
-        </button>
-<?php }else{ ?>
-        <button onclick="Javascript: window.location='q_image.php?fid=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1'; return false;" class="addButton">
-                + Add/Update Patient Photo
-        </button>
-
-<?php } ?>
-
-
 
 		</td>
 		</tr>
@@ -1242,10 +1224,20 @@ $num_face = mysql_num_rows($p);
                                 $pid = $_GET['pid'];
   $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
   $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+?>
+<span align="right">
+<?php if($num_face==0){ ?>
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" >
+		<img src="images/add_patient_photo.png" />
+        </a>
+<?php }else{ 
   while($image = mysql_fetch_array($itype_my)){
    echo "<center><img src='q_file/".$image['image_file']."' height='150' /></center>";
   }
-?>
+
+} ?>
+
 </div>
                         <label class="desc" id="title0" for="Field0" style="float:left;">
                             Name
@@ -1283,17 +1275,17 @@ $num_face = mysql_num_rows($p);
                        </div>   
 		        <div style="float:left">
                             <span>
-                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:200px;" />
+                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Home Phone
                                                                                                                                 <span id="req_0" class="req">*</span>
                                                                                                                                 </label>
                             </span>
                             <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:200px;" />
+                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:100px;" />
                                 <label for="cell_phone">Cell Phone</label>
                             </span>
                             <span>
-                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:200px;" />
+                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
                                 <label for="work_phone">Work Phone</label>
                             </span>
                                                 </div>
@@ -1384,11 +1376,11 @@ $num_face = mysql_num_rows($p);
                         </label>
                         <div>
                             <span>
-                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:325px;"  maxlength="255"/>
+                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:225px;" maxlength="255" />
+                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:175px;" maxlength="255" />
                                 <label for="add2">Address2</label>
                             </span>
                             <span>
@@ -1426,7 +1418,7 @@ $num_face = mysql_num_rows($p);
                                 <label for="gender">Gender</label>
                             </span>
                             <span>
-                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" />
+                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
                                 <label for="ssn">Patient's Soc Sec No.</label>
                             </span>
  
@@ -1479,11 +1471,11 @@ $num_face = mysql_num_rows($p);
                                 <label for="home_phone">Name</label>
                             </span>
                             <span>
-                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:200px;" />
+                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:150px;" />
                                 <label for="home_phone">Relationship</label>
                             </span>
                             <span>
-                                <input id="emergency_number" name="emergency_number" type="text" class="phonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:200px;" />
+                                <input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:150px;" />
                                 <label for="emergency_number">Number</label>
                             </span>
 						</div>
@@ -1509,11 +1501,15 @@ $num_face = mysql_num_rows($p);
                            <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
 <label>Date</label>
 				</div>
-				<div style="float:left;">
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person<br />
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?><br />
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?><br />
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?><br />
+<style type="text/css">
+#referred_source div{ float:left; }
+</style>
+				<div style="float:left;" id="referred_source">
+				
+				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
                                 <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
 
 				<label for="referred_source">Referral Source</label>
@@ -1530,8 +1526,8 @@ function show_referredby(t, rs){
                 $('#referred_source').val(rs);
 }
 </script>
-				<div style="float:left;">
-					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>	
+				<div style="clear:both;float:left;">
+					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
 					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
 <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Add Contact" />
 <br />
@@ -1546,14 +1542,14 @@ $(document).ready(function(){
 });
 </script>
 					</div>
-					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
+					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
 						<textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea> 	
 					</div>
 <input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
 <input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
 
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-                               <label for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
+                               <label style="margin-left:150px;" for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
                             </div>
                     </li>
 				</ul>
@@ -1575,11 +1571,11 @@ $(document).ready(function(){
                         </label>
                                                 <div>
                             <span>
-                                <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:525px;"  maxlength="255"/>
+                                <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:325px;"  maxlength="255"/>
                                 <label for="add1">Employer</label>
                             </span>
                                                         <span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:120px;" maxlength="255" />
+                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:150px;" maxlength="255" />
                                 <label for="state">&nbsp;&nbsp;Phone</label>
                             </span>
                                                         <span>
@@ -1590,7 +1586,7 @@ $(document).ready(function(){
                         </div>
                         <div>
                             <span>
-                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:325px;"  maxlength="255"/>
+                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:225px;"  maxlength="255"/>
                                 <label for="add1">Address1</label>
                             </span>
                             <span>

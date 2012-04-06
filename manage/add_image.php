@@ -9,8 +9,8 @@ require_once('includes/general_functions.php');
 <?php
 if($_POST["imagesub"] == 1)
 {
-
-	if ((array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
+	
+	if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
 	
@@ -234,8 +234,10 @@ if($uploaded){
   $('#imagetypeid').change(function(){
 	if($(this).val() == '0'){
 		$('#extra_files').show();
+		$('#orig_file').hide();
 	}else{
 		$('#extra_files').hide();
+		$('#orig_file').show();
 	}
   });
 </script>
@@ -253,7 +255,7 @@ if($uploaded){
 				</ul>
             </td>
         </tr>
-        <tr> 
+        <tr id="orig_file"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -276,7 +278,11 @@ if($uploaded){
         </tr>
 	<tr id="extra_files" style="display:none;">
 		<td colspan="2" class="frmhead">
+		<?php
+			$labels = array('', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower');
+		?>
 			<?php for($i=1;$i<=9;$i++){ ?>
+			<label style="width:100px; float:left; display:block;"><?= $labels[$i]; ?></label>
 				<input type="file" name="image_file_<?= $i; ?>" value="" size="26" /><br />
 			<?php } ?>
 		</td>

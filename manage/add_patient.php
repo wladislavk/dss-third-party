@@ -1402,7 +1402,7 @@ $(document).ready(function(){
 				</script>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="+ Add Insurance Company" />
+<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Add Insurance Company" />
                             </span>
 
                             <span>

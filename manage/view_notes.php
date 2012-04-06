@@ -47,7 +47,7 @@ $num_users=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <br />
-<span class="admin_head">
+<span class="admin_head" style="color:#fff">
 	View Progress Notes
 	-
 	<i>

@@ -306,6 +306,12 @@ background:#edeb46;
   .even{ background: #e4ffcf; }
   select{width:140px;}
 </style>
+<?php
+
+$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
+$pat_q = mysql_query($pat_sql);
+$pat_r = mysql_fetch_assoc($pat_q);
+?>
 <form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
 <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
@@ -432,12 +438,26 @@ function addstudylab(v){
         </tr>
 	<tr>
                 <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" name="diagnosising_doc" /> <span id="req_0" class="req">*</span>
+                  <input style="width:100px;" type="text" name="diagnosising_doc" /> 
+		<?php
+			if($pat_r['p_m_ins_type']==1){
+		?>
+		<span id="req_0" class="req">*</span>
+		<?php
+			}
+		?>
                 </td>
         </tr>
 	<tr>
                 <td valign="top" class="even">
-                  <input style="width:100px;" type="text" name="diagnosising_npi" /> <span id="req_0" class="req">*</span>
+                  <input style="width:100px;" type="text" name="diagnosising_npi" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?> 
                 </td>
         </tr>
 
@@ -664,12 +684,28 @@ No
         </tr>
         <tr>
                 <td valign="top" class="odd">
-                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
+                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?>
+ 
                 </td>
         </tr>
         <tr>
                 <td valign="top" class="even">
-                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
+                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?>
+ 
                 </td>
         </tr>
 

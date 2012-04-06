@@ -474,7 +474,7 @@ function contactabc(fa)
   pta = pt.split(',');
 
   if(fa.contacttypeid.value == '11'){ //INSURANCE
-        if(trim(fa.company.value) == "" && fa.contact_type.value == 'ins')
+        if(trim(fa.company.value) == "")
         {
                 alert("Company is Required");
                 fa.company.focus();
@@ -506,7 +506,7 @@ function contactabc(fa)
         }	  
         if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
         {
-                alert("Phone number is a required field for Insurance Companies");
+                alert("Phone or fax required");
                 fa.phone1.focus();
                 return false;
         }
@@ -555,7 +555,7 @@ function contactabc(fa)
         }
         if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
         {
-                alert("Phone number is a required field for Insurance Companies");
+                alert("Phone or fax required");
                 fa.phone1.focus();
                 return false;
         }
@@ -590,12 +590,6 @@ function contactabc(fa)
         {
                 alert("Zip is Required");
                 fa.zip.focus();
-                return false;
-        }
-        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
-        {
-                alert("Phone number is a required field");
-                fa.phone1.focus();
                 return false;
         }
 
@@ -964,7 +958,7 @@ function imageabc(fa)
 		return false;
 	}
 	
-	if(trim(fa.image_file.value) == '' && trim(fa.ed.value) == '')
+	if(fa.imagetypeid.value!='0' && trim(fa.image_file.value) == '' && trim(fa.ed.value) == '')
 	{
 		alert("Image is Required");
 		fa.image_file.focus();

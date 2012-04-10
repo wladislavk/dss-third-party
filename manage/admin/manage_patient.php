@@ -3,9 +3,14 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."' OR parent_patientid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
+	$del_sql = "delete from dental_patient_contacts where patientid='".$_REQUEST["delid"]."'";
+	mysql_query($del_sql);
+        $del_sql = "delete from dental_patient_insurance where patientid='".$_REQUEST["delid"]."'";
+        mysql_query($del_sql);
+
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">

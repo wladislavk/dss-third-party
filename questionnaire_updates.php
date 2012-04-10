@@ -36,7 +36,7 @@ if(in_array($d, $compid)){
   $othercomp .= $c['complaint'];
 }
 }
-if(trim($other_complaint)!=''){
+if(trim($othercomp)!=''){
   if($run_updates){
     mysql_query("UPDATE dental_q_page1 SET complaintid=CONCAT(complaintid,'0|1~') WHERE patientid='".$pid."'");
   }

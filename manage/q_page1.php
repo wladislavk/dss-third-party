@@ -656,7 +656,7 @@ function in_array(needle, haystack)
                                             <option value=""></option>
                                             <? for($i=0;$i<11;$i++)
                                             {?>
-                                                <option value="<?=$i;?>" <? if($enery_level!='' && $energy_level == $i) echo " selected";?>><?=$i;?></option>
+                                                <option value="<?=$i;?>" <? if($energy_level!='' && $energy_level == $i) echo " selected";?>><?=$i;?></option>
                                             <? }?>
                                         </select>
                             <?php

@@ -1278,11 +1278,14 @@ $rs = $pat_myarray['referred_source'];
 if(st($pat_myarray['referred_by']) <> '')
 {
   if($rs == DSS_REFERRED_PHYSICIAN){
-  $referredby_sql = "select * from dental_contact where status=1 and contactid='".st($pat_myarray['referred_by'])."'";
+  $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE dc.status=1 AND contactid='".st($pat_myarray['referred_by'])."'";
 	$referredby_my = mysql_query($referredby_sql);
 	$referredby_myarray = mysql_fetch_array($referredby_my);
 	
 	$referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+	$referredbythis .= " - ". $referredby_myarray['contacttype'];
   echo $referredbythis;
   }elseif($rs == DSS_REFERRED_PATIENT){
   $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";

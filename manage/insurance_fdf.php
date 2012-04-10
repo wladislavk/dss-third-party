@@ -54,6 +54,17 @@ $patient_firstname = strtoupper(st($myarray['patient_firstname']));
 $patient_middle = strtoupper(st($myarray['patient_middle']));
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
+$other_insured_firstname = st($myarray['other_insured_firstname']);
+$other_insured_lastname = st($myarray['other_insured_lastname']);
+$other_insured_middle = st($myarray['other_insured_middle']);
+$other_insured_dob = st($myarray['other_insured_dob']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+$other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+$insured_id_number = st($myarray['insured_id_number']);
+$insured_dob = st($myarray['insured_dob']);
+$insured_insurance_plan = st($myarray['insured_insurance_plan']);
+$insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+
 $patient_address = strtoupper(st($myarray['patient_address']));
 $patient_relation_insured = st($myarray['patient_relation_insured']);
 $insured_address = strtoupper(st($myarray['insured_address']));

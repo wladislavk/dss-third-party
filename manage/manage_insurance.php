@@ -205,6 +205,31 @@ $num_users=mysql_num_rows($my);
       <?php } ?>
     </td>
   </tr>
+  <?php
+    // Display a placeholder row for any ledger trxns that need added to a new claim
+    $sql = "SELECT "
+         . "  ledger.* "
+         . "FROM "
+         . "  dental_ledger ledger "
+         . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+         . "  JOIN dental_users user ON user.userid = ledger.docid "
+	 . "  JOIN dental_insurance ins ON ins.insuranceid = ledger.primary_claim_id "
+         . "WHERE "
+         . "  ins.status = " . DSS_CLAIM_PENDING . " "
+         . "  AND ledger.patientid = " . $_GET['pid'] . " "
+         . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " ";
+    $query = mysql_query($sql);
+    $num_trxns = mysql_num_rows($query);
+    $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
+  ?>
+  <tr class="<?=$tr_class;?>">
+    <td>There <?=$row_text?> on pending claims.</td>
+    <td>n/a</td>
+    <td>
+    </td>
+
 </table>
 </insurance>
 

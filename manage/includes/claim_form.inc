@@ -299,7 +299,7 @@ if ($_POST['insurancesub'] == 1) {
 		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
-		insurance_type = '".s_for($insurance_type_arr)."',
+		insurance_type = '".s_for($insurance_type)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',
@@ -536,7 +536,7 @@ if ($_POST['insurancesub'] == 1) {
 		$ed_sql = " update dental_insurance set 
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
-		insurance_type = '".s_for($insurance_type_arr)."',
+		insurance_type = '".s_for($insurance_type)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',
@@ -750,7 +750,7 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-$insurancetype = st($pat_myarray['p_m_ins_type']);
+//$insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partymname']);
 $insured_middle = st($pat_myarray['p_m_partylname']);
@@ -790,12 +790,23 @@ $insuranceid = st($myarray['insuranceid']);
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurance_type = st($myarray['insurance_type']);
+$insurancetype = st($myarray['insurance_type']);
 $patient_lastname = st($myarray['patient_lastname']);
 $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
+$other_insured_firstname = st($myarray['other_insured_firstname']);
+$other_insured_lastname = st($myarray['other_insured_lastname']);
+$other_insured_middle = st($myarray['other_insured_middle']);
+$other_insured_dob = st($myarray['other_insured_dob']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+$other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+$insured_id_number = st($myarray['insured_id_number']);
+$insured_dob = st($myarray['insured_dob']);
+$insured_insurance_plan = st($myarray['insured_insurance_plan']);
+$insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+
 $patient_address = st($myarray['patient_address']);
 $patient_relation_insured = st($myarray['patient_relation_insured']);
 $insured_address = st($myarray['insured_address']);
@@ -968,11 +979,13 @@ $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
 
 if($insured_sex == '')
 	$insured_sex = $pat_myarray['gender'];
   
-$patient_sex = $pat_myarray['gender'];
+if($patient_sex == '')
+  $patient_sex = $pat_myarray['gender'];
 
 if($patient_firstname == '')
 	$patient_firstname = $pat_myarray['firstname'];
@@ -1127,7 +1140,7 @@ input{text-transform:uppercase;}
 <script src="<?=$admin_path?>popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
-<?php if ($is_sent || (!$is_new_claim && $is_front_office)) { ?>
+<?php if ($is_sent || (!$is_new_claim && !$is_pending && $is_front_office)) { ?>
   <script>
 	$(function() {
 	  $('input, select, textarea').attr('disabled', 'true');
@@ -1159,8 +1172,13 @@ input{text-transform:uppercase;}
                <?php } ?>
 		<?php } ?>
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-        <?php if (!$is_sent) { ?>
+        <?php if (!$is_sent) { 
+                if($is_pending){ ?>
+          <input type="submit" name="ex_pagebtn" value="Save Changes" />
+                <?php }else{ ?>
           <input type="submit" name="ex_pagebtn" value="Submit Claim" />
+                <?php } ?>
+
         <?php } ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
@@ -1254,27 +1272,27 @@ input{text-transform:uppercase;}
 							</tr>
 							<tr>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Medicare" <? if($insurancetype == '1') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="1" <? if($insurancetype == '1') {echo " checked";}?> />
 									<span class="small_cap">(Medicare #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="MediCaID" <? if($insurancetype == '2') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="2" <? if($insurancetype == '2') {echo " checked";}?> />
 									<span class="small_cap">(Medicaid #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Tricare Champus" <? if($insurancetype == '3') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="3" <? if($insurancetype == '3') {echo " checked";}?> />
 									<span class="small_cap">(Sponsor's SSN)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Chmapva" <? if($insurancetype == '4') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="4" <? if($insurancetype == '4') {echo " checked";}?> />
 									<span class="small_cap">(Member ID #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Group Health Plan" <? if($insurancetype == '5') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="5" <? if($insurancetype == '5') {echo " checked";}?> />
 									<span class="small_cap">(SSN or ID)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Feca blklung" <? if($insurancetype == '6') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="6" <? if($insurancetype == '6') {echo " checked";}?> />
 									<span class="small_cap">(SSN)</span>
 								</td>
 								
@@ -2524,8 +2542,12 @@ if ($is_new_claim) {
                     <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
-        <?php if (!$is_sent) { ?>
+        <?php if (!$is_sent) { 
+		if($is_pending){ ?>
+          <input style="float:right;" type="submit" name="ex_pagebtn" value="Save Changes" />
+		<?php }else{ ?>
           <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
+		<?php } ?>
         <?php } ?>
 
 			<?php } ?>

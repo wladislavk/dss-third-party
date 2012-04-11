@@ -49,7 +49,14 @@ if($pat_myarray['patientid'] == '')
 $sql = "select * from dental_q_image where patientid='".$_GET['pid']."'";
 if($_GET['sh'] <> '')
 	$sql .= " and imagetypeid='".$_GET['sh']."' ";
-$sql .= " order by title";
+
+If(!isset($_REQUEST['sort'])){
+  $_REQUEST['sort'] = 'title';
+}
+If(!isset($_REQUEST['sortdir'])){
+  $_REQUEST['sortdir'] = 'ASC';
+}
+$sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 $my = mysql_query($sql);
 ?>
 
@@ -108,14 +115,14 @@ $itype_my = mysql_query($itype_sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Title
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=title&sortdir=<?php echo ($_REQUEST['sort']=='title'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Title</a>
 		</td>
-		<td valign="top" class="col_head" width="20%">
-			Image Type
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'imagetypeid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=imagetypeid&sortdir=<?php echo ($_REQUEST['sort']=='imagetypeid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Image Type</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Add Date
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Add Date</a>
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Preview
@@ -156,7 +163,11 @@ $itype_my = mysql_query($itype_sql);
 					<?=st($myarray["title"]);?>
 				</td>
 				<td valign="top">
+					<?php if($myarray['imagetypeid']==0){ ?>
+						Clinical Photos (Pre-Tx)
+					<?php }else{ ?>
 					<?=st($i_type_myarray["imagetype"]);?>
+					<?php } ?>
 				</td>
 				<td valign="top">
 					<?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>

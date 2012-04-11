@@ -25,6 +25,7 @@ select
 		dl.status, 
 		dl.description,
 		p.name, 
+		pat.patientid,
 		pat.firstname, 
 		pat.lastname,
 		'' as payer,
@@ -44,6 +45,7 @@ select
 		'',
 		'',
                 p.name,
+		pat.patientid,
                 pat.firstname,
 		pat.lastname,
                 dlp.payer,
@@ -234,7 +236,7 @@ background:#999999;
                 	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray['lastname'].", ".$myarray['firstname']);?>
+                	<a href="add_patient.php?ed=<?= $myarray['patientid']; ?>&pid=<?= $myarray['patientid']; ?>&addtopat=1"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
 				</td>
 				<td valign="top" width="10%">
                 	<?=st($myarray['name']);?>
@@ -333,7 +335,7 @@ background:#999999;
 		</tr>
 		<tr>
                         <td valign="top" colspan="5" align="right">
-                                <b>Daily Balance</b>
+                                <b>Balance</b>
                         </td>
 			<td align="right">
 				<b>                                <b>

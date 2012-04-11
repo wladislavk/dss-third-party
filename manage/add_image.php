@@ -16,6 +16,14 @@ if($_POST["imagesub"] == 1)
 	
 
 	  if($imagetypeid == '0'){
+                        $fname = $_FILES["image_file_1"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
 
 		// Get new sizes
 		$newwidth = 1500;
@@ -24,7 +32,18 @@ if($_POST["imagesub"] == 1)
 		// Load
 		$thumb = imagecreatetruecolor($newwidth, $newheight);
 		for($i=1;$i<=9;$i++){
-			$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
+			switch($extension){
+			  case 'jpg':
+			  case 'jpeg':
+				$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
+				break;
+                          case 'gif':
+                                $source = imagecreatefromgif($_FILES["image_file_".$i]["tmp_name"]);
+                                break;
+                          case 'png':
+                                $source = imagecreatefrompng($_FILES["image_file_".$i]["tmp_name"]);
+                                break;
+			}
 			list($width, $height) = getimagesize($_FILES["image_file_".$i]["tmp_name"]);
 			$x = (($i-1)%3)*500;
 			$y = floor(($i-1)/3)*500;	
@@ -42,7 +61,19 @@ if($_POST["imagesub"] == 1)
                         $banner1 .= ".".$extension;
 
 		// Output
-		imagejpeg($thumb, "q_file/".$banner1);
+                        switch($extension){
+                          case 'jpg':
+                          case 'jpeg':
+                		imagejpeg($thumb, "q_file/".$banner1);
+                                break;
+                          case 'gif':
+                                imagegif($thumb, "q_file/".$banner1);                               
+                                break;
+                          case 'png':
+                                imagepng($thumb, "q_file/".$banner1);
+                                break;
+                        }
+
 		@chmod("q_file/".$banner1,0777);
 		// Free up memory
 		//imagedestroy($thumb);
@@ -105,7 +136,7 @@ if($uploaded){
 			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			
 			mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-			$msg = "Added Successfully";
+			$msg = "Uploaded Successfully";
 			if ($_REQUEST['flow'] == "1") {
 				?>
 				<script type="text/javascript">
@@ -116,7 +147,7 @@ if($uploaded){
 			} else {
 				?>
 				<script type="text/javascript">
-					parent.window.location=parent.window.location
+					parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>';
 				</script>
 				<?
 				die();
@@ -151,7 +182,9 @@ if($uploaded){
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
 <body>
-
+<div id="loader" style="position:absolute;width:100%; height:98%; display:none;">
+<img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
+</div>
     <?
     $thesql = "select * from dental_q_image where imageid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
@@ -191,7 +224,7 @@ if($uploaded){
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="imagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>" method="post" onSubmit="return imageabc(this)" enctype="multipart/form-data">
+    <form name="imagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>" method="post" onSubmit="return imageabc(this);" enctype="multipart/form-data">
  
 		<input name="flow" type="hidden" value="<?=$_GET['flow'];?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

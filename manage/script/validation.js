@@ -964,7 +964,7 @@ function imageabc(fa)
 		fa.image_file.focus();
 		return false;
 	}
-	
+	document.getElementById('loader').style.display="block";	
 }
 
 //-->

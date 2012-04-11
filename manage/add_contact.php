@@ -176,6 +176,18 @@ if($_POST["contactsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
+<?php
+        if($_GET['search'] != ''){
+          if(strpos($_GET['search'], ' ')){
+            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
+            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+          }else{
+            $firstname = $_GET['search'];
+          }
+        }
+
+?>
+
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
     <input type="hidden" id="physician_types" value="<?= $physician_types; ?>" />
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />

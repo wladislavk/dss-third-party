@@ -66,6 +66,13 @@ $num_users=mysql_num_rows($my);
 <a href="ledger.php" class="editlink" title="EDIT">
 	<b>&lt;&lt;Back</b></a>
 </div>
+<div align="right">
+<button onclick="Javascript:window.location='ledger_reportfull.php';" class="addButton">
+               Daily Ledger
+        </button>
+
+        &nbsp;&nbsp;
+</div>
 
 <br />
 <style>

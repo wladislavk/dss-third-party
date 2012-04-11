@@ -9,6 +9,8 @@ function display_content(){
     $('tr.content.physician').show();
   }else if(t==11){
     $('tr.content.insurance').show();
+    $('#firstname').val('');
+    $('#lastname').val('');
   }else if(t!=''){
     $('tr.content.other').show();
   }

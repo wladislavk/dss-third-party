@@ -523,7 +523,7 @@ function popitup(url) {
 		    }
 		});
 		$('*').click(function() {
-			$('#search_hints').css('display', 'none');
+			$('.search_hints').css('display', 'none');
 		});
 	});
 	function sendValue(partial_name) {
@@ -764,7 +764,7 @@ display:none;
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
   <!--<input type="submit" name="Submit" value="Patient Search By Last Name" />-->
 	<br />
-	<div id="search_hints" style="display:none;">
+	<div id="search_hints"  class="search_hints" style="display:none;">
 		<ul id="patient_list">
 			<li class="template" style="display:none">Doe, John S</li>
 		</ul>

@@ -330,7 +330,7 @@ return s;
                Claims Outstanding 
         </button>
 <?php } ?>	&nbsp;&nbsp;
-        <a href='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>' class="addButton">
+        <a href='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>' target="_blank" class="addButton">
                 Print Ledger
         </a>
 &nbsp;&nbsp;

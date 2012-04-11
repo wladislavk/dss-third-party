@@ -30,10 +30,6 @@ $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
 {
         $exam_date = ($_POST['exam_date']!='')?date('Y-m-d', strtotime($_POST['exam_date'])):'';
-	$feet = $_POST['feet'];
-	$inches = $_POST['inches'];
-	$weight = $_POST['weight'];
-	$bmi = $_POST['bmi'];
 	$ess = $_POST['ess'];
 	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
@@ -111,10 +107,6 @@ if($_POST['q_page1sub'] == 1)
 		$ins_sql = " insert into dental_q_page1 set 
 		patientid = '".s_for($_GET['pid'])."',
                 exam_date = '".s_for($exam_date)."',
-		feet = '".s_for($feet)."',
-		inches = '".s_for($inches)."',
-		weight = '".s_for($weight)."',
-		bmi = '".s_for($bmi)."',
 		ess = '".s_for($ess)."',
 		tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
@@ -154,10 +146,6 @@ if($_POST['q_page1sub'] == 1)
 	{
 		$ed_sql = " update dental_q_page1 set 
                 exam_date = '".s_for($exam_date)."',
-		feet = '".s_for($feet)."',
-		inches = '".s_for($inches)."',
-		weight = '".s_for($weight)."',
-		bmi = '".s_for($bmi)."',
                 ess = '".s_for($ess)."',
                 tss = '".s_for($tss)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
@@ -214,10 +202,6 @@ $myarray = mysql_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
 $exam_date = st($myarray['exam_date']);
-$feet = st($myarray['feet']);
-$inches = st($myarray['inches']);
-$weight = st($myarray['weight']);
-$bmi = st($myarray['bmi']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
 $chief_complaint_text = st($myarray['chief_complaint_text']);
@@ -345,108 +329,6 @@ if($complaintid <> '')
         </td>
     </tr>
     
-    <tr>
-        <td valign="top" class="frmhead">
-        	<script type="text/javascript">
-				function cal_bmi()
-				{
-					fa = document.q_page1frm;
-					if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
-					{
-						var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-						//alert(inc);
-						
-						var inc_sqr = parseInt(inc) * parseInt(inc);
-						var wei = parseInt(fa.weight.value) * 703;
-						var bmi = parseInt(wei) / parseInt(inc_sqr);
-						
-						//alert("BMI " + bmi.toFixed(2));
-						fa.bmi.value = bmi.toFixed(1);
-					}
-					else
-					{
-						fa.bmi.value = '';
-					}
-				}
-			</script>
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        Body Mass Index Calculation
-                    </label>
-                    <div>
-                        <span>
-                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
-                            	<option value="0">Feet</option>
-                            	<? for($i=1;$i<9;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-			    <?php 
-				showPatientValue('dental_q_page1', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
-			    ?>
-                            <label for="feet">Feet</label>
-                        </span>
-                        
-                        <span>
-                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-                            	<option value="-1">Inches</option>
-                            	<? for($i=0;$i<12;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-                            <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
-                            ?>
-                            <label for="inches">Inches</label>
-                        </span>
-                        
-                        <span>
-                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
-                            	<option value="0">Weight</option>
-                            	<? for($i=80;$i<=500;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-                            <?php
-                                showPatientValue('dental_q_page1', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
-                            ?>
-
-                            <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        </span>
-                        
-                        <span>
-                        	<span style="color:#000000; padding-top:2px;">BMI</span>
-                           	<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
-                        </span>
-                        <span>
-                        	<label for="inches"> 
-                            	&lt; 18.5 is Underweight
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
-                                18.5 - 24.9 is Normal 
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
-                                25 - 29.9 is Overweight
-                                <br />
-                                &gt; 30 is Obese
-                            </label>
-                        </span>
-                   </div>   
-                </li>
-            </ul>
-            
-        </td>
-    </tr>
     <tr>
 	<td valign="top" class="frmhead">
 	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />

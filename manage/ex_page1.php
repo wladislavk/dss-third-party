@@ -25,6 +25,9 @@ if($_POST['ex_page1sub'] == 1)
 	$blood_pressure = $_POST['blood_pressure'];
 	$pulse = $_POST['pulse'];
 	$neck_measurement = $_POST['neck_measurement'];
+	$feet = $_POST['feet'];
+	$inches = $_POST['inches'];
+	$weight = $_POST['weight'];
 	$bmi = $_POST['bmi'];
 	$additional_paragraph = $_POST['additional_paragraph'];
 	$tongue = $_POST['tongue'];
@@ -57,7 +60,6 @@ if($_POST['ex_page1sub'] == 1)
 		blood_pressure = '".s_for($blood_pressure)."',
 		pulse = '".s_for($pulse)."',
 		neck_measurement = '".s_for($neck_measurement)."',
-		bmi = '".s_for($bmi)."',
 		additional_paragraph = '".s_for($additional_paragraph)."',
 		tongue = '".s_for($tongue_arr)."',
 		userid = '".s_for($_SESSION['userid'])."',
@@ -66,6 +68,14 @@ if($_POST['ex_page1sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+
+		$pat_sql = "UPDATE dental_patients SET
+		feet = '".s_for($feet)."',
+                inches = '".s_for($inches)."',
+                weight = '".s_for($weight)."',
+                bmi = '".s_for($bmi)."'
+		WHERE patientid='".s_for($_GET['pid'])."'";
+		mysql_query($pat_sql);
 		
 		$msg = "Added Successfully";
 		?>
@@ -82,13 +92,20 @@ if($_POST['ex_page1sub'] == 1)
 		blood_pressure = '".s_for($blood_pressure)."',
 		pulse = '".s_for($pulse)."',
 		neck_measurement = '".s_for($neck_measurement)."',
-		bmi = '".s_for($bmi)."',
 		additional_paragraph = '".s_for($additional_paragraph)."',
 		tongue = '".s_for($tongue_arr)."'
 		where ex_page1id = '".s_for($_POST['ed'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
+
+                $pat_sql = "UPDATE dental_patients SET
+                feet = '".s_for($feet)."',
+                inches = '".s_for($inches)."',
+                weight = '".s_for($weight)."',
+                bmi = '".s_for($bmi)."'
+                WHERE patientid='".s_for($_GET['pid'])."'";
+                mysql_query($pat_sql);
+	
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -116,10 +133,13 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-$bmi_sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
 $bmi_my = mysql_query($bmi_sql);
 $bmi_myarray = mysql_fetch_array($bmi_my);
 $bmi = st($bmi_myarray['bmi']);
+$feet = st($bmi_myarray['feet']);
+$inches = st($bmi_myarray['inches']);
+$weight = st($bmi_myarray['weight']);
 
 $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -163,7 +183,7 @@ $tongue = st($myarray['tongue']);
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td valign="top" class="frmhead">
-        	<ul>
+        	<ul style="width:48%; float:left;">
                 <li id="foli8" class="complex">	
                     <label class="desc" id="title0" for="Field0">
                         VITAL DATA
@@ -215,21 +235,91 @@ $tongue = st($myarray['tongue']);
                 	</div>
                     <br />
                     
-                    <div>
-                    	<span>
-                        	BMI
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            &nbsp;&nbsp;
-                            <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi;?>" tabindex="4" maxlength="255" style="width:50px;" readonly="readonly" />
-                        </span>
-                  	</div>
-                    <br />
                    	
                 </li>
             </ul>
+                <script type="text/javascript">
+                                function cal_bmi()
+                                {
+                                        fa = document.ex_page1frm;
+                                        if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
+                                        {
+                                                var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
+                                                //alert(inc);
+                                                
+                                                var inc_sqr = parseInt(inc) * parseInt(inc);
+                                                var wei = parseInt(fa.weight.value) * 703;
+                                                var bmi = parseInt(wei) / parseInt(inc_sqr);
+                                                
+                                                //alert("BMI " + bmi.toFixed(2));
+                                                fa.bmi.value = bmi.toFixed(1);
+                                        }
+                                        else
+                                        {
+                                                fa.bmi.value = '';
+                                        }
+                                }
+                        </script>
+
+	    <ul style="width:50%; float:left;">
+		<li>
+                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
+                                <option value="0">Feet</option>
+                                <? for($i=1;$i<9;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+                            <?php
+                                showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+                            ?>
+                            <label for="feet">Feet</label>
+		</li>
+		<li>
+                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
+                                <option value="-1">Inches</option>
+                                <? for($i=0;$i<12;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+                            <label for="inches">Inches</label>
+		</li>
+		<li>
+                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
+                                <option value="0">Weight</option>
+                                <? for($i=80;$i<=500;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+
+                            <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
+		</li>
+		<li>
+                                <span style="color:#000000; padding-top:2px;">BMI</span>
+                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+		<li>
+                                <label for="inches">
+                                &lt; 18.5 is Underweight
+                                <br />
+                                &nbsp;&nbsp;&nbsp;
+                                18.5 - 24.9 is Normal
+                                <br />
+                                &nbsp;&nbsp;&nbsp;
+                                25 - 29.9 is Overweight
+                                <br />
+                                &gt; 30 is Obese
+                            </label>
+		</li>
+	    </ul>
+		
            
         </td>
     </tr>

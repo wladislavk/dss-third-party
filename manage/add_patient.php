@@ -351,6 +351,10 @@ if($_POST["patientsub"] == 1)
 		gender = '".s_for($_POST["gender"])."', 
 		marital_status = '".s_for($_POST["marital_status"])."', 
 		ssn = '".s_for(num($_POST["ssn"], false))."', 
+		feet= '".s_for($_POST['feet'])."',
+                inches= '".s_for($_POST['inches'])."',
+                weight= '".s_for($_POST['weight'])."',
+                bmi= '".s_for($_POST['bmi'])."',
 		home_phone = '".s_for(num($_POST["home_phone"]))."', 
 		work_phone = '".s_for(num($_POST["work_phone"]))."', 
 		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
@@ -577,6 +581,10 @@ mysql_query($s1);
 		gender = '".s_for($_POST["gender"])."', 
 		marital_status = '".s_for($_POST["marital_status"])."', 
 		ssn = '".s_for(num($_POST["ssn"], false))."', 
+                feet= '".s_for($_POST['feet'])."',
+                inches= '".s_for($_POST['inches'])."',
+                weight= '".s_for($_POST['weight'])."',
+                bmi= '".s_for($_POST['bmi'])."',
 		home_phone = '".s_for(num($_POST["home_phone"]))."', 
 		work_phone = '".s_for(num($_POST["work_phone"]))."', 
 		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
@@ -743,6 +751,10 @@ mysql_query($s1);
 		$gender = $_POST['gender'];
 		$marital_status = $_POST['marital_status'];
 		$ssn = $_POST['ssn'];
+		$feet = $_POST['feet'];
+                $inches = $_POST['inches'];
+                $weight = $_POST['weight'];
+                $bmi = $_POST['bmi'];
 		$home_phone = $_POST['home_phone'];
 		$work_phone = $_POST['work_phone'];
 		$cell_phone = $_POST['cell_phone'];
@@ -845,6 +857,10 @@ mysql_query($s1);
 		$gender = st($themyarray['gender']);
 		$marital_status = st($themyarray['marital_status']);
 		$ssn = st($themyarray['ssn']);
+                $feet = st($themyarray['feet']);
+                $inches = st($themyarray['inches']);
+                $weight = st($themyarray['weight']);
+                $bmi = st($themyarray['bmi']);
 		$home_phone = st($themyarray['home_phone']);
 		$work_phone = st($themyarray['work_phone']);
 		$cell_phone = st($themyarray['cell_phone']);
@@ -1006,8 +1022,6 @@ mysql_query($s1);
 	update_patient_summary($_GET['ed'], 'patient_info', $complete_info);
 
 	?>
-	
-	<br /><br />
 	
 	<? if($msg != '') {?>
     <div align="center" class="red">
@@ -1184,7 +1198,11 @@ function remove_notification(id){
     
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	<tr>
-		<td colspan="2" align="right">
+              <td >
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
+              </td>
+
+		<td  align="right">
 			<?php $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
 				$q = mysql_query($s);
 				$n = mysql_num_rows($q);
@@ -1205,16 +1223,6 @@ function remove_notification(id){
 			} ?>
 		</td>
 	</tr>
-	<tr>
-		<td colspan="2">
-
-		</td>
-		</tr>
-        	  <tr>
-	      <td colspan="2">
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>	      
-	      </td>
-	  </tr>
         <tr>
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>
@@ -1249,10 +1257,8 @@ $num_face = mysql_num_rows($itype_my);
                                 <select name="salutation" style="width:80px;" >
                                   <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
                                   <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-                                  <option value="Miss." <?php if($salutation == "Miss."){echo "selected='selected'";} ?>>Miss.</option>
                                   <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
                                   <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
-                                  <option value="Prof." <?php if($salutation == "Prof."){echo "selected='selected'";} ?>>Prof.</option>
                                 </select>
                                 <label for="salutation">Salutation</label>
                             </span>
@@ -1291,6 +1297,36 @@ $num_face = mysql_num_rows($itype_my);
                             <span>
                                 <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
                                 <label for="email">Email/Pt. Portal Login</label>
+
+                            </span>
+
+                                                </div>
+			<div style="clear:both">
+			    <span style="width:140px;">
+				<select id="best_time" name="best_time">
+					<option value="">Please Select</option>
+					<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
+                                        <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
+                                        <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+				</select>
+				<label for="best_time">Best time to contact</label>
+			    </span>
+			    <span style="width:150px;">
+                                <select id="best_number" name="best_number">
+                                        <option value="">Please Select</option>
+                                        <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
+                                        <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
+                                        <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+                                </select>
+                                <label for="best_number">Best number to contact</label>
+			    </span>
+			    <span style="width:160px;">
+                <select id="preferredcontact" name="preferredcontact" >
+                        <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+                        <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                </select>
+				<label>Preferred Contact Method</label>
+			    </span>
 <span style="color:#933;">
                                   <?php
                                     if($themyarray['use_patient_portal']==1){
@@ -1310,36 +1346,6 @@ $num_face = mysql_num_rows($itype_my);
                                     }
                                   ?>
                                 </span>
-
-                            </span>
-
-                                                </div>
-			<div style="clear:both">
-			    <span style="width:200px;">
-				<select id="best_time" name="best_time">
-					<option value="">Please Select</option>
-					<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
-                                        <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
-                                        <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
-				</select>
-				<label for="best_time">Best time to contact patient</label>
-			    </span>
-			    <span style="width:200px;">
-                                <select id="best_number" name="best_number">
-                                        <option value="">Please Select</option>
-                                        <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
-                                        <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
-                                        <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
-                                </select>
-                                <label for="best_number">Best number to contact patient</label>
-			    </span>
-			    <span style="width:200px;">
-                <select id="preferredcontact" name="preferredcontact" >
-                        <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                        <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
-                </select>
-				<label>Preferred Contact Method</label>
-			    </span>
                         </div>
                     </li>
                 </ul>
@@ -1420,9 +1426,107 @@ $num_face = mysql_num_rows($itype_my);
                             </span>
                             <span>
                                 <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
-                                <label for="ssn">Patient's Soc Sec No.</label>
+                                <label for="ssn">Social Security No.</label>
                             </span>
- 
+                <script type="text/javascript">
+                                function cal_bmi()
+                                {
+                                        fa = document.patientfrm;
+                                        if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
+                                        {
+                                                var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
+                                                //alert(inc);
+                                                
+                                                var inc_sqr = parseInt(inc) * parseInt(inc);
+                                                var wei = parseInt(fa.weight.value) * 703;
+                                                var bmi = parseInt(wei) / parseInt(inc_sqr);
+                                                
+                                                //alert("BMI " + bmi.toFixed(2));
+                                                fa.bmi.value = bmi.toFixed(1);
+                                        }
+                                        else
+                                        {
+                                                fa.bmi.value = '';
+                                        }
+                                }
+                        </script>
+
+<span>
+                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
+                                <option value="0">Feet</option>
+                                <? for($i=1;$i<9;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+                            <?php
+                                showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+                            ?>
+                            <label for="feet">Feet</label>
+                        </span>
+
+                        <span>
+                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
+                                <option value="-1">Inches</option>
+                                <? for($i=0;$i<12;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+                            <?php
+                                showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
+                            ?>
+                            <label for="inches">Inches</label>
+                        </span>
+
+                        <span>
+                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
+                                <option value="0">Weight</option>
+                                <? for($i=80;$i<=500;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+                            <?php
+                                showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
+                            ?>
+
+                            <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        </span>
+
+                        <span>
+                                <span style="color:#000000; padding-top:2px;">BMI</span>
+                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+                        </span>
+                        <span>
+                                <label for="inches">
+                                &lt; 18.5 is Underweight
+                                <br />
+                                &nbsp;&nbsp;&nbsp;
+                                18.5 - 24.9 is Normal
+                                <br />
+                                &nbsp;&nbsp;&nbsp;
+                                25 - 29.9 is Overweight
+                                <br />
+                                &gt; 30 is Obese
+                            </label>
+                        </span>
+			</div>
+		  </li>
+		</ul>
+	</td>
+	</tr> 
+
+        <tr>
+	<td class="frmhead">
+		<ul>
+		  <li>
                             <span>
                                 <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
                                         <option value="">Select</option>
@@ -1484,11 +1588,6 @@ $num_face = mysql_num_rows($itype_my);
 				</ul>
             </td>
         </tr>
-          <tr>
-              <td colspan="2">
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
-              </td>
-          </tr>
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

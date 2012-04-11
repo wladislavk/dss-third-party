@@ -327,8 +327,31 @@ $ttotal += $myarray['snore_5'];
 }
 
 
-
+//Update Salutation
+$sql = "UPDATE dental_patients SET salutation='Ms.' WHERE salutation='Miss.'";
+if($run_updates){
+  mysql_query($sql);
 }
+$sql = "UPDATE dental_patients SET salutation='Dr.' WHERE salutation='Prof.'";
+if($run_updates){
+  mysql_query($sql);
+}
+
+
+//Move bmi to dental_patients
+$sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1";
+$q = mysql_query($sql);
+while($r = mysql_fetch_assoc($q)){
+  $upsql = "UPDATE dental_patients set feet='".$r['feet']."', feet='".$r['feet']."', feet='".$r['feet']."', feet='".$r['feet']."' WHERE patientid='".$r['patientid']."'";
+  if($run_updates){
+	mysql_query($upsql);
+  }
+}
+
+
+
+
+}//close debug
 
 
 ?>

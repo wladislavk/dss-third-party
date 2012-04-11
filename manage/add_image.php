@@ -118,7 +118,7 @@ if($uploaded){
 			$msg = "Edited Successfully";
 			?>
 			<script type="text/javascript">
-				parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>&sh=<?=$_GET['sh'];?>';
+				parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>';
 			</script>
 			<?
 			die();
@@ -147,7 +147,7 @@ if($uploaded){
 			} else {
 				?>
 				<script type="text/javascript">
-					parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg;?>';
+					parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>';
 				</script>
 				<?
 				die();

@@ -22,7 +22,7 @@ if($_REQUEST["delid"] != "")
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		window.location="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&sh=<?=$_GET['sh'];?>";
+		window.location="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>";
 	</script>
 	<?
 	die();

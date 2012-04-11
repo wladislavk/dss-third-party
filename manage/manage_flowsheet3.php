@@ -507,7 +507,8 @@ function trigger_letter11($pid, $stepid) {
 function trigger_letter13($pid, $stepid) {
   $letterid = '13';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, $stepid, '', $md_list);
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 13: " . $letter;
     die();

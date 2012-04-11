@@ -117,7 +117,6 @@ $ref_info = get_contact_info('', '', $md_referral_list, $source);
 }
 
 
-
  
 
 $pt_referral = get_ptreferralids($_GET['pid']);

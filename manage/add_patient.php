@@ -1327,7 +1327,8 @@ $num_face = mysql_num_rows($itype_my);
                 </select>
 				<label>Preferred Contact Method</label>
 			    </span>
-<span style="color:#933;">
+<div>Portal:
+<span style="color:#933; float:none;">
                                   <?php
                                     if($themyarray['use_patient_portal']==1){
                                         switch($themyarray['registration_status']){
@@ -1346,7 +1347,7 @@ $num_face = mysql_num_rows($itype_my);
                                     }
                                   ?>
                                 </span>
-                        </div>
+            </div>            </div>
                     </li>
                 </ul>
             </td>
@@ -1424,7 +1425,7 @@ $num_face = mysql_num_rows($itype_my);
                                 </select><span id="req_0" class="req">*</span>
                                 <label for="gender">Gender</label>
                             </span>
-                            <span>
+                            <span style="width:150px">
                                 <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
                                 <label for="ssn">Social Security No.</label>
                             </span>
@@ -1464,7 +1465,7 @@ $num_face = mysql_num_rows($itype_my);
                             <?php
                                 showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
                             ?>
-                            <label for="feet">Feet</label>
+                            <label for="feet">Height: Feet</label>
                         </span>
 
                         <span>
@@ -1545,9 +1546,7 @@ $num_face = mysql_num_rows($itype_my);
                     </li>
 				</ul>
             </td>
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
+        	<td valign="top" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                     	<!--<label class="desc" id="title0" for="Field0">
@@ -1555,7 +1554,7 @@ $num_face = mysql_num_rows($itype_my);
                         </label>-->
 			  <div>
                             <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:610px;" ><?=$patient_notes;?></textarea>
+                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?=$patient_notes;?></textarea>
                                 <label for="patient_notes">Patient Notes</label>
                             </span>
                         </div>
@@ -1588,6 +1587,12 @@ $num_face = mysql_num_rows($itype_my);
 				</ul>
             </td>
         </tr>
+                          <tr>
+              <td colspan="2">
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
+              </td>
+          </tr>
+
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
@@ -1612,7 +1617,6 @@ $num_face = mysql_num_rows($itype_my);
                                 <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
                                 <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
 
-				<label for="referred_source">Referral Source</label>
 				</div>
 <script type="text/javascript">
 function show_referredby(t, rs){
@@ -1649,7 +1653,6 @@ $(document).ready(function(){
 <input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
 
                                <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-                               <label style="margin-left:150px;" for="referred_by">Referred By</label><!--<input class="button" style="width:150px;" type="submit" name="add_ref_but" value="Add New Referrer" /> -->
                             </div>
                     </li>
 				</ul>

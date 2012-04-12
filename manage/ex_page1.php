@@ -261,7 +261,10 @@ $tongue = st($myarray['tongue']);
                                 }
                         </script>
 
-	    <ul style="width:50%; float:left;">
+                    <label class="desc" id="title0" for="Field0">
+                       HEIGHT/WEIGHT 
+                    </label>
+    <ul style="width:50%; float:left;">
 		<li>
                             <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
                                 <option value="0">Feet</option>

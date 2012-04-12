@@ -32,7 +32,11 @@ if($_POST["imagesub"] == 1)
 		// Load
 		$thumb = imagecreatetruecolor($newwidth, $newheight);
 		for($i=1;$i<=9;$i++){
-			switch($extension){
+                        $fname = $_FILES["image_file_".$i]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension2 = substr($fname,$lastdot+1);
+			switch($extension2){
 			  case 'jpg':
 			  case 'jpeg':
 				$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);

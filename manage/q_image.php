@@ -68,15 +68,8 @@ $my = mysql_query($sql);
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
-&nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <!--<div style="visibility:hidden; height:10px;"><?php //include("includes/form_top.htm");?></div>-->
-
-<br />
-<br>
 &nbsp;&nbsp;
 <b>Show Image Type</b>
 &nbsp;&nbsp;
@@ -208,7 +201,7 @@ $itype_my = mysql_query($itype_sql);
 </div>
 <div id="backgroundPopup"></div>
 
-<div id="popupRefer" style="width:750px;">
+<div id="popupRefer" style="width:750px;height:430px">
     <a id="popupReferClose"><button>X</button></a>
     <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>

@@ -34,7 +34,7 @@ select
 		JOIN dental_patients as pat ON dl.patientid = pat.patientid
 		LEFT JOIN dental_users as p ON dl.producerid=p.userid 
 	where dl.docid='".$_SESSION['docid']."' 
-	AND dl.service_date=CURDATE()
+	AND dl.entry_date=CURDATE()
  UNION
         select 
                 'ledger_payment',
@@ -56,7 +56,7 @@ select
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
                         where dl.docid='".$_SESSION['docid']."' 
                         AND dlp.amount != 0
-			AND dl.service_date=CURDATE()
+			AND dlp.entry_date=CURDATE()
 ";
 
         }

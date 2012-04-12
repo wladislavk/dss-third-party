@@ -95,7 +95,11 @@ if($source == DSS_REFERRED_PHYSICIAN){
 $md_referral = get_mdreferralids($_GET['pid']);
 $ref_info = get_contact_info('', '', $md_referral_list, $source);
 	if (!empty($ref_info['md_referrals'])) {                        
-		$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		if(is_physician($ref_info['md_referrals'][0]['contacttypeid'])){
+			$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+		}else{
+			$referral_fullname = '';
+		}
         } elseif(!empty($pcp)) {
         	$referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
         }else{
@@ -1533,6 +1537,14 @@ if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
 continue;
 
 } // End foreach loop through letters
+
+function is_physician($id){
+  $sql = "SELECT physician FROM dental_contacttype where contacttypeid='".mysql_real_escape_string($id)."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+  return $r['physician'] == 1;
+}
+
 ?>
 </form>
 

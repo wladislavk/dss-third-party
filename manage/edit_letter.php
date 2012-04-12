@@ -101,7 +101,11 @@ $ref_info = get_contact_info('', '', $md_referral_list, $source);
 			$referral_fullname = '';
 		}
         } elseif(!empty($pcp)) {
-        	$referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+		if(is_physician($ref_info['pcp']['contacttypeid'])){
+	        	$referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+		}else{
+		 	$referral_fullname = '';
+		}
         }else{
 		$referral_fullname = '';
 	}

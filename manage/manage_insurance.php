@@ -194,6 +194,7 @@ $num_users=mysql_num_rows($my);
     $num_trxns = mysql_num_rows($query);
     $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
   ?>
+<?php if ($num_trxns > 0) { ?>
   <tr class="<?=$tr_class;?>">
     <td>There <?=$row_text?> ready to be added to a new claim.</td>
     <td>n/a</td>
@@ -206,6 +207,8 @@ $num_users=mysql_num_rows($my);
     </td>
   </tr>
   <?php
+  }
+
     // Display a placeholder row for any ledger trxns that need added to a new claim
     $sql = "SELECT "
          . "  ledger.* "

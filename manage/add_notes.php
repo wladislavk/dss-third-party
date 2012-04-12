@@ -136,6 +136,7 @@ if($pat_myarray['patientid'] == '')
 	else
 	{
 		$but_text = "Add ";
+		$procedure_date = date('m/d/Y');
 	}
 	?>
 	
@@ -145,7 +146,7 @@ if($pat_myarray['patientid'] == '')
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
-    <? }?>
+    <? } ?>
 	
     <form name="notesfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return notesabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

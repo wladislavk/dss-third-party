@@ -213,7 +213,7 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
 	?><script type="text/javascript">
-		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set.  To create the letter, delete the current flowsheet step and specify contacts in the Patient Info section.  Note that other letters with specified contacts may be created.');
+		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set. To create the letter, delete the current flowsheet step and specify appropriate contacts in the Patient Info section.');
 	</script>
 	<?php
     return 0;

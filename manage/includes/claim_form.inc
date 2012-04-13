@@ -803,6 +803,9 @@ $other_insured_dob = st($myarray['other_insured_dob']);
 $other_insured_sex = st($myarray['other_insured_sex']);
 $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
 $insured_id_number = st($myarray['insured_id_number']);
+$insured_firstname = st($myarray['insured_firstname']);
+$insured_middle = st($myarray['insured_middle']);
+$insured_lastname = st($myarray['insured_lastname']);
 $insured_dob = st($myarray['insured_dob']);
 $insured_insurance_plan = st($myarray['insured_insurance_plan']);
 $insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
@@ -981,6 +984,7 @@ $status = st($myarray['status']);
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
 
+
 if($insured_sex == '')
 	$insured_sex = $pat_myarray['gender'];
   
@@ -1031,7 +1035,7 @@ if($is_new_claim){
 if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
 
-if($insured_id == '')
+if($insured_id_number == '')
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
 		
 if($insured_firstname == '')
@@ -1350,11 +1354,11 @@ input{text-transform:uppercase;}
 						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-                                                        <input type="text" value="<?=$insured_middle?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
+                                                        <input type="text" value="<?=$insured_lastname?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
                                                         &nbsp;
 							<input type="text" value="<?=$insured_firstname?>" name="insured_firstname" class="inbox_line3" size="18" />
 							&nbsp;
-							<input type="text" value="<?=$insured_lastname?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
+							<input type="text" value="<?=$insured_middle?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
 						</div>
 					</td>
 				</tr>
@@ -1523,9 +1527,9 @@ input{text-transform:uppercase;}
 						<span class="small_cap">(Last Name, first, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-							<input type="text" value="<?=$other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" />
+							<input type="text" value="<?=$other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" />
 							&nbsp;
-							<input type="text" value="<?=$other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" width="60" />
+							<input type="text" value="<?=$other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" width="60" />
 							&nbsp;
 							<input type="text" value="<?=$other_insured_middle?>" name="other_insured_middle" class="inbox_line3" size="3" width="30" />
 						</div>
@@ -2464,11 +2468,19 @@ if ($is_new_claim) {
 					
 						<span class="num">33.</span> 
 						Billing Provider Info & Ph#
+						<?php 
+							if($billing_provider_phone_code=='')
+								$billing_providder_phone_code = format_phone($userinfo['phone'], true);
+
+                                                        if($billing_provider_phone=='')
+                                                                $billing_providder_phone = format_phone($userinfo['phone'], false);
+
+						?>
 						<span class="style1">(
-						<input type="text" value="<?php echo format_phone($userinfo['phone'], true);?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
+						<input type="text" value="<?= $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
 						)</span>
 						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo format_phone($userinfo['phone'], false);?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
+						<input type="text" value="<?= $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
 						<table width="100%" cellpadding="1" cellspacing="1" border="0">
 							<tr>
 								<td valign="top" width="10%">

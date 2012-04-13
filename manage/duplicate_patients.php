@@ -36,16 +36,16 @@ $sql = "SELECT p.* FROM dental_patients p WHERE patientid='".mysql_real_escape_s
 $my = mysql_query($sql);
 $myarray = mysql_fetch_assoc($my);
 ?>
-<span class="admin_head">
-	Possible Duplicates Patients
+<span class="admin_head" style="float:left;">
+	Warning: Possible Duplicates Patients
 </span>
+<a href="<?= $_SERVER['PHP_SELF']; ?>?deleteid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" onclick="return confirm('Are you sure you want to delete patient?');">Delete</a>
+<a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;">Create</a>
 <br />
 <br />
-<a href="<?= $_SERVER['PHP_SELF']; ?>?deleteid=<?= $myarray['patientid']; ?>" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete patient?');">Delete</a>
-<a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" style="margin-right:10px;float:right;">Create</a>
-<br />
-<div align="center" class="red">
-	<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>
+<div align="center" class="red" style="clear:both;">
+	<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create" to add the patient to the software. If the patient IS a duplicate click "Delete" to remove the patient you just created and use the original patient listed below instead.</b>
+	<!--<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>-->
 </div>
 
 
@@ -59,9 +59,6 @@ $myarray = mysql_fetch_assoc($my);
 		</td>
                <td valign="top" class="col_head" width="15%">
 			Phone
-                </td>
-                <td valign="top" class="col_head" width="45%">
-			Similar Patients 
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -81,8 +78,6 @@ $myarray = mysql_fetch_assoc($my);
                                 <td valign="top">
                                         <?= st($s["phone"]); ?>
                                 </td>
-				<td>
-				</td>
 				<td valign="top">
 				</td>
 				</tr>

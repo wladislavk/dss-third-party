@@ -34,6 +34,8 @@ $template = "
 
 <p>Dear Dr. %contact_lastname%:</p>
 
+%patprogress%
+
 <p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% after undergoing a %type_study% done at the %1st_sleeplab_name%.</p>
 
 <p>We delivered a %dental_device% dental device on %delivery_date%.</p>

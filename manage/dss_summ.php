@@ -1293,7 +1293,7 @@ if(st($pat_myarray['referred_by']) <> '')
         $referredby_myarray = mysql_fetch_array($referredby_my);
         
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-  echo $referredbythis;
+  echo $referredbythis ." - Patient";
   }else{
    echo $dss_referred_labels[$rs].": ".$pat_myarray['referred_notes'];
   }

@@ -193,7 +193,7 @@ background:#999999;
 	  
 		<tr>
 			<td valign="top" colspan="3" align="right">
-				<b>Daily Balance</b>
+				<b>Balance</b>
 			</td>
 			<td valign="top" align="right">
 			

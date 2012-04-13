@@ -7,7 +7,7 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+$name = st($pat_myarray['lastname']).", ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename']);
 
 if($pat_myarray['patientid'] == '')
 {

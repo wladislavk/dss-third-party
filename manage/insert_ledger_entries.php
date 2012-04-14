@@ -97,7 +97,7 @@ $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `primary_claim_id`
 ) VALUES ";
 foreach($_POST[form] as $form){
-if($form['status']==DSS_TRXN_PENDING){  $new_status = DSS_TRXN_PROCESSING;
+if($form['status']==DSS_TRXN_PENDING){  $new_status = DSS_TRXN_PENDING;
 }else{
   $new_status = $form['status'];
 }

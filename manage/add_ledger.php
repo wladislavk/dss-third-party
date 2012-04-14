@@ -133,14 +133,14 @@ if($_POST["ledgerub"] == 1)
         $trow = mysql_fetch_row($tmy);
         $transaction_code = $trow[0];
         $description = $trow[1];
-        $status = (isset($_POST['status'])) ? DSS_TRXN_PROCESSING : DSS_TRXN_NA;
+        $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
         $amount = $_POST['amount'];
         $paid_amount = $_POST['paid_amount'];
 
 $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
 $claim_q = mysql_query($claim_sql);
 $claim_r = mysql_fetch_assoc($claim_r);
-if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PROCESSING){
+if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PENDING){
   $s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   $q = mysql_query($s);
   $n = mysql_num_rows($q);
@@ -165,7 +165,7 @@ if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PROCESSING){
 		transaction_code = '".s_for($transaction_code)."',
 		userid = '".s_for($_SESSION['userid'])."',
         status = ". s_for($status).",
-	primary_claim_id=".$claim_id."
+	primary_claim_id='".$claim_id."'
 	 	where ledgerid='".$_POST["ed"]."'";
 		
 		mysql_query($up_sql) or die($up_sql." | ".mysql_error());

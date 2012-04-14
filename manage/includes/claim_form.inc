@@ -1334,7 +1334,7 @@ input{text-transform:uppercase;}
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1606,7 +1606,7 @@ input{text-transform:uppercase;}
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1630,7 +1630,7 @@ input{text-transform:uppercase;}
 									Other Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1709,7 +1709,7 @@ input{text-transform:uppercase;}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
-						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3" />
+						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3 date_field" />
 					</td>
 					<td align="left" valign="top">
 						<span class="num">13.</span>
@@ -1735,7 +1735,7 @@ input{text-transform:uppercase;}
 									Date of Current
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="2%" align="left" valign="top">
@@ -1761,7 +1761,7 @@ input{text-transform:uppercase;}
 						If Patient has had same or similar Illness. Give First Date
 						<br />
 						&nbsp;&nbsp;
-						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3" size="10"/>
+						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3 date_field" size="10"/>
 						mm-dd-yy
 					</td>
 					<td valign="top">
@@ -1774,7 +1774,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_from?>" name="unable_date_from" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$unable_date_from?>" name="unable_date_from" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 								
@@ -1783,7 +1783,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_to?>" name="unable_date_to" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$unable_date_to?>" name="unable_date_to" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 								</td>
 							</tr>
@@ -1852,7 +1852,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_from?>" name="hospitalization_date_from" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$hospitalization_date_from?>" name="hospitalization_date_from" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 									
 								</td>
@@ -1862,7 +1862,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_to?>" name="hospitalization_date_to" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$hospitalization_date_to?>" name="hospitalization_date_to" class="inbox_line3 date_field" size="10"/>
 									mm-dd-yy
 									
 								</td>
@@ -2404,7 +2404,7 @@ if ($is_new_claim) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
-									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3" size="10" />
+									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3 date_field" size="10" />
 								</td>
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 
@@ -2577,3 +2577,20 @@ if ($is_new_claim) {
 <br /><br />
 </body>
 </html>
+
+<script type="text/javascript">
+$(".date_field").keydown(function(e){
+var key = e.charCode || e.keyCode || 0;
+
+            // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 46 ||
+		key == 189 ||
+		key == 191 ||
+                (key >= 37 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+});
+</script>

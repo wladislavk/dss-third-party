@@ -2370,15 +2370,15 @@ if ($is_new_claim) {
   <tr bgcolor="#FFFFFF">
     <td valign="top" width="33%">
       <span class="num">28.</span> Total Charge<br/>
-      $ <input type="text" value="<?=$total_charge;?>" name="total_charge" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$total_charge;?>" name="total_charge" class="inbox_line3 number_field" size="15" />
     </td>
     <td valign="top" width="33%">
       <span class="num">29.</span> Amount Paid<br/>
-      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3" size="15"/>
+      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
     </td>
     <td valign="top" width="33%">
       <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3 number_field" size="15" />
       <br/>
       <span class="small_cap">&nbsp;</span>
     </td>
@@ -2593,4 +2593,17 @@ var key = e.charCode || e.keyCode || 0;
                 (key >= 48 && key <= 57) ||
                 (key >= 96 && key <= 105));
 });
+$(".number_field").keydown(function(e){
+var key = e.charCode || e.keyCode || 0;
+
+            // allow backspace, tab, delete, numbers and keypad numbers ONLY
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 46 ||
+		key == 190 ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+});
+
 </script>

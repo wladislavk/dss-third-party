@@ -442,7 +442,7 @@ if (empty($prior_authorization_number)) {
 		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
-		insurance_type = '".s_for($insurance_type_arr)."',
+		insurance_type = '".s_for($insurancetype)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',

@@ -1862,6 +1862,16 @@ function updateReferredBy(o, el){
 $('#'+el).append(o);
 
 }
+
+function updateContactField(inField, inVal, idField, idVal){
+$('#'+inField).val(inVal);
+$('#'+idField).val(idVal);
+if(inField=="referredby_name"){
+  $('#referred_source').val('2');
+}
+}
+
+
 </script>
 <script type="text/javascript">
 var cal1 = new calendar2(document.getElementById('ins_dob'));

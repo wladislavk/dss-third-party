@@ -69,7 +69,10 @@ if($_REQUEST['goto']!=''){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='letter'){
                                         $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='new_letter'){
+                                        $page = 'new_letter.php?pid='.$_GET['pid'];
                                 }
+
 ?> <a href="<?=$page; ?>" class="editlink" title="Pending Letters"><?php
 }else{
 ?>
@@ -726,7 +729,7 @@ if ($_POST != array()) {
 		$search[] = "%patient_age%";
 		$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
 		$search[] = "%patient_gender%";
-		$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
+		$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 		$search[] = "%His/Her%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
 		$search[] = "%his/her%";
@@ -1143,7 +1146,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%patient_age%";
 	$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
 	$search[] = "%patient_gender%";
-	$replace[] = "<strong>" . $patient_info['gender'] . "</strong>";
+	$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 	$search[] = "%His/Her%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
 	$search[] = "%his/her%";
@@ -1486,6 +1489,8 @@ foreach ($letter_contacts as $key => $contact) {
 					$page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
 				}elseif($_REQUEST['goto']=='letter'){
                                         $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='new_letter'){
+                                        $page = 'new_letter.php?pid='.$_GET['pid'];
                                 }
 
                         ?>

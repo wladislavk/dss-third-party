@@ -1320,7 +1320,7 @@ background:#edeb46;
 		$my = mysql_query($sql) or die(mysql_error());
 		$numvob = mysql_num_rows($my);
 
-		$initialcontact = false;
+		//$initialcontact = false;
 		$questionnaire = false;
     $sleepstudy = false;
 		$medins = false;
@@ -1332,16 +1332,16 @@ background:#edeb46;
 
 		//if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $delivery_date != '') $initialcontact = true;
 		if ($referred_by == '') {
-			if ($copyreqdate != '') $initialcontact = true;
+			//if ($copyreqdate != '') $initialcontact = true;
     } elseif ($referred_by != '') {
-			if ($delivery_date != '') $initialcontact = true;
+			//if ($delivery_date != '') $initialcontact = true;
     }
 	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
 		if ($rxrec != '' && $lomnrec != '') $medins = true;
 		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
 
-		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
+		if ($questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
       print "<strong><h2>Pre-Treatment Information Below is NOT COMPLETE</h2></strong>"; 
 			update_patient_summary($_GET['pid'], 'fspage1_complete', false);
     } else {
@@ -1366,7 +1366,7 @@ background:#edeb46;
 <input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
-<table width="610px" <?php print (!$initialcontact ? 'class="yellow"' : ''); ?> align="center">
+<table width="610px" align="center">
 
 <tr>
 

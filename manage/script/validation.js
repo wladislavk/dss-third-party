@@ -472,6 +472,10 @@ function contactabc(fa)
 {
   pt = $('#physician_types').val();
   pta = pt.split(',');
+  if(fa.contacttypeid.value==''){
+    alert("Contact type is Required");
+    return false;
+  }
 
   if(fa.contacttypeid.value == '11'){ //INSURANCE
         if(trim(fa.company.value) == "")
@@ -775,7 +779,7 @@ function ledgerabc(fa)
 		fa.entry_date.focus();
 		return false;
 	}
-	
+/*	
 	if(trim(fa.transaction_type.value) == "")
 	{
 		alert("Transaction Type is Required");
@@ -784,14 +788,12 @@ function ledgerabc(fa)
 	}
 	
 	
-	
 	if(trim(fa.description.value) == "")
 	{
 		alert("Description is Required");
 		fa.description.focus();
 		return false;
 	}
-	
 	if(trim(fa.transaction_type.value) == 'Entry')
 	{
 		if(trim(fa.amount.value) == "")
@@ -808,7 +810,6 @@ function ledgerabc(fa)
 			return false;
 		}
 	}
-	
 	if(trim(fa.transaction_type.value) == 'Payment')
 	{
 		if(trim(fa.paid_amount.value) == "")
@@ -824,6 +825,12 @@ function ledgerabc(fa)
 			fa.paid_amount.focus();
 			return false;
 		}
+	}
+*/
+	if(fa.status.checked && fa.old_status.value==0){
+	    if(!confirm('An insurance claim will be generated and filed. Are you sure you want to do this?')){
+        	return false;
+    	    }
 	}
 	return true;
 }

@@ -527,6 +527,9 @@ return s;
                                            <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
                                                  Payment 
                                         </a>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payments.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Adjust 
+                                        </a>
 
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
                                   <?php }elseif($myarray[0]=='note'){ ?>
@@ -542,7 +545,12 @@ return s;
                     <a href="<?=$_SERVER['PHP_SELF']?>?delclaimid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
                                         </a>
-                                   <?php } ?>
+					<?php } ?>
+                                   <?php }elseif($myarray[0]=='ledger_payment'){ ?>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Edit 
+                                        </a>
+
   				<?php } ?>
 				</td>
 			</tr>

@@ -48,7 +48,7 @@
 					var label = "person";
 				}
                                 var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
-					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient&search="+partial_name+"')");
+					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient&in_field="+in_field+"&id_field="+id_field+"&search="+partial_name+"')");
                                         template_list_ref(newLi, "Add "+label+" with this name&#8230;")
                                                 .appendTo('#'+hint+' ul')
                                                 .fadeIn();
@@ -136,11 +136,12 @@ function updateval(t){
                 set_selectedref(window.selectionref);
         }
         function set_selectedref(menuitem) {
+		alert('here');
                 $('#referredby_list li').removeClass('list_hover');
                 $('#referredby_list li').eq(menuitem).addClass('list_hover');
                 var rowid = $('#referred_list li').eq(menuitem).data("rowid");
                 var rowsource = $('#referred_list li').eq(menuitem).data("rowsource");		
                 var rowname = $('#referred_list li').eq(menuitem).data("rowname");
 		$('#referred_name').val(rowname);
-        }
+       }
 */

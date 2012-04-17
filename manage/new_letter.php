@@ -12,7 +12,7 @@ function trigger_letter1($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -28,7 +28,7 @@ function trigger_letter2($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -44,7 +44,7 @@ function trigger_letter3($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -60,7 +60,7 @@ function trigger_letter4($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -79,7 +79,7 @@ function trigger_letter5($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -95,7 +95,7 @@ function trigger_letter6($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -111,7 +111,7 @@ function trigger_letter7($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -127,7 +127,7 @@ function trigger_letter8($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -143,7 +143,7 @@ function trigger_letter9($pid, $topatient, $md_referral_list, $md_list, $send_me
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -159,7 +159,7 @@ function trigger_letter10($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -175,7 +175,7 @@ function trigger_letter11($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -191,7 +191,7 @@ function trigger_letter12($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -207,7 +207,7 @@ function trigger_letter13($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -223,7 +223,7 @@ function trigger_letter14($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -239,7 +239,7 @@ function trigger_letter15($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -255,7 +255,7 @@ function trigger_letter16($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -271,7 +271,7 @@ function trigger_letter17($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -287,7 +287,7 @@ function trigger_letter18($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -303,7 +303,7 @@ function trigger_letter19($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -319,7 +319,7 @@ function trigger_letter20($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -335,7 +335,7 @@ function trigger_letter21($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -351,7 +351,7 @@ function trigger_letter22($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -367,7 +367,7 @@ function trigger_letter23($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();
@@ -383,7 +383,7 @@ function trigger_letter24($pid, $topatient, $md_referral_list, $md_list, $send_m
 	} else {
 		?>
 		<script type="text/javascript">
-			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>';		
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';		
 		</script>	
 		<?php
 		die();

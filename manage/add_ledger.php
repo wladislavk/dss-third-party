@@ -141,14 +141,14 @@ $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
 $claim_q = mysql_query($claim_sql);
 $claim_r = mysql_fetch_assoc($claim_r);
 if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PENDING){
-  $s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  $s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   $q = mysql_query($s);
   $n = mysql_num_rows($q);
   if($n > 0){
         $r = mysql_fetch_assoc($q);
         $claim_id = $r['insuranceid'];
   }else{
-        $claim_id = create_claim($_POST['patientid']);
+        $claim_id = create_claim($_GET['pid']);
   }
 }else{
   $claim_id = '';
@@ -421,7 +421,7 @@ xmlhttp.onreadystatechange=function()
 				Transaction Type
             </td>
         	<td valign="top" class="frmdata">
-                                <select name="procedure_code" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)">
+                                <select name="transaction_type" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)">
 					<option value="0" <?= ($transaction_type=='0')?'selected="selected"':''; ?>>Select Type</option>
 					<option value="1" <?= ($transaction_type=='1')?'selected="selected"':''; ?>>Medical Code</option>
 					<option value="2" <?= ($transaction_type=='2')?'selected="selected"':''; ?>>Patient Payment Code</option>
@@ -524,6 +524,7 @@ $e_text .= implode($errors, ', ');
                      <?php } ?>
                    <?php // } ?>
 			<span class="pend"><?= ($status == DSS_TRXN_PENDING)?'Pending':''; ?></span>
+			<input type="hidden" name="old_status" value="<?= $status; ?>" />
                 </td>
           </tr>		
         <tr>
@@ -665,7 +666,7 @@ if (empty($prior_authorization_number)) {
                 pica1 = '".s_for($pica1)."',
                 pica2 = '".s_for($pica2)."',
                 pica3 = '".s_for($pica3)."',
-                insurance_type = '".s_for($insurance_type_arr)."',
+                insurance_type = '".s_for($insurancetype)."',
                 insured_id_number = '".s_for($insured_id_number)."',
                 patient_lastname = '".s_for($patient_lastname)."',
                 patient_firstname = '".s_for($patient_firstname)."',

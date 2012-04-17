@@ -42,16 +42,29 @@ if($_POST["contactsub"] == 1)
 		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for($_POST["phone1"])."', phone2 = '".s_for($_POST["phone2"])."', fax = '".s_for($_POST["fax"])."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$rid = mysql_insert_id();	
+		$c_sql = "SELECT contacttype from dental_contacttype where contacttypeid='".$_POST["contacttypeid"]."'";
+		$c_q = mysql_query($c_sql);
+		$c_r = mysql_fetch_assoc($c_q);
+		$contact = $c_r['contacttype'];
+		$name = $_POST['lastname'].", ".$_POST['firstname']." - ".$contact;
 		$msg = "Added Successfully";
-		
-		if(isset($_GET['from']) && $_GET['from']=='add_patient'){
-                  ?>
-                  <script type="text/javascript">
-			<?php if($_POST['contacttypeid']==11){ ?>
-                    parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
+	  	if($_GET['from']=='add_patient'){	
+		  if($_GET['from_id']!=''){
+                    ?>
+                    <script type="text/javascript">
+		  	<?php if($_POST['contacttypeid']==11){ ?>
+                           parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
 			<?php } ?>
-
-			
+		    </script>
+		    <?php
+		  }elseif($_GET['in_field']!='' && $_GET['id_field']!=''){	
+		     ?>
+			<script type="text/javascript">
+			   parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= $name; ?>', '<?= $_GET['id_field']; ?>', '<?= $rid; ?>');
+			</script>
+		     <?php	
+		  } ?>
+		  <script type="text/javascript">
                     parent.disablePopupRefClean();
                   </script>
                 <?php
@@ -188,7 +201,7 @@ if($_POST["contactsub"] == 1)
 
 ?>
 
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>&in_field=<?= $_GET['in_field']; ?>&id_field=<?= $_GET['id_field']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
     <input type="hidden" id="physician_types" value="<?= $physician_types; ?>" />
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">

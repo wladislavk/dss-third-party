@@ -485,7 +485,7 @@ function popitup(url) {
 					move_selection('down');
 					break;
 				case 13:
-				 	if($('#search_hints').css('display') == 'inline'){	
+				 	if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){	
 					  if (selectedUrl != '') {
 						window.location = window.selectedUrl;
 					  }

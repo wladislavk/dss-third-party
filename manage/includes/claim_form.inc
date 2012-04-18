@@ -1,4 +1,14 @@
 <?php
+$status_sql = "SELECT status FROM dental_insurance 
+		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
+			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+$status = $status_r['status'];
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+
+
 function format_phone($num, $a){
 	$num = ereg_replace("[^0-9]", "", $num);
 	preg_match('/([0-1]*)(.*)/',$num, $m);
@@ -85,7 +95,6 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 
 // process inserts/updates for claim form
 if ($_POST['insurancesub'] == 1) {
-      
     // Put POST values into variables
 	$pica1 = $_POST['pica1'];
 	$pica2 = $_POST['pica2'];
@@ -283,7 +292,6 @@ if ($_POST['insurancesub'] == 1) {
 	}else{
 		$status = $_POST['status'];
 	}
-
 	$insurance_type_arr = $insurance_type;
 	
 	if($insurance_type_arr != '') {
@@ -532,7 +540,6 @@ if ($_POST['insurancesub'] == 1) {
 		$fdf_type="primary";
                $u_status = false;
              }
-
 		$ed_sql = " update dental_insurance set 
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
@@ -728,8 +735,7 @@ if ($_POST['insurancesub'] == 1) {
 		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
-		$ed_sql .= "where insuranceid = '".s_for($_POST['ed'])."'";
-		
+		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
@@ -745,12 +751,13 @@ if ($_POST['insurancesub'] == 1) {
 	} // end claim form insert or update
 } // end processing claim form
 
+if($is_pending){
 // Load patient info from dental_patients table using pid on query string
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
-//$insurancetype = st($pat_myarray['p_m_ins_type']);
+$insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partymname']);
 $insured_middle = st($pat_myarray['p_m_partylname']);
@@ -768,7 +775,6 @@ $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']); 
 $referred_source = st($pat_myarray['referred_source']);
 $docid = $pat_myarray['docid'];
-
 // if patient does not have an id, redirect to manage_patient.php to address the issue
 if ($pat_myarray['patientid'] == '') {
     print '<script type="text/javascript">';
@@ -777,9 +783,8 @@ if ($pat_myarray['patientid'] == '') {
 
 	die(); // already did a javascript redirect...just die
 }
-
+}
 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-
 // In the case where we have first come to this page, load the claim form
 // info from dental_insurance and place them into variables.
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
@@ -787,6 +792,7 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+if(!$is_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
@@ -980,46 +986,20 @@ $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
+}
 
-$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
-$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
-
-
-if($insured_sex == '')
-	$insured_sex = $pat_myarray['gender'];
-  
-if($patient_sex == '')
+if($is_pending){
+  $insured_sex = $pat_myarray['gender'];
   $patient_sex = $pat_myarray['gender'];
-
-if($patient_firstname == '')
-	$patient_firstname = $pat_myarray['firstname'];
-
-if($patient_lastname == '')
+  $patient_firstname = $pat_myarray['firstname'];
 	$patient_lastname = $pat_myarray['lastname'];
-
-if($patient_middle == '')
 	$patient_middle = $pat_myarray['middlename'];
-	
-if($patient_firstname == '')
 	$patient_firstname = $pat_myarray['firstname'];
-	
-if($patient_address == '')
 	$patient_address = $pat_myarray['add1'];
-
-if($patient_city == '')
 	$patient_city = $pat_myarray['city'];
-
-if($patient_state == '')
 	$patient_state = $pat_myarray['state'];
-
-if($patient_zip == '')
 	$patient_zip = $pat_myarray['zip'];
-
-
-if($patient_dob == '')
 	$patient_dob = $pat_myarray['dob'];
-
-if($is_new_claim){
 	if($pat_myarray['p_m_ins_ass']=='Yes'){
 	  $insured_signature = 1;
 	}
@@ -1031,45 +1011,18 @@ if($is_new_claim){
 	$patient_phone = format_phone($pat_myarray['home_phone'], false);
 	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
 	$insured_phone = format_phone($pat_myarray['home_phone'], false);
-  }
-if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
-
-if($insured_id_number == '')
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
-		
-if($insured_firstname == '')
 	$insured_firstname = $pat_myarray['p_d_party'];
-	
-if($insured_address == '')
 	$insured_address = $pat_myarray['add1'];
-
-if($insured_city == '')
 	$insured_city = $pat_myarray['city'];
-
-if($insured_state == '')
 	$insured_state = $pat_myarray['state'];
-
-if($insured_zip == '')
 	$insured_zip = $pat_myarray['zip'];
-
-
-if($insured_dob == '')
 	$insured_dob = $pat_myarray['ins_dob'];	
-
-if($patient_relation_insured == '')
 	$patient_relation_insured = $pat_myarray['p_m_relation'];
-
-if($insured_employer_school_name == '')
 	$insured_employer_school_name = $pat_myarray['employer'];
-
-if($insured_policy_group_feca == '')
 	$insured_policy_group_feca = $pat_myarray['group_number'];
-
-if($insured_insurance_plan == '')
 	$insured_insurance_plan = $pat_myarray['plan_name'];	
-
-if($diagnosis_1 == ''){
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -1080,7 +1033,6 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
-}
 
 $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
@@ -1098,7 +1050,7 @@ $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
-
+}
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.
 if (empty($prior_authorization_number)) {
@@ -1172,16 +1124,16 @@ input{text-transform:uppercase;}
           Claim has been sent
 	    <?php } else if ($is_back_office) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
                <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" <?=($status == DSS_CLAIM_SEC_SENT) ? 'checked' : ''?>/>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
                <?php } ?>
 		<?php } ?>
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
         <?php if (!$is_sent) { 
-                if($is_pending){ ?>
-          <input type="submit" name="ex_pagebtn" value="Save Changes" />
-                <?php }else{ ?>
+                if($is_back_office){ ?>
           <input type="submit" name="ex_pagebtn" value="Submit Claim" />
                 <?php } ?>
 
@@ -2560,9 +2512,7 @@ if ($is_new_claim) {
                                                 Delete
                                         </a>
         <?php if (!$is_sent) { 
-		if($is_pending){ ?>
-          <input style="float:right;" type="submit" name="ex_pagebtn" value="Save Changes" />
-		<?php }else{ ?>
+		if($is_back_office){ ?>
           <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
 		<?php } ?>
         <?php } ?>

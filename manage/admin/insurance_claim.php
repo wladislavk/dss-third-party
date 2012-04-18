@@ -3,6 +3,7 @@ session_start();
 require_once('../includes/constants.inc');
 require_once('includes/config.php');
 include("includes/sescheck.php");
+include('../includes/claim_create.php');
 
 $is_back_office = true;
 $manage_path = "../";

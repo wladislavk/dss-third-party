@@ -25,6 +25,7 @@ function format_phone($num, $a){
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $num = 0;
+    $added_ledger_ids = array();
     while ($num <= ($_POST['ledgercount']-1)) {
         $placeofservicenum =  'placeofservice'.$num;
         $emgnum = 'emg'.$num;
@@ -49,7 +50,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $modifiercode3 = $_POST[$modifiercode3_num];
         $modifiercode4 = $_POST[$modifiercode4_num];
         $ledgerid = $_POST[$ledgeridnum];
-        
+        array_push($added_ledger_ids, $ledgerid);
+
         $sql = "UPDATE "
              . "  dental_ledger "
              . "SET "
@@ -73,6 +75,27 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         }
         $num++;
     }
+
+    $ledger_ids = implode(',', $added_ledger_ids);
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+    $upq = mysql_query($upsql);
+    $upr = mysql_fetch_assoc($upq);
+    if($upr['num_ledger']>0){
+  	$s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  	$q = mysql_query($s);
+  	$n = mysql_num_rows($q);
+  	if($n > 0){
+          $r = mysql_fetch_assoc($q);
+          $claim_id = $r['insuranceid'];
+  	}else{
+          $claim_id = create_claim($_GET['pid']);
+  	}
+
+	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+	mysql_query($update_sql);
+
+    }
+
 }
 
 // deleting specified claim form
@@ -2267,7 +2290,7 @@ $balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
-if ($is_new_claim) {
+if ($is_pending) {
 
   // get total_charge
   $sql = "SELECT "

@@ -71,12 +71,6 @@ $num_users=mysql_num_rows($my);
 	-
     Patient <i><?=$name;?></i>
 </span>
-<br />
-&nbsp;&nbsp;
-<a href="manage_patient.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-<br />
-
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_patient.php?ed=<?=$_GET['pid'];?>');" class="addButton">
 		View Patient Info

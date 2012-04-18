@@ -139,8 +139,8 @@ if($_POST["ledgerub"] == 1)
 
 $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
 $claim_q = mysql_query($claim_sql);
-$claim_r = mysql_fetch_assoc($claim_r);
-if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PENDING){
+$claim_r = mysql_fetch_assoc($claim_q);
+if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
   $s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   $q = mysql_query($s);
   $n = mysql_num_rows($q);
@@ -154,7 +154,6 @@ if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PENDING){
   $claim_id = '';
 }
 
- 
     $up_sql = "update dental_ledger set
     service_date = '".s_for($service_date)."',
 		entry_date = '".s_for($entry_date)."',
@@ -169,7 +168,16 @@ if($claim_r['primary_claim_id']=='' && $status==DSS_TRXN_PENDING){
 	 	where ledgerid='".$_POST["ed"]."'";
 		
 		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
-		
+if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
+  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+  $c_q = mysql_query($c_sql);
+  $c_r = mysql_fetch_assoc($c_q);
+  if($c_r['num_trxn']==0){
+   $del_sql = "DELETE FROM dental_insurance where insuranceid='".mysql_real_escape_string($claim_r['primary_claim_id'])."'";
+   mysql_query($del_sql);
+  }
+}
+
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -297,7 +305,7 @@ xmlhttp.onreadystatechange=function()
         $tmy = mysql_query($tsql);
         $trow = mysql_fetch_row($tmy);
         $transaction_type = $trow[0];
-        $status = st($themyarray['status']);	
+        $status = ($themyarray['primary_claim_id']!=0 && $themyarray['primary_claim_id']!='')?DSS_TRXN_PENDING:DSS_TRXN_NA;//st($themyarray['status']);	
 	$but_text = "Add ";
 	
 	if($service_date == '')

@@ -523,10 +523,15 @@ return s;
 					<a href="Javascript:;" onclick="Javascript: loadPopup('add_ledger.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
-                    
-                                           <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
-                                                 Payment 
+                   		<?php if($myarray['primary_claim_id']!=0 && $myarray['primary_claim_id']!=''){ ?> 
+                                           <a href="view_claim.php?claimid=<?= $myarray['primary_claim_id']; ?>&pid=<?=$_GET['pid'];?>" class="editlink" title="PAYMENT">
+                                                 Pay 
                                         </a>
+				<?php }else{ ?>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('add_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Pay 
+                                        </a>
+				<?php } ?>
                                            <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payments.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
                                                  Adjust 
                                         </a>
@@ -538,9 +543,11 @@ return s;
                                                 Edit 
                                         </a>
                                   <?php }elseif($myarray[0]=='claim'){ ?>
+					<?php if($myarray['status']!=DSS_CLAIM_SENT && $myarray['status']!=DSS_CLAIM_SEC_SENT && $myarray['status']!=DSS_CLAIM_PAID_INSURANCE && $myarray['status']!=DSS_CLAIM_PAID_PATIENT && $myarray['status']!=DSS_CLAIM_PAID_SEC_INSURANCE ){ ?>
 <a href="insurance.php?insid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
                                                 Edit 
                                         </a>
+					<?php } ?>
                                     <?php if($myarray['status']==DSS_CLAIM_PENDING){ ?>
                     <a href="<?=$_SERVER['PHP_SELF']?>?delclaimid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 

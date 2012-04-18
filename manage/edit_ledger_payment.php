@@ -3,9 +3,16 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
-$sql = "SELECT * FROM dental_ledger_payment WHERE ledgerid='".$_GET['ed']."' ;";
-$p_sql = mysql_query($sql);
-$payments = mysql_fetch_array($p_sql);
+if(isset($_GET['delid'])){
+$del_sql = "delete FROM dental_ledger_payment WHERE id='".$_GET['delid']."' ;";
+mysql_query($del_sql);
+?>
+<script type="text/javascript">
+parent.window.location = parent.window.location;
+</script>
+<?php
+die();
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -85,6 +92,7 @@ while($p = mysql_fetch_array($p_sql)){
 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
+<a href="?delid=<?= $_GET['ed']; ?>&pid=<?= $_GET['pid']; ?>" class="dellink">Delete</a>
 <div style="width:200px;float:right;margin-right:10px;text-align:right;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Edit Payment" /></div>
 </form>
 </body>

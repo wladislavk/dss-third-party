@@ -302,6 +302,9 @@ return s;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
+                <td valign="top" class="col_head" width="5%">
+                       Action 
+                </td>
 		<!--
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -395,6 +398,13 @@ return s;
                if($myarray["status"] == '2'){echo "Filed";}
             */
           ?>       	
+				</td>
+				<td valign="top">
+					<?php if($myarray[0]=='ledger_payment'){ ?>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Edit 
+                                        </a>
+					<?php } ?>
 				</td>
 				<!--<td valign="top">
                                    <?php if($myarray[0]=='ledger'){ ?>

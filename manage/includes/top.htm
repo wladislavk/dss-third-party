@@ -485,8 +485,10 @@ function popitup(url) {
 					move_selection('down');
 					break;
 				case 13:
-					if (selectedUrl != '') {
+				 	if($('#search_hints').css('display') == 'inline'){	
+					  if (selectedUrl != '') {
 						window.location = window.selectedUrl;
+					  }
 					}
 					break;
 			}

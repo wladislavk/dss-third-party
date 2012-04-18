@@ -153,7 +153,7 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
                     <?php if($myarray['status'] == DSS_CLAIM_PENDING){ ?>
 					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-                                                Edit 
+                                                View 
                                         </a>
 
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">

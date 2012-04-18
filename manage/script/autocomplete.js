@@ -116,6 +116,7 @@ function updateval(t){
                                         move_selectionref('down');
                                         break;
                                 case 13:
+					//alert('');
                                         break;
                         }
                 });
@@ -136,7 +137,6 @@ function updateval(t){
                 set_selectedref(window.selectionref);
         }
         function set_selectedref(menuitem) {
-		alert('here');
                 $('#referredby_list li').removeClass('list_hover');
                 $('#referredby_list li').eq(menuitem).addClass('list_hover');
                 var rowid = $('#referred_list li').eq(menuitem).data("rowid");

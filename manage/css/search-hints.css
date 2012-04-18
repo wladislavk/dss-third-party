@@ -30,7 +30,7 @@
     list-style-type: none;
     cursor:pointer;
 }
-#patient_list li.no_matches{
+#patient_list li.no_matches, .search_list li.no_matches{
   cursor:default;
   color:#999;
 }

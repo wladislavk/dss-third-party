@@ -1469,8 +1469,7 @@ foreach ($letter_contacts as $key => $contact) {
                         <script type="text/javascript">
                                 window.location.reload();
                         </script>
-                        <?php
-
+		<?php
 	}
   }
 	// Catch Post Delete Button and Delete letters Here

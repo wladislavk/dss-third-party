@@ -92,7 +92,7 @@ while($p = mysql_fetch_array($p_sql)){
 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']; ?>">
 <input type="hidden" name="docid" value="<?php echo $_SESSION['docid']; ?>">
 <input type="hidden" name="ipaddress" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>">
-<a href="?delid=<?= $_GET['ed']; ?>&pid=<?= $_GET['pid']; ?>" class="dellink">Delete</a>
+<a href="?delid=<?= $_GET['ed']; ?>&pid=<?= $_GET['pid']; ?>" onclick="return confirm('Are you sure you want to delete this payment? This cannot be undone.');" class="dellink">Delete</a>
 <div style="width:200px;float:right;margin-right:10px;text-align:right;" id="submitButton"><input type="submit" onclick="validate(<?php $_COOKIE['tempforledgerentry']; ?>)" value="Edit Payment" /></div>
 </form>
 </body>

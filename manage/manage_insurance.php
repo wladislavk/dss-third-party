@@ -23,7 +23,7 @@ if($_REQUEST["delid"] != "")
 if(isset($_REQUEST['vob_id'])){
 
 $s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status IN (1,3)",$_REQUEST['vob_id'], $_REQUEST['pid'], $_SESSION['docid']);
-mysql_query($s);
+//mysql_query($s);
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";

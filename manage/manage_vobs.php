@@ -2,6 +2,14 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 
+if(isset($_GET['rid'])){
+$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
+mysql_query($s);
+}elseif(isset($_GET['urid'])){
+$s = sprintf("UPDATE dental_insurance_preauth SET viewed=0 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['urid'], $_REQUEST['pid'], $_SESSION['docid']);
+mysql_query($s);
+}
+
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
   
@@ -175,6 +183,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		?>
 			<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
 				<td valign="top">
+					<?= $myarray['viewed']; ?>
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
 				<td valign="top">
@@ -188,6 +197,16 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&vob_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
 						View
 					</a>
+					<br />
+					<?php if(!$myarray['viewed']){ ?>
+                                        <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                                Mark Read
+                                        </a>
+					<?php }else{ ?>
+                                        <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                                Mark Unread
+                                        </a>
+					<?php } ?>
 				</td>
 			</tr>
 	<? 	}

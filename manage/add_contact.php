@@ -464,6 +464,9 @@ if($_POST["contactsub"] == 1)
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
+<a href="#" id="google_link" target="_blank" style="float:left;" />
+		Google
+</a>
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
 		<?php if($themyarray["contactid"] != ''){ ?>
 		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
@@ -475,9 +478,11 @@ if($_POST["contactsub"] == 1)
     </table>
     </form>
 
-
-
-
+<script type="text/javascript">
+  $('#google_link').click(function(){ 
+	$('#google_link').attr('href', 'http://google.com/search?q='+$('#firstname').val()+'+'+$('#lastname').val()+'+'+$('#company').val()+'+'+$('#add1').val()+'+'+$('#city').val()+'+'+$('#state').val()+'+'+$('#zip').val());
+  });
+</script>
 
       </div>
 <!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>

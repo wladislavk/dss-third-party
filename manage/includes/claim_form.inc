@@ -1118,7 +1118,7 @@ input{text-transform:uppercase;}
 <link rel="stylesheet" href="<?=$admin_path?>popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="<?=$admin_path?>script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="<?=$manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="script/masks.js"></script>
+    <script type="text/javascript" src="<?=$manage_path?>script/masks.js"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
 <?php if ($is_sent || (!$is_new_claim && !$is_pending && $is_front_office)) { ?>

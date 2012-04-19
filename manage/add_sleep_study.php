@@ -284,7 +284,12 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
    $msg = "Successfully added sleep lab". $uploaded;
   }
  }
-$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+			JOIN dental_patients p on ss.patiendid=p.patientid                        
+		WHERE                                 
+			(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+			(ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+			ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
@@ -301,6 +306,12 @@ background:#edeb46;
   .even{ background: #e4ffcf; }
   select{width:140px;}
 </style>
+<?php
+
+$pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
+$pat_q = mysql_query($pat_sql);
+$pat_r = mysql_fetch_assoc($pat_q);
+?>
 <form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
 <table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
@@ -427,12 +438,26 @@ function addstudylab(v){
         </tr>
 	<tr>
                 <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" name="diagnosising_doc" /> <span id="req_0" class="req">*</span>
+                  <input style="width:100px;" type="text" name="diagnosising_doc" /> 
+		<?php
+			if($pat_r['p_m_ins_type']==1){
+		?>
+		<span id="req_0" class="req">*</span>
+		<?php
+			}
+		?>
                 </td>
         </tr>
 	<tr>
                 <td valign="top" class="even">
-                  <input style="width:100px;" type="text" name="diagnosising_npi" /> <span id="req_0" class="req">*</span>
+                  <input style="width:100px;" type="text" name="diagnosising_npi" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?> 
                 </td>
         </tr>
 
@@ -659,12 +684,28 @@ No
         </tr>
         <tr>
                 <td valign="top" class="odd">
-                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
+                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?>
+ 
                 </td>
         </tr>
         <tr>
                 <td valign="top" class="even">
-                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" /> <span id="req_0" class="req">*</span>
+                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" />
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?>
+ 
                 </td>
         </tr>
 

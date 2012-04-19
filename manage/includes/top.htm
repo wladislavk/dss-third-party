@@ -87,6 +87,10 @@ $c_query = "SELECT * FROM dental_patients p2 inner join dental_patients p on p.p
 $c_res = mysql_query($c_query);
 $num_c = mysql_num_rows($c_res);
 
+
+$preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
+$preauth_res = mysql_query($preauth_query);
+$num_rejected_preauth = mysql_num_rows($preauth_res);
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -112,6 +116,7 @@ $num_c = mysql_num_rows($c_res);
 </script>
 
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script language="javascript" type="text/javascript">
 function display(){
     document.getElementById("future_dental_det").style.display = "block"; 
@@ -478,6 +483,7 @@ function popitup(url) {
 				if ($(this).val().trim() == "") {
 					$('#search_hints').css('display', 'none');
 					$('.json_patient').remove();
+					$('.create_new').remove();
 					$('.initial_list').css("display", "table-row");
 				} else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
 					$('.initial_list').css("display", "none");
@@ -497,8 +503,10 @@ function popitup(url) {
 					move_selection('down');
 					break;
 				case 13:
-					if (selectedUrl != '') {
+				 	if($('#search_hints').css('display') == 'inline' || $('#search_hints').css('display') == 'block'){	
+					  if (selectedUrl != '') {
 						window.location = window.selectedUrl;
+					  }
 					}
 					break;
 			}
@@ -509,23 +517,34 @@ function popitup(url) {
 			}
 		});
 		$('#patient_list > li').hover(function() {
-			$(this).css('cursor','pointer');
+			if($(this).data("pattype")!="no"){
+			  $(this).css('cursor','pointer');
+			}
 			window.selection = $(this).data("number");
 			set_selected(window.selection);
 		}, function() {
-			$(this).css('cursor','auto');
+			if($(this).data("pattype")!="no"){
+			  $(this).css('cursor','auto');
+			}
 			$('#patient_list li').removeClass('list_hover');
 			window.selectedUrl = '';
 		});
 		$('#patient_list > li').click(function() {
+		    if($(this).data("pattype")=="new"){
+			n = $('#patient_search').val();
+			window.location = "add_patient.php?search="+n;
+		    }else if($(this).data("pattype")=="no"){
+			//do nothing
+                    }else{
 			if (selectedUrl != '') {
 				window.location = window.selectedUrl;
 			}
 			$('#patient_search').val($(this).html());
 			sendValue($(this).html());
+		    }
 		});
 		$('*').click(function() {
-			$('#search_hints').css('display', 'none');
+			$('.search_hints').css('display', 'none');
 		});
 	});
 	function sendValue(partial_name) {
@@ -539,12 +558,26 @@ function popitup(url) {
 
 		function(data) {
 			if (data.length == 0) {
-				$('#search_hints').css('display', 'none');
-			}
+				$('.json_patient').remove();
+                                $('.create_new').remove();
+				$('.no_matches').remove();
+				//$('#search_hints').css('display', 'none');
+                               var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('no_matches').data("pattype", "no");
+                                        template_list_new(newLi, "No Matches")
+                                                .appendTo('#patient_list')
+                                                .fadeIn();
+				var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('create_new').data("pattype", "new");
+                                        template_list_new(newLi, "Add patient with this name&#8230;")
+                                                .appendTo('#patient_list')
+                                                .fadeIn();
+			}else{
 			if (data.error) {
 				alert(data.error);
 			} else {
 				$('.json_patient').remove();
+				$('.create_new').remove();
+                               $('.no_matches').remove();
+ 
 				for (i in data) {
 					var newLi = $('#patient_list .template').clone(true).removeClass('template').addClass('json_patient').data("number", parseInt(i)+1).data("patientid", data[i].patientid).data("patient_info", data[i].patient_info);
 					template_list(newLi, data[i])
@@ -562,6 +595,7 @@ function popitup(url) {
 						.fadeIn();
 					<?php } ?>
 				}
+			   }
 			}
 		},
 
@@ -603,6 +637,11 @@ function popitup(url) {
 		li.html(patient.lastname + ", " + patient.firstname + " " + mid);
 		return li;
 	}
+        function template_list_new(li, str) {
+                li.html(str);
+                return li;
+        }
+
 	function template_table(row, patient) {
 		var pm = "";
 		if (patient.premedcheck == "1") {
@@ -745,7 +784,8 @@ display:none;
   </div>
   
   
-  
+ <script type="text/javascript" src="script/autocomplete.js"></script>
+ 
   <div style="height:89px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
      
     <div style="margin-top:10px; margin-left:20px; float:left;">
@@ -755,13 +795,13 @@ display:none;
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
   <!--<input type="submit" name="Submit" value="Patient Search By Last Name" />-->
 	<br />
-	<div id="search_hints" style="display:none;">
+	<div id="search_hints"  class="search_hints" style="display:none;">
 		<ul id="patient_list">
 			<li class="template" style="display:none">Doe, John S</li>
 		</ul>
 	</div>
    </div> 
-  
+
    <button onclick="window.location='add_patient.php'" style="margin-top:27px;">+ Add Patient</button>
 
 <!--</form>-->
@@ -820,6 +860,7 @@ display:none;
 
 <?php
   $mess_count = $pending_letters + $num_pending_claims + $num_preauth + $num_pc + $num_pi + $num_c;
+  $mess_count = $pending_letters + $num_pending_claims + $num_preauth + $num_rejected_preauth;;
 ?>
 <li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
   <ul>
@@ -829,7 +870,12 @@ display:none;
       <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
       <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
       <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
-</ul>
+      <li><a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>">Alerts (<?= $num_rejected_preauth; ?>)</a></li>
+      <!--<li><a href="manage_tasks.php">Tasks </a></li>-->
+  </ul>
+
+
+  </ul>
 </li>
 
 </ul>

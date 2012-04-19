@@ -194,7 +194,7 @@ if($_POST["diagnosticsub"] == 1)
                 <input type="hidden" name="diagnosticsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["diagnosticid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Diagnostic Test" class="button" />
-		<?php if($themyarray["diagnosticid"] != ''){ ?>
+		<?php if($themyarray["diagnosticid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_diagnostic.php?delid=<?=$themyarray["diagnosticid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

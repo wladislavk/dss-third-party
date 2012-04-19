@@ -194,7 +194,7 @@ if($_POST["ins_typesub"] == 1)
                 <input type="hidden" name="ins_typesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["ins_typeid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Insurance Type" class="button" />
-		<?php if($themyarray["ins_typeid"] != ''){ ?>
+		<?php if($themyarray["ins_typeid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_ins_type.php?delid=<?=$themyarray["ins_typeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

@@ -92,6 +92,11 @@ function createCookie(name,value,days) {
 
 
 <script type="text/javascript">
+
+function hideRemove(){
+  $('.remove').css('visibility','hidden');
+}
+
 function getTransCodes(str,name)
 {
 if (str=="")
@@ -224,11 +229,11 @@ if(count($errors)>0){
 $e_text = 'Unable to file claim: ';
 $e_text .= implode($errors, ', ');
 ?>
-newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="form['+tempforledgerentry+'][procedure_code]" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="4">Diagnostic Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="form['+tempforledgerentry+'][status]" name="form['+tempforledgerentry+'][status]" onclick="alert(\'<?= $e_text; ?>\'); return false;" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; float: right; width:24px;"><font style="font-size:10px;">File</font></div></div><div style="clear: both; height: 10px;"></div>';
+newdiv.innerHTML = '<div id="transaction_'+tempforledgerentry+'"><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="form['+tempforledgerentry+'][procedure_code]" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="form['+tempforledgerentry+'][status]" name="form['+tempforledgerentry+'][status]" onclick="alert(\'<?= $e_text; ?>\'); return false;" class="file_checkbox" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; width:24px;"><font style="font-size:10px;">File</font><button class="remove" onclick="removeRow('+tempforledgerentry+');return false;">X</button></div></div><div style="clear: both; height: 10px;"></div>';
 <?php 
     }else{
 ?>
-      newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="procedure_code'+tempforledgerentry+'" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name); updateFile('+tempforledgerentry+');"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="4">Diagnostic Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="status'+tempforledgerentry+'" name="form['+tempforledgerentry+'][status]" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; float: right; width:24px;" onclick="return checkCode('+tempforledgerentry+');"><font style="font-size:10px;">File</font></div></div><div style="clear: both; height: 10px;"></div>';
+      newdiv.innerHTML = '<div id="transaction_'+tempforledgerentry+'"><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" value="'+todaysdate+'" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" ><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="procedure_code'+tempforledgerentry+'" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name); updateFile('+tempforledgerentry+');"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><span><input type="checkbox" id="status'+tempforledgerentry+'" name="form['+tempforledgerentry+'][status]" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; width:24px;" class="file_checkbox" onclick="return checkCode('+tempforledgerentry+');"><font style="font-size:10px;">File</font></span><button class="remove" onclick="removeRow('+tempforledgerentry+');return false;">X</button></div></div><div style="clear: both; height: 10px;"></div>';
 <?php } ?>
       ni.appendChild(newdiv);
       setupCal(tempforledgerentry);
@@ -257,9 +262,9 @@ $e_text = 'Unable to file claim: ';
 $e_text .= implode($errors, ', ');
 ?>
 
-      newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;"  value="'+month+'/'+day+'/'+year+'"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="form['+tempforledgerentry+'][procedure_code]" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="4">Diagnostic Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="form['+tempforledgerentry+'][status]" name="form['+tempforledgerentry+'][status]" onclick="alert(\'<?= $e_text; ?>\'); return false;"  value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; float: right; width:24px;"><font style="font-size:10px;">File</font></div></div><div style="clear: both; height: 10px;"></div>';
+      newdiv.innerHTML = '<div id="transaction_'+tempforledgerentry+'"><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;"  value="'+month+'/'+day+'/'+year+'"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="form['+tempforledgerentry+'][procedure_code]" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name)"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="form['+tempforledgerentry+'][status]" name="form['+tempforledgerentry+'][status]" onclick="alert(\'<?= $e_text; ?>\'); return false;" class="file_checkbox"  value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; width:24px;"><font style="font-size:10px;">File</font><button class="remove" onclick="removeRow('+tempforledgerentry+');return false;">X</button></div></div><div style="clear: both; height: 10px;"></div>';
 <?php }else{ ?>
-      newdiv.innerHTML = '<div><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" value="'+month+'/'+day+'/'+year+'"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="procedure_code'+tempforledgerentry+'" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name); updateFile('+tempforledgerentry+');"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="4">Diagnostic Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" onchange="updateFile('+tempforledgerentry+')" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="status'+tempforledgerentry+'" name="form['+tempforledgerentry+'][status]" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; float: right; width:24px;" onclick="return checkCode('+tempforledgerentry+')"><font style="font-size:10px;" >File</font></div></div><div style="clear: both; height: 10px;"></div>';
+      newdiv.innerHTML = '<div id="transaction_'+tempforledgerentry+'"><input type="text" name="form['+tempforledgerentry+'][service_date]" id="ledger_entry_service_date'+tempforledgerentry+'" class="calendar" style="margin: 0pt 10px 0pt 0pt; float: left; width:75px;" value="'+month+'/'+day+'/'+year+'"><input type="text" name="form['+tempforledgerentry+'][entry_date]" style="width:75px;margin: 0pt 10px 0pt 0pt; float: left;" value="'+month+'/'+day+'/'+year+'" readonly="readonly"><select style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" id="form['+tempforledgerentry+'][producer]" name="form['+tempforledgerentry+'][producer]" ><?= $producer_options; ?></select><select id="procedure_code'+tempforledgerentry+'" name="form['+tempforledgerentry+'][procedure_code]" style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;" onchange="getTransCodes(this.value,this.name); updateFile('+tempforledgerentry+');"><option value="0">Select Type</option><option value="1">Medical Code</option><option value="2">Patient Payment Code</option><option value="6">Adjustment Code</option></select><div id="proccode'+tempforledgerentry+'" onchange="updateFile('+tempforledgerentry+')" name="proccode'+tempforledgerentry+'" style="margin: 0pt 10px 0pt 0pt; float: left; width: 130px;"><input type="text" value="Select Type First" /></div><div style="float:right;color:#FFF; font-weight:bold;font-size:18px;"><span id="amount_span'+tempforledgerentry+'"><input type="text" id="form['+tempforledgerentry+'][amount]" name="form['+tempforledgerentry+'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;"></span><input type="checkbox" id="status'+tempforledgerentry+'" name="form['+tempforledgerentry+'][status]" value="<?= DSS_TRXN_PENDING ?>" style="margin: 0; width:24px;" class="file_checkbox" onclick="return checkCode('+tempforledgerentry+')"><font style="font-size:10px;" >File</font><button class="remove" onclick="removeRow('+tempforledgerentry+');return false;">X</button></div></div><div style="clear: both; height: 10px;"></div>';
 <?php } ?>
       ni.appendChild(newdiv);    
       setupCal(tempforledgerentry);
@@ -279,6 +284,18 @@ function validate(){
 		}
 	}
   });
+
+  file = false;
+  $('.file_checkbox').each(function(){
+    if($(this).attr('checked')){
+	file=true;
+    }
+  });
+  if(file){
+    if(!confirm('An insurance claim will be generated and filed. Are you sure you want to do this?')){
+	returnval = false;
+    }
+  }
   return returnval;
 /*  if(<?= ($_SESSION['user_access']==2)?1:0;?>){
     return true;
@@ -294,7 +311,7 @@ function validate(){
 </script>
 
 </head>
-<body onload="appendElement();">
+<body onload="appendElement();hideRemove();">
 
 
 
@@ -318,7 +335,7 @@ document.getElementById('submitbtn').style.cssFloat = "right";
 
 </div>
 <div id="form_div" >
-<div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;"><span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Service Date</span><span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Producer</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Procedure Code</span><div style="margin: 0pt 10px 0pt 0pt; float: left; width: 207px;">Transaction Code</div><div style="float:left;font-weight:bold;">Amount</div></div>
+<div style="background:#FFFFFF none repeat scroll 0 0;height:16px;margin-left:9px;margin-top:20px;width:98%; font-weight:bold;"><span style="margin: 0pt 10px 0pt 0pt; float: left; width:83px;">Service Date</span><span style="width:80px;margin: 0pt 10px 0pt 0pt; float: left;" >Entry Date</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Producer</span><span style="width:120px;margin: 0pt 10px 0pt 0pt; float: left;">Procedure Code</span><div style="margin: 0pt 10px 0pt 0pt; float: left; width: 127px;">Transaction Code</div><div style="float:left;font-weight:bold;">Amount</div></div>
 <div id="FormFields" style="margin: 20px 10px;"></div>
 
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
@@ -333,7 +350,7 @@ Username: <input type="text" name="username" />
 Password: <input type="password" name="password" />
 </div>
 <?php } */ ?>
-<div style="width:200px;float:left;margin-left:10px;text-align:left;"><input type="button" onclick="appendElement();" id="linecountbtn"  value="Add Line Item"></div>
+<div style="width:200px;float:left;margin-left:10px;text-align:left;"><input type="button" onclick="appendElement();$('.remove').css('visibility','visible');" id="linecountbtn"  value="+ Add Line Item"></div>
 <div style="width:200px;margin-right:10px;float:right;text-align:right;" id="submitButton"><input type="submit" value="Submit Transactions" /></div>
 
 </div>
@@ -341,6 +358,16 @@ Password: <input type="password" name="password" />
 <script type="text/javascript">
 function setupCal(tempforledgerentry){
 window["cal"+tempforledgerentry] = new calendar2(document.forms['ledgerentryform'].elements['form['+tempforledgerentry+'][service_date]']);
+}
+
+function removeRow(id){
+	$('#transaction_'+id).remove();
+      var numi = document.getElementById('currval');
+      var num = (document.getElementById('currval').value -1);
+      numi.value = num;
+      if(!(num > 1)){
+        $('.remove').css('visibility','hidden');
+      }
 }
 </script>
 </body>

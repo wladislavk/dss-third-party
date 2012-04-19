@@ -7,7 +7,7 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+$name = st($pat_myarray['lastname']).", ".st($pat_myarray['firstname'])." ".st($pat_myarray['middlename']);
 
 if($pat_myarray['patientid'] == '')
 {
@@ -25,7 +25,7 @@ if($_GET['ed'] <> '')
 {
 	$sql .= " and notesid = '".$_GET['ed']."' ";
 }
-$sql .= " order by adddate";
+$sql .= " order by adddate DESC";
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 ?>
@@ -47,7 +47,7 @@ $num_users=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <br />
-<span class="admin_head">
+<span class="admin_head" style="color:#fff">
 	View Progress Notes
 	-
 	<i>

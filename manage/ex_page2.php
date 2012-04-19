@@ -220,35 +220,35 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         	<table width="100%" cellpadding="3" cellspacing="1" border="0">
                             	<tr>
                                 	<td valign="top" width="20%" align="center">
-                                    	<img src="images/grade0.jpg" height="188" width="131" border="0" />
+                                    	<img src="images/grade0.png" height="188" width="131" border="0" />
                                         <br />
                                         <input type="radio" name="tonsils_grade" value="Grade 0" <? if($tonsils_grade == 'Grade 0') echo " checked";?> /> Grade 0
                                         <br /><br />
                                         Absent
                                     </td>
                                 	<td valign="top" width="20%" align="center">
-                                    	<img src="images/grade1.jpg" height="188" width="131" border="0" />
+                                    	<img src="images/grade1.png" height="188" width="131" border="0" />
                                         <br />
                                         <input type="radio" name="tonsils_grade" value="Grade 1" <? if($tonsils_grade == 'Grade 1') echo " checked";?> /> Grade 1
                                         <br /><br />
                                         Small within the tonsillar fossa
                                     </td>
                                 	<td valign="top" width="25%" align="center">
-                                    	<img src="images/grade0.jpg" height="188" width="131" border="0" />
+                                    	<img src="images/grade2.png" height="188" width="131" border="0" />
                                         <br />
                                         <input type="radio" name="tonsils_grade" value="Grade 2" <? if($tonsils_grade == 'Grade 2') echo " checked";?> /> Grade 2
                                         <br /><br />
                                         Extends beyond the tonsillar pillar
                                     </td>
                                 	<td valign="top" width="25%" align="center">
-                                    	<img src="images/grade0.jpg" height="188" width="131" border="0" />
+                                    	<img src="images/grade3.png" height="188" width="131" border="0" />
                                         <br />
                                         <input type="radio" name="tonsils_grade" value="Grade 3" <? if($tonsils_grade == 'Grade 3') echo " checked";?> /> Grade 3
                                         <br /><br />
                                         Hypertrophic but not touching in midline
                                     </td>
                                 	<td valign="top" width="20%" align="center">
-                                    	<img src="images/grade0.jpg" height="188" width="131" border="0" />
+                                    	<img src="images/grade4.png" height="188" width="131" border="0" />
                                         <br />
                                         <input type="radio" name="tonsils_grade" value="Grade 4" <? if($tonsils_grade == 'Grade 4') echo " checked";?> /> Grade 4 
                                         <br /><br />

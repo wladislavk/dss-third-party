@@ -35,7 +35,7 @@ switch ($sort_by) {
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if($_REQUEST["delid"] != "") {
+if($_REQUEST["delid"] != ""  && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
@@ -60,7 +60,9 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     //. "  dif.filename as eob, " 
      . "  CASE claim.status 
 		WHEN ".DSS_CLAIM_PENDING." THEN 1
                 WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
@@ -78,13 +80,21 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+    
+// . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
     $sql .= "WHERE ";
     
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-        $sql .= "  claim.status = " . $_REQUEST['status'] . " ";
+	if($_REQUEST['status'] == DSS_CLAIM_PENDING){
+	   	$sql .= " claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.") ";
+	}elseif($_REQUEST['status'] == DSS_CLAIM_SENT){
+                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.") ";
+        }else{
+        	$sql .= "  claim.status = " . $_REQUEST['status'] . " ";
+	}
     }
     
     if (!empty($_REQUEST['fid'])) {
@@ -238,12 +248,32 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
 				<td valign="top">
-				    <?php if($myarray["status"] == DSS_CLAIM_PENDING){ ?>
+				    <?php
+					$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];
+					$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
+					?>
+				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
 				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
 						Edit
 					</a> 
-				<?php }else{ ?>
-					<a href="../insurance_fdf.php?insid=<?=$myarray['insuranceid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">View</a>
+				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
+                                    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
+                                                Edit Secondary
+                                        </a><br />
+					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>
+                                <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
+                                    <a href="<?= $secondary_link; ?>" class="editlink" title="EDIT">
+                                                View Secondary
+                                        </a><br />
+                                        <a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>
+                                <?php }else{ ?>
+					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View</a>
+				<?php } ?>
+				<?php 
+					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
+					$eobq = mysql_query($eobsql);
+					while($eobr = mysql_fetch_assoc($eobq)){
+						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" class="editlink" title="EDIT">View <?= $eobr['claimtype']; ?> EOB</a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
@@ -282,7 +312,7 @@ $my=mysql_query($sql) or die(mysql_error());
 if(isset($_GET['showins'])&&$_GET['showins']==1){
   ?>
   <script type="text/javascript">
-    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&pid=<?= $_GET['pid'];?>";
+    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
   </script>
   <?php
 }

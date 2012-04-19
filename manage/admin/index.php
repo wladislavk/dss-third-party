@@ -19,6 +19,8 @@ if($_POST["loginsub"] == 1)
 		
 		session_register("adminuserid");
 		$_SESSION['adminuserid']=$check_myarray['adminid'];
+                session_register("admin_access");
+                $_SESSION['admin_access']=$check_myarray['admin_access'];
 		?>
 		<script type="text/javascript">
 			window.location.replace('home.php');

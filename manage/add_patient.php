@@ -8,6 +8,7 @@ $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
 $doc_patient_portal = $docr['use_patient_portal'];
 
+include "includes/similar.php";
 function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
@@ -34,7 +35,6 @@ if ($pt_referralid) {
 
 
 ?>
-<script type="text/javascript" src="script/autocomplete.js"></script>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <script type="text/javascript" src="/manage/js/patient_dob.js"></script>
 <script type="text/javascript">
@@ -710,7 +710,16 @@ mysql_query($s1);
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";
       }
 
+		$sim = similar_patients($pid);
+                        if(count($sim) > 0){
+                ?>
+                <script type="text/javascript">
+                        parent.window.location='duplicate_patients.php?pid=<?= $pid; ?>';
+                </script>
+                <?
+                die();
 
+		}else{
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
 		?>
 		<script type="text/javascript">
@@ -719,6 +728,7 @@ mysql_query($s1);
 		</script>
 		<?
 		die();
+		}
 	}
 
 }
@@ -1188,7 +1198,17 @@ function remove_notification(id){
 
 }
 </script>
+<?php
+        if($_GET['search'] != ''){
+	  if(strpos($_GET['search'], ' ')){
+            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
+            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+	  }else{
+	    $firstname = $_GET['search'];	
+	  }
+        }
 
+?>
     <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
     
@@ -1642,7 +1662,7 @@ function show_referredby(t, rs){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php');
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', <?= $_GET['pid']; ?>);
 });
 </script>
 					</div>
@@ -1959,7 +1979,7 @@ $(document).ready(function(){
 				</script>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');scroll(0,0);" value="+ Add Insurance Company" />
+<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Add Insurance Company" />
                             </span>
 
                             <span>
@@ -2146,7 +2166,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php');
+  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -2169,6 +2189,37 @@ $(document).ready(function(){
 		        
 		       <ul>
 		        <li  id="foli8" class="complex">
+		         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
+                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+<br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
+                <ul id="docpcp_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
+});
+</script>
+                                        </div>
+<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
+		         </li>
+		         </ul>
+		         
+		         </td>
+		         </tr>
+		         
+		         
+		         
+		         
+		         
+		         
+		         
+		         <tr height="35"> 
+		        
+		       <td> 
+		        
+		       <ul>
+		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
                                         <input type="text" id="docdentist_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
 <br />        <div id="docdentist_hints" class="search_hints" style="display:none;">
@@ -2177,7 +2228,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php');
+  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -2204,6 +2255,33 @@ $(document).ready(function(){
              
              
              
+              <tr height="35"> 
+		        
+		       <td> 
+		        
+		       <ul>
+		        <li  id="foli8" class="complex">
+		         <label style="display: block; float: left; width: 110px;">ENT</label>
+                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+<br />        <div id="docent_hints" class="search_hints" style="display:none;">
+                <ul id="docent_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
+});
+</script>
+                                        </div>
+<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
+
+		         </li>
+		         </ul>
+		         
+		         </td>
+		         </tr>
+		         
+		         
 		         <tr height="35"> 
 		        
 		       <td> 
@@ -2218,7 +2296,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php');
+  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
 });
 </script>
                                         </div>
@@ -2357,6 +2435,16 @@ function updateReferredBy(o, el){
 $('#'+el).append(o);
 
 }
+
+function updateContactField(inField, inVal, idField, idVal){
+$('#'+inField).val(inVal);
+$('#'+idField).val(idVal);
+if(inField=="referredby_name"){
+  $('#referred_source').val('2');
+}
+}
+
+
 </script>
 <script type="text/javascript">
 var cal1 = new calendar2(document.getElementById('ins_dob'));

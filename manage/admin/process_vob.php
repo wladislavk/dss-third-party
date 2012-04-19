@@ -109,6 +109,7 @@ if (isset($_REQUEST['ed'])) {
          . "written_pre_auth_date_received = '".s_for($_POST["written_pre_auth_date_received"])."', "
          . "pre_auth_num = '".s_for($_POST["pre_auth_num"])."', "
          . "network_benefits = '" . $_POST["network_benefits"] . "', "
+         . "deductible_from = '" . $_POST["deductible_from"] . "', "
          . "patient_deductible = '" . $_POST["patient_deductible"] . "', "
          . "patient_amount_met = '" . $_POST["patient_amount_met"] . "', "
          . "family_deductible = '" . $_POST["family_deductible"] . "', "
@@ -116,16 +117,23 @@ if (isset($_REQUEST['ed'])) {
          . "deductible_reset_date = '".s_for($_POST["deductible_reset_date"])."', "
          . "out_of_pocket_met = '" . $_POST["out_of_pocket_met"] . "', "
          . "patient_amount_left_to_meet = '" . $_POST["patient_amount_left_to_meet"] . "', "
+         . "family_amount_left_to_meet = '" . $_POST["family_amount_left_to_meet"] . "', "
          . "expected_insurance_payment = '" . $_POST["expected_insurance_payment"] . "', "
          . "expected_patient_payment = '" . $_POST["expected_patient_payment"] . "' ";
     
-    if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
+    if(isset($_POST['reject_but'])){
+        $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
+	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+    }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
+    } elseif($_POST['is_pre_auth_required']==1){ 
+        $sql .= ", status = " . DSS_PREAUTH_PREAUTH_PENDING . " ";
+				update_patient_summary($pid, 'vob', DSS_PREAUTH_PREAUTH_PENDING);
     } else {
         $sql .= ", status = " . DSS_PREAUTH_PENDING . " ";
-				update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
+                                update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
     }
     $sql .= "WHERE id = '" . $_POST["preauth_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());
@@ -139,7 +147,8 @@ if (isset($_REQUEST['ed'])) {
 }
 
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
-$disabled = ($is_complete) ? 'DISABLED' : '';
+$is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
+$disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -436,6 +445,7 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 from <input id="ins_cal_year_start" type="text" name="ins_cal_year_start" value="<?=$preauth['ins_cal_year_start']?>" onchange="validateDate('ins_cal_year_start');"class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 to <input id="ins_cal_year_end" type="text" name="ins_cal_year_end" value="<?=$preauth['ins_cal_year_end']?>" onchange="validateDate('ins_cal_year_end');" class="tbox calendar" style="width:125px" <?=$disabled?>/>
                 <span class="red">*</span>				
+		<span><a href="#" id="ins_cal_year" onclick="$('#ins_cal_year_start').val('1/1/'+(new Date).getFullYear());$('#ins_cal_year_end').val('12/31/'+(new Date).getFullYear());return false;">Jan1-Dec31</a></span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -555,6 +565,17 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
+                Deductible Calculated From
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $patient_checked = ($preauth['deductible_from'] == '1') ? 'CHECKED="true"' : ''; ?>
+                <?php $family_checked  = ($preauth['deductible_from'] != '1') ? 'CHECKED="true"' : ''; ?>
+                <input type="radio" name="deductible_from" value="1" <?= $patient_checked ?> <?=$disabled?> class="covered"/> Patient Deductible 
+                <input type="radio" name="deductible_from" value="0" <?= $family_checked ?> <?=$disabled?> class="covered"/> Family Deductible
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
+            <td valign="top" class="frmhead" width="30%">
                 Patient Deductible
             </td>
             <td valign="top" class="frmdata">
@@ -598,6 +619,16 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">*</span>				
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
+            <td valign="top" class="frmhead" width="30%">
+                Family amount left to meet
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" id="family_amount_left_to_meet" name="family_amount_left_to_meet" value="<?=$preauth['family_amount_left_to_meet']?>" class="tbox covered readonly" <?=$disabled?>/>
+                <span class="red">*</span>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF" class="covered-row">
             <td valign="top" class="frmhead" width="30%">
                 When does the deductible reset?
@@ -650,12 +681,21 @@ $disabled = ($is_complete) ? 'DISABLED' : '';
                 <span class="red">
                     * Required Fields					
                 </span><br />
+		<?php if(!$is_complete && !$is_rejected){ ?>
+                        <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
+                        <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
+                                <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
+                                <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
+				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel" />
+                        </div>
+<br />
+		<?php } ?>
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
-                <?php if (!$is_complete) { ?>
+                <?php if (!$is_complete && !$is_rejected ) { ?>
                   <input type="submit" value="Save Verfication of Benefits" class="button" />
                 <?php } ?>
-		<?php if($preauth["status"] == DSS_PREAUTH_PENDING){ ?>
+		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>
                     <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

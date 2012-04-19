@@ -3,7 +3,7 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
-if(isset($_GET['delid'])){
+if(isset($_GET['delid']) && $_SESSION['admin_access']==1){
 
 $del = "DELETE FROM dental_document_category WHERE categoryid='".mysql_real_escape_string($_GET['delid'])."'";
 mysql_query($del);

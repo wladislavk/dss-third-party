@@ -230,7 +230,13 @@ function preauth_errors(){
     array_push($errors, "Missing referral"); 
   }*/
 
-  $sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+
   $result = mysql_query($sleepstudies);
   $numsleepstudy = mysql_num_rows($result);
   if($numsleepstudy == 0)
@@ -501,7 +507,8 @@ function trigger_letter11($pid, $stepid) {
 function trigger_letter13($pid, $stepid) {
   $letterid = '13';
   $md_list = get_mdcontactids($pid);
-  $letter = create_letter($letterid, $pid, $stepid, '', $md_list);
+  $md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, $stepid, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 13: " . $letter;
     die();
@@ -1295,7 +1302,10 @@ background:#edeb46;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT completed FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."';";
+		$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss 
+				JOIN dental_patients p on ss.patiendid=p.patientid
+			WHERE 
+				(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
 		$numsleepstudy = mysql_num_rows($result);
 
@@ -1310,7 +1320,7 @@ background:#edeb46;
 		$my = mysql_query($sql) or die(mysql_error());
 		$numvob = mysql_num_rows($my);
 
-		$initialcontact = false;
+		//$initialcontact = false;
 		$questionnaire = false;
     $sleepstudy = false;
 		$medins = false;
@@ -1322,16 +1332,16 @@ background:#edeb46;
 
 		//if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $delivery_date != '') $initialcontact = true;
 		if ($referred_by == '') {
-			if ($copyreqdate != '') $initialcontact = true;
+			//if ($copyreqdate != '') $initialcontact = true;
     } elseif ($referred_by != '') {
-			if ($delivery_date != '') $initialcontact = true;
+			//if ($delivery_date != '') $initialcontact = true;
     }
 	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
 		if ($rxrec != '' && $lomnrec != '') $medins = true;
 		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
 
-		if ($initialcontact == false || $questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
+		if ($questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
       print "<strong><h2>Pre-Treatment Information Below is NOT COMPLETE</h2></strong>"; 
 			update_patient_summary($_GET['pid'], 'fspage1_complete', false);
     } else {
@@ -1356,7 +1366,7 @@ background:#edeb46;
 <input id="iframestatus" name="iframestatus" type="hidden" />
 <!-- START INITIAL CONTACT TABLE -->
 <div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
-<table width="610px" <?php print (!$initialcontact ? 'class="yellow"' : ''); ?> align="center">
+<table width="610px" align="center">
 
 <tr>
 
@@ -2308,6 +2318,25 @@ $my = mysql_query($sql) or die(mysql_error());
       </tr>
 
 
+ <?php } elseif($preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently awaiting pre-authorization.
+        </td>
+      </tr>
+
+
+
+        <?php } elseif($preauth['status']==DSS_PREAUTH_REJECTED){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+        </td>
+      </tr>
+
+
 
 	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
@@ -2689,7 +2718,7 @@ Next Appointment
 					$letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
 				}
 				elseif ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				}
 				elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
@@ -2710,8 +2739,10 @@ Next Appointment
 					$preferred = "(F)";
 				}
 				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
-				if ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+				if ($letter['deleted'] == 1) {
+                                        $letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
+                                }elseif ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
 				}
@@ -2731,8 +2762,10 @@ Next Appointment
 					$preferred = "(F)";
 				}
 				$name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
-				if ($letter['status'] == 0) {
-					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid\">$name</a><br />";
+                                if ($letter['deleted'] == 1) {
+                                        $letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
+                                }elseif ($letter['status'] == 0) {
+					$letterlink .= "<a class=\"red\" href=\"$template?fid=$pid&pid=$pid&lid=$lid&goto=flowsheet\">$name</a><br />";
 				} elseif ($letter['delivered'] == 1 && $letter['pdf_path'] != "") {
 					$letterlink .= "<a class=\"darkblue\" href=\"/manage/letterpdfs/" . $letter['pdf_path'] . "\">$name</a><br />";
 				} elseif ($letter['status'] == 1) {

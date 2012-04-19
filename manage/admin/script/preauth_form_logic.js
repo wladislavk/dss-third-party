@@ -41,10 +41,29 @@ $(function() {
   $("input[name='is_pre_auth_required']:checked").click();
   
   $("#ins_cal_year_end").bind("focus blur click", function() {
-    $("#deductible_reset_date").val($(this).val());
+	if($(this).val()!=''){
+	myDate = new Date($(this).val());
+	myDate.setDate(myDate.getDate()+1);
+    $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+	}else{
+	  $("#deductible_reset_date").val('');
+	}
   });
   $("#ins_cal_year_end").blur();
-  
+ 
+  $("#ins_cal_year").bind("click", function() {
+        if($("#ins_cal_year_end").val()!=''){
+        myDate = new Date($("#ins_cal_year_end").val());
+        myDate.setDate(myDate.getDate()+1);
+    $("#deductible_reset_date").val(parseInt(myDate.getMonth()+1,10)+"/"+myDate.getDate()+"/"+myDate.getFullYear());
+        }else{
+          $("#deductible_reset_date").val('');
+        }
+
+  });
+
+
+ 
   function calc_amount_left_to_meet() {
     var deductible = $('#patient_deductible').val();
     var amountMet  = $('#patient_amount_met').val();
@@ -54,23 +73,48 @@ $(function() {
     if (leftToMeet < 0) { leftToMeet = 0; }
     $('#patient_amount_left_to_meet').val(leftToMeet.toFixed(2));
   }
+
+  function calc_amount_left_to_meet_family() {
+    var deductible = $('#family_deductible').val();
+    var amountMet  = $('#family_amount_met').val();
+    if (isNaN(deductible)) { deductible = 0; }
+    if (isNaN(amountMet))  { amountMet = 0; }
+    var leftToMeet = deductible - amountMet;
+    if (leftToMeet < 0) { leftToMeet = 0; }
+    $('#family_amount_left_to_meet').val(leftToMeet.toFixed(2));
+  }
+
   
   $("#patient_deductible, #patient_amount_met").bind("focus blur click", function() {
     calc_amount_left_to_meet();
     calc_expected_payments();
   });
-  
+
+  $("input[name='deductible_from']").bind("focus blur click", function() {
+    calc_expected_payments();
+  });
+
+  $("#family_deductible, #family_amount_met").bind("focus blur click", function() {
+    calc_amount_left_to_meet_family();
+    calc_expected_payments();
+  });
+
+
   function calc_expected_payments() {
     var debug = false;
     if (debug) { console.log('calc_expected_payments'); }
-    
+    var deductibleFrom = $("input[name='deductible_from']:checked").val(); 
     var deviceAmount = $('#trxn_code_amount').val();
-    var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
+    if(deductibleFrom == '1'){
+      var amountLeftToMeet = $('#patient_amount_left_to_meet').val();
+    }else{
+      var amountLeftToMeet = $('#family_amount_left_to_meet').val();
+    }
     var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
     var isHmo = $("input[name='is_hmo']:checked").val();
     var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
     var percentagePaid = 0;
-    
+
     if (debug) { 
       console.log('amountLeftToMeet: ' + amountLeftToMeet);
       console.log('hasOutOfNetwork: ' + hasOutOfNetwork);
@@ -145,7 +189,7 @@ $(function() {
   });
   
   // Fields where the user shouldn't be able to gain focus
-  $('#patient_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
+  $('#patient_amount_left_to_meet, #family_amount_left_to_meet, #deductible_reset_date, #expected_insurance_payment, #expected_patient_payment').bind('focus', function() {
     $(this).blur();
   });
   

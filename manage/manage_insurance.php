@@ -13,7 +13,7 @@ if($_REQUEST["delid"] != "")
 	?>
 	<script type="text/javascript">
 		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+		window.location="delete_insurance.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&delid=<?=$_REQUEST['delid'];?>";
 	</script>
 	<?
 	die();
@@ -22,8 +22,8 @@ if($_REQUEST["delid"] != "")
 
 if(isset($_REQUEST['vob_id'])){
 
-$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status=1",$_REQUEST['vob_id'], $_REQUEST['pid'], $_SESSION['docid']);
-mysql_query($s);
+$s = sprintf("UPDATE dental_insurance_preauth SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s AND status IN (1,3)",$_REQUEST['vob_id'], $_REQUEST['pid'], $_SESSION['docid']);
+//mysql_query($s);
 }
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -50,7 +50,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
+$sql = "select * from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
 $sqlid = "select card from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' LIMIT 1";
 
 $total_rec = mysql_num_rows($my);
@@ -71,12 +71,6 @@ $num_users=mysql_num_rows($my);
 	-
     Patient <i><?=$name;?></i>
 </span>
-<br />
-&nbsp;&nbsp;
-<a href="manage_patient.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-<br />
-
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_patient.php?ed=<?=$_GET['pid'];?>');" class="addButton">
 		View Patient Info
@@ -157,14 +151,21 @@ $num_users=mysql_num_rows($my);
 				    <?=$dss_claim_status_labels[$myarray['status']];?>
 				</td>
 				<td valign="top">
-					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-						Edit 
-					</a>
                     <?php if($myarray['status'] == DSS_CLAIM_PENDING){ ?>
+					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                View 
+                                        </a>
+
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
-			<?php } ?>
+			<?php }else{
+				?>
+                                        <a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                                View 
+                                        </a>
+				<?php
+				} ?>
 				</td>
 			</tr>
 	  <? } ?>
@@ -178,7 +179,8 @@ $num_users=mysql_num_rows($my);
          . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
          . "  JOIN dental_users user ON user.userid = ledger.docid "
          . "WHERE "
-         . "  ledger.status = " . DSS_TRXN_PENDING . " "
+	 . "  (ledger.primary_claim_id IS NULL || ledger.primary_claim_id ='') "
+         . "  AND ledger.status = " . DSS_TRXN_PENDING . " "
          . "  AND ledger.patientid = " . $_GET['pid'] . " "
          . "  AND ledger.docid = " . $_SESSION['docid'] . " "
          . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
@@ -187,6 +189,7 @@ $num_users=mysql_num_rows($my);
     $num_trxns = mysql_num_rows($query);
     $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
   ?>
+<?php if ($num_trxns > 0) { ?>
   <tr class="<?=$tr_class;?>">
     <td>There <?=$row_text?> ready to be added to a new claim.</td>
     <td>n/a</td>
@@ -198,6 +201,33 @@ $num_users=mysql_num_rows($my);
       <?php } ?>
     </td>
   </tr>
+  <?php
+  }
+
+    // Display a placeholder row for any ledger trxns that need added to a new claim
+    $sql = "SELECT "
+         . "  ledger.* "
+         . "FROM "
+         . "  dental_ledger ledger "
+         . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+         . "  JOIN dental_users user ON user.userid = ledger.docid "
+	 . "  JOIN dental_insurance ins ON ins.insuranceid = ledger.primary_claim_id "
+         . "WHERE "
+         . "  ins.status = " . DSS_CLAIM_PENDING . " "
+         . "  AND ledger.patientid = " . $_GET['pid'] . " "
+         . "  AND ledger.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+         . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " ";
+    $query = mysql_query($sql);
+    $num_trxns = mysql_num_rows($query);
+    $row_text = ($num_trxns == 1) ? "is 1 ledger transaction" : "are $num_trxns ledger transactions";
+  ?>
+  <tr class="<?=$tr_class;?>">
+    <td>There <?=$row_text?> on pending claims.</td>
+    <td>n/a</td>
+    <td>
+    </td>
+
 </table>
 </insurance>
 
@@ -253,7 +283,27 @@ $my = mysql_query($sql) or die(mysql_error());
 
 
 
-	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
+	<?php } elseif($preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently awaiting pre-authorization.
+        </td>
+      </tr>
+
+
+
+        <?php } elseif($preauth['status']==DSS_PREAUTH_REJECTED){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+        </td>
+      </tr>
+
+
+
+        <?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
         <tr class="tr_bg">
           <td valign="top" colspan="2" align="center">
 		    Verification of benefits completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.<br/>

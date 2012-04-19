@@ -26,8 +26,8 @@ $insured_firstname = strtoupper(st($pat_myarray['p_m_partyfname']));
 $insured_lastname = strtoupper(st($pat_myarray['p_m_partylname']));
 $insured_middle = strtoupper(st($pat_myarray['p_m_partymname']));
 $other_insured_firstname = strtoupper(st($pat_myarray['s_m_partyfname']));
-$other_insured_lastname = strtoupper(st($pat_myarray['s_m_partymname']));
-$other_insured_middle = strtoupper(st($pat_myarray['s_m_partylname']));
+$other_insured_lastname = strtoupper(st($pat_myarray['s_m_partylname']));
+$other_insured_middle = strtoupper(st($pat_myarray['s_m_partymname']));
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
 $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
@@ -43,23 +43,37 @@ $docid = st($pat_myarray['docid']);
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
-
+$dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurance_type = st($myarray['insurance_type']);
+$insurancetype = st($myarray['insurance_type']);
 $patient_lastname = strtoupper(st($myarray['patient_lastname']));
 $patient_firstname = strtoupper(st($myarray['patient_firstname']));
 $patient_middle = strtoupper(st($myarray['patient_middle']));
-$patient_dob = st($myarray['patient_dob']);
+$patient_dob = str_replace('-','/',st($myarray['patient_dob']));
 $patient_sex = st($myarray['patient_sex']);
+$other_insured_firstname = st($myarray['other_insured_firstname']);
+$other_insured_lastname = st($myarray['other_insured_lastname']);
+$other_insured_middle = st($myarray['other_insured_middle']);
+$other_insured_dob = str_replace('-','/',st($myarray['other_insured_dob']));
+$other_insured_sex = st($myarray['other_insured_sex']);
+$other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+$insured_id_number = st($myarray['insured_id_number']);
+$insured_lastname = st($myarray['insured_lastname']);
+$insured_firstname = st($myarray['insured_firstname']);
+$insured_middle = st($myarray['insured_middle']);
+$insured_dob = str_replace('-','/',st($myarray['insured_dob']));
+$insured_insurance_plan = st($myarray['insured_insurance_plan']);
+$insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+
 $patient_address = strtoupper(st($myarray['patient_address']));
 $patient_relation_insured = st($myarray['patient_relation_insured']);
 $insured_address = strtoupper(st($myarray['insured_address']));
 $patient_city = strtoupper(st($myarray['patient_city']));
 $patient_state = strtoupper(st($myarray['patient_state']));
-$patient_status = strtoupper(st($myarray['patient_status']));
+$patient_status = st($myarray['patient_status']);
 $patient_status_array = split('~', $patient_status);
 $insured_city = strtoupper(st($myarray['insured_city']));
 $insured_state = strtoupper(st($myarray['insured_state']));
@@ -82,16 +96,16 @@ $another_plan = strtoupper(st($myarray['another_plan']));
 $patient_signature = st($myarray['patient_signature']);
 $patient_signed_date = st($myarray['patient_signed_date']);
 $insured_signature = st($myarray['insured_signature']);
-$date_current = st($myarray['date_current']);
-$date_same_illness = st($myarray['date_same_illness']);
-$unable_date_from = st($myarray['unable_date_from']);
-$unable_date_to = st($myarray['unable_date_to']);
+$date_current = str_replace('-','/',st($myarray['date_current']));
+$date_same_illness = str_replace('-','/',st($myarray['date_same_illness']));
+$unable_date_from = str_replace('-','/',st($myarray['unable_date_from']));
+$unable_date_to = str_replace('-','/',st($myarray['unable_date_to']));
 $referring_provider = strtoupper(st($myarray['referring_provider']));
 $field_17a_dd = st($myarray['field_17a_dd']);
 $field_17a = st($myarray['field_17a']);
 $field_17b = st($myarray['field_17b']);
-$hospitalization_date_from = st($myarray['hospitalization_date_from']);
-$hospitalization_date_to = st($myarray['hospitalization_date_to']);
+$hospitalization_date_from = str_replace('-','/',st($myarray['hospitalization_date_from']));
+$hospitalization_date_to = str_replace('-','/',st($myarray['hospitalization_date_to']));
 $reserved_local_use1 = strtoupper(st($myarray['reserved_local_use1']));
 $outside_lab = strtoupper(st($myarray['outside_lab']));
 $s_charges = st($myarray['s_charges']);
@@ -102,8 +116,8 @@ $diagnosis_4 = st($myarray['diagnosis_4']);
 $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
 $original_ref_no = st($myarray['original_ref_no']);
 $prior_authorization_number = st($myarray['prior_authorization_number']);
-$service_date1_from = st($myarray['service_date1_from']);
-$service_date1_to = st($myarray['service_date1_to']);
+$service_date1_from = str_replace('-','/',st($myarray['service_date1_from']));
+$service_date1_to = str_replace('-','/',st($myarray['service_date1_to']));
 $place_of_service1 = strtoupper(st($myarray['place_of_service1']));
 $emg1 = strtoupper(st($myarray['emg1']));
 $cpt_hcpcs1 = st($myarray['cpt_hcpcs1']);
@@ -118,8 +132,8 @@ $days_or_units1 = st($myarray['days_or_units1']);
 $epsdt_family_plan1 = strtoupper(st($myarray['epsdt_family_plan1']));
 $id_qua1 = st($myarray['id_qua1']);
 $rendering_provider_id1 = st($myarray['rendering_provider_id1']);
-$service_date2_from = st($myarray['service_date2_from']);
-$service_date2_to = st($myarray['service_date2_to']);
+$service_date2_from = str_replace('-','/',st($myarray['service_date2_from']));
+$service_date2_to = str_replace('-','/',st($myarray['service_date2_to']));
 $place_of_service2 = strtoupper(st($myarray['place_of_service2']));
 $emg2 = st($myarray['emg2']);
 $cpt_hcpcs2 = st($myarray['cpt_hcpcs2']);
@@ -134,8 +148,8 @@ $days_or_units2 = st($myarray['days_or_units2']);
 $epsdt_family_plan2 = st($myarray['epsdt_family_plan2']);
 $id_qua2 = st($myarray['id_qua2']);
 $rendering_provider_id2 = st($myarray['rendering_provider_id2']);
-$service_date3_from = st($myarray['service_date3_from']);
-$service_date3_to = st($myarray['service_date3_to']);
+$service_date3_from = str_replace('-','/',st($myarray['service_date3_from']));
+$service_date3_to = str_replace('-','/',st($myarray['service_date3_to']));
 $place_of_service3 = strtoupper(st($myarray['place_of_service3']));
 $emg3 = st($myarray['emg3']);
 $cpt_hcpcs3 = st($myarray['cpt_hcpcs3']);
@@ -150,8 +164,8 @@ $days_or_units3 = st($myarray['days_or_units3']);
 $epsdt_family_plan3 = st($myarray['epsdt_family_plan3']);
 $id_qua3 = st($myarray['id_qua3']);
 $rendering_provider_id3 = st($myarray['rendering_provider_id3']);
-$service_date4_from = st($myarray['service_date4_from']);
-$service_date4_to = st($myarray['service_date4_to']);
+$service_date4_from = str_replace('-','/',st($myarray['service_date4_from']));
+$service_date4_to = str_replace('-','/',st($myarray['service_date4_to']));
 $place_of_service4 = strtoupper(st($myarray['place_of_service4']));
 $emg4 = st($myarray['emg4']);
 $cpt_hcpcs4 = st($myarray['cpt_hcpcs4']);
@@ -166,8 +180,8 @@ $days_or_units4 = st($myarray['days_or_units4']);
 $epsdt_family_plan4 = st($myarray['epsdt_family_plan4']);
 $id_qua4 = st($myarray['id_qua4']);
 $rendering_provider_id4 = st($myarray['rendering_provider_id4']);
-$service_date5_from = st($myarray['service_date5_from']);
-$service_date5_to = st($myarray['service_date5_to']);
+$service_date5_from = str_replace('-','/',st($myarray['service_date5_from']));
+$service_date5_to = str_replace('-','/',st($myarray['service_date5_to']));
 $place_of_service5 = st($myarray['place_of_service5']);
 $emg5 = st($myarray['emg5']);
 $cpt_hcpcs5 = st($myarray['cpt_hcpcs5']);
@@ -182,8 +196,8 @@ $days_or_units5 = st($myarray['days_or_units5']);
 $epsdt_family_plan5 = st($myarray['epsdt_family_plan5']);
 $id_qua5 = st($myarray['id_qua5']);
 $rendering_provider_id5 = st($myarray['rendering_provider_id5']);
-$service_date6_from = st($myarray['service_date6_from']);
-$service_date6_to = st($myarray['service_date6_to']);
+$service_date6_from = str_replace('-','/',st($myarray['service_date6_from']));
+$service_date6_to = str_replace('-','/',st($myarray['service_date6_to']));
 $place_of_service6 = st($myarray['place_of_service6']);
 $emg6 = st($myarray['emg6']);
 $cpt_hcpcs6 = st($myarray['cpt_hcpcs6']);
@@ -229,7 +243,8 @@ $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true :
 if($insured_sex == '')
 	$insured_sex = $pat_myarray['gender'];
   
-$patient_sex = $pat_myarray['gender'];
+if($patient_sex == '')
+	$patient_sex = $pat_myarray['gender'];
 
 if($patient_firstname == '')
 	$patient_firstname = $pat_myarray['firstname'];
@@ -265,7 +280,7 @@ if($patient_dob == '')
 if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
 
-if($insured_id == '')
+if($insured_id_number == '')
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
 		
 if($insured_firstname == '')
@@ -308,7 +323,13 @@ if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
 
-          $sleepstudies = "SELECT diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosising_doc = $d['diagnosising_doc'];
@@ -649,10 +670,10 @@ $fdf .= "
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
-  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(0) >>
-  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(00) >>
-  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
-  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($total_charge-floor($total_charge)).") >>
+  << /T(".$field_path.".amount_paid_dollars_fill[0]) /V(".number_format($amount_paid,0).") >>
+  << /T(".$field_path.".amount_paid_cents_fill[0]) /V(".fill_cents($amount_paid-floor($amount_paid)).") >>
+  << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0).") >>
+  << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents($balance_due-floor($balance_due)).") >>
   << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
   << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($userinfo['phone'], true).") >>
   << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>
@@ -679,15 +700,26 @@ trailer
 >>
 %%EOF
 ";
-
-
-
+$d = date('YmdHms');
+$file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
+if($_REQUEST['type']=="secondary"){
+  $fdf_field = "secondary_fdf";
+}else{
+  $fdf_field = "primary_fdf";
+}
+$sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+mysql_query($sql);
             // this is where you'd do any custom handling of the data
             // if you wanted to put it in a database, email the
             // FDF data, push ti back to the user with a header() call, etc.
 
             // write the file out
-              echo  $fdf;
+            //echo  $fdf;
+	$handle = fopen("./q_file/".$file, 'x+');
+	fwrite($handle, $fdf);
+	fclose($handle);
+
+echo $fdf;
 
 function fill_cents($v){
   if($v<10){

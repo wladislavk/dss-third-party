@@ -22,7 +22,7 @@ if($_REQUEST["delid"] != "")
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">
-		window.location="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&sh=<?=$_GET['sh'];?>";
+		window.location="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>";
 	</script>
 	<?
 	die();
@@ -49,7 +49,14 @@ if($pat_myarray['patientid'] == '')
 $sql = "select * from dental_q_image where patientid='".$_GET['pid']."'";
 if($_GET['sh'] <> '')
 	$sql .= " and imagetypeid='".$_GET['sh']."' ";
-$sql .= " order by title";
+
+If(!isset($_REQUEST['sort'])){
+  $_REQUEST['sort'] = 'title';
+}
+If(!isset($_REQUEST['sortdir'])){
+  $_REQUEST['sortdir'] = 'ASC';
+}
+$sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 $my = mysql_query($sql);
 ?>
 
@@ -61,15 +68,8 @@ $my = mysql_query($sql);
 <script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
-&nbsp;&nbsp;
-<a href="manage_forms.php?pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back To Forms</b></a>
-<br />
 
 <!--<div style="visibility:hidden; height:10px;"><?php //include("includes/form_top.htm");?></div>-->
-
-<br />
-<br>
 &nbsp;&nbsp;
 <b>Show Image Type</b>
 &nbsp;&nbsp;
@@ -108,14 +108,14 @@ $itype_my = mysql_query($itype_sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Title
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=title&sortdir=<?php echo ($_REQUEST['sort']=='title'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Title</a>
 		</td>
-		<td valign="top" class="col_head" width="20%">
-			Image Type
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'imagetypeid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=imagetypeid&sortdir=<?php echo ($_REQUEST['sort']=='imagetypeid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Image Type</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Add Date
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Add Date</a>
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Preview
@@ -156,7 +156,11 @@ $itype_my = mysql_query($itype_sql);
 					<?=st($myarray["title"]);?>
 				</td>
 				<td valign="top">
+					<?php if($myarray['imagetypeid']==0){ ?>
+						Clinical Photos (Pre-Tx)
+					<?php }else{ ?>
 					<?=st($i_type_myarray["imagetype"]);?>
+					<?php } ?>
 				</td>
 				<td valign="top">
 					<?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>
@@ -197,7 +201,7 @@ $itype_my = mysql_query($itype_sql);
 </div>
 <div id="backgroundPopup"></div>
 
-<div id="popupRefer" style="width:750px;">
+<div id="popupRefer" style="width:750px;height:430px">
     <a id="popupReferClose"><button>X</button></a>
     <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>

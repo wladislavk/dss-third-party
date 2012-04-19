@@ -114,14 +114,15 @@ $sql = "select
 		dif.adddate,
 		dif.adddate,
 		'EOB',
-		dif.description,
+		CONCAT('EOB - ', dif.claimtype, ' Insurance'),
 		'',
 		'',
-		dif.status,
+		di.status,
 		dif.filename,
 		'',
 		''
 	from dental_insurance_file dif
+		JOIN dental_insurance di ON di.insuranceid=dif.claimid
 		where dif.claimid=".mysql_real_escape_string($_GET['claimid'])."
 ";
 
@@ -301,6 +302,9 @@ return s;
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="manage_ledger.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
+                <td valign="top" class="col_head" width="5%">
+                       Action 
+                </td>
 		<!--
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -360,7 +364,7 @@ return s;
                                 </td>
 
 				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
-                	<?=st($myarray["description"]);?>
+                	<?=st(ucWords($myarray["description"]));?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
 
@@ -394,6 +398,13 @@ return s;
                if($myarray["status"] == '2'){echo "Filed";}
             */
           ?>       	
+				</td>
+				<td valign="top">
+					<?php if($myarray[0]=='ledger_payment'){ ?>
+                                           <a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_payment.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="PAYMENT">
+                                                 Edit 
+                                        </a>
+					<?php } ?>
 				</td>
 				<!--<td valign="top">
                                    <?php if($myarray[0]=='ledger'){ ?>

@@ -14,8 +14,7 @@ $template = "
 <td>
 %contact_fullname%<br />
 %practice%
-%addr1%
-%addr2%<br />
+%addr1%%addr2%<br />
 %city%, %state% %zip%<br />
 </td>
 </tr>
@@ -34,6 +33,8 @@ $template = "
 </table>
 
 <p>Dear Dr. %contact_lastname%:</p>
+
+%patprogress%
 
 <p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% after undergoing a %type_study% done at the %1st_sleeplab_name%.</p>
 

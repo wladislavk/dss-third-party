@@ -194,7 +194,7 @@ if($_POST["place_servicesub"] == 1)
                 <input type="hidden" name="place_servicesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["place_serviceid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Place of Service" class="button" />
-		<?php if($themyarray["place_serviceid"] != ''){ ?>
+		<?php if($themyarray["place_serviceid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_place_service.php?delid=<?=$themyarray["place_serviceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

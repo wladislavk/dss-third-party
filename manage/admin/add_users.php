@@ -97,6 +97,9 @@ if($_POST["usersub"] == 1)
                         $userid = mysql_insert_id();			
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, type, sortby, docid) SELECT transaction_code, description, place, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
                         mysql_query($code_sql) or die($code_sql.mysql_error());
+                        $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
+                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+
 
 			$msg = "Added Successfully";
 			?>
@@ -294,7 +297,8 @@ if($_POST["usersub"] == 1)
                 Address
             </td>
             <td valign="top" class="frmdata">
-                <textarea name="address" class="tbox"><?=$address;?></textarea>
+		<input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -361,7 +365,7 @@ if($_POST["usersub"] == 1)
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
                 <input type="submit" value=" <?=$but_text?> User" class="button" />
-                <?php if($themyarray["userid"] != ''){ ?>
+                <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete
                                         </a>

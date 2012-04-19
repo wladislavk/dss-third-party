@@ -65,6 +65,8 @@ $sql = "SELECT "
      . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
      . " WHERE preauth.status = " . DSS_PREAUTH_PENDING;
@@ -72,12 +74,13 @@ $sql = "SELECT "
 $my = mysql_query($sql);
 $num_pending_preauth = mysql_num_rows($my);
 
-$sql = "SELECT "
+ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
      . "FROM "
      . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
      . " WHERE claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.")";
@@ -94,12 +97,18 @@ $num_pending_claims = mysql_num_rows($my);
                 <li class="dir">Users
                         <ul>
                                 <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
+                                <li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>
                                 <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
                                 <li><a href="/manage/admin/manage_franchisee_analysis.php">Franchisee Analysis</a></li>
                                 <li class="dir">Insurance Codes
                                         <ul>
                                                 <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>
                                                 <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
+                                </li>
+                                <li class="dir">Custom Text
+                                        <ul>
+                                                <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
+                                                <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>                                        </ul>
                                 </li>
                                 <li class="dir">Password
                                         <ul>

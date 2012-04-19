@@ -14,8 +14,7 @@ $template = "
 <td>
 %contact_fullname%<br />
 %practice%
-%addr1%
-%addr2%<br />
+%addr1%%addr2%<br />
 %city%, %state% %zip%<br />
 </td>
 </tr>
@@ -34,7 +33,7 @@ $template = "
 
 <p>Dear Dr. %contact_lastname%:</p>
 
-<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% with a PMH that includes %history%.  %His/Her% medications include %medications%.  %patient_firstname% had a %completed_type_study% done at the %completed_sleeplab_name% which showed an AHI of %completed_ahi%; %he/she% was diagnosed with %completed_diagnosis%.</p>
+<p>Thank you for referring %patient_fullname% to our office for treatment with a dental sleep device.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender%%historysentence%.  %medicationssentence% %patient_firstname% had a %completed_type_study% done at the %completed_sleeplab_name% which showed an AHI of %completed_ahi%; %he/she% was diagnosed with %completed_diagnosis%.</p>
 
 <p>I regret to inform you that the patient has refused treatment with a dental sleep device.  I am referring %him/her% back to you to discuss other treatment options.</p>
 

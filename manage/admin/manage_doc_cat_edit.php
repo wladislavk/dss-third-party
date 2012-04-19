@@ -36,7 +36,9 @@ if(isset($_POST['edit_cat'])){
 <input type="checkbox" name="status" value="1" <?= ($cat['status'])?'checked="checked"':''; ?> />
 <br />
 <input type="submit" name="edit_cat" value="Edit" />
+<? if( $_SESSION['admin_access']==1 ){ ?>
 <a class="editdel" href="manage_doc_categories.php?delid=<?= $cat['categoryid']; ?>" onclick="return confirm('Are you sure you want to delete <?= $cat['name']; ?> and the documents in this category?');">Delete</a>
+<? } ?>
 </form>
 
 

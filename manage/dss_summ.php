@@ -192,6 +192,7 @@ if(isset($_POST['summarybtn']))
 $r_lateral_from	= $_POST['r_lateral_from'];
 $l_lateral_from = $_POST['l_lateral_from'];
 $i_opening_from = $_POST['i_opening_from'];
+$dentaldevice = $_POST['dentaldevice'];
 $ir_range = $_POST['ir_range'];
 $ir_min = $_POST['ir_min'];
 $ir_max = $_POST['ir_max'];
@@ -207,7 +208,8 @@ $ex_ed_sql = " update dental_ex_page5 set
                 protrusion_equal = '".s_for($ir_range)."',
                 i_opening_from = '".s_for($i_opening_from)."',
                 l_lateral_from = '".s_for($l_lateral_from)."',
-                r_lateral_from = '".s_for($r_lateral_from)."'
+                r_lateral_from = '".s_for($r_lateral_from)."',
+		dentaldevice = '".s_for($dentaldevice)."'
 	where ex_page5id = '".$row['ex_page5id']."'";
 mysql_query($ex_ed_sql);
 }else{
@@ -219,6 +221,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
                 i_opening_from = '".s_for($i_opening_from)."',
                 l_lateral_from = '".s_for($l_lateral_from)."',
                 r_lateral_from = '".s_for($r_lateral_from)."',
+                dentaldevice = '".s_for($dentaldevice)."',
 		userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = now(),
@@ -702,7 +705,7 @@ $protrusion_to = st($myarrayex['protrusion_to']);
 $protrusion_equals = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
-
+$dentaldevice = st($myarrayex['dentaldevice']);
 
 $sqlex8 = "select * from dental_ex_page8 where patientid='".$_GET['pid']."'";
 $myex8 = mysql_query($sqlex8);
@@ -1275,11 +1278,14 @@ $rs = $pat_myarray['referred_source'];
 if(st($pat_myarray['referred_by']) <> '')
 {
   if($rs == DSS_REFERRED_PHYSICIAN){
-  $referredby_sql = "select * from dental_contact where status=1 and contactid='".st($pat_myarray['referred_by'])."'";
+  $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE dc.status=1 AND contactid='".st($pat_myarray['referred_by'])."'";
 	$referredby_my = mysql_query($referredby_sql);
 	$referredby_myarray = mysql_fetch_array($referredby_my);
 	
 	$referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+	$referredbythis .= " - ". $referredby_myarray['contacttype'];
   echo $referredbythis;
   }elseif($rs == DSS_REFERRED_PATIENT){
   $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
@@ -1287,7 +1293,7 @@ if(st($pat_myarray['referred_by']) <> '')
         $referredby_myarray = mysql_fetch_array($referredby_my);
         
         $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
-  echo $referredbythis;
+  echo $referredbythis ." - Patient";
   }else{
    echo $dss_referred_labels[$rs].": ".$pat_myarray['referred_notes'];
   }
@@ -1439,6 +1445,23 @@ echo "Not Set, Please set through patient info.";
     <td width="17%" height="4">ROM:&nbsp;&nbsp;</td>
     <td colspan="2">
     Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm 
+&nbsp;&nbsp;&nbsp;&nbsp;
+    Device
+	<select name="dentaldevice" style="width:250px">
+	<option value=""></option>
+        <?php
+        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+
     </td>
     
   </tr>

@@ -11,10 +11,9 @@ require_once('includes/authorization_functions.php');
 <body>
 <?php
 if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid='".$_POST['claimid']."';";
+$csql = "SELECT *, REPLACE(i.total_charge,',','') AS amount_due FROM dental_insurance i WHERE i.insuranceid='".$_POST['claimid']."';";
 $cq = mysql_query($csql);
 $claim = mysql_fetch_array($cq);
-
 $psql = "SELECT * FROM dental_patients p WHERE p.patientid='".$_POST['patientid']."';";
 $pq = mysql_query($psql);
 $pat = mysql_fetch_array($pq);
@@ -90,14 +89,23 @@ $image_sql = "INSERT INTO dental_insurance_file (
     //SAVE WITHOUT CHANGING STATUS
   }elseif($claim['status']==DSS_CLAIM_SENT){
     if($_POST['close'] == 1){
-      if($pat['s_m_dss_file']==1){ //secondary
+      if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
 
         if($pat['p_m_ins_type']==1){ //medicare
 	  $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
           $new_status = DSS_CLAIM_SEC_SENT;
         }else{
+	  $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
           $new_status = DSS_CLAIM_SEC_PENDING;
         }
+	          $secsql = "UPDATE dental_insurance SET 
+                amount_paid=(SELECT SUM(lp.amount) 
+                        FROM dental_ledger_payment lp 
+                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid 
+                        WHERE dl.primary_claim_id='".$_POST['claimid']."' 
+                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'),
+                balance_due = CAST((REPLACE(total_charge,',','')-amount_paid) AS DECIMAL(6,2))
+                WHERE insuranceid='".$_POST['claimid']."'";
 
       }else{
         $new_status = DSS_CLAIM_PAID_INSURANCE;
@@ -196,6 +204,25 @@ $sqlinsertqry .= "(
 }
 $sqlinsertqry = substr($sqlinsertqry, 0, -1).";";
 $insqry = mysql_query($sqlinsertqry);
+
+if($secsql){
+$paysql = "SELECT SUM(lp.amount) as payment
+                        FROM dental_ledger_payment lp
+                                JOIN dental_ledger dl on lp.ledgerid=dl.ledgerid
+                        WHERE dl.primary_claim_id='".$_POST['claimid']."'
+                                AND lp.payer='".DSS_TRXN_PAYER_PRIMARY."'";
+$payq = mysql_query($paysql);
+$payr = mysql_fetch_assoc($payq);
+if($payr['payment']>=$claim['amount_due']){
+  $new_status = DSS_CLAIM_PAID_INSURANCE;
+  $msg = 'Payment Successfully Added';
+  $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  WHERE insuranceid='".$_POST['claimid']."';";
+  mysql_query($x); 
+}
+  mysql_query($secsql);
+}
+
+
 if(!$insqry){
 ?>
 <script type="text/javascript">

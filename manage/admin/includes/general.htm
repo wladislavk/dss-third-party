@@ -193,6 +193,19 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $referral_sour
   return $contact_info;
 }
 
+//To remove referral source from md list
+class MDReferralFilter {
+        private $num;
+
+        function __construct($num) {
+                $this->num = $num;
+        }
+
+        function isReferrer($i) {
+                return $i != $this->num;
+        }
+}
+
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
   if((!$topatient && !$md_referral_list && !$md_list) || (!$md_referral_list && !$md_list && $templateid==16)){
@@ -200,11 +213,16 @@ function create_letter ($templateid, $pid = null, $stepid = null, $topatient = n
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
 	?><script type="text/javascript">
-		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set.  To create the letter, delete the current flowsheet step and specify contacts in the Patient Info section.  Note that other letters with specified contacts may be created.');
+		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set. To create the letter, delete the current flowsheet step and specify appropriate contacts in the Patient Info section.');
 	</script>
 	<?php
     return 0;
   }
+
+  //To remove referral source from md list if exists
+  $md_array = explode(',', $md_list);
+  $md_array = array_filter($md_array, array(new MDReferralFilter($md_referral_list), 'isReferrer'));
+  $md_list = implode(',', $md_array);
 
   $gen_date = date('Y-m-d H:i:s');
   if ($status == null) {
@@ -626,7 +644,7 @@ class MYPDF extends TCPDF {
 			// Page footer
 			public function Footer() {
 				// Position at 26 mm from bottom
-				$this->SetY(-26);
+				$this->SetY(-17);
 				$this->Cell(0, 10, $this->footerText, 0, false, 'C', 0, '', 0, false, 'T', 'M');
 		}
         public function AcceptPageBreak() {

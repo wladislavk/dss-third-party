@@ -43,16 +43,29 @@ if($_POST["contactsub"] == 1)
 		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$rid = mysql_insert_id();	
+		$c_sql = "SELECT contacttype from dental_contacttype where contacttypeid='".$_POST["contacttypeid"]."'";
+		$c_q = mysql_query($c_sql);
+		$c_r = mysql_fetch_assoc($c_q);
+		$contact = $c_r['contacttype'];
+		$name = $_POST['lastname'].", ".$_POST['firstname']." - ".$contact;
 		$msg = "Added Successfully";
-		
-		if(isset($_GET['from']) && $_GET['from']=='add_patient'){
-                  ?>
-                  <script type="text/javascript">
-			<?php if($_POST['contacttypeid']==11){ ?>
-                    parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
+	  	if($_GET['from']=='add_patient'){	
+		  if($_GET['from_id']!=''){
+                    ?>
+                    <script type="text/javascript">
+		  	<?php if($_POST['contacttypeid']==11){ ?>
+                           parent.updateReferredBy('<option value="<?= $rid; ?>" selected="selected"><?= $_POST["company"]; ?></option>', '<?= $_GET['from_id']; ?>');
 			<?php } ?>
-
-			
+		    </script>
+		    <?php
+		  }elseif($_GET['in_field']!='' && $_GET['id_field']!=''){	
+		     ?>
+			<script type="text/javascript">
+			   parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= $name; ?>', '<?= $_GET['id_field']; ?>', '<?= $rid; ?>');
+			</script>
+		     <?php	
+		  } ?>
+		  <script type="text/javascript">
                     parent.disablePopupRefClean();
                   </script>
                 <?php
@@ -93,6 +106,15 @@ if($_POST["contactsub"] == 1)
 <body width="98%"> */ ?>
 
     <?
+
+    $psql = "select * from dental_contacttype WHERE physician=1";
+    $pq = mysql_query($psql);
+    $physician_array = array();
+    while($pr = mysql_fetch_assoc($pq)){
+      array_push($physician_array, $pr['contacttypeid']);
+    }
+    $physician_types = implode(',', $physician_array);
+
     $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
@@ -168,7 +190,20 @@ if($_POST["contactsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+<?php
+        if($_GET['search'] != ''){
+          if(strpos($_GET['search'], ' ')){
+            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
+            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+          }else{
+            $firstname = $_GET['search'];
+          }
+        }
+
+?>
+
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&activePat=<?php echo $_GET['activePat']; ?>&from=<?= $_GET['from']; ?>&from_id=<?= $_GET['from_id']; ?>&in_field=<?= $_GET['in_field']; ?>&id_field=<?= $_GET['id_field']; ?>" method="post" onSubmit="return contactabc(this)" style="width:99%;">
+    <input type="hidden" id="physician_types" value="<?= $physician_types; ?>" />
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
@@ -184,6 +219,46 @@ if($_POST["contactsub"] == 1)
             </td>
         </tr>
         <tr>
+                <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                        <li id="foli8" class="complex">
+                        <div>
+                            <span>
+                                <?
+
+                                                                if(isset($_GET['ed'])){
+                $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
+                $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
+
+                $ctid = mysql_fetch_array($ctype_myquerymyarray);
+
+                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+                $ctype_my = mysql_query($ctype_sql);
+                }else{
+                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+                $ctype_my = mysql_query($ctype_sql);
+                }
+                ?>
+                                <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
+                                <option value="">Select a contact type</option>
+                                    <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
+                  ?>
+
+                  <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>">
+
+                                                <?=st($ctype_myarray['contacttype']);?>
+                                        </option>
+                                    <? }?>
+                                </select>
+
+                                <label for="contacttype">Contact Type</label>
+                            </span>
+                        </div>
+                    </li>
+                                </ul>
+            </td>
+        </tr>
+        <tr class="content physician other">
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>        
                     <li id="foli8" class="complex">	
@@ -219,7 +294,7 @@ if($_POST["contactsub"] == 1)
                 </ul>
             </td>
         </tr>
-        <tr> 
+        <tr class="content physician insurance other"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -233,7 +308,7 @@ if($_POST["contactsub"] == 1)
 				</ul>
             </td>
         </tr>
-        <tr> 
+        <tr class="content physician insurance other"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -269,7 +344,7 @@ if($_POST["contactsub"] == 1)
 				</ul>
             </td>
         </tr>
-        <tr> 
+        <tr class="content physician insurance other"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -297,11 +372,12 @@ if($_POST["contactsub"] == 1)
 				</ul>
             </td>
         </tr>
-        <tr> 
+        <tr class="content physician"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                         <div>
+			    <span style="font-size:10px;">These fields required only for Medicare referring physicians.</span><br />
                             <span>
                             	National Provider ID
                                 <input id="national_provider_id" name="national_provider_id" type="text" class="field text addr tbox" value="<?=$national_provider_id?>" tabindex="15" maxlength="255" style="width:200px;" />
@@ -339,62 +415,7 @@ if($_POST["contactsub"] == 1)
                 </ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <!--<div>
-                            <span>
-                                <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?=$greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
-                                <label for="greeting">Greeting</label>
-                            </span>
-                            
-                            
-                    	</div>-->
-                        
-                        <div>
-                        <!--	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
-                                <label for="sincerely">Sincerely</label>
-                            </span>-->
-                            
-                            <span>
-                            	<? 
-								
-								if(isset($_GET['ed'])){
-                $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
-                $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
-                
-                $ctid = mysql_fetch_array($ctype_myquerymyarray);
-                
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }else{
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }
-                ?>
-                            	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-                              	<option value="">Select a contact type</option>  	 
-                                    <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
-                  ?>
-                  
-                  <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
-
-                                        	<?=st($ctype_myarray['contacttype']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-                                
-                                <label for="contacttype">Contact Type</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        
-         <tr> 
+         <tr class="content physician insurance other"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -411,7 +432,7 @@ if($_POST["contactsub"] == 1)
             </td>
         </tr>
         
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="content physician insurance other">
             <td valign="top" class="frmhead">
                 Preferred Contact Method
             </td>
@@ -425,7 +446,7 @@ if($_POST["contactsub"] == 1)
             </td>
         </tr>
         
-        <tr bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF" class="content physician insurance other">
             <td valign="top" class="frmhead">
                 Status
             </td>
@@ -437,13 +458,16 @@ if($_POST["contactsub"] == 1)
                 <br />&nbsp;
             </td>
         </tr>
-        <tr>
+        <tr class="content physician insurance other">
             <td  colspan="2" align="center">
                 <span class="red">
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
+<a href="#" id="google_link" target="_blank" style="float:left;" />
+		Google
+</a>
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
 		<?php if($themyarray["contactid"] != ''){ ?>
 		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
@@ -455,9 +479,11 @@ if($_POST["contactsub"] == 1)
     </table>
     </form>
 
-
-
-
+<script type="text/javascript">
+  $('#google_link').click(function(){ 
+	$('#google_link').attr('href', 'http://google.com/search?q='+$('#firstname').val()+'+'+$('#lastname').val()+'+'+$('#company').val()+'+'+$('#add1').val()+'+'+$('#city').val()+'+'+$('#state').val()+'+'+$('#zip').val());
+  });
+</script>
 
       </div>
 <!--<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
@@ -480,5 +506,7 @@ var cal2 = new calendar2(document.getElementById('ins2_dob'));
 <script type="text/javascript">
 var cal3 = new calendar2(document.getElementById('dob'));
 </script>
+<script type="text/javascript" src="script/contact.js"></script>
+
 </body>
 </html>

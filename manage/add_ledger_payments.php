@@ -297,7 +297,7 @@ while($row = mysql_fetch_assoc($lq)){
 <label style="color:#fff;">Reason for dispute:</label> <input type="text" name="dispute_reason" />
 </div>
 <div id="ins_attach" style="display: none">
-<label style="color:#fff;">Explanation of Benefits:</label> <input style="color:#fff;" type="file" name="attachment" /><br />
+<label style="color:#fff;">Explanation of Benefits:</label> <input type="file" name="attachment" /><br />
 </div>
 <input type="hidden" name="claimid" value="<?php echo $_GET['cid']; ?>">
 <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">

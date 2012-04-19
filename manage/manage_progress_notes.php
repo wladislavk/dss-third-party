@@ -43,7 +43,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
+$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -73,7 +73,7 @@ $num_users=mysql_num_rows($my);
 
 <div align="right">
 	<button onclick="Javascript: loadPopup('view_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton">
-		View/Print Progress Note
+		View All Notes
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	

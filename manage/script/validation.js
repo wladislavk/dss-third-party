@@ -492,89 +492,135 @@ function required_info(fa) {
 
 function contactabc(fa)
 {
-	if(fa.contact_type.value != 'ins'){
-	if(trim(fa.firstname.value) == "" )
-	{
-		alert("First Name is Required");
-		fa.firstname.focus();
-		return false;
-	}
-	if(trim(fa.lastname.value) == "" )
-	{
-		alert("Last Name is Required");
-		fa.lastname.focus();
-		return false;
-	}
-	}
-	/*if(trim(fa.middlename.value) == "" )
-	{
-		alert("Middle Name is Required");
-		fa.middlename.focus();
-		return false;
-	}*/
-        if(trim(fa.company.value) == "" && fa.contact_type.value == 'ins')
+  pt = $('#physician_types').val();
+  pta = pt.split(',');
+  if(fa.contacttypeid.value==''){
+    alert("Contact type is Required");
+    return false;
+  }
+
+  if(fa.contacttypeid.value == '11'){ //INSURANCE
+        if(trim(fa.company.value) == "")
         {
                 alert("Company is Required");
                 fa.company.focus();
                 return false;
         }
-	if(trim(fa.add1.value) == "" )
-	{
-		alert("Address1 is Required");
-		fa.add1.focus();
-		return false;
-	}
-	if(trim(fa.city.value) == "" )
-	{
-		alert("City is Required");
-		fa.city.focus();
-		return false;
-	}
-	if(trim(fa.state.value) == "" )
-	{
-		alert("State is Required");
-		fa.state.focus();
-		return false;
-	}
-	if(trim(fa.zip.value) == "" )
-	{
-		alert("Zip is Required");
-		fa.zip.focus();
-		return false;
-	}
-	
-	if(trim(fa.email.value) != "" )
-	{
-		if(! is_email(trim(fa.email.value)))
-		{
-			alert("In-Valid Email");
-			fa.email.focus();
-			return false;
-		}
-	}
-	if(trim(fa.contacttypeid.value) == ""){
-		alert("Contact type is Required");
-		fa.contacttypeid.focus();
-		return false;
-	}
-	if(trim(fa.contacttypeid.value) == "11" && trim(fa.phone1.value) == "")
-	{
-		alert("Phone number is a required field for Insurance Companies");
-		fa.phone1.focus();
-		return false;
-	}
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }	  
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone or fax required");
+                fa.phone1.focus();
+                return false;
+        }
+  }else if($.inArray(fa.contacttypeid.value, pta)!=-1){ //physician
+        if(trim(fa.salutation.value) == "" )
+        {
+                alert("Salutation is Required");
+                fa.salutation.focus();
+                return false;
+        }
+        if(trim(fa.firstname.value) == "" )
+        {
+                alert("First Name is Required");
+                fa.firstname.focus();
+                return false;
+        }
+        if(trim(fa.lastname.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.lastname.focus();
+                return false;
+        }
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone or fax required");
+                fa.phone1.focus();
+                return false;
+        }
 
-	if(fa.preferredcontact.value=="email" && trim(fa.email.value)==''){
-		alert("An email address must be entered if preferred contact method is email");
-		return false;
-	}
+  }else if(fa.contacttypeid.value != ''){ //other
+        if((trim(fa.firstname.value) == "" || trim(fa.lastname.value) == "") && trim(fa.company.value) == "" )
+        {
+                alert("First Name, Last Name or Company is Required");
+                fa.lastname.focus();
+                return false;
+        }
 
-        if(fa.preferredcontact.value=="fax" && trim(fa.fax.value)==''){
-                alert("A fax number must be entered if preferred contact method is fax");
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
                 return false;
         }
 
 
+  }
 }
 
 function referredbyabc(fa)
@@ -755,7 +801,7 @@ function ledgerabc(fa)
 		fa.entry_date.focus();
 		return false;
 	}
-	
+/*	
 	if(trim(fa.transaction_type.value) == "")
 	{
 		alert("Transaction Type is Required");
@@ -764,14 +810,12 @@ function ledgerabc(fa)
 	}
 	
 	
-	
 	if(trim(fa.description.value) == "")
 	{
 		alert("Description is Required");
 		fa.description.focus();
 		return false;
 	}
-	
 	if(trim(fa.transaction_type.value) == 'Entry')
 	{
 		if(trim(fa.amount.value) == "")
@@ -788,7 +832,6 @@ function ledgerabc(fa)
 			return false;
 		}
 	}
-	
 	if(trim(fa.transaction_type.value) == 'Payment')
 	{
 		if(trim(fa.paid_amount.value) == "")
@@ -804,6 +847,12 @@ function ledgerabc(fa)
 			fa.paid_amount.focus();
 			return false;
 		}
+	}
+*/
+	if(fa.status.checked && fa.old_status.value==0){
+	    if(!confirm('An insurance claim will be generated and filed. Are you sure you want to do this?')){
+        	return false;
+    	    }
 	}
 	return true;
 }
@@ -938,13 +987,13 @@ function imageabc(fa)
 		return false;
 	}
 	
-	if(trim(fa.image_file.value) == '' && trim(fa.ed.value) == '')
+	if(fa.imagetypeid.value!='0' && trim(fa.image_file.value) == '' && trim(fa.ed.value) == '')
 	{
 		alert("Image is Required");
 		fa.image_file.focus();
 		return false;
 	}
-	
+	document.getElementById('loader').style.display="block";	
 }
 
 //-->

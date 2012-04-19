@@ -75,6 +75,8 @@ $dss_claim_status_labels[DSS_CLAIM_PAID_SEC_INSURANCE]['short'] = 'Sec. Paid';
 // Pre-authorization statuses (pre-auth)
 define('DSS_PREAUTH_PENDING', 0);
 define('DSS_PREAUTH_COMPLETE', 1);
+define('DSS_PREAUTH_PREAUTH_PENDING', 2);
+define('DSS_PREAUTH_REJECTED', 3);
 
 // A convenience array to get pre-auth labels
 $dss_preauth_status_labels = array();
@@ -82,6 +84,10 @@ $dss_preauth_status_labels[DSS_PREAUTH_PENDING] = 'Pending';
 $dss_preauth_status_labels[DSS_PREAUTH_PENDING]['short'] = 'Pend.';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE] = 'Complete';
 $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]['short'] = 'Comp.';
+$dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] = 'Pre-Auth Pending';
+$dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pend.';
+$dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
+$dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
 //Transaction Payers (ledger)
 define('DSS_TRXN_PAYER_PRIMARY', 0);
@@ -209,3 +215,9 @@ $dss_patient_contact_labels[DSS_PATIENT_CONTACT_ENT] = "ENT";
 $dss_patient_contact_labels[DSS_PATIENT_CONTACT_OTHER] = "Other MD";
 
 
+define('DSS_ADMIN_ACCESS_SUPER', 1);
+define('DSS_ADMIN_ACCESS_BASIC', 2);
+
+$dss_admin_access_labels = array();
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";

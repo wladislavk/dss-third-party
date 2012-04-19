@@ -133,7 +133,7 @@ foreach ($dental_letters as $key => $letter) {
 	if (!empty($letter['pdf_path'])) {
 		$dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
 	} else {
-		$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'];
+		$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
 	}
 	$dental_letters[$key]['subject'] = $correspondance['name'];
 	// Get Recipients for Sent to Column

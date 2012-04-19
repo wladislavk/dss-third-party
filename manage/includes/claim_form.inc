@@ -1,4 +1,14 @@
 <?php
+$status_sql = "SELECT status FROM dental_insurance 
+		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
+			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+$status = $status_r['status'];
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+
+
 function format_phone($num, $a){
 	$num = ereg_replace("[^0-9]", "", $num);
 	preg_match('/([0-1]*)(.*)/',$num, $m);
@@ -15,6 +25,7 @@ function format_phone($num, $a){
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $num = 0;
+    $added_ledger_ids = array();
     while ($num <= ($_POST['ledgercount']-1)) {
         $placeofservicenum =  'placeofservice'.$num;
         $emgnum = 'emg'.$num;
@@ -39,7 +50,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         $modifiercode3 = $_POST[$modifiercode3_num];
         $modifiercode4 = $_POST[$modifiercode4_num];
         $ledgerid = $_POST[$ledgeridnum];
-        
+        array_push($added_ledger_ids, $ledgerid);
+
         $sql = "UPDATE "
              . "  dental_ledger "
              . "SET "
@@ -63,6 +75,27 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         }
         $num++;
     }
+
+    $ledger_ids = implode(',', $added_ledger_ids);
+    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+    $upq = mysql_query($upsql);
+    $upr = mysql_fetch_assoc($upq);
+    if($upr['num_ledger']>0){
+  	$s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  	$q = mysql_query($s);
+  	$n = mysql_num_rows($q);
+  	if($n > 0){
+          $r = mysql_fetch_assoc($q);
+          $claim_id = $r['insuranceid'];
+  	}else{
+          $claim_id = create_claim($_GET['pid']);
+  	}
+
+	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
+	mysql_query($update_sql);
+
+    }
+
 }
 
 // deleting specified claim form
@@ -71,9 +104,12 @@ if ($_REQUEST["delid"] != "") {
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
-    print '<script type="text/javascript">';
-    print '  window.location="' . $_SERVER['PHP_SELF'] . '?pid=' . $_GET['pid'] . '&insid=' . $_GET['insid'] . '&msg=' . $msg . '";';
-    print '</script>';
+        ?>
+        <script type="text/javascript">
+                //alert("Deleted Successfully");
+                window.location="delete_insurance.php?pid=<?=$_GET['pid'];?>&msg=<?=$msg?>&delid=<?=$_REQUEST['delid'];?>";
+        </script>
+        <?
 
 	die(); // already did a javascript redirect...just die
 }
@@ -82,7 +118,6 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 
 // process inserts/updates for claim form
 if ($_POST['insurancesub'] == 1) {
-      
     // Put POST values into variables
 	$pica1 = $_POST['pica1'];
 	$pica2 = $_POST['pica2'];
@@ -274,8 +309,12 @@ if ($_POST['insurancesub'] == 1) {
 	$billing_provider_a = $_POST['billing_provider_a'];
 	$billing_provider_dd = $_POST['billing_provider_dd'];
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
-	$status = $_POST['status'];
-	
+	$reject_reason = $_POST['reject_reason'];
+	if(isset($_POST['reject_but'])){
+		$status = DSS_CLAIM_REJECTED;
+	}else{
+		$status = $_POST['status'];
+	}
 	$insurance_type_arr = $insurance_type;
 	
 	if($insurance_type_arr != '') {
@@ -291,7 +330,7 @@ if ($_POST['insurancesub'] == 1) {
 		pica1 = '".s_for($pica1)."',
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
-		insurance_type = '".s_for($insurance_type_arr)."',
+		insurance_type = '".s_for($insurance_type)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',
@@ -507,25 +546,27 @@ if ($_POST['insurancesub'] == 1) {
              $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
              $u_status = $status;
              if($status == DSS_CLAIM_SENT){
+		$fdf_type="primary";
                 if($p_m_ins_ass == 'No'){
                    $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
                    $u_status = DSS_CLAIM_SENT;
                 }
              }elseif($status == DSS_CLAIM_SEC_SENT){
+		$fdf_type="secondary";
                 if($s_m_ins_ass == 'No'){
                   $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
                   $u_status = DSS_CLAIM_SEC_SENT;
                 }
              }else{
+		$fdf_type="primary";
                $u_status = false;
              }
-
 		$ed_sql = " update dental_insurance set 
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
-		insurance_type = '".s_for($insurance_type_arr)."',
+		insurance_type = '".s_for($insurance_type)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',
@@ -711,11 +752,13 @@ if ($_POST['insurancesub'] == 1) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."'";
-                if($u_status){
+		if(isset($_POST['reject_but'])){
+		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
+                  $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
+		}elseif($u_status){
 		  $ed_sql .= ", status = '".s_for($u_status)."'";
 		}
-		$ed_sql .= "where insuranceid = '".s_for($_POST['ed'])."'";
-		
+		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
@@ -724,13 +767,14 @@ if ($_POST['insurancesub'] == 1) {
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';
-        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
 
 		die(); // already did a javascript redirect...just die
 	} // end claim form insert or update
 } // end processing claim form
 
+if($is_pending){
 // Load patient info from dental_patients table using pid on query string
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -754,7 +798,6 @@ $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']); 
 $referred_source = st($pat_myarray['referred_source']);
 $docid = $pat_myarray['docid'];
-
 // if patient does not have an id, redirect to manage_patient.php to address the issue
 if ($pat_myarray['patientid'] == '') {
     print '<script type="text/javascript">';
@@ -763,9 +806,8 @@ if ($pat_myarray['patientid'] == '') {
 
 	die(); // already did a javascript redirect...just die
 }
-
+}
 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
-
 // In the case where we have first come to this page, load the claim form
 // info from dental_insurance and place them into variables.
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
@@ -773,15 +815,30 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+if(!$is_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurance_type = st($myarray['insurance_type']);
+$insurancetype = st($myarray['insurance_type']);
 $patient_lastname = st($myarray['patient_lastname']);
 $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
+$other_insured_firstname = st($myarray['other_insured_firstname']);
+$other_insured_lastname = st($myarray['other_insured_lastname']);
+$other_insured_middle = st($myarray['other_insured_middle']);
+$other_insured_dob = st($myarray['other_insured_dob']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+$other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+$insured_id_number = st($myarray['insured_id_number']);
+$insured_firstname = st($myarray['insured_firstname']);
+$insured_middle = st($myarray['insured_middle']);
+$insured_lastname = st($myarray['insured_lastname']);
+$insured_dob = st($myarray['insured_dob']);
+$insured_insurance_plan = st($myarray['insured_insurance_plan']);
+$insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+
 $patient_address = st($myarray['patient_address']);
 $patient_relation_insured = st($myarray['patient_relation_insured']);
 $insured_address = st($myarray['insured_address']);
@@ -950,44 +1007,22 @@ $billing_provider_city = st($myarray['billing_provider_city']);
 $billing_provider_a = st($myarray['billing_provider_a']);
 $billing_provider_dd = st($myarray['billing_provider_dd']);
 $billing_provider_b_other = st($myarray['billing_provider_b_other']);
+$reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
+}
 
-$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
-
-if($insured_sex == '')
-	$insured_sex = $pat_myarray['gender'];
-  
-$patient_sex = $pat_myarray['gender'];
-
-if($patient_firstname == '')
-	$patient_firstname = $pat_myarray['firstname'];
-
-if($patient_lastname == '')
+if($is_pending){
+  $insured_sex = $pat_myarray['gender'];
+  $patient_sex = $pat_myarray['gender'];
+  $patient_firstname = $pat_myarray['firstname'];
 	$patient_lastname = $pat_myarray['lastname'];
-
-if($patient_middle == '')
 	$patient_middle = $pat_myarray['middlename'];
-	
-if($patient_firstname == '')
 	$patient_firstname = $pat_myarray['firstname'];
-	
-if($patient_address == '')
 	$patient_address = $pat_myarray['add1'];
-
-if($patient_city == '')
 	$patient_city = $pat_myarray['city'];
-
-if($patient_state == '')
 	$patient_state = $pat_myarray['state'];
-
-if($patient_zip == '')
 	$patient_zip = $pat_myarray['zip'];
-
-
-if($patient_dob == '')
 	$patient_dob = $pat_myarray['dob'];
-
-if($is_new_claim){
 	if($pat_myarray['p_m_ins_ass']=='Yes'){
 	  $insured_signature = 1;
 	}
@@ -999,52 +1034,36 @@ if($is_new_claim){
 	$patient_phone = format_phone($pat_myarray['home_phone'], false);
 	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
 	$insured_phone = format_phone($pat_myarray['home_phone'], false);
-  }
-if($patient_status == '')
 	$patient_status = $pat_myarray['marital_status'];	
-
-if($insured_id == '')
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
-		
-if($insured_firstname == '')
 	$insured_firstname = $pat_myarray['p_d_party'];
-	
-if($insured_address == '')
 	$insured_address = $pat_myarray['add1'];
-
-if($insured_city == '')
 	$insured_city = $pat_myarray['city'];
-
-if($insured_state == '')
 	$insured_state = $pat_myarray['state'];
-
-if($insured_zip == '')
 	$insured_zip = $pat_myarray['zip'];
-
-
-if($insured_dob == '')
 	$insured_dob = $pat_myarray['ins_dob'];	
-
-if($patient_relation_insured == '')
 	$patient_relation_insured = $pat_myarray['p_m_relation'];
-
-if($insured_employer_school_name == '')
 	$insured_employer_school_name = $pat_myarray['employer'];
-
-if($insured_policy_group_feca == '')
 	$insured_policy_group_feca = $pat_myarray['group_number'];
-
-if($insured_insurance_plan == '')
 	$insured_insurance_plan = $pat_myarray['plan_name'];	
+$sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
-if($diagnosis_1 == ''){
-	  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
-}
 
-          $sleepstudies = "SELECT diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab WHERE (diagnosising_doc IS NOT NULL && diagnosising_doc != '') AND (diagnosising_npi IS NOT NULL && diagnosising_npi != '') AND (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosising_doc = $d['diagnosising_doc'];
@@ -1054,7 +1073,7 @@ $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
-
+}
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.
 if (empty($prior_authorization_number)) {
@@ -1097,10 +1116,12 @@ input{text-transform:uppercase;}
 <?php echo $msg; ?>
 
 <link rel="stylesheet" href="<?=$admin_path?>popup/popup.css" type="text/css" media="screen" />
-<script src="<?=$admin_path?>popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?=$admin_path?>script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="<?=$manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="<?=$manage_path?>script/masks.js"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
-<?php if ($is_sent || (!$is_new_claim && $is_front_office)) { ?>
+<?php if ($is_sent || (!$is_new_claim && !$is_pending && $is_front_office)) { ?>
   <script>
 	$(function() {
 	  $('input, select, textarea').attr('disabled', 'true');
@@ -1126,14 +1147,19 @@ input{text-transform:uppercase;}
           Claim has been sent
 	    <?php } else if ($is_back_office) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SENT?>" <?=($status == DSS_CLAIM_SENT) ? 'checked' : ''?>/>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
                <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
-          Mark Sent <input type="checkbox" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" <?=($status == DSS_CLAIM_SEC_SENT) ? 'checked' : ''?>/>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
                <?php } ?>
 		<?php } ?>
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-        <?php if (!$is_sent) { ?>
+        <?php if (!$is_sent) { 
+                if($is_back_office){ ?>
           <input type="submit" name="ex_pagebtn" value="Submit Claim" />
+                <?php } ?>
+
         <?php } ?>
 		&nbsp;&nbsp;&nbsp;
 	</div>
@@ -1227,30 +1253,33 @@ input{text-transform:uppercase;}
 							</tr>
 							<tr>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Medicare" <? if($insurancetype == '1') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="1" <? if($insurancetype == '1') {echo " checked";}?> />
 									<span class="small_cap">(Medicare #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="MediCaID" <? if($insurancetype == '2') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="2" <? if($insurancetype == '2') {echo " checked";}?> />
 									<span class="small_cap">(Medicaid #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Tricare Champus" <? if($insurancetype == '3') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="3" <? if($insurancetype == '3') {echo " checked";}?> />
 									<span class="small_cap">(Sponsor's SSN)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Chmapva" <? if($insurancetype == '4') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="4" <? if($insurancetype == '4') {echo " checked";}?> />
 									<span class="small_cap">(Member ID #)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Group Health Plan" <? if($insurancetype == '5') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="5" <? if($insurancetype == '5') {echo " checked";}?> />
 									<span class="small_cap">(SSN or ID)</span>
 								</td>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="Feca blklung" <? if($insurancetype == '6') {echo " checked";}?> />
+									<input name="insurance_type" type="radio" value="6" <? if($insurancetype == '6') {echo " checked";}?> />
 									<span class="small_cap">(SSN)</span>
 								</td>
-								
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="7" <? if($insurancetype == '7') {echo " checked";}?> />
+                                                                        <span class="small_cap">(ID)</span>
+                                                                </td>								
 							</tr>
 						</table>
 					</td>
@@ -1285,7 +1314,7 @@ input{text-transform:uppercase;}
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1305,11 +1334,11 @@ input{text-transform:uppercase;}
 						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-                                                        <input type="text" value="<?=$insured_middle?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
+                                                        <input type="text" value="<?=$insured_lastname?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
                                                         &nbsp;
 							<input type="text" value="<?=$insured_firstname?>" name="insured_firstname" class="inbox_line3" size="18" />
 							&nbsp;
-							<input type="text" value="<?=$insured_lastname?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
+							<input type="text" value="<?=$insured_middle?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
 						</div>
 					</td>
 				</tr>
@@ -1478,9 +1507,9 @@ input{text-transform:uppercase;}
 						<span class="small_cap">(Last Name, first, Middle Initial)</span>
 						<br />
 						<div style="padding-top:7px;">
-							<input type="text" value="<?=$other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" />
+							<input type="text" value="<?=$other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" />
 							&nbsp;
-							<input type="text" value="<?=$other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" width="60" />
+							<input type="text" value="<?=$other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" width="60" />
 							&nbsp;
 							<input type="text" value="<?=$other_insured_middle?>" name="other_insured_middle" class="inbox_line3" size="3" width="30" />
 						</div>
@@ -1557,7 +1586,7 @@ input{text-transform:uppercase;}
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1581,7 +1610,7 @@ input{text-transform:uppercase;}
 									Other Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="42%" align="center" valign="top">
@@ -1660,7 +1689,7 @@ input{text-transform:uppercase;}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
-						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3" />
+						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3 datealtmask" />
 					</td>
 					<td align="left" valign="top">
 						<span class="num">13.</span>
@@ -1686,7 +1715,7 @@ input{text-transform:uppercase;}
 									Date of Current
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 								<td width="2%" align="left" valign="top">
@@ -1712,7 +1741,7 @@ input{text-transform:uppercase;}
 						If Patient has had same or similar Illness. Give First Date
 						<br />
 						&nbsp;&nbsp;
-						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3" size="10"/>
+						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3 datealtmask" size="10"/>
 						mm-dd-yy
 					</td>
 					<td valign="top">
@@ -1725,7 +1754,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_from?>" name="unable_date_from" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$unable_date_from?>" name="unable_date_from" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 								
@@ -1734,7 +1763,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_to?>" name="unable_date_to" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$unable_date_to?>" name="unable_date_to" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
 							</tr>
@@ -1803,7 +1832,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_from?>" name="hospitalization_date_from" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$hospitalization_date_from?>" name="hospitalization_date_from" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 									
 								</td>
@@ -1813,7 +1842,7 @@ input{text-transform:uppercase;}
 								</td>
 								<td valign="top" width="40%">
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_to?>" name="hospitalization_date_to" class="inbox_line3" size="10"/>
+									<input type="text" value="<?=$hospitalization_date_to?>" name="hospitalization_date_to" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 									
 								</td>
@@ -2256,12 +2285,12 @@ if (!$query) {
 					
 <?php
 $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-$amount_paid = (empty($amount_paid)) ? 0.00 : $amount_paid;
-$balance_due = (empty($balance_due)) ? 0.00 : $balance_due;
+$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
+$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
-if ($is_new_claim) {
+if ($is_pending) {
 
   // get total_charge
   $sql = "SELECT "
@@ -2311,7 +2340,7 @@ if ($is_new_claim) {
   // format calculations
   $total_charge = number_format($total_charge, 2);
   $amount_paid = number_format($amount_paid, 2);
-  $balance_due = number_format($balance_due, 2);
+  $balance_due = number_format($balance_due, 2, '.','');
 
 }
 ?>
@@ -2321,15 +2350,15 @@ if ($is_new_claim) {
   <tr bgcolor="#FFFFFF">
     <td valign="top" width="33%">
       <span class="num">28.</span> Total Charge<br/>
-      $ <input type="text" value="<?=$total_charge;?>" name="total_charge" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$total_charge;?>" name="total_charge" class="inbox_line3 number_field" size="15" />
     </td>
     <td valign="top" width="33%">
       <span class="num">29.</span> Amount Paid<br/>
-      $ <input type="text" value="0.00" name="amount_paid" class="inbox_line3" size="15"/>
+      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
     </td>
     <td valign="top" width="33%">
       <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$total_charge;?>" name="balance_due" class="inbox_line3" size="15" />
+      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3 number_field" size="15" />
       <br/>
       <span class="small_cap">&nbsp;</span>
     </td>
@@ -2355,7 +2384,7 @@ if ($is_new_claim) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
-									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3" size="10" />
+									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtmask" size="10" />
 								</td>
 								<td valign="top" width="50%">
 									<span class="num">32.</span> 
@@ -2419,11 +2448,19 @@ if ($is_new_claim) {
 					
 						<span class="num">33.</span> 
 						Billing Provider Info & Ph#
+						<?php 
+							if($billing_provider_phone_code=='')
+								$billing_providder_phone_code = format_phone($userinfo['phone'], true);
+
+                                                        if($billing_provider_phone=='')
+                                                                $billing_providder_phone = format_phone($userinfo['phone'], false);
+
+						?>
 						<span class="style1">(
-						<input type="text" value="<?php echo format_phone($userinfo['phone'], true);?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
+						<input type="text" value="<?= $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
 						)</span>
 						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?php echo format_phone($userinfo['phone'], false);?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
+						<input type="text" value="<?= $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
 						<table width="100%" cellpadding="1" cellspacing="1" border="0">
 							<tr>
 								<td valign="top" width="10%">
@@ -2479,20 +2516,34 @@ if ($is_new_claim) {
 	</tr>
 </table>
 
-</form>
-                                <?php if($myarray['status']==DSS_CLAIM_PENDING){ ?>
+                                <?php if($myarray['status']==DSS_CLAIM_PENDING || $myarray['status']==DSS_CLAIM_REJECTED){ ?>
 			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
+				<? if( $_SESSION['admin_access']==1){ ?>
                     <a href="manage_claims.php?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
+				<? } ?> 
+			<!--
+			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
+			<div id="reject_reason_div" <?= ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
+				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $reject_reason; ?></textarea>
+				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
+			</div>
+			-->
 			<?php }else{ ?>
-                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
+        <?php if (!$is_sent) { 
+		if($is_back_office){ ?>
+          <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
+		<?php } ?>
+        <?php } ?>
+
 			<?php } ?>
                                 <?php } ?>
-
-<br />
+</form>
+<br /><br /><br /><br /><br /><br />
 
 
 <div id="popupContact" style="width:750px;">
@@ -2504,3 +2555,35 @@ if ($is_new_claim) {
 <br /><br />
 </body>
 </html>
+
+<script type="text/javascript">
+
+$(".date_field").keydown(function(e){
+var key = e.charCode || e.keyCode || 0;
+
+            // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 46 ||
+		key == 189 ||
+		key == 191 ||
+                (key >= 37 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+});
+$(".number_field").keydown(function(e){
+var key = e.charCode || e.keyCode || 0;
+
+            // allow backspace, tab, delete, numbers and keypad numbers ONLY
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 46 ||
+		key == 110 ||
+		key == 190 ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+});
+
+</script>

@@ -311,7 +311,7 @@ if($_POST["doc_welcomeub"] == 1)
                 <input type="hidden" name="doc_welcomeub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["doc_welcomeid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Welcome Information " class="button" />
-		<?php if($themyarray["doc_welcomeid"] != ''){ ?>
+		<?php if($themyarray["doc_welcomeid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_doc_welcome.php?delid=<?=$themyarray["doc_welcomeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

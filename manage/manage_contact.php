@@ -87,7 +87,7 @@ Filter by type: <select name="myjumpbox"
 </select>
 </form>
 
-	<button style="margin-right:10px; float:right;" onclick="window.location.href='add_contact.php'" class="addButton">
+	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_contact.php')" class="addButton">
 		Add New Contact
 	</button>
 	&nbsp;&nbsp;

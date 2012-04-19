@@ -194,7 +194,7 @@ if($_POST["devicesub"] == 1)
                 <input type="hidden" name="devicesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["deviceid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Device" class="button" />
-		<?php if($themyarray["deviceid"] != ''){ ?>
+		<?php if($themyarray["deviceid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_device.php?delid=<?=$themyarray["deviceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>

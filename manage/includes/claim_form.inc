@@ -38,7 +38,8 @@ function confirm_ledger_trxns(){
 		if($row['entry_date'] != $_POST['entry_date'.$num] ||
 			$row['service_date'] != $_POST['service_date'.$num] ||
 			$row['transaction_code'] != $_POST['transaction_code'.$num] ||
-			$row['amount'] != $_POST['amount'.$num]
+			$row['amount'] != $_POST['amount'.$num] ||
+			$row['status'] == DSS_TRXN_NA
 		){
 			$return_val = false;
 		}

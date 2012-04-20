@@ -1467,7 +1467,7 @@ foreach ($letter_contacts as $key => $contact) {
 	if(!$parent){
 		?>
                         <script type="text/javascript">
-                                window.location.reload();
+                                window.location=window.location;
                         </script>
 		<?php
 	}

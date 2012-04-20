@@ -604,10 +604,18 @@ function popitup(url) {
 		$('#patient_list li').eq(menuitem).addClass('list_hover');
 		var pid = $('#patient_list li').eq(menuitem).data("patientid");
 		var patient_info = $('#patient_list li').eq(menuitem).data("patient_info");
-		if (patient_info == 1) {
+		var pat_type = $('#patient_list li').eq(menuitem).data("pattype");
+		if(pat_type == "new"){
+			n = $('#patient_search').val();
+		 	window.selectedUrl = "/manage/add_patient.php?search="+n;
+		}else if(pat_type == "no"){
+			window.selectedUrl = '';
+		}else{
+		  if (patient_info == 1) {
 			window.selectedUrl = "/manage/manage_flowsheet3.php?pid=" + pid;
-		} else {
+		  } else {
 			window.selectedUrl = "/manage/add_patient.php?pid=" + pid + "&ed=" + pid;
+		  }
 		}
 	}
 	function template_list(li, patient) {

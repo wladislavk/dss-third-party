@@ -152,7 +152,7 @@ if ($_POST['insurancesub'] == 1) {
     if(!confirm_ledger_trxns()){
 	?>
 	<script type="text/javascript">
-		window.location = "manage_claims.php?msg=Error sending claim. Please reload and try again";
+		window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
 	</script>
 	<?php
 	die();

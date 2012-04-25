@@ -343,8 +343,8 @@ return s;
                 Add Note 
         </button>
         &nbsp;&nbsp;
-        <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
-               Reports 
+        <button onclick="Javascript: window.location = 'ledger_statement.php?pid=<?=$_GET['pid'];?>'" class="addButton">
+               Statement 
         </button>
         &nbsp;&nbsp;
 

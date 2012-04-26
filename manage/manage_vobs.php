@@ -114,6 +114,9 @@ $sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.fron
 if(isset($_GET['status'])){
   $sql .= " AND preauth.status = '".mysql_real_escape_string($_GET['status'])."' ";
 }
+if(isset($_GET['viewed'])){
+  $sql .= " AND preauth.viewed = '".mysql_real_escape_string($_GET['viewed'])."' ";
+}
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -181,7 +184,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
+			<tr class="<?=$tr_class;?> <?= ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
 				<td valign="top">
 					<?= $myarray['viewed']; ?>
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
@@ -198,7 +201,9 @@ $my=mysql_query($sql) or die(mysql_error());
 						View
 					</a>
 					<br />
-					<?php if(!$myarray['viewed']){ ?>
+					<?php 
+					if($myarray['status']!=DSS_PREAUTH_PENDING){
+					if(!$myarray['viewed']){ ?>
                                         <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
                                                 Mark Read
                                         </a>
@@ -206,7 +211,8 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <a href="manage_vobs.php?pid=<?= $myarray["patient_id"]; ?>&urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
                                                 Mark Unread
                                         </a>
-					<?php } ?>
+					<?php } 
+					}?>
 				</td>
 			</tr>
 	<? 	}

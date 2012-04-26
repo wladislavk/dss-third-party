@@ -61,11 +61,6 @@ $num_users=mysql_num_rows($my);
 	<?php } ?>
 
 </span>
-<div>
-&nbsp;&nbsp;
-<a href="ledger.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-</div>
 <div align="right">
 <button onclick="Javascript:window.location='ledger_reportfull.php';" class="addButton">
                Daily Ledger
@@ -193,7 +188,7 @@ background:#999999;
 	  
 		<tr>
 			<td valign="top" colspan="3" align="right">
-				<b>Balance</b>
+				<b>Totals</b>
 			</td>
 			<td valign="top" align="right">
 			
@@ -214,6 +209,20 @@ background:#999999;
 				
 			</td>
 		</tr>
+                <tr>
+                        <td valign="top" colspan="3" align="right">
+                                <b>Balance</b>
+                        </td>
+                        <td align="right">
+                                <b>                                <b>
+                                <?php echo "$".number_format(($tot_charges - $tot_credit),2);?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td colspan="2">
+                        </td>
+                </tr>
+
 
 </table>
  </div>

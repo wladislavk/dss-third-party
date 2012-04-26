@@ -184,6 +184,94 @@ input.button1 { font-size:20px; background:#fff; }
     <td><input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
 	<input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
 	<?php
+    }elseif($field == 'p_m_ins_co' || $field == 's_m_ins_co'){ ?>
+    <td><?= $label; ?>:</td>
+        <?php
+                $docsql = "SELECT company from dental_contact WHERE contactid='".$p[$field]."'";
+                $docq = mysql_query($docsql);
+                $docr = mysql_fetch_assoc($docq);
+        ?>
+    <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+        <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
+    <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+        <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
+        <?php
+                $docsql = "SELECT company from dental_contact WHERE contactid='".$c[$field]."'";
+                $docq = mysql_query($docsql);
+                $docr = mysql_fetch_assoc($docq);
+        ?>
+
+    <td><input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+        <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
+        <?php
+    }elseif($field == 'p_m_ins_type' || $field == 's_m_ins_type'){ ?>
+
+    <td><?= $label; ?>:</td>
+	<?php
+		switch($p[$field]){
+		  case 1:
+			$val = 'Medicare';
+			break;
+                  case 2:
+                        $val = 'Medicaid';
+                        break;
+                  case 3:
+                        $val = 'Tricare Champus';
+                        break;
+                  case 4:
+                        $val = 'Champ VA';
+                        break;
+                  case 5:
+                        $val = 'Group Health Plan';
+                        break;
+                  case 6:
+                        $val = 'FECA BLKLUNG';
+                        break;
+                  case 7:
+                        $val = 'Other';
+                        break;
+		  default:
+			$val = '';
+			break;
+		}
+	?>
+    <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
+        <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" /></td>
+
+    <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+        <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" /></td>
+        <?php
+                switch($c[$field]){
+                  case 1:
+                        $val = 'Medicare';
+                        break;
+                  case 2:
+                        $val = 'Medicaid';
+                        break;
+                  case 3:
+                        $val = 'Tricare Champus';
+                        break;
+                  case 4:
+                        $val = 'Champ VA';
+                        break;
+                  case 5:
+                        $val = 'Group Health Plan';
+                        break;
+                  case 6:
+                        $val = 'FECA BLKLUNG';
+                        break;
+                  case 7:
+                        $val = 'Other';
+                        break;
+                  default:
+                        $val = '';
+                        break;
+                }
+        ?>
+
+    <td><input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
+        <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
+        <?php
     }else{
   ?>
     <td><?= $label; ?>:</td>

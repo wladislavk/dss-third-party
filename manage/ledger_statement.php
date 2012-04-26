@@ -95,7 +95,7 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my); 
 
-$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
+$name = st($pat_myarray['firstname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['lastname']);
 
 if($pat_myarray['patientid'] == '')
 {
@@ -221,6 +221,7 @@ $sql = "select
 	from dental_ledger_note n
 		LEFT JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
+			AND n.private!=1
   UNION
 	select
 		'claim',

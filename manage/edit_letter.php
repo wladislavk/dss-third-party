@@ -188,10 +188,19 @@ $impressions_result = mysql_query($impressions_query);
 $impressions_date = date('F d, Y', strtotime(mysql_result($impressions_result, 0)));
 
 // Get Medical Information
-$q3_sql = "SELECT history, medications from dental_q_page3 WHERE patientid = '".$patientid."';";
+$q3_sql = "SELECT other_history, other_medications, medicationscheck from dental_q_page3 WHERE patientid = '".$patientid."';";
 $q3_my = mysql_query($q3_sql);
 $q3_myarray = mysql_fetch_array($q3_my);
 
+  $history_disp = $q3_myarray['other_history'];
+
+if($q3_myarray['medicationscheck']){
+  $medications_disp = $q3_myarray['other_medications'];
+}else{
+  $medications_disp = '';
+}
+
+/*
 $history = $q3_myarray['history'];
 $medications = $q3_myarray['medications'];
 
@@ -246,7 +255,7 @@ foreach($medications_arr as $key => $val)
 		}
 	}
 }
-
+*/
 // Oldest Sleepstudy Results
 $q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, s.diagnosis, s.place, s.dentaldevice, d.ins_diagnosis, d.description FROM dental_summ_sleeplab s 
 LEFT JOIN dental_ins_diagnosis d

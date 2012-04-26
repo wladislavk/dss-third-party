@@ -16,6 +16,11 @@ include 'includes/completed.php';
 <? $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'"; 
 $q = mysql_query($s);
 $pat = mysql_fetch_assoc($q);
+
+$ds = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($pat['docid'])."'";
+$dq = mysql_query($ds);
+$doc = mysql_fetch_assoc($dq);
+
 ?>
 <div class="dp60">
 
@@ -23,28 +28,18 @@ $pat = mysql_fetch_assoc($q);
 
 <ul class="tabsB cf">
 								<li><a href="#tab-1" class="current">Welcome</a></li>
-								<li><a href="#tab-2" class="">About OSA</a></li>
-								<li><a href="#tab-3" class="">Another Tab</a></li>
 							</ul>
  
 <div class="content_panes">
 
 	<div id="tab-1" style="display: block; ">
-		<div class="dp100">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
-<div style="height:12px; display:block; clear:both;"></div>
-		<div class="dp50">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</div>
-		<div class="dp50">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
+		<div class="dp100">
+			<p>Welcome to the Dental Sleep Solutions&reg; secure patient portal! We're excited that you have taken the first steps toward improving your sleep quality and health. Treating snoring and sleep apnea improves your quality of life, and can dramatically improve your health and well-being. At the office of <?= $doc['name'];?>, we work hard to make sure you receive the best possible treatment.</p>
+<br /> 
+<p>Please check the status box on the right side of this page to make sure your patient profile is 100% complete. Click on any incomplete highlighted fields to answer them. After your profile is 100% complete, we will be ready to see you at your next visit!</p>
+		</div>
 	</div>
 
-	<div id="tab-2" class="cf formEl_a" style="display: none; ">
-                <div class="dp100">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
-	</div>
-
-        <div id="tab-3" class="cf formEl_a" style="display: none; ">
-                <div class="dp50">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</div>
-                <div class="dp50">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</div>
-
-        </div> 
 </div>
 </div>
 <div class="dp40">

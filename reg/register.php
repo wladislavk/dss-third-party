@@ -39,15 +39,40 @@ include 'includes/header.php';
 	<form action="register.php" id="register_form" method="post">
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
 							<ul id="status" class="cf">
-								<li class="active"><span class="large">1. Contact Information</span></li>
-								<li><span class="large">2. Personal Information</span></li>
-								<li><span class="large">3. Insurance</span></li>
-								<li><span class="large">4. 2nd Insurance</span></li>
-								<li><span class="large">5. Employer</span></li>
-								<li><span class="large">6. Contacts</span></li>
+							<?php $pagenum = 1; ?>
+							<?php if(!$p['registered']){ ?>
+								<li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
+							<?php } ?>
+								<li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Information</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Personal Information</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Insurance</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. 2nd Insurance</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Contacts</span></li>
 							</ul>
 							<div id="register" class="wizard" style="height:1400px;">
 								<div class="items formEl_a">
+                                                        <?php if(!$p['registered']){ ?>
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp100">
+                                                                                                        <h3 class="sepH_a">Welcome!</h3>
+                                                                                                        <p class="s_color small">Please accurately complete the information on the following pages. Th
+is will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest e
+ncryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your informati
+on without your consent.  We're excited to see you at your next visit!</p>
+                                                                                                                <div class="cf">
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+
+	                                                                                                </div>
+												</div>
+											</div>
+										</div>
+																						
+<?php } ?>
+
 									<div class="page">
 										<div class="pageInside">
 											<div class="cf">
@@ -218,8 +243,8 @@ include 'includes/header.php';
 				</select>
                 </div>
                 <div class="sepH_b clear half">
-                        <label class="lbl_a"><strong>3.</strong> Marital Status:</label><select class="inpt_a" name="marital_status">
-                                <option>Select</option>
+                        <label class="lbl_a"><strong>3.</strong> Marital Status:</label><select class="inpt_a validate" name="marital_status">
+                                <option value=''>Select</option>
                                 <option value="Married" <?= ($p['marital_status']=="Married")?'selected="selected"':'';?>>Married</option>
                                 <option value="Single" <?= ($p['marital_status']=="Single")?'selected="selected"':'';?>>Single</option>
                                 <option value="Life Partner" <?= ($p['marital_status']=="Life Partner")?'selected="selected"':'';?>>Life Partner</option>
@@ -245,7 +270,7 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>8.</strong> Emergency Contact Relationship:</label><input class="inpt_a" type="text" name="emergency_relationship" value="<?= $p['emergency_relationship']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Emergency Contact Number:</label><input class="inpt_a" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
+                        <label class="lbl_a"><strong>9.</strong> Emergency Contact Number:</label><input class="inpt_a  extphonemask" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
 		</div>
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>10.</strong> Do you have medical insurance?</label>
@@ -372,11 +397,11 @@ include 'includes/header.php';
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7g.</strong> Phone</label>
-                        <input class="inpt_a" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
+                        <input class="inpt_a extphonemask" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7h.</strong> Fax</label>
-                        <input class="inpt_a" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
+                        <input class="inpt_a phonemask" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7i.</strong> Email</label>
@@ -511,11 +536,11 @@ include 'includes/header.php';
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6g.</strong> Phone</label>
-                        <input class="inpt_a" id="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
+                        <input class="inpt_a extphonemask" i="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6h.</strong> Fax</label>
-                        <input class="inpt_a" id="s_m_ins_fax" name="s_m_ins_fax" type="text" value="<?= $s_m_r['fax']; ?>" />
+                        <input class="inpt_a phonemask" id="s_m_ins_fax" name="s_m_ins_fax" type="text" value="<?= $s_m_r['fax']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6i.</strong> Email</label>
@@ -631,10 +656,10 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>6.</strong> Zip Code:</label><input class="inpt_a" id="emp_zip" name="emp_zip" type="text" value="<?=$p['emp_zip']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b clear half">
-                        <label class="lbl_a"><strong>7.</strong> Phone:</label><input class="inpt_a" id="emp_phone" name="emp_phone" type="text" value="<?=$p['emp_phone']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>7.</strong> Phone:</label><input class="inpt_a extphonemask" id="emp_phone" name="emp_phone" type="text" value="<?=$p['emp_phone']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>8.</strong> Fax:</label><input class="inpt_a" id="emp_fax" name="emp_fax" type="text" value="<?=$p['emp_fax']?>"   maxlength="255" />
+                        <label class="lbl_a"><strong>8.</strong> Fax:</label><input class="inpt_a phonemask" id="emp_fax" name="emp_fax" type="text" value="<?=$p['emp_fax']?>"   maxlength="255" />
 		</div>
 
                                                                                                                 <div class="cf">
@@ -749,7 +774,7 @@ $(document).ready(function(){
                         <label class="lbl_a"><strong>7.</strong> Zip:</label><input class="inpt_a" id="pc_<?= $t; ?>_zip" name="pc_<?= $t; ?>_zip" type="text" value="<?=$pc['zip']?>"   maxlength="100" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
+                        <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a extphonemask" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
                 </div>
                 <div class="sepH_b half">
                         <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>

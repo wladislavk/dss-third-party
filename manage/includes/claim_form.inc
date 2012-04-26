@@ -782,8 +782,8 @@ $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
-$insured_lastname = st($pat_myarray['p_m_partymname']);
-$insured_middle = st($pat_myarray['p_m_partylname']);
+$insured_lastname = st($pat_myarray['p_m_partylname']);
+$insured_middle = st($pat_myarray['p_m_partymname']);
 $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
 $other_insured_lastname = st($pat_myarray['s_m_partymname']);
 $other_insured_middle = st($pat_myarray['s_m_partylname']);
@@ -1036,7 +1036,6 @@ if($is_pending){
 	$insured_phone = format_phone($pat_myarray['home_phone'], false);
 	$patient_status = $pat_myarray['marital_status'];	
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
-	$insured_firstname = $pat_myarray['p_d_party'];
 	$insured_address = $pat_myarray['add1'];
 	$insured_city = $pat_myarray['city'];
 	$insured_state = $pat_myarray['state'];
@@ -2450,10 +2449,10 @@ if ($is_pending) {
 						Billing Provider Info & Ph#
 						<?php 
 							if($billing_provider_phone_code=='')
-								$billing_providder_phone_code = format_phone($userinfo['phone'], true);
+								$billing_provider_phone_code = format_phone($userinfo['phone'], true);
 
                                                         if($billing_provider_phone=='')
-                                                                $billing_providder_phone = format_phone($userinfo['phone'], false);
+                                                                $billing_provider_phone = format_phone($userinfo['phone'], false);
 
 						?>
 						<span class="style1">(

@@ -139,7 +139,7 @@ $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$headers .= "Content-Transfer-Encoding: 7bit\r\n";
 	$body	=  "";
 	$body	.= "--$mime_boundary\n";
-	$body	.= "Content-Type: text/plain; charset=\"charset=us-ascii\"\n";
+	$body	.= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
 	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
 	$body	.= "A message from Dental Sleep Solutions
 
@@ -191,69 +191,15 @@ patient@dentalsleepsolutions.com</b></p>
 	$body	.= "--$mime_boundary--\n";
 
 	# Finish off headers
-	$headers .= "From: $from\r\n";
+	$headers .= "From: ".$from."\r\n";
 	$headers .= "X-Sender-IP: $_SERVER[SERVER_ADDR]\r\n";
 	$headers .= 'Date: '.date('n/d/Y g:i A')."\r\n";
 
-  $m = "
---PHP-alt-". $random_hash ."
-Content-Type: text/plain; charset=\"iso-8859-1\"
-Content-Transfer-Encoding: 7bit
-
-A message from Dental Sleep Solutions
-
-Your New Account
-A new patient account has been created for you.
-Your Patient Portal login information is:
-Email: ".$e."
-
-Save Time - Complete Your Paperwork Online
-
-Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving tre
-es is good too!
-
-Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
-
-Need Assistance?
-Contact us at ".$n." or at patient@dentalsleepsolutions.com
-
---PHP-alt-". $random_hash ."  
-Content-Type: text/html; charset=\"iso-8859-1\" 
-Content-Transfer-Encoding: 7bit
-
-<html><body><center>
-<table width='600'>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
-<tr><td width='400'>
-<h2>Your New Account</h2>
-<p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
-<p><b>Email:</b> ".$e."</p>
-</td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
-<tr><td colspan='2'>
-<center>
-<h2>Save Time - Complete Your Paperwork Online</h2>
-</center>
-<p>Click the link below to log in and complete your patient forms online. Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit. Saving trees is good too!</p>
-<center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
-</td></tr>
-<tr><td>
-<h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
-</td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
-</table>
-</center></body></html>
-
---PHP-alt-".$random_hash."--
-";
-/*
-$headers = "MIME-Version: 1.0\r\nFrom: SWsupport@dentalsleepsolutions.com\r\nReply-To: SWsupport@dentalsleepsolutions.com";
-//add boundary string and mime type specification
-$headers .= "\r\nContent-Type: multipart/alternative; boundary=\"PHP-alt-".$random_hash."\"";
-$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
-		'Content-Type: multipart/alternative; boundary="PHP-alt-'.$random_hash.'"' .
-                     'X-Mailer: PHP/' . phpversion();*/
+$headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' . "\n"; 
+        $headers .= "MIME-Version: 1.0\n";
+        $headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
+        $headers .= "Content-Transfer-Encoding: 7bit\n";
+        $headers .= 'X-Mailer: PHP/' . phpversion();
 
                 $subject = "Dental Sleep Solutions Registration";
 

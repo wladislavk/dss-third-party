@@ -119,11 +119,6 @@ $num_users=mysql_num_rows($my);
 	<?php } ?>
 
 </span>
-<div>
-&nbsp;&nbsp;
-<a href="ledger.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-</div>
 
 <br />
 <style>
@@ -236,7 +231,7 @@ background:#999999;
                 	<?=date('m-d-Y',strtotime(st($myarray["entry_date"])));?>
 				</td>
 				<td valign="top" width="10%">
-                	<a href="add_patient.php?ed=<?= $myarray['patientid']; ?>&pid=<?= $myarray['patientid']; ?>&addtopat=1"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
+                	<a href="manage_ledger.php?pid=<?= $myarray['patientid']; ?>&addtopat=1"><?=st($myarray['lastname'].", ".$myarray['firstname']);?></a>
 				</td>
 				<td valign="top" width="10%">
                 	<?=st($myarray['name']);?>

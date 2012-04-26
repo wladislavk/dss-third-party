@@ -82,9 +82,9 @@ echo $memo_array['memo'] . "<br /><hr />";
 
   <a href="manage_claims.php" class="notification <?= ($num_pending_claims==0)?"good_count":"bad_count"; ?>"><?= $num_pending_claims;?> Claims</a>
   <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
-  <a href="manage_vobs.php" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
   <?php if($num_rejected_preauth>0){ ?>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
   <?php } ?>
 <!--
   <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
@@ -330,10 +330,10 @@ if($_SESSION['userid'] != '')
   ?>
 	<center><img src="images/cpanelImgMap_06.jpg" width="474" height="466" border="0" usemap="#Map" />
 <map name="Map" id="Map">
-  <area shape="rect" alt="PATIENTS" coords="13,4,234,230" href="manage_patient.php" />
-  <area shape="rect" alt="LEDGER/REPORTS" coords="233,4,462,231" href="ledger.php" />
-  <area shape="rect" alt="DIRECTORY/CONTACTS" coords="13,230,233,459" href="directory.php" />
-  <area shape="rect" alt="TOOLS" coords="232,230,462,458" href="tools.php" />
+  <area shape="rect" alt="PATIENTS" title="Manage Patients" coords="13,4,234,230" href="manage_patient.php" />
+  <area shape="rect" alt="LEDGER/REPORTS" title="Ledger Reports" coords="233,4,462,231" href="ledger.php" />
+  <area shape="rect" alt="DIRECTORY/CONTACTS" title="Contacts" coords="13,230,233,459" href="directory.php" />
+  <area shape="rect" alt="TOOLS" title="Configuration" coords="232,230,462,458" href="tools.php" />
 </map></center>
   
   <br />

@@ -5,6 +5,9 @@ include("includes/sescheck.php");
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/general_functions.php');
+?>
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+<?php
 include("includes/calendarinc.php");
 // Determine Type of Appliance
 $sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY date DESC LIMIT 1;";
@@ -29,7 +32,6 @@ $body_width = ($num_labs*185)+215;
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <link rel="stylesheet" href="css/form.css" />
-  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript">
 function update_needed(v, f){
         if(v=='yes'){

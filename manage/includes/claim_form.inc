@@ -21,6 +21,37 @@ function format_phone($num, $a){
   return $num;
 }
 
+//confirm ledger transactions and make sure they haven't changed.
+function confirm_ledger_trxns(){
+    $num = 0;
+    $return_val = true;
+    while ($num <= ($_POST['ledgercount']-1)) {
+	$ledgerid = $_POST['ledgerid'.$num];
+        $sql = "SELECT * "
+             . "  FROM dental_ledger "
+             . "WHERE "
+             . " ledgerid = ".$ledgerid;
+        $query = mysql_query($sql);
+	$c = mysql_num_rows($query);
+	if($c){
+        	$row = mysql_fetch_assoc($query);
+		if($row['entry_date'] != $_POST['entry_date'.$num] ||
+			$row['service_date'] != $_POST['service_date'.$num] ||
+			$row['transaction_code'] != $_POST['transaction_code'.$num] ||
+			$row['amount'] != $_POST['amount'.$num] ||
+			$row['status'] == DSS_TRXN_NA
+		){
+			$return_val = false;
+		}
+	}else{
+	  $return_val = false;
+	}
+	$num++;
+    }
+    return $return_val;
+}
+
+
 // update and changes to ledger trxns
 // (updating associated claim id and status later w/ claim form insert and update)
 function update_ledger_trxns($primary_claim_id, $trxn_status) {
@@ -118,6 +149,14 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 
 // process inserts/updates for claim form
 if ($_POST['insurancesub'] == 1) {
+    if(!confirm_ledger_trxns()){
+	?>
+	<script type="text/javascript">
+		window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
+	</script>
+	<?php
+	die();
+    }
     // Put POST values into variables
 	$pica1 = $_POST['pica1'];
 	$pica2 = $_POST['pica2'];
@@ -2221,6 +2260,10 @@ if (!$query) {
         <td width="60"><input style="width:45px;" type="text" name="epsdt<?=$li;?>" value="<?php echo $array['epsdt']; ?>"></td>
         <td width="52"><input style="width:37px;" type="text" name="idqual<?=$li;?>" value="<?php echo $array['idqual']; ?>"></td>
         <input type="hidden" name="ledgerid<?=$li;?>" value="<?php echo $array['ledgerid']; ?>">
+	<input type="hidden" name="service_date<?=$li;?>" value="<?php echo $array['service_date']; ?>">
+	<input type="hidden" name="entry_date<?=$li;?>" value="<?php echo $array['entry_date']; ?>">
+	<input type="hidden" name="transaction_code<?=$li;?>" value="<?php echo $array['transaction_code']; ?>">
+	<input type="hidden" name="amount<?=$li;?>" value="<?php echo $array['amount']; ?>">
         <td width="122"><?=$array['provider_id']?></td>
       </tr>
     </table>

@@ -193,7 +193,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["firstname"]);?>&nbsp;
                     <?=st($myarray["lastname"]);?> 
 				</td>
-				<td valign="top">
+				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_preauth_status_labels[$myarray["status"]];?>&nbsp;
 				</td>
 				<td valign="top">

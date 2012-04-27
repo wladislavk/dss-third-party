@@ -482,7 +482,7 @@ $title = "test";
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-	$filename = '/manage/letterpdfs/test.pdf';
+	$filename = '/manage/letterpdfs/statement'.$_GET['pid'].'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
 ?>

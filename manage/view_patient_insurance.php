@@ -22,7 +22,7 @@ include "includes/general_functions.php";
 <?php
 if($_POST["contactsub"] == 1)
 {
-		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		$ins_sql = "insert into dental_contact set company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', contacttypeid = '11', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 $pc_id = mysql_insert_id();
 $pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysql_real_escape_string($_REQUEST['id'])."'";
@@ -68,9 +68,6 @@ mysql_query($psql);
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
-		$salutation = st($themyarray['salutation']);
-		$firstname = st($themyarray['firstname']);
-		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
 		$company = st($themyarray['company']);
 		$add1 = st($themyarray['address1']);
@@ -109,42 +106,6 @@ mysql_query($psql);
         <tr>
             <td colspan="2" class="cat_head">
 		Add Insurance Company
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>        
-                    <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
-                            Name
-                            <?= ($_GET['ctype']!='ins')?'<span id="req_0" class="req">*</span>':''; ?>
-                        </label>
-                        <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
-                                    <option value="Dr." <? if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
-                                    <option value="Mr." <? if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
-                                    <option value="Mrs." <? if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
-                                    <option value="Miss." <? if($salutation == 'Miss.') echo " selected";?>>Miss.</option>
-                                </select>
-                                <label for="salutation">Salutation</label>
-                            </span>
-                            <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" tabindex="2" maxlength="255" />
-                                <label for="firstname">First Name</label>
-                            </span>
-                            <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" tabindex="3" maxlength="255" />
-                                <label for="lastname">Last Name</label>
-                            </span>
-                            <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" tabindex="4" style="width:50px;" maxlength="1" />
-                                <label for="middlename">Middle <br />Init</label>
-                            </span>
-                       </div>   
-                    </li>
-                </ul>
             </td>
         </tr>
         <tr> 
@@ -225,93 +186,6 @@ mysql_query($psql);
 				</ul>
             </td>
         </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                            	National Provider ID
-                                <input id="national_provider_id" name="national_provider_id" type="text" class="field text addr tbox" value="<?=$national_provider_id?>" tabindex="15" maxlength="255" style="width:200px;" />
-                            </span>
-                        </div>
-                    </li>
-                    <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
-                            Other ID For Claim Forms
-                        </label>
-                        
-                        <div>
-                            <span>
-                            	<? 
-								$qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
-								$qualifier_my = mysql_query($qualifier_sql);
-								?>
-                            	<select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
-                                	<option value="0"></option>
-                                    <? while($qualifier_myarray = mysql_fetch_array($qualifier_my))
-									{?>
-                                    	<option value="<?=st($qualifier_myarray['qualifierid']);?>">
-                                        	<?=st($qualifier_myarray['qualifier']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-                                <label for="qualifier">Qualifier</label>
-                            </span>
-                            <span>
-                                <input id="qualifierid" name="qualifierid" type="text" class="field text addr tbox" value="<?=$qualifierid?>" tabindex="17" maxlength="255" style="width:200px;" />
-                                <label for="qualifierid">ID</label>
-                            </span>
-						</div>
-                   </li>     
-                </ul>
-            </td>
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <!--<div>
-                            <span>
-                                <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?=$greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
-                                <label for="greeting">Greeting</label>
-                            </span>
-                            
-                            
-                    	</div>-->
-                        
-                        <div>
-                        <!--	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
-                                <label for="sincerely">Sincerely</label>
-                            </span>-->
-                            
-                            <span>
-                            	<? 
-								
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                ?>
-                            	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-                              	<option value="">Select a contact type</option>  	 
-                                    <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
-                  ?>
-                  
-                  <option <?php if($ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
-
-                                        	<?=st($ctype_myarray['contacttype']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-                                
-                                <label for="contacttype">Contact Type</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        
          <tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

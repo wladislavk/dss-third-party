@@ -9,6 +9,7 @@
         $dob = ($_POST['dob_month'] != '' && $_POST['dob_day'] != '' && $_POST['dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['dob_month'],$_POST['dob_day'],$_POST['dob_year'])):'';
         $ins_dob = ($_POST['ins_dob_month'] != '' && $_POST['ins_dob_day'] != '' && $_POST['ins_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins_dob_month'],$_POST['ins_dob_day'],$_POST['ins_dob_year'])):'';
         $ins2_dob = ($_POST['ins2_dob_month'] != '' && $_POST['ins2_dob_day'] != '' && $_POST['ins2_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins2_dob_month'],$_POST['ins2_dob_day'],$_POST['ins2_dob_year'])):'';
+	$p_m_ins_type = ($_POST['p_m_ins_type']==1)?$_POST['p_m_ins_type']:'7';
         if($chkc == 0){
         $sql = "INSERT INTO dental_patients set
                 firstname = '".mysql_real_escape_string($_POST['firstname'])."',
@@ -42,7 +43,7 @@
                 p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
                 p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
                 p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',
-                p_m_ins_type = '".mysql_real_escape_string($_POST['p_m_ins_type'])."',
+                p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."',
                 p_m_ins_ass = '".mysql_real_escape_string($_POST['p_m_ins_ass'])."',
 		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
                 has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
@@ -55,7 +56,7 @@
                 s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
                 s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
                 s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',
-                s_m_ins_type = '".mysql_real_escape_string($_POST['s_m_ins_type'])."',
+                s_m_ins_type = '7', 
                 s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
                 employer = '".mysql_real_escape_string($_POST['employer'])."',
                 emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
@@ -154,7 +155,7 @@
                 $s_r = mysql_fetch_assoc($s_q);
                 sendUpdatedEmail($_SESSION['pid'], $_POST['email'], $s_r['email'], 'pat');
 		if(trim($_POST['email']) != trim($s_r['email'])){
-			echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
+			//echo create_notification($_SESSION['pid'], '', "User has updated email from ".$s_r['email']." to ".$_POST['email'].".", 'email');
 		}
 		
 		$s = "UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
@@ -211,11 +212,7 @@
                                                 "phone = '" . mysql_real_escape_string(num($_POST['p_m_ins_phone'])) . "';";
 					mysql_query($insql);
 					$id = mysql_insert_id();
-					?>
-					  <script type="text/javascript">
-					    $('#p_m_patient_insuranceid').val('<?= $id; ?>');
-					  </script>
-					<?php
+					echo '{"p_m_patient_insuranceid": "'.$id.'"}';
 				    }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
@@ -250,11 +247,7 @@
                                                 "phone = '" . mysql_real_escape_string(num($_POST['s_m_ins_phone'])) . "';";
                                         mysql_query($insql);
                                         $id = mysql_insert_id();
-                                        ?>
-                                          <script type="text/javascript">
-                                            $('#s_m_patient_insuranceid').val('<?= $id; ?>');
-                                          </script>
-                                        <?php
+					echo '{"s_m_patient_insuranceid": "'.$id.'"}';
                                     }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .

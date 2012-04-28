@@ -100,6 +100,11 @@ lga_wizard = {
                             ins_dob_year: { valueNotEquals: '' },
 			    p_m_ins_medicare: "required",
                             p_m_ins_company: "required",
+			    p_m_ins_address1: "required",
+			    p_m_ins_city: "required",
+			    p_m_ins_state: "required",
+			    p_m_ins_zip: "required",
+			    p_m_ins_phone: "required",
                             p_m_ins_id: "required",
                             p_m_ins_grp: "required",
                             p_m_ins_plan: "required",
@@ -112,6 +117,11 @@ lga_wizard = {
                             ins2_dob_day: { valueNotEquals: '' },
                             ins2_dob_year: { valueNotEquals: '' },
                             s_m_ins_company: "required",
+                            s_m_ins_address1: "required",
+                            s_m_ins_city: "required",
+                            s_m_ins_state: "required",
+                            s_m_ins_zip: "required",
+                            s_m_ins_phone: "required",
                             s_m_ins_id: "required",
                             s_m_ins_grp: "required",
                             s_m_ins_plan: "required"
@@ -146,6 +156,11 @@ lga_wizard = {
                             ins_dob_day: { valueNotEquals: 'This field is required' },
                             ins_dob_year: { valueNotEquals: 'This field is required' },
                             p_m_ins_company: "This field is required",
+                            p_m_ins_address1: "This field is required",
+                            p_m_ins_city: "This field is required",
+                            p_m_ins_state: "This field is required",
+                            p_m_ins_zip: "This field is required",
+                            p_m_ins_phone: "This field is required",
                             p_m_ins_id: "This field is required",
                             p_m_ins_grp: "This field is required",
                             p_m_ins_plan: "This field is required",
@@ -156,6 +171,11 @@ lga_wizard = {
                             ins2_dob_day: { valueNotEquals: 'This field is required' },
                             ins2_dob_year: { valueNotEquals: 'This field is required' },
                             s_m_ins_company: "This field is required",
+                            s_m_ins_address1: "This field is required",
+                            s_m_ins_city: "This field is required",
+                            s_m_ins_state: "This field is required",
+                            s_m_ins_zip: "This field is required",
+                            s_m_ins_phone: "This field is required",
                             s_m_ins_id: "This field is required",
                             s_m_ins_grp: "This field is required",
                             s_m_ins_plan: "This field is required"
@@ -195,7 +215,14 @@ lga_wizard = {
 	                        var post = $('#register_form').serializeObject();
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {
-                        	        $('#form_summary').html(data);
+					var r = $.parseJSON(data);
+					//alert(data);
+					if(r.p_m_patient_insuranceid){
+					  $('#p_m_patient_insuranceid').val(r.p_m_patient_insuranceid);
+					}else if(r.s_m_patient_insuranceid){
+                                          $('#s_m_patient_insuranceid').val(r.s_m_patient_insuranceid);
+                                        }
+                        	        //$('#form_summary').html(data);
                                 	//alert(data);
                         	});
 			$("#status li").removeClass("active").eq(i).addClass("active filed");

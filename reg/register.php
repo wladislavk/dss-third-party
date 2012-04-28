@@ -43,8 +43,8 @@ include 'includes/header.php';
 							<?php if(!$p['registered']){ ?>
 								<li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
 							<?php } ?>
-								<li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Information</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. Personal Information</span></li>
+								<li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Info</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Personal Info</span></li>
 								<li><span class="large"><?= $pagenum++; ?>. Insurance</span></li>
 								<li><span class="large"><?= $pagenum++; ?>. 2nd Insurance</span></li>
 								<li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
@@ -58,10 +58,8 @@ include 'includes/header.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp100">
                                                                                                         <h3 class="sepH_a">Welcome!</h3>
-                                                                                                        <p class="s_color small">Please accurately complete the information on the following pages. Th
-is will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest e
-ncryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your informati
-on without your consent.  We're excited to see you at your next visit!</p>
+                                                                                                        <p>Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+<br />
                                                                                                                 <div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
@@ -377,27 +375,27 @@ on without your consent.  We're excited to see you at your next visit!</p>
            	</div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>7b.</strong> Address 1</label>
-                        <input class="inpt_a" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
+                        <input class="inpt_a validate" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>7c.</strong> Address 2</label>
                         <input class="inpt_a" id="p_m_ins_address2" name="p_m_ins_address2" type="text" value="<?= $p_m_r['address2']; ?>" />
                 </div>
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>7d.</strong> City</label>
-                        <input class="inpt_a" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
+                        <input class="inpt_a validate" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7e.</strong> State</label>
-                        <input class="inpt_a" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
+                        <input class="inpt_a validate" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7f.</strong> Zip</label>
-                        <input class="inpt_a" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
+                        <input class="inpt_a validate" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7g.</strong> Phone</label>
-                        <input class="inpt_a extphonemask" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
+                        <input class="inpt_a extphonemask validate" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>7h.</strong> Fax</label>
@@ -516,27 +514,27 @@ on without your consent.  We're excited to see you at your next visit!</p>
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>6b.</strong> Address 1</label>
-                        <input class="inpt_a" id="s_m_ins_address1" name="s_m_ins_address1" type="text" value="<?= $s_m_r['address1']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_address1" name="s_m_ins_address1" type="text" value="<?= $s_m_r['address1']; ?>" />
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>6c.</strong> Address 2</label>
                         <input class="inpt_a" id="s_m_ins_address2" name="s_m_ins_address2" type="text" value="<?= $s_m_r['address2']; ?>" />
                 </div>
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>6d.</strong> City</label>
-                        <input class="inpt_a" id="s_m_ins_city" name="s_m_ins_city" type="text" value="<?= $s_m_r['city']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_city" name="s_m_ins_city" type="text" value="<?= $s_m_r['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6e.</strong> State</label>
-                        <input class="inpt_a" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6f.</strong> Zip</label>
-                        <input class="inpt_a" id="s_m_ins_zip" name="s_m_ins_zip" type="text" value="<?= $s_m_r['zip']; ?>" />
+                        <input class="inpt_a validate" id="s_m_ins_zip" name="s_m_ins_zip" type="text" value="<?= $s_m_r['zip']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6g.</strong> Phone</label>
-                        <input class="inpt_a extphonemask" i="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
+                        <input class="inpt_a extphonemask validate" i="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <label class="lbl_a"><strong>6h.</strong> Fax</label>

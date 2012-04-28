@@ -342,7 +342,8 @@ if($run_updates){
 $sql = "SELECT patientid, feet, inches, weight, bmi from dental_q_page1";
 $q = mysql_query($sql);
 while($r = mysql_fetch_assoc($q)){
-  $upsql = "UPDATE dental_patients set feet='".$r['feet']."', feet='".$r['feet']."', feet='".$r['feet']."', feet='".$r['feet']."' WHERE patientid='".$r['patientid']."'";
+  $upsql = "UPDATE dental_patients set feet='".$r['feet']."', inches='".$r['inches']."', weight='".$r['weight']."', bmi='".$r['bmi']."' WHERE patientid='".$r['patientid']."'";
+  echo $upsql."<br />";
   if($run_updates){
 	mysql_query($upsql);
   }

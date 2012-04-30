@@ -214,7 +214,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					        View
 					</a> 
                                         <a href="http://google.com/search?q=<?= $myarray["company"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="EDIT">
-                                               Confirm 
+                                               Search 
                                         </a>
                                         <a href="manage_patient_insurance.php?delid=<?= $myarray["id"]; ?>" onclick="return confirm('Are you sure you want to delete this insurance?')" class="dellink" title="DELETE">
                                                 Delete 

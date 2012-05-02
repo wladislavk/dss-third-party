@@ -38,7 +38,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 							<tr>
 							<!-- table column with logo -->
 							<td height="133" align="center" valign="middle" style="padding: 0px;">
-							<a href="" title="" target="_blank"><img src="images/invoice/logo.jpg" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>
+							<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo.jpg" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>
 							</td>
 							</tr>
 						</table>

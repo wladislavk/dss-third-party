@@ -2135,37 +2135,6 @@ $(document).ready(function(){
 		        
 		       <ul>
 		        <li  id="foli8" class="complex">
-		         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
-<br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
-                <ul id="docpcp_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
-});
-</script>
-                                        </div>
-<input type="hidden" name="docpcp" id="docpcp" value="<?=$docpcp;?>" />
-		         </li>
-		         </ul>
-		         
-		         </td>
-		         </tr>
-		         
-		         
-		         
-		         
-		         
-		         
-		         
-		         <tr height="35"> 
-		        
-		       <td> 
-		        
-		       <ul>
-		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
                                         <input type="text" id="docdentist_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
 <br />        <div id="docdentist_hints" class="search_hints" style="display:none;">
@@ -2201,32 +2170,6 @@ $(document).ready(function(){
              
              
              
-              <tr height="35"> 
-		        
-		       <td> 
-		        
-		       <ul>
-		        <li  id="foli8" class="complex">
-		         <label style="display: block; float: left; width: 110px;">ENT</label>
-                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
-<br />        <div id="docent_hints" class="search_hints" style="display:none;">
-                <ul id="docent_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-<script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
-});
-</script>
-                                        </div>
-<input type="hidden" name="docent" id="docent" value="<?=$docent;?>" />
-
-		         </li>
-		         </ul>
-		         
-		         </td>
-		         </tr>
-		         
 		         
 		         <tr height="35"> 
 		        
@@ -2255,8 +2198,8 @@ $(document).ready(function(){
 		         </tr>
 		         
 		         
-		         
-		         
+		        
+
 		         
 		         
 		         

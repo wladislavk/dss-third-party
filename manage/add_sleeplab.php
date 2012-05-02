@@ -2,6 +2,7 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+require_once('includes/general_functions.php');
 
 if($_POST["sleeplabsub"] == 1)
 {

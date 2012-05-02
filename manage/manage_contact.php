@@ -183,7 +183,7 @@ Filter by type: <select name="myjumpbox"
 					<?= ($myarray['referrer']==1)?'X':''; ?>
 				</td>
 				<td valign="top" width="10%">
-					<a href="add_contact.php?ed=<?=$myarray["contactid"];?>" class="editlink" title="EDIT">
+					<a href="#" onclick="loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
 						Edit 
 					</a>
                     

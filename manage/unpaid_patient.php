@@ -14,14 +14,12 @@ $i_val = $index_val * $rec_disp;
 
 
 $sql = "SELECT  "
-                 . "  sum(dl.amount) as amount, sum(pay.amount) as paid_amount, "
+                 . "  sum(dl.amount) as amount, "
      . "p.firstname, p.lastname, p.patientid "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
-     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
      . "WHERE dl.docid='".$_SESSION['docid']."'  "
      . "GROUP BY dl.patientid";
-
 $my = mysql_query($sql);
 /*
 $sql .= " order by service_date";
@@ -134,7 +132,18 @@ background:#999999;
 		
 		while($myarray = mysql_fetch_array($my))
 		{
-			if($myarray['amount']>$myarray['paid_amount']){
+$pay_sql = "SELECT  "
+                 . "  sum(pay.amount) as paid_amount "
+     . "FROM dental_ledger dl  "
+     . "JOIN dental_patients p ON p.patientid=dl.patientid "
+     . "LEFT JOIN dental_ledger_payment pay on pay.ledgerid = dl.ledgerid  "
+     . "WHERE dl.docid='".$_SESSION['docid']."' "
+     . "AND p.patientid='".$myarray['patientid']."' "
+     . "GROUP BY dl.patientid";
+$pay_q = mysql_query($pay_sql);
+$pay_r = mysql_fetch_assoc($pay_q);
+
+			if($myarray['amount']>$pay_r['paid_amount']){
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 			$pat_my = mysql_query($pat_sql);
 			$pat_myarray = mysql_fetch_array($pat_my);
@@ -170,10 +179,10 @@ background:#999999;
 					&nbsp;
 				</td>
 				<td valign="top" align="right" width="18%">
-					<? if(st($myarray["paid_amount"]) <> 0) {?>
-	                	<?=number_format(st($myarray["paid_amount"]),2);?>
+					<? if(st($pay_r["paid_amount"]) <> 0) {?>
+	                	<?=number_format(st($pay_r["paid_amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["paid_amount"]);
+						$tot_credit += st($pay_r["paid_amount"]);
 					}?>
 					&nbsp;
 	

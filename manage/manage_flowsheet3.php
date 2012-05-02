@@ -276,12 +276,12 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
     }
   }
 
-  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
+  /*$sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing questionnaire page 3"); // The file and table are named q_page2, but this is displayed on page 3 of questionnaire
-  }
+  }*/
 
 
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";

@@ -15,7 +15,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 <!-- You can load the jQuery library from the Google Content Network.
   Probably better than from your own server. -->
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
-  <!--<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>-->
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
   <script type="text/javascript" src="/manage/3rdParty/free-css-drop-down-menu_v1.2/js/jquery/jquery.dropdown.js"></script>
 <!-- THESE ARE NOT RELATIVE TO WORK WHEN INCLUDED FROM DIFFERENT DIRECTORIES -->
@@ -99,7 +99,11 @@ $num_pending_claims = mysql_num_rows($my);
                                 <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
                                 <li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>
                                 <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
-                                <li><a href="/manage/admin/manage_franchisee_analysis.php">Franchisee Analysis</a></li>
+                                <li class="dir">Franchisee Analysis
+                                        <ul>
+                                                <li><a href="/manage/admin/manage_percase_invoice.php">Per-case Invoice</a></li>
+                                        </ul>
+                                </li>
                                 <li class="dir">Insurance Codes
                                         <ul>
                                                 <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>

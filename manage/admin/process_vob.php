@@ -4,7 +4,9 @@ require_once('../includes/constants.inc');
 require_once('includes/config.php');
 include("includes/sescheck.php");
 require_once('../includes/dental_patient_summary.php');
-
+?>
+<script type="text/javascript" src="script/jquery-1.6.2.min.js"></script>
+<?php
 // Get patient id for updating patient summary table
 $sql = "SELECT "
 		 . "  preauth.patient_id "

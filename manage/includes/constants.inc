@@ -221,3 +221,7 @@ define('DSS_ADMIN_ACCESS_BASIC', 2);
 $dss_admin_access_labels = array();
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";
+
+
+define('DSS_PERCASE_PENDING', 0);
+define('DSS_PERCASE_INVOICED', 1);

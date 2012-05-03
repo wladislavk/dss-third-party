@@ -14,7 +14,7 @@ $i_val = $index_val * $rec_disp;
 
 
 $sql = "SELECT  "
-                 . "  sum(dl.amount) as amount, "
+                 . "  sum(dl.amount) as amount, sum(dl.paid_amount) as paid_amount, "
      . "p.firstname, p.lastname, p.patientid "
      . "FROM dental_ledger dl  "
      . "JOIN dental_patients p ON p.patientid=dl.patientid "
@@ -93,10 +93,10 @@ background:#999999;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="5%">
 			Svc Date
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="5%">
 			Entry Date
 		</td>
 		<td valign="top" class="col_head" width="10%">
@@ -108,13 +108,10 @@ background:#999999;
 		<td valign="top" class="col_head" width="10%">
 			Credits
 		</td>
-		<td valign="top" class="col_head" width="5%">
-			Ins
+		<td valign="top" class="col_head" width="10%">
+			Pt. Balance	
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -142,8 +139,8 @@ $pay_sql = "SELECT  "
      . "GROUP BY dl.patientid";
 $pay_q = mysql_query($pay_sql);
 $pay_r = mysql_fetch_assoc($pay_q);
-
-			if($myarray['amount']>$pay_r['paid_amount']){
+$paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
+			if($myarray['amount']>$paid_amount){
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 			$pat_my = mysql_query($pat_sql);
 			$pat_myarray = mysql_fetch_array($pat_my);
@@ -179,19 +176,19 @@ $pay_r = mysql_fetch_assoc($pay_q);
 					&nbsp;
 				</td>
 				<td valign="top" align="right" width="18%">
-					<? if(st($pay_r["paid_amount"]) <> 0) {?>
-	                	<?=number_format(st($pay_r["paid_amount"]),2);?>
+					<? if(st($paid_amount) <> 0) {?>
+	                	<?=number_format(st($paid_amount),2);?>
 					<? 
-						$tot_credit += st($pay_r["paid_amount"]);
+						$tot_credit += st($paid_amount);
 					}?>
 					&nbsp;
 	
 				</td>
 				<td valign="top" width="10%">&nbsp;
-					<?php }?>       	
+					<?= number_format(($myarray["amount"]-$paid_amount),2); ?>
 				</td>
 			</tr>
-	<? 	} }
+	<? 	} } }
 	?> 
 	  
 		<tr>
@@ -233,7 +230,6 @@ $pay_r = mysql_fetch_assoc($pay_q);
 
 
 </table>
- </div>
 
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>

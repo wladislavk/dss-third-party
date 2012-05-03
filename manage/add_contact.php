@@ -13,7 +13,8 @@ include "includes/general_functions.php";
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-
+    <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="js/masks.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
@@ -69,7 +70,7 @@ if($_POST["contactsub"] == 1)
                     parent.disablePopupRefClean();
                   </script>
                 <?php
-                }elseif(isset($_GET['activePat'])){
+                }elseif($_GET['activePat']!=''){
 		?>
     <script type="text/javascript">
 			//alert("<?=$msg;?>");
@@ -350,15 +351,15 @@ if($_POST["contactsub"] == 1)
             		<li id="foli8" class="complex">	
                         <div>
                             <span>
-                                <input id="phone1" name="phone1" type="text" class="field text addr tbox" value="<?=$phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
+                                <input id="phone1" name="phone1" type="text" class="extphonemask field text addr tbox" value="<?=$phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
                                 <label for="phone1">Phone 1</label>
                             </span>
                             <span>
-                                <input id="phone2" name="phone2" type="text" class="field text addr tbox" value="<?=$phone2?>" tabindex="12" maxlength="255" style="width:200px;" />
+                                <input id="phone2" name="phone2" type="text" class="extphonemask field text addr tbox" value="<?=$phone2?>" tabindex="12" maxlength="255" style="width:200px;" />
                                 <label for="phone2">Phone 2</label>
                             </span>
                             <span>
-                                <input id="fax" name="fax" type="text" class="field text addr tbox" value="<?=$fax?>" tabindex="13" maxlength="255" style="width:200px;" />
+                                <input id="fax" name="fax" type="text" class="phonemask field text addr tbox" value="<?=$fax?>" tabindex="13" maxlength="255" style="width:200px;" />
                                 <label for="fax">Fax</label>
                             </span>
 						</div>

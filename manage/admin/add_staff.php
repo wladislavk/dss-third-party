@@ -3,6 +3,7 @@ session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
 include("includes/password.php");
+include("../includes/general_functions.php");
 if($_POST["staffsub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";

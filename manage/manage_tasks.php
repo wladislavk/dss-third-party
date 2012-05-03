@@ -2,11 +2,11 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 
-
-$sql = "select * from dental_task WHERE
-docid = ".$_SESSION['docid']." ";
+$sql = "select dt.*, du.name from dental_task dt
+	JOIN dental_users du ON dt.responsibleid=du.userid
+ ";
 if(isset($_GET['status'])){
-  $sql .= " AND status = '".mysql_real_escape_string($_GET['status'])."' ";
+  $sql .= " WHERE status = '".mysql_real_escape_string($_GET['status'])."' ";
 }
   $sql .= "ORDER BY due_date DESC";
 $my = mysql_query($sql);
@@ -35,15 +35,15 @@ $my=mysql_query($sql) or die(mysql_error());
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
 			<a href="manage_tasks.php?sort=task&sortdir=<?php echo ($_REQUEST['sort']=='task'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Task</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'description')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
-			<a href="manage_tasks.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='description'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Description</a>
-		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
 			<a href="manage_tasks.php?sort=due_date&sortdir=<?php echo ($_REQUEST['sort']=='due_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>	
 		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+                </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
@@ -67,15 +67,14 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($myarray["task"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st(substr($myarray["description"],0, 30));?>&nbsp;
-                    <?=st($myarray["lastname"]);?> 
-				</td>
-				<td valign="top">
 					<?= date('m/d/Y', strtotime($myarray["due_date"]));?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="add_task.php?id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-						View (still need implemented)
+					<?= $myarray["name"]; ?>
+				</td>
+				<td valign="top">
+					<a href="#" onclick="loadPopup('add_task.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">
+						Edit
 					</a>
 				</td>
 			</tr>

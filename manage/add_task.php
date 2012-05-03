@@ -2,17 +2,20 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+?>
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php
 include("includes/calendarinc.php");
 
-if($_POST["tasksub"] == 1){
+if($_POST["taskadd"] == 1){
 
 		$due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
 		$sql = "INSERT INTO dental_task SET
 				task = '".mysql_real_escape_string($_POST['task'])."',
 				description = '".mysql_real_escape_string($_POST['description'])."',
-				due_date = '".mysql_real_escape_string($due_date)."',
-				docid = '".mysql_real_escape_string($_SESSION['docid'])."',
-				responsibleid = '".mysql_real_escape_string($_SESSION['docid'])."'";
+				due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
+				userid = '".mysql_real_escape_string($_SESSION['userid'])."',
+				responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'";
 		mysql_query($sql);
 		$msg = "Task Added!";
 	?>
@@ -21,6 +24,34 @@ if($_POST["tasksub"] == 1){
                 </script>
 
 	<?php
+
+}elseif($_POST["taskedit"] == 1){
+
+                $due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
+                $sql = "UPDATE dental_task SET
+                                task = '".mysql_real_escape_string($_POST['task'])."',
+                                description = '".mysql_real_escape_string($_POST['description'])."',
+                                due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
+                                userid = '".mysql_real_escape_string($_SESSION['userid'])."',
+                                responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'
+			WHERE id='".mysql_real_escape_string($_POST['task_id'])."'
+				";
+                mysql_query($sql);
+                $msg = "Task Added!";
+        ?>
+                <script type="text/javascript">
+                        parent.window.location='manage_tasks.php?msg=<?=$msg;?>';
+                </script>
+
+        <?php
+
+}
+
+if(isset($_GET['id'])){
+
+$t_sql = "SELECT * from dental_task WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+$t_q = mysql_query($t_sql);
+$task = mysql_fetch_assoc($t_q);
 
 }
 
@@ -47,21 +78,21 @@ if($_POST["tasksub"] == 1){
                 <td valign="top" class="frmhead">
                                 <label>Task</label>
                                 <span class="red">*</span>
-				<input type="text" name="task" />
+				<input type="text" name="task" value="<?= $task['task']; ?>" />
             </td>
        	</tr>
         <tr>
                 <td valign="top" class="frmhead">
                                 <label>Description</label>
                                 <span class="red">*</span>
-                                <textarea name="description"></textarea>
+                                <textarea name="description"><?= $task['description']; ?></textarea>
             </td>
         </tr>
         <tr>
                 <td valign="top" class="frmhead">
                                 <label>Due Date</label>
                                 <span class="red">*</span>
-                                <input type="text" name="due_date" id="due_date" class="calendar" />
+                                <input type="text" name="due_date" id="due_date" class="calendar" value="<?= date('m/d/Y', strtotime($task['due_date'])); ?>" />
             </td>
         </tr>
         <tr>
@@ -69,13 +100,26 @@ if($_POST["tasksub"] == 1){
                                 <label>Assigned To:</label>
                                 <span class="red">*</span>
                                 <select name="responsibleid">
-					<option>No one yet</option>
+				<?php 
+					$r_sql = "SELECT * FROM dental_users
+						WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."' OR
+							docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+
+					$r_q = mysql_query($r_sql);
+					while($responsible = mysql_fetch_assoc($r_q)){ ?>
+						<option value="<?= $responsible['userid']; ?>"><?= $responsible['name']; ?></option>
+					<?php } ?>
 				</select>
             </td>
         </tr>
 	<tr>
 		<td valign="top" class="frmhead">
-			<input name="tasksub" value="1" type="hidden" />
+			<?php if(isset($_GET['id'])){ ?>
+				<input name="taskedit" value="1" type="hidden" />
+				<input name="task_id" value="<?= $_GET['id']; ?>" type="hidden" />
+			<?php }else{ ?>
+                        	<input name="taskadd" value="1" type="hidden" />
+			<?php } ?>
 			<input type="submit" class="addButton" value="Add Task" />
 		</td>
 

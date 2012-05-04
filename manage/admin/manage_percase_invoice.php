@@ -77,8 +77,11 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="40%">
 			Name		
 		</td>
+                <td valign="top" class="col_head" width="20%">
+                        E0486 (Last 30 days)
+                </td>
 		<td valign="top" class="col_head" width="20%">
-			E0486 (Last 30 days)		
+			Unbilled E0486		
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			History
@@ -109,20 +112,32 @@ $num_users=mysql_num_rows($my);
 ";
 $case_q = mysql_query($case_sql);
 		$case = mysql_fetch_assoc($case_q);
+                $case30_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['userid']."' AND
+                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY) 
+";
+$case30_q = mysql_query($case30_sql);
+                $case30 = mysql_fetch_assoc($case30_q);
 		?>
 			<tr>
 				<td valign="top">
 					<?=st($myarray["username"]);?>
 				</td>
-				<td valign="top">
-					<?=st($myarray["name"]);?>
+                                <td valign="top">
+                                        <?=st($myarray["name"]);?>
+                                </td>
+				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
+					<?=st($case30["num_trxn"]);?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php
          				    echo st($case["num_trxn"]); ?>
 				</td>
 				<td valign="top" align="center">
-					<a href="#">History</a>
+					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["userid"];?>">History</a>
 				</td>	
 						
 				<td valign="top">
@@ -134,17 +149,6 @@ $case_q = mysql_query($case_sql);
 			</tr>
 	<? 	}
 
-		?>
-		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;
-				
-			</td>
-			<td valign="top" class="col_head" colspan="2">
-				<input type="hidden" name="sortsub" value="1" />
-				<input type="submit" value=" Change " class="button" />
-			</td>
-		</tr>
-		<?
 	}?>
 </table>
 </form>

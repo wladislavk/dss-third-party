@@ -61,7 +61,9 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bottom: 10px;">
-									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'
+									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
+									Invoice Date: '.date('m/d/Y').'<br />
+									Payment Due: '.date('m/d/Y', strtotime(date() . " +7 day")).'
 									</td>
 									</tr>							
 								</table>
@@ -155,16 +157,16 @@ $html .= '<tr>
                                                                         <!-- table column with item price -->
                                                                         <td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;"></td>
                                                                         </tr>';
-
+$total_charge = 0;
 while($case = mysql_fetch_assoc($case_q)){
-
+$total_charge += $case['percase_amount'];
 $html .= '<tr>
-                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;"></td>
+                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 2px dotted #DDDDDD;"></td>
 									<td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">'.$case['firstname'].' '.$case['lastname'].'</td>
                                                                         <td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">'.date('m/d/Y', strtotime($case['service_date'])).'</td>
 									<td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">#'.str_pad($case['ledgerid'],5,'0',STR_PAD_LEFT).'</td>
-									<td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">$195.00</td>
-									</tr>'; 
+									<td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">'.$case['percase_amount'].'</td>
+									</tr><tr><td colspan="5" style="color:#333333;" valign="top">'.str_pad('-',430,'-').'</td></tr>'; 
 
 }
 /*								<!-- table row no3.-->
@@ -206,7 +208,7 @@ $html .= '
 									<!-- table column with subtotal text -->
 									<td height="30" width="100" align="left" valign="middle" style="text-align: left;">Subtotal:</td>
 									<!-- table column with subtotal price -->
-									<td height="30" width="90" align="right" valign="middle" style="text-align: right; padding-right: 10px;">$'.number_format($num_case*195).'.00</td>
+									<td height="30" width="90" align="right" valign="middle" style="text-align: right; padding-right: 10px;">$'.number_format($total_charge,2).'</td>
 									</tr>
 									<!-- table row no6.-->
 									<tr style="font-size:30px;">
@@ -232,7 +234,7 @@ $html .= '
 									<!-- table column with total text -->
 									<td height="30" width="100" align="left" valign="middle" style="color: #444444; font-weight: bold; text-align: left;">Total:</td>
 									<!-- table column with total price -->
-									<td height="30" width="90" align="right" valign="middle" style="color: #444444; font-weight: bold; text-align: right; padding-right: 10px;">$'.number_format($num_case*195).'.00</td>
+									<td height="30" width="90" align="right" valign="middle" style="color: #444444; font-weight: bold; text-align: right; padding-right: 10px;">$'.number_format($total_charge,2).'</td>
 									</tr>
 								</table>
 							</td>
@@ -255,7 +257,7 @@ $html .= '
 					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
 						<table border="0" cellspacing="0" cellpadding="0" >
 							<tr>
-							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 12px; line-height: 18px; color: #888888; padding-bottom: 20px;">
+							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
 							<!-- text goes here -->Donec porttitor quam vel purus venenatis rutrum. Nullam quam nibh, congue sed aliquet posuere, aliquam non lacus. Maecenas nec luctus neque. Aliquam sagittis tincidunt lectus, non semper lorem sollicitudin ac. Proin ac felis tortor, eu ultricies orci. Vivamus consequat sapien ut mi tempus aliquam. Praesent egestas leo at erat sodales auctor. Curabitur non nunc justo, id sagittis neque. Praesent eget justo vel arcu faucibus elementum eget vitae dui. Ut at velit urna, eget pulvinar nibh. Proin aliquet pulvinar consectetur. Proin semper tempus tortor vitae semper. 
 							</td>
@@ -279,9 +281,10 @@ $html .= '
 							<td width="196" align="left" valign="top" style="padding-bottom: 20px; padding-top: 0px;">
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
-									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 12px; line-height: 20px; color: #888888; ">
-									Company adress, City, State<br/>
-									Phone: 1-800-0000-000<br/>
+									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
+									3909 East Bay Drive, Ste 203<br />
+									Holmes Beach, FL 34217
+									Phone: 941-757-4642<br/>
 									</td>
 									</tr>
 								</table>
@@ -293,9 +296,9 @@ $html .= '
 							<td width="196" align="left" valign="top" style="padding-bottom: 20px; padding-top: 0px;">
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
-									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 12px; line-height: 20px; color: #888888; ">
-									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">info@companywebsite.com</a><br/>
-									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">companywebsite.com</a>
+									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
+									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">Info@DentalSleepSolutions.com</a><br/>
+									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">www.DentalSleepSolutions.com</a>
 									</td>
 									</tr>
 								</table>
@@ -305,27 +308,14 @@ $html .= '
 							</td>
 							<!-- start right table column with social media links -->
 							<td align="right" valign="middle" style="margin:0px; padding-bottom: 20px; padding-top: 0px;">
-								<table border="0" cellspacing="0" cellpadding="0">
-									<tr>
-									<td width="20" align="left" valign="top" style="padding-left: 5px">
-									<!-- footer icon --><a href="" title="" target="_blank"><img src="images/invoice/icon-footer.jpg" alt="footer icon" border="no" style="margin: 0px; padding: 0px;"/></a>
-									</td>
-									<td width="20" align="left" valign="top" style="padding-left: 5px">
-									<!-- footer icon --><a href="" title="" target="_blank"><img src="images/invoice/icon-footer.jpg" alt="footer icon" border="no" style="margin: 0px; padding: 0px;"/></a>
-									</td>
-									<td width="20" align="left" valign="top" style="padding-left: 5px">
-									<!-- footer icon --><a href="" title="" target="_blank"><img src="images/invoice/icon-footer.jpg" alt="footer icon" border="no" style="margin: 0px; padding: 0px;"/></a>
-									</td>
-									</tr>
-								</table>
 							</td>
 							</tr>
 							<tr>
 							<td align="left" colspan="5" valign="top">
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
-									<td align="left" valign="middle" style="font-family: Arial,Helvetica,sans-serif; font-size: 16px; font-weight: bold; color: #444444; padding-bottom: 30px; padding-top: 20px; border-top: solid 5px #444444; ">
-									<!-- featuring text-->Company name Ltd. 
+									<td align="left" valign="middle" style="font-family: Arial,Helvetica,sans-serif; font-size: 36px; font-weight: bold; color: #444444; padding-bottom: 30px; padding-top: 20px; border-top: solid 5px #444444; ">
+									<!-- featuring text-->Dental Sleep Solutions Franchising, LLC 
 									</td>
 									</tr>
 								</table>
@@ -386,11 +376,11 @@ $title = "test";
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        $filename = '/manage/letterpdfs/percase_invoice_'.$_GET['invoice_id'].'.pdf';
+        $filename = '/manage/q_file/percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
 ?>
 
 <script type="text/javascript">
-  window.location = "<?= $filename; ?>";
+  //window.location = "<?= $filename; ?>";
 </script>

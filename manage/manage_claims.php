@@ -49,7 +49,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Unsubmitted Claims 
+	Pending Claims 
 </span>
 <br />
 &nbsp;&nbsp;
@@ -121,7 +121,7 @@ while($myarrayp = mysql_fetch_array($myp))
 				</td>
                                 <td valign="top">
         <button onclick="Javascript: window.location = 'insurance.php?pid=<?=$myarrayp['patientid'];?>';" class="addButton">
-                  Add New Claim
+                  View 
             </button>
 
                                 </td>

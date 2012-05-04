@@ -4,16 +4,10 @@ include "includes/top.htm";
 
 $sql = "select dt.*, du.name from dental_task dt
 	JOIN dental_users du ON dt.responsibleid=du.userid
- ";
-if(isset($_GET['status'])){
-  $sql .= " WHERE status = '".mysql_real_escape_string($_GET['status'])."' ";
-}
-  $sql .= "ORDER BY due_date DESC";
+   WHERE dt.status = '0' OR
+	dt.status IS NULL
+  ORDER BY due_date ASC";
 $my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
-
-$my=mysql_query($sql) or die(mysql_error());
-
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -32,9 +26,10 @@ $my=mysql_query($sql) or die(mysql_error());
 </div>
 
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
+		<td width="2%">
+		</td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
 			<a href="manage_tasks.php?sort=task&sortdir=<?php echo ($_REQUEST['sort']=='task'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Task</a>
 		</td>
@@ -61,8 +56,15 @@ $my=mysql_query($sql) or die(mysql_error());
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
+			$tr_class = '';
+			$due = getdate(date('Y-m-d',strtotime($myarray['due_date'])));
+			$today = getdate(date('Y-m-d'));
+			if($due[0] < $today[0]){
+			  $tr_class = 'expired';
+			}
 		?>
-			<tr class="<?=$tr_class;?> ">
+			<tr class="<?=$tr_class;?> " id="task_<?= $myarray["id"]; ?>" >
+				<td class="status_col"><input type="checkbox" class="status" value="<?= $myarray["id"]; ?>" />
 				<td valign="top">
 					<?=st($myarray["task"]);?>&nbsp;
 				</td>
@@ -81,7 +83,86 @@ $my=mysql_query($sql) or die(mysql_error());
 	<? 	}
 	}?>
 </table>
-</form>
+<script type="text/javascript">
+$('.status').click(function(){
+  t = $(this).val();
+                                  $.ajax({
+                                        url: "includes/update_task.php",
+                                        type: "post",
+                                        data: {id: t},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+							x = $('#task_'+t).clone()
+  							x.find('td.status_col').remove()
+  							x.appendTo('#completed_tasks');
+							$('#task_'+t).remove();
+						}
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+</script>
+<?php
+$sql = "select dt.*, du.name from dental_task dt
+        JOIN dental_users du ON dt.responsibleid=du.userid
+   WHERE dt.status = '1' 
+  ORDER BY due_date DESC";
+
+$my=mysql_query($sql) or die(mysql_error());
+?>
+<h3>Completed</h3>
+<table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr class="tr_bg_h">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
+                        <a href="manage_tasks.php?sort=task&sortdir=<?php echo ($_REQUEST['sort']=='task'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort=due_date&sortdir=<?php echo ($_REQUEST['sort']=='due_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+                </td>
+                <td valign="top" class="col_head" width="15%">
+                        Action
+                </td>
+        </tr>
+        <? if(mysql_num_rows($my) == 0)
+        { ?>
+                <tr class="tr_bg">
+                        <td valign="top" class="col_head" colspan="4" align="center">
+                                No Records
+                        </td>
+                </tr>
+        <?
+        }
+        else
+        {
+                while($myarray = mysql_fetch_array($my))
+                {
+                ?>
+                        <tr class="<?=$tr_class;?> ">
+                                <td valign="top">
+                                        <?=st($myarray["task"]);?>&nbsp;
+                                </td>
+                                <td valign="top">
+                                        <?= date('m/d/Y', strtotime($myarray["due_date"]));?>&nbsp;
+                                </td>
+                                <td valign="top">
+                                        <?= $myarray["name"]; ?>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="loadPopup('add_task.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">
+                                                Edit
+                                        </a>
+                                </td>
+                        </tr>
+        <?      }
+        }?>
+</table>
 
 
 <div id="popupContact" style="width:750px;">

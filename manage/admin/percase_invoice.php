@@ -47,7 +47,7 @@ if(isset($_POST['submit'])){
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
+<br /><br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <input type="hidden" name="docid" value="<?=$_GET["docid"];?>" />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -84,14 +84,14 @@ if(isset($_POST['submit'])){
 					<input type="text" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
 				</td>
 				<td valign="top">
-         				    $<input type="text" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
+         				    $<input type="text" class="amount" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
 				</td>
 			</tr>
 	<? 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="3">&nbsp;
-				
+			<td valign="top" colspan="2">&nbsp;
+			Total: <span id="total" style="font-weight:bold;">$<?= number_format(mysql_num_rows($case_q)*195,2); ?></span>	
 			</td>
 			<td valign="top" class="col_head" colspan="2">
 				<input type="submit" name="submit" value=" Create " class="button" />
@@ -101,7 +101,17 @@ if(isset($_POST['submit'])){
 	}?>
 </table>
 </form>
+<script type="text/javascript">
 
+$('.amount').keyup(function(){
+a = 0;
+  $('.amount').each(function(){
+    a += Number($(this).val());
+  });
+a = a.toFixed(2);
+$('#total').html('$'+a);
+});
+</script>
 
 <br /><br />	
 <? include "includes/bottom.htm";?>

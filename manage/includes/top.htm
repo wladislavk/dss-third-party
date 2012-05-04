@@ -861,19 +861,18 @@ display:none;
 
   <ul>
      <li><a href="ledger_reportfull.php">Ledger</a></li>
-     <li><a href="manage_claims.php">Claims</a></li>
+     <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
      <li><a href="#">Performance</a></li>
   </ul>
 </li>
 
 <?php
-  $mess_count = $pending_letters + $num_pending_claims + $num_preauth + $num_pc + $num_pi + $num_c;
-  $mess_count = $pending_letters + $num_pending_claims + $num_preauth + $num_rejected_preauth;;
+  $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
+  $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth;;
 ?>
 <li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
   <ul>
       <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
-      <li><a <?php {echo "href='manage_claims.php'";} ?>>Claims (<?= $num_pending_claims; ?>)</a></li>
       <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
       <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
       <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>

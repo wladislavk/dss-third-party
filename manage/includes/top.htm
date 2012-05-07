@@ -99,6 +99,7 @@ $num_rejected_preauth = mysql_num_rows($preauth_res);
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/task.css" rel="stylesheet" type="text/css" />
 <link href="css/notifications.css" rel="stylesheet" type="text/css" />
 <link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <link href="css/top.css" rel="stylesheet" type="text/css" />
@@ -790,7 +791,71 @@ display:none;
        <li><a href="logout.php">Sign Out</a></li>
       </ul>
   </div>
-  
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#task_header').click(function(){
+    $('#task_list').toggle();
+  });
+
+
+});
+</script>
+ <div id="task_menu" style="margin-top:8px;float:right">
+<span id="task_header">Tasks</span>
+<div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
+<?php
+$task_sql = "SELECT * FROM dental_task WHERE responsibleid='".$_SESSION['userid']."'";
+$od_sql = $task_sql . " AND due_date < CURDATE();";
+$tod_sql = $task_sql . " AND due_date = CURDATE();";
+$tom_sql = $task_sql . " AND due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+?>
+<h4>Overdue</h4>
+<ul>
+<?php
+$od_q = mysql_query($od_sql);
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li>
+<a href="manage_tasks.php">
+<?php echo $od_r['task']; ?>
+</a>
+</li>
+<?php
+}
+?>
+</ul>
+
+<h4>Today</h4>
+<ul>
+<?php
+$tod_q = mysql_query($tod_sql);
+while($tod_r = mysql_fetch_assoc($tod_q)){
+?><li>
+<a href="manage_tasks.php">
+<?php echo $tod_r['task']; ?>
+</a>
+</li>
+<?php
+}
+?>
+</ul>
+
+<h4>Tomorrow</h4>
+<ul>
+<?php
+$tom_q = mysql_query($tom_sql);
+while($tom_r = mysql_fetch_assoc($tom_q)){
+?><li>
+<a href="manage_tasks.php">
+<?php echo $tom_r['task']; ?>
+</a>
+</li>
+<?php
+}
+?>
+</ul>
+</div>
+</div> 
   
  <script type="text/javascript" src="script/autocomplete.js"></script>
  

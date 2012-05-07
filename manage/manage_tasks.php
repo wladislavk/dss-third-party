@@ -11,6 +11,7 @@ $my = mysql_query($sql);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/task.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -28,16 +29,16 @@ $my = mysql_query($sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td width="2%">
+		<td width="2%" class="col_head">
 		</td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
-			<a href="manage_tasks.php?sort=task&sortdir=<?php echo ($_REQUEST['sort']=='task'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+			Task
 		</td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			<a href="manage_tasks.php?sort=due_date&sortdir=<?php echo ($_REQUEST['sort']=='due_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>	
+			Due Date	
 		</td>
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_tasks.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+			Assigned To
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -56,20 +57,28 @@ $my = mysql_query($sql);
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
-			$tr_class = '';
-			$due = getdate(date('Y-m-d',strtotime($myarray['due_date'])));
-			$today = getdate(date('Y-m-d'));
-			if($due[0] < $today[0]){
-			  $tr_class = 'expired';
-			}
+			$type = '';
+			$due = strtotime(date('Y-m-d',strtotime($myarray['due_date'])));
+			$today = strtotime(date('Y-m-d'));
+			if($due < $today){
+			  $type = 'expired';
+			}elseif($due == $today){
+                          $type = 'today';
+                        }
 		?>
-			<tr class="<?=$tr_class;?> " id="task_<?= $myarray["id"]; ?>" >
+			<tr class="<?=$type;?> " id="task_<?= $myarray["id"]; ?>" >
 				<td class="status_col"><input type="checkbox" class="status" value="<?= $myarray["id"]; ?>" />
 				<td valign="top">
 					<?=st($myarray["task"]);?>&nbsp;
 				</td>
-				<td valign="top">
+				<td class="due_date" valign="top">
+					<?php if($type=='expired'){ ?>
+						Over Due
+					<?php }elseif($type=='today'){ ?>
+						Today
+					<?php }else{	?>	
 					<?= date('m/d/Y', strtotime($myarray["due_date"]));?>&nbsp;
+					<?php } ?>
 				</td>
 				<td valign="top">
 					<?= $myarray["name"]; ?>

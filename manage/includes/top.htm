@@ -801,11 +801,15 @@ $(document).ready(function(){
 
 });
 </script>
+<?php
+$task_sql = "SELECT * FROM dental_task WHERE responsibleid='".$_SESSION['userid']."' AND (status IS NULL OR status=0)";
+$task_q = mysql_query($task_sql);
+$num_tasks = mysql_num_rows($task_q);
+?>
  <div id="task_menu" style="margin-top:8px;float:right">
-<span id="task_header">Tasks</span>
+<span id="task_header">Tasks (<?= $num_tasks; ?>)</span>
 <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
 <?php
-$task_sql = "SELECT * FROM dental_task WHERE responsibleid='".$_SESSION['userid']."'";
 $od_sql = $task_sql . " AND due_date < CURDATE();";
 $tod_sql = $task_sql . " AND due_date = CURDATE();";
 $tom_sql = $task_sql . " AND due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";

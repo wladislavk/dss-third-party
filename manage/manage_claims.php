@@ -242,9 +242,6 @@ if(v == '100'){
                                                 View 
                                         </a>
 
-					<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
-						Edit 
-					</a>
                     
 				</td>
 			</tr>

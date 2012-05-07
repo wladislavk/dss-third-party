@@ -123,7 +123,8 @@ $sql = "select dt.*, du.name from dental_task dt
 
 $my=mysql_query($sql) or die(mysql_error());
 ?>
-<h3>Completed</h3>
+<br />
+<span class="admin_head">Completed</span>
 <table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">

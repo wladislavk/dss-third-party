@@ -12,9 +12,9 @@ if($_POST["taskadd"] == 1){
 		$due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
 		$sql = "INSERT INTO dental_task SET
 				task = '".mysql_real_escape_string($_POST['task'])."',
-				description = '".mysql_real_escape_string($_POST['description'])."',
 				due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
 				userid = '".mysql_real_escape_string($_SESSION['userid'])."',
+                                status = '".mysql_real_escape_string($_POST['status'])."',
 				responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'";
 		mysql_query($sql);
 		$msg = "Task Added!";
@@ -30,9 +30,9 @@ if($_POST["taskadd"] == 1){
                 $due_date = ($_POST['due_date']!='')?date('Y-m-d', strtotime($_POST['due_date'])):'';
                 $sql = "UPDATE dental_task SET
                                 task = '".mysql_real_escape_string($_POST['task'])."',
-                                description = '".mysql_real_escape_string($_POST['description'])."',
                                 due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
                                 userid = '".mysql_real_escape_string($_SESSION['userid'])."',
+				status = '".mysql_real_escape_string($_POST['status'])."',
                                 responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'
 			WHERE id='".mysql_real_escape_string($_POST['task_id'])."'
 				";
@@ -78,21 +78,14 @@ $task = mysql_fetch_assoc($t_q);
                 <td valign="top" class="frmhead">
                                 <label>Task</label>
                                 <span class="red">*</span>
-				<input type="text" name="task" value="<?= $task['task']; ?>" />
+				<input style="width:500px;" type="text" name="task" value="<?= $task['task']; ?>" />
             </td>
        	</tr>
         <tr>
                 <td valign="top" class="frmhead">
-                                <label>Description</label>
-                                <span class="red">*</span>
-                                <textarea name="description"><?= $task['description']; ?></textarea>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
                                 <label>Due Date</label>
                                 <span class="red">*</span>
-                                <input type="text" name="due_date" id="due_date" class="calendar" value="<?= date('m/d/Y', strtotime($task['due_date'])); ?>" />
+                                <input type="text" name="due_date" id="due_date" class="calendar" value="<?= ($task['due_date'])?date('m/d/Y', strtotime($task['due_date'])):date('m/d/Y'); ?>" />
             </td>
         </tr>
         <tr>
@@ -101,15 +94,22 @@ $task = mysql_fetch_assoc($t_q);
                                 <span class="red">*</span>
                                 <select name="responsibleid">
 				<?php 
+					$responsibleid = ($task['responsibleid'])?$task['responsibleid']:$_SESSION['userid'];
 					$r_sql = "SELECT * FROM dental_users
 						WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."' OR
 							docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 
 					$r_q = mysql_query($r_sql);
 					while($responsible = mysql_fetch_assoc($r_q)){ ?>
-						<option value="<?= $responsible['userid']; ?>"><?= $responsible['name']; ?></option>
+						<option value="<?= $responsible['userid']; ?>" <?= ($responsible['userid']==$responsibleid)?'selected="selected"':'';?>><?= $responsible['name']; ?></option>
 					<?php } ?>
 				</select>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <label>Completed:</label>
+                                <input type="checkbox" value="1" name="status" <?= ($task['status']==1)?'checked="checked"':''; ?> />
             </td>
         </tr>
 	<tr>

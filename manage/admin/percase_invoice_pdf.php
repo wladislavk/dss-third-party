@@ -81,7 +81,9 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									</tr>
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-									Dental Sleep Solutions
+									Dental Sleep Solutions<br />
+									3909 East Bay Drive, Ste 203<br />
+									Holmes Beach, FL 34217
 									</td>
 									</tr>
 								</table>
@@ -259,7 +261,7 @@ $html .= '
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
-							<!-- text goes here -->Donec porttitor quam vel purus venenatis rutrum. Nullam quam nibh, congue sed aliquet posuere, aliquam non lacus. Maecenas nec luctus neque. Aliquam sagittis tincidunt lectus, non semper lorem sollicitudin ac. Proin ac felis tortor, eu ultricies orci. Vivamus consequat sapien ut mi tempus aliquam. Praesent egestas leo at erat sodales auctor. Curabitur non nunc justo, id sagittis neque. Praesent eget justo vel arcu faucibus elementum eget vitae dui. Ut at velit urna, eget pulvinar nibh. Proin aliquet pulvinar consectetur. Proin semper tempus tortor vitae semper. 
+							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark.
 							</td>
 							</tr>
 						</table>	
@@ -283,7 +285,7 @@ $html .= '
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
 									3909 East Bay Drive, Ste 203<br />
-									Holmes Beach, FL 34217
+									Holmes Beach, FL 34217<br />
 									Phone: 941-757-4642<br/>
 									</td>
 									</tr>
@@ -382,5 +384,5 @@ $title = "test";
 ?>
 
 <script type="text/javascript">
-  //window.location = "<?= $filename; ?>";
+  window.location = "<?= $filename; ?>";
 </script>

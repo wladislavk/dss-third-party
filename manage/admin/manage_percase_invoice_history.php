@@ -21,6 +21,7 @@ $doc = mysql_fetch_assoc($doc_q);
 
 <span class="admin_head">
 	Per-case Invoice History - <?= $doc['name']; ?> 	
+	<a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </span>
 <br />
 

@@ -2,8 +2,9 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 
-$sql = "select dt.*, du.name from dental_task dt
+$sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
 	JOIN dental_users du ON dt.responsibleid=du.userid
+	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
    WHERE dt.status = '0' OR
 	dt.status IS NULL
   ORDER BY due_date ASC";
@@ -69,7 +70,10 @@ $my = mysql_query($sql);
 			<tr class="<?=$type;?> " id="task_<?= $myarray["id"]; ?>" >
 				<td class="status_col"><input type="checkbox" class="status" value="<?= $myarray["id"]; ?>" />
 				<td valign="top">
-					<?=st($myarray["task"]);?>&nbsp;
+					<?=st($myarray["task"]);?>
+					<?php if($myarray['firstname']!='' && $myarray['lastname']!=''){
+						echo " (".$myarray['firstname']." ". $myarray['lastname'].")";
+					} ?>
 				</td>
 				<td class="due_date" valign="top">
 					<?php if($type=='expired'){ ?>

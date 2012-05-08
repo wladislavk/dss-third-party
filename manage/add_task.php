@@ -15,6 +15,7 @@ if($_POST["taskadd"] == 1){
 				due_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($due_date)))."',
 				userid = '".mysql_real_escape_string($_SESSION['userid'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."',
+				patientid = '".mysql_real_escape_string($_POST['patientid'])."',
 				responsibleid = '".mysql_real_escape_string($_POST['responsibleid'])."'";
 		mysql_query($sql);
 		$msg = "Task Added!";
@@ -68,10 +69,19 @@ $task = mysql_fetch_assoc($t_q);
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
     <form name="notesfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" >
+    <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td class="cat_head">
-                Tasks
+		<?php
+		if(isset($_GET['pid'])){
+			$p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+			$p_q = mysql_query($p_sql);
+			$pat = mysql_fetch_assoc($p_q); ?>
+			Add a task about <?= $pat['firstname'] . " " . $pat['lastname']; ?>
+		<?php }else{ ?>
+                	Tasks
+		<?php } ?>
             </td>
         </tr>
         <tr>

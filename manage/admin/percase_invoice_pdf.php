@@ -284,6 +284,7 @@ $html .= '
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
+									Dental Sleep Solutions<br />
 									3909 East Bay Drive, Ste 203<br />
 									Holmes Beach, FL 34217<br />
 									Phone: 941-757-4642<br/>

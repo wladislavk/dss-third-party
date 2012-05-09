@@ -1,7 +1,7 @@
 <?php include 'includes/top.htm';?>
 
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/popup2.js" type="text/javascript"></script>
+<!--<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />-->
+<!--<script src="admin/popup/popup2.js" type="text/javascript"></script>-->
 
 <br />
 <div>
@@ -409,17 +409,12 @@ if($_SESSION['userid'] != '')
 </div>
 </td></tr>
 </table>
+<!--
 <div id="popupMemo" style="width:750px; z-index:9999; display:none; height:400px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div> 
 
-<div id="popupContact" style="width:750px; display:none; height:400px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div> 
-
-<div id="backgroundPopup"></div>
-
+-->
 <br /><br />
 <? include 'includes/bottom.htm';?> 

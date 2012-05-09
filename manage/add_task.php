@@ -127,6 +127,8 @@ $task = mysql_fetch_assoc($t_q);
 			<?php if(isset($_GET['id'])){ ?>
 				<input name="taskedit" value="1" type="hidden" />
 				<input name="task_id" value="<?= $_GET['id']; ?>" type="hidden" />
+	                        <a href="manage_tasks.php?delid=<?= $_GET['id']; ?>" target="_parent" style="float:right;" onclick="return confirm('Are you sure you want to delete this task?')">Delete</a>
+
 			<?php }else{ ?>
                         	<input name="taskadd" value="1" type="hidden" />
 			<?php } ?>

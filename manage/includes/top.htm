@@ -106,7 +106,6 @@ $num_rejected_preauth = mysql_num_rows($preauth_res);
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="js/masks.js"></script>
-
 <script type="text/javascript" src="script/logout_timer.js"></script>
 
 <?php //<script type="text/javascript" src="js/p7tbmenu.js"></script> ?>
@@ -806,9 +805,12 @@ $(document).ready(function(){
 });
 </script>
 <?php
-$task_sql = "SELECT dt.*, p.firstname, p.lastname FROM dental_task dt
-		LEFT JOIN dental_patients p ON p.patientid=dt.patientid
- WHERE dt.responsibleid='".$_SESSION['userid']."' AND (dt.status IS NULL OR dt.status=0)";
+$task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+        JOIN dental_users du ON dt.responsibleid=du.userid
+        LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+   WHERE (dt.status = '0' OR
+        dt.status IS NULL) AND
+        (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')";
 $task_q = mysql_query($task_sql);
 $num_tasks = mysql_num_rows($task_q);
 ?>
@@ -827,13 +829,16 @@ if(mysql_num_rows($od_q)>0){
 <ul>
 <?php
 while($od_r = mysql_fetch_assoc($od_q)){
-?><li>
-<a href="manage_tasks.php">
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" style="position:absolute; left:-28px;background:#fff; float:left; padding:3px; display:none;">
+  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
 <?php echo $od_r['task']; ?>
 <?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
-  echo " (".$od_r['firstname']." ". $od_r['lastname'].")";
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
 } ?>
-</a>
 </li>
 <?php
 }
@@ -848,17 +853,20 @@ if(mysql_num_rows($tod_q)>0){
 <h4>Today</h4>
 <ul>
 <?php
-while($tod_r = mysql_fetch_assoc($tod_q)){
-?><li>
-<a href="manage_tasks.php">
-<?php echo $tod_r['task']; ?>
-<?php if($tod_r['firstname']!='' && $tod_r['lastname']!=''){
-  echo " (".$tod_r['firstname']." ". $tod_r['lastname'].")";
+while($od_r = mysql_fetch_assoc($tod_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" style="position:absolute; left:-28px;background:#fff; float:left; padding:3px; display:none;">
+  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
 } ?>
-
-</a>
 </li>
 <?php
+
 }
 ?>
 </ul>
@@ -871,15 +879,17 @@ if(mysql_num_rows($tom_q)>0){
 <h4>Tomorrow</h4>
 <ul>
 <?php
-while($tom_r = mysql_fetch_assoc($tom_q)){
-?><li>
-<a href="manage_tasks.php">
-<?php echo $tom_r['task']; ?>
-<?php if($tom_r['firstname']!='' && $tom_r['lastname']!=''){
-  echo " (".$tom_r['firstname']." ". $tom_r['lastname'].")";
+while($od_r = mysql_fetch_assoc($tom_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" style="position:absolute; left:-28px;background:#fff; float:left; padding:3px; display:none;">
+  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
 } ?>
-
-</a>
 </li>
 <?php
 }

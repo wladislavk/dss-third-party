@@ -2,11 +2,17 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 
+if(isset($_GET['delid'])){
+$del_sql = "UPDATE dental_task SET status=2 WHERE id='".mysql_real_escape_string($_GET['delid'])."'";
+mysql_query($del_sql);
+}
+
 $sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
 	JOIN dental_users du ON dt.responsibleid=du.userid
 	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-   WHERE dt.status = '0' OR
-	dt.status IS NULL
+   WHERE (dt.status = '0' OR
+	dt.status IS NULL) AND
+	(du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')
   ORDER BY due_date ASC";
 $my = mysql_query($sql);
 ?>
@@ -67,12 +73,12 @@ $my = mysql_query($sql);
                           $type = 'today';
                         }
 		?>
-			<tr class="<?=$type;?> " id="task_<?= $myarray["id"]; ?>" >
-				<td class="status_col"><input type="checkbox" class="status" value="<?= $myarray["id"]; ?>" />
+			<tr class="<?=$type;?> task_<?= $myarray["id"]; ?>" id="task_<?= $myarray["id"]; ?>" >
+				<td class="status_col"><input type="checkbox" class="task_status" value="<?= $myarray["id"]; ?>" />
 				<td valign="top">
 					<?=st($myarray["task"]);?>
 					<?php if($myarray['firstname']!='' && $myarray['lastname']!=''){
-						echo " (".$myarray['firstname']." ". $myarray['lastname'].")";
+						echo ' (<a href="add_patient.php?ed='.$myarray['patientid'].'&preview=1&addtopat=1&pid='.$myarray['patientid'].'">'.$myarray['firstname'].' '. $myarray['lastname'].'</a>)';
 					} ?>
 				</td>
 				<td class="due_date" valign="top">
@@ -96,29 +102,6 @@ $my = mysql_query($sql);
 	<? 	}
 	}?>
 </table>
-<script type="text/javascript">
-$('.status').click(function(){
-  t = $(this).val();
-                                  $.ajax({
-                                        url: "includes/update_task.php",
-                                        type: "post",
-                                        data: {id: t},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-							x = $('#task_'+t).clone()
-  							x.find('td.status_col').remove()
-  							x.appendTo('#completed_tasks');
-							$('#task_'+t).remove();
-						}
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-});
-</script>
 <?php
 $sql = "select dt.*, du.name from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid

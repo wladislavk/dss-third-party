@@ -323,7 +323,7 @@ if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 }
 
-$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+$sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
@@ -337,11 +337,8 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
 if($insurancetype!=1){
   $diagnosising_doc = '';
   $diagnosising_npi = '';
-$field_17a = '';
-$field_17b = '';
 
 }
-
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.
 if (empty($prior_authorization_number)) {

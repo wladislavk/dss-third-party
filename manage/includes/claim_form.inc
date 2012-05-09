@@ -1106,8 +1106,6 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   $d = mysql_fetch_assoc($result);
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
-$field_17a = st($myarray['field_17a']);
-$field_17b = st($myarray['field_17b']);
 
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {
@@ -1117,8 +1115,6 @@ if ($dent_rows <= 0) {
 if($insurancetype!=1){
   $diagnosising_doc = '';
   $diagnosising_npi = '';
-$field_17a = '';
-$field_17b = '';
 
 }
 // If claim doesn't yet have a preauth number, try to load it

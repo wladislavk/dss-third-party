@@ -815,7 +815,7 @@ $task_q = mysql_query($task_sql." AND dt.due_date < DATE_ADD(CURDATE(), INTERVAL
 $num_tasks = mysql_num_rows($task_q);
 ?>
  <div id="task_menu" style="margin-top:8px;float:right">
-<span id="task_header">Tasks (<?= $num_tasks; ?>)</span>
+<span id="task_header">Tasks (<span id="task_count"><?= $num_tasks; ?></span>)</span>
 <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
 <?php
 $od_sql = $task_sql . " AND dt.due_date < CURDATE();";
@@ -831,7 +831,7 @@ if(mysql_num_rows($od_q)>0){
 while($od_r = mysql_fetch_assoc($od_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
 <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
 <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
@@ -856,7 +856,7 @@ if(mysql_num_rows($tod_q)>0){
 while($od_r = mysql_fetch_assoc($tod_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
 <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
 <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
@@ -882,7 +882,7 @@ if(mysql_num_rows($tom_q)>0){
 while($od_r = mysql_fetch_assoc($tom_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
 <div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
-  <a href="manage_tasks.php?delid=<?= $od_r['id']; ?>" onclick="return confirm('Are you sure you want to delete this task?')" class="task_delete"></a>
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
 <input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />

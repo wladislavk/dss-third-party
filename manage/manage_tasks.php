@@ -5,6 +5,12 @@ include "includes/top.htm";
 if(isset($_GET['delid'])){
 $del_sql = "UPDATE dental_task SET status=2 WHERE id='".mysql_real_escape_string($_GET['delid'])."'";
 mysql_query($del_sql);
+?>
+<script type="text/javascript">
+  window.location = "manage_tasks.php";
+</script>
+<?php
+die();
 }
 
 $sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
@@ -103,9 +109,11 @@ $my = mysql_query($sql);
 	}?>
 </table>
 <?php
-$sql = "select dt.*, du.name from dental_task dt
+$sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid
-   WHERE dt.status = '1' 
+	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+   WHERE dt.status = '1' AND
+        (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')
   ORDER BY due_date DESC";
 
 $my=mysql_query($sql) or die(mysql_error());
@@ -144,6 +152,9 @@ $my=mysql_query($sql) or die(mysql_error());
                         <tr class="<?=$tr_class;?> ">
                                 <td valign="top">
                                         <?=st($myarray["task"]);?>&nbsp;
+                                        <?php if($myarray['firstname']!='' && $myarray['lastname']!=''){
+                                                echo ' (<a href="add_patient.php?ed='.$myarray['patientid'].'&preview=1&addtopat=1&pid='.$myarray['patientid'].'">'.$myarray['firstname'].' '. $myarray['lastname'].'</a>)';
+                                        } ?>
                                 </td>
                                 <td valign="top">
                                         <?= date('m/d/Y', strtotime($myarray["due_date"]));?>&nbsp;

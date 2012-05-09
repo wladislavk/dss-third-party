@@ -21,7 +21,9 @@ if($_POST["taskadd"] == 1){
 		$msg = "Task Added!";
 	?>
                 <script type="text/javascript">
-                        parent.window.location='manage_tasks.php?msg=<?=$msg;?>';
+                        loc = parent.window.location.href;
+                        loc = loc.replace("#","");
+                        parent.window.location = loc;
                 </script>
 
 	<?php
@@ -41,7 +43,9 @@ if($_POST["taskadd"] == 1){
                 $msg = "Task Added!";
         ?>
                 <script type="text/javascript">
-                        parent.window.location='manage_tasks.php?msg=<?=$msg;?>';
+			loc = parent.window.location.href;
+			loc = loc.replace("#","");
+			parent.window.location = loc;
                 </script>
 
         <?php

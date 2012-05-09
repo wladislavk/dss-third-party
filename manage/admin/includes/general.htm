@@ -208,7 +208,7 @@ class MDReferralFilter {
 
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $stepid = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
-  if((!$topatient && !$md_referral_list && !$md_list) || (!$md_referral_list && !$md_list && $templateid==16)){
+  if((!$topatient && !$md_referral_list && !$md_list) || (!$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
 	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);

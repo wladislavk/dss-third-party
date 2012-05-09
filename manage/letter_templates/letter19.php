@@ -32,7 +32,9 @@ $template = "
 	</tr>
 </table>
 
-<p>Dear Dr. %contact_lastname%:</p>
+<p>Dear %contact_salutation% %contact_lastname%:</p>
+  
+%patprogress%
 
 <p>I write regarding our mutual Patient, %patient_fullname%.  As you recall, %patient_firstname% is a %patient_age% year old %patient_gender% who scored an AHI of %ahi% and/or RDI of %1stRDI% after undergoing a %type_study% done at the %1st_sleeplab_name%.   %He/She% spent %1stTO290% % of the night below 90% sp O2, and had an O2 nadir of %1stLowO2%.</p>
 

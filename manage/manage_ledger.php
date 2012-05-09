@@ -57,17 +57,20 @@ if($_REQUEST["delid"] != "")
 }
 if($_REQUEST["delclaimid"] != "")
 {
-
-        $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
-        if(mysql_query($del_sql)){
+	$sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
+	$q = mysql_query($sql);
+	if(mysql_num_rows($q)>0){
+         $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
+         if(mysql_query($del_sql)){
 
 	  $up_sql = "UPDATE dental_ledger set primary_claim_id=NULL, status='".DSS_TRXN_NA."' WHERE primary_claim_id='".$_REQUEST["delclaimid"]."'";
           mysql_query($up_sql);
 
           $msg= "Deleted Successfully";
-        }else{
+         }else{
           $msg = "Error deleting.";
-        }
+         }
+	}
         ?>
         <script type="text/javascript">
                 //alert("Deleted Successfully");
@@ -79,6 +82,7 @@ if($_REQUEST["delclaimid"] != "")
         </script>
         <?
         die();
+	
 }
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);

@@ -37,12 +37,48 @@ function claim_errors( $pid ){
     array_push($errors, "Missing transaction code E0486");
   }
 
+
+$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+
+  $result = mysql_query($sleepstudies);
+  $num = mysql_num_rows($result);
+  if( $num <= 0 ){
+    array_push($errors, "Missing completed sleep lab - Flow sheet");
+  } 
+
+
+$p_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$pid."';";
+$p_q = mysql_query($p_sql);
+$p = mysql_fetch_assoc($p_q);
+if($p['p_m_ins_type']==1){
+
+$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+
+  $result = mysql_query($sleepstudies);
+  $num = mysql_num_rows($result);
+  if( $num <= 0 ){
+    array_push($errors, "Flowsheet - Sleep Study: Diagnosing Phys. and Diagnosing NPI# are required for Medicare claims.");
+  }
+}
+
+
+/*
 $sql = "SELECT * FROM dental_summ_sleeplab p WHERE p.patiendid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing sleep lab");
   }
+*/
 /*  $sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);

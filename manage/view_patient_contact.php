@@ -53,7 +53,7 @@ mysql_query($psql);
   mysql_query($d);
   ?>
   <script type="text/javascript">
-        window.location = "manage_patient_contacts.php";
+        parent.window.location = "manage_patient_contacts.php";
   </script>
   <?php
 
@@ -113,12 +113,23 @@ mysql_query($psql);
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;">
+	<script type="text/javascript">
+		function validate(){
+		  returnval = true;
+		  if($('#contacttypeid').val()==''){
+		    alert('Contact type is a required field.');
+		    returnval = false;
+		  }
+
+		  return returnval;
+		}
+	</script>
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onsubmit="return validate()">
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">
-		Add Insurance Company
+		Add Physician Contact 
             </td>
         </tr>
         <tr>
@@ -133,7 +144,7 @@ mysql_query($psql);
                         	<span>
                             	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
                                 	<option value=""></option>
-                                    <option value="Dr." <? if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
+                                    <option value="Dr." <? if($salutation == 'Dr.' || $salutation=='') echo " selected";?>>Dr.</option>
                                     <option value="Mr." <? if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                     <option value="Mrs." <? if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
                                     <option value="Miss." <? if($salutation == 'Miss.') echo " selected";?>>Miss.</option>

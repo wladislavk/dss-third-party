@@ -78,6 +78,8 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
 
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
+  $field_17a = $diagnosising_doc;
+  $field_17b = $diagnosising_npi;
 
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 if ($dent_rows <= 0) {

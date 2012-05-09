@@ -44,7 +44,7 @@ mysql_query($psql);
   mysql_query($d);
   ?>
   <script type="text/javascript">
-        window.location = "manage_patient_insurance.php";
+        parent.window.location = "manage_patient_insurance.php";
   </script>
 	<?php	
 }

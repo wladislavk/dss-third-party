@@ -334,6 +334,13 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
   $d = mysql_fetch_assoc($result);
   $diagnosising_doc = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
+if($insurancetype!=1){
+  $diagnosising_doc = '';
+  $diagnosising_npi = '';
+$field_17a = '';
+$field_17b = '';
+
+}
 
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.

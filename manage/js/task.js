@@ -13,6 +13,7 @@ $('.task_status').click(function(){
 							$('.task_'+t).remove();
                                                         x.appendTo('#completed_tasks');
 							$('#task_count').html($('#task_count').html()-1);
+							clean_task_menu();
                                                 }
                                         },
                                         failure: function(data){
@@ -52,5 +53,25 @@ function delete_task(id){
                                         }
                                   });
 
+	clean_task_menu();
   }
+}
+
+
+function clean_task_menu(){
+
+if($('#task_od_list li').size()==0){
+  $('#task_od_header').hide();
+}
+
+if($('#task_tod_list li').size()==0){
+  $('#task_tod_header').hide();
+}
+
+if($('#task_tom_list li').size()==0){
+  $('#task_tom_header').hide();
+}
+
+
+
 }

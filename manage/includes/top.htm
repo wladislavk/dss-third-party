@@ -811,7 +811,7 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
    WHERE (dt.status = '0' OR
         dt.status IS NULL) AND
         (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')";
-$task_q = mysql_query($task_sql." AND dt.due_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
+$task_q = mysql_query($task_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
 $num_tasks = mysql_num_rows($task_q);
 ?>
  <div id="task_menu" style="margin-top:8px;float:right">
@@ -825,8 +825,8 @@ $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);"
 $od_q = mysql_query($od_sql);
 if(mysql_num_rows($od_q)>0){
 ?>
-<h4>Overdue</h4>
-<ul>
+<h4 id="task_od_header">Overdue</h4>
+<ul id="task_od_list">
 <?php
 while($od_r = mysql_fetch_assoc($od_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
@@ -850,8 +850,8 @@ while($od_r = mysql_fetch_assoc($od_q)){
 $tod_q = mysql_query($tod_sql);
 if(mysql_num_rows($tod_q)>0){
 ?>
-<h4>Today</h4>
-<ul>
+<h4 id="task_tod_header">Today</h4>
+<ul id="task_tod_list">
 <?php
 while($od_r = mysql_fetch_assoc($tod_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
@@ -876,8 +876,8 @@ while($od_r = mysql_fetch_assoc($tod_q)){
 $tom_q = mysql_query($tom_sql);
 if(mysql_num_rows($tom_q)>0){
 ?>
-<h4>Tomorrow</h4>
-<ul>
+<h4 id="task_tom_header">Tomorrow</h4>
+<ul id="task_tom_list">
 <?php
 while($od_r = mysql_fetch_assoc($tom_q)){
 ?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
@@ -898,7 +898,6 @@ while($od_r = mysql_fetch_assoc($tom_q)){
 <?php } ?>
 <?php
 if(mysql_num_rows($od_q)==0 && mysql_num_rows($tod_q) == 0 && mysql_num_rows($tom_q) == 0){
-?>No Tasks<br /><?php
 }
 ?>
 <br />

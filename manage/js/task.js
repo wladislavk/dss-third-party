@@ -46,6 +46,7 @@ function delete_task(id){
                                                 }else{
                                                         $('.task_'+id).remove();
 							$('#task_count').html($('#task_count').html()-1);
+							clean_task_menu();
                                                 }
                                         },
                                         failure: function(data){
@@ -53,7 +54,6 @@ function delete_task(id){
                                         }
                                   });
 
-	clean_task_menu();
   }
 }
 

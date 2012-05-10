@@ -10,10 +10,11 @@
                                 var listSize = $('#'+hint+' ul li').size();
                                 var val = $(this).val();
 				var lowerVal = val.toLowerCase();
-				var trimVal = lowerVal.trim();
+				//var trimVal = lowerVal.trim();
+				var trimVal = $.trim(lowerVal);
        				if(trimVal.indexOf('dr. ')==0 || trimVal.indexOf('dr ')==0){ val = val.substr(val.indexOf(' ', lowerVal.indexOf('Dr'))); }
                                 var stringSize = val.length;
-                                if (val.trim() == "") {
+                                if ($.trim(val) == "") {
                                         $('#'+hint).css('display', 'none');
                                 } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || (val == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
                                         $('#'+hint).css("display", "inline");
@@ -48,9 +49,10 @@
 						.clone(true)
 						.removeClass('template')
 						.addClass('json_patient')
+						.addClass('cur_ref')
 						.data('rowid', data[i].id)
 						.data('rowsource', data[i].id)
-						.attr("onclick", "update_referredby('"+data[i].id+"', '"+hint+"', '"+cid+"', '"+name+"')");
+						.data('rowname', name);
                                         template_list_ref(newLi, name, data[i].add1+" "+data[i].add2+" "+data[i].city+" "+data[i].state+" "+data[i].zip+" - "+data[i].phone)
                                               .appendTo('#'+hint+' ul')
                                             .fadeIn();
@@ -60,11 +62,19 @@
                                                 .clone(true)
                                                 .removeClass('template')
                                                 .addClass('json_patient')
-						.addClass('contact_add')
-                                                .attr("onclick", "show_referredby('"+cid+"', '"+partial_name+"')");
+						.addClass('contact_add');
                                         template_list_ref(newLi, "Don't see your doctor? Click here.", '')
                                               .appendTo('#'+hint+' ul')
                                             .fadeIn();
+
+				$('.cur_ref').click(function(){
+					id = $(this).data('rowid');
+					name = $(this).data('rowname');
+					update_referredby(id, hint, cid, name);
+				});
+				$('.contact_add').click(function(){
+                                        show_referredby(cid, partial_name);
+                                });
 
                 },
 
@@ -78,6 +88,8 @@
                 li.html(val+"<span>"+val2+"</span>");
                 return li;
         }
+
+
 function show_referredby(cid, n){
   $('#pc_'+cid+'_input_div').show();
   $('#pc_'+cid+'_person').hide();

@@ -15,6 +15,7 @@ include "includes/general_functions.php";
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 </head>
 <body>
 
@@ -100,7 +101,7 @@ mysql_query($psql);
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;">
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onSubmit="return patinsabc(this)">
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>

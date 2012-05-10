@@ -1176,7 +1176,6 @@ function remove_notification(id){
 				if($n>0){ ?>
 					<input type="button" class="button" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;" value="View edits" />
 				<? } ?>
-			<input type="submit" value=" <?=$but_text?> Patient" class="button" />
 			<?php 
 			if($doc_patient_portal && $use_patient_portal){
 			  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
@@ -1187,6 +1186,7 @@ function remove_notification(id){
 			<?php
 			  }	
 			} ?>
+                        <input type="submit" value=" <?=$but_text?> Patient" class="button" />
 		</td>
 	</tr>
         <tr>
@@ -1575,7 +1575,7 @@ $num_face = mysql_num_rows($itype_my);
 <style type="text/css">
 #referred_source div{ float:left; }
 </style>
-				<div style="float:left;" id="referred_source">
+				<div style="float:left;" id="referred_source_div">
 				
 				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
 				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>

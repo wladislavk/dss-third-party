@@ -21,6 +21,10 @@ $q = mysql_query($s);
 ?>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
+<![endif]-->
+
 <script type="text/javascript">
 
 function send_text(but){

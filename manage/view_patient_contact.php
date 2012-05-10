@@ -74,6 +74,17 @@ mysql_query($psql);
 <body width="98%"> */ ?>
 
     <?
+
+    $psql = "select * from dental_contacttype WHERE physician=1";
+    $pq = mysql_query($psql);
+    $physician_array = array();
+    while($pr = mysql_fetch_assoc($pq)){
+      array_push($physician_array, $pr['contacttypeid']);
+    }
+    $physician_types = implode(',', $physician_array);
+
+
+
     $thesql = "select * from dental_patient_contacts where id='".mysql_real_escape_string($_REQUEST["id"])."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
@@ -118,13 +129,13 @@ mysql_query($psql);
 		  returnval = true;
 		  if($('#contacttypeid').val()==''){
 		    alert('Contact type is a required field.');
-		    returnval = false;
+		    return false;
 		  }
-
 		  return returnval;
 		}
 	</script>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onsubmit="return validate()">
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" style="width:99%;" onsubmit="return patcontactabc(this)">
+<input type="hidden" id="physician_types" value="<?= $physician_types; ?>" />
     <input type="hidden" name="contact_type" value="<?= $_GET['ctype']; ?>" />
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>

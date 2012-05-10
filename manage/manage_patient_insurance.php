@@ -120,7 +120,7 @@ if(isset($_REQUEST['sortdir'])){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "SELECT pi.* FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid ";
+$sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid ";
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -170,6 +170,9 @@ $my=mysql_query($sql) or die(mysql_error());
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
                         <a href="manage_patient_insurance.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
                 </td>
+               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'addedby')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+                        <a href="manage_patient_insurance.php?sort=addedby&sortdir=<?php echo ($_REQUEST['sort']=='addedby'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Added By</a>
+                </td>
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
                         <a href="manage_patient_insurance.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Insurance</a>
                 </td>
@@ -205,6 +208,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
                                 <td valign="top">
 					<span class="phonemask"><?= st($myarray["phone"]); ?></span>
+                                </td>
+                                <td valign="top">
+                                        <?= st($myarray["patfirstname"]." ".$myarray["patlastname"]); ?>
                                 </td>
 				<td valign="top">
 					<a href="#" onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>

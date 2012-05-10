@@ -47,8 +47,8 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   $result = mysql_query($sleepstudies);
   $num = mysql_num_rows($result);
   if( $num <= 0 ){
-    array_push($errors, "Missing completed sleep lab - Flow sheet");
-  } 
+    array_push($errors, "Flow sheet - Missing completed sleep study");
+  }else{ 
 
 
 $p_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$pid."';";
@@ -69,7 +69,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
     array_push($errors, "Flowsheet - Sleep Study: Diagnosing Phys. and Diagnosing NPI# are required for Medicare claims.");
   }
 }
-
+}
 
 /*
 $sql = "SELECT * FROM dental_summ_sleeplab p WHERE p.patiendid=".$pid;

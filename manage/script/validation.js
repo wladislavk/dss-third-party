@@ -490,6 +490,138 @@ function required_info(fa) {
 	return errors;
 }
 
+function patinsabc(fa){
+        if(trim(fa.company.value) == "")
+        {
+                alert("Company is Required");
+                fa.company.focus();
+                return false;
+        }
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone or fax required");
+                fa.phone1.focus();
+                return false;
+        }
+}
+function patcontactabc(fa){
+  pt = $('#physician_types').val();
+  pta = pt.split(',');
+  if(fa.contacttypeid.value==''){
+    alert("Contact type is Required");
+    return false;
+  }
+
+if($.inArray(fa.contacttypeid.value, pta)!=-1){ //physician
+        if(trim(fa.salutation.value) == "" )
+        {
+                alert("Salutation is Required");
+                fa.salutation.focus();
+                return false;
+        }
+        if(trim(fa.firstname.value) == "" )
+        {
+                alert("First Name is Required");
+                fa.firstname.focus();
+                return false;
+        }
+        if(trim(fa.lastname.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.lastname.focus();
+                return false;
+        }
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+        if(trim(fa.phone2.value) == "" && trim(fa.phone1.value) == "" && trim(fa.fax.value)== "")
+        {
+                alert("Phone or fax required");
+                fa.phone1.focus();
+                return false;
+        }
+
+  }else if(fa.contacttypeid.value != ''){ //other
+        if((trim(fa.firstname.value) == "" || trim(fa.lastname.value) == "") && trim(fa.company.value) == "" )
+        {
+                alert("First Name, Last Name or Company is Required");
+                fa.lastname.focus();
+                return false;
+        }
+
+        if(trim(fa.add1.value) == "" )
+        {
+                alert("Address1 is Required");
+                fa.add1.focus();
+                return false;
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                alert("City is Required");
+                fa.city.focus();
+                return false;
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                alert("State is Required");
+                fa.state.focus();
+                return false;
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                alert("Zip is Required");
+                fa.zip.focus();
+                return false;
+        }
+
+
+  }
+}
 function contactabc(fa)
 {
   pt = $('#physician_types').val();

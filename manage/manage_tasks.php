@@ -73,11 +73,14 @@ $my = mysql_query($sql);
 			$type = '';
 			$due = strtotime(date('Y-m-d',strtotime($myarray['due_date'])));
 			$today = strtotime(date('Y-m-d'));
+			$tomorrow = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"))));
 			if($due < $today){
 			  $type = 'expired';
 			}elseif($due == $today){
                           $type = 'today';
-                        }
+                        }elseif($due == $tomorrow){
+			  $type = 'tomorrow';
+			}
 		?>
 			<tr class="<?=$type;?> task_<?= $myarray["id"]; ?>" id="task_<?= $myarray["id"]; ?>" >
 				<td class="status_col"><input type="checkbox" class="task_status" value="<?= $myarray["id"]; ?>" />
@@ -89,10 +92,12 @@ $my = mysql_query($sql);
 				</td>
 				<td class="due_date" valign="top">
 					<?php if($type=='expired'){ ?>
-						Over Due
+						Overdue
 					<?php }elseif($type=='today'){ ?>
 						Today
-					<?php }else{	?>	
+					<?php }elseif($type=='tomorrow'){ ?>
+                                                Tomorrow
+                                        <?php }else{	?>	
 					<?= date('m/d/Y', strtotime($myarray["due_date"]));?>&nbsp;
 					<?php } ?>
 				</td>

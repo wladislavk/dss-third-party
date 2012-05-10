@@ -1,5 +1,6 @@
 .expired .due_date { font-weight: bold; color:#900; }
 .today .due_date { font-weight: bold; color: #393; }
+.tomorrow .due_date { font-weight: bold; color: #00457C; }
 
 #task_menu ul { margin:0px; list-style: none; padding: 0px;}
 #task_menu ul li { margin-left:0px; }

@@ -1,3 +1,4 @@
+$(document).ready(function(){
 $('.task_status').click(function(){
   t = $(this).val();
                                   $.ajax({
@@ -75,3 +76,5 @@ if($('#task_tom_list li').size()==0){
 
 
 }
+
+});

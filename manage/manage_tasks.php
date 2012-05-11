@@ -17,9 +17,13 @@ $sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
 	JOIN dental_users du ON dt.responsibleid=du.userid
 	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
    WHERE (dt.status = '0' OR
-	dt.status IS NULL) AND
-	(du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')
-  ORDER BY due_date ASC";
+	dt.status IS NULL) AND ";
+if($_GET['mine']==1){ 
+  $sql .= " dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."' ";
+}else{
+  $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
+}
+$sql .= " ORDER BY due_date ASC";
 $my = mysql_query($sql);
 ?>
 
@@ -34,6 +38,12 @@ $my = mysql_query($sql);
 <br />
 &nbsp;
 <button onclick="loadPopup('add_task.php');" class="addButton" style="float:right; margin-right: 10px;">Add Task</button>
+<?php 
+if($_GET['mine']==1){ ?>
+  <button onclick="window.location='manage_tasks.php'" class="addButton" style="float:right; margin-right: 10px;">Show All</button>
+<?php }else{ ?>
+  <button onclick="window.location='manage_tasks.php?mine=1'" class="addButton" style="float:right; margin-right: 10px;">Assigned to me</button>
+<?php } ?>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -117,14 +127,39 @@ $my = mysql_query($sql);
 $sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid
 	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-   WHERE dt.status = '1' AND
-        (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')
-  ORDER BY due_date DESC";
+   WHERE dt.status = '1' AND ";
+if($_GET['mine']==1){
+  $sql .= " dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."' ";
+}else{
+  $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
+}
+$sql .= " ORDER BY due_date DESC";
 
+$rec_disp = 10;
+
+if($_REQUEST["page"] != "")
+        $index_val = $_REQUEST["page"];
+else
+        $index_val = 0;
+
+$i_val = $index_val * $rec_disp;
+
+$my = mysql_query($sql);
+$total_rec = mysql_num_rows($my);
+$no_pages = $total_rec/$rec_disp;
+
+$sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
+
 ?>
 <br />
 <span class="admin_head">Completed</span>
+<span style="float:right; margin-right:20px;">
+                        Pages:
+                        <?
+                                 paging($no_pages,$index_val,"");
+                        ?>
+</span>
 <table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">

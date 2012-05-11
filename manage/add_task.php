@@ -54,7 +54,9 @@ if($_POST["taskadd"] == 1){
 
 if(isset($_GET['id'])){
 
-$t_sql = "SELECT * from dental_task WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+$t_sql = "SELECT dt.*, p.firstname, p.lastname from dental_task dt 
+	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+WHERE dt.id='".mysql_real_escape_string($_GET['id'])."'";
 $t_q = mysql_query($t_sql);
 $task = mysql_fetch_assoc($t_q);
 
@@ -85,6 +87,10 @@ $task = mysql_fetch_assoc($t_q);
 			Add a task about <?= $pat['firstname'] . " " . $pat['lastname']; ?>
 		<?php }else{ ?>
                 	Tasks
+			<?php if($task['firstname']!='' || $task['lastname']!=''){
+					echo "(".$task['firstname']." ".$task['lastname'].")";
+				}
+			?>
 		<?php } ?>
             </td>
         </tr>

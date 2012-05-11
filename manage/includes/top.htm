@@ -814,7 +814,7 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
 $task_q = mysql_query($task_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
 $num_tasks = mysql_num_rows($task_q);
 ?>
- <div id="task_menu" style="margin-top:8px;float:right">
+ <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
 <span id="task_header">Tasks (<span id="task_count"><?= $num_tasks; ?></span>)</span>
 <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
 <?php
@@ -825,7 +825,7 @@ $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);"
 $od_q = mysql_query($od_sql);
 if(mysql_num_rows($od_q)>0){
 ?>
-<h4 id="task_od_header">Overdue</h4>
+<h4 id="task_od_header" class="task_od_header">Overdue</h4>
 <ul id="task_od_list">
 <?php
 while($od_r = mysql_fetch_assoc($od_q)){
@@ -850,7 +850,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
 $tod_q = mysql_query($tod_sql);
 if(mysql_num_rows($tod_q)>0){
 ?>
-<h4 id="task_tod_header">Today</h4>
+<h4 id="task_tod_header" class="task_tod_header">Today</h4>
 <ul id="task_tod_list">
 <?php
 while($od_r = mysql_fetch_assoc($tod_q)){
@@ -876,7 +876,7 @@ while($od_r = mysql_fetch_assoc($tod_q)){
 $tom_q = mysql_query($tom_sql);
 if(mysql_num_rows($tom_q)>0){
 ?>
-<h4 id="task_tom_header">Tomorrow</h4>
+<h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
 <ul id="task_tom_list">
 <?php
 while($od_r = mysql_fetch_assoc($tom_q)){
@@ -952,7 +952,153 @@ if(mysql_num_rows($od_q)==0 && mysql_num_rows($tod_q) == 0 && mysql_num_rows($to
     <div id="patient_name_div" <?= (strlen($thename)>20)?'style="font-size:14px"':''; ?>><?= $thename; ?>
 		<?php if($premed == 1){
                     echo "<font style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*PM</font>";
-                    } ?></div>
+                    } ?>
+
+<?php
+$t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+        JOIN dental_users du ON dt.responsibleid=du.userid
+        LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+   WHERE (dt.status = '0' OR
+        dt.status IS NULL) AND
+        (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') AND
+ 	dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$t_q = mysql_query($t_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
+$num_pat_tasks = mysql_num_rows($t_q);
+?>
+<div class="task_menu" id="pat_task_menu" style="float:right; margin-right:10px;">
+<span id="pat_task_header" style="font-size:14px; font-weight:normal">Tasks(<?= $num_pat_tasks; ?>)</span>
+<?php
+$od_sql = $t_sql . " AND dt.due_date < CURDATE();";
+$tod_sql = $t_sql . " AND dt.due_date = CURDATE();";
+$tom_sql = $t_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+?>
+<div class="task_list" id="pat_task_list" style="display:none;">
+<?php
+$od_q = mysql_query($od_sql);
+if(mysql_num_rows($od_q)>0){
+?>
+<h4 id="pat_task_od_header" class="task_od_header">Overdue</h4>
+<ul id="pat_task_od_list">
+<?php
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+
+<?php
+$od_q = mysql_query($tod_sql);
+if(mysql_num_rows($od_q)>0){
+?>
+<h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
+<ul id="pat_task_tod_list">
+<?php
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+
+<?php
+$od_q = mysql_query($tom_sql);
+if(mysql_num_rows($od_q)>0){
+?>
+<h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
+<ul id="pat_task_tom_list">
+<?php
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+
+
+
+</div>
+</div>
+<?php
+/*
+$task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+        JOIN dental_users du ON dt.responsibleid=du.userid
+        LEFT JOIN dental_patients p ON p.patientid=dt.patientid
+   WHERE (dt.status = '0' OR
+        dt.status IS NULL) AND
+        (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."')";
+$task_q = mysql_query($task_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
+$num_tasks = mysql_num_rows($task_q);
+?>
+ <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
+<span id="task_header">Tasks (<span id="task_count"><?= $num_tasks; ?></span>)</span>
+<div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
+<?php
+$od_sql = $task_sql . " AND dt.due_date < CURDATE();";
+$tod_sql = $task_sql . " AND dt.due_date = CURDATE();";
+$tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+
+$od_q = mysql_query($od_sql);
+if(mysql_num_rows($od_q)>0){
+?>
+<h4 id="task_od_header" class="task_od_header">Overdue</h4>
+<ul id="task_od_list">
+<?php
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+
+*/
+?>
+
+
+
+
+
+
+
+
+
+</div>
   <?php } ?>
 
 <div class="suckertreemenu">

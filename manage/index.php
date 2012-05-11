@@ -78,12 +78,12 @@ echo $memo_array['memo'] . "<br /><hr />";
   </tr>
   </table>
   <br /> 
-
-  <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
   <?php if($num_rejected_preauth>0){ ?>
   <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
   <?php } ?>
+
+  <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
 <!--
   <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
   <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>
@@ -253,6 +253,93 @@ while($ddlistpname2 = (mysql_fetch_array($myddlist2))){
 </FORM>
 
 -->
+
+<div class="task_menu index_task">
+<h3>Tasks</h3>
+
+<?php
+$od_q = mysql_query($od_sql);
+if(mysql_num_rows($od_q)>0){
+?>
+
+<h4 style="margin-bottom:0px;" class="task_od_header">Overdue</h4>
+<ul class="task_od_list">
+<?php
+while($od_r = mysql_fetch_assoc($od_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php
+}
+?>
+</ul>
+<?php
+}
+
+$tod_q = mysql_query($tod_sql);
+if(mysql_num_rows($tod_q)>0){
+?>
+
+
+<h4 style="margin-bottom:0px;" class="task_tod_header">Today</h4>
+<ul class="task_tod_list">
+<?php
+while($od_r = mysql_fetch_assoc($tod_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php
+
+}
+?>
+</ul>
+<?php
+}
+
+$tom_q = mysql_query($tom_sql);
+if(mysql_num_rows($tom_q)>0){
+?>
+<h4 style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
+<ul class="task_tom_list">
+<?php
+while($od_r = mysql_fetch_assoc($tom_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
+<?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?>
+</li>
+<?php
+}
+?>
+</ul>
+<?php } ?>
+<br />
+<a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
+
+</div>
+
 
 
 <div style="margin-top:25px;  width:100%;">&nbsp;</div> 

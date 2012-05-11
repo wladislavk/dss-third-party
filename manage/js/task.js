@@ -25,12 +25,20 @@ $('.task_status').click(function(){
 
   $('.task_item').mouseenter(function(){
         var v = $(this).find('.task_status').val();
-        $('#task_extra_'+v).show();
+        $(this).find('.task_extra').show();
 
   });
   $('.task_item').mouseleave(function(){
         var v = $(this).find('.task_extra').hide();
   });
+
+  $('#pat_task_header').mouseover(function(){
+    $('#pat_task_list').show();
+  });
+
+  $('#pat_task_menu').mouseleave(function(){
+    $('#pat_task_list').hide();
+  })
 
 
 function delete_task(id){
@@ -62,18 +70,29 @@ function delete_task(id){
 function clean_task_menu(){
 
 if($('#task_od_list li').size()==0){
-  $('#task_od_header').hide();
+  $('.task_od_header').hide();
 }
 
 if($('#task_tod_list li').size()==0){
-  $('#task_tod_header').hide();
+  $('.task_tod_header').hide();
 }
 
 if($('#task_tom_list li').size()==0){
-  $('#task_tom_header').hide();
+  $('.task_tom_header').hide();
 }
 
 
+if($('#pat_task_od_list li').size()==0){
+  $('#pat_task_od_header').hide();
+}
+
+if($('#pat_task_tod_list li').size()==0){
+  $('#pat_task_tod_header').hide();
+}
+
+if($('#pat_task_tom_list li').size()==0){
+  $('#pat_task_tom_header').hide();
+}
 
 }
 

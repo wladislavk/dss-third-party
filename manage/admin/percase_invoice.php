@@ -16,14 +16,16 @@ if(isset($_POST['submit'])){
     $invoiceid = mysql_insert_id();
   while($case = mysql_fetch_assoc($case_q)){
     $id = $case['ledgerid'];
-    $up_sql = "UPDATE dental_ledger SET " .
-      " percase_date = '".$_POST['service_date_'.$id]."', " .
-      " percase_name = '".$_POST['name_'.$id]."', " .
-      " percase_amount = '".$_POST['amount_'.$id]."', " .
-      " percase_status = '".DSS_PERCASE_INVOICED."', " .
-      " percase_invoice = '".$invoiceid."' " .
-      " WHERE ledgerid = '".$id."'";
-    mysql_query($up_sql);
+    if(isset($_POST['service_date_'.$id])){
+      $up_sql = "UPDATE dental_ledger SET " .
+        " percase_date = '".$_POST['service_date_'.$id]."', " .
+        " percase_name = '".$_POST['name_'.$id]."', " .
+        " percase_amount = '".$_POST['amount_'.$id]."', " .
+        " percase_status = '".DSS_PERCASE_INVOICED."', " .
+        " percase_invoice = '".$invoiceid."' " .
+        " WHERE ledgerid = '".$id."'";
+      mysql_query($up_sql);
+    }
   }
   ?>
   <script type="text/javascript">
@@ -61,6 +63,8 @@ if(isset($_POST['submit'])){
 		<td valign="top" class="col_head" width="20%">
 			Amount		
 		</td>
+		<td valign="top" class="col_head" width="5%">
+		</td>
 	</tr>
 	<? if(mysql_num_rows($case_q) == 0)
 	{ ?>
@@ -76,7 +80,7 @@ if(isset($_POST['submit'])){
 		while($case = mysql_fetch_array($case_q))
 		{
 		?>
-			<tr>
+			<tr id="case_row_<?= $case['ledgerid'] ?>">
 				<td valign="top">
 					<input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" />
 				</td>
@@ -85,6 +89,9 @@ if(isset($_POST['submit'])){
 				</td>
 				<td valign="top">
          				    $<input type="text" class="amount" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
+				</td>
+				<td valign="top">
+					<a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove()">Remove</a>
 				</td>
 			</tr>
 	<? 	}
@@ -95,6 +102,7 @@ if(isset($_POST['submit'])){
 			</td>
 			<td valign="top" class="col_head" colspan="2">
 				<input type="submit" name="submit" value=" Create " class="button" />
+				<a href="manage_percase_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
 			</td>
 		</tr>
 		<?

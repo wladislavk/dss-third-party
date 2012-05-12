@@ -10,8 +10,13 @@ $case_sql = "SELECT * FROM dental_ledger dl
 ";
 $case_q = mysql_query($case_sql);
 if(isset($_POST['submit'])){
-    $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
+    if(isset($_POST['amount_monthly'])){
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', CURDATE(), '".mysql_real_escape_string($_POST['amount_monthly'])."')";
+    }else{
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
                 " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
+    }
     mysql_query($in_sql);
     $invoiceid = mysql_insert_id();
   while($case = mysql_fetch_assoc($case_q)){
@@ -77,6 +82,22 @@ if(isset($_POST['submit'])){
 	}
 	else
 	{
+?>
+                        <tr id="month_row">
+                                <td valign="top">
+                                        MONTHLY FEE 
+                                </td>
+                                <td valign="top">
+                                        <?=date('m/d/Y');?>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="amount_monthly" value="695.00" />
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#month_row').remove()">Remove</a>
+                                </td>
+                        </tr>
+<?php
 		while($case = mysql_fetch_array($case_q))
 		{
 		?>

@@ -12,7 +12,7 @@ $case_q = mysql_query($case_sql);
 if(isset($_POST['submit'])){
     if(isset($_POST['amount_monthly'])){
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', CURDATE(), '".mysql_real_escape_string($_POST['amount_monthly'])."')";
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
     }else{
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
                 " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
@@ -88,7 +88,7 @@ if(isset($_POST['submit'])){
                                         MONTHLY FEE 
                                 </td>
                                 <td valign="top">
-                                        <?=date('m/d/Y');?>
+                                        <input type="text" name="monthly_date" value="<?=date('m/d/Y');?>" />
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="amount_monthly" value="695.00" />

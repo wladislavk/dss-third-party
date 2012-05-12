@@ -271,11 +271,12 @@ while($od_r = mysql_fetch_assoc($od_q)){
   <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
-<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-<?php echo $od_r['task']; ?>
+<input type="checkbox" style="float:left; " class="task_status" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
 <?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
   echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
 } ?>
+</div>
 </li>
 <?php
 }
@@ -298,11 +299,11 @@ while($od_r = mysql_fetch_assoc($tod_q)){
   <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
-<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-<?php echo $od_r['task']; ?>
+<input type="checkbox" style="float:left;" class="task_status" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
 <?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
   echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-} ?>
+} ?></div>
 </li>
 <?php
 
@@ -324,18 +325,18 @@ while($od_r = mysql_fetch_assoc($tom_q)){
   <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
   <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
 </div>
-<input type="checkbox" class="task_status" value="<?= $od_r['id']; ?>" />
-<?php echo $od_r['task']; ?>
+<input type="checkbox" style="float:left;" class="task_status" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
 <?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
   echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-} ?>
+} ?></div>
 </li>
 <?php
 }
 ?>
 </ul>
 <?php } ?>
-<br />
+<br /><br />
 <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
 
 </div>

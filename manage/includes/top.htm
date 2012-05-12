@@ -964,6 +964,7 @@ $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
  	dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $t_q = mysql_query($t_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
 $num_pat_tasks = mysql_num_rows($t_q);
+if($num_pat_tasks > 0){
 ?>
 <div class="task_menu" id="pat_task_menu" style="float:right; margin-right:10px;">
 <span id="pat_task_header" style="font-size:14px; font-weight:normal">Tasks(<?= $num_pat_tasks; ?>)</span>
@@ -1088,6 +1089,8 @@ while($od_r = mysql_fetch_assoc($od_q)){
 </li>
 
 */
+
+}
 ?>
 
 
@@ -1099,7 +1102,8 @@ while($od_r = mysql_fetch_assoc($od_q)){
 
 
 </div>
-  <?php } ?>
+  <?php } 
+?>
 
 <div class="suckertreemenu">
 <ul id="treemenu1" style="padding-top:3px;">

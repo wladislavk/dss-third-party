@@ -142,7 +142,8 @@ $i_val = $index_val * $rec_disp;
 $sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
 	p.firstname as patfirstname, p.lastname as patlastname
 	FROM dental_patient_contacts pc 
-	INNER JOIN dental_patients p ON pc.patientid=p.patientid ";
+	INNER JOIN dental_patients p ON pc.patientid=p.patientid
+	WHERE p.docid='".$_SESSION['docid']."' ";
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);

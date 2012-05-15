@@ -272,6 +272,11 @@ include 'includes/header.php';
 		</div>
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>10.</strong> Do you have medical insurance?</label>
+			<?php
+			  if($p['has_p_m_ins']=='' && $p['p_m_ins_co']!=''){
+			    $p['has_p_m_ins'] = "Yes";
+			  }
+			?>
                         <input class="validate" onclick="updateNext('Yes', 1);" type="radio" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes
                         <input onclick="updateNext('No', 1);" type="radio" id="has_p_m_ins_no" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
                 </div>
@@ -301,7 +306,7 @@ include 'includes/header.php';
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>1.</strong> Do you have Medicare?</label>
 				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
-				<input type="radio" name="p_m_ins_type" class="validate" value="" <?= ($p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
+				<input type="radio" name="p_m_ins_type" class="validate" value="7" <?= ($p['p_m_ins_type'] != 'Select Type' && $p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
                 </div>
                 <div class="sepH_b">
                         <label id='p_m_ins_description' class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your <?= ($p['p_m_ins_type'] == '1')?'MEDICARE ':'';?>insurance card.</label>

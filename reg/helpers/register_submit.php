@@ -9,7 +9,11 @@
         $dob = ($_POST['dob_month'] != '' && $_POST['dob_day'] != '' && $_POST['dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['dob_month'],$_POST['dob_day'],$_POST['dob_year'])):'';
         $ins_dob = ($_POST['ins_dob_month'] != '' && $_POST['ins_dob_day'] != '' && $_POST['ins_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins_dob_month'],$_POST['ins_dob_day'],$_POST['ins_dob_year'])):'';
         $ins2_dob = ($_POST['ins2_dob_month'] != '' && $_POST['ins2_dob_day'] != '' && $_POST['ins2_dob_year'] != '')?date('m/d/Y', mktime(0,0,0,$_POST['ins2_dob_month'],$_POST['ins2_dob_day'],$_POST['ins2_dob_year'])):'';
-	$p_m_ins_type = ($_POST['p_m_ins_type']==1)?$_POST['p_m_ins_type']:'7';
+	if($_POST['p_m_ins_type']!=''){
+	  $p_m_ins_type = ($_POST['p_m_ins_type']==1)?$_POST['p_m_ins_type']:'7';
+	}else{
+	  $p_m_ins_type = '';
+	}
         if($chkc == 0){
         $sql = "INSERT INTO dental_patients set
                 firstname = '".mysql_real_escape_string($_POST['firstname'])."',
@@ -42,8 +46,11 @@
                 p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_co'])."',
                 p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
                 p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
-                p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',
-                p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."',
+                p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',";
+                if($p_m_ins_type!=''){
+			$sql .= " p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."', ";
+		}
+		$sql .= "
                 p_m_ins_ass = '".mysql_real_escape_string($_POST['p_m_ins_ass'])."',
 		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
                 has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
@@ -55,8 +62,11 @@
                 s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_co'])."',
                 s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
                 s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
-                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',
-                s_m_ins_type = '7', 
+                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',";
+                if($_POST['has_s_m_ins']=="Yes"){
+                        $sql .= " s_m_ins_type = '7', ";
+                }
+                $sql .= "
                 s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
                 employer = '".mysql_real_escape_string($_POST['employer'])."',
                 emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
@@ -121,8 +131,11 @@
                 s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_co'])."',
                 s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
                 s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
-                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',
-                s_m_ins_type = '7',
+                s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',";
+		if($_POST['has_s_m_ins']=="Yes"){
+                	$sql .= " s_m_ins_type = '7', ";
+		}
+		$sql .= "
                 s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
                 employer = '".mysql_real_escape_string($_POST['employer'])."',
                 emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',

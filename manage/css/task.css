@@ -7,9 +7,11 @@
 .task_list { border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px; text-align:left; font-size:12px;}
 .task_menu h4 { margin-bottom:0px; }
 
+.task_item { height: 20px; }
+.task_item input {margin-left:10px}
 .task_delete { display:block; width:10px; height:10px; background: url(../images/delete.png) no-repeat 0 0; float:left; margin-right:4px; margin-top:1px;}
 .task_edit { margin:0 10px 0 5px; }
 .task_extra { position:absolute; background:#fff; float:left; padding:3px; display:none;}
-.task_extra{  margin-left:-55px;}
+.task_extra{  margin-left:-50px;}
 
 .index_task { width: 200px; padding: 0 5px 10px 5px; border:solid 1px #999; margin:20px auto 0 auto;-moz-border-radius: 5px;border-radius: 5px;}

@@ -262,7 +262,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= $myarray['patfirstname']." ".$myarray['patlastname']; ?>	
 				</td>
 				<td valign="top">
-					<a href="#" <?= (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?> (click to view)</a>
+					<a href="#" <?= (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?> <?= (count($sim)>0)?'(click to view)':'';?></a>
 				</td>
 				<td valign="top">
 					<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">

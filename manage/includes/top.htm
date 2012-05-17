@@ -1201,9 +1201,9 @@ while($od_r = mysql_fetch_assoc($od_q)){
                                 $n = mysql_num_rows($q);
                                 $pat = mysql_fetch_assoc($q);
                                 if($n>0){ ?>
-<div class="warning">
-<span>Warning! Patient has updated their profile via the online patient portal, and you have not yet accepted these changes. Please view patient changes via Patient Info -> View Edits button now.</span>
-</div>
+<a class="warning" href="#" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;">
+<span>Warning! Patient has updated their profile via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+</a>
 
                                 <? } 
 

@@ -11,10 +11,10 @@ $s2 = "SELECT * FROM dental_contact WHERE " .
                 "((firstname = '".$r['firstname']."' AND " .
                 "lastname = '".$r['lastname']."') " .
         " OR " .
-                "(add1 = '".$r['address1']."' AND " .
-                "city = '".$r['city']."' AND " .
-                "state = '".$r['state']."' AND " .
-                "zip = '".$r['zip']."')) ";
+                "(add1 = '".$r['address1']."' AND add1!='' AND " .
+                "city = '".$r['city']."' AND city!='' AND " .
+                "state = '".$r['state']."' AND state!='' AND " .
+                "zip = '".$r['zip']."' AND zip!='')) ";
 
 
 
@@ -72,10 +72,10 @@ $s2 = "SELECT * FROM dental_contact WHERE " .
 		"contacttypeid =  '11' AND " .
                 "(company LIKE '%".$r['company']."%' " .
         " OR " .
-                "(add1 = '".$r['address1']."' AND " .
-                "city = '".$r['city']."' AND " .
-                "state = '".$r['state']."' AND " .
-                "zip = '".$r['zip']."')) ";
+                "(add1 = '".$r['address1']."' AND add1!='' AND " .
+                "city = '".$r['city']."' AND city!='' AND " .
+                "state = '".$r['state']."' AND state!='' AND " .
+                "zip = '".$r['zip']."' AND zip!='')) ";
 
 $q2 = mysql_query($s2);
 $docs = array();

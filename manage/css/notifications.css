@@ -1,5 +1,6 @@
 .warning{
 	padding:10px;
+	display:block;
 	width: 500px;
 	margin:0 auto;
 	background:#f46;
@@ -7,6 +8,11 @@
 	color:#000;
 	font-weight:bold;
 	font-size: 12px;
+	}
+a.warning:hover{
+	color:#000;
+	text-decoration:none;
+	background:#e35;
 	}
 .warning a.close_but{
 	float:right;

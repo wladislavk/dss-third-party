@@ -557,6 +557,9 @@ switch ($templateid) {
 	case 25:
 		require_once("letter_templates/letter25.php");
 		break;
+        case 99:
+                require_once("letter_templates/letter99.php");
+                break;
 }
 
 if (!empty($altered_template)) $template = html_entity_decode($altered_template);

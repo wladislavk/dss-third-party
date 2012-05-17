@@ -406,6 +406,22 @@ function trigger_letter25($pid, $topatient, $md_referral_list, $md_list, $send_m
 	}
 }
 
+function trigger_letter99($pid, $topatient, $md_referral_list, $md_list, $send_method) {
+        $letterid = '99';
+        $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method);
+        if (!is_numeric($letter)) {
+                print "Can't send letter 99: " . $letter;
+                die();
+        } else {
+                ?>
+                <script type="text/javascript">
+                        parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';                
+                </script>
+                <?php
+                die();
+        }
+}
+
 if (isset($_POST['submit'])) {
 	$templateid = $_POST['template'];
 	$patientid = $_POST['patient'];
@@ -498,6 +514,10 @@ if (isset($_POST['submit'])) {
 		case 25:
 			trigger_letter25($patientid, $topatient, $md_referral_list, $md_list, $send_method);
 			break;
+                case 99:
+                        trigger_letter99($patientid, $topatient, $md_referral_list, $md_list, $send_method);
+                        break;
+
 		default:
 			break;
 	}
@@ -683,6 +703,7 @@ if (isset($_POST['submit'])) {
 					print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
 				}
 				?>
+					<option value="99">99 - Blank Letter</option>
 				</select>
 			</td>
 			<td style="padding-left: 20px;">Method of Sending: <select id="send_method" name="send_method">

@@ -162,22 +162,22 @@ $my=mysql_query($sql) or die(mysql_error());
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
 			<a href="manage_patient_insurance.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'address')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'address')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
 			<a href="manage_patient_insurance.php?sort=address&sortdir=<?php echo ($_REQUEST['sort']=='address'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Address</a>
 		</td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_patient_insurance.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
                 </td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'addedby')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'addedby')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_patient_insurance.php?sort=addedby&sortdir=<?php echo ($_REQUEST['sort']=='addedby'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Added By</a>
                 </td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'similar')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
                         <a href="manage_patient_insurance.php?sort=similar&sortdir=<?php echo ($_REQUEST['sort']=='similar'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Similar Insurance</a>
                 </td>
-		<td valign="top" class="col_head" width="15%">
+		<td valign="top" class="col_head" width="5%">
 			Action
 		</td>
 	</tr>
@@ -214,7 +214,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= st($myarray["patfirstname"]." ".$myarray["patlastname"]); ?>
                                 </td>
 				<td valign="top">
-					<a href="#" onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>
+					<a href="#" <?= (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?></a>
 				</td>
 				<td valign="top">
 					<a href="#" onclick="loadPopup('view_patient_insurance.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">

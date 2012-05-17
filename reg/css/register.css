@@ -10,3 +10,5 @@
 .json_patient:hover { cursor: pointer; background-color:#D6ECF4;}
 .search_list { padding:3px; width:500px; border-right:solid 1px #446696;border-left:solid 1px #446696;border-bottom:solid 1px #446696; }
 .contact_add { font-size:14px; padding-left:20px; background: url(../images/icons/user2.png) no-repeat 0 0; }
+
+#register .s_color{ color: #000; }

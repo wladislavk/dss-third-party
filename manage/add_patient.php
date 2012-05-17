@@ -1169,13 +1169,6 @@ function remove_notification(id){
               </td>
 
 		<td  align="right">
-			<?php $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
-				$q = mysql_query($s);
-				$n = mysql_num_rows($q);
-				$pat = mysql_fetch_assoc($q);
-				if($n>0){ ?>
-					<input type="button" class="button" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;" value="View edits" />
-				<? } ?>
 			<?php 
 			if($doc_patient_portal && $use_patient_portal){
 			  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
@@ -1599,7 +1592,7 @@ function show_referredby(t, rs){
 				<div style="clear:both;float:left;">
 					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
 					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
-<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Add Contact" />
+<input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" />
 <br />
         <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="referredby_list" class="search_list">
@@ -1764,10 +1757,10 @@ $(document).ready(function(){
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
 																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
-<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Add Insurance Company" />
+<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
                             </span>
                             <span>
-								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:200px;" />
+								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:190px;" />
                                 <label for="home_phone">Insurance ID.</label>
                             </span>
                             <span>
@@ -1925,11 +1918,11 @@ $(document).ready(function(){
 				</script>
                                 </select>
                                 <label for="s_m_ins_co">Insurance Co.</label><br />
-<input type="button" class="button" style="width:170px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Add Insurance Company" />
+<input type="button" class="button" style="width:215px;" onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');" value="+ Create New Insurance Company" />
                             </span>
 
                             <span>
-								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:200px;" />
+								 <input id="s_m_party" name="s_m_ins_id" type="text" class="field text addr tbox" value="<?=$s_m_ins_id?>" maxlength="255" style="width:190px;" />
                                 <label for="s_m_ins_id">Insurance ID.</label>
                             </span>
                             <span>
@@ -2042,8 +2035,8 @@ $(document).ready(function(){
                          <tr height="35">
 
                        <td>
-           <font style="padding-left:10px;">Add contacts below so they can receive correspondence about this patient.</font>
-                        <p>&nbsp;</p>
+           <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
+           <span style="float:left; margin-left:20px;"><input type="button" class="button" style="float:left; width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" /></span>
 
                        <ul>
                         <li  id="foli8" class="complex">
@@ -2205,7 +2198,6 @@ $(document).ready(function(){
 		         
 		         
 		         </table>
-		        <input type="button" class="button" style="float:left; margin: 50px 0 0 20px; width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Add Contact" /> 
 		        </td>
 		        
 		        

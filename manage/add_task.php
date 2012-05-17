@@ -78,7 +78,7 @@ $task = mysql_fetch_assoc($t_q);
     <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
-            <td class="cat_head">
+            <td class="cat_head" style="font-size:20px;">
 		<?php
 		if(isset($_GET['pid'])){
 			$p_sql = "SELECT firstname, lastname FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -86,7 +86,7 @@ $task = mysql_fetch_assoc($t_q);
 			$pat = mysql_fetch_assoc($p_q); ?>
 			Add a task about <?= $pat['firstname'] . " " . $pat['lastname']; ?>
 		<?php }else{ ?>
-                	Tasks
+                	Add new task	
 			<?php if($task['firstname']!='' || $task['lastname']!=''){
 					echo "(".$task['firstname']." ".$task['lastname'].")";
 				}

@@ -175,6 +175,7 @@
 		mysql_query($s);
 
                 $types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
+		$updatevals = '';
                 foreach($types as $t){
                         if(trim($_POST['pc_'.$t.'_contactid']) ==''){
                                 if($_POST['pc_'.$t.'_firstname'] != ''){
@@ -190,6 +191,10 @@
                                                 "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
                                                 "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
                                                 "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "';";
+                                        mysql_query($insql);
+                                        $id = mysql_insert_id();
+					if($updatevals!=''){ $updatevals .= ','; }
+                                        $updatevals .= '"pc_'.$t.'_patient_contactid": "'.$id.'"';
 				    }else{
                                         $insql = "UPDATE dental_patient_contacts SET " .
                                                 "contacttype = '" . $t . "', " .
@@ -203,12 +208,14 @@
                                                 "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
                                                 "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "' " .
 						" WHERE id = '" . mysql_real_escape_string($_POST['pc_'.$t.'_patient_contactid']) . "'";
-				    }
                                         mysql_query($insql);
+				    }
                                 }
                         }
                 }
-
+		if($updatevals != ''){
+			echo "{".$updatevals."}";
+		}
 				if(trim($_POST['p_m_ins_company'])!=''){
 				    if($_POST['p_m_patient_insuranceid'] == ''){
 					$insql = "INSERT INTO dental_patient_insurance SET " .

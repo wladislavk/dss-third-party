@@ -222,6 +222,21 @@ lga_wizard = {
 					}else if(r.s_m_patient_insuranceid){
                                           $('#s_m_patient_insuranceid').val(r.s_m_patient_insuranceid);
                                         }
+					if(r.pc_1_patient_contactid){
+					  $('#pc_1_patient_contactid').val(r.pc_1_patient_contactid);
+					}
+                                        if(r.pc_2_patient_contactid){
+                                          $('#pc_2_patient_contactid').val(r.pc_2_patient_contactid);
+                                        }
+                                        if(r.pc_3_patient_contactid){
+                                          $('#pc_3_patient_contactid').val(r.pc_3_patient_contactid);
+                                        }
+                                        if(r.pc_4_patient_contactid){
+                                          $('#pc_4_patient_contactid').val(r.pc_4_patient_contactid);
+                                        }
+                                        if(r.pc_5_patient_contactid){
+                                          $('#pc_5_patient_contactid').val(r.pc_5_patient_contactid);
+                                        }
                         	        //$('#form_summary').html(data);
                                 	//alert(data);
                         	});

@@ -29,8 +29,6 @@ $template = "
 
 <p>We are working closely with physicians such as you who recognize the importance of diagnosing and treating this illness.  As awareness of the ill effects of OSA (hypertension, MI, CHF, stroke, fatigue, impotence, mood swings, and dozing accidents) increases in the public's eye, all of medicine will begin to see an increasing number of patients asking questions about snoring and sleep apnea and seeking treatment options.  We hope you'll consider referring these patients to us.</p>
 
-<p>I have included an informational brochure as well as a simple referral form, making the referral process easy for you and the patient.</p>
-
 <p>Again, thank you for your time, and I look forward to working with you.</p>
 
 <p>Regards,

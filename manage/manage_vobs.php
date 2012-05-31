@@ -134,6 +134,11 @@ $my=mysql_query($sql) or die(mysql_error());
 <span class="admin_head">
 	Manage Verification of Benefits
 </span>
+<?php if(isset($_GET['viewed']) && $_GET['viewed']==0){ ?>
+<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">View All</a>
+<?php }else{ ?>
+<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&viewed=0&sort=<?php echo $_REQUEST['sort']; ?>&sortdir=<?php echo $_REQUEST['sortdir']; ?>" style="float:right; margin-right:10px;" class="addButton">View Unread</a>
+<?php } ?>
 <br />
 <br />
 &nbsp;

@@ -1357,6 +1357,7 @@ input{text-transform:uppercase;}
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
+									<?php if($patient_dob!=''){ $patient_dob = date('m-d-y', strtotime($patient_dob)); } ?>
 									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
@@ -1629,6 +1630,7 @@ input{text-transform:uppercase;}
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
+									<?php if($insured_dob!=''){ $insured_dob = date('m-d-y', strtotime($insured_dob)); } ?>
 									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
 								</td>
@@ -1732,6 +1734,7 @@ input{text-transform:uppercase;}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
+						<?php if($patient_signed_date != ''){ $patient_signed_date = date('m-d-y', strtotime($patient_signed_date)); } ?>
 						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3 datealtmask" />
 					</td>
 					<td align="left" valign="top">
@@ -2175,8 +2178,8 @@ if($insurancetype == '1'){
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
-       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2348,8 +2351,8 @@ if ($is_pending) {
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
-       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2369,8 +2372,8 @@ if ($is_pending) {
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $_SESSION['docid'] . " "
-       . "  AND trxn_code.docid = " . $_SESSION['docid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -2431,6 +2434,7 @@ if ($is_pending) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
+									<?php if($physician_signed_date!=''){ $physician_signed_date = date('m-d-y', strtotime($physician_signed_date)); } ?>
 									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtmask" size="10" />
 								</td>
 								<td valign="top" width="50%">

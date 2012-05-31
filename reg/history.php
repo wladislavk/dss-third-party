@@ -439,8 +439,24 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 				<label class="lbl_a">Do you have any known allergens (for example: aspirin, latex, penicillin, etc)?</label>
                                 <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('all_det').style.display='block'" value="1" /> Yes
                                 <input id="allergenscheck" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('all_det').style.display='none'" value="0" /> No
+<div style="clear:both;"></div>
 			<span id="all_det" <?php if($allergenscheck == 0){ echo 'style="display:none;"';} ?>>
-                            	<label class="lbl_a">Please list everything you are allergic to:</label> 
+<?
+                                                        $allergens_sql = "select * from dental_allergens where status=1 order by sortby";
+                                                        $allergens_my = mysql_query($allergens_sql);
+                                                                $i=0;
+                                                                while($allergens_myarray = mysql_fetch_array($allergens_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;">
+                                                <input type="checkbox" name="allergens[]" value="<?=st($allergens_myarray['allergensid']);?>" class="tbox" style="width:10px;" <? if(strpos($allergens,'~'.st($allergens_myarray['allergensid']).'~') === false) {} else { echo " checked";}?> />
+                                            <?=st($allergens_myarray['allergens']);?>
+                                        </span>
+                                    <?
+                                                                        $i++;
+
+                                                                 } ?>
+                            	<label class="lbl_a" style="clear:both">Please list everything you are allergic to:</label> 
                             <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
 			</span>
                     </div>
@@ -449,16 +465,45 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                 <label class="lbl_a">Are you currently taking any medications?</label>
                                 <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('med_det').style.display='block'" value="1" /> Yes
                                 <input id="medicationscheck" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('med_det').style.display='none'" value="0" /> No
+<div style="clear:both;"></div>
                         <span id="med_det" <?php if($medicationscheck == 0){ echo 'style="display:none;"';} ?>>
+                                <?
+                                                        $medications_sql = "select * from dental_medications where status=1 order by sortby";
+                                                        $medications_my = mysql_query($medications_sql);
+                                                                $i=0;
+                                                                while($medications_myarray = mysql_fetch_array($medications_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;">
+                                                <input type="checkbox" name="medications[]" value="<?=st($medications_myarray['medicationsid']);?>" class="tbox" style="width:10px;" <? if(strpos($medications,'~'.st($medications_myarray['medicationsid']).'~') === false) {} else { echo " checked";}?> />
+                                            <?=st($medications_myarray['medications']);?>
+                                        </span>
+                                    <?
+                                                                        $i++;
+                                                                 }?>
 
-                            	<label class="lbl_a">Please list all medications you are currently taking:</label> 
+                            	<label class="lbl_a" style="clear:both;">Please list all medications you are currently taking:</label> 
                             <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
 			</span>
                     </div>
                     
                         <h3>Medical History</h3>
 			<div class="sepH_b">
-                            	<label class="lbl_a">List all other medical diagnoses and surgeries from birth until now:</label>
+                                <?
+                                                        $history_sql = "select * from dental_history where status=1 order by history";
+                                                        $history_my = mysql_query($history_sql);
+                                                                $i=0;
+                                                                while($history_myarray = mysql_fetch_array($history_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;">
+                                                <input type="checkbox" name="history[]" value="<?=st($history_myarray['historyid']);?>" class="tbox" style="width:10px;" <? if(strpos($history,'~'.st($history_myarray['historyid']).'~') === false) {} else { echo " checked";}?> />
+                                            <?=st($history_myarray['history']);?>
+                                        </span>
+                                    <?
+                                                                        $i++;
+                                                                 }?>
+                            	<label class="lbl_a" style="clear:both;">List all other medical diagnoses and surgeries from birth until now:</label>
                             <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
                     </div>
                         

@@ -85,39 +85,48 @@ $injurytohead = $_POST['injurytohead'];
 
 
 	
-	$allergens_arr = '';
+	$allergens_arr = $all_text = '';
 	if(is_array($allergens))
 	{
 		foreach($allergens as $val)
 		{
 			if(trim($val) <> '')
-				$allergens_arr .= trim($val).'~';
+				$as = "SELECT allergens from dental_allergens where allergensid = '".mysql_real_escape_string($val)."'";
+				$aq = mysql_query($as);
+				$arow = mysql_fetch_assoc($aq);
+				$all_text .= $arow['allergens'].", ";
 		}
 	}
 	
-	if($allergens_arr != '')
-		$allergens_arr = '~'.$allergens_arr;
+	//if($allergens_arr != '')
+		//$allergens_arr = '~'.$allergens_arr;
 		
-	$medications_arr = '';
+	$medications_arr = $med_text = '';
 	if(is_array($medications))
 	{
 		foreach($medications as $val)
 		{
 			if(trim($val) <> '')
-				$medications_arr .= trim($val).'~';
+                                $ms = "SELECT medications from dental_medications where medicationsid = '".mysql_real_escape_string($val)."'";
+                                $mq = mysql_query($ms);
+                                $mrow = mysql_fetch_assoc($mq);
+                                $med_text .= $mrow['medications'].", ";
 		}
 	}
 	
 	if($medications_arr != '')
 		$medications_arr = '~'.$medications_arr;
 		
-	$history_arr = '';
+	$history_arr = $his_text = '';
 	if(is_array($history))
 	{
 		foreach($history as $val)
 		{
 			if(trim($val) <> '')
-				$history_arr .= trim($val).'~';
+                                $hs = "SELECT history from dental_history where historyid = '".mysql_real_escape_string($val)."'";
+                                $hq = mysql_query($hs);
+                                $hrow = mysql_fetch_assoc($hq);
+                                $his_text .= $hrow['history'].", ";
 		}
 	}
 	
@@ -156,12 +165,12 @@ $injurytohead = $_POST['injurytohead'];
 		parent_patientid = '".s_for($_SESSION['pid'])."',
 		allergens = '".s_for($allergens_arr)."',
 		allergenscheck = '".s_for($allergenscheck)."',
-		other_allergens = '".s_for($other_allergens)."',
+		other_allergens = '".s_for($all_text.$other_allergens)."',
 		medications = '".s_for($medications_arr)."',
 		medicationscheck = '".s_for($medicationscheck)."',
-		other_medications = '".s_for($other_medications)."',
+		other_medications = '".s_for($med_text.$other_medications)."',
 		history = '".s_for($history_arr)."',
-		other_history = '".s_for($other_history)."',
+		other_history = '".s_for($his_text.$other_history)."',
 		dental_health = '".s_for($dental_health)."',
 		removable = '".s_for($removable)."',
 		injurytohead = '".s_for($injurytohead)."',
@@ -242,12 +251,12 @@ $injurytohead = $_POST['injurytohead'];
 		$ed_sql = " update dental_q_page3 set 
 		allergens = '".s_for($allergens_arr)."',
 		allergenscheck = '".s_for($allergenscheck)."',
-		other_allergens = '".s_for($other_allergens)."',
+		other_allergens = '".s_for($all_text.$other_allergens)."',
 		medications = '".s_for($medications_arr)."',
 		medicationscheck = '".s_for($medicationscheck)."',
-		other_medications = '".s_for($other_medications)."',
+		other_medications = '".s_for($med_text.$other_medications)."',
 		history = '".s_for($history_arr)."',
-		other_history = '".s_for($other_history)."',
+		other_history = '".s_for($his_text.$other_history)."',
 		dental_health = '".s_for($dental_health)."',
 		injurytohead = '".$injurytohead."',
 		injurytoface = '".s_for($injurytoface)."',

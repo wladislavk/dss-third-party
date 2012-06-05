@@ -32,6 +32,26 @@ if(isset($_POST['submit'])){
       mysql_query($up_sql);
     }
   }
+
+  $num_extra = $_POST['extra_total'];
+  for($i=1;$i<=$num_extra;$i++){
+    if(isset($_POST['extra_name_'.$i])){
+	$name = $_POST['extra_name_'.$i];
+        $service_date = $_POST['extra_service_date_'.$i];
+	$service_date = ($service_date!='')?date('Y-m-d', strtotime($service_date)):'';
+	$amount = $_POST['extra_amount_'.$i];
+	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
+        " percase_date = '".$service_date."', " .
+        " percase_name = '".$name."', " .
+        " percase_amount = '".$amount."', " .
+        " percase_status = '".DSS_PERCASE_INVOICED."', " .
+        " percase_invoice = '".$invoiceid."', " .
+	" adddate = NOW(), " .
+  	" ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+	echo $sql;
+      mysql_query($sql);
+    }
+  }
   ?>
   <script type="text/javascript">
     window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
@@ -57,7 +77,7 @@ if(isset($_POST['submit'])){
 <br /><br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <input type="hidden" name="docid" value="<?=$_GET["docid"];?>" />
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
 			Patient Name		
@@ -68,7 +88,7 @@ if(isset($_POST['submit'])){
 		<td valign="top" class="col_head" width="20%">
 			Amount		
 		</td>
-		<td valign="top" class="col_head" width="5%">
+		<td valign="top" class="col_head" width="10%">
 		</td>
 	</tr>
 	<? if(mysql_num_rows($case_q) == 0)
@@ -117,13 +137,17 @@ if(isset($_POST['submit'])){
 			</tr>
 	<? 	}
 		?>
-		<tr>
+		<tr id="total_row">
 			<td valign="top" colspan="2">&nbsp;
-			Total: <span id="total" style="font-weight:bold;">$<?= number_format(mysql_num_rows($case_q)*195,2); ?></span>	
+			Total: <span id="total" style="font-weight:bold;">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></span>	
+			<input type="hidden" name="extra_total" id="extra_total" value="0" />
 			</td>
-			<td valign="top" class="col_head" colspan="2">
+			<td valign="top" class="col_head">
 				<input type="submit" name="submit" value=" Create " class="button" />
 				<a href="manage_percase_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
+			</td>
+			<td>
+				<a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
 			</td>
 		</tr>
 		<?
@@ -132,14 +156,46 @@ if(isset($_POST['submit'])){
 </form>
 <script type="text/javascript">
 
-$('.amount').keyup(function(){
+var row_count = 1;
+function add_row(){
+
+var row = '<tr id="extra_row_'+row_count+'">';
+row += '<td valign="top">';
+row += '<input type="text" name="extra_name_'+row_count+'" value="" />';
+row += '</td><td valign="top">';
+row += '<input type="text" name="extra_service_date_'+row_count+'" value="<?=date('m/d/Y');?>" />';
+row += '</td><td valign="top">';
+row += '$<input type="text" class="amount" name="extra_amount_'+row_count+'" value="195.00" />';
+row += '</td><td valign="top">';
+row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove()">Remove</a>';
+row += '</td></tr>';
+
+
+$('#extra_total').val(row_count);
+
+$(row).insertBefore('#total_row');
+
+row_count++;
+setupAmount();
+calcTotal();
+}
+
+function calcTotal(){
 a = 0;
   $('.amount').each(function(){
     a += Number($(this).val());
   });
 a = a.toFixed(2);
 $('#total').html('$'+a);
+}
+
+function setupAmount(){
+$('.amount').keyup(function(){
+  calcTotal();
 });
+}
+
+setupAmount();
 </script>
 
 <br /><br />	

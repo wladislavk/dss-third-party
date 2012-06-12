@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
     $id = $case['ledgerid'];
     if(isset($_POST['service_date_'.$id])){
       $up_sql = "UPDATE dental_ledger SET " .
-        " percase_date = '".$_POST['service_date_'.$id]."', " .
+        " percase_date = '".date('Y-m-d', strtotime($_POST['service_date_'.$id]))."', " .
         " percase_name = '".$_POST['name_'.$id]."', " .
         " percase_amount = '".$_POST['amount_'.$id]."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
@@ -91,18 +91,6 @@ if(isset($_POST['submit'])){
 		<td valign="top" class="col_head" width="10%">
 		</td>
 	</tr>
-	<? if(mysql_num_rows($case_q) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<? 
-	}
-	else
-	{
-?>
                         <tr id="month_row">
                                 <td valign="top">
                                         MONTHLY FEE 
@@ -150,8 +138,6 @@ if(isset($_POST['submit'])){
 				<a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
 			</td>
 		</tr>
-		<?
-	}?>
 </table>
 </form>
 <script type="text/javascript">

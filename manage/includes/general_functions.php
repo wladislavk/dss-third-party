@@ -10,7 +10,7 @@ function uploadImage($image, $file_path){
   $lastdot = strrpos($fname,".");
   $name = substr($fname,0,$lastdot);
   $extension = substr($fname,$lastdot+1);
-/*  list($width,$height)=getimagesize($uploadedfile);
+  list($width,$height)=getimagesize($uploadedfile);
   if($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT){
 
     if($extension=="jpg" || $extension=="jpeg" )
@@ -63,14 +63,14 @@ function uploadImage($image, $file_path){
 
   }else{
     if($image['size'] <= DSS_FILE_MAX_SIZE){
-  */
+
       @move_uploaded_file($image["tmp_name"],$file_path);
       $uploaded = true;
-  /*
+
     }else{
       $uploaded =false;
     }
-  }*/
+  }
 
                         @chmod($file_path,0777);
   return $uploaded;

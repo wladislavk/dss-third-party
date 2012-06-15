@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
     $id = $case['ledgerid'];
     if(isset($_POST['service_date_'.$id])){
       $up_sql = "UPDATE dental_ledger SET " .
-        " percase_date = '".$_POST['service_date_'.$id]."', " .
+        " percase_date = '".date('Y-m-d', strtotime($_POST['service_date_'.$id]))."', " .
         " percase_name = '".$_POST['name_'.$id]."', " .
         " percase_amount = '".$_POST['amount_'.$id]."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
@@ -77,7 +77,7 @@ if(isset($_POST['submit'])){
 <br /><br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <input type="hidden" name="docid" value="<?=$_GET["docid"];?>" />
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
 			Patient Name		
@@ -91,18 +91,6 @@ if(isset($_POST['submit'])){
 		<td valign="top" class="col_head" width="10%">
 		</td>
 	</tr>
-	<? if(mysql_num_rows($case_q) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="10" align="center">
-				No Records
-			</td>
-		</tr>
-	<? 
-	}
-	else
-	{
-?>
                         <tr id="month_row">
                                 <td valign="top">
                                         MONTHLY FEE 
@@ -139,8 +127,8 @@ if(isset($_POST['submit'])){
 		?>
 		<tr id="total_row">
 			<td valign="top" colspan="2">&nbsp;
-			Total: <span id="total" style="font-weight:bold;">$<?= number_format(mysql_num_rows($case_q)*195,2); ?></span>	
-			<input type="text" name="extra_total" id="extra_total" value="0" />
+			Total: <span id="total" style="font-weight:bold;">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></span>	
+			<input type="hidden" name="extra_total" id="extra_total" value="0" />
 			</td>
 			<td valign="top" class="col_head">
 				<input type="submit" name="submit" value=" Create " class="button" />
@@ -150,8 +138,6 @@ if(isset($_POST['submit'])){
 				<a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
 			</td>
 		</tr>
-		<?
-	}?>
 </table>
 </form>
 <script type="text/javascript">
@@ -176,17 +162,26 @@ $('#extra_total').val(row_count);
 $(row).insertBefore('#total_row');
 
 row_count++;
+setupAmount();
+calcTotal();
 }
 
-
-$('.amount').keyup(function(){
+function calcTotal(){
 a = 0;
   $('.amount').each(function(){
     a += Number($(this).val());
   });
 a = a.toFixed(2);
 $('#total').html('$'+a);
+}
+
+function setupAmount(){
+$('.amount').keyup(function(){
+  calcTotal();
 });
+}
+
+setupAmount();
 </script>
 
 <br /><br />	

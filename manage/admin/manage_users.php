@@ -72,14 +72,17 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Username	
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="20%">
 			Letterhead
 		</td>       
 		<td valign="top" class="col_head" width="10%">
 			Login As
+		</td>
+		<td valign="top" class="col_head" width="10">
+			Locations
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Contact
@@ -87,7 +90,7 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Staff
 		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
 	</tr>
@@ -111,6 +114,10 @@ $num_users=mysql_num_rows($my);
 			$con_sql = "select count(contactid) as con_count from dental_contact where docid='".st($myarray['userid'])."'";
 			$con_my = mysql_query($con_sql) or die(mysql_error()." | ".$con_sql);
 			$con_myarray = mysql_fetch_array($con_my);
+
+                        $loc_sql = "select count(id) as loc_count from dental_locations where docid='".st($myarray['userid'])."'";
+                        $loc_my = mysql_query($loc_sql) or die(mysql_error()." | ".$loc_sql);
+                        $loc_myarray = mysql_fetch_array($loc_my);
 			
 			if($myarray["status"] == 1)
 			{
@@ -140,15 +147,18 @@ $num_users=mysql_num_rows($my);
 			            <input type="submit" name="btnsubmit" value=" Login " class="addButton">			
 					</form>
 				</td>
-				
+			           <td valign="top" align="center">
+                    <a href="manage_locations.php?docid=<?=$myarray["userid"];?>" class="dellink" title="locations">
+                        <?=st($loc_myarray['loc_count']);?></a>
+                                </td>	
                 
 				<td valign="top" align="center">
-                    <a href="manage_contact.php?docid=<?=$myarray["userid"];?>" class="dellink" title="DELETE">
+                    <a href="manage_contact.php?docid=<?=$myarray["userid"];?>" class="dellink" title="contacts">
                     	<?=st($con_myarray['con_count']);?></a>
 				</td>	
                 
 				<td valign="top" align="center">
-					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="DELETE">
+					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="staff">
                     	<?=st($staff_myarray['staff_count']);?></a>
 				</td>	
 						

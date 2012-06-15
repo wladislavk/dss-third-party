@@ -96,8 +96,8 @@ if($_POST["imagesub"] == 1)
 			$banner1 = str_replace(" ","_",$banner1);
 			$banner1 = str_replace(".","_",$banner1);
 			$banner1 .= ".".$extension;
-
-			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1);
+			$profile = ($_POST['imagetypeid']==4);
+			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1, $profile);
 			if($_POST['image_file_old'] <> '')
 			{
 				@unlink("q_file/".$_POST['image_file_old']);

@@ -4,14 +4,14 @@
 
 
 
-function uploadImage($image, $file_path){
+function uploadImage($image, $file_path, $profile = false){
   $uploadedfile = $image['tmp_name'];
   $fname = $image["name"];
   $lastdot = strrpos($fname,".");
   $name = substr($fname,0,$lastdot);
   $extension = substr($fname,$lastdot+1);
   list($width,$height)=getimagesize($uploadedfile);
-  if($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT){
+  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
 
     if($extension=="jpg" || $extension=="jpeg" )
     {
@@ -25,20 +25,21 @@ function uploadImage($image, $file_path){
     {
       $src = imagecreatefromgif($uploadedfile);
     }
-
+	$resize_width = ($profile)?DSS_IMAGE_PROFILE_WIDTH:DSS_IMAGE_RESIZE_WIDTH;
+	$resize_height = ($profile)?DSS_IMAGE_PROFILE_HEIGHT:DSS_IMAGE_RESIZE_HEIGHT;
 
     if($width>$height){
-      $newwidth=DSS_IMAGE_MAX_WIDTH;
+      $newwidth=$resize_width;
       $newheight=($height/$width)*$newwidth;
     }elseif($height>$width){
-      $newheight=DSS_IMAGE_MAX_HEIGHT;
+      $newheight=$resize_height;
       $newwidth=($width/$height)*$newheight;
     }else{
-      $newwidth=DSS_IMAGE_MAX_WIDTH;
-      $newheight=DSS_IMAGE_MAX_HEIGHT;
+      $newwidth=$resize_width;
+      $newheight=$resize_height;
     }
-    $newwidth=DSS_IMAGE_MAX_WIDTH;
-    $newheight=($height/$width)*$newwidth;
+    //$newwidth=DSS_IMAGE_MAX_WIDTH;
+    //$newheight=($height/$width)*$newwidth;
     $tmp=imagecreatetruecolor($newwidth,$newheight);
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )

@@ -1,10 +1,10 @@
 <?php 
-session_start();
-require_once 'admin/includes/config.php';
+//session_start();
+//require_once 'admin/includes/config.php';
 
-//include "includes/top.htm";
-//require_once('includes/constants.inc');
-//require_once('includes/formatters.php');
+include "includes/top.htm";
+require_once('includes/constants.inc');
+require_once('includes/formatters.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
@@ -22,7 +22,6 @@ require_once 'admin/includes/config.php';
 <script type="text/javascript" charset="utf-8">
 	function initCal() {
 		scheduler.config.multi_day = true;
-		
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
                 scheduler.init('scheduler_here',new Date(2012,5,5),"month");
 
@@ -115,7 +114,7 @@ $(document).ready(function(){
 });
 </script>
 
-	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+	<div id="scheduler_here" class="dhx_cal_container" style='width:900px; height:800px; margin-left:40px;'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>
 			<div class="dhx_cal_next_button">&nbsp;</div>
@@ -131,6 +130,6 @@ $(document).ready(function(){
 		</div>
 	</div>
 
-
+<div style="clear:both;"></div>
 <br /><br />	
-<? //include "includes/bottom.htm";?>
+<? include "includes/bottom.htm";?>

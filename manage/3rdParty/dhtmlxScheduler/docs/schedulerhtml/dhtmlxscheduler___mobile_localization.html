@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    dhtmlxscheduler:mobile_localization    [DHX documentation]
+  </title><link rel="stylesheet" type="text/css" href="./codebase/css.css" /></head>
+
+<body>
+<div class="dokuwiki">
+  
+  <div class="page">
+    
+    
+
+
+
+<h1><a name="localization" id="localization">Localization</a></h1>
+<div class="level1">
+
+</div>
+
+<h2><a name="basic_principles" id="basic_principles">Basic principles</a></h2>
+<div class="level2">
+
+<p>
+The mobile version as well as the desktop one allows to adapt the scheduler to a particular language and region.<br/>
+
+</p>
+
+<p>
+The scheduler package already contains locales for most popular languages, but as the locales  are basically intended to be used in the desktop version, they don&#039;t contain some mobile-specific parameters.
+</p>
+
+<p>
+<em class="u"><strong>To localize the scheduler to some language you should know the following</strong>:</em> 
+</p>
+<ul>
+<li class="level1"><div class="li"> To not define the parameters that have already been defined in one of the locales you should check the desired locale in the package. A full list of the included locales and details of how to activate the desired one you can find in the chapter <a href="dhtmlxscheduler___localization.html#included_locales" class="wikilink1" title="dhtmlxscheduler:localization">&#039;Localization: included files&#039;</a>.<br/>
+ <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> All locale&#039;s parameters for the mobile version are contained in the <em>scheduler.locale.labels</em> object and to redefine the parameters you should &#039;rewrite&#039; this object.<br/>
+ <br/>
+</div>
+</li>
+<li class="level1"><div class="li"> For &#039;rewriting&#039; you should use the technique below:<br/>
+ <br/>
+ <pre class="code javascript">dhx.<span class="me1">extend</span><span class="br0">&#40;</span>scheduler.<span class="me1">locale</span>.<span class="me1">labels</span><span class="sy0">,</span>labels<span class="br0">&#41;</span>;</pre>
+<p>
+  where <em>labels</em> is any object variable that contains the redefined parameters.<br/>
+ 
+</p>
+<pre class="code javascript"><span class="kw2">var</span> labels <span class="sy0">=</span> <span class="br0">&#123;</span> 
+               icon_today <span class="sy0">:</span> <span class="st0">&quot;...&quot;</span><span class="sy0">,</span>
+               ... 
+<span class="br0">&#125;</span></pre></div>
+</li>
+</ul>
+
+<p>
+
+<strong>Related sample:</strong> <em>samples/07_mobile/07_locale.html</em>
+</p>
+
+</div>
+
+<h2><a name="localization_parameters_for_mobile_scheduler" id="localization_parameters_for_mobile_scheduler">Localization parameters for mobile scheduler</a></h2>
+<div class="level2">
+
+<p>
+The table below presents all available localization parameters for the mobile version of the scheduler. Some of them are contained in the locale files (marked as <em>&#039;both versions&#039;</em>), but some characteristics you will need to specify yourself (marked as <em>&#039;mobile version only&#039;</em>).
+</p>
+
+<p>
+<img src="./images/dhtmlxschedulermobile_localization_table.png" class="media" alt="" />
+</p>
+
+<p>
+<img src="./images/dhtmlxschedulermobile_locale_parameters.png" class="media" alt="" />
+
+</p>
+
+</div>
+
+<h2><a name="step-by-step_example" id="step-by-step_example">Step-by-step example</a></h2>
+<div class="level2">
+
+<p>
+Let&#039;s assume, we want to localize the mobile scheduler to Spanish. To achieve it, we will need to make the following steps:
+</p>
+<ol>
+<li class="level1"><div class="li"> First, we should check the locale. The package contains one we need and we will include it:<br/>
+ <br/>
+ <pre class="code javascript"><span class="sy0">&lt;</span>script src<span class="sy0">=</span><span class="st0">&quot;../sources/locale_es.js&quot;</span> type<span class="sy0">=</span><span class="st0">&quot;text/javascript&quot;</span> charset<span class="sy0">=</span><span class="st0">&quot;utf-8&quot;</span><span class="sy0">&gt;&lt;/</span>script<span class="sy0">&gt;</span></pre></div>
+</li>
+<li class="level1"><div class="li"> Then, we will create an object to define the missing parameters.<br/>
+ <br/>
+ <pre class="code javascript"><span class="kw2">var</span> labels <span class="sy0">=</span> <span class="br0">&#123;</span>
+        icon_today <span class="sy0">:</span> <span class="st0">&quot;Hoy&quot;</span><span class="sy0">,</span>
+	list_tab <span class="sy0">:</span> <span class="st0">&quot;Lista&quot;</span><span class="sy0">,</span>
+	icon_back <span class="sy0">:</span> <span class="st0">&quot;Atrás&quot;</span><span class="sy0">,</span>
+	label_event<span class="sy0">:</span><span class="st0">&quot;Evento&quot;</span><span class="sy0">,</span>
+	label_start<span class="sy0">:</span><span class="st0">&quot;Сomienzo&quot;</span><span class="sy0">,</span>
+	label_end<span class="sy0">:</span><span class="st0">&quot;Аin&quot;</span><span class="sy0">,</span>
+	label_details<span class="sy0">:</span><span class="st0">&quot;Nota&quot;</span><span class="sy0">,</span>
+	label_from<span class="sy0">:</span> <span class="st0">&quot;Desde&quot;</span><span class="sy0">,</span>
+	label_to<span class="sy0">:</span> <span class="st0">&quot;Hasta&quot;</span><span class="sy0">,</span>
+	icon_close <span class="sy0">:</span> <span class="st0">&quot;Cerrar&quot;</span><span class="sy0">,</span>
+	icon_yes <span class="sy0">:</span> <span class="st0">&quot;Sí&quot;</span><span class="sy0">,</span>
+	icon_no <span class="sy0">:</span> <span class="st0">&quot;No&quot;</span>
+<span class="br0">&#125;</span></pre></div>
+</li>
+<li class="level1"><div class="li"> And our last step - to extend the &#039;<em>scheduler.locale.labels</em>&#039; object with the variable defined on the previous step.<br/>
+ <br/>
+ <pre class="code javascript">dhx.<span class="me1">extend</span><span class="br0">&#40;</span>scheduler.<span class="me1">locale</span>.<span class="me1">labels</span><span class="sy0">,</span>labels<span class="br0">&#41;</span>;</pre></div>
+</li>
+</ol>
+
+<p>
+
+<strong>Related sample:</strong>samples/07_mobile/07_locale.html
+</p>
+
+</div>
+
+    
+  </div>
+
+  <div class="clearer">&nbsp;</div>
+
+  
+  <div class="stylefoot">
+
+    <div class="meta">
+      <div class="user">
+              </div>
+     
+
+   
+    
+      
+        
+        
+      
+      
+        
+        
+        
+        
+        
+        
+        
+      
+      
+    
+
+  </div>
+
+  
+
+</div>
+
+
+
+<div class="no"><img src="./images/" width="1" height="1" alt=""  /></div>
+     <div class="footer">
+        <div class="footer-logo"></div>
+        <div class="copyright">Copyright © 1998-2011 DHTMLX LTD.<br />All rights reserved.</div>
+            	    </div>
+</body>
+</html>

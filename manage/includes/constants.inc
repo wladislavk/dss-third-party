@@ -151,10 +151,12 @@ $dss_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
 $dss_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
 $dss_file_types[DSS_FILE_APP_PDF] = "application/pdf";
 
-//define('DSS_IMAGE_MAX_WIDTH', 2000);
-//define('DSS_IMAGE_MAX_HEIGHT', 2000);
-define('DSS_IMAGE_MAX_WIDTH', 200);
-define('DSS_IMAGE_MAX_HEIGHT', 200);
+define('DSS_IMAGE_MAX_WIDTH', 2000);
+define('DSS_IMAGE_MAX_HEIGHT', 2000);
+define('DSS_IMAGE_RESIZE_WIDTH', 1000);
+define('DSS_IMAGE_RESIZE_HEIGHT', 1000);
+define('DSS_IMAGE_PROFILE_WIDTH', 200);
+define('DSS_IMAGE_PROFILE_HEIGHT', 200);
 
 // User types
 define('DSS_USER_TYPE_ROOT', 4);

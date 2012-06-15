@@ -199,7 +199,7 @@ $dss_referred_labels = array();
 $dss_referred_labels[DSS_REFERRED_PATIENT] = "Patient";
 $dss_referred_labels[DSS_REFERRED_PHYSICIAN] = "Physician";
 $dss_referred_labels[DSS_REFERRED_MEDIA] = "Media";
-$dss_referred_labels[DSS_REFERRED_FRANCHISE] = "Franchise";
+$dss_referred_labels[DSS_REFERRED_FRANCHISE] = "Internal";
 $dss_referred_labels[DSS_REFERRED_DSSOFFICE] = "DSS Office";
 $dss_referred_labels[DSS_REFERRED_OTHER] = "Other";
 

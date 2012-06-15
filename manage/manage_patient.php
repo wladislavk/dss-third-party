@@ -35,13 +35,14 @@ if(!isset($_REQUEST['sort'])){
 $sql = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
      . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
-		 . "  s.delivery_date, s.vob, s.ledger, s.patient_info, d.device, "
+		 . "  ex.dentaldevice_date as delivery_date, s.vob, s.ledger, s.patient_info, ex.dentaldevice as device, "
                  . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec "
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
 		 . "  LEFT JOIN dental_device d ON s.appliance = d.deviceid  "
 		 . "  LEFT JOIN dental_flow_pg1 fs ON fs.pid = p.patientid " 
+		 . "  LEFT JOIN dental_ex_page5 ex ON ex.patientid = p.patientid "
 		 . "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
@@ -222,7 +223,17 @@ background:#999999;
           <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?></a>
         </td>
 				<td valign="top">
-	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['device'] == null ? 'N/A' : $myarray['device']); ?></a>
+		<?php
+		  if($myarray['device'] == null){
+			$device = "N/A";
+		  }else{
+			$device_sql = "select deviceid, device from dental_device where status=1 AND deviceid='".$myarray['device']."'";
+			$device_q = mysql_query($device_sql);
+			$device_row = mysql_fetch_assoc($device_q);
+			$device = $device_row['device'];
+		  }
+		?>
+	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $device; ?></a>
         </td>
         <td valign="top">
 	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>

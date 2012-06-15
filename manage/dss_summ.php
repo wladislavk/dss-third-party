@@ -193,6 +193,7 @@ $r_lateral_from	= $_POST['r_lateral_from'];
 $l_lateral_from = $_POST['l_lateral_from'];
 $i_opening_from = $_POST['i_opening_from'];
 $dentaldevice = $_POST['dentaldevice'];
+$dentaldevice_date = ($_POST['dentaldevice_date']!='')?date('Y-m-d', strtotime($_POST['dentaldevice_date'])):'';
 $ir_range = $_POST['ir_range'];
 $ir_min = $_POST['ir_min'];
 $ir_max = $_POST['ir_max'];
@@ -209,7 +210,8 @@ $ex_ed_sql = " update dental_ex_page5 set
                 i_opening_from = '".s_for($i_opening_from)."',
                 l_lateral_from = '".s_for($l_lateral_from)."',
                 r_lateral_from = '".s_for($r_lateral_from)."',
-		dentaldevice = '".s_for($dentaldevice)."'
+		dentaldevice = '".s_for($dentaldevice)."',
+		dentaldevice_date = '".s_for($dentaldevice_date)."'
 	where ex_page5id = '".$row['ex_page5id']."'";
 mysql_query($ex_ed_sql);
 }else{
@@ -222,6 +224,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
                 l_lateral_from = '".s_for($l_lateral_from)."',
                 r_lateral_from = '".s_for($r_lateral_from)."',
                 dentaldevice = '".s_for($dentaldevice)."',
+		dentaldevice_date = '".s_for($dentaldevice_date)."',
 		userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = now(),
@@ -706,6 +709,7 @@ $protrusion_equals = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 $dentaldevice = st($myarrayex['dentaldevice']);
+$dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
 
 $sqlex8 = "select * from dental_ex_page8 where patientid='".$_GET['pid']."'";
 $myex8 = mysql_query($sqlex8);
@@ -1445,6 +1449,7 @@ echo "Not Set, Please set through patient info.";
     <td colspan="2">
     Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm 
 &nbsp;&nbsp;&nbsp;&nbsp;
+<br />
     Device
 	<select name="dentaldevice" style="width:250px">
 	<option value=""></option>
@@ -1460,7 +1465,7 @@ echo "Not Set, Please set through patient info.";
                                                                  }
                                                                 ?>
     </select>
-
+	Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
     </td>
     
   </tr>

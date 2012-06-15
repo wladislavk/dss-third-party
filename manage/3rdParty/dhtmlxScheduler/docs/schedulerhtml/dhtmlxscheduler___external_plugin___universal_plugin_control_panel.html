@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+ lang="en" dir="ltr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+    dhtmlxscheduler:external_plugin:universal_plugin_control_panel    [DHX documentation]
+  </title><link rel="stylesheet" type="text/css" href="./codebase/css.css" /></head>
+
+<body>
+<div class="dokuwiki">
+  
+  <div class="page">
+    
+    
+
+
+
+<h2><a name="universal_plugin_control_panel" id="universal_plugin_control_panel">Universal plugin control panel</a></h2>
+<div class="level2">
+
+<p>
+
+Before changing anything, beware that settings will be applied only after pressing “Save” button. 
+If you leave page without saving - all changes will be lost.
+</p>
+
+</div>
+
+<h3><a name="settings" id="settings">Settings</a></h3>
+<div class="level3">
+
+<p>
+
+<img src="./images/dhtmlxschedulerexternal_pluginplugin1-1.png" class="media" alt="" />
+</p>
+<ul>
+<li class="level1"><div class="li"> Width and height - size of scheduler on the page</div>
+</li>
+<li class="level1"><div class="li"> Link - link to the page, where scheduler is placed</div>
+</li>
+<li class="level1"><div class="li"> Debug mode - can be used to get detailed report when data is not loaded or not saved correctly </div>
+</li>
+<li class="level1"><div class="li"> Repeat events - enables support of recurring events</div>
+</li>
+<li class="level1"><div class="li"> Prevent overlapping - allow only one event in the same timeslot</div>
+</li>
+<li class="level1"><div class="li"> Mini-calendar - adds mini-calendar icon on top, and calendar based edit-form.</div>
+</li>
+<li class="level1"><div class="li"> Modes - list of tabs, which will be on top of scheduler</div>
+</li>
+</ul>
+
+</div>
+
+<h3><a name="access_rights" id="access_rights">Access rights</a></h3>
+<div class="level3">
+
+<p>
+<img src="./images/dhtmlxschedulerexternal_pluginplugin5.png" class="media" alt="" />
+</p>
+
+<p>
+Allows to define access level for different groups of users:
+</p>
+<ul>
+<li class="level1"><div class="li"> Add - ability to create new events</div>
+</li>
+<li class="level1"><div class="li"> Edit - ability to edit existing events</div>
+</li>
+<li class="level1"><div class="li"> Show - ability to see the scheduler</div>
+</li>
+</ul>
+
+<p>
+
+And set private mode:
+</p>
+<ul>
+<li class="level1"><div class="li"> off - events are public. Users see and can edit (if the appropriate check is set) all events</div>
+</li>
+<li class="level1"><div class="li"> Private mode - users see and can edit (if the appropriate check is set) just self-created events</div>
+</li>
+<li class="level1"><div class="li"> Private extended mode - users see all events but can edit (if the appropriate check is set) just self-created ones</div>
+</li>
+</ul>
+
+</div>
+
+<h3><a name="templates" id="templates">Templates</a></h3>
+<div class="level3">
+
+<p>
+
+<img src="./images/dhtmlxschedulerexternal_pluginplugin2-3.png" class="media" alt="" />
+</p>
+
+<p>
+You can define 
+</p>
+<ul>
+<li class="level1"><div class="li"> format of dates</div>
+<ul>
+<li class="level2"><div class="li"> <a href="dhtmlxscheduler___settings_format.html" class="urlextern" title="http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:settings_format"  rel="nofollow">http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:settings_format</a> </div>
+</li>
+<li class="level2"><div class="li"> <a href="dhtmlxscheduler___settings_config.html" class="urlextern" title="http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:settings_config"  rel="nofollow">http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:settings_config</a></div>
+</li>
+</ul>
+</li>
+<li class="level1"><div class="li"> time scales</div>
+</li>
+<li class="level1"><div class="li"> how text is rendered inside events ( which can be used to show info from custom fields )</div>
+</li>
+</ul>
+
+</div>
+
+<h3><a name="administration" id="administration">Administration</a></h3>
+<div class="level3">
+
+<p>
+
+<img src="./images/dhtmlxschedulerexternal_pluginplugin3.png" class="media" alt="" />
+</p>
+
+<p>
+Panel shows the list of all events in the editable grid, you can add | delete | edit | reload events here. 
+</p>
+
+</div>
+
+<h3><a name="custom_fields" id="custom_fields">Custom fields</a></h3>
+<div class="level3">
+
+<p>
+
+<img src="./images/dhtmlxschedulerexternal_pluginplugin4.png" class="media" alt="" />
+</p>
+
+<p>
+Panel allows to define custom fields, which will be linked to events. 
+</p>
+
+<p>
+There are two types of custom fields
+</p>
+<ul>
+<li class="level1"><div class="li"> Textarea - plain text field</div>
+</li>
+<li class="level1"><div class="li"> Select list - select box with list of options</div>
+</li>
+</ul>
+
+<p>
+
+Each field can have
+</p>
+<ul>
+<li class="level1"><div class="li"> Name - the name of a field in DB ( will be created automatically )</div>
+</li>
+<li class="level1"><div class="li"> Description - will be used in edit-form</div>
+</li>
+</ul>
+
+<p>
+Select list fields have also extra flags
+</p>
+<ul>
+<li class="level1"><div class="li"> “use as colors” - allows to define which color event will have, based on custom field value</div>
+</li>
+<li class="level1"><div class="li"> “use as units” - creates an unit view based on list of options</div>
+</li>
+<li class="level1"><div class="li"> “Timeline”  - creates a timeline view where you can choose time-scale unit:</div>
+<ul>
+<li class="level6"><div class="li"> Day</div>
+</li>
+<li class="level6"><div class="li"> Working Day</div>
+</li>
+<li class="level6"><div class="li"> Week</div>
+</li>
+<li class="level6"><div class="li"> Working week</div>
+</li>
+<li class="level6"><div class="li"> Month</div>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Depending on your needs you can choose one or both of these views.<br/>
+
+<a href="dhtmlxscheduler___units_view.html" class="urlextern" title="http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:units_view"  rel="nofollow">http://docs.dhtmlx.com/doku.php?id=dhtmlxscheduler:units_view</a>
+</p>
+
+</div>
+
+<h3><a name="for_advanced_users" id="for_advanced_users">For advanced users</a></h3>
+<div class="level3">
+
+<p>
+For advanced users we offer extra possibility - to wide available functionality.<br/>
+
+All you need -<strong> scheduler_include.html</strong> file (you can find it in the plugin&#039;s folder: <em>you_wordpress/wp-content/plugins/event-calendar-scheduler/scheduler_include.html</em>).<br/>
+
+How does it work?<br/>
+
+You add the desired additions to the file. Essentially, it&#039;s all. To the page the contents will be added automatically (the file is included to the page on default). 
+
+</p>
+
+</div>
+
+<h4><a name="print_to_pdf" id="print_to_pdf">Print to PDF</a></h4>
+<div class="level4">
+
+<p>
+Print to <acronym title="Portable Document Format">PDF</acronym> is a case in point for showing <strong>scheduler_include.html</strong> usage. <br/>
+
+Let&#039;s consider the details.<br/>
+
+The script includes server, client sides and generate <acronym title="Portable Document Format">PDF</acronym> with scheduler, to start with.<br/>
+
+The first thing you need to make is to download the latest package from <a href="http://www.dhtmlx.com/docs/download/dhtmlxscheduler-to-pdf.zip" class="urlextern" title="http://www.dhtmlx.com/docs/download/dhtmlxscheduler-to-pdf.zip"  rel="nofollow">http://www.dhtmlx.com/docs/download/dhtmlxscheduler-to-pdf.zip</a><br/>
+
+Then, you have to unpack the contents of the <em>&#039;server&#039;</em> folder somewhere under the web root ( you will need to enable php for this installation )<br/>
+
+After you execute the previous steps - add a button or any other element on the page that will call the  <em>scheduler.toPDF(</em>) method. Immediately here we need our file.<br/>
+
+ This is the code you can include to <strong>scheduler_include.html</strong>:
+
+</p>
+<pre class="code javascript"><span class="sy0">&lt;</span>input type<span class="sy0">=</span><span class="st0">&quot;button&quot;</span> <span class="kw3">name</span><span class="sy0">=</span><span class="st0">&quot;Print&quot;</span> value<span class="sy0">=</span><span class="st0">&quot;Print&quot;</span> onclick<span class="sy0">=</span><span class="st0">&quot;scheduler.toPDF('../server/generate.php')&quot;</span> style<span class="sy0">=</span><span class="st0">'width:250px; margin-top:2px; font-weight:bold;'</span><span class="sy0">&gt;</span></pre>
+<p>
+scheduler.toPDF(&#039;../server/generate.php&#039;)  - the main function we use for implementation.
+</p>
+<ul>
+<li class="level1"><div class="li"> &#039;../server/generate.php&#039; - the path to &#039;<em>generate.php</em>&#039; file that is situated in the <em>&#039;server&#039;</em> folder.</div>
+</li>
+</ul>
+
+<p>
+
+And the last step - check &#039;<em>Print to pdf</em>&#039; in the <em>&#039;Settings&#039;</em> tab and click the button &#039;Save&#039;.
+</p>
+
+</div>
+
+    
+  </div>
+
+  <div class="clearer">&nbsp;</div>
+
+  
+  <div class="stylefoot">
+
+    <div class="meta">
+      <div class="user">
+              </div>
+     
+
+   
+    
+      
+        
+        
+      
+      
+        
+        
+        
+        
+        
+        
+        
+      
+      
+    
+
+  </div>
+
+  
+
+</div>
+
+
+
+<div class="no"><img src="./images/" width="1" height="1" alt=""  /></div>
+     <div class="footer">
+        <div class="footer-logo"></div>
+        <div class="copyright">Copyright © 1998-2011 DHTMLX LTD.<br />All rights reserved.</div>
+            	    </div>
+</body>
+</html>

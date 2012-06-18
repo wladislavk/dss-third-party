@@ -8,6 +8,7 @@ require_once('includes/formatters.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <div style="clear: both">
 <span class="admin_head">
@@ -23,7 +24,19 @@ require_once('includes/formatters.php');
 	function initCal() {
 		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
-                scheduler.init('scheduler_here',new Date(2012,5,5),"month");
+		scheduler.config.first_hour = 8;
+		scheduler.config.last_hour = 18;
+		scheduler.locale.labels.workweek_tab = "W-Week"
+		scheduler.attachEvent("onTemplatesReady",function(){
+			//work week
+			scheduler.date.workweek_start = scheduler.date.week_start;
+			scheduler.templates.workweek_date = scheduler.templates.week_date;
+			scheduler.templates.workweek_scale_date = scheduler.templates.week_scale_date;
+			scheduler.date.add_workweek=function(date,inc){ return scheduler.date.add(date,inc*7,"day"); }
+			scheduler.date.get_workweek_end=function(date){ return scheduler.date.add(date,5,"day"); }
+			
+		});
+                scheduler.init('scheduler_here',null,"workweek");
 
 		<?php
 		$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']."'";
@@ -109,6 +122,21 @@ require_once('includes/formatters.php');
                 });
 	}
 
+function show_minical(){
+      if (scheduler.isCalendarVisible())
+         scheduler.destroyCalendar();
+      else
+         scheduler.renderCalendar({
+            position:"dhx_minical_icon",
+            date:scheduler._date,
+            navigation:true,
+            handler:function(date,calendar){
+               scheduler.setCurrentView(date);
+               scheduler.destroyCalendar()
+            }
+         });
+   }
+
 $(document).ready(function(){
   initCal();
 });
@@ -120,8 +148,10 @@ $(document).ready(function(){
 			<div class="dhx_cal_next_button">&nbsp;</div>
 			<div class="dhx_cal_today_button"></div>
 			<div class="dhx_cal_date"></div>
+			<div class="dhx_minical_icon" id="dhx_minical_icon" onclick="show_minical()">&nbsp;</div>
 			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
 			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+			<div class="dhx_cal_tab" name="workweek_tab" style="right:270px;"></div>
 			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
 		</div>
 		<div class="dhx_cal_header">

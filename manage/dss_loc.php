@@ -11,6 +11,5 @@
                 }
         ?>
                 </select>
-<br />
 <input type="submit" name="locsubmit" value="Save Office Site">
 </form>

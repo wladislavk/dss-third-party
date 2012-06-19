@@ -40,6 +40,7 @@ $('.task_status').click(function(){
     $('#pat_task_list').hide();
   })
 
+});
 
 function delete_task(id){
 
@@ -54,8 +55,8 @@ function delete_task(id){
                                                 if(r.error){
                                                 }else{
                                                         $('.task_'+id).remove();
-							$('#task_count').html($('#task_count').html()-1);
-							clean_task_menu();
+                                                        $('#task_count').html($('#task_count').html()-1);
+                                                        clean_task_menu();
                                                 }
                                         },
                                         failure: function(data){
@@ -65,7 +66,6 @@ function delete_task(id){
 
   }
 }
-
 
 function clean_task_menu(){
 
@@ -96,4 +96,3 @@ if($('#pat_task_tom_list li').size()==0){
 
 }
 
-});

@@ -24,8 +24,7 @@ require_once('includes/formatters.php');
 	function initCal() {
 		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
-		scheduler.config.first_hour = 8;
-		scheduler.config.last_hour = 18;
+		scheduler.config.scroll_hour = 8;
 		scheduler.locale.labels.workweek_tab = "W-Week"
 		scheduler.attachEvent("onTemplatesReady",function(){
 			//work week
@@ -142,7 +141,7 @@ $(document).ready(function(){
 });
 </script>
 
-	<div id="scheduler_here" class="dhx_cal_container" style='width:900px; height:800px; margin-left:40px;'>
+	<div id="scheduler_here" class="dhx_cal_container" style='width:900px; height:600px; margin-left:40px;'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>
 			<div class="dhx_cal_next_button">&nbsp;</div>

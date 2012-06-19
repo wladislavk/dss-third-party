@@ -44,15 +44,15 @@ function uploadImage($image, $file_path, $profile = false){
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )
     {
-    imagejpeg($tmp,$file_path,100);
+    imagejpeg($tmp,$file_path,50);
     }
     elseif($extension=="png")
     {
-      imagepng($tmp,$file_path,100);
+      imagepng($tmp,$file_path,50);
     }
     else
     {
-      imagegif($tmp,$file_path,100);
+      imagegif($tmp,$file_path,50);
     }
     $uploaded = true;
     if(filesize($file_path) > DSS_FILE_MAX_SIZE){

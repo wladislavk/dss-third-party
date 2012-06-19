@@ -6,7 +6,6 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 ?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -135,7 +134,6 @@ function show_minical(){
             }
          });
    }
-
 $(document).ready(function(){
   initCal();
 });

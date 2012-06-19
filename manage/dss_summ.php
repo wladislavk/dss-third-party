@@ -1211,7 +1211,15 @@ $num_face = mysql_num_rows($p);
       </label>
       <br />
     </td>
-    <td colspan="5" rowspan="4">
+<?php
+$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
+                $loc_q = mysql_query($loc_sql);
+$num_loc = mysql_num_rows($loc_q);
+$rowspan = ($num_loc > 1)?"4":"3";
+?>
+
+    <td colspan="5" rowspan="<?= $rowspan; ?>">
+
 <strong><h3 style="margin-top:-5px;">Medical Caregivers:</h3></strong>
 <div style="margin-left:20px;">
 
@@ -1317,7 +1325,9 @@ echo "Not Set, Please set through patient info.";
     </td>
     
   </tr>
-
+<?php
+if($num_loc > 1){
+?>
   <tr valign="top">
     <td width="15%" height="5">Office Site</td>
     <td colspan="1">
@@ -1325,6 +1335,7 @@ echo "Not Set, Please set through patient info.";
       <br />
     </td>
   </tr>
+<?php } ?>
   <tr valign="top">
     <td width="15%" height="5">Reason seeking tx</td>
     <td colspan="6">

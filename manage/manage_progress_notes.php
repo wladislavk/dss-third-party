@@ -111,14 +111,20 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="30%">
+		<td valign="top" class="col_head" width="20%">
 			Note Date
 		</td>
-		<td valign="top" class="col_head" width="60%">
+                <td valign="top" class="col_head" width="20%">
+                        Procedure Date
+                </td>
+		<td valign="top" class="col_head" width="40%">
 			Added by
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
+		</td>
+		<td valign="top" class="col_head" width="10">
+			Status
 		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
@@ -153,6 +159,9 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
                 	<?=date('M d, Y H:i',strtotime(st($myarray["adddate"])));?>
 				</td>
+                                <td valign="top">
+                        <?= ($myarray['procedure_date']!='')?date('M d, Y',strtotime($myarray["procedure_date"])):'';?>
+                                </td>
 				<td valign="top">
                 	<?=st($user_myarray["name"]);?>
 				</td>
@@ -171,6 +180,9 @@ $num_users=mysql_num_rows($my);
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["notesid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						 Delete 
 					</a>
+				</td>
+				<td valign="top">
+				  <?= ($myarray['status'])?"Open":"Closed"; ?>
 				</td>
 			</tr>
 	<? 	}

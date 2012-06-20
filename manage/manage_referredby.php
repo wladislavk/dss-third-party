@@ -32,9 +32,17 @@ $sql = "select
 		dc.middlename,
 		dc.lastname, 
 		count(p.patientid) as num_ref, 
-		'".DSS_REFERRED_PHYSICIAN."' as referral_type
+		count(p30.patientid) as num_ref30,
+                count(p60.patientid) as num_ref60,
+                count(p90.patientid) as num_ref90,
+		'".DSS_REFERRED_PHYSICIAN."' as referral_type,
+		ct.contacttype
 	from dental_contact dc 
+		INNER JOIN dental_contacttype ct ON ct.contacttypeid = dc.contacttypeid
 		INNER JOIN dental_patients p on dc.contactid=p.referred_by
+		LEFT JOIN dental_patients p30 on dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                LEFT JOIN dental_patients p60 on dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
+                LEFT JOIN dental_patients p90 on dc.contactid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
 	where dc.docid='".$_SESSION['docid']."'
 		AND p.referred_source=".DSS_REFERRED_PHYSICIAN."
 		GROUP BY dc.contactid
@@ -46,9 +54,16 @@ $sql = "select
 		dp.middlename,
 		dp.lastname,
 		count(p.patientid),
-		'".DSS_REFERRED_PATIENT."'
+		count(p30.patientid),
+                count(p60.patientid),
+                count(p90.patientid),
+		'".DSS_REFERRED_PATIENT."',
+		'Patient'
 	from dental_patients dp
 		INNER JOIN dental_patients p ON dp.patientid=p.referred_by
+		LEFT JOIN dental_patients p30 on dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                LEFT JOIN dental_patients p60 on dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)
+                LEFT JOIN dental_patients p90 on dp.patientid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
 	where p.docid='".$_SESSION['docid']."'
                 AND p.referred_source=".DSS_REFERRED_PATIENT."
 		GROUP BY dp.patientid
@@ -110,12 +125,24 @@ background:#999999;
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="62%">
-			User Type	
+		<td valign="top" class="col_head" width="30%">
+			Physician Type	
 		</td>
 		<td valign="top" class="col_head" width="10%">
-			Patients
+			Total Referrals	
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        30 Days
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        60 Days 
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        90 Days
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Notes
+                </td>
 	</tr>
 	</table>
 	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
@@ -151,14 +178,34 @@ background:#999999;
 				<td valign="top" width="20%">
 					<?=$name;?>
 				</td>
-				<td valign="top" width="62%">
-					<?=st($dss_referred_labels[$myarray["referral_type"]]);?>
+				<td valign="top" width="30%">
+					<?=st($myarray['contacttype']);?>
 				</td>
 				<td valign="top" width="10%">
 					<a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
 						<?=$myarray['num_ref'];?>
 					</a>
 				</td>
+                                <td valign="top" width="10%">
+                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
+                                                <?=$myarray['num_ref30'];?>
+                                        </a>
+                                </td>
+                                <td valign="top" width="10%">
+                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
+                                                <?=$myarray['num_ref60'];?>
+                                        </a>
+                                </td>
+                                <td valign="top" width="10%">
+                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
+                                                <?=$myarray['num_ref90'];?>
+                                        </a>
+                                </td>
+				<td valign="top" width="10%">
+                                        <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?=$myarray["contactid"];?>')" class="editlink">
+						View
+                                        </a>
+                                </td>
 			</tr>
 	<? 	}
 	}?>

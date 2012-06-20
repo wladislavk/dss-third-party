@@ -115,10 +115,15 @@ $num_users=mysql_num_rows($my);
 					<table width="100%" cellpadding="2" cellspacing="1" border="0">
 						<tr>
 							<td valign="top" width="50%">
-								Note Date: 
+								Entry Date: 
 								<span style="font-weight:normal;">
 									<?=date('M d, Y H:i',strtotime(st($myarray["adddate"])));?>
 								</span>
+                                                                Procedure Date:
+                                                                <span style="font-weight:normal;">
+                                                                        <?=($myarray["procedure_date"]!='')?date('M d, Y',strtotime(st($myarray["procedure_date"]))):'';?>
+                                                                </span>
+
 							</td>
 							<td valign="top">
 								Added By: 

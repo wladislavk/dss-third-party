@@ -51,6 +51,13 @@ if($_POST["usersub"] == 1)
 				state = '".s_for($_POST["state"])."', 
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for(num($_POST["phone"]))."', 
+                                mailing_practice = '".s_for($_POST['mailing_practice'])."', 
+                                mailing_name = '".s_for($_POST["mailing_name"])."', 
+                                mailing_address = '".s_for($_POST["mailing_address"])."', 
+                                mailing_city = '".s_for($_POST["mailing_city"])."', 
+                                mailing_state = '".s_for($_POST["mailing_state"])."', 
+                                mailing_zip = '".s_for($_POST["mailing_zip"])."', 
+                                mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
@@ -89,6 +96,13 @@ if($_POST["usersub"] == 1)
 				state = '".s_for($_POST["state"])."', 
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for(num($_POST["phone"]))."', 
+                                mailing_practice = '".s_for($_POST['mailing_practice'])."',
+                                mailing_name = '".s_for($_POST["mailing_name"])."', 
+                                mailing_address = '".s_for($_POST["mailing_address"])."', 
+                                mailing_city = '".s_for($_POST["mailing_city"])."', 
+                                mailing_state = '".s_for($_POST["mailing_state"])."', 
+                                mailing_zip = '".s_for($_POST["mailing_zip"])."', 
+                                mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				status = '".s_for($_POST["status"])."',
 				adddate=now(),
@@ -146,6 +160,15 @@ if($_POST["usersub"] == 1)
 		$state = $_POST['state'];
 		$zip = $_POST['zip'];
 		$phone = $_POST['phone'];
+
+                $mailing_practice = $_POST['mailing_practice'];
+                $mailing_name = $_POST['mailing_name'];
+                $mailing_address = $_POST['mailing_address'];
+                $mailing_city = $_POST['mailing_city'];
+                $mailing_state = $_POST['mailing_state'];
+                $mailing_zip = $_POST['mailing_zip'];
+                $mailing_phone = $_POST['mailing_phone'];
+
 		$status = $_POST['status'];
 		$use_patient_portal = $_POST['use_patient_portal'];
 	}
@@ -166,6 +189,15 @@ if($_POST["usersub"] == 1)
 		$state = st($themyarray['state']);
 		$zip = st($themyarray['zip']);
 		$phone = st($themyarray['phone']);
+
+                $mailing_practice = st($themyarray['mailing_practice']);
+                $mailing_name = st($themyarray['mailing_name']);
+                $mailing_address = st($themyarray['mailing_address']);
+                $mailing_city = st($themyarray['mailing_city']);
+                $mailing_state = st($themyarray['mailing_state']);
+                $mailing_zip = st($themyarray['mailing_zip']);
+                $mailing_phone = st($themyarray['mailing_phone']);
+
 		$status = st($themyarray['status']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$but_text = "Add ";
@@ -338,6 +370,71 @@ if($_POST["usersub"] == 1)
                 <span class="red">*</span>				
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Mailing Practice
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing Address
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="mailing_address" class="tbox" id="mailing_address" value="<?= $mailing_address; ?>" />
+                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing City
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing State
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing Zip
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Patient Portal Active? 

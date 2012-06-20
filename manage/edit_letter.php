@@ -171,7 +171,7 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$did."';";
+$franchisee_query = "SELECT mailing_name as name, mailing_practice as practive, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email FROM dental_users WHERE userid = '".$did."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;

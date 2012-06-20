@@ -426,6 +426,7 @@ function addstudylab(v){
   </tr>
   <tr>
                 <td valign="top" class="even">                                                                <select name="sleeplab">
+				<option value="">SELECT</option>
                                                 <?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -521,6 +522,7 @@ function addstudylab(v){
   <tr>	
 		<td valign="top" class="even" style="height:25px;">
 		<select name="dentaldevice" style="width:150px;">
+<option value="">SELECT</option>
         <?php
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
 								$device_my = mysql_query($device_sql);
@@ -672,6 +674,7 @@ No
   </tr>
   <tr>
                 <td valign="top" class="even">                                                                <select name="sleeplab">
+<option value="">SELECT</option>
                                                 <?php
             $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
             $sleeplabres = mysql_query($sleeplabquery);
@@ -779,6 +782,7 @@ No
   <tr>	
 		<td valign="top" class="even">
                 <select name="dentaldevice" style="width:150px;">
+<option value="">SELECT</option>
         <?php
         $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
                                                                 $device_my = mysql_query($device_sql);

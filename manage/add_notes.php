@@ -1,12 +1,17 @@
 <?php 
 session_start();
+?>
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
 if($_POST["notesub"] == 1)
 {
 	$notes = $_POST['notes'];
-	
+   	$procedure_date = ($_POST['procedure_date']!='')?date('Y-m-d', strtotime($_POST['procedure_date'])):'';	
+	$editor_initials = $_POST['editor_initials'];
+
 	if($_POST['ed'] == '')
 	{
 		$ins_sql = " insert into dental_notes set 
@@ -155,10 +160,12 @@ if($pat_myarray['patientid'] == '')
                	<?=$but_text?> Progress Notes
 			   	-
    				Patient <i><?=$name;?></i>
+
+		Entry Date: <?= date('m/d/Y', strtotime($procedure_date)); ?>
             </td>
         </tr>
         <tr>
-        	<td valign="top" class="frmhead">
+        	<td valign="top" colspan="2" class="frmhead">
 				Progress Note
 				<span class="red">*</span>
             <select name="title" class="tbox" onChange="change_desc(this.value)">
@@ -167,7 +174,7 @@ if($pat_myarray['patientid'] == '')
                                 $j=0;
                                 $my = mysql_query($sql);
                                 while($myarray = mysql_fetch_array($my))
-                                {?>
+                                { ?>
                                         <option value="<?=$j;?>">
                         <?=st($myarray['title']);?>
                     </option>
@@ -179,7 +186,7 @@ if($pat_myarray['patientid'] == '')
             </td>
 		</tr>
 		<tr>
-        	<td valign="top" class="frmdata">
+        	<td colspan="2" valign="top" class="frmdata">
 				<textarea id="notes" name="notes" class="tbox" style="width:100%; height:200px;"><?=$notes;?></textarea>
             </td>
         </tr>
@@ -188,8 +195,6 @@ if($pat_myarray['patientid'] == '')
         	<td valign="top" class="frmdata">
 				Editor Initials: <input type="text" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
             </td>
-        </tr>
-        <tr>
         	<td valign="top" class="frmdata">
 				Procedure Date: <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
             </td>

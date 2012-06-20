@@ -354,6 +354,16 @@ $my = mysql_query($sql) or die(mysql_error());
           <td>Out-of-network notes</td>
           <td><?= $preauth['hmo_auth_notes']; ?></td>
         </tr>
+	<tr class="tr_bg">
+          <td>Insurance/Patient Pay (%)</td>
+          <td><?php
+	    if($preauth['has_out_of_network_benefits']){
+		echo $preauth['out_of_network_percentage']." / ". (100-$preauth['out_of_network_percentage']);
+	    }else{
+                echo $preauth['in_network_percentage']." / ". (100-$preauth['in_network_percentage']);
+	    }
+	?></td>
+        </tr>
         <tr class="tr_bg">
           <td>Device amount?</td>
           <td>$<?= $preauth['trxn_code_amount'] ?></td>

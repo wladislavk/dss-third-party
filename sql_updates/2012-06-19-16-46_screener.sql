@@ -1,0 +1,21 @@
+CREATE TABLE `dental_screener` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50),
+  `last_name` varchar(50),
+  `email` varchar(70),
+  `epworth_reading` tinyint(1) default 0,
+  `epworth_public` tinyint(1) default 0,
+  `epworth_passenger` tinyint(1) default 0,
+  `epworth_lying` tinyint(1) default 0,
+  `epworth_talking` tinyint(1) default 0,
+  `epworth_lunch` tinyint(1) default 0,
+  `epworth_traffic` tinyint(1) default 0,
+  `snore_1` tinyint(1) default 0,
+  `snore_2` tinyint(1) default 0,
+  `snore_3` tinyint(1) default 0,
+  `snore_4` tinyint(1) default 0,
+  `snore_5` tinyint(1) default 0,
+  `adddate` datetime,
+  `ip_address` varchar(50),
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM CHARSET=latin1;

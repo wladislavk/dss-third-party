@@ -951,6 +951,7 @@ display: block;
 visibility: hidden;
 margin-left:0;
 margin-top:-9px;
+z-index:50;
 }
 
 /*Sub level menu list items (undo style from Top level List Items)*/

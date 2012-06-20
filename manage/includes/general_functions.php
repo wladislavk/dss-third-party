@@ -9,9 +9,10 @@ function uploadImage($image, $file_path, $profile = false){
   $fname = $image["name"];
   $lastdot = strrpos($fname,".");
   $name = substr($fname,0,$lastdot);
+  $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   list($width,$height)=getimagesize($uploadedfile);
-  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
+  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
 
     if($extension=="jpg" || $extension=="jpeg" )
     {
@@ -25,18 +26,23 @@ function uploadImage($image, $file_path, $profile = false){
     {
       $src = imagecreatefromgif($uploadedfile);
     }
+    if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
 	$resize_width = ($profile)?DSS_IMAGE_PROFILE_WIDTH:DSS_IMAGE_RESIZE_WIDTH;
 	$resize_height = ($profile)?DSS_IMAGE_PROFILE_HEIGHT:DSS_IMAGE_RESIZE_HEIGHT;
 
-    if($width>$height){
-      $newwidth=$resize_width;
-      $newheight=($height/$width)*$newwidth;
-    }elseif($height>$width){
-      $newheight=$resize_height;
-      $newwidth=($width/$height)*$newheight;
+    	if($width>$height){
+      	  $newwidth=$resize_width;
+      	  $newheight=($height/$width)*$newwidth;
+    	}elseif($height>$width){
+      	  $newheight=$resize_height;
+      	  $newwidth=($width/$height)*$newheight;
+    	}else{
+      	  $newwidth=$resize_width;
+      	  $newheight=$resize_height;
+    	}
     }else{
-      $newwidth=$resize_width;
-      $newheight=$resize_height;
+	$newwidth = $width;
+	$newheight = $height;
     }
     //$newwidth=DSS_IMAGE_MAX_WIDTH;
     //$newheight=($height/$width)*$newwidth;
@@ -44,15 +50,15 @@ function uploadImage($image, $file_path, $profile = false){
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )
     {
-    imagejpeg($tmp,$file_path,50);
+    imagejpeg($tmp,$file_path,60);
     }
     elseif($extension=="png")
     {
-      imagepng($tmp,$file_path,50);
+      imagepng($tmp,$file_path,60);
     }
     else
     {
-      imagegif($tmp,$file_path,50);
+      imagegif($tmp,$file_path,60);
     }
     $uploaded = true;
     if(filesize($file_path) > DSS_FILE_MAX_SIZE){

@@ -1394,7 +1394,7 @@ $num_face = mysql_num_rows($itype_my);
                 		}
         			?>
                 		</select>
-				<label for"location">Location</label>
+				<label for"location">Office Site</label>
 			    </span>
 			  <?php } ?>
                         </div>

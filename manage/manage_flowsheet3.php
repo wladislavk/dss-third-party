@@ -364,7 +364,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
        . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
        . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
-       . "  front_office_request_date, status, userid "
+       . "  front_office_request_date, status, userid, viewed "
        . ") VALUES ("
        . "  " . $_GET['pid'] . ", "
        . "  " . $my_array['doc_id'] . ", "
@@ -393,7 +393,8 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
        . "  '" . $sd . "', "
        . DSS_PREAUTH_PENDING . ", "
-       . "  '" . $_SESSION['userid'] . "' "
+       . "  '" . $_SESSION['userid'] . "', "
+       . 1
        . ")";
   //print_r($my_array);
   //print_r($sql);exit;

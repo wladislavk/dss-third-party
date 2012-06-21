@@ -812,7 +812,10 @@ if ($_POST['insurancesub'] == 1) {
 		die(); // already did a javascript redirect...just die
 	} // end claim form insert or update
 } // end processing claim form
-
+$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+$pat_my = mysql_query($pat_sql);
+$pat_myarray = mysql_fetch_array($pat_my);
+$docid = $pat_myarray['docid'];
 if($is_pending){
 // Load patient info from dental_patients table using pid on query string
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
@@ -2206,7 +2209,6 @@ if($insurancetype == '1'){
        . "ORDER BY "
        . "  ledger.service_date ASC";
 }
-
 $query = mysql_query($sql);
 // Display ledger trxns
 if (!$query) {

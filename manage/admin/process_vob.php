@@ -127,9 +127,11 @@ if (isset($_REQUEST['ed'])) {
     if(isset($_POST['reject_but'])){
         $sql .= ", status = " . DSS_PREAUTH_REJECTED . " ";
 	$sql .= ", reject_reason = '" . mysql_real_escape_string($_POST['reject_reason']) ."' ";
+        $sql .= ", viewed = 0 ";
     }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
+	$sql .= ", viewed = 0 ";
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } elseif($_POST['is_pre_auth_required']==1){ 
         $sql .= ", status = " . DSS_PREAUTH_PREAUTH_PENDING . " ";

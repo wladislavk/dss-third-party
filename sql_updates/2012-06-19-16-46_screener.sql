@@ -1,5 +1,7 @@
 CREATE TABLE `dental_screener` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `docid` int(11),
+  `userid` int(11),
   `first_name` varchar(50),
   `last_name` varchar(50),
   `email` varchar(70),

@@ -1,3 +1,14 @@
+<?php
+session_start();
+if(!isset($_SESSION['screener_doc'])){
+  ?>
+	<script type="text/javascript">
+		window.location = 'login.php';
+	</script>
+  <?php
+	die();
+}
+?>
 <html>
 <head>
 <script type="text/javascript" src="../manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -5,6 +16,8 @@
 </head>
 <body>
 <form>
+<input type="hidden" id="docid" name="docid" value="<?= $_SESSION['screener_doc']; ?>" />
+<input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
 <div class="sect" id="sect1">
 
 <h3>General</h3>
@@ -128,10 +141,13 @@
 <a href="#" onclick="submit_screener()">Next</a>
 </div>
 
-<div class="sect" id="sect4">
+<div class="sect" id="sectresults">
 
 <h3>Results</h3>
 
+Your scores are...<br />
+Epworth: <span id="ep_score"></span><br />
+Thornton: <span id="snore_score"></span>
 
 
 </div>

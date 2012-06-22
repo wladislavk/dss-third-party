@@ -2,6 +2,13 @@
 include_once 'includes/constants.inc';
 include 'includes/top.htm';
 require_once('includes/patient_info.php');
+if(isset($_POST['locsubmit'])){
+$query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+if(!mysql_query($query)){
+echo "Could not add note! Please contact the system administrator or try again.";
+}
+}
+
 if ($patient_info) {
 $patid = $_GET['pid'];
 if(isset($_POST['summarybtn']))
@@ -9,6 +16,7 @@ if(isset($_POST['summarybtn']))
 	$patient_name = $_POST['patient_name'];
 	$patient_dob = $_POST['patient_dob'];
 	$office = $_POST['osite'];
+	$location = $_POST['location'];
   $referral_source = $_POST['referral_source'];
 	$reason_seeking_tx = $_POST['reason_seeking_tx'];
 	$symptoms_osa = $_POST['symptoms_osa'];
@@ -138,6 +146,7 @@ if(isset($_POST['summarybtn']))
 	$year_check_4 = $_POST['year_check_4'];
 	$additional_notes = $_POST['additional_notes'];
 	$office = $_POST['osite'];
+	$location = $_POST['location'];
 	$sleep_qual1 = $_POST['sleep_qual1'];
 	$sleep_qual2 = $_POST['sleep_qual2'];
 	$sleep_qual3 = $_POST['sleep_qual3'];
@@ -240,6 +249,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
 		patient_name = '".s_for($patient_name)."',
 		patient_dob = '".s_for($patient_dob)."',
 	  osite = '".s_for($office)."',
+		location = '".s_for($location)."',
 		referral_source = '".s_for($referral_source)."',
 		reason_seeking_tx = '".s_for($reason_seeking_tx)."',
 		symptoms_osa = '".s_for($symptoms_osa)."',
@@ -572,6 +582,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
 		year_check_4 = '".s_for($year_check_4)."',
 		additional_notes = '".s_for($additional_notes)."',
 		osite = '".s_for($office)."',
+		location = '".s_for($location)."',
 		sleep_qual1 = '".s_for($sleep_qual1)."',
 		sleep_qual2 = '".s_for($sleep_qual2)."',
 		sleep_qual3 = '".s_for($sleep_qual3)."',
@@ -867,6 +878,7 @@ $year_check_3 = st($myarray['year_check_3']);
 $year_check_4 = st($myarray['year_check_4']);
 $additional_notes = st($myarray['additional_notes']);
 $office = st($myarray['osite']);
+$location = st($myarray['location']);
 $sleep_same_room = st($myarray['sleep_same_room']);
 $currently_wearing = st($myarray['currently_wearing']);
 $what_percentage = st($myarray['what_percentage']);
@@ -1203,7 +1215,15 @@ $num_face = mysql_num_rows($p);
       </label>
       <br />
     </td>
-    <td colspan="5" rowspan="4">
+<?php
+$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
+                $loc_q = mysql_query($loc_sql);
+$num_loc = mysql_num_rows($loc_q);
+$rowspan = ($num_loc > 1)?"4":"3";
+?>
+
+    <td colspan="5" rowspan="<?= $rowspan; ?>">
+
 <strong><h3 style="margin-top:-5px;">Medical Caregivers:</h3></strong>
 <div style="margin-left:20px;">
 
@@ -1309,14 +1329,17 @@ echo "Not Set, Please set through patient info.";
     </td>
     
   </tr>
-
+<?php
+if($num_loc > 1){
+?>
   <tr valign="top">
     <td width="15%" height="5">Office Site</td>
     <td colspan="1">
-      <?php include("dss_osite.php"); ?>
+      <?php include("dss_loc.php"); ?>
       <br />
     </td>
   </tr>
+<?php } ?>
   <tr valign="top">
     <td width="15%" height="5">Reason seeking tx</td>
     <td colspan="6">

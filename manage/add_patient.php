@@ -389,6 +389,12 @@ if($_POST["patientsub"] == 1)
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
+	
+		if(isset($_POST['location'])){
+			$loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+			mysql_query($loc_query);
+		}
+
 		$lsql = "SELECT login, password, registration_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_POST['ed'])."'";
 		$lq = mysql_query($lsql);
 		$l = mysql_fetch_assoc($lq);
@@ -616,7 +622,12 @@ mysql_query($s1);
 		ip_address='".$_SERVER['REMOTE_ADDR']."',
 		preferredcontact='".s_for($_POST["preferredcontact"])."';";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-		
+
+		if(isset($_POST['location'])){
+                	$loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+                	mysql_query($loc_query);
+		}
+
                 $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
@@ -791,6 +802,7 @@ mysql_query($s1);
 		$referred_notes = $_POST["referred_notes"];
 		$copyreqdate = $_POST["copyreqdate"];
 		$preferredcontact = $_POST["preferredcontact"];
+		$location = $_POST["location"];
 		
 	}
 	else
@@ -950,6 +962,11 @@ mysql_query($s1);
 		$preferredcontact = st($themyarray["preferredcontact"]);
 		$referred_notes = st($themyarray["referred_notes"]);
 		$name = st($themyarray['lastname'])." ".st($themyarray['middlename']).", ".st($themyarray['firstname']);
+
+		$loc_sql = "SELECT location from dental_summary WHERE patientid='".$_GET['pid']."';";
+		$loc_q = mysql_query($loc_sql);
+		$loc_r = mysql_fetch_assoc($loc_q);
+		$location = $loc_r['location'];
 		
 		$but_text = "Add ";
 	}
@@ -1362,6 +1379,24 @@ $num_face = mysql_num_rows($itype_my);
                                 <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
                                 <label for="zip">Zip / Post Code </label>
                             </span>
+				<?php
+				$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
+                		$loc_q = mysql_query($loc_sql);
+				$num_loc = mysql_num_rows($loc_q);
+				if($num_loc > 1){
+				?>
+			    <span>
+				<select name="location">
+                        		<option value="">Select</option>
+        			<?php
+                		while($loc_r = mysql_fetch_assoc($loc_q)){
+                        		?><option <?= ($location==$loc_r['id'])?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
+                		}
+        			?>
+                		</select>
+				<label for"location">Office Site</label>
+			    </span>
+			  <?php } ?>
                         </div>
                     </li>
 				</ul>

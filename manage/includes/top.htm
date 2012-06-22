@@ -727,20 +727,20 @@ display:none;
 <?php if(isset($_GET['pid']) && $_GET['pid']!= ''){ ?> 
                     <?php
 			$title = '';
-		    $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
-		    $myq3 = mysql_query($sqlq3);
-		    $myq3array = mysql_fetch_assoc($myq3);
-		    $allergen = $myq3array['allergenscheck'];
-		    if($allergen){
-			$title .= "Allergens: " . $myq3array['other_allergens']."\n";
-		    }
                     $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid=".$_GET['pid'];
                     $my=mysql_query($sql) or die(mysql_error());
                     while($myarray = mysql_fetch_array($my))
                                 {
 			$premed = $myarray['premedcheck'];
                     if($premed){
-                        $title .= "Pre-medication: " . $myarray['premed'];
+                        $title .= "Pre-medication: " . $myarray['premed']."\n";
+                    }
+                    $sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+                    $myq3 = mysql_query($sqlq3);
+                    $myq3array = mysql_fetch_assoc($myq3);
+                    $allergen = $myq3array['allergenscheck'];
+                    if($allergen){
+                        $title .= "Allergens: " . $myq3array['other_allergens'];
                     }
                      $thename= $myarray['firstname']." ".$myarray['lastname'];
                     }

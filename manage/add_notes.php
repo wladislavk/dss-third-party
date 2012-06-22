@@ -130,7 +130,7 @@ if($pat_myarray['patientid'] == '')
 	
 	$notes = st($themyarray['notes']);
 	$editor_initials = st($themyarray['editor_initials']);
-	$procedure_date = st($themyarray['procedure_date']);
+	$procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
 	
 	$but_text = "Add ";
 	

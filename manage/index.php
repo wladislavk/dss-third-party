@@ -255,7 +255,7 @@ while($ddlistpname2 = (mysql_fetch_array($myddlist2))){
 -->
 
 <div class="task_menu index_task">
-<h3>Tasks</h3>
+<h3>My Tasks</h3>
 
 <?php
 $od_q = mysql_query($od_sql);

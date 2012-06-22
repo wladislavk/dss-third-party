@@ -22,7 +22,8 @@ require_once('includes/formatters.php');
 <script type="text/javascript" charset="utf-8">
 	function initCal() {
 		scheduler.config.multi_day = true;
-		scheduler.config.xml_date="%Y-%m-%d %H:%i";
+		scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
+		scheduler.config.hour_date="%h:%i%A";
 		scheduler.config.scroll_hour = 8;
 		scheduler.locale.labels.workweek_tab = "W-Week"
 		scheduler.attachEvent("onTemplatesReady",function(){
@@ -139,7 +140,7 @@ $(document).ready(function(){
 });
 </script>
 
-	<div id="scheduler_here" class="dhx_cal_container" style='width:900px; height:600px; margin-left:40px;'>
+	<div id="scheduler_here" class="dhx_cal_container" style='width:960px; height:600px; margin-left:10px;'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>
 			<div class="dhx_cal_next_button">&nbsp;</div>

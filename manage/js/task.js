@@ -40,7 +40,7 @@ $('.task_status').click(function(){
     $('#pat_task_list').hide();
   })
 
-
+});
 function delete_task(id){
 
   if(confirm('Are you sure you want to delete this task?')){
@@ -96,4 +96,4 @@ if($('#pat_task_tom_list li').size()==0){
 
 }
 
-});
+

@@ -138,6 +138,83 @@ if(!isset($_SESSION['screener_doc'])){
         <select id="snore_5" name="snore_5"><?= $options; ?></select>
 </div>
 
+<a href="#" onclick="next_sect(4)">Next</a>
+
+</div>
+
+<div class="sect" id="sect4">
+  <div class="field">
+	<input type="radio" name="breathing" value="8" /> Yes
+	<input type="radio" name="breathing" value="0" /> No
+	<label>Have you ever been told you stop breathing while asleep?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="driving" value="6" /> Yes
+        <input type="radio" name="driving" value="0" /> No
+        <label>Have you ever fallen asleep or nodded off while driving?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="gasping" value="6" /> Yes
+        <input type="radio" name="gasping" value="0" /> No
+        <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="sleepy" value="4" /> Yes
+        <input type="radio" name="sleepy" value="0" /> No
+        <label>Do you feel excessively sleepy during the day?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="snore" value="4" /> Yes
+        <input type="radio" name="snore" value="0" /> No
+        <label>Do you snore or have you ever been told that you snore?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="weight_gain" value="2" /> Yes
+        <input type="radio" name="weight_gain" value="0" /> No
+        <label>Have you had weight gain and found it difficult to lose?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="blood_pressure" value="1" /> Yes
+        <input type="radio" name="blood_pressure" value="0" /> No
+        <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="jerk" value="3" /> Yes
+        <input type="radio" name="jerk" value="0" /> No
+        <label>Do you kick or jerk your legs while sleeping?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="burning" value="3" /> Yes
+        <input type="radio" name="burning" value="0" /> No
+        <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up? </label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="headaches" value="3" /> Yes
+        <input type="radio" name="headaches" value="0" /> No
+        <label>Do you wake up with headaches during the night or in the morning?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="falling_asleep" value="4" /> Yes
+        <input type="radio" name="falling_asleep" value="0" /> No
+        <label>Do you have trouble falling asleep?</label>
+  </div>
+
+  <div class="field">
+        <input type="radio" name="staying_asleep" value="4" /> Yes
+        <input type="radio" name="staying_asleep" value="0" /> No
+        <label>Do you have trouble staying asleep once you fall asleep?</label>
+  </div>
+
 <a href="#" onclick="submit_screener()">Next</a>
 </div>
 
@@ -147,8 +224,8 @@ if(!isset($_SESSION['screener_doc'])){
 
 Your scores are...<br />
 Epworth: <span id="ep_score"></span><br />
-Thornton: <span id="snore_score"></span>
-
+Thornton: <span id="snore_score"></span><br />
+Survey: <span id="survey_score"></span>
 
 </div>
 

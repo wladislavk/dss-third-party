@@ -19,7 +19,19 @@ function submit_screener(){
       snore_2: $('#snore_2').val(),
       snore_3: $('#snore_3').val(),
       snore_4: $('#snore_4').val(),
-      snore_5: $('#snore_5').val()
+      snore_5: $('#snore_5').val(),
+      breathing: $("input[name=breathing]:checked").val(),
+      driving: $("input[name=driving]:checked").val(),
+      gasping: $("input[name=gasping]:checked").val(),
+      sleepy: $("input[name=sleepy]:checked").val(),
+      snore: $("input[name=snore]:checked").val(),
+      weight_gain: $("input[name=weight_gain]:checked").val(),
+      blood_pressure: $("input[name=blood_pressure]:checked").val(),
+      jerk: $("input[name=jerk]:checked").val(),
+      burning: $("input[name=burning]:checked").val(),
+      headaches: $("input[name=headaches]:checked").val(),
+      falling_asleep: $("input[name=falling_asleep]:checked").val(),
+      staying_asleep: $("input[name=staying_asleep]:checked").val()
     },
     success: function(data){
       var r = $.parseJSON(data);
@@ -39,9 +51,23 @@ function submit_screener(){
         snore += parseInt($('#snore_3').val(), 10);
         snore += parseInt($('#snore_4').val(), 10);
         snore += parseInt($('#snore_5').val(), 10);
-	
+	var survey = 0;
+	survey += parseInt($("input[name=breathing]:checked").val(), 10);
+        survey += parseInt($("input[name=driving]:checked").val(), 10);
+        survey += parseInt($("input[name=gasping]:checked").val(), 10);
+        survey += parseInt($("input[name=sleepy]:checked").val(), 10);
+        survey += parseInt($("input[name=snore]:checked").val(), 10);
+        survey += parseInt($("input[name=weight_gain]:checked").val(), 10);
+        survey += parseInt($("input[name=blood_pressure]:checked").val(), 10);
+        survey += parseInt($("input[name=jerk]:checked").val(), 10);
+        survey += parseInt($("input[name=burning]:checked").val(), 10);
+        survey += parseInt($("input[name=headaches]:checked").val(), 10);
+        survey += parseInt($("input[name=falling_asleep]:checked").val(), 10);
+        survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
+
 	$('#ep_score').text(ep);
 	$('#snore_score').text(snore);
+	$('#survey_score').text(survey);
 	next_sect('results');
 
       }

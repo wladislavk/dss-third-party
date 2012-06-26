@@ -215,6 +215,58 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
+<h3>Rx</h3>
+  <div class="field">
+	<input type="checkbox" name="rx_tongue" value="1" />
+	<label>Enlarged/Scalloped Tongue</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_reflux" value="1" />
+        <label>Gastroesophageal Reflux</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_hypertension" value="1" />
+        <label>Hypertension</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_jaw" value="1" />
+        <label>Retruded lower Jaw</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_tonsils" value="1" />
+        <label>Elarged Tonsils</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_heart" value="1" />
+        <label>Heart Failure</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_pallet" value="1" />
+        <label>High Arching Hard Pallet</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_metabolic" value="1" />
+        <label>Metabolic Syndrome</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_stroke" value="1" />
+        <label>Stroke</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_bruxism" value="1" />
+        <label>Bruxism</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_diabetes" value="1" />
+        <label>Diabetes</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_obesity" value="1" />
+        <label>Obesity</label>
+  </div>
+
+
+
 <a href="#" onclick="submit_screener()">Next</a>
 </div>
 

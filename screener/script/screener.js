@@ -31,7 +31,19 @@ function submit_screener(){
       burning: $("input[name=burning]:checked").val(),
       headaches: $("input[name=headaches]:checked").val(),
       falling_asleep: $("input[name=falling_asleep]:checked").val(),
-      staying_asleep: $("input[name=staying_asleep]:checked").val()
+      staying_asleep: $("input[name=staying_asleep]:checked").val(),
+      rx_tongue: $("input[name=rx_tongue]").is(':checked')?1:0,
+      rx_reflux: $("input[name=rx_reflux]").is(':checked')?1:0,
+      rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
+      rx_jaw: $("input[name=rx_jaw]").is(':checked')?1:0,
+      rx_tonsils: $("input[name=rx_tonsils]").is(':checked')?1:0,
+      rx_heart: $("input[name=rx_heart]").is(':checked')?1:0,
+      rx_pallet: $("input[name=rx_pallet]").is(':checked')?1:0,
+      rx_metabolic: $("input[name=rx_metabolic]").is(':checked')?1:0,
+      rx_stroke: $("input[name=rx_stroke]").is(':checked')?1:0,
+      rx_bruxism: $("input[name=rx_bruxism]").is(':checked')?1:0,
+      rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
+      rx_obesity: $("input[name=rx_obesity]").is(':checked')?1:0
     },
     success: function(data){
       var r = $.parseJSON(data);

@@ -81,7 +81,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									</tr>
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-									Dental Sleep Solutions<br />
+									Dental Sleep Solutions Franchising, LLC<br />
 									3909 East Bay Drive, Ste 203<br />
 									Holmes Beach, FL 34217
 									</td>
@@ -96,7 +96,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-									<!-- title goes here -->Billing to:
+									<!-- title goes here -->Billed to:
 									</td>
 									</tr>
 									<tr>
@@ -280,7 +280,7 @@ $html .= '
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
-							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark. <b>Please detach the portion below and include with payment.</b>
+							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark. <b>Please include the receipt on the next page with payment.</b>
 							</td>
 							</tr>
 						</table>	
@@ -294,16 +294,34 @@ $html .= '
 					<!-- divider goes here --><img src="images/invoice/splitted-footer.jpg" alt="" border="no" style="margin: 0px; padding: 0px; display: block;"/>	
 					</td>
 					</tr>
-					<tr>
-					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
-                                                <table width="630" border="0" cellspacing="0" cellpadding="0">
+				
+				</table>
+				<!-- END main content table -->
+			 </td>
+		</tr>
+		</table>
+		<!-- END main centred table -->
+	</div></td>
+	</tr>
+</table>
+<br pagebreak="true"/>
+ <span style="font-size:45px">
+INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - RECEIPT
+</span>
+<span style="font-size:30px;">
+<i>Please include this receipt with your payment.</i>
+</span>
+<br />
+<br />
+ <table width="630" border="0" cellspacing="0" cellpadding="0">
                                                         <tr>
                                                         <!-- start left table column -->
                                                         <td width="196" align="left" valign="top" >
                                                                 <table width="196" border="0" cellspacing="0" cellpadding="0" >
                                                                         <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bottom: 10px;">
-                                                                        <!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bott
+om: 10px;">
+Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
                                                                         Invoice Date: '.date('m/d/Y').'<br />
                                                                         Payment Due: '.date('m/d/Y', strtotime(date() . " +7 day")).'
                                                                         </td>
@@ -317,39 +335,37 @@ $html .= '
                                                                 <table width="196" border="0" cellspacing="0" cellpadding="0" >
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-                                                                        <!-- title goes here -->Paid to:
+Paid to:
                                                                         </td>
                                                                         </tr>
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-                                                                        Dental Sleep Solutions<br />
+Dental Sleep Solutions<br />
                                                                         3909 East Bay Drive, Ste 203<br />
                                                                         Holmes Beach, FL 34217
                                                                         </td>
                                                                         </tr>
                                                                 </table>
                                                         </td>
-                                                        <td width="21">
-                                                        <!-- this is BLANK table column DO NOT DELETE -->
-                                                        </td>
-                                                        <!-- start right table column -->
+                                                       <!-- start right table column -->
                                                         <td width="196" align="left" valign="top" >
                                                                 <table width="196" border="0" cellspacing="0" cellpadding="0" >
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-                                                                        <!-- title goes here -->Billing to:
+Billed to:
                                                                         </td>
                                                                         </tr>
                                                                         <tr>
-                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-                                                                        '.$invoice['name'].'<br />
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bott
+om: 20px;">
+'.$invoice['name'].'<br />
                                                                         '.$invoice['address'].'<br />
                                                                         '.$invoice['city'].', '.$invoice['state'].' '.$invoice['zip'].'<br />
                                                                         Phone: '.$invoice['phone'].'<br />
-									<br />
-									<span style="color:#000; font-size:43px;">
-										Total: $'.number_format($total_charge,2).' 
-									</span>
+                                                                        <br />
+                                                                        <span style="color:#000; font-size:43px;">
+                                                                                Total: $'.number_format($total_charge,2).' 
+                                                                        </span>
                                                                         </td>
                                                                         </tr>
                                                                 </table>
@@ -357,20 +373,11 @@ $html .= '
                                                         </tr>
 
 
-						</table>
-					</td>
-					</tr>
-					<!-- END module -->
-				
-				</table>
-				<!-- END main content table -->
-			 </td>
-		</tr>
-		</table>
-		<!-- END main centred table -->
-	</div></td>
-	</tr>
-</table>
+                                                </table>
+
+
+
+<div style="display:block;">
 <table border="1" style="font-size:30px;" cellpadding="10">
 <tr>
 <td>
@@ -421,7 +428,10 @@ No Cases * $195=__________<br />
 </table>
 <div style="font-size:30px;">
 I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office during the past month, and have noted any cases not listed aboce here and adjusted payment appropriately.<br />
-________________________(signature) '.$invoice['name'].'
+<br />
+__________________________________________________(signature) '.$invoice['name'].'
+</div>
+</div>
 <!-- END main table -->
 </body>
 </html>';
@@ -469,5 +479,5 @@ $title = "test";
 ?>
 
 <script type="text/javascript">
-  window.location = "<?= $filename; ?>";
+  //window.location = "<?= $filename; ?>";
 </script>

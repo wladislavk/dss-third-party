@@ -821,7 +821,7 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         LEFT JOIN dental_patients p ON p.patientid=dt.patientid
    WHERE (dt.status = '0' OR
         dt.status IS NULL) AND
-        dt.responsibleid='".mysql_real_escape_string($_SESSION['docid'])."'";
+        dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
 $task_q = mysql_query($task_sql." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
 $num_tasks = mysql_num_rows($task_q);
 ?>

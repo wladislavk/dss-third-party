@@ -389,29 +389,29 @@ If YES, please list applicable cases performed in the previous month and adjust 
 <table>
 <tr>
 <td>
-<table>
+<table style="width: 400px;">
 	<tr>
 		<td>Name</td>
 		<td>Date</td>
 	</tr>
 	<tr>
-		<td>_______________</td>
+		<td>______________________________</td>
 		<td>____________</td>
 	</tr>	
         <tr>
-                <td>_______________</td>
+                <td>______________________________</td>
                 <td>____________</td>
         </tr>   
         <tr>
-                <td>_______________</td>
+                <td>______________________________</td>
                 <td>____________</td>
         </tr>   
         <tr>
-                <td>_______________</td>
+                <td>______________________________</td>
                 <td>____________</td>
         </tr>   
         <tr>
-                <td>_______________</td>
+                <td>______________________________</td>
                 <td>____________</td>
         </tr>   
 </table>
@@ -479,5 +479,6 @@ $title = "test";
 ?>
 
 <script type="text/javascript">
-  //window.location = "<?= $filename; ?>";
+  window.open("<?= $filename; ?>");
+  window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
 </script>

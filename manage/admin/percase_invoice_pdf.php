@@ -340,7 +340,7 @@ Paid to:
                                                                         </tr>
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-Dental Sleep Solutions<br />
+Dental Sleep Solutions Franchising, LLC<br />
                                                                         3909 East Bay Drive, Ste 203<br />
                                                                         Holmes Beach, FL 34217
                                                                         </td>

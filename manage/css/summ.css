@@ -1,0 +1,33 @@
+
+#summ_nav{
+  list-style: none;
+  float: left;
+  }
+
+#summ_nav li{
+  margin-bottom: 5px;
+  }
+
+#summ_nav li a{
+  display: block;
+  width: 165px;
+  height: 25px;
+  background: url(../images/summ_nav.gif) no-repeat 0 -32px;
+  text-align: center;
+  font-size: 18px;
+  padding-top: 7px; 
+  color: #333;
+  }
+
+#summ_nav li a:hover, #summ_nav li a.active{
+  background-position: 0 0;
+  color: #fff;
+  text-decoration: none;
+  }
+
+
+#sections{
+  width: 700px;
+  margin-left:20px;
+  float:left;
+  }

@@ -20,6 +20,15 @@ include 'includes/top.htm';
 
   <div id="sections">
   	<div id="sect_notes">
+        <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
+                Print Progress Note
+        </button>
+
+        <button onclick="Javascript: loadPopup('add_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton" style="float: right;">
+                Add New Progress Note
+        </button>
+
+
 <?php
 $sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
 $sql .= " order by adddate DESC";
@@ -40,7 +49,7 @@ $my=mysql_query($sql) or die(mysql_error());
         {
                 while($myarray = mysql_fetch_array($my))
                 {
-                        if($myarray["status"] == 1)
+                        if($myarray["signed_id"] != '')
                         {
                                 $tr_class = "tr_active";
                         }
@@ -54,11 +63,11 @@ $my=mysql_query($sql) or die(mysql_error());
                         $user_my = mysql_query($user_sql);
                         $user_myarray = mysql_fetch_array($user_my);
                 ?>
-                        <tr class="<?=$tr_class;?>" <? if(st($myarray["edited"]) == 1) {?> style="background-color:#FF9999" <? }?>>
+                        <tr class="<?=$tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
                                 <td valign="top">
                                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                                 <tr>
-                                                        <td valign="top" width="50%">
+                                                        <td valign="top" width="55%">
                                                                 Entry Date:
                                                                 <span style="font-weight:normal;">
                                                                         <?=date('M d, Y H:i',strtotime(st($myarray["adddate"])));?>
@@ -75,9 +84,18 @@ $my=mysql_query($sql) or die(mysql_error());
                                                                         <?=st($user_myarray["name"]);?>
                                                                 </span>
                                                         </td>
+							<td valign="top">
+							<? if(st($myarray["signed_id"]) == '') { ?>
+								<a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit / Sign</a>
+							<? }else{ ?>
+								Signed By: <?= $myarray["signed_id"]; ?>
+								<br />
+								Signed On: <?= date('m/d/Y H:m a', strtotime($myarray["signed_on"])); ?>
+							<? } ?>
+							</td>
                                                 </tr>
                                                 <tr>
-                                                        <td valign="top" colspan="2">
+                                                        <td valign="top" colspan="3">
                                                                 <hr size="1" />
                                                                 <span style="font-weight:normal;">
                                                                         <?=nl2br(st($myarray["notes"]));?>

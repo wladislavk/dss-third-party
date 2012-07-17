@@ -209,6 +209,10 @@ if($pat_myarray['patientid'] == '')
                 <input type="hidden" name="notesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["notesid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Progress Notes" class="button" />
+		<?php 
+		  if($_SESSION['docid'] == $_SESSION['userid']){ ?>
+		<input type="submit" name="sign" value=" <?=$but_text?> Sign and Close" class="button" />
+		<?php } ?>
             </td>
         </tr>
     </table>

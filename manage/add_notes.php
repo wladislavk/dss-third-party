@@ -20,7 +20,14 @@ if($_POST["notesub"] == 1)
 		editor_initials = '".s_for($editor_initials)."',
 		procedure_date = '".s_for($procedure_date)."',
 		userid = '".s_for($_SESSION['userid'])."',
-		docid = '".s_for($_SESSION['docid'])."',
+		docid = '".s_for($_SESSION['docid'])."',";
+		if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
+		  $ins_sql .= "
+			signed_id='".s_for($_SESSION['userid'])."',
+			signed_on=now(),
+			";
+		}
+		$ins_sql .= "
 		adddate = now(),
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
@@ -42,7 +49,14 @@ if($_POST["notesub"] == 1)
 		notes = '".s_for($notes)."',
 		editor_initials = '".s_for($editor_initials)."',
 		procedure_date = '".s_for($procedure_date)."',
-		edited = 1,
+		edited = 1,";
+                if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
+                  $up_sql .= "
+                        signed_id='".s_for($_SESSION['userid'])."',
+                        signed_on=now(),
+                        ";
+                }
+                $up_sql .= "
 		userid = '".s_for($_SESSION['userid'])."'
 	 	where notesid='".$_POST["ed"]."'";
 		

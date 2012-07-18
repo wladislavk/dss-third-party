@@ -45,6 +45,11 @@ require_once('includes/formatters.php');
 		top: 20px;
 		width: 20px;
 	}
+	.dhx_cal_event.event_general div{ background-color: #FFF9CF !important; }
+	.dhx_cal_event.event_follow_up div{ background-color: #D6CFFF !important; } 
+	.dhx_cal_event.event_sleep_test div{ background-color: #CFF5FF !important; }
+	.dhx_cal_event.event_impressions div {background-color: #DFFFCF !important; }
+	.dhx_cal_event.event_new_patient div{background-color: #FFCFCF !important; }
 		
 </style>
 
@@ -56,12 +61,21 @@ require_once('includes/formatters.php');
 		scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
 		scheduler.config.mark_now = true;
 		scheduler.config.details_on_create = true;
+		scheduler.config.details_on_dblclick=true;
 		scheduler.config.scroll_hour = 8;
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";
-		scheduler.locale.labels.section_category = "Type";
+		scheduler.locale.labels.section_category = "Appointment Type";
                 scheduler.locale.labels.section_producer = "Producer";
 		scheduler.locale.labels.workweek_tab = "W-Week"
+                scheduler.templates.event_class=function(start, end, event){
+
+                  if(event.category) // if event has subject property then special class should be assigned
+                    return "event_"+event.category;
+
+                  return "event_general"; // default return
+
+            	};
 		scheduler.templates.hour_scale = function(date){
             		var hour = date.getHours();
             		var top = '00';

@@ -148,6 +148,16 @@ if($uploaded){
 				</script>
 				<?
 				die();
+			} elseif($_REQUEST['return']=='patinfo'){
+				?>
+                                <script type="text/javascript">
+					<? if($_REQUEST['return_field']=='profile'){ ?>
+						parent.updateProfileImage('<?= $banner1; ?>');
+					<? } ?>
+					parent.disablePopupClean();
+                                </script>
+                                <?
+                                die();
 			} else {
 				?>
 				<script type="text/javascript">
@@ -331,6 +341,8 @@ if($uploaded){
                 </span><br />
                 <input type="hidden" name="imagesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["imageid"]?>" />
+		<input type="hidden" name="return" value="<?= $_REQUEST['return']; ?>" />
+                <input type="hidden" name="return_field" value="<?= $_REQUEST['return_field']; ?>" />
                 <input type="submit" value=" <?=$but_text?> Image" class="button" />
             </td>
         </tr>

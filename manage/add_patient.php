@@ -1203,7 +1203,7 @@ function remove_notification(id){
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>
                     <li id="foli8" class="complex">	
-<div style="float:right; width:270px;">
+<div id="profile_image" style="float:right; width:270px;">
 <?php
                                 $pid = $_GET['pid'];
   $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
@@ -1212,7 +1212,7 @@ $num_face = mysql_num_rows($itype_my);
 ?>
 <span style="float:right">
 <?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" >
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
 		<img src="images/add_patient_photo.png" />
         </a>
 <?php }else{ 
@@ -1749,7 +1749,7 @@ $(document).ready(function(){
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-				        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+				        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
 			    </span>
@@ -1911,7 +1911,7 @@ $(document).ready(function(){
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-                                        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+                                        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
 			    </span>
@@ -2358,6 +2358,10 @@ $('#'+idField).val(idVal);
 if(inField=="referredby_name"){
   $('#referred_source').val('2');
 }
+}
+
+function updateProfileImage(img){
+	$('#profile_image').html("<img src='q_file/"+img+"' height='150' style='float:right;' />");
 }
 
 

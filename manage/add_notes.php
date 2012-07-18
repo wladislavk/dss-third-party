@@ -32,7 +32,8 @@ if($_POST["notesub"] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+	 	$id = mysql_insert_id();
+		mysql_query("UPDATE dental_notes SET parentid='".$id."' WHERE notesid='".$id."'");	
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -44,6 +45,27 @@ if($_POST["notesub"] == 1)
 	}
 	else
 	{
+		$p_q = mysql_query("select parentid FROM dental_notes WHERE notesid='".$_POST["ed"]."'");
+		$p_r = mysql_fetch_assoc($p_q);
+		$parentid = $p_r['parentid'];
+		$ins_sql = " insert into dental_notes set 
+                patientid = '".s_for($_GET['pid'])."',
+                notes = '".s_for($notes)."',
+                editor_initials = '".s_for($editor_initials)."',
+                procedure_date = '".s_for($procedure_date)."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',";
+                if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
+                  $ins_sql .= "
+                        signed_id='".s_for($_SESSION['userid'])."',
+                        signed_on=now(),
+                        ";
+                }
+                $ins_sql .= "
+		parentid='".$parentid."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
 		$up_sql = "update dental_notes set 
 		patientid = '".s_for($_GET['pid'])."',
 		notes = '".s_for($notes)."',
@@ -60,7 +82,7 @@ if($_POST["notesub"] == 1)
 		userid = '".s_for($_SESSION['userid'])."'
 	 	where notesid='".$_POST["ed"]."'";
 		
-		mysql_query($up_sql) or die($up_sql." | ".mysql_error());
+		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
 		?>
@@ -198,7 +220,21 @@ if($pat_myarray['patientid'] == '')
                                         $j++;
                                 }?>
             </select>
-
+		<span style="float:right;">
+		<?php
+		$r_sql = "SELECT n.parentid, u.name FROM dental_notes n LEFT JOIN dental_users u ON n.userid=u.userid
+			WHERE parentid=(select parentid from dental_notes where notesid='".mysql_real_escape_string($_REQUEST['ed'])."')
+			AND notesid != '".mysql_real_escape_string($_REQUEST['ed'])."'";
+		$r_q = mysql_query($r_sql);
+		$num_r = mysql_num_rows($r_q);
+		$r = mysql_fetch_assoc($r_q);
+		if($num_r == 1){
+		  ?>Last Edited By: <?
+			echo $r['name'];
+		}elseif($num_r > 1){
+		  ?><a href="note_revisions.php?nid=<?=$r['parentid'];?>">View Revisions</a><?php
+		}
+		?></span>
             </td>
 		</tr>
 		<tr>

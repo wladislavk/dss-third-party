@@ -34,8 +34,14 @@ $sql = "select n.*, u.name signed_name from dental_notes n
 	LEFT JOIN dental_users u on u.userid=n.signed_id
 where n.docid='".$_SESSION['docid']."' and n.patientid='".s_for($_GET['pid'])."' ";
 $sql .= " order by n.adddate DESC";
+$sql = "select * from
+	(
+	select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate desc
+	) as tmp_table
+	group by parentid
+	order by adddate desc
+	";
 $my=mysql_query($sql) or die(mysql_error());
-
 ?>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <? if(mysql_num_rows($my) == 0)

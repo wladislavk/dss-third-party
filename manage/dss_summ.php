@@ -30,8 +30,10 @@ include 'includes/top.htm';
 
 
 <?php
-$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' ";
-$sql .= " order by adddate DESC";
+$sql = "select n.*, u.name signed_name from dental_notes n
+	LEFT JOIN dental_users u on u.userid=n.signed_id
+where n.docid='".$_SESSION['docid']."' and n.patientid='".s_for($_GET['pid'])."' ";
+$sql .= " order by n.adddate DESC";
 $my=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -88,9 +90,9 @@ $my=mysql_query($sql) or die(mysql_error());
 							<? if(st($myarray["signed_id"]) == '') { ?>
 								<a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit / Sign</a>
 							<? }else{ ?>
-								Signed By: <?= $myarray["signed_id"]; ?>
+								Signed By: <?= $myarray["signed_name"]; ?>
 								<br />
-								Signed On: <?= date('m/d/Y H:m a', strtotime($myarray["signed_on"])); ?>
+								Signed On: <?= date('m/d/Y H:i a', strtotime($myarray["signed_on"])); ?>
 							<? } ?>
 							</td>
                                                 </tr>

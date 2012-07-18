@@ -138,7 +138,9 @@ if($pat_myarray['patientid'] == '')
 <script language="JavaScript" src="calendar2.js"></script>
     <?
 	
-    $thesql = "select * from dental_notes where notesid='".$_REQUEST["ed"]."'";
+    $thesql = "select n.*, u.name added_name from dental_notes n
+	LEFT JOIN dental_users u on u.userid=n.userid
+	where notesid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
@@ -180,7 +182,7 @@ if($pat_myarray['patientid'] == '')
         </tr>
         <tr>
         	<td valign="top" colspan="2" class="frmhead">
-				Progress Note
+				Text Templates
 				<span class="red">*</span>
             <select name="title" class="tbox" onChange="change_desc(this.value)">
                 <option value="">Select</option>
@@ -211,6 +213,17 @@ if($pat_myarray['patientid'] == '')
             </td>
         	<td valign="top" class="frmdata">
 				Procedure Date: <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
+				Added by: 
+				<?php
+					if(isset($_REQUEST['ed'])){
+						echo $themyarray["added_name"];
+					}else{
+						$s = "SELECT name from dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+						$q = mysql_query($s);
+						$r = mysql_fetch_assoc($q);
+						echo $r['name'];
+					}
+				?>
             </td>
         </tr>
         

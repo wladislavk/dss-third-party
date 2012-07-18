@@ -1749,9 +1749,22 @@ $(document).ready(function(){
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-				        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="p_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
 			    </span>
 						</div>
 						<div>
@@ -1911,9 +1924,24 @@ $(document).ready(function(){
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-                                        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+
+                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=12&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
+
 			    </span>
 						</div>
 						<div>
@@ -2364,6 +2392,10 @@ function updateProfileImage(img){
 	$('#profile_image').html("<img src='q_file/"+img+"' height='150' style='float:right;' />");
 }
 
+function updateInsCard(img, field){
+  $('#'+field).text('View Insurance Card Image');
+  $('#'+field).attr('onclick', "window.open('imageholder.php?image="+img+"','welcome','width=800,height=400,scrollbars=yes'); return false;");
+}
 
 </script>
 <script type="text/javascript">

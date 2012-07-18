@@ -153,10 +153,15 @@ if($uploaded){
                                 <script type="text/javascript">
 					<? if($_REQUEST['return_field']=='profile'){ ?>
 						parent.updateProfileImage('<?= $banner1; ?>');
-					<? } ?>
+					<? }elseif($_POST['imagetypeid']==10){ ?>
+						parent.updateInsCard('<?= $banner1; ?>', 'p_m_ins_card');
+					<? }elseif($_POST['imagetypeid']==12){ ?>
+                                                parent.updateInsCard('<?= $banner1; ?>', 's_m_ins_card');
+                                        <? } ?>
 					parent.disablePopupClean();
                                 </script>
                                 <?
+			
                                 die();
 			} else {
 				?>

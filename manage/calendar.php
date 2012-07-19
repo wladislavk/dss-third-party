@@ -76,6 +76,41 @@ require_once('includes/formatters.php');
                   return "event_general"; // default return
 
             	};
+		scheduler.templates.tooltip_text = function(start,end,event) {
+			switch(event.category){
+				case 'follow_up':
+					cat = 'Follow-up';
+					break;
+				case 'sleep_test':
+					cat = 'Sleep Test';
+					break;
+				case 'impressions':
+					cat = 'Impressions';
+					break;
+				case 'new_patient':
+					cat = 'New Pt';
+					break;
+				default:
+					cat = 'General';
+					break;
+			}
+			switch(event.producer){
+				<?php
+				$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
+                        	$p_query = mysql_query($p_sql);
+                        	while($p = mysql_fetch_array($p_query)){
+                                	?>case '<?= $p['userid']; ?>':
+						prod = '<?= $p['name']; ?>';
+						break;
+					<?php
+                        	}
+				?>
+				default:
+					prod = 'None';
+					break;
+			}
+			return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
+		}
 		scheduler.templates.hour_scale = function(date){
             		var hour = date.getHours();
             		var top = '00';

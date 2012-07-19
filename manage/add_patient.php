@@ -1108,6 +1108,12 @@ if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementBy
   alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
   return false;
 }
+
+if($('#s_m_ins_type').val() == 1){
+  alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  return false;
+}
+
 return result;
 
 //workaround for settimeout being called in conditionals even if not true
@@ -1812,12 +1818,24 @@ $image = mysql_fetch_assoc($itype_my);
                                 <label for="home_phone">Insurance ID.</label>
                             </span>
                             <span>
-                                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p_m_ins_grp?>" maxlength="255" style="width:100px;" />
+                                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox"
+					<?php if($p_m_ins_type == '1'){?>
+					  value="NONE" readonly="readonly"
+					<?php }else{ ?>
+					  value="<?=$p_m_ins_grp?>" 
+					<?php } ?>
+					maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Group #</label>
                             </span>
                             
                             <span>
-                                 <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p_m_ins_plan?>" maxlength="255" style="width:200px;" />
+                                 <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" 
+                                        <?php if($p_m_ins_type == '1'){?>
+                                          value="" readonly="readonly"
+                                        <?php }else{ ?>
+					  value="<?=$p_m_ins_plan?>" 
+					<?php } ?>
+					maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Plan Name</label>
                             </span>
 <span>                                                                 <textarea id="p_m_ins_phone" name="p_m_ins_phone" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
@@ -1846,7 +1864,7 @@ $image = mysql_fetch_assoc($itype_my);
                   
                         <div>
                             <span>
-                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -2023,7 +2041,7 @@ $image = mysql_fetch_assoc($itype_my);
                   
                         <div>
                             <span>
-                                <select id="s_m_ins_type" name="s_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -2395,6 +2413,25 @@ function updateProfileImage(img){
 function updateInsCard(img, field){
   $('#'+field).text('View Insurance Card Image');
   $('#'+field).attr('onclick', "window.open('imageholder.php?image="+img+"','welcome','width=800,height=400,scrollbars=yes'); return false;");
+}
+
+function update_insurance_type(){
+  if($('#p_m_ins_type').val()==1){
+    $('#p_m_ins_grp').val('NONE');
+    $('#p_m_ins_plan').val('');
+    $('#p_m_ins_grp').attr('readonly', 'readonly');
+    $('#p_m_ins_plan').attr('readonly', 'readonly');
+  }else{
+    $('#p_m_ins_grp').removeAttr('readonly');
+    $('#p_m_ins_plan').removeAttr('readonly');
+  }
+}
+
+function checkMedicare(){
+  if($('#s_m_ins_type').val() == 1){
+    $('#s_m_ins_type').val('');
+    alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  }
 }
 
 </script>

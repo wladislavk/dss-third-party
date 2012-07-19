@@ -166,6 +166,10 @@ if($_POST['q_page1sub'] == 1)
 	}
 }
 
+        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        if(mysql_num_rows($exist_q) == 0)
+        {
 
 $pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -668,7 +672,10 @@ $('document').ready( function(){
 </form>
 
 
+<?php }else{ ?>
 
+This section has been completed.
+<?php } ?>
 
 <? include "includes/footer.php";?>
 

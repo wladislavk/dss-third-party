@@ -6,6 +6,7 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
+include_once('admin/includes/password.php');
 if($_POST["notesub"] == 1)
 {
 	$notes = $_POST['notes'];
@@ -26,6 +27,30 @@ if($_POST["notesub"] == 1)
 			signed_id='".s_for($_SESSION['userid'])."',
 			signed_on=now(),
 			";
+		}elseif(isset($_POST['signstaff'])){
+		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+        		$salt_q = mysql_query($salt_sql);
+        		$salt_row = mysql_fetch_assoc($salt_q);
+
+        		$pass = gen_password($_POST['password'], $salt_row['salt']);
+
+        		$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+        		$check_my = mysql_query($check_sql);
+
+        		if(mysql_num_rows($check_my) == 1)
+        		{
+				$check_myarray = mysql_fetch_array($check_my);
+				$ins_sql .= "
+                        	signed_id='".s_for($check_myarray['userid'])."',
+                        	signed_on=now(),
+                        	";
+			}else{
+				?>
+				<script type="text/javascript">
+					alert("Unable to sign note due to invalid credentials. Note has been saved.");
+				</script>	
+				<?php
+			}
 		}
 		$ins_sql .= "
 		adddate = now(),
@@ -38,7 +63,7 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_progress_notes.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
+			parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
 		</script>
 		<?
 		die();
@@ -60,7 +85,32 @@ if($_POST["notesub"] == 1)
                         signed_id='".s_for($_SESSION['userid'])."',
                         signed_on=now(),
                         ";
+                }elseif(isset($_POST['signstaff'])){
+                        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+                        $salt_q = mysql_query($salt_sql);
+                        $salt_row = mysql_fetch_assoc($salt_q);
+
+                        $pass = gen_password($_POST['password'], $salt_row['salt']);
+
+                        $check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+                        $check_my = mysql_query($check_sql);
+
+                        if(mysql_num_rows($check_my) == 1)
+                        {
+                                $check_myarray = mysql_fetch_array($check_my);
+                                $ins_sql .= "
+                                signed_id='".s_for($check_myarray['userid'])."',
+                                signed_on=now(),
+                                ";
+                        }else{
+                                ?>
+                                <script type="text/javascript">
+                                        alert("Unable to sign note due to invalid credentials. Updated note has been saved.");
+                                </script>
+                                <?php
+                        }
                 }
+
                 $ins_sql .= "
 		parentid='".$parentid."',
                 adddate = now(),
@@ -88,7 +138,7 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='manage_progress_notes.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>';
+			parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
 		</script>
 		<?
 		die();
@@ -170,15 +220,18 @@ if($pat_myarray['patientid'] == '')
 	$editor_initials = st($themyarray['editor_initials']);
 	$procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
 	
-	$but_text = "Add ";
+	$but_unsigned_text = "Save and keep UNSIGNED";
+	$but_signed_text = "Save Progress Note and SIGN";
 	
 	if($themyarray["userid"] != '')
 	{
-		$but_text = "Edit ";
+        	$but_unsigned_text = "Save changes and keep UNSIGNED";
+        	$but_signed_text = "Save changes and SIGN";
 	}
 	else
 	{
-		$but_text = "Add ";
+		$but_unsigned_text = "Save and keep UNSIGNED";
+        	$but_signed_text = "Save Progress Note and SIGN";
 		$procedure_date = date('m/d/Y');
 	}
 	?>
@@ -194,7 +247,7 @@ if($pat_myarray['patientid'] == '')
     <form name="notesfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return notesabc(this)">
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
-            <td colspan="2" class="cat_head">
+            <td colspan="2" class="cat_head" style="font-size:16px;">
                	<?=$but_text?> Progress Notes
 			   	-
    				Patient <i><?=$name;?></i>
@@ -247,8 +300,8 @@ if($pat_myarray['patientid'] == '')
         	<td valign="top" class="frmdata">
 				Editor Initials: <input type="text" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
             </td>
-        	<td valign="top" class="frmdata">
-				Procedure Date: <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
+        	<td class="frmdata">
+				Procedure Date: <span class="red">*</span> <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
 				Added by: 
 				<?php
 					if(isset($_REQUEST['ed'])){
@@ -271,10 +324,24 @@ if($pat_myarray['patientid'] == '')
                 </span><br />
                 <input type="hidden" name="notesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["notesid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Progress Notes" class="button" />
+		<div id="submit_buttons">
+                <input type="submit" value=" <?=$but_unsigned_text?>" class="button" />
 		<?php 
 		  if($_SESSION['docid'] == $_SESSION['userid']){ ?>
-		<input type="submit" name="sign" value=" <?=$but_text?> Sign and Close" class="button" />
+		<input type="submit"  style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />
+		<?php }else{ ?>
+			<input type="button" onclick="$('#submit_buttons').hide();$('#cred_div').show();return false;" style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />		
+		<? } ?>
+		</div>
+<p style="text-align:left;">NOTE: For a Progress Note to be legally valid it must be SIGNED. SIGNED means that the note is stored permanently and can no longer be edited. If you wish to make future edits to a Progress Note then select UNSIGNED, but it will not become a legal part of the Patient's chart until SIGNED.</p>
+		<?php if($_SESSION['docid'] != $_SESSION['userid']){ ?>
+			<div id="cred_div" style="display:none;">
+				Username: <input type="text" name="username" /><br />
+				Password: <input type="password" name="password" /><br />
+				<input type="submit" value=" <?=$but_unsigned_text?>" class="button" />
+				<input type="submit" style="margin-left: 20px;" name="signstaff" value=" <?=$but_signed_text?>" class="button" />
+
+			</div>
 		<?php } ?>
             </td>
         </tr>

@@ -1047,6 +1047,12 @@ function notesabc(fa)
 		fa.notes.focus();
 		return false;
 	}
+	if(trim(fa.procedure_date.value) == '')
+        {
+                alert("Procedure Date is Required");
+                fa.procedure_date.focus();
+                return false;
+        }
 }
 
 function patientreportabc(fa)

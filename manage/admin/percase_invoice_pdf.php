@@ -82,7 +82,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
 									Dental Sleep Solutions Franchising, LLC<br />
-									3909 East Bay Drive, Ste 203<br />
+									3909 East Bay Drive, Ste 205<br />
 									Holmes Beach, FL 34217
 									</td>
 									</tr>
@@ -341,7 +341,7 @@ Paid to:
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
 Dental Sleep Solutions Franchising, LLC<br />
-                                                                        3909 East Bay Drive, Ste 203<br />
+                                                                        3909 East Bay Drive, Ste 205<br />
                                                                         Holmes Beach, FL 34217
                                                                         </td>
                                                                         </tr>
@@ -383,7 +383,7 @@ om: 20px;">
 <td>
 
 Additional Cases?&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;No<br />
-If YES, please list applicable cases performed in the previous month and adjust total:
+If YES, please list all cases performed to-date that have not been previously invoiced and adjust total:
 <br />
 <br />
 <table>
@@ -427,7 +427,7 @@ No Cases * $195=__________<br />
 </tr>
 </table>
 <div style="font-size:30px;">
-I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office during the past month, and have noted any cases not listed aboce here and adjusted payment appropriately.<br />
+I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office up to and including invoice date, and have noted any cases not listed on this or previous invoices performed to-date and adjusted payment accordingly.<br />
 <br />
 __________________________________________________(signature) '.$invoice['name'].'
 </div>

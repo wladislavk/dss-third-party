@@ -32,9 +32,17 @@ $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
 $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
 $other_insured_dob = st($pat_myarray['ins2_dob']);
-$insured_insurance_plan = strtoupper(st($pat_myarray['p_m_ins_plan']));
 $other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
-$insured_policy_group_feca = strtoupper(st($pat_myarray['p_m_ins_grp']));
+        if($pat_myarray['p_m_ins_type']==1){
+          $insured_policy_group_feca = "NONE";
+          $insured_insurance_plan = '';
+          $insured_dob = '';
+          $insured_sex = '';
+          $insured_employer_school_name = '';
+        }else{
+          $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
+          $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];
+        }
 $other_insured_policy_group_feca = strtoupper(st($pat_myarray['s_m_ins_grp']));
 $referredby = st($pat_myarray['referred_by']);
 $referred_source = st($pat_myarray['referred_source']);
@@ -93,6 +101,12 @@ $insured_employer_school_name = strtoupper(st($myarray['insured_employer_school_
 $other_insured_employer_school_name = strtoupper(st($myarray['other_insured_employer_school_name']));
 $reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
 $another_plan = strtoupper(st($myarray['another_plan']));
+if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+  $another_plan = 'YES';
+}else{
+  $another_plan = '';
+}
+
 $patient_signature = st($myarray['patient_signature']);
 $patient_signed_date = st($myarray['patient_signed_date']);
 $insured_signature = st($myarray['insured_signature']);
@@ -317,11 +331,19 @@ if($insured_policy_group_feca == '')
 
 if($insured_insurance_plan == '')
 	$insured_insurance_plan = $pat_myarray['plan_name'];	
+        
 
+if($pat_myarray['p_m_ins_type']==1){
+          $insured_policy_group_feca = "NONE";
+          $insured_insurance_plan = '';
+          $insured_dob = '';
+          $insured_sex = '';
+          $insured_employer_school_name = '';
+        }
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
-if ($dent_rows <= 0) {
+//if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
-}
+//}
 
 $sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
@@ -451,7 +473,7 @@ $fdf = "
     $fdf .= "
       << /T(".$field_path.".pt_birth_date_mm_fill[0]) /V(".date('m',strtotime($patient_dob)).") >>
       << /T(".$field_path.".pt_birth_date_dd_fill[0]) /V(".date('d',strtotime($patient_dob)).") >>
-      << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".date('y',strtotime($patient_dob)).") >>
+      << /T(".$field_path.".pt_birth_date_yy_fill[0]) /V(".date('Y',strtotime($patient_dob)).") >>
     ";
   }
   $fdf .= "
@@ -496,7 +518,7 @@ $fdf = "
     $fdf .= "
       << /T(".$field_path.".insured_dob_mm_fill[0]) /V(".date('m', strtotime($insured_dob)).") >>
       << /T(".$field_path.".insured_dob_dd_fill[0]) /V(".date('d', strtotime($insured_dob)).") >>
-      << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".date('y', strtotime($insured_dob)).") >>
+      << /T(".$field_path.".insured_dob_yy_fill[0]) /V(".date('Y', strtotime($insured_dob)).") >>
     ";
   }
   $fdf .= "
@@ -507,7 +529,7 @@ $fdf = "
     $fdf .= "
       << /T(".$field_path.".other_insured_dob_mm_fill[0]) /V(".date('m', strtotime($other_insured_dob)).") >>
       << /T(".$field_path.".other_insured_dob_dd_fill[0]) /V(".date('d', strtotime($other_insured_dob)).") >>
-      << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".date('y', strtotime($other_insured_dob)).") >>
+      << /T(".$field_path.".other_insured_dob_yy_fill[0]) /V(".date('Y', strtotime($other_insured_dob)).") >>
     ";
   }
   $fdf .= "

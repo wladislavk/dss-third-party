@@ -1108,6 +1108,12 @@ if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementBy
   alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
   return false;
 }
+
+if($('#s_m_ins_type').val() == 1){
+  alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  return false;
+}
+
 return result;
 
 //workaround for settimeout being called in conditionals even if not true
@@ -1203,7 +1209,7 @@ function remove_notification(id){
         	<td valign="top" colspan="2" class="frmhead">
 				<ul>
                     <li id="foli8" class="complex">	
-<div style="float:right; width:270px;">
+<div id="profile_image" style="float:right; width:270px;">
 <?php
                                 $pid = $_GET['pid'];
   $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
@@ -1212,7 +1218,7 @@ $num_face = mysql_num_rows($itype_my);
 ?>
 <span style="float:right">
 <?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4');return false;" >
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
 		<img src="images/add_patient_photo.png" />
         </a>
 <?php }else{ 
@@ -1749,9 +1755,22 @@ $(document).ready(function(){
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-				        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="p_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
 			    </span>
 						</div>
 						<div>
@@ -1799,12 +1818,24 @@ $(document).ready(function(){
                                 <label for="home_phone">Insurance ID.</label>
                             </span>
                             <span>
-                                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p_m_ins_grp?>" maxlength="255" style="width:100px;" />
+                                 <input id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox"
+					<?php if($p_m_ins_type == '1'){?>
+					  value="NONE" readonly="readonly"
+					<?php }else{ ?>
+					  value="<?=$p_m_ins_grp?>" 
+					<?php } ?>
+					maxlength="255" style="width:100px;" />
                                 <label for="home_phone">Group #</label>
                             </span>
                             
                             <span>
-                                 <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" value="<?=$p_m_ins_plan?>" maxlength="255" style="width:200px;" />
+                                 <input id="p_m_ins_plan" name="p_m_ins_plan" type="text" class="field text addr tbox" 
+                                        <?php if($p_m_ins_type == '1'){?>
+                                          value="" readonly="readonly"
+                                        <?php }else{ ?>
+					  value="<?=$p_m_ins_plan?>" 
+					<?php } ?>
+					maxlength="255" style="width:200px;" />
                                 <label for="home_phone">Plan Name</label>
                             </span>
 <span>                                                                 <textarea id="p_m_ins_phone" name="p_m_ins_phone" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
@@ -1833,7 +1864,7 @@ $(document).ready(function(){
                   
                         <div>
                             <span>
-                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -1911,9 +1942,24 @@ $(document).ready(function(){
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
 			    <span>
-                                        <button onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10');return false;" class="addButton">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+
+                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=12&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
+
 			    </span>
 						</div>
 						<div>
@@ -1995,15 +2041,15 @@ $(document).ready(function(){
                   
                         <div>
                             <span>
-                                <select id="s_m_ins_type" name="s_m_ins_type" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
                                      <option>Select Type</option>
                                      <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
                                      <option value="4" <?php if($s_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                     <option value="5" <?php if($p_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                     <option value="6" <?php if($p_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                     <option value="7" <?php if($p_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>                                 
+                                     <option value="5" <?php if($s_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
+                                     <option value="6" <?php if($s_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
+                                     <option value="7" <?php if($s_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>                                 
                                 </select>
                                 <label for="s_m_ins_type">Insurance Type</label>
                             </span>
@@ -2360,6 +2406,33 @@ if(inField=="referredby_name"){
 }
 }
 
+function updateProfileImage(img){
+	$('#profile_image').html("<img src='q_file/"+img+"' height='150' style='float:right;' />");
+}
+
+function updateInsCard(img, field){
+  $('#'+field).text('View Insurance Card Image');
+  $('#'+field).attr('onclick', "window.open('imageholder.php?image="+img+"','welcome','width=800,height=400,scrollbars=yes'); return false;");
+}
+
+function update_insurance_type(){
+  if($('#p_m_ins_type').val()==1){
+    $('#p_m_ins_grp').val('NONE');
+    $('#p_m_ins_plan').val('');
+    $('#p_m_ins_grp').attr('readonly', 'readonly');
+    $('#p_m_ins_plan').attr('readonly', 'readonly');
+  }else{
+    $('#p_m_ins_grp').removeAttr('readonly');
+    $('#p_m_ins_plan').removeAttr('readonly');
+  }
+}
+
+function checkMedicare(){
+  if($('#s_m_ins_type').val() == 1){
+    $('#s_m_ins_type').val('');
+    alert("Error! By law, Medicare MUST be set to Primary Insurance and CANNOT be Secondary Insurance. If patient has Medicare and additional insurance, please list Medicare as Primary Insurance.");
+  }
+}
 
 </script>
 <script type="text/javascript">

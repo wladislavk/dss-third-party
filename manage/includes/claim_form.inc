@@ -1052,7 +1052,11 @@ $billing_provider_b_other = st($myarray['billing_provider_b_other']);
 $reject_reason = st($myarray['reject_reason']);
 $status = st($myarray['status']);
 }
-
+if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
+  $another_plan = 'YES';
+}else{
+  $another_plan = '';
+}
 if($is_pending){
   $insured_sex = $pat_myarray['gender'];
   $patient_sex = $pat_myarray['gender'];
@@ -1085,8 +1089,16 @@ if($is_pending){
 	$insured_dob = $pat_myarray['ins_dob'];	
 	$patient_relation_insured = $pat_myarray['p_m_relation'];
 	$insured_employer_school_name = $pat_myarray['employer'];
-	$insured_policy_group_feca = $pat_myarray['group_number'];
-	$insured_insurance_plan = $pat_myarray['plan_name'];	
+	if($pat_myarray['p_m_ins_type']==1){
+	  $insured_policy_group_feca = "NONE";
+          $insured_insurance_plan = '';
+	  $insured_dob = '';
+	  $insured_sex = '';  
+	  $insured_employer_school_name = '';
+	}else{
+	  $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
+	  $insured_insurance_plan = $pat_myarray['p_m_ins_plan'];	
+	}
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -1111,9 +1123,9 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   $diagnosising_npi = $d['diagnosising_npi'];
 
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
-if ($dent_rows <= 0) {
+//if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
-}
+//}
 }
 if($insurancetype!=1){
   $diagnosising_doc = '';
@@ -1360,9 +1372,9 @@ input{text-transform:uppercase;}
 									Patient's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){ $patient_dob = date('m-d-y', strtotime($patient_dob)); } ?>
-									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
+									<?php if($patient_dob!=''){ $patient_dob = date('m-d-Y', strtotime($patient_dob)); } ?>
+									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtfullmask" size="10"/>
+									mm-dd-yyyy
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -1633,9 +1645,9 @@ input{text-transform:uppercase;}
 									Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<?php if($insured_dob!=''){ $insured_dob = date('m-d-y', strtotime($insured_dob)); } ?>
-									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
+									<?php if($insured_dob!=''){ $insured_dob = date('m-d-Y', strtotime($insured_dob)); } ?>
+									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
+									mm-dd-yyyy
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -1658,8 +1670,8 @@ input{text-transform:uppercase;}
 									Other Insured's Birth Date
 									<br />
 									&nbsp;&nbsp;
-									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
+									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
+									mm-dd-yyyy
 								</td>
 								<td width="42%" align="center" valign="top">
 									Sex
@@ -2166,7 +2178,7 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
-       . "  ledger.*, ";
+       . "  ledger.*, trxn_code.modifier_codeid_1 as modcode, trxn_code.modifier_codeid_1 as modcode2, trxn_code.days_units as daysorunits, ";
 if($insurancetype == '1'){
         $sql .= " user.medicare_npi ";
 }else{
@@ -2189,6 +2201,9 @@ if($insurancetype == '1'){
 } else {
   $sql = "SELECT "
        . "  ledger.*, ";
+if($is_pending){
+  $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
+}
 if($insurancetype == '1'){
 	$sql .= " user.medicare_npi ";
 }else{

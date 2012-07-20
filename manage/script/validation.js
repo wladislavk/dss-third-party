@@ -371,7 +371,7 @@ function patientabc(fa)
 			alert("Group # is a Required Field");
 			fa.p_m_ins_grp.focus();
 			return false;
-		} else if(trim(fa.p_m_ins_plan.value) == "") {
+		} else if(trim(fa.p_m_ins_plan.value) == "" && fa.p_m_ins_type.value != 1) {
 			alert("Plan Name is a Required Field");
 			fa.p_m_ins_plan.focus();
 			return false;

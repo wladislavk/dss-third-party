@@ -739,6 +739,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             <textarea name="additional_paragraph" class="inpt_a" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
                     </div>
 
+<p>Thank you for completing the Health History Questionnaire! Please click the box below to confirm and record your answers. We look forward to seeing you at your next appointment!</p>
 
 <div align="right">
     <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" tabindex="12" />

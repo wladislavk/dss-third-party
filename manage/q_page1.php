@@ -4,6 +4,18 @@ require_once('includes/patient_info.php');
 if ($patient_info) {
 
 
+if($_GET['own']==1){
+  $own_sql = "UPDATE dental_patients SET symptoms_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  mysql_query($own_sql);
+                ?>
+                <script type="text/javascript">
+                        window.location='q_page1.php?pid=<?=$_GET['pid']?>&addtopat=1';
+                </script>
+                <?
+                die();
+
+}
+
 ?>
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
@@ -196,6 +208,28 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
+
+        $exist_sql = "SELECT symptoms_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['symptoms_status'] == 0)
+        {
+		?>
+		<div style="width:700px; margin:30px auto 0 auto;">This section is being edited by patient. If you would like to take ownership of this section and make edits, please 
+			<a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+		<?php
+
+	}else{
+
+	if($exist_row['symptoms_status'] == 1)
+        {
+                ?>
+                <div style="width:700px; margin:30px auto 0 auto;">This section has been edited by the patient. If you would like to accept these changes, please
+                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+                <?php
+
+        }
+
 $sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
@@ -885,10 +919,11 @@ $('document').ready( function(){
 <br /><br />	
 
 <?php
-
+} //end symptom status check
 } else {  // end pt info check
 	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }
+
 
 ?>
 

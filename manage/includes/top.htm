@@ -1221,6 +1221,27 @@ while($od_r = mysql_fetch_assoc($od_q)){
 
                                 <? } 
 
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+	if($exist_row['symptoms_status']==1){ ?>
+<a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
+<span>Warning! Patient has updated their symptoms via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+</a>
+	<?php
+	}
+        if($exist_row['treatments_status']==1){ ?>
+<a class="warning" href="q_page2.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
+<span>Warning! Patient has updated their treatments via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+</a>
+        <?php
+        }
+        if($exist_row['history_status']==1){ ?>
+<a class="warning" href="q_page3.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
+<span>Warning! Patient has updated their history via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+</a>
+        <?php
+        }
 
 
   }

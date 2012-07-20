@@ -1,23 +1,7 @@
 <?php 
 include "includes/header.php";
+include 'includes/questionnaire_sections.php';
 ?>
-<script type="text/javascript">
-edited = false;
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			edited = true;
-			//window.onbeforeunload = confirmExit;
-		});
-		$('#q_page2frm').submit(function() {
-			window.onbeforeunload = null;
-		});
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
-</script>
-
 
 <?php
 if($_POST['q_page2sub'] == 1)
@@ -85,32 +69,13 @@ if($_POST['q_page2sub'] == 1)
 	if($polysomnographic == '')
 		$polysomnographic = 0;
 	
-	/*echo "polysomnographic - ".$polysomnographic."<br>";
-	echo "sleep_center_name - ".$sleep_center_name."<br>";
-	echo "sleep_study_on - ".$sleep_study_on."<br>";
-	echo "confirmed_diagnosis - ".$confirmed_diagnosis."<br>";
-	echo "rdi - ".$rdi."<br>";
-	echo "ahi - ".$ahi."<br>";
-	echo "cpap - ".$cpap."<br>";
-	echo "intolerance - ".$intolerance."<br>";
-	echo "other_intolerance - ".$other_intolerance ."<br>";
-	echo "other_therapy - ".$other_therapy ."<br>";
-	echo "int_arr - ".$int_arr ."<br>";
-	echo "other - ".$other_arr ."<br>";
-	echo "affidavit - ".$affidavit ."<br>";
-	echo "type_study - ".$type_study ."<br>";
-	echo "nights_wear_cpap - ".$nights_wear_cpap ."<br>";
-	echo "percent_night_cpap - ".$percent_night_cpap ."<br>";
-	echo "custom_diagnosis - ".$custom_diagnosis ."<br>";
-	echo "sleep_study_by - ".$sleep_study_by."<br>";*/
 	
-	
-        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page2 set 
-		parent_patientid = '".s_for($_SESSION['pid'])."',
+		patientid = '".s_for($_SESSION['pid'])."',
 		polysomnographic = '".s_for($polysomnographic)."',
 		sleep_center_name_text = '".s_for($sleep_center_name_text)."',
 		sleep_study_on = '".s_for($sleep_study_on)."',
@@ -144,7 +109,7 @@ if($_POST['q_page2sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -184,7 +149,7 @@ if($_POST['q_page2sub'] == 1)
                 dd_who = '".s_for($dd_who)."',
                 dd_experience = '".s_for($dd_experience)."',
 		surgery = '".s_for($surgery)."'
-		where parent_patientid = '".s_for($_SESSION['pid'])."'";
+		where patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -202,7 +167,7 @@ if($_POST['q_page2sub'] == 1)
                         }
                         mysql_query($s);
                 }
-
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -214,13 +179,21 @@ if($_POST['q_page2sub'] == 1)
 	}
 }
 
-$pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
+
+        $exist_sql = "SELECT treatments_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['treatments_status'] == 0)
+        {
+
+
+$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
+$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' ";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -582,6 +555,9 @@ if($cpap == '')
 </div>
 </form>
 
+<?php }else{
+show_section_completed($_SESSION['pid']);
+} ?>
 
 <? include "includes/footer.php";?>
 

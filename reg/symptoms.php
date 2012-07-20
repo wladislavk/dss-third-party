@@ -1,6 +1,6 @@
 <?php 
 include "includes/header.php";
-
+include 'includes/questionnaire_sections.php';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
 <!--[if IE]>
@@ -10,6 +10,12 @@ include "includes/header.php";
 $todaysdate=date("m/d/Y");
 if($_POST['q_page1sub'] == 1)
 {
+  $s_sql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+  $s_q = mysql_query($s_sql);
+  $s_r = mysql_fetch_assoc($s_q);
+  if($s_r['symptoms_status']==0){
+
+
 	$feet = $_POST['feet'];
 	$inches = $_POST['inches'];
 	$weight = $_POST['weight'];
@@ -64,32 +70,12 @@ if($_POST['q_page1sub'] == 1)
 	if($main_reason_arr != '')
 		$main_reason_arr = '~'.$main_reason_arr;
 	
-	/*
-	echo "feet - ".$feet."<br>";
-	echo "inches - ".$inches."<br>";
-	echo "weight - ".$weight."<br>";
-	echo "bmi - ".$bmi."<br>";
-	echo "complaintid - ".$comp_arr ."<br>";
-	echo "other_complaint - ".$other_complaint ."<br>";
-	echo "additional_paragraph - ".$additional_paragraph ."<br>";
-	echo "energy_level - ".$energy_level ."<br>";
-	echo "snoring_sound - ".$snoring_sound ."<br>";
-	echo "wake_night - ".$wake_night ."<br>";
-	echo "breathing_night - ".$breathing_night ."<br>";
-	echo "morning_headaches - ".$morning_headaches ."<br>";
-	echo "hours_sleep - ".$hours_sleep ."<br>";
-	echo "quit_breathing - ".$quit_breathing ."<br>";
-	echo "bed_time_partner - ".$bed_time_partner ."<br>";
-	echo "sleep_same_room - ".$sleep_same_room ."<br>";
-	echo "told_you_snore - ".$told_you_snore ."<br>";
-	echo "main_reason - ".$main_reason_arr ."<br>";
-	echo "main_reason_other - ".$main_reason_other."<br>";*/
- 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
+ 	$exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";	
 	$exist_q = mysql_query($exist_sql);
 	if(mysql_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page1 set 
-		parent_patientid = '".s_for($_SESSION['pid'])."',
+		patientid = '".s_for($_SESSION['pid'])."',
 		feet = '".s_for($feet)."',
 		inches = '".s_for($inches)."',
 		weight = '".s_for($weight)."',
@@ -117,7 +103,7 @@ if($_POST['q_page1sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+	        mysql_query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -151,10 +137,10 @@ if($_POST['q_page1sub'] == 1)
 		told_you_snore = '".s_for($told_you_snore)."',
 		main_reason = '".s_for($main_reason_arr)."',
 		main_reason_other = '".s_for($main_reason_other)."'
-		where parent_patientid = '".s_for($_SESSION['pid'])."'";
+		where patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-		
+	        mysql_query("UPDATE dental_patients SET symptoms_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");		
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -164,11 +150,25 @@ if($_POST['q_page1sub'] == 1)
 		<?
 		die();
 	}
-}
+  }else{
+    //symptoms status is not 0
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='<?= $_POST['goto_p']; ?>?msg=<?=$msg;?>';
+                </script>
+                <?
+                die();
 
-        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+  }
+}
+?>
+<?php
+
+        $exist_sql = "SELECT symptoms_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
-        if(mysql_num_rows($exist_q) == 0)
+	$exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['symptoms_status'] == 0)
         {
 
 $pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
@@ -186,7 +186,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	//die();
 }
-$sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
+$sql = "select * from dental_q_page1 where patientid='".$_SESSION['pid']."' ";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -228,9 +228,9 @@ if($complaintid <> '')
 }
 
 ?>
-
 <a name="top"></a>
 <?php include 'includes/questionnaire_header.php'; ?>
+
 
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -672,10 +672,9 @@ $('document').ready( function(){
 </form>
 
 
-<?php }else{ ?>
-
-This section has been completed.
-<?php } ?>
+<?php }else{ 
+show_section_completed($_SESSION['pid']);
+} ?>
 
 <? include "includes/footer.php";?>
 

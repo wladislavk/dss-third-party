@@ -1,5 +1,6 @@
 <?php 
 include "includes/header.php";
+include 'includes/questionnaire_sections.php';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
 <script type="text/javascript">
@@ -134,35 +135,13 @@ $injurytohead = $_POST['injurytohead'];
 		$history_arr = '~'.$history_arr;
 	
 	
-	/*echo "allergens - ".$allergens_arr."<br>";
-	echo "other_allergens - ".$other_allergens."<br>";
-	echo "medications - ".$medications_arr."<br>";
-	echo "other_medications - ".$other_medications."<br>";
-	echo "history - ".$history_arr."<br>";
-	echo "other_history - ".$other_history."<br>";
-	echo "dental_health - ".$dental_health."<br>";
-	echo "removable - ".$removable."<br>";
-	echo "year_completed - ".$year_completed."<br>";
-	echo "tmj - ".$tmj."<br>";
-	echo "gum_problems - ".$gum_problems."<br>";
-	echo "dental_pain - ".$dental_pain."<br>";
-	echo "dental_pain_describe - ".$dental_pain_describe."<br>";
-	echo "completed_future - ".$completed_future."<br>";
-	echo "clinch_grind - ".$clinch_grind."<br>";
-	echo "wisdom_extraction - ".$wisdom_extraction."<br>";
-	echo "no_allergens - ".$no_allergens."<br>";
-	echo "no_medications - ".$no_medications."<br>";
-	echo "no_history - ".$no_history."<br>";
-	echo "orthodontics - ".$orthodontics."<br>";*/
-	
-	
-        $exist_sql = "SELECT patientid FROM dental_q_page3 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page3 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
         {
 
 		$ins_sql = " insert into dental_q_page3 set 
-		parent_patientid = '".s_for($_SESSION['pid'])."',
+		patientid = '".s_for($_SESSION['pid'])."',
 		allergens = '".s_for($allergens_arr)."',
 		allergenscheck = '".s_for($allergenscheck)."',
 		other_allergens = '".s_for($all_text.$other_allergens)."',
@@ -228,7 +207,7 @@ $injurytohead = $_POST['injurytohead'];
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-
+		mysql_query("UPDATE dental_patients SET history_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$ped_sql = "update dental_patients 
                 	set		
 			premedcheck = '".s_for($_POST["premedcheck"])."',
@@ -308,9 +287,10 @@ $injurytohead = $_POST['injurytohead'];
                 clinch_grind_text  = '".s_for($clinch_grind_text)."',
                 future_dental_det = '".s_for($future_dental_det)."',
                 drymouth_text = '".s_for($drymouth_text)."'
-		where parent_patientid = '".s_for($_SESSION['pid'])."'";
+		where patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+                mysql_query("UPDATE dental_patients SET history_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$ped_sql = "update dental_patients 
                         set             
                         premedcheck = '".s_for($_POST["premedcheck"])."',
@@ -331,7 +311,13 @@ $injurytohead = $_POST['injurytohead'];
 }
 
 
-$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."' OR parent_patientid='".s_for($_SESSION['pid'])."' ORDER BY parent_patientid DESC";
+        $exist_sql = "SELECT history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['history_status'] == 0)
+        {
+
+$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."' ";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
@@ -346,7 +332,7 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
-$sql = "select * from dental_q_page3 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
+$sql = "select * from dental_q_page3 where patientid='".$_SESSION['pid']."' ";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -797,6 +783,10 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                         </script>
 
 
+
+<?php }else{
+show_section_completed($_SESSION['pid']);
+} ?>
 
 <? include "includes/footer.php";?>
 

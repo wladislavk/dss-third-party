@@ -64,50 +64,41 @@ if($_POST["loginsub"] == 1)
 }
 ?>
 <div id="login_container">
-<FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
-<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
-    <tr bgcolor="#FFFFFF">
-        <td colspan="2" class="t_head">
-	       Please Enter Your Login Information 
-        </td>
-    </tr>
-	<? if($_GET['msg']!="")
-    {
-    ?> 
-        <tr bgcolor="#FFFFFF">
-            <td colspan="2" >
-                <span class="red">
-					<?=$_GET['msg'];?>
-                </span>
-            </td>
-        </tr>
-    <? }?>
-    <tr bgcolor="#FFFFFF">
-        <td class="t_data">
-        	User name
-        </td>
-        <td class="t_data">
-        	<input type="text" name="username">
-        </td>
-    </tr>
-    <tr bgcolor="#FFFFFF">
-        <td class="t_data">
-        	Password
-        </td>
-        <td class="t_data">
-        	<input type="password" name="password">
-        </td>
-	</tr>
-    <tr bgcolor="#FFFFFF">
-        <td colspan="2" align="center" >
+  <h1>Dental Sleep Solutions</h1>
+  <div class="login_content" id="login_sect">
+    <h2>Screener Tool</h2>
+    <?php if($login_error){ ?>
+      <span class="error">
+        Error! Wrong email address or password.
+      </span>
+    <?php } ?>
+    <?php if($_GET['activated']==1){ ?>
+      <span class="success">
+        Account created! Please login below.
+      </span>
+
+    <?php } ?>
+      <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
+
+    <div class="field">
+      <label>Username</label>
+      <input type="text" tabindex="1" name="username" >
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" tabindex="2" name="password">
+    </div>
+
+    <div class="field">
             <input type="hidden" name="loginsub" value="1">
-            <input type="submit" name="btnsubmit" value=" Login " class="addButton">
-            <a style="float:right; margin-top:4px;" href="forgot_password.php">Forgot Password</a>
-        </td>
-    </tr>
-</table>
-</FORM>
+      <button type="submit" name="loginbut" class="large">Log In</button>
+    </div>
+        </form>
+  </div>
 </div>
+
+<div style="clear:both;"></div>
 <span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
 <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a></span>
 <div style="clear:both;"></div>

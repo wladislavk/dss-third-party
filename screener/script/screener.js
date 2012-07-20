@@ -99,5 +99,5 @@ function next_sect(sect){
 
 
 $(document).ready( function(){
-  next_sect(1);
+  next_sect(0);
 });

@@ -18,11 +18,16 @@ if(!isset($_SESSION['screener_doc'])){
 <link rel="stylesheet" href="css/screener.css" />
 </head>
 <body class="fixed">
-    <div id="header">
+    <div id="header" >
         <div class="wrapper cf">
             <div class="logo fl">
                 <h1>Dental Sleep Solutions</h1>
             </div>
+            <ul id="main_nav" class="fr">
+                                <li class="nav_item lgutipT" title="Log Out"><a href="logout.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/locked2.png)" alt="" src="images/blank.gif"/><span>Log Out</span></a></li>
+
+            </ul>
+
 	</div>
     </div>
     <div id="main">

@@ -24,6 +24,8 @@ if(!isset($_SESSION['screener_doc'])){
                 <h1>Dental Sleep Solutions</h1>
             </div>
             <ul id="main_nav" class="fr">
+                                <li class="nav_item lgutipT" title="start over" style="display:none;" id="restart_nav"><a href="index.php" class="main_link"><img class="img_holder" style="background-image: url(images/images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Reset and Start Over</span></a></li>
+
                                 <li class="nav_item lgutipT" title="Log Out"><a href="logout.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/locked2.png)" alt="" src="images/blank.gif"/><span>Log Out</span></a></li>
 
             </ul>

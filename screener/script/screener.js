@@ -76,8 +76,27 @@ function submit_screener(){
         survey += parseInt($("input[name=headaches]:checked").val(), 10);
         survey += parseInt($("input[name=falling_asleep]:checked").val(), 10);
         survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
-
-	$('#ep_score').text(ep);
+	an_tot = ep;
+	                                                                        if(an_tot < 8)
+                                                                        {
+                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
+                                                                        }
+                                                                        
+                                                                        if (an_tot >= 8 && an_tot < 10)
+                                                                        {
+                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a average amount of sleepiness.';
+                                                                        }
+                                                                        
+                                                                        if (an_tot >= 10 && an_tot < 16)
+                                                                        {
+                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which may indicate excessive sleepiness depending on the situation. The patient may want to seek medical attention.';
+                                                                        }
+                                                                        
+                                                                        if (an_tot >= 16 )
+                                                                        {
+                                                                                an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates excessive sleepiness and medical attention should be sought.';
+                                                                        }
+	$('#ep_score').text(an_text);
 	$('#snore_score').text(snore);
 	$('#survey_score').text(survey);
 	next_sect('results');
@@ -93,6 +112,9 @@ function submit_screener(){
 
 
 function next_sect(sect){
+  if(sect==1){
+	$('#restart_nav').show();
+  }
   $('.sect').hide();
   $('#sect'+sect).show();
 }

@@ -44,10 +44,15 @@ if($_POST["notesub"] == 1)
                         	signed_id='".s_for($check_myarray['userid'])."',
                         	signed_on=now(),
                         	";
+				?>
+                                <script type="text/javascript">
+                                        alert("Progress Note SIGNED and saved successfully.");
+                                </script>
+                                <?php
 			}else{
 				?>
 				<script type="text/javascript">
-					alert("Unable to sign note due to invalid credentials. Note has been saved.");
+					alert("Credential invalid - unable to SIGN note. Changes to note has been successfully saved, but note is UNSIGNED.");
 				</script>	
 				<?php
 			}
@@ -236,7 +241,6 @@ if($pat_myarray['patientid'] == '')
 	}
 	?>
 	
-	<br /><br />
 	
 	<? if($msg != '') {?>
     <div align="center" class="red">
@@ -292,7 +296,7 @@ if($pat_myarray['patientid'] == '')
 		</tr>
 		<tr>
         	<td colspan="2" valign="top" class="frmdata">
-				<textarea id="notes" name="notes" class="tbox" style="width:100%; height:200px;"><?=$notes;?></textarea>
+				<textarea id="notes" name="notes" class="tbox" style="width:100%; height:190px;"><?=$notes;?></textarea>
             </td>
         </tr>
         
@@ -325,30 +329,46 @@ if($pat_myarray['patientid'] == '')
                 <input type="hidden" name="notesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["notesid"]?>" />
 		<div id="submit_buttons">
-                <input type="submit" value=" <?=$but_unsigned_text?>" class="button" />
+                <input type="submit" name="<?= ($_SESSION['docid'] == $_SESSION['userid'])?'unsign':'unsign_staff'; ?>" value=" <?=$but_unsigned_text?>" class="button" />
 		<?php 
 		  if($_SESSION['docid'] == $_SESSION['userid']){ ?>
 		<input type="submit"  style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />
 		<?php }else{ ?>
-			<input type="button" onclick="$('#submit_buttons').hide();$('#cred_div').show();return false;" style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />		
+			<input type="button" onclick="staff_sign();return false;" style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />		
 		<? } ?>
 		</div>
-<p style="text-align:left;">NOTE: For a Progress Note to be legally valid it must be SIGNED. SIGNED means that the note is stored permanently and can no longer be edited. If you wish to make future edits to a Progress Note then select UNSIGNED, but it will not become a legal part of the Patient's chart until SIGNED.</p>
+<p style="font-size:9px; text-align:left;">NOTE: For a Progress Note to be legally valid it must be SIGNED. SIGNED means that the note is stored permanently and can no longer be edited. If you wish to make future edits to a Progress Note then select UNSIGNED, but it will not become a legal part of the Patient's chart until SIGNED.</p>
 		<?php if($_SESSION['docid'] != $_SESSION['userid']){ ?>
 			<div id="cred_div" style="display:none;">
-				Username: <input type="text" name="username" /><br />
+				Authorized User: <input type="text" name="username" /><br />
 				Password: <input type="password" name="password" /><br />
 				<input type="submit" value=" <?=$but_unsigned_text?>" class="button" />
 				<input type="submit" style="margin-left: 20px;" name="signstaff" value=" <?=$but_signed_text?>" class="button" />
 
 			</div>
 		<?php } ?>
+		<a href="#" onclick="delete_note();return false;">Delete</a>
             </td>
         </tr>
     </table>
     </form>
 	  <script language="JavaScript">
-	
+	   function delete_note(){
+		if(confirm('Progress Note will be deleted, are you sure?')){
+		  parent.window.location = "dss_summ.php?pid=<?= $themyarray['patientid'];?>&del_note=<?= ($themyarray['parentid']!='')?$themyarray['parentid']:$themyarray['notesid']; ?>"
+		}
+	   }
+	   function staff_sign(){
+		<?php
+			$doc_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+			$doc_q = mysql_query($doc_sql);
+			$doc_r = mysql_fetch_assoc($doc_q);
+		?>
+		if(confirm("Your account does not have sufficient privileges to SIGN progress notes. The users in your office who can legally SIGN this progress note are: <?= $doc_r['name']; ?>. Please ask one of these authorized users to enter their credentials below - by doing so they will legally SIGN this progress note. If you do not wish to SIGN this progress note, simply click \"Save and Keep UNSIGNED\"")){
+			$('#submit_buttons').hide();
+			$('#cred_div').show();
+		}
+	   }	
 	   var cal72 = new calendar2(document.forms['notesfrm'].elements['procedure_date']);
 
     </script>

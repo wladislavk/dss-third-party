@@ -1039,6 +1039,12 @@ function monthlyabc(fa)
 	}
 }
 
+var noteclick = '';
+$(document).ready(function(){
+$("form input[type=submit]").click(function() {
+  noteclick = $(this).attr('name');
+});
+});
 function notesabc(fa)
 {
 	if(trim(fa.notes.value) == '')
@@ -1053,6 +1059,13 @@ function notesabc(fa)
                 fa.procedure_date.focus();
                 return false;
         }
+	if(noteclick=='unsign'){
+		return confirm("Warning: A progress note is not considered legally valid until SIGNED. To save your changes and keep the note unsigned (in order to make future changes) click OK. At any time you can sign the note by clicking the \Save Progress Note and SIGN\ button.");
+	}else if(noteclick=='unsign_staff'){
+		return confirm("Warning: A progress note is not considered legally valid until SIGNED. To save your changes and keep the note unsigned (in order to make future changes) click OK. Administrators can sign the note by clicking the \"Save Progress Note and SIGN\" button.");
+	}else if(noteclick=='sign'){
+		return confirm("This progress note will become a legally valid part of the patient's chart; no further changes can be made after saving. Proceed?");
+	}
 }
 
 function patientreportabc(fa)

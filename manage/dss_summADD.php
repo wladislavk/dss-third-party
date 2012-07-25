@@ -110,7 +110,7 @@ $fuquery_array = mysql_query($fuquery_sql);
 
 
 	<div style=" border: medium none;float: left;height: 570px;margin-bottom: 20px;margin-top: -4px;">
-		 <table width="700" style="overflow-x: hidden; height: 570px;">
+		 <table width="480" style="overflow-x: hidden; height: 570px;">
 		   <tr>
 		    <td valign="top">
 

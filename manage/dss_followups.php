@@ -2,7 +2,9 @@
 session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
-
+?>
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+<?php
 if(isset($_POST['submitaddfu'])){
   $patientid = $_POST['patientid'];
   $ep_dateadd = date("Y-m-d H:i:s", strtotime($_POST['ep_dateadd']));
@@ -81,25 +83,30 @@ $fuquery_array = mysql_query($fuquery_sql);
 $numf = mysql_num_rows($fuquery_array);
 $bodywidth = ($numf*160)+320;
 ?>
-
+<script type="text/javascript">
+function show_new_followup(){
+  $('#sleepstudyadd').show();
+}
+</script>
 <body style="width:<?= $bodywidth; ?>px;background:none;">
-<form id="sleepstudyadd" style="float:left;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <style type="text/css">
 #sleepstudyscrolltable tr{ height:28px; }
+#sleepstudyscrolltable tr td{ background:#00457C; }
 </style>
 	<table id="sleepstudyscrolltable" style="margin-top:-3px;">
 <tr style="background: #444;height: 30px;">
-  	<td colspan="4"><span style="color: #fff;">New</span></td>
+  	<td colspan="4" style="background: #444;"><span style="color: #fff;">New</span></td>
   </tr>
 
   <tr >
-    <td style="background: #F9FFDF;">
+    <td >
       <input type="text" size="12" style="width:100px;" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" />
     </td>
   </tr>
   
   <tr >
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <select name="devadd" style="width:150px;">
         <?php
         $device_sql = "select * from dental_device where status=1 order by sortby";
@@ -118,14 +125,14 @@ $bodywidth = ($numf*160)+320;
   </tr>
     
   <tr >
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="dsetadd" />
       
     </td>
   </tr>
   
   <tr >
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <select name="nightsperweek" style="width:150px;">
         <?php
 								for ($i = 0; $i <= 7; $i++)
@@ -140,49 +147,49 @@ $bodywidth = ($numf*160)+320;
 	</tr>
 
   <tr >
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <input type="text" size="12" name="ep_eadd" />
       
     </td>
   </tr>
   
   <tr >
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="ep_tsadd" />
       
     </td>
   </tr>
   
   <tr >
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <input type="text" size="12" name="ep_sadd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="ep_radd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <input type="text" size="12" name="ep_eladd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="sleep_qualadd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <!--<input type="text" size="12" style="width:90px;" name="ep_hadd" />-->
 <select name="ep_hadd" class="field text addr tbox" style="width:150px;">
                                             <option value=""></option>
@@ -210,37 +217,37 @@ $bodywidth = ($numf*160)+320;
   </tr>
   
     <tr>
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="ep_wadd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #E4FFCF;">
+  	    <td >
       <input type="text" size="12" style="width:90px;" name="wapnadd" />
       
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #F9FFDF;">
+  	    <td >
       <input type="text" size="12" name="hours_sleepadd" />
       
     </td>
   </tr>
     <tr>
-            <td style="background: #E4FFCF;">
+            <td >
       <input type="text" size="12" name="appt_notesadd" style="width:100px;" />
 
     </td>
   </tr>
   
     <tr>
-  	    <td style="background: #E4FFCF;">
+  	    <td >
   	  <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
       <input type="submit" name="submitaddfu" value="Submit Follow Up" id="submitaddfu" style="width:120px;" />
-      
+      <input type="button" value="cancel" onclick="$('#sleepstudyadd').hide(); parent.show_new_but(); return false;" value="Cancel" /> 
     </td>
   </tr>
 					
@@ -266,7 +273,7 @@ $device = mysql_result($device_result, 0);
 <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
  <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">
-  	<td colspan="4"><span style="color: #ccc;"><?php echo $fuquery['followupid'];?></span></td>
+  	<td colspan="4" style="background: #444;"><span style="color: #ccc;"><?php echo $fuquery['followupid'];?></span></td>
   </tr>
 
   <tr>
@@ -449,7 +456,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 <input type="hidden" name="id" value="baseline" />
  <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">
-        <td colspan="4"><span style="color: #ccc;">Baseline</span></td>
+        <td colspan="4" style="background: #444;"><span style="color: #ccc;">Baseline</span></td>
   </tr>
 <?php
   $s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";

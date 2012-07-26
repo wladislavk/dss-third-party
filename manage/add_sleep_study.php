@@ -306,6 +306,7 @@ background:#edeb46;
 
   .odd{ background: #F9FFDF; }
   .even{ background: #e4ffcf; }
+  .new_table .odd, .new_table .even {background: #00457C; }
   select{width:140px;}
 </style>
 <?php
@@ -314,8 +315,8 @@ $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['p
 $pat_q = mysql_query($pat_sql);
 $pat_r = mysql_fetch_assoc($pat_q);
 ?>
-<form action="#" method="POST" style="float:left; width:185px;" enctype="multipart/form-data">
-<table class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
+<form id="new_sleep_study_form" action="#" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
+<table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
 		<td valign="top" class="odd">
 		<input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
@@ -331,7 +332,9 @@ $pat_r = mysql_fetch_assoc($pat_q);
       <option value="HST Titration">HST Titration</option>
     </select>	
 <script type="text/javascript">
-
+function show_new_study(){
+  $('#new_sleep_study_form').show();
+}
 function updatePlace(f){
 if(f.sleeptesttype.value == "HST"){
   f.place.style.display = "none";
@@ -550,6 +553,7 @@ function addstudylab(v){
 	<tr>	
 		<td valign="top" class="odd">
 		<input type="submit" name="submitnewsleeplabsumm" value="Submit Study" />	
+		<input type="button" onclick="$('#new_sleep_study_form').hide(); parent.show_new_but(); return false;" value="Cancel" />
 		</td>
 	</tr>
 </table>

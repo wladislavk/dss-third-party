@@ -104,9 +104,22 @@ $fuquery_array = mysql_query($fuquery_sql);
     <tr>
   	<td style="background: #E4FFCF;"><strong>Other</strong></td>
   </tr>
+    <tr>
+	<td style="background: #F9FFDF;"><input id="new_followup_but" type="button" onclick="show_new_followup(); return false;" value="+Add New Followup" style="width:140px;"/></td>
+  </tr>
+
  </table>
 </div>
 
+<script type="text/javascript">
+function show_new_followup(){
+$('#new_followup_but').hide();
+document.getElementById('followup_frame').contentWindow.show_new_followup();
+}
+function show_new_but(){
+$('#new_followup_but').show();
+}
+</script>
 
 
 	<div style=" border: medium none;float: left;height: 570px;margin-bottom: 20px;margin-top: -4px;">
@@ -116,7 +129,7 @@ $fuquery_array = mysql_query($fuquery_sql);
 
 <!-- IFRAME for FOLLOW UPS-->
 
-<iframe height="563" width="100%" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+<iframe height="563" width="100%" id="followup_frame" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 <!-- IFRAME for FOLLOW UPS-->
 
@@ -126,4 +139,3 @@ $fuquery_array = mysql_query($fuquery_sql);
 	</div>
 
 
-</div>

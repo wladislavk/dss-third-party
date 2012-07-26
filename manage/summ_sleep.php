@@ -1,3 +1,19 @@
+<?php
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
+$s_lab_result = mysql_query($s_lab_query);
+$num_labs = mysql_num_rows($s_lab_result);
+if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
+$body_width = ($num_labs*185)+215;
+if($num_labs == 0){
+?>
+<div id="no_sleep_studies_div">
+Patient has no completed sleep studies. Click here to add a study.
+<input type="button" id="new_sleep_study_but2" onclick="show_study_table(); return false;" value="+ Add Sleep Study" />
+</div>
+<?php
+}
+?>
+<div id="sleep_studies_div" <?= ($num_labs==0)?'style="display:none;"':''; ?>>
 <table width="97%" align="center" style="float:left;margin-left:15px;">
 <tr>
 <td style="background:#333; color:#FFFFFF; font-size: 14px; font-weight:bold; height:30px;">
@@ -146,6 +162,11 @@ Sleep Studies:
                 Notes
                 </td>
         </tr>
+  <tr>
+		<td valign="top" class="odd">
+                <input type="button" id="new_sleep_study_but" onclick="show_new_study(); return false;" value="+ Add Sleep Study" />  
+                </td>
+        </tr>
   </table>
 
 
@@ -153,18 +174,23 @@ Sleep Studies:
 function updateiframe(w){
 $('#sleepstudies').css('width', ((w+1)*185)+'px');
 }
+function show_new_study(){
+$('#new_sleep_study_but').hide();
+document.getElementById('sleepstudies').contentWindow.show_new_study();
+}
+function show_new_but(){
+$('#new_sleep_study_but').show();
+}
+function show_study_table(){
+  show_new_study();
+  $('#no_sleep_studies_div').hide();
+  $('#sleep_studies_div').show();
+}
 </script>
-<?php
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
-$s_lab_result = mysql_query($s_lab_query);
-$num_labs = mysql_num_rows($s_lab_result);
-if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
-$body_width = ($num_labs*185)+215;
-?>
 
         <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">
                     <iframe id="sleepstudies" height="842" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 
-
+</div>

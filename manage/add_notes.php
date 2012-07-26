@@ -340,6 +340,7 @@ if($pat_myarray['patientid'] == '')
 <p style="font-size:9px; text-align:left;">NOTE: For a Progress Note to be legally valid it must be SIGNED. SIGNED means that the note is stored permanently and can no longer be edited. If you wish to make future edits to a Progress Note then select UNSIGNED, but it will not become a legal part of the Patient's chart until SIGNED.</p>
 		<?php if($_SESSION['docid'] != $_SESSION['userid']){ ?>
 			<div id="cred_div" style="display:none;">
+				<p>To SIGN this progress note an authorized user must enter credentials and click "Save changes and SIGN".<br />To save note without signing click "Save changes and keep UNSIGNED".</p>
 				Authorized User: <input type="text" name="username" /><br />
 				Password: <input type="password" name="password" /><br />
 				<input type="submit" value=" <?=$but_unsigned_text?>" class="button" />

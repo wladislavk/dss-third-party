@@ -13,15 +13,25 @@ if(isset($_REQUEST['del_note'])){
 
 <div>TOP SECTION</div>
 
+                <?php
+                        $dental_letters_query = "SELECT letterid FROM dental_letters                                 JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid                                 WHERE dental_letters.status = '0' AND 
+                                        dental_letters.deleted = '0' AND 
+                                        dental_patients.docid = '".mysql_real_escape_string($_SESSION['docid'])."' AND
+                                        dental_letters.patientid= '".mysql_real_escape_string($_REQUEST['pid'])."';";
+$dental_letters_res = mysql_query($dental_letters_query);
+$pending_letters = mysql_num_rows($dental_letters_res);
+                ?>
+
 <div id="content">
 <ul id="summ_nav">
   <li><a href="#" onclick="show_sect('notes')" id="link_notes" class="active">PROG NOTES</a></li>
   <li><a href="#" onclick="show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
   <li><a href="#" onclick="show_sect('health')" id="link_health">HEALTH Hx</a></li>
-  <li><a href="#" onclick="show_sect('letters')" id="link_letters">LETTERS</a></li>
+  <li><a href="#" onclick="show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters>0)?"(".$pending_letters.")":''; ?></a></li>
   <li><a href="#" onclick="show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
-  <li><a href="#" onclick="show_sect('subj')" id="link_subject">SUBJ TESTS</a></li>
+  <li><a href="#" onclick="show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
   <li><a href="#" onclick="show_sect('contacts')" id="link_contacts">CONTACTS</a></li>
+  <li><a href="#" onclick="show_sect('appointments')" id="link_appointments">APPOINTMENTS</a></li>
 </ul>
 
   <div id="sections">
@@ -29,10 +39,10 @@ if(isset($_REQUEST['del_note'])){
 		<?php include 'summ_notes.php'; ?>
 	</div>
 	<div id="sect_treatment">
-		TREATMENT
+		<?php include 'summ_treatment.php'; ?>
 	</div>
 	<div id="sect_health">
-		
+		<?php include 'summ_health.php'; ?>		
 	</div>
 	<div id="sect_letters">
                 <?php include 'summ_letters.php'; ?>
@@ -46,6 +56,9 @@ if(isset($_REQUEST['del_note'])){
 	<div id="sect_contacts">
 
 	</div>
+	<div id="sect_appointments">
+		<?php //include 'summ_appointments.php'; ?>
+	</div>
   </div>
 <div class="clear"></div>
 <div>
@@ -58,5 +71,5 @@ if(isset($_REQUEST['del_note'])){
     $("#sections > div").hide();
     $("#sect_"+sect).show();
   }
-show_sect('sleep');
+show_sect('notes');
 </script>

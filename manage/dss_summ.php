@@ -57,6 +57,7 @@ $pending_letters = mysql_num_rows($dental_letters_res);
 
 	</div>
 	<div id="sect_appointments">
+		<iframe src="summ_appointments.php" width="700" height="500"></iframe>
 		<?php //include 'summ_appointments.php'; ?>
 	</div>
   </div>

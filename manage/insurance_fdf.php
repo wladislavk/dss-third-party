@@ -665,7 +665,7 @@ $c++;
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['place'].") >>
+  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
   << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>

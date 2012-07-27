@@ -2237,7 +2237,7 @@ if (!$query) {
       <tr>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo $array['place']; ?>"></td>
+        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo ($array['placeofservice']!='')?$array['placeofservice']:$array['place']; ?>"></td>
         <td width="41"><input  style="width:26px;"type="text" name="emg<?=$li;?>" value="<?php echo $array['emg']; ?>"></td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">

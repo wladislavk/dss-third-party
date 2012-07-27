@@ -1055,7 +1055,7 @@ $status = st($myarray['status']);
 if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
-  $another_plan = '';
+  $another_plan = 'NO';
 }
 if($is_pending){
   $insured_sex = $pat_myarray['gender'];
@@ -1092,8 +1092,6 @@ if($is_pending){
 	if($pat_myarray['p_m_ins_type']==1){
 	  $insured_policy_group_feca = "NONE";
           $insured_insurance_plan = '';
-	  $insured_dob = '';
-	  $insured_sex = '';  
 	  $insured_employer_school_name = '';
 	}else{
 	  $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];

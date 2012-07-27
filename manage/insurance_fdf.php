@@ -36,8 +36,6 @@ $other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
         if($pat_myarray['p_m_ins_type']==1){
           $insured_policy_group_feca = "NONE";
           $insured_insurance_plan = '';
-          $insured_dob = '';
-          $insured_sex = '';
           $insured_employer_school_name = '';
         }else{
           $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
@@ -104,7 +102,7 @@ $another_plan = strtoupper(st($myarray['another_plan']));
 if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
-  $another_plan = '';
+  $another_plan = 'NO';
 }
 
 $patient_signature = st($myarray['patient_signature']);
@@ -336,8 +334,6 @@ if($insured_insurance_plan == '')
 if($pat_myarray['p_m_ins_type']==1){
           $insured_policy_group_feca = "NONE";
           $insured_insurance_plan = '';
-          $insured_dob = '';
-          $insured_sex = '';
           $insured_employer_school_name = '';
         }
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);

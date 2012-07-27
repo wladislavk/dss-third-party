@@ -24,9 +24,9 @@ if(!isset($_SESSION['screener_doc'])){
                 <h1>Dental Sleep Solutions</h1>
             </div>
             <ul id="main_nav" class="fr">
-                                <li class="nav_item lgutipT" title="start over" style="display:none;" id="restart_nav"><a href="index.php" class="main_link"><img class="img_holder" style="background-image: url(images/images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Reset and Start Over</span></a></li>
+                                <li class="nav_item lgutipT" title="start over" style="display:none;" id="restart_nav"><a href="index.php" class="main_link" onclick="return confirm('Are you sure? All current progress will be lost.');"><img class="img_holder" style="background-image: url(images/images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Reset and Start Over</span></a></li>
 
-                                <li class="nav_item lgutipT" title="Log Out"><a href="logout.php" class="main_link"><img class="img_holder" style="background-image: url(images/icons/locked2.png)" alt="" src="images/blank.gif"/><span>Log Out</span></a></li>
+                                <li class="nav_item lgutipT" title="Log Out"><a href="logout.php" onclick="return confirm('Are you sure you want to logout?')" class="main_link"><img class="img_holder" style="background-image: url(images/icons/locked2.png)" alt="" src="images/blank.gif"/><span>Log Out</span></a></li>
 
             </ul>
 
@@ -40,12 +40,14 @@ if(!isset($_SESSION['screener_doc'])){
 <input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
 
 <div class="sect" id="sect0">
-<h3 class="sepH_a">Welcome!</h3>
-                                                                                                        <p>Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+<div class="dp50">
+<h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
+                                                                                                        <p>Over 40 million Americans suffer from a sleep disorder, and 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain undiagnosed. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never shared without your consent. Find out whether you may be suffering from an undiagnosed sleep problem.</p>
 <br />
                                                                                                                 <div class="cf">
-<a href="#" onclick="next_sect(1)" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="#" onclick="next_sect(1)" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
+</div>
 </div>
 
 <div class="sect" id="sect1">
@@ -66,9 +68,9 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 <div class="sect" id="sect2">
 
-<h3>Epworth</h3>
+<h3>Epworth Sleepiness Score</h3>
 <div class="formEl_a">
-        <div class="legend">
+        <div class="legend dp33">
                         Using the following scale, choose the most appropriate number for each situation.
 
                         <br />
@@ -85,101 +87,57 @@ if(!isset($_SESSION['screener_doc'])){
                 <option value=\"2\">2</option>
                 <option value=\"3\">3</option>";
 ?>
-
-<div class="sepH_b half">
-	<label class="lbl_in">Sitting and reading</label>
+<div class="dp66">
+<div class="sepH_b clear">
 	<select class="inpt_in" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
+        <label class="lbl_in">Sitting and reading</label>
 </div>
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_public" name="epworth_public"><?= $options; ?></select>
+        <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
 </div>
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">As a passenger in a car for an hour without a break</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
+        <label class="lbl_in">As a passenger in a car for an hour without a break</label>
 </div>
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
+        <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
 </div>
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">Sitting and talking to someone</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
+        <label class="lbl_in">Sitting and talking to someone</label>
 </div>
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
+        <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
 </div> 
 
 
-<div class="sepH_b half">
-        <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
+<div class="sepH_b clear">
         <select class="inpt_in" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
+        <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
-
+</div>
 </div>
 <a href="#" onclick="next_sect(3)" class="fr next btn btn_d">Next</a>
 </div>
 <div class="sect" id="sect3">
-
-<h3>Thornton</h3>
-<div class="formEl_a">
-
-<div class="legend">
-                        Using the following scale, choose the most appropriate number for each situation.
-
-                        <br />
-                        <strong>0</strong> = Never<br />
-                        <strong>1</strong> = Infrequently (1 night per week)<br />
-                        <strong>2</strong> = Frequently (2-3 nights per week)<br />
-                        <strong>3</strong> = Most of the time (4 or more nights)<br />
-</div>
-
-
-<div class="sepH_b half">
-	<label class="lbl_in">1. My snoring affects my relationship with my partner:</label>
-        <select class="inpt_in" id="snore_1" name="snore_1"><?= $options; ?></select>
-</div>
-
-<div class="sepH_b half">
-        <label class="lbl_in">2. My snoring causes my partner to be irritable or tired:</label>
-        <select class="inpt_in" id="snore_2" name="snore_2"><?= $options; ?></select>
-</div>
-
-<div class="sepH_b half">
-        <label class="lbl_in">3. My snoring requires us to sleep in separate rooms:</label>
-        <select class="inpt_in" id="snore_3" name="snore_3"><?= $options; ?></select>
-</div>
-
-<div class="sepH_b half">
-        <label class="lbl_in">4. My snoring is loud:</label>
-        <select class="inpt_in" id="snore_4" name="snore_4"><?= $options; ?></select>
-</div>
-
-<div class="sepH_b half">
-        <label class="lbl_in">5. My snoring affects people when I am sleeping away from home:</label>
-        <select class="inpt_in" id="snore_5" name="snore_5"><?= $options; ?></select>
-</div>
-</div>
-<a href="#" onclick="next_sect(4)" class="fr next btn btn_d">Next</a>
-
-</div>
-
-<div class="sect" id="sect4">
+<h3>Health Symptoms</h3>
   <div class="field">
-	<input type="radio" name="breathing" value="8" /> Yes
-	<input type="radio" name="breathing" value="0" /> No
-	<label>Have you ever been told you stop breathing while asleep?</label>
+        <input type="radio" name="breathing" value="8" /> Yes
+        <input type="radio" name="breathing" value="0" /> No
+        <label>Have you ever been told you stop breathing while asleep?</label>
   </div>
 
   <div class="field">
@@ -213,7 +171,7 @@ if(!isset($_SESSION['screener_doc'])){
   </div>
 
   <div class="field">
-        <input type="radio" name="blood_pressure" value="1" /> Yes
+        <input type="radio" name="blood_pressure" value="2" /> Yes
         <input type="radio" name="blood_pressure" value="0" /> No
         <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
   </div>
@@ -248,54 +206,68 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
+<a href="#" onclick="next_sect(4)" class="fr next btn btn_d">Next</a>
+
+</div>
+
+<div class="sect" id="sect4">
+
 <h3>Rx</h3>
   <div class="field">
-	<input type="checkbox" name="rx_tongue" value="1" />
-	<label>Enlarged/Scalloped Tongue</label>
-  </div>
-  <div class="field">
-        <input type="checkbox" name="rx_reflux" value="1" />
-        <label>Gastroesophageal Reflux</label>
+	<input type="checkbox" name="rx_blood_pressure" value="1" />
+	<label>High blood pressure</label>
   </div>
   <div class="field">
         <input type="checkbox" name="rx_hypertension" value="1" />
         <label>Hypertension</label>
   </div>
   <div class="field">
-        <input type="checkbox" name="rx_jaw" value="1" />
-        <label>Retruded lower Jaw</label>
+        <input type="checkbox" name="rx_heart_disease" value="1" />
+        <label>Heart disease</label>
   </div>
-  <div class="field">
-        <input type="checkbox" name="rx_tonsils" value="1" />
-        <label>Elarged Tonsils</label>
-  </div>
-  <div class="field">
-        <input type="checkbox" name="rx_heart" value="1" />
-        <label>Heart Failure</label>
-  </div>
-  <div class="field">
-        <input type="checkbox" name="rx_pallet" value="1" />
-        <label>High Arching Hard Pallet</label>
-  </div>
-  <div class="field">
-        <input type="checkbox" name="rx_metabolic" value="1" />
-        <label>Metabolic Syndrome</label>
-  </div>
-  <div class="field">
+   <div class="field">
         <input type="checkbox" name="rx_stroke" value="1" />
         <label>Stroke</label>
   </div>
   <div class="field">
-        <input type="checkbox" name="rx_bruxism" value="1" />
-        <label>Bruxism</label>
+        <input type="checkbox" name="rx_apnea" value="1" />
+        <label>Sleep apnea</label>
   </div>
   <div class="field">
         <input type="checkbox" name="rx_diabetes" value="1" />
         <label>Diabetes</label>
   </div>
   <div class="field">
-        <input type="checkbox" name="rx_obesity" value="1" />
-        <label>Obesity</label>
+        <input type="checkbox" name="rx_lung_disease" value="1" />
+        <label>Lung Disease</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_insomnia" value="1" />
+        <label>Insomnia</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_depression" value="1" />
+        <label>Depression</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_narcolepsy" value="1" />
+        <label>Narcolepsy</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_medication" value="1" />
+        <label>Sleeping medication</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_restless_leg" value="1" />
+        <label>Restless leg syndrome</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_headaches" value="1" />
+        <label>Morning headaches</label>
+  </div>
+  <div class="field">
+        <input type="checkbox" name="rx_heartburn" value="1" />
+        <label>Heartburn (Gastroesophageal Reflux)</label>
   </div>
 
 
@@ -305,13 +277,15 @@ if(!isset($_SESSION['screener_doc'])){
 
 <div class="sect" id="sectresults">
 
-<h3>Results</h3>
+<h3>Your Results</h3>
 
-Your scores are...<br />
+<p id="result_body"></p>
+<br />
 Epworth: <span id="ep_score"></span><br />
-Thornton: <span id="snore_score"></span><br />
+<br />
 Survey: <span id="survey_score"></span>
-
+<br />
+<div id="risk_image"></div>
 <a href="index.php" class="fr next btn btn_d">Start New Survey</a>
 </div>
 

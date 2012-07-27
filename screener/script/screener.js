@@ -32,18 +32,21 @@ function submit_screener(){
       headaches: $("input[name=headaches]:checked").val(),
       falling_asleep: $("input[name=falling_asleep]:checked").val(),
       staying_asleep: $("input[name=staying_asleep]:checked").val(),
-      rx_tongue: $("input[name=rx_tongue]").is(':checked')?1:0,
-      rx_reflux: $("input[name=rx_reflux]").is(':checked')?1:0,
+      rx_blood_pressure: $("input[name=rx_blood_pressure]").is(':checked')?1:0,
       rx_hypertension: $("input[name=rx_hypertension]").is(':checked')?1:0,
-      rx_jaw: $("input[name=rx_jaw]").is(':checked')?1:0,
-      rx_tonsils: $("input[name=rx_tonsils]").is(':checked')?1:0,
-      rx_heart: $("input[name=rx_heart]").is(':checked')?1:0,
-      rx_pallet: $("input[name=rx_pallet]").is(':checked')?1:0,
-      rx_metabolic: $("input[name=rx_metabolic]").is(':checked')?1:0,
+      rx_heart_disease: $("input[name=rx_heart_disease]").is(':checked')?1:0,
       rx_stroke: $("input[name=rx_stroke]").is(':checked')?1:0,
-      rx_bruxism: $("input[name=rx_bruxism]").is(':checked')?1:0,
+      rx_apnea: $("input[name=rx_apnea]").is(':checked')?1:0,
       rx_diabetes: $("input[name=rx_diabetes]").is(':checked')?1:0,
-      rx_obesity: $("input[name=rx_obesity]").is(':checked')?1:0
+      rx_lung_disease: $("input[name=rx_lung_disease]").is(':checked')?1:0,
+      rx_insomnia: $("input[name=rx_insomnia]").is(':checked')?1:0,
+      rx_depression: $("input[name=rx_depression]").is(':checked')?1:0,
+      rx_narcolepsy: $("input[name=rx_narcolepsy]").is(':checked')?1:0,
+      rx_medication: $("input[name=rx_medication]").is(':checked')?1:0,
+      rx_restless_leg: $("input[name=rx_restless_leg]").is(':checked')?1:0,
+      rx_headaches: $("input[name=rx_headaches]").is(':checked')?1:0,
+      rx_heartburn: $("input[name=rx_heartburn]").is(':checked')?1:0
+
     },
     success: function(data){
       var r = $.parseJSON(data);
@@ -64,40 +67,69 @@ function submit_screener(){
         snore += parseInt($('#snore_4').val(), 10);
         snore += parseInt($('#snore_5').val(), 10);
 	var survey = 0;
-	survey += parseInt($("input[name=breathing]:checked").val(), 10);
-        survey += parseInt($("input[name=driving]:checked").val(), 10);
-        survey += parseInt($("input[name=gasping]:checked").val(), 10);
-        survey += parseInt($("input[name=sleepy]:checked").val(), 10);
-        survey += parseInt($("input[name=snore]:checked").val(), 10);
-        survey += parseInt($("input[name=weight_gain]:checked").val(), 10);
-        survey += parseInt($("input[name=blood_pressure]:checked").val(), 10);
-        survey += parseInt($("input[name=jerk]:checked").val(), 10);
-        survey += parseInt($("input[name=burning]:checked").val(), 10);
-        survey += parseInt($("input[name=headaches]:checked").val(), 10);
-        survey += parseInt($("input[name=falling_asleep]:checked").val(), 10);
-        survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
+	if($("input[name=breathing]:checked").val())
+		survey += parseInt($("input[name=breathing]:checked").val(), 10);
+	if($("input[name=driving]:checked").val())
+        	survey += parseInt($("input[name=driving]:checked").val(), 10);
+        if($("input[name=gasping]:checked").val())                
+		survey += parseInt($("input[name=gasping]:checked").val(), 10);
+        if($("input[name=sleepy]:checked").val())                
+                survey += parseInt($("input[name=sleepy]:checked").val(), 10);
+        if($("input[name=snore]:checked").val())                
+                survey += parseInt($("input[name=snore]:checked").val(), 10);
+        if($("input[name=weight_gain]:checked").val()) 
+                survey += parseInt($("input[name=weight_gain]:checked").val(), 10);
+        if($("input[name=blood_pressure]:checked").val())                
+                survey += parseInt($("input[name=blood_pressure]:checked").val(), 10);
+        if($("input[name=jerk]:checked").val())                
+                survey += parseInt($("input[name=jerk]:checked").val(), 10);
+        if($("input[name=burning]:checked").val())                
+                survey += parseInt($("input[name=burning]:checked").val(), 10);
+        if($("input[name=headaches]:checked").val())                
+                survey += parseInt($("input[name=headaches]:checked").val(), 10);
+        if($("input[name=falling_asleep]:checked").val())                
+                survey += parseInt($("input[name=falling_asleep]:checked").val(), 10);
+        if($("input[name=staying_asleep]:checked").val())                
+                survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
 	an_tot = ep;
 	                                                                        if(an_tot < 8)
                                                                         {
                                                                                 an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
+										img = 'images/screener-low_risk.png';
                                                                         }
                                                                         
                                                                         if (an_tot >= 8 && an_tot < 10)
                                                                         {
                                                                                 an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a average amount of sleepiness.';
+                                                                                img = 'images/screener-moderate_risk.png';
                                                                         }
                                                                         
                                                                         if (an_tot >= 10 && an_tot < 16)
                                                                         {
                                                                                 an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which may indicate excessive sleepiness depending on the situation. The patient may want to seek medical attention.';
+                                                                                img = 'images/screener-high_risk.png';
                                                                         }
                                                                         
                                                                         if (an_tot >= 16 )
                                                                         {
                                                                                 an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates excessive sleepiness and medical attention should be sought.';
+                                                                                img = 'images/screener-severe_risk.png';
                                                                         }
+	var img = '';
+	if(survey<8){
+		img = 'images/screener-low_risk.png';
+	}else if(survey<12){
+                img = 'images/screener-moderate_risk.png';
+        }else if(survey<16){
+                img = 'images/screener-high_risk.png';
+        }else{
+                img = 'images/screener-severe_risk.png';
+        }
+
+	$('#result_body').text($('#first_name').val() + ', thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate:');
+	$('#risk_image').html('<img src="'+img+'" />');
 	$('#ep_score').text(an_text);
-	$('#snore_score').text(snore);
+	//$('#snore_score').text(snore);
 	$('#survey_score').text(survey);
 	next_sect('results');
 

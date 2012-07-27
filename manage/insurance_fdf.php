@@ -36,8 +36,6 @@ $other_insured_insurance_plan = strtoupper(st($pat_myarray['s_m_ins_plan']));
         if($pat_myarray['p_m_ins_type']==1){
           $insured_policy_group_feca = "NONE";
           $insured_insurance_plan = '';
-          $insured_dob = '';
-          $insured_sex = '';
           $insured_employer_school_name = '';
         }else{
           $insured_policy_group_feca = $pat_myarray['p_m_ins_grp'];
@@ -104,7 +102,7 @@ $another_plan = strtoupper(st($myarray['another_plan']));
 if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){
   $another_plan = 'YES';
 }else{
-  $another_plan = '';
+  $another_plan = 'NO';
 }
 
 $patient_signature = st($myarray['patient_signature']);
@@ -336,8 +334,6 @@ if($insured_insurance_plan == '')
 if($pat_myarray['p_m_ins_type']==1){
           $insured_policy_group_feca = "NONE";
           $insured_insurance_plan = '';
-          $insured_dob = '';
-          $insured_sex = '';
           $insured_employer_school_name = '';
         }
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
@@ -669,7 +665,7 @@ $c++;
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['place'].") >>
+  << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
   << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
   << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>

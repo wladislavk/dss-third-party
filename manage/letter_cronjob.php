@@ -16,7 +16,7 @@ foreach ($patients as $patient) {
   $memo = "Patient, " . $patient['salutation'] . " " . $patient['firstname'] . " " . $patient['lastname'] . ", has not completed their scheduled consultation within 30 days.  Click <a href=\"/manage/letter12.php?pid=" . $patient['patientid'] . "\">Yes</a> to send them a letter, or click <a href=\"/manage/manage_flowsheet3.php?pid=" . $patient['patientid'] . "&page=page2\">No</a> to view the patient's Flow Sheet.";
   $memo = mysql_real_escape_string($memo); 
   $memo_query = "INSERT INTO memo VALUES ('$user_id', '$memo', DATE_ADD(NOW(), INTERVAL 1 DAY));";
-  $memo_result = mysql_query($memo_query);
+  //$memo_result = mysql_query($memo_query);
 }
 
 // Trigger Letter 18

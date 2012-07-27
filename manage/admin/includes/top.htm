@@ -12,6 +12,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 <link href="/manage/admin/css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="/manage/admin/script/validation.js"></script>
 <script language="javascript" src="/manage/admin/calendar.js"></script>
+<script type="text/javascript" src="script/logout_timer.js"></script>
 <!-- You can load the jQuery library from the Google Content Network.
   Probably better than from your own server. -->
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
@@ -35,7 +36,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 
 </style>
 </head>
-<body>
+<body onload="set_interval();">
 <table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
   <tr bgcolor="#FFFFFF">
     <td colspan="2" class="header_bg"> 

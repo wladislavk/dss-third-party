@@ -50,7 +50,7 @@ if (isset($_REQUEST['ed'])) {
 		 . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
 		 . "  JOIN dental_users d ON p.docid = d.userid "
 		 . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-		 . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+		 . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
 		 . "WHERE "
 		 . "  p.patientid = ".$preauth['patientid'];
 

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once('../manage/admin/includes/config.php');
 if(!isset($_SESSION['screener_doc'])){
   ?>
 	<script type="text/javascript">
@@ -132,10 +133,11 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 </div>
 </div>
-<a href="#" onclick="return validate_epworth(); next_sect(3)" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_epworth();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect3">
 <h3>Health Symptoms</h3>
+  <p>Please answer the following questions about your sleep habits.</p>
   <div class="field">
         <input type="radio" name="breathing" value="8" /> Yes
         <input type="radio" name="breathing" value="0" /> No
@@ -208,13 +210,14 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
-<a href="#" onclick="next_sect(4)" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_sect3();" class="fr next btn btn_medium btn_d">Next</a>
 
 </div>
 
 <div class="sect" id="sect4">
 
-<h3>Rx</h3>
+<h3>Previous medical diagnoses</h3>
+  <p>Please check all conditions for which you have been medically diagnosed or treated.</p>
   <div class="field">
 	<input type="checkbox" name="rx_blood_pressure" value="1" />
 	<label>High blood pressure</label>
@@ -282,11 +285,44 @@ if(!isset($_SESSION['screener_doc'])){
 <h3>Your Results</h3>
 
 <p id="result_body"></p>
+<!--
 <br />
 Epworth: <span id="ep_score"></span><br />
 <br />
 Survey: <span id="survey_score"></span>
-<br />
+<br />-->
+<div class="risk_desc" id="risk_low">
+<!-- LOW RISK -->
+<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at low risk for sleep apnea, indicating a normal amount of sleepiness. Should any of your symptoms change, please let us know so we can reassess your sleepiness and risk for sleep apnea.
+
+Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
+</div>
+
+<div class="risk_desc" id="risk_moderate">
+<!-- MODERATE RISK -->
+<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at moderate risk for sleep apnea, indicating that some of your symptoms may be signs of Obstructive Sleep Apnea (OSA). Please talk to [Franchisee/User name] or any of our staff to find out about our advanced tools for diagnosing sleep apnea. We are here to answer your questions and help you breathe and sleep better! 
+
+Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
+</div>
+
+<?php
+  $s = "SELECT name FROM dental_users where userid='".mysql_real_escape_string($_SESSION['screener_user'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+?>
+<div class="risk_desc" id="risk_high">
+<!-- HIGH RISK -->
+<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at high risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness, and medical attention should be sought. Please talk to <?= $r['name']; ?> or any of our staff to find out about our advanced tools for diagnosing sleep apnea. 
+
+Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your HIGH risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
+</div>
+
+<div class="risk_desc" id="risk_severe">
+<!-- SEVERE RISK -->
+<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at severe risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness and medical attention should be sought. Please talk to <?= $r['name']; ?> or any of our staff to find out about our advanced tools for diagnosing sleep apnea.
+
+Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
+</div>
 <div id="risk_image"></div>
 <a href="index.php" class="fr next btn btn_medium btn_d">Start New Survey</a>
 </div>

@@ -92,6 +92,7 @@ function submit_screener(){
         if($("input[name=staying_asleep]:checked").val())                
                 survey += parseInt($("input[name=staying_asleep]:checked").val(), 10);
 	an_tot = ep;
+	$('.risk_desc').hide();
 	                                                                        if(an_tot < 8)
                                                                         {
                                                                                 an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
@@ -118,19 +119,23 @@ function submit_screener(){
 	var img = '';
 	if(survey<8){
 		img = 'images/screener-low_risk.png';
+		$('#risk_low').show();
 	}else if(survey<12){
                 img = 'images/screener-moderate_risk.png';
+		$('#risk_moderate').show();
         }else if(survey<16){
                 img = 'images/screener-high_risk.png';
+		$('#risk_high').show();
         }else{
                 img = 'images/screener-severe_risk.png';
+		$('#risk_severe').show();
         }
 
-	$('#result_body').text($('#first_name').val() + ', thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate:');
+	$('.pat_name').text($('#first_name').val());
 	$('#risk_image').html('<img src="'+img+'" />');
-	$('#ep_score').text(an_text);
+	//$('#ep_score').text(an_text);
 	//$('#snore_score').text(snore);
-	$('#survey_score').text(survey);
+	//$('#survey_score').text(survey);
 	next_sect('results');
 
       }
@@ -155,3 +160,44 @@ function next_sect(sect){
 $(document).ready( function(){
   next_sect(0);
 });
+
+
+function validate_epworth(){
+
+  if( $('#epworth_reading').val() == '' ||
+      $('#epworth_public').val() == '' ||
+      $('#epworth_passenger').val() == '' ||
+      $('#epworth_lying').val() == '' ||
+      $('#epworth_talking').val() == '' ||
+      $('#epworth_lunch').val() == '' ||
+      $('#epworth_traffic').val() == ''
+    ){
+	alert('All questions much be answered.');
+	return false;
+    }
+  next_sect(3);
+  return true;
+}
+
+function validate_sect3(){
+
+  if($("input[name=weight_gain]:checked").val() == null ||
+      $("input[name=breathing]:checked").val() == null ||
+      $("input[name=driving]:checked").val() == null ||
+      $("input[name=gasping]:checked").val() == null ||
+      $("input[name=sleepy]:checked").val() == null ||
+      $("input[name=snore]:checked").val() == null ||
+      $("input[name=weight_gain]:checked").val() == null ||
+      $("input[name=blood_pressure]:checked").val() == null ||
+      $("input[name=jerk]:checked").val() == null ||
+      $("input[name=burning]:checked").val() == null ||
+      $("input[name=headaches]:checked").val() == null ||
+      $("input[name=falling_asleep]:checked").val() == null ||
+      $("input[name=staying_asleep]:checked").val() == null
+){
+    alert('All questions much be answered.');
+    return false;
+  }
+
+  next_sect(4);
+}

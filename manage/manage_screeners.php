@@ -2,6 +2,12 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 include "includes/similar.php";
+
+
+if(isset($_REQUEST['delid'])){
+  $sql = "DELETE FROM dental_screener where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+  mysql_query($sql);
+}
 ?>
 <style type="text/css">
 .similar{ display:none; }
@@ -29,7 +35,7 @@ if(isset($_REQUEST['sort'])){
 }else{
   $_REQUEST['sort']='adddate';
   $_REQUEST['sortdir']='DESC';
-  $sort = "u.adddate";
+  $sort = "s.adddate";
 }
 if(isset($_REQUEST['sortdir'])){
   $dir = $_REQUEST['sortdir'];
@@ -38,7 +44,8 @@ if(isset($_REQUEST['sortdir'])){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "SELECT s.*, u.name
+$sql = "SELECT s.*, u.name,
+	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
 	WHERE s.docid='".$_SESSION['docid']."' ";
@@ -89,14 +96,20 @@ $my=mysql_query($sql) or die(mysql_error());
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        Risk 
+                </td>
+               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			Epworth
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			Thornton
+			Diagnosis	
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
                 </td>
+		<td valign="top" class="col_head">
+			Edit
+		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
@@ -114,21 +127,90 @@ $my=mysql_query($sql) or die(mysql_error());
 		?>
 			<tr>
 				<td valign="top">
-					<?= date('m/d/Y', strtotime($myarray["adddate"]));?>
+					<?= date('m/d/Y h:i a', strtotime($myarray["adddate"]));?>
 				</td>
 				<td valign="top">
                                         <?= st($myarray["first_name"]); ?> <?= $myarray['last_name']; ?>
+				</td>
+				<td valign="top">
+					<?php if($myarray["survey_total"] < 8 ){ ?>		
+						Low
+                                        <?php }elseif($myarray["survey_total"] < 10 ){ ?>
+						Moderate
+                                        <?php }elseif($myarray["survey_total"] < 16 ){ ?>
+						High
+                                        <?php }else{ ?>
+						Severe
+					<?php } ?>
 				</td>
                                 <td valign="top">
 					<?= st($myarray['epworth_lunch']+$myarray['epworth_lying']+$myarray['epworth_reading']+$myarray['epworth_passenger']+$myarray['epworth_public']+$myarray['epworth_traffic']+$myarray["epworth_talking"]); ?>
                                 </td>
 				<td valign="top">
 					<?php
-					  echo $myarray['snore_1']+$myarray['snore_2']+$myarray['snore_3']+$myarray['snore_4']+$myarray['snore_5'];	
-					?>
+						$diagnosis = array();
+						if($myarray['rx_blood_pressure']==1){
+							array_push($diagnosis, 'High blood pressure');
+						}
+                                                if($myarray['rx_hypertension']==1){
+                                                        array_push($diagnosis, 'Hypertension');
+                                                }
+                                                if($myarray['rx_heart_disease']==1){
+                                                        array_push($diagnosis, 'Heart disease');
+                                                }
+                                                if($myarray['rx_stroke']==1){
+                                                        array_push($diagnosis, 'Stroke');
+                                                }
+
+                                                if($myarray['rx_apnea']==1){
+                                                        array_push($diagnosis, 'Sleep apnea');
+                                                }
+
+                                                if($myarray['rx_diabetes']==1){
+                                                        array_push($diagnosis, 'Diabetes');
+                                                }
+
+                                                if($myarray['rx_lung_disease']==1){
+                                                        array_push($diagnosis, 'Lung disease');
+                                                }
+
+                                                if($myarray['rx_insomnia']==1){
+                                                        array_push($diagnosis, 'Insomnia');
+                                                }
+
+                                                if($myarray['rx_depression']==1){
+                                                        array_push($diagnosis, 'Depression');
+                                                }
+
+                                                if($myarray['rx_narcolepsy']==1){
+                                                        array_push($diagnosis, 'Narcolepsy');
+                                                }
+
+                                                if($myarray['rx_medication']==1){
+                                                        array_push($diagnosis, 'Sleeping medication');
+                                                }
+
+                                                if($myarray['rx_restless_leg']==1){
+                                                        array_push($diagnosis, 'Restless Leg Syndrome');
+                                                }
+
+                                                if($myarray['rx_headaches']==1){
+                                                        array_push($diagnosis, 'Morning headaches');
+                                                }
+
+                                                if($myarray['rx_heartburn']==1){
+                                                        array_push($diagnosis, 'Heartburn (Gastroesophageal Reflux)');
+                                                }
+
+?>
+					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').hide();$('#diagnosis_text_<?=$myarray['id']; ?>').show();" id="diagnosis_count_<?=$myarray['id']; ?>"><?= count($diagnosis); ?></a>
+					<span id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></span>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	
+				</td>
+				<td>
+					<a href="manage_screeners.php?delid=<?= $myarray['id']; ?>&page=<?= $_REQUEST['page']; ?>" onclick="return confirm('Are you sure you want to delete this screener?');">Delete</a>
 				</td>
 			</tr>
 	<? 	}

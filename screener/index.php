@@ -64,7 +64,7 @@ if(!isset($_SESSION['screener_doc'])){
         <input type="text" id="last_name" name="last_name" />
 </div>
 
-<a href="#" onclick="next_sect(2)" class="fr next btn btn_d">Next</a>
+<a href="#" onclick="next_sect(2)" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect2">
 
@@ -130,7 +130,7 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 </div>
 </div>
-<a href="#" onclick="next_sect(3)" class="fr next btn btn_d">Next</a>
+<a href="#" onclick="next_sect(3)" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect3">
 <h3>Health Symptoms</h3>
@@ -206,7 +206,7 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
-<a href="#" onclick="next_sect(4)" class="fr next btn btn_d">Next</a>
+<a href="#" onclick="next_sect(4)" class="fr next btn btn_medium btn_d">Next</a>
 
 </div>
 
@@ -272,7 +272,7 @@ if(!isset($_SESSION['screener_doc'])){
 
 
 
-<a href="#" onclick="submit_screener()" class="fr next btn btn_d">Next</a>
+<a href="#" onclick="submit_screener()" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 
 <div class="sect" id="sectresults">
@@ -286,7 +286,7 @@ Epworth: <span id="ep_score"></span><br />
 Survey: <span id="survey_score"></span>
 <br />
 <div id="risk_image"></div>
-<a href="index.php" class="fr next btn btn_d">Start New Survey</a>
+<a href="index.php" class="fr next btn btn_medium btn_d">Start New Survey</a>
 </div>
 
           </div>

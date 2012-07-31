@@ -25,5 +25,10 @@ body{
   background-image: url(../images/grd_dl.png);
   }
 
+.btn_medium{
+  font: 700 18px/36px Helvetica, Arial, sans-serif;
+  background-image: url(../images/grd_dl.png);
+  }
+
 .field input[type="radio"]{ margin-left:10px; }
 #sect3 label{ margin-left:30px; }

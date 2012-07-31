@@ -52,7 +52,7 @@ if(!isset($_SESSION['screener_doc'])){
 
 <div class="sect" id="sect1">
 
-<h3>General</h3>
+<h3>Please enter your name.</h3>
 
 <div class="sepH_b clear">
 	<label>First Name</label>
@@ -69,6 +69,7 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect2">
 
 <h3>Epworth Sleepiness Score</h3>
+<p>How likely are you to sleep or doze in each of the following situations?</p>
 <div class="formEl_a">
         <div class="legend dp33">
                         Using the following scale, choose the most appropriate number for each situation.
@@ -82,55 +83,56 @@ if(!isset($_SESSION['screener_doc'])){
 
 
 <?php
-  $options = "<option value=\"0\">0</option>
+  $options = "<option value=\"\"></option>
+		<option value=\"0\">0</option>
 		<option value=\"1\">1</option>
                 <option value=\"2\">2</option>
                 <option value=\"3\">3</option>";
 ?>
 <div class="dp66">
 <div class="sepH_b clear">
-	<select class="inpt_in" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
+	<select class="inpt_in epworth_select" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
         <label class="lbl_in">Sitting and reading</label>
 </div>
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_public" name="epworth_public"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_public" name="epworth_public"><?= $options; ?></select>
         <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
 </div>
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
         <label class="lbl_in">As a passenger in a car for an hour without a break</label>
 </div>
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
         <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
 </div>
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
         <label class="lbl_in">Sitting and talking to someone</label>
 </div>
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
         <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
 </div> 
 
 
 <div class="sepH_b clear">
-        <select class="inpt_in" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
+        <select class="inpt_in epworth_select" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
         <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
 </div>
 </div>
-<a href="#" onclick="next_sect(3)" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_epworth(); next_sect(3)" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect3">
 <h3>Health Symptoms</h3>

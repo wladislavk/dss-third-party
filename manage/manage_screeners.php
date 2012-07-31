@@ -204,7 +204,7 @@ $my=mysql_query($sql) or die(mysql_error());
 
 ?>
 					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').hide();$('#diagnosis_text_<?=$myarray['id']; ?>').show();" id="diagnosis_count_<?=$myarray['id']; ?>"><?= count($diagnosis); ?></a>
-					<span id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></span>
+					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').show();$('#diagnosis_text_<?=$myarray['id']; ?>').hide();" id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></span>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	

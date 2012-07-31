@@ -1,0 +1,67 @@
+
+.vob_item{
+  margin-left:150px;
+  font-size: 30px;
+  clear:both;
+  height: 130px;
+  margin-top:20px;
+  display:block;
+  color:#000;
+  text-decoration:none;
+  }
+
+.vob_check{
+  margin-top:14px;
+  width:72px;
+  height:66px;
+  display:block;
+  float: left;
+  background: url(../images/green_check.png) no-repeat 0 0;
+  }
+
+
+.vob_x{
+  margin-top:14px;
+  width:72px;
+  height:66px;
+  display:block;
+  float: left;
+  background: url(../images/red_x.png) no-repeat 0 0;
+  }
+
+.vob_item span{
+  padding-top:25px;
+  display:block;
+}
+.vob_icon{
+  width: 101px;
+  height: 111px;
+  display: block;
+  float:left;
+  margin: 0 20px;
+  }
+
+.vob_request{
+  background: url(../images/request_vob.png) no-repeat center center;
+  }
+
+.vob_file{
+  background: url(../images/file_insurance.png) no-repeat center center;
+  }
+
+.vob_insurance{
+  background: url(../images/insurance_info.png) no-repeat center center;
+  }
+
+.vob_study{
+  background: url(../images/sleep_study.png) no-repeat center center;
+  }
+
+.vob_rx{
+  background: url(../images/rx.png) no-repeat center center;
+  }
+
+.vob_lomn{
+  background: url(../images/LOMN.png) no-repeat center center;
+  }
+

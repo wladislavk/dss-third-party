@@ -1586,7 +1586,7 @@ Completed/Uploaded
 	#sleeplablabels					{ /* line-height:22.6px; */ }
 	#sleeplablabels 	   tr td 	{ height: 35px; padding: 0; border-bottom: 1px solid #000; font-weight: bold; text-align: right; padding-right: 10px; }
 </style>
-
+<a name="sleep_study"></a>
 <div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SLEEP STUDY</div>
 
 <!--sleep study table-->
@@ -2184,6 +2184,7 @@ if (end(explode('.', $lomnimgname)) == "pdf") $pdf2 = true;
 if (end(explode('.', $notesimgname)) == "pdf") $pdf3 = true;
 ?>
 
+<a name="ins"></a>
 <div style="width:600px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
 <table width="610px" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
 <tr style="vertical-align:middle;">
@@ -2454,6 +2455,9 @@ N/A
 <br /><br />
 
 </form>
+<a href="flowsheet_complete.php?pid=<?= $_GET['pid']; ?>" class="addButton" style="margin-left:20px;">Complete</a>
+<a href="vob_checklist.php?pid=<?= $_GET['pid']; ?>" class="addButton">VOB Checklist</a>
+
 </div>
 <!-- END FLOWSHEET PAGE 1 ***************************** -->
 

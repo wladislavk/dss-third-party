@@ -37,19 +37,26 @@ if($complaintid <> '')
                 $compseq[$i] = $comp_arr2[1];
         }
 }
-
 ?>
+	  <?php if($ess != ''){ ?>
           Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
           <br />
+	  <?php } ?>
+	  <?php if($tss != ''){ ?>
           Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
+	  <?php } ?>
 
+	  <?php if($cheif_complaint_text != ''){ ?>
                     <label style="display:block;">
                         What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
                     </label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
+	  <?php } ?>
 
+<?php if($complaintid != '' || in_array('0', $compid)){ ?>
 <h3>Complaints</h3>
 <ul>
+		<?php if($complaintid != ''){ ?>
                     <?
                                         $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
                                         $complaint_my = mysql_query($complaint_sql);
@@ -68,16 +75,20 @@ if($complaintid <> '')
 					}
 
 ?>
-<?php if($other_complaint != ''){ ?>
+<?php } ?>
+<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
 <li><?= $other_complaint; ?></li>
 <?php } ?>
 </ul>
+<?php } ?>
+
 
 <h3>Subjective Signs/Symptoms</h3>
 
                     <div>
                         <span class="full">
                                 <table width="100%" cellpadding="3" cellspacing="1" border="0">
+				<?php if($energy_level != ''){ ?>
                                 <tr>
                                         <td valign="top" width="60%">
                                         Rate your overall energy level 0 -10 (10 being the highest)
@@ -86,6 +97,8 @@ if($complaintid <> '')
                                       <?= $energy_level;?>
                                     </td>
                                 </tr>
+				<? } ?>
+                                <?php if($sleep_qual != ''){ ?>
                                                                 <tr>
                                         <td valign="top">
                                         Rate your sleep quality 0-10 (10 being the highest)
@@ -94,7 +107,8 @@ if($complaintid <> '')
                                       <?=$sleep_qual;?>
                                     </td>
                                 </tr>
-
+                                <? } ?>
+                                <?php if($told_you_snore != ''){ ?>
                                                                                                 <tr>
                                         <td valign="top">
                                         Have you been told you snore?
@@ -103,7 +117,8 @@ if($complaintid <> '')
                                             <?=$told_you_snore;?>
                                     </td>
                                 </tr>
-
+                                <? } ?>
+                                <?php if($snoring_sound != ''){ ?>
                                 <tr>
                                         <td valign="top">
                                         Rate the sound of your snoring 0 -10 (10 being the highest)
@@ -112,6 +127,8 @@ if($complaintid <> '')
                                       <?=$snoring_sound ;?>
                                     </td>
                                 </tr>
+                                <? } ?>
+                                <?php if($wake_night != ''){ ?>
                                 <tr>
                                         <td valign="top">
                                         On average how many times per night do you wake up?
@@ -120,6 +137,8 @@ if($complaintid <> '')
                                                 <?=$wake_night;?>
                                     </td>
                                 </tr>
+                                <? } ?>
+                                <?php if($hours_sleep != ''){ ?>
                                 <tr>
                                         <td valign="top">
                                         On average how many hours of sleep do you get per night?
@@ -128,6 +147,8 @@ if($complaintid <> '')
                                                 <?=$hours_sleep;?>
                                     </td>
                                 </tr>
+                                <? } ?>
+                                <?php if($morning_headaches != ''){ ?>
                                                                <tr>
                                         <td valign="top">
                                         How often do you wake up with morning headaches?
@@ -136,7 +157,8 @@ if($complaintid <> '')
                                             <?= $morning_headaches;?>
                                     </td>
                                 </tr>
-
+                                <? } ?>
+                                <?php if($bed_time_partner != ''){ ?>
                                                                                                 <tr>
                                         <td valign="top">
                                         Do you have a bed time partner?
@@ -145,10 +167,8 @@ if($complaintid <> '')
                                             <?= $bed_time_partner;?>
                                     </td>
                                 </tr>
-
-
-
-
+                                <? } ?>
+                                <?php if($sleep_same_room != ''){ ?>
                                                                 <tr>
                                         <td valign="top">
                                         If yes do they sleep in the same room?
@@ -157,7 +177,8 @@ if($complaintid <> '')
                                             <?= $sleep_same_room;?>
                                     </td>
                                 </tr>
-
+                                <? } ?>
+                                <?php if($quit_breathing != ''){ ?>
                                 <tr>
                                         <td valign="top">
                                         How many times per night does your bedtime partner notice you quit breathing?
@@ -166,7 +187,7 @@ if($complaintid <> '')
                                             <?= $quit_breathing;?>
                                     </td>
                                 </tr>
-
+                                <? } ?>
 
                             </table>
 
@@ -220,22 +241,28 @@ $surgery = st($myarray['surgery']);
 if($cpap == '')
         $cpap = 'No';
 ?>
-
+                                <?php if($polysomnographic != ''){ ?>
                     <div>
                         <span>
                                                         Have you had a sleep study
 
 <?= ($polysomnographic == '1')?'Yes':'No'; ?> 
 <?php if($polysomnographic == '1'){ ?>                  
+                                <?php if($sleep_center_name_text != ''){ ?>
                             At <?=$sleep_center_name_text;?>
+                                <? } ?>
+                                <?php if($sleep_study_on != ''){ ?>
                             Date
                             <?=$sleep_study_on;?>
+                                <? } ?>
 <?php } ?>
                         </span>
                     </div>
+		<?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         CPAP Intolerance
                     </label>
+                                <?php if($cpap != ''){ ?>
                     <div>
                         <span>
                                 Have you tried CPAP?
@@ -244,12 +271,11 @@ if($cpap == '')
 
                             <input type="radio" class="cpap_radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
                             No
-                    <?php
-                        showPatientValue('dental_q_page2', $_GET['pid'], 'cpap', $pat_row['cpap'], $cpap, true, $showEdits, 'radio');
-                    ?>
 
                 </span>
                         </div>
+                                <? } ?>
+                                <?php if($cur_cpap != ''){  ?>
                     <div class="cpap_options">
                         <span>
                                 Are you currently using CPAP?
@@ -261,13 +287,15 @@ if($cpap == '')
                         </span>
                         </div>
 
-
+                                <? } ?>
+                                <?php if($nights_wear_cpap != ''){ ?>
                                         <div class="cpap_options2">                        <span>
                                                         If currently using CPAP, how many nights / week do you wear it? <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
                                                         <br />&nbsp;
                                                 </span>
                                         </div>
-
+                                <? } ?>
+                                <?php if($percent_night_cpap != ''){ ?>
                                         <div class="cpap_options2">
                         <span>
                                                         How many hours each night do you wear it? <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
@@ -275,7 +303,8 @@ if($cpap == '')
                                                         <br />&nbsp;
                                                 </span>
                                         </div>
-
+                                <? } ?>
+                                <?php if($intolerance != ''){ ?>
                         <div id="cpap_options" class="cpap_options">
                         <span>
                                 What are your chief complaints about CPAP?
@@ -306,6 +335,8 @@ if($cpap == '')
 &nbsp;&nbsp; Other<br />
                         </span>
                                         </div>
+                                <? } ?>
+                                <?php if($other_intolerance != ''){ ?>
                     <br />
                     <div class="cpap_options">
                         <span class="cpap_other_text">
@@ -317,11 +348,12 @@ if($cpap == '')
                                                         <br />&nbsp;
                         </span>
                     </div>
-
+                                <? } ?>
 
                     <label class="desc" id="title0" for="Field0">
                         Dental Devices
                     </label>
+                                <?php if($dd_wearing != ''){ ?>
                     <div>
                         <span>
                                 Are you currently wearing a dental device?
@@ -330,12 +362,10 @@ if($cpap == '')
 
                             <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="No" <? if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_wearing', $pat_row['dd_wearing'], $dd_wearing, true, $showEdits, 'radio');
-                            ?>
-
                         </span>
                     </div>
+                                <? } ?>
+                                <?php if($dd_prev != ''){ ?>
                     <div>
                         <span>
                                 Have you previously tried a dental device?
@@ -344,12 +374,10 @@ if($cpap == '')
 
                             <input type="radio" class="dd_prev_radio" name="dd_prev" value="No" <? if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
                             No
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_prev', $pat_row['dd_prev'], $dd_prev, true, $showEdits, 'radio');
-                            ?>
-
                         </span>
                     </div>
+                                <? } ?>
+                                <?php if($dd_otc != ''){ ?>
                     <div class="dd_options">
                         <span>
                                 Was it over-the-counter (OTC)?
@@ -364,6 +392,8 @@ if($cpap == '')
 
                         </span>
                     </div>
+                                <? } ?>
+                                <?php if($dd_fab != ''){ ?>
                     <div class="dd_options">
                         <span>
                                 Was it fabricated by a dentist?
@@ -372,21 +402,17 @@ if($cpap == '')
 
                             <input type="radio" class="dd_fab_radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
                             No
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_fab', $pat_row['dd_fab'], $dd_fab, true, $showEdits, 'radio');
-                            ?>
-
                         <span>
                     </div>
+                                <? } ?>
+                                <?php if($dd_who != ''){ ?>
                     <div class="dd_options">
                         <span>
                                 Who <input type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'dd_who', $pat_row['dd_who'], $dd_who, true, $showEdits);
-                            ?>
-
                         </span>
                     </div>
+                                <? } ?>
+                                <?php if($dd_experience != ''){ ?>
                     <div class="dd_options">
                         <span>
                                 Describe your experience<br />
@@ -397,9 +423,11 @@ if($cpap == '')
 
                         </span>
                     </div>
+                                <? } ?>
                     <label class="desc" id="title0" for="Field0">
                         Surgery
                     </label>
+                                <?php if($surgery != ''){ ?>
                     <div>
                         <span>
                                 Have you had surgery for snoring or sleep apnea?
@@ -408,19 +436,19 @@ if($cpap == '')
 
                             <input type="radio" class="surgery_radio" name="surgery" value="No" <? if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
                             No
-                            <?php
-                                showPatientValue('dental_q_page2', $_GET['pid'], 'surgery', $pat_row['surgery'], $surgery, true, $showEdits, 'radio');
-                            ?>
-
                         </span>                    </div>
+                                <? } ?>
+                                <?php 
+                  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+                  $s_q = mysql_query($s_sql);
+		  $s_num = mysql_num_rows($s_q);
+				if($s_num != 0){ ?>
                     <div class="s_options">
                         <span>
 Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
         <table id="surgery_table">
         <tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>
                 <?php
-                  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
-                  $s_q = mysql_query($s_sql);
                   $s_count = 0;
                   while($s_row = mysql_fetch_assoc($s_q)){
                 ?>
@@ -441,6 +469,9 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
         </table>
                         </span>
                     </div>
+		<?php } ?>
+
+	<?php if($other_therapy != ''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         OTHER ATTEMPTED THERAPIES
                     </label>
@@ -452,5 +483,5 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 
                         </span>
                         </div>
-
+	<? } ?>
 

@@ -78,15 +78,14 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             <span id="req_0" class="req">*</span>
                         </label><br />
                         <div>
+			  <?php if($premedcheck != ''){ ?>
                             <span>
                                 Have you been told you should receive pre-medication before dental procedures?
                                 <input id="premedcheck" class="premedcheck_radio" name="premedcheck" tabindex="5" type="radio"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('pm_det').style.display='block'" value="1" /> Yes
                                 <input id="premedcheck" class="premedcheck_radio" name="premedcheck" tabindex="5" type="radio"  <?php if($premedcheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('pm_det').style.display='none'" value="0" /> No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'premedcheck', $dpp_row['premedcheck'], $premedcheck, true, $showEdits, 'radio');
-                            ?>
-
                             </span>
+                          <?php } ?>
+                          <?php if($premeddet != ''){ ?>
                             <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
                                 What medication(s) and why do you require it?<br />
                                 <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" ><?=$premeddet;?></textarea>
@@ -95,10 +94,10 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             ?>
 
                             </span>
-
+                          <?php } ?>
                        </div>
 
-
+                          <?php if($allergenscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
                         Allergens
                     </label><br />
@@ -108,21 +107,18 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                 Do you have any known allergens (for example: aspirin, latex, penicillin, etc)?
                                 <input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='block'" value="1" /> Yes
                         <input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none'" value="0" /> No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'allergenscheck', $pat_row['allergenscheck'], $allergenscheck, true, $showEdits, 'radio');
-                            ?>
-
                     </span>
+                          <?php if($other_allergens != ''){ ?>
                             <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
                                 Please list everything you are allergic to:<br />
                                <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_allergens', $pat_row['other_allergens'], $other_allergens, true, $showEdits);
-                            ?>
-
                             </span>
+                          <?php } ?>
                         </span>
                     </div>
+                          <?php } ?>
+
+                          <?php if($medicationscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
                         Current Medications
                     </label><br />
@@ -137,17 +133,17 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             ?>
 
                             </span>
-
+                          <?php if($other_medications != ''){ ?>
                         <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
                                 Please list all medication you are currently taking: <br />
                             <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_medications', $pat_row['other_medications'], $other_medications, true, $showEdits);
-                            ?>
-
                         </span>
+                          <?php } ?>
                         </span>
                     </div>
+
+                          <?php } ?>
+                          <?php if($other_history != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%;">
                         Medical History
                     </label>
@@ -155,28 +151,19 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         <span>
                             <span>
                                 Please list all medical diagnoses and surgeries from birth until now (for example: heart attack, high blood pressure, asthma, stroke, hip replacement, HIV, diabetes, etc):
-    <!--                            <input id="historycheck" class="history_check_radio" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='block'" value="1" /> Yes
-                                <input id="historycheck" class="history_check_radio" name="historycheck" tabindex="5" type="radio"  <?php if($historycheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('h_det').style.display='none'" value="0" /> No
-                             <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'historycheck', $pat_row['hisorycheck'], $historycheck, true, $showEdits, 'radio');
-                            ?>
- -->
                             </span>
-
                              <span id="h_det" >
                                 <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'other_history', $pat_row['other_history'], $other_history, true, $showEdits);
-                            ?>
-
                              </span>
                         </span>
                     </div>
+                          <?php } ?>
                         <br />
 
                     <label class="desc" id="title0" for="Field0">
                         Dental History
                     </label>
+		<?php if($dental_health != ''){ ?>
                     <div>
                         <span class="full">
                                                         How would you describe your dental health?
@@ -199,6 +186,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                                                 </span>
                                         </div>
+                <?php } ?>
+                <?php if($wisdom_extraction != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Have you ever had teeth extracted?</label>
@@ -207,18 +196,12 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra wisdom_extraction_radio" name="wisdom_extraction" value="No" <? if($wisdom_extraction == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction', $pat_row['wisdom_extraction'], $wisdom_extraction, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="wisdom_extraction_extra">Please describe: <input type="text" class="field text addr tbox" id="wisdom_extraction_text" name="wisdom_extraction_text" value="<?= $wisdom_extraction_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'wisdom_extraction_text', $pat_row['wisdom_extraction_text'], $wisdom_extraction_text, true, $showEdits);
-                            ?>
-
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($removable != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Do you wear removable partials?</label>
@@ -227,14 +210,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra removable_radio" name="removable" value="No" <? if($removable == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'removable', $pat_row['removable'], $removable, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="removable_extra">Please describe: <input type="text" class="field text addr tbox" id="removable_text" name="removable_text" value="<?= $removable_text; ?>" />
 </span>
                                                 </span>
                                         </div>
+                <?php } ?>
+                <?php if($dentures != ''){ ?>
                                        <div>
                         <span>
                                                         <label>Do you wear dentures?</label>
@@ -243,20 +225,14 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra dentures_radio" name="dentures" value="No" <? if($dentures == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures', $pat_row['dentures'], $dentures, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="dentures_extra">Please describe: <input type="text" class="field text addr tbox" id="dentures_text" name="dentures_text" value="<?= $dentures_text; ?>" />
-
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'dentures_text', $pat_row['dentures_text'], $dentures_text, true, $showEdits);
-                            ?>
 
 </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($orthodontics != ''){ ?>
 
                                         <div>
                         <span>
@@ -266,15 +242,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra orthodontics_radio" name="orthodontics" value="No" <? if($orthodontics == 'No') echo " checked";?>  />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'orthodontics', $pat_row['orthodontics'], $orthodontics, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="orthodontics_extra">Year completed: <input id="year_completed" name="year_completed" type="text" class="field text addr tbox" value="<?=$year_completed;?>" maxlength="255" style="width:225px;" />
                         </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($tmj_cp != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Does your TMJ (jaw joint) click or pop?</label>
@@ -282,19 +256,14 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra tmj_cp_radio" name="tmj_cp" value="No" <? if($tmj_cp == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_cp', $pat_row['tmj_cp'], $tmj_cp, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="tmj_cp_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_cp_text" name="tmj_cp_text" value="<?= $tmj_cp_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_cp_text', $pat_row['tmj_cp_text'], $tmj_cp_text, true, $showEdits);
-                            ?>
 
 </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($tmj_pain != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Do you have pain in this joint?</label>
@@ -302,16 +271,14 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra tmj_pain_radio" name="tmj_pain" value="No" <? if($tmj_pain == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_pain', $pat_row['tmj_pain'], $tmj_pain, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="tmj_pain_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_pain_text" name="tmj_pain_text" value="<?= $tmj_pain_text; ?>" />
 </span>
                                                 </span>
                                         </div>
 
-
+                <?php } ?>
+                <?php if($tmj_surgery != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Have you had TMJ (jaw joint) surgery?</label>
@@ -319,34 +286,27 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         <input type="radio" class="extra tmj_surgery_radio" name="tmj_surgery" value="No" <? if($tmj_surgery == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_surgery', $pat_row['tmj_surgery'], $tmj_surgery, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="tmj_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="tmj_surgery_text" name="tmj_surgery_text" value="<?= $tmj_surgery_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'tmj_surgery_text', $pat_row['tmj_surgery_text'], $tmj_surgery_text, true, $showEdits);
-                            ?>
-
 </span>
 
                                                 </span>
                                         </div>
+                <?php } ?>
+                <?php if($gum_prob != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Have you ever had gum problems?</label>
                             <input id="gum_prob" name="gum_prob" type="radio" class="extra gum_prob_radio" value="Yes" <?= ($gum_prob=='Yes')?'checked="checked"':'';?> /> Yes
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input id="gum_prob" name="gum_prob" type="radio" class="extra gum_prob_radio" value="No" <?= ($gum_prob=='No')?'checked="checked"':'';?> /> No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_prob', $pat_row['gum_prob'], $gum_prob, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="gum_prob_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_prob_text" name="gum_prob_text"  value="<?= $gum_prob_text; ?>" />
 </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($gum_surgery != ''){ ?>
 
                                         <div>
                         <span>
@@ -356,20 +316,15 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra gum_surgery_radio" name="gum_surgery" value="No" <? if($gum_surgery == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_surgery', $pat_row['gum_surgery'], $gum_surgery, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="gum_surgery_extra">Please describe: <input type="text" class="field text addr tbox" id="gum_surgery_text" name="gum_surgery_text" value="<?= $gum_surgery_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'gum_surgery_text', $pat_row['gum_surgery_text'], $gum_surgery_text, true, $showEdits);
-                            ?>
 
 </span>
                                                 </span>
                                         </div>
 
-
+                <?php } ?>
+                <?php if($drymouth != ''){ ?>
 
                                         <div>
                         <span>
@@ -379,14 +334,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra drymouth_radio" name="drymouth" value="No" <? if($drymouth == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'drymouth', $pat_row['drymouth'], $drymouth, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="drymouth_extra">Please describe: <input type="text" class="field text addr tbox" id="drymouth_text" name="drymouth_text" value="<?= $drymouth_text; ?>" />
 </span>
                                                 </span>
                                         </div>
+                <?php } ?>
+                <?php if($injury != ''){ ?>
 
                                  <div>                        <span>
                                                         <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
@@ -395,19 +349,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra injury_radio" name="injury" value="No" <? if($injury == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'injury', $pat_row['injury'], $injury, true, $showEdits, 'radio');
-                            ?>
 
                                                         <span id="injury_extra">Please describe: <input type="text" class="field text addr tbox" id="injury_text" name="injury_text" value="<?= $injury_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'injury_text', $pat_row['injury_text'], $injury_text, true, $showEdits);
-                            ?>
-
 </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($completed_future != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Are you planning to have dental work done in the near future?</label>
@@ -417,15 +365,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra completed_future_radio" name="completed_future" value="No" <? if($completed_future == 'No') echo " checked";?> />No
-                                                                                    <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'completed_future', $pat_row['completed_future'], $completed_future, true, $showEdits, 'radio');
-                            ?>
 
 <span id="completed_future_extra">Please describe: <input type="text" class="field text addr tbox" id="future_dental_det" name="future_dental_det"  value="<?= $future_dental_det; ?>" />
 </span>
                                                 </span>
                                         </div>
-
+                <?php } ?>
+                <?php if($clinch_teeth != ''){ ?>
                                         <div>
                         <span>
                                                         <label>Do you clinch or grind your teeth?</label>
@@ -434,20 +380,15 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                                         <input type="radio" class="extra clinch_grind_radio" name="clinch_grind" value="No" <? if($clinch_grind == 'No') echo " checked";?> />No
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'clinch_grind', $pat_row['clinch_grind'], $clinch_grind, true, $showEdits, 'radio');
-                            ?>
-
                                                         <span id="clinch_grind_extra">Please describe: <input type="text" class="field text addr tbox" id="clinch_grind_text" name="clinch_grind_text" value="<?= $clinch_grind_text; ?>" />
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'clinch_grind_text', $pat_row['clinch_grind_text'], $clinch_grind_text, true, $showEdits);
-                            ?>
 </span>
                                                 </span>
                                         </div>
+                <?php } ?>
 <label class="desc" id="title0" for="Field0">
                         Family History
                     </label>
+                <?php if($family_hd != ''){ ?>
                     <div>
                         <span class="full">
                                 <label>Have genetic members of your family had Heart Disease?</label>
@@ -459,6 +400,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                         </span>
                     </div>
+                <?php } ?>
+                <?php if($family_bp != ''){ ?>
                     <div>
                         <span>
                                 <label>High Blood Pressure?</label>
@@ -470,6 +413,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                         </span>
                     </div>
+                <?php } ?>
+                <?php if($family_dia != ''){ ?>
                     <div>
                         <span>
                              <label>Diabetes?</label>
@@ -481,6 +426,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                                         </span>
                 </div>
+                <?php } ?>
+                <?php if($family_sd != ''){ ?>
                 <div>
                         <span>
                                 <label>Have any genetic members of your family been diagnosed or treated for a sleep disorder?</label>
@@ -493,11 +440,12 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         </span>
 
 		</div>
-
+                <?php } ?>
 
 		<label class="desc" id="title0" for="Field0">
                         SOCIAL HISTORY
                     </label>
+                <?php if($alcohol != ''){ ?>
                     <div>
                         <span class="full">
                                 Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
@@ -519,7 +467,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             ?>
 
                             <br /><br />
-
+                <?php } ?>
+                <?php if($sedative != ''){ ?>
                             Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
                             <br />
 
@@ -537,7 +486,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
 
                             <br /><br />
-
+                <?php } ?>
+                <?php if($caffeine != ''){ ?>
 
                             Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?
                             <br />
@@ -558,6 +508,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             ?>
 
                             <br /><br />
+                <?php } ?>
+                <?php if($smoke != ''){ ?>
                             Do you Smoke?
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -582,7 +534,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                             </div>
                             <br /><br />
-
+                <?php } ?>
+                <?php if($tobacco != ''){ ?>
                             Do you use Chewing Tobacco?
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -599,6 +552,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         </span>
                                         </div>
                 <br /><br />
+                <?php } ?>
+                <?php if($additional_paragraph != ''){ ?>
 		<div>
                         <span>
                                 Additional Paragraph<br />
@@ -609,7 +564,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                         </span>
                     </div>
-
+                <?php } ?>
 
 <?php
 $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
@@ -641,6 +596,7 @@ $crossbite = st($myarray['crossbite']);
                                 DENTAL SCREENING
                         </span>
                     </label>
+                <?php if($missing != ''){ ?>
                                         <div>
                         <span style="color:#000000;">
                                 Missing Tooth #
@@ -662,6 +618,7 @@ $crossbite = st($myarray['crossbite']);
 <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
 </div>
                     <br />
+<?php } ?>
 
                     <label class="desc" id="title0" for="Field0">
                         EXAMINATION OF TEETH REVEALED
@@ -675,15 +632,18 @@ $crossbite = st($myarray['crossbite']);
 
                                                         while($exam_teeth_myarray = mysql_fetch_array($exam_teeth_my))
                                                         {
+							if(!strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {
                                                         ?>
                                                                 <input type="checkbox" id="exam_teeth" name="exam_teeth[]" value="<?=st($exam_teeth_myarray['exam_teethid'])?>" <? if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($exam_teeth_myarray['exam_teeth']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?>
                         </span>
                         </div>
+		<?php if($other_exam_teeth != ''){ ?>
                     <div>
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -694,7 +654,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($caries != ''){ ?>
 
                     <div>
                         <span style="color:#000000;">
@@ -704,7 +665,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($where_facets != ''){ ?>
                     <div>
                         <span style="color:#000000;">
                             <label class="exam_label">Wear Facets Tooth #</label>
@@ -713,7 +675,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($cracked_fractured != ''){ ?>
                     <div>
                         <span style="color:#000000;">
                                 <label class="exam_label">Cracked or Fractured Tooth #</label>
@@ -722,6 +685,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
+                <?php } ?>
+                <?php if($old_worn_inadequate_restorations != ''){ ?>
                     <div>
                         <span style="color:#000000;">
                                 <label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label>
@@ -730,7 +695,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         DENTAL RELATIONSHIP
                     </label>
@@ -846,11 +811,10 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                         </div>
                     <br />
-
-                    <label class="desc" id="title0" for="Field0">
+<div class="clear"></div>
+                <?php if($additional_paragraph != ''){ ?>
+                    <label class="desc clear" id="title0" for="Field0">
                         Other Items:
-
-                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page4frm&tx=additional_paragraph'); return false;">Use Custom Text</button>
                     </label>
 
                     <div>
@@ -859,11 +823,11 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         TOOTH CONTACT PRIOR TO ORAL APPLIANCE
                     </label>
-
+                <?php if($crossbite != ''){ ?>
                                         <div>
                         <span>
                             <label class="exam_label">Teeth in Crossbite</label>
@@ -873,7 +837,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($initial_tooth != ''){ ?>
                     <div>
                         <span>
                                 <label class="exam_label">The initial tooth contact was between</label>
@@ -884,7 +849,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($open_proximal != ''){ ?>
                     <div>
                         <span>
                                 <label class="exam_label">Open proximal contact(s) present between teeth numbers</label>
@@ -893,7 +859,8 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
+                <?php if($deistema != ''){ ?>
                     <div>
                         <span>
                                 <label class="exam_label">Diastema(s) present between teeth numbers</label>
@@ -903,7 +870,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
 <?php
 $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -922,7 +889,7 @@ $tongue = st($myarray['tongue']);
                     <label class="desc" id="title0" for="Field0">
                         VITAL DATA
                     </label>
-
+                <?php if($blood_pressure != ''){ ?>
                     <div>
                         <span>
                                 Blood Pressure
@@ -932,7 +899,8 @@ $tongue = st($myarray['tongue']);
                         </span>
                         </div>
                     <br />
-
+                <?php } ?>
+                <?php if($pulse != ''){ ?>
                     <div>
                         <span>
                                 Pulse
@@ -951,6 +919,8 @@ $tongue = st($myarray['tongue']);
                         </span>
                         </div>
                     <br />
+                <?php } ?>
+                <?php if($neck_measurement != ''){ ?>
                     <div>
                         <span>
                                 Neck Measurement
@@ -967,10 +937,12 @@ $tongue = st($myarray['tongue']);
                         </span>
                         </div>
                     <br />
+                <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                        HEIGHT/WEIGHT
                     </label>
     <ul style="width:50%; float:left;">
+                <?php if($feet != ''){ ?>
                 <li>
                             <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
                                 <option value="0">Feet</option>
@@ -986,6 +958,8 @@ $tongue = st($myarray['tongue']);
                             ?>
                             <label for="feet">Feet</label>
                 </li>
+                <?php } ?>
+                <?php if($inches != ''){ ?>
                 <li>
                             <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
                                 <option value="-1">Inches</option>
@@ -998,6 +972,8 @@ $tongue = st($myarray['tongue']);
                             </select>
                             <label for="inches">Inches</label>
                 </li>
+                <?php } ?>
+                <?php if($weight != ''){ ?>
                 <li>
                             <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
                                 <option value="0">Weight</option>
@@ -1011,10 +987,13 @@ $tongue = st($myarray['tongue']);
 
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 </li>
+                <?php } ?>
+                <?php if($bmi != ''){ ?>
                 <li>
                                 <span style="color:#000000; padding-top:2px;">BMI</span>
                                 <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
-                <li>
+                </li>
+                <?php } ?>
                                 <label for="inches">
                                 &lt; 18.5 is Underweight
                                 <br />
@@ -1040,21 +1019,22 @@ $tongue = st($myarray['tongue']);
 
                                                         while($tongue_myarray = mysql_fetch_array($tongue_my))
                                                         {
+							if(!strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false){
                                                         ?>
                                                                 <input type="checkbox" id="tongue" name="tongue[]" value="<?=st($tongue_myarray['tongueid'])?>" tabindex="9" <? if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($tongue_myarray['tongue']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?>
                         </span>
                    </div>
 
                                         <br />
+                <?php if($additional_paragraph != ''){ ?>
                                         <label class="desc" id="title0" for="Field0">
                                                 Additional Paragraph
-                                                /
-                                                <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page1frm&tx=additional_paragraph'); return false;">Custom Text</button>
                                         </label>
 
                                         <div>
@@ -1063,7 +1043,7 @@ $tongue = st($myarray['tongue']);
                                                 </span>
                                         </div>
                                         <br />
-
+                <?php } ?>
 <?php
 
 $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
@@ -1076,6 +1056,7 @@ $tonsils = st($myarray['tonsils']);
 $tonsils_grade = st($myarray['tonsils_grade']);
 
 ?>
+                <?php if($mallampati != ''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         AIRWAY EVALUATION(continued)
                         <br />
@@ -1112,9 +1093,11 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         </span>
                         </div>
                     <br />
+                <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         TONSILS
                     </label>
+                <?php if($tonsils != ''){ ?>
                     <div>
                         <span>
                                 <input type="checkbox" id="tonsils" name="tonsils[]" value="Present" <? if(strpos($tonsils,'~Present~') === false) {} else { echo " checked";}?> />
@@ -1128,7 +1111,8 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         </span>
                    </div>
                    <br />
-
+                <?php } ?>
+                <?php if($tonsils_grade != ''){ ?>
                    <div>
                         <span>
                                 <table width="100%" cellpadding="3" cellspacing="1" border="0">
@@ -1173,7 +1157,7 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         </span>
                         </div>
                     <br />
-
+                <?php } ?>
 
 <?php
 
@@ -1213,15 +1197,18 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($maxilla_myarray = mysql_fetch_array($maxilla_my))
                                                         {
+							if(!strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false){
                                                         ?>
                                                                 <input type="checkbox" id="maxilla" name="maxilla[]" value="<?=st($maxilla_myarray['maxillaid'])?>" <? if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($maxilla_myarray['maxilla']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?>
                         </span>
                         </div>
+                <?php if($other_maxilla != ''){ ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1232,6 +1219,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         </span>
                     </div>
                     <br />
+                <?php } ?>
 
                     <label class="desc" id="title0" for="Field0">
                         Mandible
@@ -1245,15 +1233,18 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($mandible_myarray = mysql_fetch_array($mandible_my))
                                                         {
+							if(!strpos($mandible,'~'.st($mandible_array['mandibleid']).'~') === false ) {
                                                         ?>
                                                                 <input type="checkbox" id="mandible" name="mandible[]" value="<?=st($mandible_myarray['mandibleid'])?>" <? if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($mandible_myarray['mandible']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?>
                         </span>
                         </div>
+                <?php if($other_mandible != ''){ ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1264,7 +1255,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         </span>
                     </div>
                     <br />
-
+                <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         Soft Palate
                     </label>
@@ -1277,15 +1268,18 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($soft_palate_myarray = mysql_fetch_array($soft_palate_my))
                                                         {
+							if(!strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {
                                                         ?>
                                                                 <input type="checkbox" id="soft_palate" name="soft_palate[]" value="<?=st($soft_palate_myarray['soft_palateid'])?>" <? if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($soft_palate_myarray['soft_palate']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?>
                         </span>
                         </div>
+		<?php if($other_soft_palate != ''){ ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1296,7 +1290,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         </span>
                     </div>
                     <br />
-
+		<?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         Uvula
                     </label>
@@ -1317,16 +1311,19 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($uvula_myarray = mysql_fetch_array($uvula_my))
                                                         {
+							if(!strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {
                                                         ?>
                                                                 <input type="checkbox" id="uvula" name="uvula[]" value="<?=st($uvula_myarray['uvulaid'])?>" <? if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($uvula_myarray['uvula']);?><br />
                                                         <?
+							}
                                                         }
                                                         ?> <!--</div>-->
 
                         </span>
                         </div>
+		<?php if($other_uvula != '') { ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1337,7 +1334,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         </span>
                     </div>
                     <br />
-
+		<? } ?>
                     <label class="desc" id="title0" for="Field0">
                         Gag Reflex
                     </label>
@@ -1350,15 +1347,18 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($gag_reflex_myarray = mysql_fetch_array($gag_reflex_my))
                                                         {
+							if(!strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {
                                                         ?>
                                                                 <input type="checkbox" id="gag_reflex" name="gag_reflex[]" value="<?=st($gag_reflex_myarray['gag_reflexid'])?>" <? if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($gag_reflex_myarray['gag_reflex']);?><br />
                                                         <?
                                                         }
+							}
                                                         ?>
                         </span>
                         </div>
+		<?php if( $other_gag_reflex != ''){ ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1369,7 +1369,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                         </span>
                     </div>
                     <br />
-
+		<?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         Nasal Passages
                     </label>
@@ -1382,15 +1382,18 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($nasal_passages_myarray = mysql_fetch_array($nasal_passages_my))
                                                         {
+							if(!strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {
                                                         ?>
                                                                 <input type="checkbox" id="nasal_passages" name="nasal_passages[]" value="<?=st($nasal_passages_myarray['nasal_passagesid'])?>" <? if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($nasal_passages_myarray['nasal_passages']);?><br />
                                                         <?
                                                         }
+							}
                                                         ?>
                         </span>
                         </div>
+		<?php if($other_nasal_passages != ''){ ?>
                     <div class="ta_half">
                         <span>
                                 <span style="color:#000000; padding-top:0px;">
@@ -1402,7 +1405,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                     </div>
                     <br />
 
-
+		<?php } ?>
 
 <?php
 
@@ -1549,6 +1552,7 @@ if($jointid <> '')
                                                                         }
 
                                                                 ?>
+			<?php if($chk != '' || $chkR != ''){ ?>
                                 <tr>
                                         <td valign="top">
                                                                                 <select id="palpation_<?=st($palpation_myarray['palpationid']);?>" name="palpation_<?=st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
@@ -1593,6 +1597,7 @@ if($jointid <> '')
                                      </td>
                                   </tr>
                                                                 <?
+						}
                                                                 }?>
                                 <tr>
                                         <td valign="top" colspan="3" align="right">
@@ -1602,11 +1607,9 @@ if($jointid <> '')
                         </span>
                         </div>
                     <br />
-
+                        <?php if($additional_paragraph_pal != ''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
-                        /
-                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_pal'); getElementById('popupContact1').style.top = '400px'; return false;">Custom Text</button>
                     </label>
 
                     <div>
@@ -1615,6 +1618,7 @@ if($jointid <> '')
                         </span>
                     </div>
                     <br />
+                        <?php } ?>
                     <label class="desc" id="title0" for="Field0">
                         Joint Sounds
                     </label>
@@ -1636,11 +1640,13 @@ if($jointid <> '')
 
                                                                                 while($joint_exam_myarray = mysql_fetch_array($joint_exam_my))
                                                                                 {
+										if(!strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {
                                                                                 ?>
                                                                                         <input type="checkbox" id="joint_exam" name="joint_exam[]" value="<?=st($joint_exam_myarray['joint_examid'])?>" <? if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
                                                                                         &nbsp;&nbsp;
                                                                                         <?=st($joint_exam_myarray['joint_exam']);?><br />
                                                                                 <?
+										}
                                                                                 }
                                                                                 ?></span>
                                     </td>
@@ -1660,6 +1666,7 @@ if($jointid <> '')
                                                                                                         $chkJ = $joseq[@array_search($joint_myarray['jointid'],$joid)];
                                                                                                 }
                                                                                         ?>
+						<?php if($chkJ != ''){ ?>
                                                 <tr>
                                                         <td valign="top" width="40%"> <span>
                                                                                                                 <?=st($joint_myarray['joint']);?></span>
@@ -1680,6 +1687,7 @@ if($jointid <> '')
                                                                                                         </td>
                                                                                                 </tr>
                                                                                         <?
+											}
                                                                                         }
                                                                                         ?>
                                         </table>
@@ -1702,6 +1710,7 @@ if($jointid <> '')
                     <div>
                         <span >
                                 <table width="100%" cellpadding="3" cellspacing="1">
+			<?php if($i_opening_from != '') { ?>
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1722,8 +1731,9 @@ if($jointid <> '')
 
                                   }
                                </script>
+			                        <?php } ?>
+                        <?php if($protrusion_from != '' || $protrusion_to != '') { ?>
                                <tr>
-                                </td>
                                     <td valign="top">
                                     <span>George Scale</span>
                                     </td>
@@ -1737,7 +1747,6 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
-
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1748,7 +1757,8 @@ if($jointid <> '')
                                         <span>
                                         <input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo abs($protrusion_to-($protrusion_from));?>">                                     </td>
                                 </tr>
-
+                        <?php } ?>
+                        <?php if($l_lateral_from != '') { ?>
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1761,7 +1771,8 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
-
+                        <?php } ?>
+                        <?php if($r_lateral_from != '') { ?>
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1774,6 +1785,8 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
+                        <?php } ?>
+                        <?php if($deviation_r_l != '') { ?>
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1796,7 +1809,8 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
-
+                        <?php } ?>
+                        <?php if($deflection_r_l != '') { ?>
                                 <tr>
                                         <td valign="top">
                                         <span>
@@ -1819,8 +1833,8 @@ if($jointid <> '')
                                         </span>
                                     </td>
                                 </tr>
+                        <?php } ?>
                             </table>
-
                             <input type="checkbox" name="range_normal" value="1" <? if($range_normal == 1) echo " checked"; ?>/>
                             Within normal limits
 
@@ -1830,7 +1844,7 @@ if($jointid <> '')
                         </span>
                         </div>
                     <br />
-
+                        <?php if($additional_paragraph_rm != '') { ?>
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
                         /
@@ -1843,6 +1857,7 @@ if($jointid <> '')
                         </span>
                     </div>
                     <br />
+                        <?php } ?>
 
                     <label class="desc" id="title0" for="Field0">
                         Craniomandibular Screening

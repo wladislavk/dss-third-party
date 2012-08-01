@@ -72,5 +72,5 @@ $pending_letters = mysql_num_rows($dental_letters_res);
     $("#sections > div").hide();
     $("#sect_"+sect).show();
   }
-show_sect('notes');
+show_sect('health');
 </script>

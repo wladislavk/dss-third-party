@@ -2,7 +2,10 @@
 require_once('includes/constants.inc');
 include "includes/top.htm";
 include "includes/similar.php";
+?>
+<link rel="stylesheet" href="css/screener.css" />
 
+<?php
 
 if(isset($_REQUEST['delid'])){
   $sql = "DELETE FROM dental_screener where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_REQUEST['delid'])."'";
@@ -49,6 +52,9 @@ $sql = "SELECT s.*, u.name,
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
 	WHERE s.docid='".$_SESSION['docid']."' ";
+if(isset($_GET['risk'])){
+  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['risk'])." ";
+}
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -75,7 +81,13 @@ $my=mysql_query($sql) or die(mysql_error());
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-
+<div style="margin-left:20px;margin-bottom:10px;">
+<?php if($_GET['risk']>=10){ ?>
+<a href="manage_screeners.php" class="addButton">Show All</a>
+<?php }else{ ?>
+<a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
+<?php } ?>
+</div>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
@@ -96,7 +108,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        Risk 
+                        Co-morbidity 
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			Epworth
@@ -132,17 +144,15 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
                                         <?= st($myarray["first_name"]); ?> <?= $myarray['last_name']; ?>
 				</td>
-				<td valign="top">
 					<?php if($myarray["survey_total"] < 8 ){ ?>		
-						Low
+						<td valign="top" class="risk_low">Low</td>
                                         <?php }elseif($myarray["survey_total"] < 10 ){ ?>
-						Moderate
+						<td valign="top" class="risk_moderate">Moderate</td>
                                         <?php }elseif($myarray["survey_total"] < 16 ){ ?>
-						High
+						<td valign="top" class="risk_high">High</td>
                                         <?php }else{ ?>
-						Severe
+						<td valign="top" class="risk_severe">Severe</td>
 					<?php } ?>
-				</td>
                                 <td valign="top">
 					<?= st($myarray['epworth_lunch']+$myarray['epworth_lying']+$myarray['epworth_reading']+$myarray['epworth_passenger']+$myarray['epworth_public']+$myarray['epworth_traffic']+$myarray["epworth_talking"]); ?>
                                 </td>

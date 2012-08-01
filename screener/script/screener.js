@@ -162,24 +162,207 @@ $(document).ready( function(){
 });
 
 
+function validate_name(){
+  var return_val = true;
+  var error_text = '';
+  if($('#first_name input').val() == ''){
+    $('#first_name').addClass('error');
+    error_text += "<label for=\"first_name\" generated=\"true\" class=\"error\" style=\"\"><strong>First Name</strong>: Please provide a first name</label>"
+    return_val = false;
+  }else{
+    $('#first_name').removeClass('error');
+  }
+
+
+  if($('#last_name input').val() == ''){
+    $('#last_name').addClass('error');
+    error_text += "<label for=\"last_name\" generated=\"true\" class=\"error\" style=\"\"><strong>Last Name</strong>: Please provide a last name</label>"
+    return_val = false;
+  }else{
+    $('#last_name').removeClass('error');
+  }
+
+  if(return_val){
+  	next_sect(2);
+  }else{
+    $('#name_error_box').html(error_text).show();
+  }
+  return return_val;
+}
 function validate_epworth(){
 
-  if( $('#epworth_reading').val() == '' ||
-      $('#epworth_public').val() == '' ||
-      $('#epworth_passenger').val() == '' ||
-      $('#epworth_lying').val() == '' ||
-      $('#epworth_talking').val() == '' ||
-      $('#epworth_lunch').val() == '' ||
-      $('#epworth_traffic').val() == ''
-    ){
-	alert('All questions much be answered.');
-	return false;
-    }
-  next_sect(3);
-  return true;
+  var return_val = true;
+  var error_text = '';
+  if($('#epworth_reading select').val() == ''){
+    $('#epworth_reading').addClass('error');
+    error_text += "<label for=\"epworth_reading\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting And Reading</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_reading').removeClass('error');
+  }
+
+  if($('#epworth_public select').val() == ''){
+    $('#epworth_public').addClass('error');
+    error_text += "<label for=\"epworth_public\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting inactive in a public place</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_public').removeClass('error');
+  } 
+        
+  if($('#epworth_passenger select').val() == ''){
+    $('#epworth_passenger').addClass('error');
+    error_text += "<label for=\"epworth_passenger\" generated=\"true\" class=\"error\" style=\"\"><strong>As a passenger</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_passenger').removeClass('error');
+  } 
+        
+  if($('#epworth_lying select').val() == ''){
+    $('#epworth_lying').addClass('error');
+    error_text += "<label for=\"epworth_lying\" generated=\"true\" class=\"error\" style=\"\"><strong>Lying down to rest</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_lying').removeClass('error');
+  } 
+        
+  if($('#epworth_talking select').val() == ''){
+    $('#epworth_talking').addClass('error');
+    error_text += "<label for=\"epworth_talking\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting and talking</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_talking').removeClass('error');
+  } 
+        
+  if($('#epworth_lunch select').val() == ''){
+    $('#epworth_lunch').addClass('error');
+    error_text += "<label for=\"epworth_lunch\" generated=\"true\" class=\"error\" style=\"\"><strong>After a lunch</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_lunch').removeClass('error');
+  } 
+        
+  if($('#epworth_traffic select').val() == ''){
+    $('#epworth_traffic').addClass('error');
+    error_text += "<label for=\"epworth_traffic\" generated=\"true\" class=\"error\" style=\"\"><strong>Stopped in traffic</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#epworth_traffic').removeClass('error');
+  }
+
+
+  if(return_val){
+        next_sect(3);
+  }else{
+    $('#epworth_error_box').html(error_text).show();
+  }
+  return return_val;
 }
 
 function validate_sect3(){
+  var return_val = true;
+  var error_text = '';
+  if($('#breathing input:checked').val() == null){
+    $('#breathing').addClass('error');
+    error_text += "<label for=\"breathing\" generated=\"true\" class=\"error\" style=\"\"><strong>Stop breathing</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#breathing').removeClass('error');
+  }
+
+  if($('#driving input:checked').val() == null){
+    $('#driving').addClass('error');
+    error_text += "<label for=\"driving\" generated=\"true\" class=\"error\" style=\"\"><strong>Driving</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#driving').removeClass('error');
+  }
+
+  if($('#gasping input:checked').val() == null){
+    $('#gasping').addClass('error');
+    error_text += "<label for=\"gasping\" generated=\"true\" class=\"error\" style=\"\"><strong>Wake up gasping</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#gasping').removeClass('error');
+  }
+
+  if($('#sleepy input:checked').val() == null){
+    $('#sleepy').addClass('error');
+    error_text += "<label for=\"sleepy\" generated=\"true\" class=\"error\" style=\"\"><strong>Excessively sleepy</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#sleepy').removeClass('error');
+  }
+
+  if($('#weight_gain input:checked').val() == null){
+    $('#weight_gain').addClass('error');
+    error_text += "<label for=\"weight_gain\" generated=\"true\" class=\"error\" style=\"\"><strong>Weight gain</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#weight_gain').removeClass('error');
+  }
+
+  if($('#snore input:checked').val() == null){
+    $('#snore').addClass('error');
+    error_text += "<label for=\"snore\" generated=\"true\" class=\"error\" style=\"\"><strong>Snore</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#snore').removeClass('error');
+  }
+
+  if($('#blood_pressure input:checked').val() == null){
+    $('#blood_pressure').addClass('error');
+    error_text += "<label for=\"blood_pressure\" generated=\"true\" class=\"error\" style=\"\"><strong>High Blood Pressure</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#blood_pressure').removeClass('error');
+  }
+
+  if($('#jerk input:checked').val() == null){
+    $('#jerk').addClass('error');
+    error_text += "<label for=\"jerk\" generated=\"true\" class=\"error\" style=\"\"><strong>Jerk</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#jerk').removeClass('error');
+  }
+
+  if($('#burning input:checked').val() == null){
+    $('#burning').addClass('error');
+    error_text += "<label for=\"burning\" generated=\"true\" class=\"error\" style=\"\"><strong>Burning</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#burning').removeClass('error');
+  }
+
+  if($('#headaches input:checked').val() == null){
+    $('#headaches').addClass('error');
+    error_text += "<label for=\"headaches\" generated=\"true\" class=\"error\" style=\"\"><strong>Headaches</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#headaches').removeClass('error');
+  }
+
+  if($('#staying_asleep input:checked').val() == null){
+    $('#staying_asleep').addClass('error');
+    error_text += "<label for=\"staying_asleep\" generated=\"true\" class=\"error\" style=\"\"><strong>Staying asleep</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#staying_asleep').removeClass('error');
+  }
+
+  if($('#falling_asleep input:checked').val() == null){
+    $('#falling_asleep').addClass('error');
+    error_text += "<label for=\"falling_asleep\" generated=\"true\" class=\"error\" style=\"\"><strong>Falling asleep</strong>: Please provide an answer</label>"
+    return_val = false;
+  }else{
+    $('#falling_asleep').removeClass('error');
+  }
+
+  if(return_val){
+        next_sect(4);
+  }else{
+    $('#sect3_error_box').html(error_text).show();
+  }
+  return return_val;
 
   if($("input[name=weight_gain]:checked").val() == null ||
       $("input[name=breathing]:checked").val() == null ||
@@ -201,3 +384,15 @@ function validate_sect3(){
 
   next_sect(4);
 }
+
+$(document).ready(function(){
+				//regular dialog
+				$("a[rel='fancyReg']").fancybox({
+					'transitionIn'	: 'elastic',
+					'width'				: 300,
+					'height'			: 150,
+					'autoDimensions'	: false,
+					'overlayOpacity'	: '0',
+					'hideOnOverlayClick': false
+				});
+});

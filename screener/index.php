@@ -15,8 +15,14 @@ if(!isset($_SESSION['screener_doc'])){
     <title>Dental Sleep Solutions :: Screener</title>
     <link rel="stylesheet" href="css/lagu.css" />
 <script type="text/javascript" src="../manage/admin/script/jquery-1.6.2.min.js"></script>
+			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
+			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="script/screener.js"></script>
 <link rel="stylesheet" href="css/screener.css" />
+<link rel="stylesheet" href="../reg/lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
+<![endif]-->
 </head>
 <body class="fixed">
     <div id="header" >
@@ -36,36 +42,42 @@ if(!isset($_SESSION['screener_doc'])){
     <div id="main">
         <div class="wrapper">
             <div class="brdrrad_a" id="main_section">
-<form>
+<form class="formEl_a">
 <input type="hidden" id="docid" name="docid" value="<?= $_SESSION['screener_doc']; ?>" />
 <input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
 
 <div class="sect" id="sect0">
 <div class="dp50">
 <h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
-                                                                                                        <p>Over 40 million Americans suffer from a sleep disorder, and 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain undiagnosed. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never shared without your consent. Find out whether you may be suffering from an undiagnosed sleep problem.</p>
+                                                                                                        <p style="font-size:14px;">Over 40 million Americans suffer from a sleep disorder, and 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain undiagnosed. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never shared without your consent. Find out whether you may be suffering from an undiagnosed sleep problem.</p>
+</div>
+<div class="dp50">
+<img src="images/sleeping_couple.png" style="float:right;"/>
 <br />
                                                                                                                 <div class="cf">
 <a href="#" onclick="next_sect(1)" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
 </div>
+<div class="clear"></div>
 </div>
 
 <div class="sect" id="sect1">
 
 <h3>Please enter your name.</h3>
+<br />
+<div class="msg_box msg_error" id="name_error_box" style="display:none;"></div>
 
-<div class="sepH_b clear">
-	<label>First Name</label>
+<div class="sepH_b clear" id="first_name">
+	<label class="lbl_a">First Name</label>
 	<input class="inpt_a" type="text" id="first_name" name="first_name" />
 </div>
 
-<div class="field">
-        <label>Last Name</label>
-        <input type="text" id="last_name" name="last_name" />
+<div class="sepH_b" id="last_name">
+        <label class="lbl_a">Last Name</label>
+        <input class="inpt_a" type="text" id="last_name" name="last_name" />
 </div>
 
-<a href="#" onclick="next_sect(2)" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_name();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect2">
 
@@ -85,49 +97,51 @@ if(!isset($_SESSION['screener_doc'])){
 
 <?php
   $options = "<option value=\"\"></option>
-		<option value=\"0\">0</option>
-		<option value=\"1\">1</option>
-                <option value=\"2\">2</option>
-                <option value=\"3\">3</option>";
+		<option value=\"0\">0 - No chance of dozing</option>
+		<option value=\"1\">1 - Slight chance of dozing</option>
+                <option value=\"2\">2 - Moderate chance of dozing</option>
+                <option value=\"3\">3 - High chance of dozing</option>";
 ?>
 <div class="dp66">
-<div class="sepH_b clear">
+<div class="msg_box msg_error" id="epworth_error_box" style="display:none;"></div>
+
+<div class="sepH_b clear" id="epworth_reading">
 	<select class="inpt_in epworth_select" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
         <label class="lbl_in">Sitting and reading</label>
 </div>
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_public">
         <select class="inpt_in epworth_select" id="epworth_public" name="epworth_public"><?= $options; ?></select>
         <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
 </div>
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_passenger">
         <select class="inpt_in epworth_select" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
         <label class="lbl_in">As a passenger in a car for an hour without a break</label>
 </div>
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_lying">
         <select class="inpt_in epworth_select" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
         <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
 </div>
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_talking">
         <select class="inpt_in epworth_select" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
         <label class="lbl_in">Sitting and talking to someone</label>
 </div>
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_lunch">
         <select class="inpt_in epworth_select" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
         <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
 </div> 
 
 
-<div class="sepH_b clear">
+<div class="sepH_b clear" id="epworth_traffic">
         <select class="inpt_in epworth_select" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
         <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
@@ -138,73 +152,74 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect3">
 <h3>Health Symptoms</h3>
   <p>Please answer the following questions about your sleep habits.</p>
-  <div class="field">
+<div class="msg_box msg_error" id="sect3_error_box" style="display:none;"></div>
+  <div class="sepH_b" id="breathing">
         <input type="radio" name="breathing" value="8" /> Yes
         <input type="radio" name="breathing" value="0" /> No
         <label>Have you ever been told you stop breathing while asleep?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="driving">
         <input type="radio" name="driving" value="6" /> Yes
         <input type="radio" name="driving" value="0" /> No
         <label>Have you ever fallen asleep or nodded off while driving?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="gasping">
         <input type="radio" name="gasping" value="6" /> Yes
         <input type="radio" name="gasping" value="0" /> No
         <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="sleepy">
         <input type="radio" name="sleepy" value="4" /> Yes
         <input type="radio" name="sleepy" value="0" /> No
         <label>Do you feel excessively sleepy during the day?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="snore">
         <input type="radio" name="snore" value="4" /> Yes
         <input type="radio" name="snore" value="0" /> No
         <label>Do you snore or have you ever been told that you snore?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="weight_gain">
         <input type="radio" name="weight_gain" value="2" /> Yes
         <input type="radio" name="weight_gain" value="0" /> No
         <label>Have you had weight gain and found it difficult to lose?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="blood_pressure">
         <input type="radio" name="blood_pressure" value="2" /> Yes
         <input type="radio" name="blood_pressure" value="0" /> No
         <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="jerk">
         <input type="radio" name="jerk" value="3" /> Yes
         <input type="radio" name="jerk" value="0" /> No
         <label>Do you kick or jerk your legs while sleeping?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="burning">
         <input type="radio" name="burning" value="3" /> Yes
         <input type="radio" name="burning" value="0" /> No
         <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up? </label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="headaches">
         <input type="radio" name="headaches" value="3" /> Yes
         <input type="radio" name="headaches" value="0" /> No
         <label>Do you wake up with headaches during the night or in the morning?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="falling_asleep">
         <input type="radio" name="falling_asleep" value="4" /> Yes
         <input type="radio" name="falling_asleep" value="0" /> No
         <label>Do you have trouble falling asleep?</label>
   </div>
 
-  <div class="field">
+  <div class="sepH_b" id="staying_asleep">
         <input type="radio" name="staying_asleep" value="4" /> Yes
         <input type="radio" name="staying_asleep" value="0" /> No
         <label>Do you have trouble staying asleep once you fall asleep?</label>
@@ -218,59 +233,59 @@ if(!isset($_SESSION['screener_doc'])){
 
 <h3>Previous medical diagnoses</h3>
   <p>Please check all conditions for which you have been medically diagnosed or treated.</p>
-  <div class="field">
+  <div class="field half">
 	<input type="checkbox" name="rx_blood_pressure" value="1" />
 	<label>High blood pressure</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_hypertension" value="1" />
         <label>Hypertension</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_heart_disease" value="1" />
         <label>Heart disease</label>
   </div>
-   <div class="field">
+   <div class="field half">
         <input type="checkbox" name="rx_stroke" value="1" />
         <label>Stroke</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_apnea" value="1" />
         <label>Sleep apnea</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_diabetes" value="1" />
         <label>Diabetes</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_lung_disease" value="1" />
         <label>Lung Disease</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_insomnia" value="1" />
         <label>Insomnia</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_depression" value="1" />
         <label>Depression</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_narcolepsy" value="1" />
         <label>Narcolepsy</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_medication" value="1" />
         <label>Sleeping medication</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_restless_leg" value="1" />
         <label>Restless leg syndrome</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_headaches" value="1" />
         <label>Morning headaches</label>
   </div>
-  <div class="field">
+  <div class="field half">
         <input type="checkbox" name="rx_heartburn" value="1" />
         <label>Heartburn (Gastroesophageal Reflux)</label>
   </div>
@@ -324,7 +339,14 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
 </div>
 <div id="risk_image"></div>
-<a href="index.php" class="fr next btn btn_medium btn_d">Start New Survey</a>
+<a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Start New Survey</a>
+						<div style="display:none">
+							<div id="regModal">
+								<h4 class="sepH_a">Survey Complete</h4>
+								<p class="sepH_c">Thank you for completing the survey. Please return this device to our staff or let them know you have completed the survey.</p>
+								<a href="index.php" class="btn btn_d">OK</a>
+							</div>
+						</div>
 </div>
 
           </div>

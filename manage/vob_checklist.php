@@ -9,9 +9,36 @@ require_once('includes/patient_info.php');
 if ($patient_info) {
 
 ?>
-
-<h3 style="margin-left: 30px; font-size:30px;" >You are able to do the following:</h3>
+<h3 style="margin-left: 30px; font-size:30px;float:left;" >You are able to do the following:</h3>
 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&addtopat=1" style="float:right; margin:0 20px 0 0; color:#000; text-decoration:none; font-size:14px; cursor:pointer;">Return to Flowsheet</a>
+
+<div class="vob_item">
+<?php
+  $errors = claim_errors($_GET['pid'], true);
+  if(count($errors)>0){
+    ?><div class="vob_x"></div><?php
+  }else{
+    ?><div class="vob_check"></div><?php
+  } ?>
+<div class="vob_icon vob_request"></div>
+Request<br />Verification of Benefits
+</div>
+
+
+<div class="vob_item">
+<?php
+  $errors = claim_errors($_GET['pid']);
+  if(count($errors)>0){
+    ?><div class="vob_x"></div><?php
+  }else{
+    ?><div class="vob_check"></div><?php
+  } ?>
+<div class="vob_icon vob_file"></div>
+File<br />Insurance Claim
+</div>
+<div class="clear"></div>
+
+<h3 style="margin-left: 30px; font-size:30px;" >The following items are needed:</h3>
 <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item">
 <?php
   $ins_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
@@ -98,4 +125,5 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
 include "includes/bottom.htm";?>
+
 

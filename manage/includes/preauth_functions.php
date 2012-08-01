@@ -1,14 +1,25 @@
 <?php
 
-function claim_errors( $pid ){
+function claim_errors( $pid, $medicare = false ){
   $errors = array();
 
+/*
    $sql = "SELECT * FROM dental_patients p WHERE p.referred_source IS NOT NULL AND p.referred_source != '' AND p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
   if( $num <= 0 ){
     array_push($errors, "Missing referral - Flow Sheet");
   }
+*/
+ if($medicare){
+  $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$pid." LIMIT 1";
+  $my = mysql_query($sql);
+  $row = mysql_fetch_array($my);
+  if($row['p_m_ins_type']==1){
+    array_push($errors, "patient has Medicare Insurance. You can change patient\'s insurance type in the Patient Info section");
+  }
+
+ }
   $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
   $num = mysql_num_rows($my);
@@ -42,7 +53,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
   $result = mysql_query($sleepstudies);
   $num = mysql_num_rows($result);
@@ -61,7 +72,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
   $result = mysql_query($sleepstudies);
   $num = mysql_num_rows($result);

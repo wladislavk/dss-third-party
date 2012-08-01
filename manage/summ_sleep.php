@@ -32,30 +32,15 @@ Sleep Studies:
 
 
         <tr>
-                <td valign="top" class="odd">
+                <td valign="top" class="even">
                 Date
                 </td>
         </tr>
   <tr>
-                <td valign="top" class="even">
+                <td valign="top" class="odd">
                 Sleep Test Type
                 </td>
 </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Needed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Date Scheduled
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Completed
-                </td>
-        </tr>
 <tr>
                 <td valign="top" class="even">
                 Interpretation

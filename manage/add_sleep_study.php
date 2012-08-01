@@ -286,12 +286,12 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
    $msg = "Successfully added sleep lab". $uploaded;
   }
  }
-$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+$sleepstudies = "SELECT ss.* FROM dental_summ_sleeplab ss                                 
 			JOIN dental_patients p on ss.patiendid=p.patientid                        
 		WHERE                                 
 			(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
 			(ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-			ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+			ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
@@ -318,12 +318,12 @@ $pat_r = mysql_fetch_assoc($pat_q);
 <form id="new_sleep_study_form" action="#" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
 <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
-		<td valign="top" class="odd">
+		<td valign="top" class="even">
 		<input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" class="even">
+		<td valign="top" class="odd">
 		<select name="sleeptesttype">
       <option value="HST">HST</option>
       <option value="PSG">PSG</option>    
@@ -348,26 +348,6 @@ if(f.sleeptesttype.value == "HST"){
 </script>
 		</td>
 </tr>
- <tr>
-                <td valign="top" class="odd">
- <input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                <input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                                                <input name="scheddate" id="scheddate" type="text" class="field text addr tbox calendar" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                                                                <input type="radio" name="completed" value="Yes"><span>Yes</span> <span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="completed" value="No"><span>No</span>
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="even">
                                 <div name="interpolationdiv">
@@ -585,12 +565,12 @@ $device = mysql_result($device_result, 0);
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
 <table id="sleepstudyscrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>
-		<td valign="top" class="odd">
+		<td valign="top" class="even">
 		<input type="text" name="date" id="date<?= $s_lab['id']; ?>" class="calendar" value="<?php echo $s_lab['date']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" class="even">
+		<td valign="top" class="odd">
                 <select name="sleeptesttype">
                    <option <?= ($s_lab['sleeptesttype']=="HST")?'selected="selected"':''; ?> value="HST">HST</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG")?'selected="selected"':''; ?> value="PSG">PSG</option>
@@ -602,28 +582,6 @@ $device = mysql_result($device_result, 0);
 
 		</td>
 </tr>
- <tr>
-                <td valign="top" class="odd">
- <input type="radio" name="needed" id="needed1" onclick="update_needed('yes', this.form)" value="Yes" <?= ($s_lab['needed']=="Yes")?'checked="checked"':''; ?> />
-Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                <input type="radio" name="needed" id="needed2" onclick="update_needed('no', this.form)" value="No" <?= ($s_lab['needed']=="No")?'checked="checked"':''; ?> />
-No
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                                                <input name="scheddate" value="<?= $s_lab['scheddate']; ?>" type="text" class="field text addr tbox calendar" id="scheddate<?= $s_lab['id']; ?>" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                                                                <input type="radio" name="completed" value="Yes" <?= ($s_lab['completed']=="Yes")?'checked="checked"':''; ?>><span>Yes</span> <span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="completed" value="No" <?= ($s_lab['completed']=="No")?'checked="checked"':''; ?>><span>No</span>
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="even">
                                                 <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><label for="interpolation">Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

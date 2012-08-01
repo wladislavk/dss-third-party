@@ -1,6 +1,7 @@
 <?php include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
+require_once('includes/preauth_functions.php');
 require_once('includes/patient_info.php');
 if ($patient_info) {
  ?>
@@ -216,116 +217,6 @@ return true;
 }
 
 
-function preauth_errors(){
-  $errors = array();
-  $pa_sql = "SELECT status FROM dental_insurance_preauth WHERE status = '".DSS_PREAUTH_PENDING."' AND patient_id=".$_GET['pid'];
-  $pa = mysql_query($pa_sql);
-  if(mysql_num_rows($pa)>0)
-    array_push($errors, "Already has verification of benefits");
-
-  /* $sql = "SELECT * FROM dental_patients p JOIN dental_contact r ON p.referred_by = r.contactid WHERE p.patientid=".$_GET['pid'];
-  $my = mysql_query($sql);
-  $num = mysql_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing referral"); 
-  }*/
-
-$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
-                        JOIN dental_patients p on ss.patiendid=p.patientid                        
-                WHERE                                 
-                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
-                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
-
-  $result = mysql_query($sleepstudies);
-  $numsleepstudy = mysql_num_rows($result);
-  if($numsleepstudy == 0)
-	array_push($errors, "There are no completed sleep studies.");
-
-  $sql = "SELECT * FROM dental_patients p JOIN dental_contact i ON p.p_m_ins_co = i.contactid WHERE p.patientid=".$_GET['pid'];
-  $my = mysql_query($sql);
-  $num = mysql_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing insurance company");
-  }
-
-  $sql = "SELECT * FROM dental_patients p JOIN dental_users d ON p.docid = d.userid WHERE p.patientid=".$_GET['pid'];
-  $my = mysql_query($sql);
-  $num = mysql_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing doctor");
-  }
-
-  $sql = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
-  $my = mysql_query($sql);
-  $row = mysql_fetch_array($my);
-  if($row['p_m_ins_type']==1){
-    array_push($errors, "patient has Medicare Insurance. You can change patient\'s insurance type in the Patient Info section");
-  }
-
-
-  $sql = "SELECT * FROM dental_patients p JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' WHERE p.patientid=".$_GET['pid'];
-  $my = mysql_query($sql);
-  $num = mysql_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing transaction code E0486");
-  }else{
-    $row=mysql_fetch_assoc($my);
-    if($row['amount']==0||$row['amount']==''){
-    array_push($errors, "You have not set a dollar amount for E0486 - Dental Device. Please contact Dental Sleep Solutions Corporate Office to set this fee.");
-    }
-  }
-
-  /*$sql = "SELECT * FROM dental_patients p JOIN dental_q_page2 q2 ON p.patientid = q2.patientid WHERE p.patientid=".$_GET['pid'];
-  $my = mysql_query($sql);
-  $num = mysql_num_rows($my);
-  if( $num <= 0 ){
-    array_push($errors, "Missing questionnaire page 3"); // The file and table are named q_page2, but this is displayed on page 3 of questionnaire
-  }*/
-
-
-$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
-$flowresult = mysql_query($flowquery);
-if(mysql_num_rows($flowresult) <= 0){
-  array_push($errors, "Doesn\'t have flowsheet.");
-}else{
-    $flow = mysql_fetch_array($flowresult);
-    $copyreqdate = $flow['copyreqdate'];
-    $referred_by = $flow['referred_by'];
-    $referreddate = $flow['referreddate'];
-    $thxletter = $flow['thxletter'];
-    $queststartdate = $flow['queststartdate'];
-    $questcompdate = $flow['questcompdate'];
-    $insinforec = $flow['insinforec'];
-    $rxreq = $flow['rxreq'];
-    $rxrec = $flow['rxrec'];
-    $lomnreq = $flow['lomnreq'];
-    $lomnrec = $flow['lomnrec'];
-    $contact_location = $flow['contact_location'];
-    $questsendmeth = $flow['questsendmeth'];
-    $questsender = $flow['questsender'];
-    $refneed = $flow['refneed'];
-    $refneeddate1 = $flow['refneeddate1'];
-    $refneeddate2 = $flow['refneeddate2'];
-    $preauth = $flow['preauth'];
-    $preauth1 = $flow['preauth1'];
-    $preauth2 = $flow['preauth2'];
-    $insverbendate1 = $flow['insverbendate1'];
-    $insverbendate2 = $flow['insverbendate2'];
-}
-
-
-    if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == ''  /*$clinnotereq == '' || $clinnoterec == ''*/){
-       array_push($errors, "Medical insurance dates are not filled out."); 
-     }
-
-
-
-return $errors;
-}
-
-
-
 if(isset($_GET['pid']) && isset($_GET['preauth'])){
 
   $sql = "SELECT "
@@ -351,7 +242,7 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
 
-  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND completed = 'Yes' AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
+  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis = $d['diagnosis'];
@@ -1306,10 +1197,10 @@ background:#edeb46;
 
 <div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
     <?php
-		$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss 
+		$sleepstudies = "SELECT ss.* FROM dental_summ_sleeplab ss 
 				JOIN dental_patients p on ss.patiendid=p.patientid
 			WHERE 
-				(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+				(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 		$result = mysql_query($sleepstudies);
 		$numsleepstudy = mysql_num_rows($result);
 
@@ -1325,7 +1216,7 @@ background:#edeb46;
 		$numvob = mysql_num_rows($my);
 
 		//$initialcontact = false;
-		$questionnaire = false;
+		//$questionnaire = false;
     $sleepstudy = false;
 		$medins = false;
 		$vob = false;
@@ -1340,12 +1231,11 @@ background:#edeb46;
     } elseif ($referred_by != '') {
 			//if ($delivery_date != '') $initialcontact = true;
     }
-	  if ($queststartdate != '' && $questsendmeth != '' && $questcompdate != '') $questionnaire = true;
 		if ($numsleepstudy > '0') $sleepstudy = true;
 		if ($rxrec != '' && $lomnrec != '') $medins = true;
 		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
 
-		if ($questionnaire == false || $sleepstudy == false || $medins == false || $vob == false) {
+		if ( $sleepstudy == false || $medins == false || $vob == false) {
       print "<strong><h2>Pre-Treatment Information Below is NOT COMPLETE</h2></strong>"; 
 			update_patient_summary($_GET['pid'], 'fspage1_complete', false);
     } else {
@@ -1512,74 +1402,6 @@ Thank You Sent
 
 
 
-<!-- START SEND PATIENT QUESTIONNAIRE TABLE -->
-<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SEND PATIENT QUESTIONNAIRE</div>
-<table width="610px" <?php print (!$queststartdate ? 'class="yellow"' : ''); ?> align="center">
-
-<tr>
-<td>
-Date
-
-
-</td>
-<td>
-Method
-
-</td>
-<td>
-Who Sent
-
-
-</td>
-<td>
-Completed/Uploaded
-
-
-</td>
-</tr>
-
-
-
-<tr>
-<td>
-<input id="queststartdate" name="queststartdate" type="text" class="field text addr tbox calendar" value="<?php echo $queststartdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('queststartdate');"  /><span id="req_0" class="req">*</span>
-
-
-
-</td>
-<td>
-<select name="questsendmeth">
-<option value="Online">Online</option>
-<option value="Email">Email</option>
-<option value="Fax">Fax</option>
-<option value="Mail">Mail</option>
-<option value="At Office">At Office</option>
-</select>
-
-
-</td>
-<td>
-<select name="questsender">
-<option value="DSS Franchisee">DSS Franchisee</option>
-<option value="Corporate Office">Corporate Office</option>
-</select>
-
-
-</td>
-<td>
-<input id="questcompdate" name="questcompdate" type="text" class="field text addr tbox calendar" value="<?php echo $questcompdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('questcompdate');" /><span id="req_0" class="req">*</span>
-
-
-</td>
-</tr>
-
-</table>
-
-<!-- END SEND PATIENT QUESTIONNAIRE TABLE -->
-
-
-
-
 <!-- START SLEEP LABS TABLE -->
 <style>
 	#sleepstudyscrolltable tr td	{ border-bottom: 1px solid #000; height: 35px; }
@@ -1592,7 +1414,7 @@ Completed/Uploaded
 <!--sleep study table-->
 
 <!-- SLEEP LAB SECTION START -->
-<div style="width:610px; margin:0 auto; ">
+<div style="width:630px; margin:0 auto; ">
 <style type="text/css">
   .sleeplabstable tr{ height: 28px; }
 .yellow .odd, .yellow .even{
@@ -1606,29 +1428,14 @@ background:#edeb46;
 
 
         <tr>
-                <td valign="top" class="odd">
-                Date
+                <td valign="top" class="even">
+                Test Date
                 </td>
         </tr>
   <tr>
-                <td valign="top" class="even">
+                <td valign="top" class="odd">
                 Sleep Test Type
                 </td></tr>
-  <tr>
-                <td valign="top" class="odd">
-                Needed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Date Scheduled
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Completed
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="even">
                 Interpretation
@@ -1735,11 +1542,30 @@ background:#edeb46;
                 Notes
                 </td>
         </tr>
+  <tr>
+                <td valign="top" class="odd">
+                <input type="button" id="new_sleep_study_but" onclick="show_new_study(); return false;" value="+ Add Sleep Study" />
+                </td>
+        </tr>
+
   </table>
 <script type="text/javascript">
 function updateiframe(w){
 $('#sleepstudies').css('width', ((w+1)*185)+'px');
 }
+function show_new_study(){
+$('#new_sleep_study_but').hide();
+document.getElementById('sleepstudies').contentWindow.show_new_study();
+}
+function show_new_but(){
+$('#new_sleep_study_but').show();
+}
+function show_study_table(){
+  show_new_study();
+  $('#no_sleep_studies_div').hide();
+  $('#sleep_studies_div').show();
+}
+
 </script>
 <?php
 $s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
@@ -1748,7 +1574,6 @@ $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
 $body_width = ($num_labs*185)+215;
 ?>
-
         <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">
                     <iframe id="sleepstudies" height="842" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
@@ -2356,7 +2181,7 @@ $my = mysql_query($sql) or die(mysql_error());
 	<tr>
 		<td style="padding:10px;">
 			<?php 
-			$errors = preauth_errors();
+			$errors = claim_errors($_GET['pid'], true);
 			if(count($errors)>0){ 
 				$e_text = 'Unable to request verification of benefits:\n';
 				foreach($errors as $e){
@@ -2455,8 +2280,7 @@ N/A
 <br /><br />
 
 </form>
-<a href="flowsheet_complete.php?pid=<?= $_GET['pid']; ?>" class="addButton" style="margin-left:20px;">Complete</a>
-<a href="vob_checklist.php?pid=<?= $_GET['pid']; ?>" class="addButton">VOB Checklist</a>
+<a href="vob_checklist.php?pid=<?= $_GET['pid']; ?>" class="addButton" style="margin-left:20px;">Checklist</a>
 
 </div>
 <!-- END FLOWSHEET PAGE 1 ***************************** -->

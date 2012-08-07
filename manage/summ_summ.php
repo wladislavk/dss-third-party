@@ -46,39 +46,14 @@ $rs = $r['referred_source'];
   <td rowspan="3">PHOTO</td>
 </tr>
 <tr>
-  <td>Last seen:
-
-<?php
-        $qso = "SELECT `consultrow`, `sleepstudyrow`, `impressionrow`, `delayingtreatmentrow`, `refusedtreatmentrow`, `devicedeliveryrow`, `checkuprow`, `patientnoncomprow`, `homesleeptestrow`, `startt
-reatmentrow`, `annualrecallrow`, `terminationrow` FROM `segments_order` WHERE `patientid` = '".$_GET['pid']."'";
-        $qso_query = mysql_query($qso);
-
-        $qsoResult = array();
-
-        while ($qsoTmpResult = mysql_fetch_assoc($qso_query))
-        {
-                $qsoResult []= $qsoTmpResult;
-        }
-
-        $fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$_GET['pid']."';";
-        $fsData_query = mysql_query($fsData_sql);
-        $fsData_array = mysql_fetch_array($fsData_query);
-
-
-        if (!empty($fsData_array['steparray'])) {
-                $order = explode(",",$fsData_array['steparray']);
-        	$order = array_reverse($order);
-	}
-
-	  $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY date_completed DESC;";
-  $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
-  $row = mysql_fetch_assoc($flow_pg2_info_res);
-  echo ($row['date_completed']!=0)?date('m/d/Y', $row['date_completed']):'';
-
-
-
+  <?php
+     $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
+     $last_q = mysql_query($last_sql);
+     $last_r = mysql_fetch_assoc($last_q);
 ?>
-  For: 
+  <td>Last seen: <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
+
+  For: <?= $last_r['last_treatment']; ?>
 
 <?php
   $segment_query = "SELECT * FROM `flowsheet_segments` WHERE `id` = ".$row[$stepid].";";

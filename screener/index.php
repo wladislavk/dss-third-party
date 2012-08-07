@@ -10,6 +10,7 @@ if(!isset($_SESSION['screener_doc'])){
 	die();
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
     <title>Dental Sleep Solutions :: Screener</title>
@@ -24,7 +25,7 @@ if(!isset($_SESSION['screener_doc'])){
         <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
 <![endif]-->
 </head>
-<body class="fixed">
+<body class="bg_c fixed">
     <div id="header" >
         <div class="wrapper cf">
             <div class="logo fl">
@@ -40,8 +41,8 @@ if(!isset($_SESSION['screener_doc'])){
 	</div>
     </div>
     <div id="main">
-        <div class="wrapper">
-            <div class="brdrrad_a" id="main_section">
+        <div class="wrapper cf">
+            <div class="cf brdrrad_a" id="main_section">
 <form class="formEl_a">
 <input type="hidden" id="docid" name="docid" value="<?= $_SESSION['screener_doc']; ?>" />
 <input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
@@ -84,17 +85,6 @@ if(!isset($_SESSION['screener_doc'])){
 <h3>Epworth Sleepiness Score</h3>
 <p>How likely are you to sleep or doze in each of the following situations?</p>
 <div class="formEl_a">
-        <div class="legend dp33">
-                        Using the following scale, choose the most appropriate number for each situation.
-
-                        <br />
-                        <strong>0</strong> = No chance of dozing<br />
-                        <strong>1</strong> = Slight chance of dozing<br />
-                        <strong>2</strong> = Moderate chance of dozing<br />
-                        <strong>3</strong> = High chance of dozing<br />
-        </div>
-
-
 <?php
   $options = "<option value=\"\"></option>
 		<option value=\"0\">0 - No chance of dozing</option>
@@ -146,6 +136,16 @@ if(!isset($_SESSION['screener_doc'])){
         <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
 </div>
+        <div class="legend dp33">
+                        Using the following scale, choose the most appropriate number for each situation.
+
+                        <br />
+                        <strong>0</strong> = No chance of dozing<br />
+                        <strong>1</strong> = Slight chance of dozing<br />
+                        <strong>2</strong> = Moderate chance of dozing<br />
+                        <strong>3</strong> = High chance of dozing<br />
+        </div>
+<div style="clear:both;"></div>
 </div>
 <a href="#" onclick="return validate_epworth();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
@@ -232,14 +232,14 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect4">
 
 <h3>Previous medical diagnoses</h3>
+
+  <div class="field">
+  Have you ever used CPAP before?
+
   <p>Please check all conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
 	<input type="checkbox" name="rx_blood_pressure" value="1" />
 	<label>High blood pressure</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_hypertension" value="1" />
-        <label>Hypertension</label>
   </div>
   <div class="field half">
         <input type="checkbox" name="rx_heart_disease" value="1" />
@@ -268,10 +268,6 @@ if(!isset($_SESSION['screener_doc'])){
   <div class="field half">
         <input type="checkbox" name="rx_depression" value="1" />
         <label>Depression</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_narcolepsy" value="1" />
-        <label>Narcolepsy</label>
   </div>
   <div class="field half">
         <input type="checkbox" name="rx_medication" value="1" />

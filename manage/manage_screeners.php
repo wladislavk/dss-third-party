@@ -108,13 +108,16 @@ $my=mysql_query($sql) or die(mysql_error());
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        Co-morbidity 
+                        Diagnosis 
+                </td>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        CPAP
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			Epworth
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			Diagnosis	
+			Co-morbidity	
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
@@ -153,6 +156,9 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?php }else{ ?>
 						<td valign="top" class="risk_severe">Severe</td>
 					<?php } ?>
+				<td valign="top">
+					<?= ($myarray['rx_cpap']>0)?'Yes':'No'; ?>
+				</td>
                                 <td valign="top">
 					<?= st($myarray['epworth_lunch']+$myarray['epworth_lying']+$myarray['epworth_reading']+$myarray['epworth_passenger']+$myarray['epworth_public']+$myarray['epworth_traffic']+$myarray["epworth_talking"]); ?>
                                 </td>

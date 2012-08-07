@@ -14,7 +14,6 @@ if(isset($_POST['submitaddfu'])){
   $ep_eadd = $_POST['ep_eadd'];
   $ep_tsadd = $_POST['ep_tsadd'];
   $ep_sadd = $_POST['ep_sadd'];
-  $ep_radd = $_POST['ep_radd'];
   $ep_eladd = $_POST['ep_eladd'];
   $sleep_qualadd = $_POST['sleep_qualadd'];
   $ep_hadd = $_POST['ep_hadd'];
@@ -22,7 +21,7 @@ if(isset($_POST['submitaddfu'])){
   $wapnadd = $_POST['wapnadd'];
   $hours_sleepadd = $_POST['hours_sleepadd'];
   $appt_notesadd = $_POST['appt_notesadd'];
-  $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_radd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`hours_sleepadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_radd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$hours_sleepadd."','".$appt_notesadd."');";
+  $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`hours_sleepadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$hours_sleepadd."','".$appt_notesadd."');";
   $insert = mysql_query($insertquery);
   if(!$insert){
   echo "Could not insert follow up, please try again!";
@@ -37,7 +36,6 @@ if(isset($_POST['submitaddfu'])){
   $ep_eadd = $_POST['ep_eadd'];
   $ep_tsadd = $_POST['ep_tsadd'];
   $ep_sadd = $_POST['ep_sadd'];
-  $ep_radd = $_POST['ep_radd'];
   $ep_eladd = $_POST['ep_eladd'];
   $sleep_qualadd = $_POST['sleep_qualadd'];
   $ep_hadd = $_POST['ep_hadd'];
@@ -53,7 +51,6 @@ if(isset($_POST['submitaddfu'])){
 `ep_eadd` = '".$ep_eadd."',
 `ep_tsadd` = '".$ep_tsadd."',
 `ep_sadd` = '".$ep_sadd."',
-`ep_radd` = '".$ep_radd."',
 `ep_eladd` = '".$ep_eladd."',
 `sleep_qualadd` = '".$sleep_qualadd."',
 `ep_hadd` = '".$ep_hadd."',
@@ -163,13 +160,6 @@ function show_new_followup(){
   <tr >
   	    <td >
       <input type="text" size="12" name="ep_sadd" />
-      
-    </td>
-  </tr>
-  
-    <tr>
-  	    <td >
-      <input type="text" size="12" name="ep_radd" />
       
     </td>
   </tr>
@@ -339,13 +329,6 @@ $device = mysql_result($device_result, 0);
   <tr>
   	    <td style="background: #E4FFCF;">
       <input type="text" size="12" name="ep_sadd" value="<?php echo $fuquery['ep_sadd'];?>" />
-      
-    </td>
-  </tr>
-  
-    <tr>
-  	    <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="ep_radd" value="<?php echo $fuquery['ep_radd'];?>" />
       
     </td>
   </tr>
@@ -527,12 +510,6 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     </td>
   </tr>
 
-    <tr>
-            <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="ep_radd" value="<?php echo $fuquery['ep_radd'];?>" />
-
-    </td>
-  </tr>
 
     <tr>
             <td style="background: #E4FFCF;">

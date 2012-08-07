@@ -1,9 +1,6 @@
-        <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
-                Print Progress Note
-        </button>
 
         <button onclick="Javascript: loadPopup('add_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton" style="float: right;">
-                Add New Progress Note
+                + Add New Progress Note
         </button>
 <div class="clear"></div>
 
@@ -19,7 +16,7 @@ $sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
         LEFT JOIN dental_users u on u.userid=n.signed_id
         LEFT JOIN dental_notes p ON p.notesid = n.parentid
         group by n.parentid
-        order by parent_adddate DESC, n.adddate desc
+        order by n.procedure_date DESC, n.adddate desc
         ";
 $my=mysql_query($sql) or die(mysql_error());
 ?>
@@ -78,7 +75,11 @@ $my=mysql_query($sql) or die(mysql_error());
                                                         <td valign="top" width="30%">
                                                         <? if(st($myarray["signed_id"]) == '') { ?>
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
-                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit / Sign</a>
+                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
+								<?php if($myarray["docid"]==$_SESSION['userid']){ ?>
+								/
+								<a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
+								<?php } ?>
                                                         <? }else{ ?>
                                                                 Signed By: <?= $myarray["signed_name"]; ?>
                                                                 <br />
@@ -100,5 +101,7 @@ $my=mysql_query($sql) or die(mysql_error());
         <?      }
         }?>
 </table>
-
+        <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
+                Print All Progress Notes
+        </button>
 

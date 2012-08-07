@@ -74,10 +74,6 @@ $fuquery_array = mysql_query($fuquery_sql);
   </tr>
   
     <tr>
-  	<td style="background: #F9FFDF;"><strong>Dig</strong> - Dig Recorder</td>
-  </tr>
-  
-    <tr>
   	<td style="background: #E4FFCF;"><strong>E</strong> - Energy Level</td>
   </tr>
   

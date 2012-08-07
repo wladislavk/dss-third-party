@@ -85,8 +85,6 @@ function autoselect(selectedOption, f) {
   $place = s_for($_POST['place']);
   $diagnosising_doc = s_for($_POST['diagnosising_doc']);
   $diagnosising_npi = s_for($_POST['diagnosising_npi']);
-  $apnea = s_for($_POST['apnea']);
-  $hypopnea = s_for($_POST['hypopnea']); 
   $ahi = s_for($_POST['ahi']); 
   $ahisupine = s_for($_POST['ahisupine']);
   $rdi = s_for($_POST['rdi']); 
@@ -142,8 +140,6 @@ function autoselect(selectedOption, f) {
 `place`  = '".$place."',
 `diagnosising_doc` = '".$diagnosising_doc."',
 `diagnosising_npi` = '".$diagnosising_npi."',
-`apnea`  = '".$apnea."',
-`hypopnea`  = '".$hypopnea."',
 `ahi`  = '".$ahi."',
 `ahisupine`  = '".$ahisupine."',
 `rdi`  = '".$rdi."',
@@ -193,8 +189,6 @@ if($uploaded){
   $place = s_for($_POST['place']);
   $diagnosising_doc = s_for($_POST['diagnosising_doc']);
   $diagnosising_npi = s_for($_POST['diagnosising_npi']);
-  $apnea = s_for($_POST['apnea']);
-  $hypopnea = s_for($_POST['hypopnea']);
   $ahi = s_for($_POST['ahi']);
   $ahisupine = s_for($_POST['ahisupine']);
   $rdi = s_for($_POST['rdi']);
@@ -240,8 +234,6 @@ if($uploaded){
 `place` ,
 `diagnosising_doc`,
 `diagnosising_npi`,
-`apnea` ,
-`hypopnea` ,
 `ahi` ,
 `ahisupine` ,
 `rdi` ,
@@ -264,7 +256,7 @@ if($uploaded){
 `sleeplab`,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
@@ -452,16 +444,6 @@ function addstudylab(v){
                   <input style="width:140px" size="8" type="file" name="ss_file" /> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
-  <tr>	
-		<td valign="top" class="even">
-		<input type="text" name="apnea" />	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" class="odd">
-		<input type="text" name="hypopnea" />	
-		</td>
-	</tr>
   <tr>	
 		<td valign="top" class="even">
 		<input type="text" name="ahi" />	
@@ -691,16 +673,6 @@ $device = mysql_result($device_result, 0);
                 </td>
         </tr>
 
-  <tr>	
-		<td valign="top" class="even">
-		<input type="text" name="apnea" value="<?php echo $s_lab['apnea']; ?>" />	
-		</td>
-	</tr>
-  <tr>	
-		<td valign="top" class="odd">
-		<input type="text" name="hypopnea" value="<?php echo $s_lab['hypopnea']; ?>" />	
-		</td>
-	</tr>
   <tr>	
 		<td valign="top" class="even">
 		<input type="text" name="ahi" value="<?php echo $s_lab['ahi']; ?>" />	

@@ -82,16 +82,6 @@ Sleep Studies:
                 File
                 </td>
         </tr>
-<tr>
-                <td valign="top" class="even">
-                Apnea
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Hypopnia
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="even">
                 AHI

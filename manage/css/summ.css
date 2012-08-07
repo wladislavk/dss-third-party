@@ -2,6 +2,7 @@
 #summ_nav{
   list-style: none;
   float: left;
+  padding:15px;
   }
 
 #summ_nav li{
@@ -10,12 +11,12 @@
 
 #summ_nav li a{
   display: block;
-  width: 165px;
-  height: 25px;
-  background: url(../images/summ_nav.gif) no-repeat 0 -32px;
+  width: 108px;
+  height: 24px;
+  background: url(../images/summ_nav.png) no-repeat 0 -36px;
   text-align: center;
-  font-size: 18px;
-  padding-top: 7px; 
+  font-size: 12px;
+  padding-top: 12px; 
   color: #333;
   }
 
@@ -27,7 +28,7 @@
 
 
 #sections{
-  width: 700px;
-  margin-left:20px;
+  width: 800px;
+  margin-left:10px;
   float:left;
   }

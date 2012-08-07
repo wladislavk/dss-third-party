@@ -25,7 +25,7 @@ if(!isset($_SESSION['screener_doc'])){
         <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
 <![endif]-->
 </head>
-<body class="bg_c fixed">
+<body class="fixed">
     <div id="header" >
         <div class="wrapper cf">
             <div class="logo fl">
@@ -68,12 +68,12 @@ if(!isset($_SESSION['screener_doc'])){
 <br />
 <div class="msg_box msg_error" id="name_error_box" style="display:none;"></div>
 
-<div class="sepH_b clear" id="first_name">
+<div class="sepH_b clear" id="first_name_div">
 	<label class="lbl_a">First Name</label>
 	<input class="inpt_a" type="text" id="first_name" name="first_name" />
 </div>
 
-<div class="sepH_b" id="last_name">
+<div class="sepH_b" id="last_name_div">
         <label class="lbl_a">Last Name</label>
         <input class="inpt_a" type="text" id="last_name" name="last_name" />
 </div>
@@ -95,43 +95,43 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="dp66">
 <div class="msg_box msg_error" id="epworth_error_box" style="display:none;"></div>
 
-<div class="sepH_b clear" id="epworth_reading">
+<div class="sepH_b clear" id="epworth_reading_div">
 	<select class="inpt_in epworth_select" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
         <label class="lbl_in">Sitting and reading</label>
 </div>
 
 
-<div class="sepH_b clear" id="epworth_public">
+<div class="sepH_b clear" id="epworth_public_div">
         <select class="inpt_in epworth_select" id="epworth_public" name="epworth_public"><?= $options; ?></select>
         <label class="lbl_in">Sitting inactive in a public place (e.g. a theater or meeting)</label>
 </div>
 
 
-<div class="sepH_b clear" id="epworth_passenger">
+<div class="sepH_b clear" id="epworth_passenger_div">
         <select class="inpt_in epworth_select" id="epworth_passenger" name="epworth_passenger"><?= $options; ?></select>
         <label class="lbl_in">As a passenger in a car for an hour without a break</label>
 </div>
 
 
-<div class="sepH_b clear" id="epworth_lying">
+<div class="sepH_b clear" id="epworth_lying_div">
         <select class="inpt_in epworth_select" id="epworth_lying" name="epworth_lying"><?= $options; ?></select>
         <label class="lbl_in">Lying down to rest in the afternoon when circumstances permit</label>
 </div>
 
 
-<div class="sepH_b clear" id="epworth_talking">
+<div class="sepH_b clear" id="epworth_talking_div">
         <select class="inpt_in epworth_select" id="epworth_talking" name="epworth_talking"><?= $options; ?></select>
         <label class="lbl_in">Sitting and talking to someone</label>
 </div>
 
 
-<div class="sepH_b clear" id="epworth_lunch">
+<div class="sepH_b clear" id="epworth_lunch_div">
         <select class="inpt_in epworth_select" id="epworth_lunch" name="epworth_lunch"><?= $options; ?></select>
         <label class="lbl_in">Sitting quietly after a lunch without alcohol</label>
 </div> 
 
 
-<div class="sepH_b clear" id="epworth_traffic">
+<div class="sepH_b clear" id="epworth_traffic_div">
         <select class="inpt_in epworth_select" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
         <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
@@ -153,73 +153,73 @@ if(!isset($_SESSION['screener_doc'])){
 <h3>Health Symptoms</h3>
   <p>Please answer the following questions about your sleep habits.</p>
 <div class="msg_box msg_error" id="sect3_error_box" style="display:none;"></div>
-  <div class="sepH_b" id="breathing">
+  <div class="sepH_b" id="breathing_div">
         <input type="radio" name="breathing" value="8" /> Yes
         <input type="radio" name="breathing" value="0" /> No
         <label>Have you ever been told you stop breathing while asleep?</label>
   </div>
 
-  <div class="sepH_b" id="driving">
+  <div class="sepH_b" id="driving_div">
         <input type="radio" name="driving" value="6" /> Yes
         <input type="radio" name="driving" value="0" /> No
         <label>Have you ever fallen asleep or nodded off while driving?</label>
   </div>
 
-  <div class="sepH_b" id="gasping">
+  <div class="sepH_b" id="gasping_div">
         <input type="radio" name="gasping" value="6" /> Yes
         <input type="radio" name="gasping" value="0" /> No
         <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
   </div>
 
-  <div class="sepH_b" id="sleepy">
+  <div class="sepH_b" id="sleepy_div">
         <input type="radio" name="sleepy" value="4" /> Yes
         <input type="radio" name="sleepy" value="0" /> No
         <label>Do you feel excessively sleepy during the day?</label>
   </div>
 
-  <div class="sepH_b" id="snore">
+  <div class="sepH_b" id="snore_div">
         <input type="radio" name="snore" value="4" /> Yes
         <input type="radio" name="snore" value="0" /> No
         <label>Do you snore or have you ever been told that you snore?</label>
   </div>
 
-  <div class="sepH_b" id="weight_gain">
+  <div class="sepH_b" id="weight_gain_div">
         <input type="radio" name="weight_gain" value="2" /> Yes
         <input type="radio" name="weight_gain" value="0" /> No
         <label>Have you had weight gain and found it difficult to lose?</label>
   </div>
 
-  <div class="sepH_b" id="blood_pressure">
+  <div class="sepH_b" id="blood_pressure_div">
         <input type="radio" name="blood_pressure" value="2" /> Yes
         <input type="radio" name="blood_pressure" value="0" /> No
         <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
   </div>
 
-  <div class="sepH_b" id="jerk">
+  <div class="sepH_b" id="jerk_div">
         <input type="radio" name="jerk" value="3" /> Yes
         <input type="radio" name="jerk" value="0" /> No
         <label>Do you kick or jerk your legs while sleeping?</label>
   </div>
 
-  <div class="sepH_b" id="burning">
+  <div class="sepH_b" id="burning_div">
         <input type="radio" name="burning" value="3" /> Yes
         <input type="radio" name="burning" value="0" /> No
         <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up? </label>
   </div>
 
-  <div class="sepH_b" id="headaches">
+  <div class="sepH_b" id="headaches_div">
         <input type="radio" name="headaches" value="3" /> Yes
         <input type="radio" name="headaches" value="0" /> No
         <label>Do you wake up with headaches during the night or in the morning?</label>
   </div>
 
-  <div class="sepH_b" id="falling_asleep">
+  <div class="sepH_b" id="falling_asleep_div">
         <input type="radio" name="falling_asleep" value="4" /> Yes
         <input type="radio" name="falling_asleep" value="0" /> No
         <label>Do you have trouble falling asleep?</label>
   </div>
 
-  <div class="sepH_b" id="staying_asleep">
+  <div class="sepH_b" id="staying_asleep_div">
         <input type="radio" name="staying_asleep" value="4" /> Yes
         <input type="radio" name="staying_asleep" value="0" /> No
         <label>Do you have trouble staying asleep once you fall asleep?</label>
@@ -232,9 +232,12 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect4">
 
 <h3>Previous medical diagnoses</h3>
+  <div class="sepH_b" id="rx_cpap_div">
+        <input type="radio" name="rx_cpap" value="4" /> Yes
+        <input type="radio" name="rx_cpap" value="0" /> No
+        <label>Have you ever used CPAP before?</label>
+  </div>
 
-  <div class="field">
-  Have you ever used CPAP before?
 
   <p>Please check all conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">

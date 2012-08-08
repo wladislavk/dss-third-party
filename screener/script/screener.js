@@ -8,6 +8,7 @@ function submit_screener(){
       userid: $('#userid').val(),
       first_name: $('#first_name').val(),
       last_name: $('#last_name').val(), 
+      phone: $('#phone').val(),
       epworth_reading: $('#epworth_reading').val(),
       epworth_public: $('#epworth_public').val(),
       epworth_passenger: $('#epworth_passenger').val(),
@@ -193,6 +194,14 @@ function validate_name(){
     return_val = false;
   }else{
     $('#last_name_div').removeClass('error');
+  }
+
+  if($('#phone_div input').val() == ''){
+    $('#phone_div').addClass('error');
+    error_text += "<label for=\"phone\" generated=\"true\" class=\"error\" style=\"\"><strong>Phone number</strong>: Please provide a phone number</label>"
+    return_val = false;
+  }else{
+    $('#phone_div').removeClass('error');
   }
 
   if(return_val){

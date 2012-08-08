@@ -16,10 +16,14 @@ if(!isset($_SESSION['screener_doc'])){
     <title>Dental Sleep Solutions :: Screener</title>
     <link rel="stylesheet" href="css/lagu.css" />
 <script type="text/javascript" src="../manage/admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="script/screener.js"></script>
+    <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="script/screener_masks.js"></script>
 <link rel="stylesheet" href="css/screener.css" />
+<link rel="stylesheet" href="../manage/admin/css/jquery-ui-1.8.22.custom.css" />
 <link rel="stylesheet" href="../reg/lib/fancybox/jquery.fancybox-1.3.4.css" type="text/css" />
 <!--[if IE]>
         <link rel="stylesheet" type="text/css" href="css/style_ie.css" />
@@ -64,7 +68,7 @@ if(!isset($_SESSION['screener_doc'])){
 
 <div class="sect" id="sect1">
 
-<h3>Please enter your name.</h3>
+<h3>Contact Information</h3>
 <br />
 <div class="msg_box msg_error" id="name_error_box" style="display:none;"></div>
 
@@ -78,6 +82,12 @@ if(!isset($_SESSION['screener_doc'])){
         <input class="inpt_a" type="text" id="last_name" name="last_name" />
 </div>
 
+<div class="sepH_b" id="phone_div">
+        <label class="lbl_a">Phone Number</label>
+        <input class="inpt_a phonemask" type="text" id="phone" name="phone" />
+</div>
+
+
 <a href="#" onclick="return validate_name();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect2">
@@ -86,7 +96,7 @@ if(!isset($_SESSION['screener_doc'])){
 <p>How likely are you to sleep or doze in each of the following situations?</p>
 <div class="formEl_a">
 <?php
-  $options = "<option value=\"\"></option>
+  $options = "<option value=\"\">Select an answer</option>
 		<option value=\"0\">0 - No chance of dozing</option>
 		<option value=\"1\">1 - Slight chance of dozing</option>
                 <option value=\"2\">2 - Moderate chance of dozing</option>
@@ -154,74 +164,102 @@ if(!isset($_SESSION['screener_doc'])){
   <p>Please answer the following questions about your sleep habits.</p>
 <div class="msg_box msg_error" id="sect3_error_box" style="display:none;"></div>
   <div class="sepH_b" id="breathing_div">
-        <input type="radio" name="breathing" value="8" /> Yes
-        <input type="radio" name="breathing" value="0" /> No
+	<div class="buttonset">
+        <input type="radio" id="breathing1" name="breathing" value="8" /><label for="breathing1">Yes</label>
+        <input type="radio" id="breathing2" name="breathing" value="0" /><label for="breathing2">No</label>
+  	</div>
         <label>Have you ever been told you stop breathing while asleep?</label>
   </div>
-
+<script>
+	$(function() {
+		$(".buttonset").buttonset();
+	});
+	</script>
   <div class="sepH_b" id="driving_div">
-        <input type="radio" name="driving" value="6" /> Yes
-        <input type="radio" name="driving" value="0" /> No
+	<div class="buttonset">
+          <input type="radio" id="driving1" name="driving" value="6" /><label for="driving1">Yes</label>
+          <input type="radio" id="driving2" name="driving" value="0" /><label for="driving2">No</label>
+	</div>
         <label>Have you ever fallen asleep or nodded off while driving?</label>
   </div>
 
   <div class="sepH_b" id="gasping_div">
-        <input type="radio" name="gasping" value="6" /> Yes
-        <input type="radio" name="gasping" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="gasping" value="6" id="gasping1" /><label for="gasping1">Yes</label>
+        <input type="radio" name="gasping" value="0" id="gasping2" /><label for="gasping2">No</label>
+        </div>
         <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
   </div>
 
   <div class="sepH_b" id="sleepy_div">
-        <input type="radio" name="sleepy" value="4" /> Yes
-        <input type="radio" name="sleepy" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="sleepy" value="4" id="sleepy1" /><label for="sleepy1">Yes</label>
+        <input type="radio" name="sleepy" value="0" id="sleepy2" /><label for="sleepy2">No</label>
+        </div>
         <label>Do you feel excessively sleepy during the day?</label>
   </div>
 
   <div class="sepH_b" id="snore_div">
-        <input type="radio" name="snore" value="4" /> Yes
-        <input type="radio" name="snore" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="snore" value="4" id="snore1" /><label for="snore1">Yes</label>
+        <input type="radio" name="snore" value="0" id="snore2" /><label for="snore2">No</label>
+        </div>
         <label>Do you snore or have you ever been told that you snore?</label>
   </div>
 
   <div class="sepH_b" id="weight_gain_div">
-        <input type="radio" name="weight_gain" value="2" /> Yes
-        <input type="radio" name="weight_gain" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="weight_gain" value="2" id="weight_gain1" /><label for="weight_gain1">Yes</label>
+        <input type="radio" name="weight_gain" value="0" id="weight_gain2" /><label for="weight_gain2">No</label>
+        </div>
         <label>Have you had weight gain and found it difficult to lose?</label>
   </div>
 
   <div class="sepH_b" id="blood_pressure_div">
-        <input type="radio" name="blood_pressure" value="2" /> Yes
-        <input type="radio" name="blood_pressure" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="blood_pressure" value="2" id="blood_pressure1" /><label for="blood_pressure1">Yes</label>
+        <input type="radio" name="blood_pressure" value="0" id="blood_pressure2" /><label for="blood_pressure2">No</label>
+        </div>
         <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
   </div>
 
   <div class="sepH_b" id="jerk_div">
-        <input type="radio" name="jerk" value="3" /> Yes
-        <input type="radio" name="jerk" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="jerk" value="3" id="jerk1" /><label for="jerk1">Yes</label>
+        <input type="radio" name="jerk" value="0" id="jerk2" /><label for="jerk2">No</label>
+        </div>
         <label>Do you kick or jerk your legs while sleeping?</label>
   </div>
 
   <div class="sepH_b" id="burning_div">
-        <input type="radio" name="burning" value="3" /> Yes
-        <input type="radio" name="burning" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="burning" value="3" id="burning1" /><label for="burning1">Yes</label>
+        <input type="radio" name="burning" value="0" id="burning2" /><label for="burning2">No</label>
+        </div>
         <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up? </label>
   </div>
 
   <div class="sepH_b" id="headaches_div">
-        <input type="radio" name="headaches" value="3" /> Yes
-        <input type="radio" name="headaches" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="headaches" value="3" id="headaches1" /><label for="headaches1">Yes</label>
+        <input type="radio" name="headaches" value="0" id="headaches2" /><label for="headaches2">No</label>
+        </div>
         <label>Do you wake up with headaches during the night or in the morning?</label>
   </div>
 
   <div class="sepH_b" id="falling_asleep_div">
-        <input type="radio" name="falling_asleep" value="4" /> Yes
-        <input type="radio" name="falling_asleep" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="falling_asleep" value="4" id="falling_asleep1" /><label for="falling_asleep1">Yes</label>
+        <input type="radio" name="falling_asleep" value="0" id="falling_asleep2" /><label for="falling_asleep2">No</label>
+        </div>
         <label>Do you have trouble falling asleep?</label>
   </div>
 
   <div class="sepH_b" id="staying_asleep_div">
-        <input type="radio" name="staying_asleep" value="4" /> Yes
-        <input type="radio" name="staying_asleep" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" name="staying_asleep" value="4" id="staying_asleep1" /><label for="staying_asleep1">Yes</label>
+        <input type="radio" name="staying_asleep" value="0" id="staying_asleep2" /><label for="staying_asleep2">No</label>
+        </div>
         <label>Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 

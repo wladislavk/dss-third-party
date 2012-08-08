@@ -31,5 +31,6 @@ body{
   background-image: url(../images/grd_dl.png);
   }
 
-.field input[type="radio"]{ margin-left:10px; }
-#sect3 label{ margin-left:30px; }
+.sepH_b.ui-buttonset{ float:left;}
+#sect3 .buttonset{float:left;}
+#sect3 .sepH_b{ clear:both; margin-top:10px; height: 30px;}

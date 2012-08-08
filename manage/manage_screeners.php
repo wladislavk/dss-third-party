@@ -55,6 +55,9 @@ $sql = "SELECT s.*, u.name,
 if(isset($_GET['risk'])){
   $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['risk'])." ";
 }
+if(isset($_GET['contacted'])){
+  $sql .= " AND contacted = ".mysql_real_escape_string($_GET['contacted'])." ";
+}
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -87,6 +90,12 @@ $my=mysql_query($sql) or die(mysql_error());
 <?php }else{ ?>
 <a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
 <?php } ?>
+<?php if(isset($_GET['contacted']) && $_GET['contacted']==0){ ?>
+<a href="manage_screeners.php" class="addButton">Show All</a>
+<?php }else{ ?>
+<a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
+<?php } ?>
+
 </div>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -107,6 +116,9 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+                        <a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
+                </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         Diagnosis 
                 </td>
@@ -121,6 +133,9 @@ $my=mysql_query($sql) or die(mysql_error());
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contacted</a>
                 </td>
 		<td valign="top" class="col_head">
 			Edit
@@ -147,6 +162,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
                                         <?= st($myarray["first_name"]); ?> <?= $myarray['last_name']; ?>
 				</td>
+                                <td valign="top">
+                                        <?= st($myarray["phone"]); ?> 
+                                </td>
 					<?php if($myarray["survey_total"] < 8 ){ ?>		
 						<td valign="top" class="risk_low">Low</td>
                                         <?php }elseif($myarray["survey_total"] < 10 ){ ?>
@@ -220,10 +238,13 @@ $my=mysql_query($sql) or die(mysql_error());
 
 ?>
 					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').hide();$('#diagnosis_text_<?=$myarray['id']; ?>').show();" id="diagnosis_count_<?=$myarray['id']; ?>"><?= count($diagnosis); ?></a>
-					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').show();$('#diagnosis_text_<?=$myarray['id']; ?>').hide();" id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></span>
+					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').show();$('#diagnosis_text_<?=$myarray['id']; ?>').hide();" id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></a></span>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	
+				</td>
+				<td valign="top">
+					<input type="checkbox" class="contact_chbx" value="<?= $myarray['id']; ?>" <?= ($myarray['contacted']==1)?'checked="checked"':'';?> />
 				</td>
 				<td>
 					<a href="manage_screeners.php?delid=<?= $myarray['id']; ?>&page=<?= $_REQUEST['page']; ?>" onclick="return confirm('Are you sure you want to delete this screener?');">Delete</a>
@@ -243,3 +264,24 @@ $my=mysql_query($sql) or die(mysql_error());
 
 <br /><br />	
 <? include "includes/bottom.htm";?>
+
+<script type="text/javascript">
+$('.contact_chbx').click(function(){
+  c = ($(this).is(':checked'))?1:0;
+  id = $(this).val();
+                                  $.ajax({
+                                        url: "includes/screener_contact.php",
+                                        type: "post",
+                                        data: {id: id, c: c},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+</script>

@@ -48,7 +48,7 @@ $my=mysql_query($sql) or die(mysql_error());
                         $user_my = mysql_query($user_sql);
                         $user_myarray = mysql_fetch_array($user_my);
                 ?>
-                        <tr class="<?=$tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
+                        <tr id="note_<?= $myarray['notesid'];?>" class="<?=$tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
                                 <td valign="top">
                                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                                 <tr>
@@ -73,18 +73,21 @@ $my=mysql_query($sql) or die(mysql_error());
                                                                 </span>
                                                         </td>
                                                         <td valign="top" width="30%">
+							<span id="note_edit_<?= $myarray['notesid'];?>">
                                                         <? if(st($myarray["signed_id"]) == '') { ?>
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
                                                                 <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
 								<?php if($myarray["docid"]==$_SESSION['userid']){ ?>
 								/
 								<a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
+								<input type="checkbox" class="sign_chbx" name="sign[]" value="<?= $myarray['notesid']; ?>" />
 								<?php } ?>
                                                         <? }else{ ?>
                                                                 Signed By: <?= $myarray["signed_name"]; ?>
                                                                 <br />
                                                                 Signed On: <?= date('m/d/Y H:i a', strtotime($myarray["signed_on"])); ?>
                                                         <? } ?>
+							</span>
                                                         </td>
                                                 </tr>
                                                 <tr>
@@ -104,4 +107,40 @@ $my=mysql_query($sql) or die(mysql_error());
         <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
                 Print All Progress Notes
         </button>
+        <button onClick="sign_notes(); return false;" class="addButton" style="float: left;">
+                Sign
+        </button>
+
+
+<script type="text/javascript">
+
+function sign_notes(){
+  sign_arr = new Array();
+  i=0;
+  $('.sign_chbx:checked').each(function(){
+    sign_arr[i++] = $(this).val();
+  });
+                                  $.ajax({
+                                        url: "includes/sign_notes.php",
+                                        type: "post",
+                                        data: {ids: sign_arr.join(',')},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+						    $('.sign_chbx:checked').each(function(){
+    							id = $(this).val();
+							$('#note_'+id).css('backgroundColor', '');
+							$('#note_edit_'+id).remove();
+ 						    });
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+}
+
+</script>
+
 

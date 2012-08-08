@@ -49,8 +49,8 @@ $pending_letters = mysql_num_rows($dental_letters_res);
 
 <div id="content">
 <ul id="summ_nav">
-  <li><a href="#" onclick="show_sect('summ')" id="link_summ" class="active">SUMMARY</a></li>
-  <li><a href="#" onclick="show_sect('notes')" id="link_notes" class="active">PROG NOTES <?= ($num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a></li>
+  <li><a href="#" onclick="show_sect('summ')" id="link_summ">SUMMARY</a></li>
+  <li><a href="#" onclick="show_sect('notes')" id="link_notes">PROG NOTES <?= ($num_unsigned_notes>0)?"(".$num_unsigned_notes.")":''; ?></a></li>
   <li><a href="#" onclick="show_sect('treatment')" id="link_treatment">TREATMENT Hx</a></li>
   <li><a href="#" onclick="show_sect('health')" id="link_health">HEALTH Hx</a></li>
   <li><a href="#" onclick="show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters>0)?"(".$pending_letters.")":''; ?></a></li>
@@ -100,11 +100,17 @@ $pending_letters = mysql_num_rows($dental_letters_res);
     $("#link_"+sect).addClass('active');
     $("#sections > div").hide();
     $("#sect_"+sect).show();
+    $.cookie('pid', '<?= $_GET['pid']; ?>');
+    $.cookie('summ_sect', sect);
   }
 <?php
 if($_GET['sect']!=''){ ?>
 show_sect('<?= $_GET['sect']; ?>');
 <?php }else{ ?>
-show_sect('summ');
+  if($.cookie('summ_sect') && $.cookie('pid') == '<?= $_GET['pid']; ?>'){
+    show_sect($.cookie('summ_sect'));
+  }else{
+    show_sect('summ');
+  }
 <?php } ?>
 </script>

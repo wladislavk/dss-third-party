@@ -7,7 +7,7 @@ $r = mysql_fetch_assoc($q);
 ?>
 <table width="95%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto;">
 <tr>
-  <td>
+  <td width="50%">
       <span style="width: 40%; display:block; float:left;">Preferred Name: <?= $r['preferred_name']; ?></span>
       <span style="width: 20%; display:block; float:left;">Age: <?php
 $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
@@ -43,7 +43,26 @@ $rs = $r['referred_source'];
   }
 ?>
   </td>
-  <td rowspan="3">PHOTO</td>
+  <td width="150" rowspan="3">
+<?php
+                                $pid = $_GET['pid'];
+  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+?>
+<span style="float:right">
+<?php if($num_face==0){ ?>
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
+                <img src="images/add_patient_photo.png" />
+        </a>
+<?php }else{
+  while($image = mysql_fetch_array($itype_my)){
+   echo "<img src='q_file/".$image['image_file']."' width='150' style='float:right;' />";
+  }
+
+} ?>
+
+</td>
 </tr>
 <tr>
   <?php
@@ -66,7 +85,7 @@ $rs = $r['referred_source'];
 
 ?>
 </td>
-  <td rowspan="2">
+  <td rowspan="2">Reason for Tx:
 <?php
 $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $c_q = mysql_query($c_sql);
@@ -76,8 +95,29 @@ echo $c_r['chief_complaint_text'];
 ?>
 </td>
 </tr>
+<?php
+                $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
+ 				FROM dental_summ_sleeplab ss 
+                                JOIN dental_patients p on ss.patiendid=p.patientid
+				LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
+                        WHERE 
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                $result = mysql_query($sleepstudies);
+                $numsleepstudy = mysql_num_rows($result);
+		$sleepstudy = mysql_fetch_assoc($result); 
+
+?>
 <tr>
-  <td>Sleep Test:</td>
+  <td>Sleep Test? <?= ($numsleepstudy > 0)?'Yes':'No'; ?>
+      <br />
+      Diagnosis: <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?>
+      <br />
+      AHI/RDI: <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
+      Low O2: <?= $sleepstudy['o2nadir']; ?>
+      T < 90%: <?= $sleepstudy['t9002']; ?>
+
+
+</td>
 </tr>
 
 
@@ -274,6 +314,93 @@ if($num_loc > 1){
     </td>
   </tr>
 <?php } ?>
+  <tr valign="top">
+    <td width="15%" height="5">Reason seeking tx</td>
+    <td colspan="6">
+      <label>
+        <textarea name="reason_seeking_tx" id="textarea" cols="68" rows="7"><?=$reason_seeking_tx;?></textarea>
+      </label>
+
+      </td>
+  </tr>
+  <tr valign="top">
+   <td width="15%" height="5">CPAP</td>
+    <td colspan="6">
+    <div style="width:80%;">
+        <?php
+          $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+          $pat_my = mysql_query($pat_sql);
+          $pat_myarray = mysql_fetch_array($pat_my);
+          if($pat_myarray['cpap']=="No"){
+
+            ?>Patient has not previously attempted CPAP therapy.<?php
+
+          }else{
+        echo $pat_myarray['cpap'];
+        ?>
+    <label>
+
+
+
+      <span>On average how many nights per week do you wear your CPAP?
+                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $nights_wear_cpap; ?>" class="field text addr tbox" name="nights_wear_cpap" id="nights_wear_cpap">
+                                                        <br>
+                                                </span>
+
+
+
+      <span>
+                                                        On average how many hours each night do you wear your CPAP?
+                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $percent_night_cpap; ?>" class="field text addr tbox" name="percent_night_cpap" id="percent_night_cpap">
+                                                        <br>
+                                                </span>
+
+    <div style="height:10px;"></div>
+
+
+
+    <span style="font-weight:bold;">Problems w/ CPAP</span><br />
+        <textarea name="textarea8" id="textarea" cols="68" rows="5"><?=$problem_cpap;?></textarea>
+      </label>
+
+
+
+
+
+
+
+     <?php } ?>
+
+     </div>
+    </td>
+
+
+
+
+
+  </tr>
+
+  <tr valign="top">
+    <td width="18%" height="6">Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />
+                        &nbsp;&nbsp;
+                        <br /><br />
+      Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br />
+</td>
+    <td colspan="6">
+    History of Surgery or other Treatment Attempts:<br />
+      <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
+      <br />
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" colspan="7">Notes/Personal:
+
+
+       <?php include("dss_notes.php"); ?>
+
+
+      </td>
+  </tr>
 
 
 

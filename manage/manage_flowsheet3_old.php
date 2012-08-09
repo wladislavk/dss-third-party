@@ -1182,7 +1182,1098 @@ background:#edeb46;
     Patient <i><?=$name;?></i>-->
 </span>
 
+<form action="#" method="post">
 <div style="margin:0 auto; width:500px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;"><?php echo $message; ?></div>
+<div style="width:300px; float:right;">
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page1').style.display='block';document.getElementById('flowsheet_page2').style.display='none';" value="Pre-Treatment" />
+<input type="button" class="addButton" onclick="document.getElementById('flowsheet_page2').style.display='block';document.getElementById('flowsheet_page1').style.display='none';" value="Appointments" />
+</div>
+</form>
+<div style="clear:both;height:10px;width:100%;"></div>
+
+
+<!-- START FLOWSHEET PAGE 1 ***************************** -->
+<div id="flowsheet_page1">
+
+<div id="not-complete" style="width:98%; margin:0 auto; text-align:center;">
+    <?php
+		$sleepstudies = "SELECT ss.* FROM dental_summ_sleeplab ss 
+				JOIN dental_patients p on ss.patiendid=p.patientid
+			WHERE 
+				(p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+		$result = mysql_query($sleepstudies);
+		$numsleepstudy = mysql_num_rows($result);
+
+		$sql = "SELECT " . "  status "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+		$my = mysql_query($sql) or die(mysql_error());
+		$numvob = mysql_num_rows($my);
+
+		//$initialcontact = false;
+		//$questionnaire = false;
+    $sleepstudy = false;
+		$medins = false;
+		$vob = false;
+    
+  $sql2 = "SELECT p_m_ins_type FROM dental_patients p WHERE p.patientid=".$_GET['pid']." LIMIT 1";
+  $my2 = mysql_query($sql2);
+  $row2 = mysql_fetch_array($my2);
+
+		//if ($copyreqdate != '' && $referred_by != '' && $contact_location != '' && $referreddate != '' && $delivery_date != '') $initialcontact = true;
+		if ($referred_by == '') {
+			//if ($copyreqdate != '') $initialcontact = true;
+    } elseif ($referred_by != '') {
+			//if ($delivery_date != '') $initialcontact = true;
+    }
+		if ($numsleepstudy > '0') $sleepstudy = true;
+		if ($rxrec != '' && $lomnrec != '') $medins = true;
+		if ($numvob > '0' || $row2['p_m_ins_type']==1) $vob = true;
+
+		if ( $sleepstudy == false || $medins == false || $vob == false) {
+      print "<strong><h2>Pre-Treatment Information Below is NOT COMPLETE</h2></strong>"; 
+			update_patient_summary($_GET['pid'], 'fspage1_complete', false);
+    } else {
+			update_patient_summary($_GET['pid'], 'fspage1_complete', true);
+?>
+			<script type="text/javascript">
+				$(document).ready(function() {	
+					$('#flowsheet_page2').css("display", "block");
+					$('#flowsheet_page1').css("display", "none");
+				});
+			</script>
+<?php
+		}
+		// Compute Summary table information
+ 		
+
+
+    ?>
+</div>
+
+<form id="form_page1" name="form_page1" action="/manage/manage_flowsheet3.php?pid=<?php echo $_GET['pid']; ?>" enctype="multipart/form-data" method="post">
+<input id="iframestatus" name="iframestatus" type="hidden" />
+<!-- START INITIAL CONTACT TABLE -->
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">INITIAL CONTACT & REFERRAL</div>
+<table width="610px" align="center">
+
+<tr>
+
+<td>
+
+Initial Contact Date
+
+</td>
+
+<td>
+
+Referral Source
+
+</td>
+
+<td>
+
+Referred By
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>
+<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" /><span id="req_0" class="req">*</span>
+
+</td>
+<td>
+
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person<br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?><br />
+                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+
+
+</td>
+
+<td>
+
+
+<script type="text/javascript">
+function show_referredby(t, rs){
+        if(t=='person'){
+                document.getElementById('referred_notes').style.display="none";
+                document.getElementById('referred_person').style.display="block";
+        }else{
+                document.getElementById('referred_notes').style.display="block";
+                document.getElementById('referred_person').style.display="none";
+        }
+                $('#referred_source').val(rs);
+}
+</script>
+                                <div style="float:left;">
+                                        <div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;"':''; ?>>
+                                        <input type="text" id="referredby_name" class="autocomplete_search" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" />
+<br />
+        <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
+                <ul id="referredby_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+        </div>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php');
+});
+</script>
+                                        </div>
+                                        <div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;"':''; ?>>
+                                                <textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea>
+                                        </div>
+<input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
+<input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
+
+
+
+
+
+</td>
+
+</tr>
+
+
+<!-- END INITIAL CONTACT TABLE -->
+
+
+<!-- START REFERRED TO DSS OFFICE TABLE -->
+
+<tr>
+
+<td>
+
+</td>
+
+<td>
+
+
+</td>
+
+<td>
+
+Thank You Sent
+
+</td>
+
+</tr>
+
+
+
+<tr>
+<td>
+
+
+</td>
+<td>
+
+
+
+</td>
+<td>
+<input id="thxletter" name="thxletter" type="text" class="field text addr tbox calendar" value="<?php echo $delivery_date; //$thxletter ?>" tabindex="10" style="width:100px;background-color:#cccccc;" maxlength="255" onChange="validateDate('thxletter');" disabled /><!--<span id="req_0" class="req">*</span>-->
+
+
+
+</td>
+</tr>
+
+</table>
+
+<!-- END REFERRED TO DSS OFFICE TABLE -->
+
+
+
+
+
+
+
+<!-- START SLEEP LABS TABLE -->
+<style>
+	#sleepstudyscrolltable tr td	{ border-bottom: 1px solid #000; height: 35px; }
+	#sleeplablabels					{ /* line-height:22.6px; */ }
+	#sleeplablabels 	   tr td 	{ height: 35px; padding: 0; border-bottom: 1px solid #000; font-weight: bold; text-align: right; padding-right: 10px; }
+</style>
+<a name="sleep_study"></a>
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">SLEEP STUDY</div>
+
+<!--sleep study table-->
+
+<!-- SLEEP LAB SECTION START -->
+<div style="width:630px; margin:0 auto; ">
+<style type="text/css">
+  .sleeplabstable tr{ height: 28px; }
+.yellow .odd, .yellow .even{
+background:#edeb46;
+}
+
+  .odd{ background: #F9FFDF; }
+  .even{ background: #e4ffcf; }
+</style>
+<table class="sleeplabstable <?php print (!$sleepstudy  ? 'yellow' : ''); ?>" width="108" align="center" style="float:left; margin: 0;line-height:22px;">
+
+
+        <tr>
+                <td valign="top" class="even">
+                Test Date
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Sleep Test Type
+                </td></tr>
+  <tr>
+                <td valign="top" class="even">
+                Interpretation
+                </td>
+        </tr>
+
+  <tr>
+                <td valign="top" class="odd">
+                Place
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Diagnosis
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Copy Requested
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Request From
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Diagnosing Phys.
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+		Diagnosing NPI#                
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                File
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                AHI
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                AHI Supine
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                RDI
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                RDI Supine
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                O<sub>2</sub> Nadir
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                T &le; 90% O<sub>2</sub>
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Sleep Efficiency
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                CPAP Level
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Dental Device
+                </td>
+  </tr>
+  <tr>
+                <td valign="top" class="odd">
+                Device Setting
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="even">
+                Notes
+                </td>
+        </tr>
+  <tr>
+                <td valign="top" class="odd">
+                <input type="button" id="new_sleep_study_but" onclick="show_new_study(); return false;" value="+ Add Sleep Study" />
+                </td>
+        </tr>
+
+  </table>
+<script type="text/javascript">
+function updateiframe(w){
+$('#sleepstudies').css('width', ((w+1)*185)+'px');
+}
+function show_new_study(){
+$('#new_sleep_study_but').hide();
+document.getElementById('sleepstudies').contentWindow.show_new_study();
+}
+function show_new_but(){
+$('#new_sleep_study_but').show();
+}
+function show_study_table(){
+  show_new_study();
+  $('#no_sleep_studies_div').hide();
+  $('#sleep_studies_div').show();
+}
+
+</script>
+<?php
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY id DESC";
+$s_lab_result = mysql_query($s_lab_query);
+$num_labs = mysql_num_rows($s_lab_result);
+if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
+$body_width = ($num_labs*185)+215;
+?>
+        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">
+                    <iframe id="sleepstudies" height="842" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+
+        </div>
+</div>
+<!--
+<div style="width: 610px; margin: auto; display: table;" <?php print (!$sleepstudy  ? 'class="yellow"' : ''); ?> id="sleeplabtable">
+	
+	<div style="float: left; width: 170px;">
+		<table id="sleeplablabels" style="border: 0; width: 100%;" cellpadding="0">
+			<tr>
+			
+			<td>
+			
+			Test Number
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Needed
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Date Scheduled
+			
+			</td>
+			
+			</tr>
+
+                        <tr>
+
+                        <td>
+
+                        Type
+
+                        </td>
+
+                        </tr>
+	
+			<tr>
+			
+			<td>
+			
+			Where Scheduled
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Completed
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Interpretation
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Copy Requested
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Sleep Study Request From
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Scanned Copy
+			
+			</td>
+			
+			</tr>
+		
+		</table>
+	</div>
+	
+	<div style=" border: medium none;float: left;height: 460px;margin-bottom: 20px;margin-top: -4px;overflow: auto;width: 430px;">
+		 <table width="700" style="overflow-x: auto;">
+		   <tr>
+		    <td>
+-->
+<!-- Begin repeat sleep study section -->
+      
+
+
+
+
+<!--
+
+	<iframe src="manage_sleep_studies.php?pid=<?php echo $_GET['pid']; ?>" height="430" width="10000" style="border: medium none; overflow:hidden;">Iframes must be enabled to view this area.</iframe>
+
+
+
+
+
+
+
+
+-->
+      
+ 
+ 
+ 
+<!-- End repeat sleep study section -->
+<!--   
+      </td>
+      </tr>
+		 </table>
+	</div>
+</div>
+-->
+
+<!--
+<table width="500px;" align="center" id="sleeplabtable">
+<tr>
+	<td style="width:200px;">
+		<table width="200px" align="center" id="sleeplablabels" style="border:none; float:left;">
+			<tr>
+			
+			<td>
+			
+			Test Number
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Needed
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Date Scheduled
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Where Scheduled
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Completed
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Interpolation
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Type
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Copy Requested
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Sleep Study Request From
+			
+			</td>
+			
+			</tr>
+			
+			<tr>
+			
+			<td>
+			
+			Copy Obtained/Scanned In
+			
+			</td>
+			
+			</tr>
+		
+		</table>
+	</td>
+
+	<td width="300">
+		<div style="width: 300px; height: 295px; overflow-x: scroll; overflow-y: hidden;">
+			<div style="width: 500px; height: 295px; overflow-x: scroll; overflow-y: hidden;"> 
+				<table align="center" style="border:none; float: left;width: 140px;" id="sleepstudyscrolltable">
+	
+					<tr>
+					
+					<td>
+					
+					<input type="text" style="width:25px;" readonly="readonly">
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<input type="radio" name="needed" value="Yes">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					
+					<input type="radio" name="needed" value="No">No
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<select>
+					
+					<option>Sleep Lab 1</option>
+					
+					<option>Sleep Lab 2</option>
+					
+					<option>Sleep Lab 3</option>
+					
+					</select>
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<input type="radio" name="completed" value="Yes">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					
+					<input type="radio" name="completed" value="No">No
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<input type="radio" name="interpretation" value="Yes">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					
+					<input type="radio" name="interpretation" value="No">No
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<select>
+					
+					<option>PSG</option>
+					
+					<option>HST</option>
+					
+					</select>
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox" value="<?php echo $copyreqdate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<select>
+					
+					<option>Sleep Lab 1</option>
+					
+					<option>Sleep Lab 2</option>
+					
+					<option>Sleep Lab 3</option>
+					
+					</select>
+					
+					</td>
+					
+					</tr>
+					
+					<tr>
+					
+					<td>
+					
+					<button class="addButton" onclick="">
+							Upload
+					</button>
+					&nbsp;&nbsp;&nbsp;<a href="#"> View</a>
+					
+					</td>
+					
+					</tr>
+					
+				</table>
+
+			</div>
+		</div> 
+	</td>
+
+</tr>
+
+</table>
+-->
+
+<!-- END SLEEP LABS TABLE -->
+
+
+
+
+<!-- START MED INS TABLE -->
+
+<?php
+if ($rximgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$rximgid."';"; 
+	$result = mysql_query($sql);
+	$rximgname = mysql_result($result, 0);
+}
+
+if ($lomnimgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$lomnimgid."';"; 
+	$result = mysql_query($sql);
+	$lomnimgname = mysql_result($result, 0);
+}
+
+if ($notesimgid != "") {
+	$sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$notesimgid."';"; 
+	$result = mysql_query($sql);
+	$notesimgname = mysql_result($result, 0);
+}
+
+if (end(explode('.', $rximgname)) == "pdf") $pdf1 = true;
+if (end(explode('.', $lomnimgname)) == "pdf") $pdf2 = true;
+if (end(explode('.', $notesimgname)) == "pdf") $pdf3 = true;
+?>
+
+<a name="ins"></a>
+<div style="width:600px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
+<table width="610px" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
+<tr style="vertical-align:middle;">
+<td>
+<h3>Procedure</h3>
+</td>
+<td>
+<h3>Requested</h3>
+</td>
+<td>
+<h3>Received</h3>
+</td>
+<td>
+<h3>Image</h3>
+</td>
+</tr>
+
+<!--<tr>
+
+<td>
+Insurance Information
+</td>
+<td>
+N/A
+</td>
+<td>
+<input id="insinforec" name="insinforec" type="text" class="field text addr tbox" value="<?php echo $insinforec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('insinforec');" onClick="cal6.popup();"value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_self">Add/Edit Info</a>
+</td>
+
+</tr>-->
+
+<tr>
+
+<td>
+Rx.
+</td>
+<td>
+<input id="rxreq" name="rxreq" type="text" class="field text addr tbox calendar" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" />
+</td>
+<td>
+<input id="rxrec" name="rxrec" type="text" class="field text addr tbox calendar" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
+</td>
+<td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->						
+						<?php 
+						if ($rximgid != "") {
+							print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open(" . ($pdf1 ? "'/manage/q_file/$rximgname'" : "'imageholder.php?image=$rximgname'") . ",'windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
+							print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" value=\"Edit\" title=\"Edit\" />";
+							print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"rximg\" name=\"rximg\" type=\"file\" size=\"4\" />";
+						}
+						?>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+L.O.M.N.
+</td>
+<td>
+<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox calendar" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" />
+</td>
+<td>
+<input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox calendar" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="<?php print ($lomnimgid == "" ? "alert('You must upload an image before LOMN can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+						<?php 
+						if ($lomnimgid != "") {
+							print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open(" . ($pdf2 ? "'/manage/q_file/$lomnimgname'" : "'imageholder.php?image=$lomnimgname'") . ",'windowname1','width=860,height=790,scrollbars=yes');return false;\" />";
+							print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" value=\"Edit\" title=\"Edit\" />";
+							print "<input id=\"lomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
+							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+						} else {
+							print "<input id=\"lomnimg\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
+						}
+						?>
+
+</td>
+
+</tr>
+
+
+</table>
+
+<!-- END MED INS TABLE -->
+
+<!-- START PRE-AUTHORIZATION TABLE -->
+
+<?php
+$sql = "SELECT "
+     . "  * "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_GET['pid'] . " "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$my = mysql_query($sql) or die(mysql_error());
+?>
+
+<div style="width:600px; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">VERIFICATION OF BENEFITS</div>
+<table width="610px" <?php print (!$vob ? 'class="yellow"' : ''); ?> align="center">
+    <?php
+  if($row2['p_m_ins_type']==1){
+    ?>
+      <tr>
+        <td valign="top" align="center">
+          VOB CANNOT BE REQUESTED - patient has Medicare Insurance.<br />You can change patient's insurance type in the Patient Info section.
+        </td>
+      </tr>
+      <?php } ?>
+
+	<? if (mysql_num_rows($my) == 0) { 
+	?>
+      <tr>
+        <td valign="top" align="center">
+          No verification of benefits on record.
+        </td>
+      </tr>
+	<?php } else { ?> 
+      <?php while ($preauth = mysql_fetch_array($my)) { ?>
+
+	<?php if($preauth['status']==DSS_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+		Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently pending.
+        </td>
+      </tr>
+
+
+ <?php } elseif($preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and is currently awaiting pre-authorization.
+        </td>
+      </tr>
+
+
+
+        <?php } elseif($preauth['status']==DSS_PREAUTH_REJECTED){ ?>
+
+      <tr class="tr_bg">
+        <td valign="top" align="center" style="color:#930;">
+                Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
+        </td>
+      </tr>
+
+
+
+	<?php } elseif ($preauth['status']==DSS_PREAUTH_COMPLETE) { ?>
+        <tr class="tr_bg">
+          <td valign="top" colspan="2" align="center">
+		    Verification of benefits completed on <?= date('m/d/Y', strtotime($preauth['date_completed'])); ?>.
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/manage/manage_insurance.php?pid=<?= $_GET['pid'] ?>">VIEW Verification of Benefits</a>
+          </td>
+        </tr>
+	<?php } ?>
+      <?php } ?>
+    <?php } ?>
+	<tr>
+		<td style="padding:10px;">
+			<?php 
+			$errors = claim_errors($_GET['pid'], true);
+			if(count($errors)>0){ 
+				$e_text = 'Unable to request verification of benefits:\n';
+				foreach($errors as $e){
+					$e_text .= '\n'.$e;
+				}
+			}
+			if (mysql_num_rows($my) == 0) {
+				if ($e_text) {
+			?>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Verification of Benefits</a>
+				<? }else{ ?>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" class="addButton" >Request Verification of Benefits</a>
+				<?php } ?>
+			<? } else { 
+				if ($e_text) { ?>
+				 <a href="javascript:alert('<?= $e_text; ?>');" class="addButton" >Request Additional Verification of Benefits</a>
+				<? }else{ ?>
+				 <a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&preauth=1" id="additional-preauth" class="addButton" >Request Additional Verification of Benefits</a>
+				<?php } ?>			
+			<?php } ?>
+		</td>
+	</tr>
+</table>
+
+<!-- END PRE-AUTHORIZATION TABLE -->
+
+<!-- 
+START MED INS CORP TABLE 
+
+<table width="50%" align="center">
+<tr>
+<td>
+Referral Needed
+</td>
+<td>
+<select name="refneed">
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+</select>
+</td>
+<td>
+<input id="refneeddate1" name="refneeddate" type="text" class="field text addr tbox" value="<?php echo $refneeddate1; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('refneeddate1');" onClick="cal13.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+<input id="refneeddate2" name="refneeddate2" type="text" class="field text addr tbox" value="<?php echo $refneeddate2; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('refneeddate2');" onClick="cal14.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+</tr>
+
+
+
+<tr>
+<td>
+Verification of Benefits
+</td>
+<td>
+<select>
+<option>Yes</option>
+<option>No</option>
+</select>
+</td>
+<td>
+<input id="preautho1" name="preautho1" type="text" class="field text addr tbox" value="<?php echo $preautho1; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('preautho1');" onClick="cal15.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+<input id="preautho2" name="preautho2" type="text" class="field text addr tbox" value="<?php echo $preautho2; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('preautho2');" onClick="cal16.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+</tr>
+
+
+
+<tr>
+<td>
+Ins. Ver. of Benefits
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+<input id="insverbendate" name="insverbendate" type="text" class="field text addr tbox" value="<?php echo $insverbendate; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('insverbendate');" onClick="cal17.popup();" value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+</td>
+</tr>
+
+
+</table>
+
+-->
+
+<!-- START MED INS CORP TABLE -->
+
+
+
+<input type="submit" class="addButton" style="float:right;margin-right:20px;" name="flowsubmit" value="Update Flowsheet">
+<br /><br />
+
+</form>
+<a href="vob_checklist.php?pid=<?= $_GET['pid']; ?>" class="addButton" style="margin-left:20px;">Checklist</a>
+
+</div>
+<!-- END FLOWSHEET PAGE 1 ***************************** -->
 
 
 
@@ -1190,7 +2281,11 @@ background:#edeb46;
 <!-- START FLOWSHEET PAGE 2 ***************************** -->
 
 
-<div id="lowsheet_page2" style="border-right: 1px solid rgb(0, 0, 0); margin-left: 20px; min-height: 400px; overflow: hidden; width: 932px;">  
+<div id="flowsheet_page2" style="border-right: 1px solid rgb(0, 0, 0); margin-left: 20px; min-height: 400px; overflow: hidden; width: 932px;">  
+
+<?php if ($copyreqdate == ""): ?>
+<div style="margin:0 auto; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:red;float:left;">In order to start this patient Flowsheet, you must enter a date in the "Initial Contact" section of Flowsheet Page 1.</div>
+<?php endif; ?>
 
 <?php if ($copyreqdate != ""): ?>
 <div id="dellaststep" style="float: right;">
@@ -1264,6 +2359,7 @@ Next Appointment
 
 
 <?php
+
 ?>
 
 
@@ -1271,6 +2367,45 @@ Next Appointment
 
 
 <?php
+/*
+    function array_sort($array, $on, $order)
+    {
+      $new_array = array();
+      $sortable_array = array();
+ 
+      if (count($array) > 0) {
+          foreach ($array as $k => $v) {
+              if (is_array($v)) {
+                  foreach ($v as $k2 => $v2) {
+                      if ($k2 == $on) {
+                          $sortable_array[$k] = $v2;
+                      }
+                  }
+              } else {
+                  $sortable_array[$k] = $v;
+              }
+          }
+ 
+          switch($order)
+          {
+              case 'SORT_ASC':   
+                  echo "ASC";
+                  asort($sortable_array);
+              break;
+              case 'SORT_DESC':
+                  echo "DESC";               
+                  arsort($sortable_array);
+              break;
+          }
+ 
+          foreach($sortable_array as $k => $v) {
+              $new_array[] = $array[$k];
+          }
+      }
+      return $new_array;
+    }   
+
+ */
 
 	$qso = "SELECT `consultrow`, `sleepstudyrow`, `impressionrow`, `delayingtreatmentrow`, `refusedtreatmentrow`, `devicedeliveryrow`, `checkuprow`, `patientnoncomprow`, `homesleeptestrow`, `starttreatmentrow`, `annualrecallrow`, `terminationrow` FROM `segments_order` WHERE `patientid` = '".$_GET['pid']."'";
 	$qso_query = mysql_query($qso);
@@ -1287,12 +2422,39 @@ Next Appointment
 	$fsData_array = mysql_fetch_array($fsData_query);
 	
 	
+	/*
+	$final_fsData_array = array();
+	$fsIt = 1;
+	
+	while ($fsdataRow = mysql_fetch_assoc($fsData_query))
+	{
+		$current_section = $fsdataRow['section'];
+		
+		$final_fsData_array[$fsIt] = array( 'order' => $qsoResult[0]["$current_section"], 'section' => $current_section);
+		
+		$fsIt++;
+	}
+	
+	*/
+	
+	
  	if (!empty($fsData_array['steparray'])) {
 		$order = explode(",",$fsData_array['steparray']);
   	$order = array_reverse($order);
+  	//print_r($order);
 	}
 	
 	
+	/*
+	echo '<pre>';
+	echo print_r($final_fsData_array);
+	echo '</pre>';	
+  echo '<br /><br />';
+  */
+   
+  
+  
+  
   
   $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
   $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
@@ -1326,8 +2488,23 @@ Next Appointment
   }else{
     echo "Error selecting segments from flowsheet"; 
   }
+	if ($order[$i] != 1 && $order[$i] != 5 && $order[$i] != 6 && $order[$i] != 9 && $order[$i] != 13 && $order[$i] != 14) {
+		//$calendar_vars[$i]['datesched'] .= "var cal_sched$i = new calendar2(document.getElementById('datesched$i'));";
+		//$calendar_vars[$i]['varsched'] = "cal_sched$i";
+	}
+	//$calendar_vars[$i]['datecomp'] .= "var cal_comp$i = new calendar2(document.getElementById('datecomp$i'));";
+	//$calendar_vars[$i]['varcomp'] = "cal_comp$i";
+	//$caldatesched = $calendar_vars[$i]['varsched'];
+	//$caldatecomp = $calendar_vars[$i]['varcomp'];
 	$schedid = "datesched$i";
 	$compid = "datecomp$i";
+
+  /*$getsteparray = "SELECT * FROM dental_flow_pg2 WHERE `patientid` = '".$_GET['pid']."' LIMIT 1;";
+  $steparrayqry = mysql_query($getsteparray);
+  $steparray = mysql_fetch_array($steparrayqry);
+  $steparray = explode(",", $steparray['steparray']);
+  $stepcount = count($steparray);
+  $steparray_last = end($steparray);*/
 
   $step = count($order) - $i;
   $datesched = date('m/d/Y', $flow_pg2_info[$step]['date_scheduled']);
@@ -1433,6 +2610,33 @@ Next Appointment
 		}
 		print "</script>";
 	}
+	/*
+  	asort($final_fsData_array, SORT_NUMERIC);	
+	
+	foreach($final_fsData_array as $sectiondata)
+	{
+    	echo $sectiondata['section']."<br />";
+  	}
+	*/
+	
+	/*     
+  $i = 2;
+  while($section = mysql_fetch_array($s)){
+	  $q2 = "SELECT * FROM `segments_order` WHERE `patientid` = '".$_GET['pid']."'";
+	  $s2 = mysql_query($q2);
+	  $a2 = mysql_fetch_array($s2);
+	  $title = $section['section'];
+	  echo $title;
+	      if(1==1){
+	        eval('?>' . $section['content'] . '<?');
+	      }else{
+	        continue;
+	      }
+  }
+
+*/
+    
+
 ?>
 <input type="hidden" name="flowsubmitpgtwo" value="1">
 <input type="submit" class="addButton" value="Submit" <?php print $order == null ? 'style="display: none"' : ''; ?> />

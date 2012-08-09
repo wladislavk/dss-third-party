@@ -1,8 +1,11 @@
-<?php include "includes/top.htm";
+<?php 
+
+//include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
 require_once('includes/patient_info.php');
+
 ?>
 <link rel="stylesheet" href="css/vob.css" />
 <?php
@@ -124,6 +127,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-include "includes/bottom.htm";?>
+//include "includes/bottom.htm";
+?>
 
 

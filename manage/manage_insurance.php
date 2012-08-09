@@ -64,7 +64,10 @@ $num_users=mysql_num_rows($my);
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
+<?php
+  include 'vob_checklist.php';
+  include 'flowsheet_medical.php';
+?>
 <span class="admin_head">
 	Manage Insurance
 	-

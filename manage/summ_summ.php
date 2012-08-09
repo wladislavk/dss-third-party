@@ -42,6 +42,20 @@ $rs = $r['referred_source'];
    echo $dss_referred_labels[$rs].": ".$r['referred_notes'];
   }
 ?>
+<br />
+<?php
+// Get delivery date of Thank You letter to Referral Source
+$sql = "SELECT UNIX_TIMESTAMP(delivery_date) as delivery_date FROM dental_letters WHERE templateid = '9' AND md_referral_list = '".$referred_by."' AND patientid = '".s_for($_GET['pid'])."' ORDER BY delivery_date DESC LIMIT 1;";
+$result = mysql_query($sql);
+while ($row = mysql_fetch_assoc($result)) {
+  if (!empty($row['delivery_date'])) {
+                $delivery_date = date('m/d/Y', $row['delivery_date']);
+        } else {
+                $delivery_date = null;
+  }
+}
+?>
+Thank You Sent: <?= $delivery_date; ?>
   </td>
   <td width="150" rowspan="3">
 <?php

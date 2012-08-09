@@ -62,6 +62,16 @@
                                 $('.no_matches').remove();
                                 for(i in data) {
                                         var name = data[i].name;
+				    if(in_field=="contact_name"){
+                                        var newLi = $('#'+hint+' ul .template')
+                                                .clone(true)
+                                                .removeClass('template')
+                                                .addClass('json_patient')
+                                                .data('rowid', data[i].id)
+                                                .data('rowsource', data[i].id)
+                                                .attr("onclick", "loadPopup('add_contact.php?ed="+data[i].id+"')"
+);
+				    }else{
                                         var newLi = $('#'+hint+' ul .template')
 						.clone(true)
 						.removeClass('template')
@@ -69,6 +79,7 @@
 						.data('rowid', data[i].id)
 						.data('rowsource', data[i].id)
 						.attr("onclick", "update_referredby('"+in_field+"','"+name+"', '"+id_field+"', '"+data[i].id+"', '"+source+"', '"+data[i].source+"','"+hint+"')");
+				    }
                                         template_list_ref(newLi, name)
                                               .appendTo('#'+hint+' ul')
                                             .fadeIn();

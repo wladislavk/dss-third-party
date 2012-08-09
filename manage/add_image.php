@@ -4,6 +4,118 @@ require_once('admin/includes/config.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/general_functions.php');
+if(isset($_POST['submitnewsleeplabsumm'])){
+  $date = s_for($_POST['date']);
+  $sleeptesttype = s_for($_POST['sleeptesttype']);
+  $place = s_for($_POST['place']);
+  $diagnosising_doc = s_for($_POST['diagnosising_doc']);
+  $diagnosising_npi = s_for($_POST['diagnosising_npi']);
+  $apnea = s_for($_POST['apnea']);
+  $hypopnea = s_for($_POST['hypopnea']);
+  $ahi = s_for($_POST['ahi']);
+  $ahisupine = s_for($_POST['ahisupine']);
+  $rdi = s_for($_POST['rdi']);
+  $rdisupine = s_for($_POST['rdisupine']);
+  $o2nadir = s_for($_POST['o2nadir']);
+  $t9002 = s_for($_POST['t9002']);
+  $sleepefficiency = s_for($_POST['sleepefficiency']);
+  $cpaplevel = s_for($_POST['cpaplevel']);
+  $dentaldevice = s_for($_POST['dentaldevice']);
+  $devicesetting = s_for($_POST['devicesetting']);
+  $diagnosis = s_for($_POST['diagnosis']);
+  $notes = s_for($_POST['notes']);
+  $testnumber = s_for($_POST['testnumber']);
+  $needed = s_for($_POST['needed']);
+  $scheddate = s_for($_POST['scheddate']);
+  $completed = s_for($_POST['completed']);
+  $interpolation = s_for($_POST['interpolation']);
+  $copyreqdate = s_for($_POST['copyreqdate']);
+  $sleeplab = s_for($_POST['sleeplab']);
+  $patientid = $_GET['pid'];
+                if($_FILES["ss_file"]["name"] <> '')
+                {
+                        $fname = $_FILES["ss_file"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+
+                }
+                else
+                {
+                        $banner1 = '';
+                }
+  $q = "INSERT INTO `dental_summ_sleeplab` (
+`id` ,
+`date` ,
+`sleeptesttype` ,
+`place` ,
+`diagnosising_doc`,
+`diagnosising_npi`,
+`apnea` ,
+`hypopnea` ,
+`ahi` ,
+`ahisupine` ,
+`rdi` ,
+`rdisupine` ,
+`o2nadir` ,
+`t9002` ,
+`sleepefficiency` ,
+`cpaplevel` ,
+`dentaldevice` ,
+`devicesetting` ,
+`diagnosis` ,
+`filename` ,
+`notes`,
+`testnumber`,
+`needed`,
+`scheddate`,
+`completed`,
+`interpolation`,
+`copyreqdate`,
+`sleeplab`,
+`patiendid`
+)
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
+  $run_q = mysql_query($q);
+  if(!$run_q){
+   echo "Could not add sleep lab... Please try again.";
+  }else{
+        if($uploaded){
+                $ins_id = mysql_insert_id();
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = 'Sleep Study ".$ins_id."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+}
+   $msg = "Successfully added sleep lab". $uploaded;
+?>
+<script type="text/javascript">
+parent.window.location='q_image.php?pid=<?=$_GET['pid'];?>';
+</script>
+<?php
+die();
+  }
+ }
+
+
+
+
+
+
+
 ?>
 <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -285,15 +397,22 @@ if($uploaded){
 <script type="text/javascript">
   $('#imagetypeid').change(function(){
 	if($(this).val() == '0'){
+		$('.image_sect').show();
 		$('#extra_files').show();
 		$('#orig_file').hide();
+		$('#sleep_study').hide();
+	}else if($(this).val() == '1'){
+                $('.image_sect').hide();
+                $('#sleep_study').show();
 	}else{
+		$('.image_sect').show();
 		$('#extra_files').hide();
 		$('#orig_file').show();
+                $('#sleep_study').hide();
 	}
   });
 </script>
-        <tr> 
+        <tr class="image_sect"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -307,7 +426,7 @@ if($uploaded){
 				</ul>
             </td>
         </tr>
-        <tr id="orig_file"> 
+        <tr id="orig_file" class="image_sect"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
@@ -328,7 +447,7 @@ if($uploaded){
 				</ul>
             </td>
         </tr>
-	<tr id="extra_files" style="display:none;">
+	<tr id="extra_files" style="display:none;" class="image_sect">
 		<td colspan="2" class="frmhead">
 		<?php
 			$labels = array('', 'Facial Right', 'Facial Front', 'Facial Left', 'Retracted Right', 'Retracted Frontal', 'Retracted Left', 'Occlusal Upper', 'Mallampati', 'Occlusal Lower');
@@ -339,7 +458,7 @@ if($uploaded){
 			<?php } ?>
 		</td>
 	</tr>
-        <tr>
+        <tr class="image_sect">
             <td  colspan="2" align="center">
                 <span class="red">
                     * Required Fields					
@@ -351,7 +470,14 @@ if($uploaded){
                 <input type="submit" value=" <?=$but_text?> Image" class="button" />
             </td>
         </tr>
+</table>
+</form>
+<table>
+        <tr id="sleep_study" style="display:none;">
+		<td colspan="2" class="frmhead">
+			<?php include 'add_image_sleep_study.php'; ?>
+		</td>
+	</tr>
     </table>
-    </form>
 </body>
 </html>

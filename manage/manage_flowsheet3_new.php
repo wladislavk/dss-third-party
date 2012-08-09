@@ -9,7 +9,7 @@ require_once('includes/preauth_functions.php');
 
         if (!empty($fsData_array['steparray'])) {
                 $order = explode(",",$fsData_array['steparray']);
-        $order = array_reverse($order);
+        	//$order = array_reverse($order);
         }
 
 
@@ -43,11 +43,75 @@ $i = 0;
         $noncompreason = strtolower($flow_pg2_info[$step]['noncomp_reason']);
         $description = $flow_pg2_info[$step]['description'];
 
-  echo $datecomp;
+  //echo $datecomp;
   $i++;
 }
 
+
+$segments = Array();
+$segments[2] = "Consult";
+$segments[4] = "Impressions";
+$segments[5] = "Delaying Treatment / Waiting";
+$segments[14] = "Not a Candidate";
+$segments[6] = "Refused Treatment";
+$segments[3] = "Sleep Study";
+$segments[8] = "Check / Follow Up";
+$segments[9] = "Patient Non-Compliant";
+$segments[10] = "Home Sleep Test";
+$segments[11] = "Treatment Complete";
+$segments[12] = "Annual Recall";
+$segments[13] = "Termination";
+
+?><table>
+    <tr>
+	<th>Steps</th>
+	<th>Done Today</th>
+	<th>Next Appt</th>
+    </tr>
+
+<?php
+foreach($segments as $segment => $label){
 ?>
+<tr>
+  <td>
+    <?= $label; ?>
+  </td>
+  <td>
+<?php
+
+if($x = array_search($segment, $order)){
+  $datesched = ($flow_pg2_info[$x]['date_scheduled']!='0' && $flow_pg2_info[$x]['date_scheduled']!='')?date('m/d/Y', $flow_pg2_info[$x]['date_scheduled']):'';
+  if($flow_pg2_info[$x]['date_completed']!='0' && $flow_pg2_info[$x]['date_completed']!=''){
+    $datecomp = date('m/d/Y', $flow_pg2_info[$x]['date_completed']);
+    $completed= true;
+  }else{
+    $datecomp = '';
+    $completed = false;
+  }
+}else{
+  $datesched = '';
+  $datecomp = '';
+  $completed = false;
+}
+
+?>
+    <input type="checkbox" <?= ($completed)?'checked="checked"':''; ?> name="completed_<?= $segment; ?>" value="1" />
+  </td>
+  <td>
+    <input type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
+  </td>
+</tr>
+<?php
+}
+?>
+
+
+</table>
+
+
+
+
+
 
 
 

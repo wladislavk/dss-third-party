@@ -93,6 +93,7 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect2">
 
 <h3>Epworth Sleepiness Score</h3>
+<br />
 <p>How likely are you to sleep or doze in each of the following situations?</p>
 <div class="formEl_a">
 <?php
@@ -271,8 +272,10 @@ if(!isset($_SESSION['screener_doc'])){
 
 <h3>Previous medical diagnoses</h3>
   <div class="sepH_b" id="rx_cpap_div">
-        <input type="radio" name="rx_cpap" value="4" /> Yes
-        <input type="radio" name="rx_cpap" value="0" /> No
+        <div class="buttonset">
+        <input type="radio" id="rx_cpap1" name="rx_cpap" value="4" /><label for="rx_cpap1">Yes</label>
+        <input type="radio" id="rx_cpap2" name="rx_cpap" value="0" /><label for="rx_cpap2">No</label> 
+	</div>
         <label>Have you ever used CPAP before?</label>
   </div>
 

@@ -97,6 +97,15 @@ $my=mysql_query($sql) or die(mysql_error());
 <?php } ?>
 
 </div>
+
+<div style="font-weight:bold; font-size: 14px; margin:0 auto; width: 300px; text-align:center;">
+<?php if($_GET['risk']>=10){ ?>
+	<p>Showing High/Severe Patients only</p>
+<?php }elseif(isset($_GET['contacted']) && $_GET['contacted']==0){ ?>
+	<p>Showing NOT contacted patients only</p>
+<?php } ?>
+</div>
+
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>

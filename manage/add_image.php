@@ -121,13 +121,12 @@ die();
 <?php
 if($_POST["imagesub"] == 1)
 {
-	
 	if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 		$title = $_POST['title'];
 		$imagetypeid = $_POST['imagetypeid'];
 	
 
-	  if($imagetypeid == '0'){
+	  	if($imagetypeid == '0'){
                         $fname = $_FILES["image_file_1"]["name"];
                         $lastdot = strrpos($fname,".");
                         $name = substr($fname,0,$lastdot);
@@ -195,9 +194,10 @@ if($_POST["imagesub"] == 1)
 		//imagedestroy($thumb);
 		$uploaded = true;
 
-	  }else{
+	  }else{ //ALL OTHER IMAGES
 
-	
+	     $filesize = $_FILES["image_file"]["size"];
+	     if($filesize <= DSS_IMAGE_MAX_SIZE){
 		if($_FILES["image_file"]["name"] <> '')
 		{
 			$fname = $_FILES["image_file"]["name"];
@@ -219,6 +219,14 @@ if($_POST["imagesub"] == 1)
 		{
 			$banner1 = $_POST['image_file_old'];
 		}
+	     }else{
+		?>
+		<script type="text/javascript">
+		  alert('Max image size exceeded. Uploaded files can be no larger than 10 megabytes.');
+		</script>
+		<?php
+		$uploaded = false;
+	     }     
 	}	
 if($uploaded){		
 		if($_POST["ed"] != "")
@@ -287,7 +295,7 @@ if($uploaded){
 }else{
   ?>
                         <script type="text/javascript">
-                                alert("File too Large");
+                                //alert("Max image size exceeded. Uploaded files can be no larger than 10 megabytes.");
                         </script>
                 <?php
 }

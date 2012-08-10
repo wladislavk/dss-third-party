@@ -85,8 +85,8 @@ Filter by type: <select name="myjumpbox"
                     <?php } ?>
 </select>
 </form>
-<br />
-             <input type="text" id="contact_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="contact_name" value="Type contact name" />
+<br /><br />
+             Search Contacts: <input type="text" id="contact_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="contact_name" value="Type contact name" />
 <br />        <div id="contact_hints" class="search_hints" style="display:none;">
                 <ul id="contact_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>

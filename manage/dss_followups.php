@@ -89,7 +89,7 @@ function show_new_followup(){
 <form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <style type="text/css">
 #sleepstudyscrolltable tr{ height:28px; }
-#sleepstudyscrolltable tr td{ background:#00457C; }
+#sleepstudyscrolltable tr td{ background:#add8e6; }
 </style>
 	<table id="sleepstudyscrolltable" style="margin-top:-3px;">
 <tr style="background: #444;height: 30px;">

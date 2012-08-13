@@ -107,8 +107,8 @@ $my=mysql_query($sql) or die(mysql_error());
         <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
                 Print All Progress Notes
         </button>
-        <button onClick="sign_notes(); return false;" class="addButton" style="float: left;">
-                Sign
+        <button onClick="sign_notes(); return false;" class="addButton" style="float: right;">
+                Sign Selected Notes
         </button>
 
 

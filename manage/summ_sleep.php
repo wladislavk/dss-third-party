@@ -153,7 +153,7 @@ function show_new_study(){
 $('#new_sleep_study_but').hide();
 document.getElementById('sleepstudies').contentWindow.show_new_study();
 }
-function show_new_but(){
+function show_new_sleep_but(){
 $('#new_sleep_study_but').show();
 }
 function show_study_table(){
@@ -163,8 +163,8 @@ function show_study_table(){
 }
 </script>
 
-        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 869px;overflow-x:scroll;">
-                    <iframe id="sleepstudies" height="842" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 689px;overflow-x:scroll;">
+                    <iframe id="sleepstudies" height="662" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 

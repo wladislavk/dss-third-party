@@ -298,7 +298,7 @@ background:#edeb46;
 
   .odd{ background: #F9FFDF; }
   .even{ background: #e4ffcf; }
-  .new_table .odd, .new_table .even {background: #00457C; }
+  .new_table .odd, .new_table .even {background: #add8e6; }
   select{width:140px;}
 </style>
 <?php
@@ -515,7 +515,7 @@ function addstudylab(v){
 	<tr>	
 		<td valign="top" class="odd">
 		<input type="submit" name="submitnewsleeplabsumm" value="Submit Study" />	
-		<input type="button" onclick="$('#new_sleep_study_form').hide(); parent.show_new_but(); return false;" value="Cancel" />
+		<input type="button" onclick="$('#new_sleep_study_form').hide(); parent.show_new_sleep_but(); return false;" value="Cancel" />
 		</td>
 	</tr>
 </table>

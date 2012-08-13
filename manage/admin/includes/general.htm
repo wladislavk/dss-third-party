@@ -110,7 +110,7 @@ function get_mdcontactids ($pid) {
 function get_mdreferralids ($pid) {
   $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
 	JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
-	WHERE dental_patients.patientid IN('".s_for($pid)."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
+	WHERE dental_patients.patientid IN('".$pid."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
   $contact_res = mysql_query($contact_sql);
   $contactids = array();
   while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {

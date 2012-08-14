@@ -29,7 +29,7 @@ if($_POST['passsub'] == 1)
                 $salt = create_salt();
                 $new_pass = gen_password($_POST['new_pass'], $salt);
 
-                $up_sql = "update admin set password='".$new_pass."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
+                $up_sql = "update admin set password='".mysql_real_escape_string($new_pass)."', salt='".$salt."' where adminid='".s_for($_SESSION['adminuserid'])."'";
 		mysql_query($up_sql);
 		
 		$msg="Password Changed Successfully.";

@@ -18,6 +18,12 @@ edited = false;
 	function reloadPerio(t){
 	  window.frames.perio_iframe.updateTeeth(t);
 	}
+	function toggle_perio(){
+		if($('#perio_chart').css('display') == 'block'){
+		  document.getElementById('perio_iframe').contentWindow.submit_form();
+		}
+		$('#perio_chart').toggle('slow');
+	}
   function confirmExit()
   {
     return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
@@ -248,7 +254,7 @@ $crossbite = st($myarray['crossbite']);
                             <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
 							
 							<!--<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>-->
-                                                        <button onclick="Javascript: $('#perio_chart').toggle('slow'); return false;">Perio Chart</button>
+                                                        <button onclick="toggle_perio(); return false;">Perio Chart</button>
 							
                         </span>
                     </div>

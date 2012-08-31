@@ -519,7 +519,7 @@ mysql_query($s1);
                 preferred_name = '".s_for($_POST["preferred_name"])."',
 		login = '".$login."',
 		salt = '".$salt."',
-		password = '".$password."',
+		password = '".mysql_real_escape_string($password)."',
 		salutation = '".s_for($_POST["salutation"])."',
     member_no = '".s_for($_POST['member_no'])."',
 	  group_no = '".s_for($_POST['group_no'])."',

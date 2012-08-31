@@ -87,7 +87,7 @@ if($_POST["usersub"] == 1)
 				ssn = '".s_for($_POST['ssn'])."',
 				ein = '".s_for($_POST['ein'])."',
 				practice = '".s_for($_POST['practice'])."', 
-				password = '".$password."', 
+				password = '".mysql_real_escape_string($password)."', 
 				salt = '".$salt."',
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 

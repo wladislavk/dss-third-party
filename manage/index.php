@@ -262,7 +262,7 @@ $od_q = mysql_query($od_sql);
 if(mysql_num_rows($od_q)>0){
 ?>
 
-<h4 style="margin-bottom:0px;" class="task_od_header">Overdue</h4>
+<h4 style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
 <ul class="task_od_list">
 <?php
 while($od_r = mysql_fetch_assoc($od_q)){
@@ -327,6 +327,87 @@ while($od_r = mysql_fetch_assoc($tom_q)){
 </div>
 <input type="checkbox" style="float:left;" class="task_status" value="<?= $od_r['id']; ?>" />
 <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?></div>
+</li>
+<?php
+}
+?>
+</ul>
+<?php } ?>
+
+
+<?php
+$tw_q = mysql_query($tw_sql);
+if(mysql_num_rows($tw_q)>0){
+?>
+<h4 id="task_tw_header" class="task_tw_header">This Week</h4>
+<ul id="task_tw_list">
+<?php
+while($od_r = mysql_fetch_assoc($tw_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?></div>
+</li>
+<?php
+}
+?>
+</ul>
+<?php } ?>
+
+<?php
+$nw_q = mysql_query($nw_sql);
+if(mysql_num_rows($nw_q)>0){
+?>
+<h4 id="task_nw_header" class="task_nw_header">Next Week</h4>
+<ul id="task_nw_list">
+<?php
+while($od_r = mysql_fetch_assoc($nw_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
+<?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
+  echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
+} ?></div>
+</li>
+<?php
+}
+?>
+</ul>
+<?php } ?>
+
+
+
+<?php
+$lat_q = mysql_query($lat_sql);
+if(mysql_num_rows($lat_q)>0){
+?>
+<h4 id="task_lat_header" class="task_lat_header">Later</h4>
+<ul id="task_lat_list">
+<?php
+while($od_r = mysql_fetch_assoc($lat_q)){
+?><li class="task_item task_<?= $od_r['id']; ?>" style="clear:both;">
+<div class="task_extra" id="task_extra_<?= $od_r['id']; ?>" >
+  <a href="#" onclick="delete_task('<?= $od_r['id']; ?>')" class="task_delete"></a>
+  <a href="#" onclick="loadPopup('add_task.php?id=<?= $od_r['id']; ?>')" class="task_edit">Edit</a>
+</div>
+<input type="checkbox" class="task_status" style="float:left;" value="<?= $od_r['id']; ?>" />
+<div style="float:left; width:170px;">
+<?= date('M d', strtotime($od_r['due_date'])); ?>
+-
+<?php echo $od_r['task']; ?>
 <?php if($od_r['firstname']!='' && $od_r['lastname']!=''){
   echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&preview=1&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
 } ?></div>

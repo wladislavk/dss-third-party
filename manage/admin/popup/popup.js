@@ -100,6 +100,15 @@ function disablePopup(){
 	}
 	}
 }
+function disablePopupClean(){
+        //disables popup only if it is enabled
+        if(popupStatus==1){
+                                $("#backgroundPopup").fadeOut("slow");
+                $("#popupContact").fadeOut("slow");
+                eraseCookie('tempforledgerentry');
+                popupStatus = 0;
+        }
+}
 //disabling popup with jQuery magic!
 function disablePopupRef(){
         //disables popup only if it is enabled

@@ -81,8 +81,8 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									</tr>
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
-									Dental Sleep Solutions<br />
-									3909 East Bay Drive, Ste 203<br />
+									Dental Sleep Solutions Franchising, LLC<br />
+									3909 East Bay Drive, Ste 205<br />
 									Holmes Beach, FL 34217
 									</td>
 									</tr>
@@ -96,7 +96,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 								<table width="196" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-									<!-- title goes here -->Billing to:
+									<!-- title goes here -->Billed to:
 									</td>
 									</tr>
 									<tr>
@@ -280,7 +280,7 @@ $html .= '
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
-							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark.
+							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark. <b>Please include the receipt on the next page with payment.</b>
 							</td>
 							</tr>
 						</table>	
@@ -294,59 +294,6 @@ $html .= '
 					<!-- divider goes here --><img src="images/invoice/splitted-footer.jpg" alt="" border="no" style="margin: 0px; padding: 0px; display: block;"/>	
 					</td>
 					</tr>
-					<tr>
-					<td bgcolor="#FFFFFF" valign="top" style="border-top: none; border-right: none; border-bottom: none; border-left: none; padding-bottom: 0px;">
-						<table width="630" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-							<!-- start left table column with contact data -->
-							<td width="196" align="left" valign="top" style="padding-bottom: 20px; padding-top: 0px;">
-								<table width="196" border="0" cellspacing="0" cellpadding="0" >
-									<tr>
-									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
-									Dental Sleep Solutions<br />
-									3909 East Bay Drive, Ste 203<br />
-									Holmes Beach, FL 34217<br />
-									Phone: 941-757-4642<br/>
-									</td>
-									</tr>
-								</table>
-							</td>
-							<td width="21">
-							<!-- this is BLANK table column DO NOT DELETE -->
-							</td>
-							<!-- start center table column with links-->
-							<td width="196" align="left" valign="top" style="padding-bottom: 20px; padding-top: 0px;">
-								<table width="196" border="0" cellspacing="0" cellpadding="0" >
-									<tr>
-									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; ">
-									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">Info@DentalSleepSolutions.com</a><br/>
-									<a href="" title="" target="_blank" style="color: #54A9D0; text-decoration: none;">www.DentalSleepSolutions.com</a>
-									</td>
-									</tr>
-								</table>
-							</td>
-							<td width="21">
-							<!-- this is BLANK table column DO NOT DELETE -->
-							</td>
-							<!-- start right table column with social media links -->
-							<td align="right" valign="middle" style="margin:0px; padding-bottom: 20px; padding-top: 0px;">
-							</td>
-							</tr>
-							<tr>
-							<td align="left" colspan="5" valign="top">
-								<table width="196" border="0" cellspacing="0" cellpadding="0" >
-									<tr>
-									<td align="left" valign="middle" style="font-family: Arial,Helvetica,sans-serif; font-size: 36px; font-weight: bold; color: #444444; padding-bottom: 30px; padding-top: 20px; border-top: solid 5px #444444; ">
-									<!-- featuring text-->Dental Sleep Solutions Franchising, LLC 
-									</td>
-									</tr>
-								</table>
-							</td>
-							</tr>
-						</table>
-					</td>
-					</tr>
-					<!-- END module -->
 				
 				</table>
 				<!-- END main content table -->
@@ -357,6 +304,134 @@ $html .= '
 	</div></td>
 	</tr>
 </table>
+<br pagebreak="true"/>
+ <span style="font-size:45px">
+INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - RECEIPT
+</span>
+<span style="font-size:30px;">
+<i>Please include this receipt with your payment.</i>
+</span>
+<br />
+<br />
+ <table width="630" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                        <!-- start left table column -->
+                                                        <td width="196" align="left" valign="top" >
+                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                                                                        <tr>
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bott
+om: 10px;">
+Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
+                                                                        Invoice Date: '.date('m/d/Y').'<br />
+                                                                        Payment Due: '.date('m/d/Y', strtotime(date() . " +7 day")).'
+                                                                        </td>
+                                                                        </tr>                                                   
+                                                                </table>                                                        </td>
+                                                        <td width="21">
+                                                        <!-- this is BLANK table column DO NOT DELETE -->
+                                                        </td>
+                                                        <!-- start center table column -->
+                                                        <td width="196" align="left" valign="top" >
+                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                                                                        <tr>
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
+Paid to:
+                                                                        </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
+Dental Sleep Solutions Franchising, LLC<br />
+                                                                        3909 East Bay Drive, Ste 205<br />
+                                                                        Holmes Beach, FL 34217
+                                                                        </td>
+                                                                        </tr>
+                                                                </table>
+                                                        </td>
+                                                       <!-- start right table column -->
+                                                        <td width="196" align="left" valign="top" >
+                                                                <table width="196" border="0" cellspacing="0" cellpadding="0" >
+                                                                        <tr>
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
+Billed to:
+                                                                        </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                        <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bott
+om: 20px;">
+'.$invoice['name'].'<br />
+                                                                        '.$invoice['address'].'<br />
+                                                                        '.$invoice['city'].', '.$invoice['state'].' '.$invoice['zip'].'<br />
+                                                                        Phone: '.$invoice['phone'].'<br />
+                                                                        <br />
+                                                                        <span style="color:#000; font-size:43px;">
+                                                                                Total: $'.number_format($total_charge,2).' 
+                                                                        </span>
+                                                                        </td>
+                                                                        </tr>
+                                                                </table>
+                                                        </td>
+                                                        </tr>
+
+
+                                                </table>
+
+
+
+<div style="display:block;">
+<table border="1" style="font-size:30px;" cellpadding="10">
+<tr>
+<td>
+
+Additional Cases?&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;No<br />
+If YES, please list all cases performed to-date that have not been previously invoiced and adjust total:
+<br />
+<br />
+<table>
+<tr>
+<td>
+<table style="width: 400px;">
+	<tr>
+		<td>Name</td>
+		<td>Date</td>
+	</tr>
+	<tr>
+		<td>______________________________</td>
+		<td>____________</td>
+	</tr>	
+        <tr>
+                <td>______________________________</td>
+                <td>____________</td>
+        </tr>   
+        <tr>
+                <td>______________________________</td>
+                <td>____________</td>
+        </tr>   
+        <tr>
+                <td>______________________________</td>
+                <td>____________</td>
+        </tr>   
+        <tr>
+                <td>______________________________</td>
+                <td>____________</td>
+        </tr>   
+</table>
+</td>
+<td align="right">
+Number of Additional Cases=__________<br />
+No Cases * $195=__________<br />
+<b>Adjusted Total:</b>__________
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<div style="font-size:30px;">
+I certify that the above invoice accurately reflects the dental sleep medicine cases performed in this office up to and including invoice date, and have noted any cases not listed on this or previous invoices performed to-date and adjusted payment accordingly.<br />
+<br />
+__________________________________________________(signature) '.$invoice['name'].'
+</div>
+</div>
 <!-- END main table -->
 </body>
 </html>';
@@ -404,5 +479,6 @@ $title = "test";
 ?>
 
 <script type="text/javascript">
-  window.location = "<?= $filename; ?>";
+  window.open("<?= $filename; ?>");
+  window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
 </script>

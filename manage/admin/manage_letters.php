@@ -214,6 +214,9 @@ foreach ($dental_letters as $key => $letter) {
   	$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'] . "&backoffice=1";
 	}
   $dental_letters[$key]['subject'] = $correspondance['name'];
+  if($letter['templateid']==99){
+    $dental_letters[$key]['subject'] = "User generated";
+  }
   // Get Recipients for Sent to Column
   $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
   //print_r($contacts); print "<br />";

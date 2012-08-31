@@ -1,3 +1,4 @@
+
 <?php 
 include "includes/top.htm";
 require_once('includes/constants.inc');
@@ -203,8 +204,13 @@ background:#999999;
 										<?=st($myarray["firstname"]); ?>&nbsp;
                     <?= (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : ""); ?></a>
                     <?php
-                    if($myarray["premedcheck"] == 1){
-                    echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*PM</font>";
+		$sqlq3 = "select other_allergens, allergenscheck from dental_q_page3 WHERE patientid=".mysql_real_escape_string($myarray['patientid']);
+                    $myq3 = mysql_query($sqlq3);
+                    $myq3array = mysql_fetch_assoc($myq3);
+                    $allergen = $myq3array['allergenscheck'];
+
+                    if($myarray["premedcheck"] == 1 || $allergen == 1){
+                    echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med</font>";
                     }
                     ?> 
 				</td>

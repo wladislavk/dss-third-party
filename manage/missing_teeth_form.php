@@ -1,3 +1,4 @@
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <? 
 include "admin/includes/config.php";
 
@@ -180,8 +181,12 @@ function updateTeeth(teeth){
 			<div align="center" class="red">
 				<b><? echo $_GET['msg'];?></b>
 			</div>
-
-<form name="missingfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>" method="post" >
+<script type="text/javascript">
+function submit_form(){
+  $('#missingfrm').submit();
+}
+</script>
+<form name="missingfrm" id="missingfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>&mt=<?=$_GET['mt']?>" method="post" >
 <input type="hidden" name="missingsub" value="1" />
 <input type="hidden" name="ed" value="<?=$missingid;?>" />
 			<table cellpadding="5" cellspacing="1" align="center" >
@@ -257,31 +262,29 @@ function updateTeeth(teeth){
 									?>
 									
 									<b><?=$i;?></b>
-									<table width="80" cellpadding="0" cellspacing="0" border="0">
+									<table width="50" cellpadding="0" cellspacing="0" border="0">
 										<tr>
 											<td valign="top" align="center">
 												<? $pck_c++;?>
 												Di
-												&nbsp;&nbsp;
 												Bu
-												&nbsp;&nbsp;
 												Me
 												<br />
-												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c; ?>" name="pck_<?=$i?>_1" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c; ?>" name="pck_<?=$i?>_2" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c; ?>" name="pck_<?=$i?>_3" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+192; ?>" name="rec_<?=$i?>_1" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+192; ?>" name="rec_<?=$i?>_2" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+192; ?>" name="rec_<?=$i?>_3" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 											</td>
 										</tr>
 										
@@ -299,32 +302,30 @@ function updateTeeth(teeth){
 										<tr>
 											<td valign="top" align="center">
 												<? $mob_c++;?>
-												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
+												<input type="text" maxlength="2" tabindex="<?= $mob_c+384; ?>" name="mob_<?=$i?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" tabindex="<?= $pck1_c+48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" tabindex="<?= $pck1_c+48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" tabindex="<?= $pck1_c+48; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<br />
 												Di
-												&nbsp;&nbsp;
 												Li
-												&nbsp;&nbsp;
 												Me
 											</td>
 										</tr>
@@ -433,7 +434,7 @@ function updateTeeth(teeth){
 										$miss=1;	
 									}
 									?>
-									<table width="80" cellpadding="0" cellspacing="0" border="0">
+									<table width="50" cellpadding="0" cellspacing="0" border="0">
 										<tr>
 											<td valign="top" align="center">
 												<? if($miss == 1) {?>
@@ -448,33 +449,31 @@ function updateTeeth(teeth){
 										<tr>
 											<td valign="top" align="center">
 												Di
-												&nbsp;&nbsp;
 												Li
-												&nbsp;&nbsp;
 												Me
 												<br />
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+288; ?>" name="rec_<?=$i?>_1" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+288; ?>" name="rec_<?=$i?>_2" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 												<? $rec_c++;?>
-												<input type="text" maxlength="2" name="rec_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $rec_c+288; ?>" name="rec_<?=$i?>_3" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec_arr[$rec_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c+96; ?>" name="pck_<?=$i?>_1" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c+96; ?>" name="pck_<?=$i?>_2" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 												<? $pck_c++;?>
-												<input type="text" maxlength="2" name="pck_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck_c+96; ?>" name="pck_<?=$i?>_3" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck_arr[$pck_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $mob_c++;?>
-												<input type="text" maxlength="2" name="mob_<?=$i?>" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
+												<input type="text"  tabindex="<?= $mob_c+384; ?>" maxlength="1" name="mob_<?=$i?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$mob_arr[$mob_c];?>">
 											</td>
 										</tr>
 										
@@ -492,26 +491,24 @@ function updateTeeth(teeth){
 										<tr>
 											<td valign="top" align="center">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="1" name="rec1_<?=$i?>_1" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="1" name="rec1_<?=$i?>_2" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 												<? $rec1_c++;?>
-												<input type="text" maxlength="2" name="rec1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
+												<input type="text" maxlength="1" name="rec1_<?=$i?>_3" tabindex="<?= $rec1_c+240; ?>" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$rec1_arr[$rec1_c];?>">
 											</td>
 										</tr>
 										<tr>
 											<td valign="top" align="center">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_1" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck1_c+48; ?>" name="pck1_<?=$i?>_1" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_2" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck1_c+48; ?>" name="pck1_<?=$i?>_2" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<? $pck1_c++;?>
-												<input type="text" maxlength="2" name="pck1_<?=$i?>_3" style="width:15px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
+												<input type="text" maxlength="1" tabindex="<?= $pck1_c+48; ?>" name="pck1_<?=$i?>_3" style="width:14px" <? if($miss == 1) echo " disabled";?> value="<?=$pck1_arr[$pck1_c];?>">
 												<br />
 												Di
-												&nbsp;&nbsp;
 												Bu
-												&nbsp;&nbsp;
 												Me
 											</td>
 										</tr>
@@ -562,36 +559,53 @@ function updateTeeth(teeth){
 			<span class="admin_head">
 				Periodontal Screening and Recording
 			</span>
-			
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$("input").keyup(function() {
+				move_cursor(parseInt($(this).attr('tabindex'),10));
+			});
+			function move_cursor(p){
+				if($('input[tabindex="'+(p+1)+'"]').is(":disabled")){
+					move_cursor(p+1);
+				}else{
+					$('input[tabindex="'+(p+1)+'"]').focus();
+                                }
+			}
+  //var inputs = $(this).closest('form').find(':input');
+  //inputs.eq( inputs.index(this)+ 1 ).focus();
+		});
+		</script>	
 			<table cellpadding="5" cellspacing="1">
 				<tr>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s1" style="width:15px" value="<?=$s1;?>">
+						<input  tabindex="417" type="text" maxlength="1" name="s1" style="width:15px" value="<?=$s1;?>">
 						<br />
 						<b>S1</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s2" style="width:15px" value="<?=$s2;?>">
+						<input tabindex="418" type="text" maxlength="1" name="s2" style="width:15px" value="<?=$s2;?>">
 						<br />
 						<b>S2</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s3" style="width:15px" value="<?=$s3;?>">
+						<input tabindex="419" type="text" maxlength="1" name="s3" style="width:15px" value="<?=$s3;?>">
 						<br />
 						<b>S3</b>
 					</td>
+				</tr>
+				<tr>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s4" style="width:15px" value="<?=$s4;?>">
+						<input tabindex="420" type="text" maxlength="1" name="s4" style="width:15px" value="<?=$s4;?>">
 						<br />
 						<b>S4</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s5" style="width:15px" value="<?=$s5;?>">
+						<input tabindex="421" type="text" maxlength="1" name="s5" style="width:15px" value="<?=$s5;?>">
 						<br />
 						<b>S5</b>
 					</td>
 					<td valign="top" colspan="2" align="center" >	
-						<input type="text" maxlength="2" name="s6" style="width:15px" value="<?=$s6;?>">
+						<input tabindex="422" type="text" maxlength="1" name="s6" style="width:15px" value="<?=$s6;?>">
 						<br />
 						<b>S6</b>
 					</td>

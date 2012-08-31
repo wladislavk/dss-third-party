@@ -100,7 +100,7 @@ $num_referredby=mysql_num_rows($my);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=$name;?>
+					<a href="dss_summ.php?pid=<?= $myarray['patientid']; ?>&addtopat=1"><?=$name;?></a>
 				</td>
 				<td valign="top">
 					<?=date('M d,Y H:i',strtotime(st($myarray["adddate"])));?>

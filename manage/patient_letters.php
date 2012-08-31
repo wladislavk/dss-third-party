@@ -136,6 +136,9 @@ foreach ($dental_letters as $key => $letter) {
 		$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
 	}
 	$dental_letters[$key]['subject'] = $correspondance['name'];
+	if($letter['templateid']==99){
+		$dental_letters[$key]['subject'] = "User Generated";
+	}
 	// Get Recipients for Sent to Column
 $s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($letter['patientid'])." LIMIT 1";
 $q = mysql_query($s);

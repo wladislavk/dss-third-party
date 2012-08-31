@@ -66,7 +66,7 @@ $num_contact=mysql_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"&docid=".$_GET['docid']);
 			?>
 		</TD>        
 	</TR>

@@ -81,6 +81,16 @@ if($('#task_tom_list li').size()==0){
   $('.task_tom_header').hide();
 }
 
+if($('#task_tw_list li').size()==0){
+  $('.task_tw_header').hide();
+}
+if($('#task_nw_list li').size()==0){
+  $('.task_nw_header').hide();
+}
+if($('#task_lat_list li').size()==0){
+  $('.task_lat_header').hide();
+}
+
 
 if($('#pat_task_od_list li').size()==0){
   $('#pat_task_od_header').hide();
@@ -92,6 +102,18 @@ if($('#pat_task_tod_list li').size()==0){
 
 if($('#pat_task_tom_list li').size()==0){
   $('#pat_task_tom_header').hide();
+}
+
+if($('#pat_task_tw_list li').size()==0){
+  $('#pat_task_tw_header').hide();
+}
+
+if($('#pat_task_nw_list li').size()==0){
+  $('#pat_task_nw_header').hide();
+}
+
+if($('#pat_task_lat_list li').size()==0){
+  $('#pat_task_lat_header').hide();
 }
 
 }

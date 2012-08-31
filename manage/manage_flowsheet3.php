@@ -316,7 +316,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
     if(/*$insinforec == '' || $rxreq == '' ||*/ $rxrec == '' || /*$lomnreq == '' ||*/ $lomnrec == ''  /*$clinnotereq == '' || $clinnoterec == ''*/){
-       //array_push($errors, "Medical insurance dates are not filled out."); 
+       array_push($errors, "Medical insurance dates are not filled out."); 
      }
 
 
@@ -345,10 +345,9 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
        . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
        . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-       . "  JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
        . "WHERE "
        . "  p.patientid = ".$_GET['pid'];
-
   $my = mysql_query($sql);
   $my_array = mysql_fetch_array($my);
 
@@ -401,6 +400,10 @@ if(isset($_GET['pid']) && isset($_GET['preauth'])){
   if($my = mysql_query($sql)){
     ?><script type="text/javascript">
       alert("Submitted! Verification of benefits request was submitted <?= date('m/d/Y', strtotime($sd)); ?> and is currently pending.");
+    </script><?php
+  }else{
+    ?><script type="text/javascript">
+      alert("Unable to save Verification of Benefits");
     </script><?php
   }
 }

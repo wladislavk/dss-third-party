@@ -66,7 +66,7 @@ include_once('admin/includes/password.php');
 		if($_POST['password1']==$_POST['password2']){
 			$salt = create_salt();
                         $pass = gen_password($_POST['password1'], $salt);
-			$up_sql = "UPDATE dental_users SET password='".$pass."', salt='".$salt."', recover_hash='' WHERE userid='".mysql_real_escape_string($_POST['userid'])."' AND recover_hash='".mysql_real_escape_string($_POST['hash'])."'";
+			$up_sql = "UPDATE dental_users SET password='".mysql_real_escape_string($pass)."', salt='".$salt."', recover_hash='' WHERE userid='".mysql_real_escape_string($_POST['userid'])."' AND recover_hash='".mysql_real_escape_string($_POST['hash'])."'";
 			mysql_query($up_sql);
 			?>
                 <script type="text/javascript">

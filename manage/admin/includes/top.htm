@@ -12,12 +12,15 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 <link href="/manage/admin/css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="/manage/admin/script/validation.js"></script>
 <script language="javascript" src="/manage/admin/calendar.js"></script>
+<script type="text/javascript" src="script/logout_timer.js"></script>
 <!-- You can load the jQuery library from the Google Content Network.
   Probably better than from your own server. -->
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
   <script type="text/javascript" src="/manage/3rdParty/free-css-drop-down-menu_v1.2/js/jquery/jquery.dropdown.js"></script>
+    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="../js/masks.js"></script>
 <!-- THESE ARE NOT RELATIVE TO WORK WHEN INCLUDED FROM DIFFERENT DIRECTORIES -->
 <link href="/manage/admin/calendar.css" rel="stylesheet" type="text/css">
 <link href="/manage/3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/dropdown.vertical.css" media="screen" rel="stylesheet" type="text/css" />
@@ -33,7 +36,7 @@ include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php");
 
 </style>
 </head>
-<body>
+<body onload="set_interval();">
 <table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
   <tr bgcolor="#FFFFFF">
     <td colspan="2" class="header_bg"> 

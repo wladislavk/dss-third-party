@@ -110,6 +110,7 @@ if($_POST['q_page2sub'] == 1)
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -168,6 +169,7 @@ if($_POST['q_page2sub'] == 1)
                         mysql_query($s);
                 }
 		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">

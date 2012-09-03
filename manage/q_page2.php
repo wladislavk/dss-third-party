@@ -5,7 +5,7 @@ if ($patient_info) {
 
 
 if($_GET['own']==1){
-  $own_sql = "UPDATE dental_patients SET treatments_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($own_sql);
                 ?>
                 <script type="text/javascript">
@@ -243,28 +243,33 @@ if($pat_myarray['patientid'] == '')
 	die();
 }
 
-        $exist_sql = "SELECT treatments_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+
+        $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         $exist_row = mysql_fetch_assoc($exist_q);
-        if($exist_row['treatments_status'] == 0)
+        if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0)
         {
                 ?>
-                <div style="width:700px; margin:30px auto 0 auto;">This section is being edited by patient. If you would like to take ownership of this section and make edits, please 
+                <div style="width:700px; margin:30px auto 0 auto;">This section has not been edited by the patient. If you would like to take ownership of this section and make edits, please
+                        <a href="q_page2.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+                <?php
+
+        }elseif($exist_row['symptoms_status'] != 2 && $exist_row['sleep_status'] != 2 && $exist_row['treatments_status'] != 2 && $exist_row['history_status'] != 2 &&
+                $exist_row['symptoms_status'] != 3 && $exist_row['sleep_status'] != 3 && $exist_row['treatments_status'] != 3 && $exist_row['history_status'] != 3)
+        {
+                ?>
+                <div style="width:700px; margin:30px auto 0 auto;">This section has been edited by the patient but is not completed. If you would like to take ownership of this section and make edits, please
                         <a href="q_page2.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
                 <?php
 
         }else{
 
-        if($exist_row['treatments_status'] == 1)
-        {
-                ?>
-                <div style="width:700px; margin:30px auto 0 auto;">This section has been edited by the patient. If you would like to accept these changes, please
-                        <a href="q_page2.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+                if($exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['history_status'] == 2){
+                ?>                                <div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. Please
+                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a> to accept the changes.</div>
                 <?php
 
-        }
-
-
+                }
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);

@@ -25,7 +25,12 @@ function show_section_completed($pid){
 
 
   if($links==''){
-    echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page.</p>";
+    $s = "SELECT u.name, u.phone FROM dental_users u
+		JOIN dental_patients p ON u.userid=p.docid
+		WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+    $q = mysql_query($s);
+    $r = mysql_fetch_assoc($q);
+    echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page. If you need to make changes to the questionnaire please contact ".$r['name']." at ".$r['phone']."</p>";
   }else{
     echo $links;
   }

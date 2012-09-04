@@ -32,7 +32,7 @@ $pid = $_REQUEST['pid'];
 		$stepid=count($order)+1;
 		$s = "SELECT * from dental_flow_pg2_info WHERE segmentid=".$id." AND patientid=".$pid;
 		$q = mysql_query($s);
-		echo mysql_num_rows($q);
+		//echo mysql_num_rows($q);
 		if(mysql_num_rows($q)==0){
 		    $s = "INSERT INTO dental_flow_pg2_info SET
 			patientid= ".$pid.",

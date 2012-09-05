@@ -393,7 +393,7 @@ if($cpap == '')
                             <label class="lbl_a">Are you currently using CPAP?</label>
                             <input type="radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
 
-                            <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap();$('#nights_wear_cpap').val(0);$('#percent_night_cpap').val(0);"  />
                             No
                         </div>
                    

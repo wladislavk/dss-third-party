@@ -216,7 +216,7 @@ if($pat_myarray['patientid'] == '')
         if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0)
         {
                 ?>
-                <div style="width:700px; margin:30px auto 0 auto;">This section has not been edited by the patient. If you would like to take ownership of this section and make edits, please
+                <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It has not been edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please  
                         <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
                 <?php
 
@@ -224,7 +224,7 @@ if($pat_myarray['patientid'] == '')
                 $exist_row['symptoms_status'] != 3 && $exist_row['sleep_status'] != 3 && $exist_row['treatments_status'] != 3 && $exist_row['history_status'] != 3)
         {
                 ?>
-                <div style="width:700px; margin:30px auto 0 auto;">This section has been edited by the patient but is not completed. If you would like to take ownership of this section and make edits, please
+                <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It is currently being edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please
                         <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
                 <?php
 
@@ -233,8 +233,8 @@ if($pat_myarray['patientid'] == '')
 
 		if($exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['history_status'] == 2){
                 ?>
-                <div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. Please
-                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a> to accept the changes.</div>
+                <div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. All patient changes are visible below. Review each page of the Questionnaire then
+                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.</div>
                 <?php
 
 		}	  

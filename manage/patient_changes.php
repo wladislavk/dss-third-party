@@ -1,22 +1,6 @@
 <?php
-session_start();
-require_once('admin/includes/config.php');
-require_once('includes/constants.inc');
-include("includes/sescheck.php");
-require_once('includes/general_functions.php');
+include "includes/top.htm";
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
-</head>
-<body class="solid">
 
 <?php
 $psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -148,7 +132,7 @@ input.button1 { font-size:20px; background:#fff; }
     <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br />Patient Data</th>
   </tr>
 </table>
-<div style="overflow:auto; height:300px;">
+<div> 
 <table >
 <?php
   foreach($fields as $field => $label){
@@ -317,6 +301,4 @@ function updateAll(v){
 }
 </script>
 
-
-</body>
-</html>
+<?php include 'includes/bottom.htm'; ?>

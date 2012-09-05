@@ -2,7 +2,7 @@
 
 function show_section_completed($pid){
 
-  echo "This section has been completed";
+  $links_title = "<p>The section you are trying to access has been completed. Please click any of the sections below to complete your Questionnaire:</p>";
   $links = '';
   $sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($pid)."'";
   $q = mysql_query($sql);
@@ -32,7 +32,7 @@ function show_section_completed($pid){
     $r = mysql_fetch_assoc($q);
     echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page. If you need to make changes to the questionnaire please contact ".$r['name']." at ".$r['phone']."</p>";
   }else{
-    echo $links;
+    echo $links_title . $links;
   }
 
 }

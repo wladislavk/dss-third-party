@@ -18,7 +18,23 @@ include "admin/includes/config.php";
 	    <td> 
 <br />
 <span class="admin_head">
-	Tooth Contacts Prior to OAT <input type="button" value="save" onclick="fill_up()" />
+	<?php
+	 switch($_GET['tx']){ 
+		case 'crossbite':
+			echo "Teeth in Crossbite";
+			break;
+		case 'initial_tooth':
+			echo "Tooth Contacts prior to OAT Therapy";
+			break;
+                case 'open_proximal':
+                        echo "Open contacts";
+                        break;
+                case 'deistema':
+                        echo "Diastemas";
+                        break;
+	}
+	?>
+<input type="button" value="save" onclick="fill_up()" />
 </span>
 <br />
 <br />

@@ -103,7 +103,7 @@ $my=mysql_query($sql) or die(mysql_error());
                     			<?=st($myarray["lastname"]);?> 
 				</td>
 				<td valign="top">
-					<a href="#" onclick="loadPopup('patient_changes.php?pid=<?=$myarray['parent_patientid'];?>');return false;" class="editlink" title="EDIT">
+					<a href="patient_changes.php?pid=<?=$myarray['parent_patientid'];?>" class="editlink" title="EDIT">
 					        View
 					</a>
 				</td>

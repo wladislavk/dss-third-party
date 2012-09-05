@@ -119,7 +119,6 @@ parent.window.location = parent.window.location;
 <style type="text/css">
 .duplicate{ display:none; }
 table {  width: 700px; margin:0 auto; }
-table, td{ color:#fff;}
 input.selected { background-color:#0f3; border:solid 1px #0f3;}
 input.button1 { font-size:20px; background:#fff; }
 </style>
@@ -293,12 +292,23 @@ function updateAll(v){
   $('.change_row').each(function(){
     $(this).find('.doc_field').removeClass('selected');
     $(this).find('.pat_field').removeClass('selected');
+    $(this).find('.doc_field_extra').removeClass('selected');
+    $(this).find('.pat_field_extra').removeClass('selected');
     $(this).find('.'+v+'_field').addClass('selected');
+    $(this).find('.'+v+'_field_extra').addClass('selected');
     val = $(this).find('.'+v+'_field').val();
     $(this).find('.value').val(val);
     $(this).find('.accepted').val(v);
   });
 }
 </script>
+
+
+<?php include 'patient_contacts.php'; ?>
+
+
+<?php include 'patient_insurance.php'; ?>
+
+
 
 <?php include 'includes/bottom.htm'; ?>

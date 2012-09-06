@@ -32,5 +32,5 @@ body{
   }
 
 .sepH_b.ui-buttonset{ float:left;}
-#sect3 .buttonset{float:left;}
+#sect3 .buttonset, #sect4 .buttonset{float:left;}
 #sect3 .sepH_b{ clear:both; margin-top:10px; height: 30px;}

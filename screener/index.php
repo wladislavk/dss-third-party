@@ -271,6 +271,7 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect4">
 
 <h3>Previous medical diagnoses</h3>
+<br />
   <div class="sepH_b" id="rx_cpap_div">
         <div class="buttonset">
         <input type="radio" id="rx_cpap1" name="rx_cpap" value="4" /><label for="rx_cpap1">Yes</label>
@@ -279,8 +280,8 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Have you ever used CPAP before?</label>
   </div>
 
-
-  <p>Please check all conditions for which you have been medically diagnosed or treated.</p>
+<br /><br />
+  <p class="clear">Please check any conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
 	<input type="checkbox" name="rx_blood_pressure" value="1" />
 	<label>High blood pressure</label>
@@ -352,19 +353,19 @@ Survey: <span id="survey_score"></span>
 
 Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
 </div>
-
-<div class="risk_desc" id="risk_moderate">
-<!-- MODERATE RISK -->
-<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at moderate risk for sleep apnea, indicating that some of your symptoms may be signs of Obstructive Sleep Apnea (OSA). Please talk to [Franchisee/User name] or any of our staff to find out about our advanced tools for diagnosing sleep apnea. We are here to answer your questions and help you breathe and sleep better! 
-
-Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
-</div>
-
 <?php
   $s = "SELECT name FROM dental_users where userid='".mysql_real_escape_string($_SESSION['screener_user'])."'";
   $q = mysql_query($s);
   $r = mysql_fetch_assoc($q);
 ?>
+
+<div class="risk_desc" id="risk_moderate">
+<!-- MODERATE RISK -->
+<span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at moderate risk for sleep apnea, indicating that some of your symptoms may be signs of Obstructive Sleep Apnea (OSA). Please talk to <?= $r['name']; ?> or any of our staff to find out about our advanced tools for diagnosing sleep apnea. We are here to answer your questions and help you breathe and sleep better! 
+
+Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.
+</div>
+
 <div class="risk_desc" id="risk_high">
 <!-- HIGH RISK -->
 <span class="pat_name"></span>, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at high risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness, and medical attention should be sought. Please talk to <?= $r['name']; ?> or any of our staff to find out about our advanced tools for diagnosing sleep apnea. 

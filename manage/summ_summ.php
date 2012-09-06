@@ -147,6 +147,11 @@ echo $c_r['chief_complaint_text'];
 <!-- DSS SUMM PAGE 1 -->
 <?php
 $patid = $_GET['pid'];
+$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+$nights_wear_cpap = st($myarray['nights_wear_cpap']);
+$percent_night_cpap = st($myarray['percent_night_cpap']);
 
 $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -350,7 +355,7 @@ if($num_loc > 1){
             ?>Patient has not previously attempted CPAP therapy.<?php
 
           }else{
-        echo $pat_myarray['cpap'];
+        //echo $pat_myarray['cpap'];
         ?>
     <label>
 

@@ -3,6 +3,8 @@ include "includes/top.htm";
 ?>
 
 <?php
+$num_changes = 0;
+
 $psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $pq = mysql_query($psql);
 $p = mysql_fetch_assoc($pq);
@@ -145,6 +147,7 @@ input.button1 { font-size:20px; background:#fff; }
 	<input type="hidden" class="accepted" id="accepted_<?= $field; ?>"  name="accepted_<?= $field; ?>" />
     	<input type="hidden" class="value" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
 	<?php
+	$num_changes++;
     }
 
     if(in_array($field, $doc_fields)){ ?>
@@ -267,9 +270,10 @@ input.button1 { font-size:20px; background:#fff; }
 <?php } ?>
 </table>
 </div>
-<input type="submit" name="submit" value="Submit" />
+<input type="submit" name="submit"  style="float:right; margin-right:30px;" value="Submit" />
 <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
 </form>
+<br /><br />
 
 <script type="text/javascript">
 function updateField(f, v){
@@ -309,6 +313,14 @@ function updateAll(v){
 
 <?php include 'patient_insurance.php'; ?>
 
-
+<?php
+if($num_changes == 0){
+  ?>
+    <script type="text/javascript">
+      window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
+    </script>
+  <?php
+}
+?>
 
 <?php include 'includes/bottom.htm'; ?>

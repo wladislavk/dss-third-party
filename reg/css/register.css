@@ -1,8 +1,8 @@
 #register_form .large{ font-size:13px; }
 .third{ width:32%; float:left;  display:block;}
 .half{width:49%; float:left; display:block;}
-.formel_a .third .inpt_a{ width:200px; }
-.formel_a .half .inpt_a{ width: 300px; }
+.third .inpt_a{ width:180px; }
+.half .inpt_a{ width: 300px; }
 
 .formel_a .inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
 .json_patient { font-weight: bold; }

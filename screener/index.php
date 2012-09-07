@@ -54,7 +54,7 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="sect" id="sect0">
 <div class="dp50">
 <h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
-                                                                                                        <p style="font-size:14px;">Over 40 million Americans suffer from a sleep disorder, and 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain undiagnosed. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never shared without your consent. Find out whether you may be suffering from an undiagnosed sleep problem.</p>
+                                                                                                        <p style="font-size:14px;">Over 40 million Americans suffer from a sleep disorder, and more than 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain UNDIAGNOSED and UNAWARE that they have a deadly disease. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never be shared without your consent.</p>
 </div>
 <div class="dp50">
 <img src="images/sleeping_couple.png" style="float:right;"/>

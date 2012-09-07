@@ -378,7 +378,7 @@ cal_analaysis(0);
 
 
 
-<p>Thank you for completing the Epworth/Thorton Questionnaire! Please click the box below to confirm and record your answers. We look forward to seeing you at your next appointment!</p>
+<p class="confirm_text">Thank you for completing the Epworth/Thorton Questionnaire! Please click the box below to confirm and record your answers. </p>
 
 
 <div align="right">

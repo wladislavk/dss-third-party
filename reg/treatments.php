@@ -157,8 +157,9 @@ if($_POST['q_page2sub'] == 1)
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_REQUEST['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".date('y-m-d', strtotime($_POST['surgery_date_'.$i]))."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
                                 }
+				else{ $s=''; }
                         }else{
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
                                         $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
@@ -276,6 +277,20 @@ if($cpap == '')
 		}
 
 	}	
+	function chk_who(){
+                fa = document.q_page2frm;
+                
+                if(fa.dd_fab[1].checked)
+                {
+                        $('.dd_fab_options').hide();
+                }
+                else
+                {
+                        $('.dd_fab_options').show();
+                }
+
+	}
+
         function chk_dd()
         {       
                 fa = document.q_page2frm;
@@ -470,14 +485,19 @@ if($cpap == '')
 		    </div>
 		    <div class="dd_options sepH_b half">
 			<label class="lbl_a">Was it fabricated by a dentist?</label>
-                            <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> />
+                            <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> onclick="chk_who();" />
                             Yes
 
-                            <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
+                            <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> onclick="chk_who();" />
                             No
 				<br /><br />
+				<div class="dd_fab_options">
 				<label class="lbl_a">Who?</label>
 				<input class="inpt_a" type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
+				</div>
+<script type="text/javascript">
+  chk_who();
+</script>
 	 	    </div>
 		    <div class="dd_options">
 			<label class="lbl_a">Describe your experience</label>
@@ -549,7 +569,7 @@ if($cpap == '')
                                                                 other_chk1();
                                                    </script>
                         </div>
-<p>Thank you for completing the Treatments Questionnaire! Please click the box below to confirm and record your answers. We look forward to seeing you at your next appointment!</p>
+<p class="confirm_text">Thank you for completing the Treatments Questionnaire! Please click the box below to confirm and record your answers.</p>
 <div align="right">
     <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed"  />
     &nbsp;&nbsp;&nbsp;

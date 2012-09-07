@@ -664,7 +664,7 @@ $('document').ready( function(){
 });
 
 </script>
-<p>Thank you for completing the Symptoms Questionnaire! Please click the box below to confirm and record your answers. We look forward to seeing you at your next appointment!</p>
+<p class="confirm_text">Thank you for completing the Symptoms Questionnaire! Please click the box below to confirm and record your answers. </p>
 <div align="right">
     <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" />
     &nbsp;&nbsp;&nbsp;

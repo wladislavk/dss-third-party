@@ -179,7 +179,7 @@ include 'includes/header.php';
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>13.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>13.</strong> Zip:</label><input class="inpt_a validate" type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
@@ -779,7 +779,7 @@ $(document).ready(function(){
                 <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a extphonemask" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
                 </div>
-                <div class="sepH_b half">
+                <div class="sepH_b clear">
                         <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>
                 </div>
 	</div>

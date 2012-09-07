@@ -650,8 +650,9 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 					</div>
 
                         <h3 class="clear">Family History</h3>
+			<p>Have genetic members of your family had</p>
                     <div class="sepH_b half">
-				<label class="lbl_in2">Have genetic members of your family had Heart Disease?</label>
+				<label class="lbl_in2">Heart Disease?</label>
                                                 <input type="radio" name="family_hd" value="Yes" <?= ($family_hd == "Yes")?'checked="checked"':''; ?> /> Yes
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="radio" name="family_hd" value="No" <?= ($family_hd == "No")?'checked="checked"':''; ?> /> No
@@ -741,7 +742,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             <textarea name="additional_paragraph" class="inpt_a" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
                     </div>
 
-<p>Thank you for completing the Health History Questionnaire! Please click the box below to confirm and record your answers. We look forward to seeing you at your next appointment!</p>
+<p class="confirm_text">Thank you for completing the Health History Questionnaire! Please click the box below to confirm and record your answers.</p>
 
 <div align="right">
     <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed" tabindex="12" />

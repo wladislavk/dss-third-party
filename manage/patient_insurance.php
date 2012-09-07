@@ -126,6 +126,10 @@ $no_pages = $total_rec/$rec_disp;
 $sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 
+if($total_rec > 0){
+if(isset($num_changes)){
+	$num_changes += $total_rec;
+}
 ?>
 
 
@@ -261,3 +265,4 @@ $my=mysql_query($sql) or die(mysql_error());
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<?php } //END show if rows > 0 ?>

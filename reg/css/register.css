@@ -2,7 +2,7 @@
 .third{ width:32%; float:left;  display:block;}
 .half{width:49%; float:left; display:block;}
 .third .inpt_a{ width:180px; }
-.half .inpt_a{ width: 300px; }
+.half .inpt_a{ width: 260px; }
 
 .formel_a .inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
 .json_patient { font-weight: bold; }

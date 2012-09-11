@@ -242,6 +242,7 @@ lga_wizard = {
                         	});
 			$("#status li").removeClass("active").eq(i).addClass("active filed");
 			$("#status li.active").prev("li").addClass("filed");
+			window.scroll(0,0);
 		});
 
 		// if tab is pressed on the next button seek to next page

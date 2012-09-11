@@ -5,10 +5,15 @@ if ($patient_info) {
 
 
 if($_GET['own']==1){
+  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";  $c_q = mysql_query($c_sql);  $changed = mysql_num_rows($c_q);
   $own_sql = "UPDATE dental_patients SET symptoms_status=3, sleep_status=3, treatments_status=3, history_status=3 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($own_sql);
                 ?>
                 <script type="text/javascript">
+                        <?php if($changed>0){ ?>
+                                alert("Warning! Patient has made changes to the Questionnaire. Please review the patient's ENTIRE questionnaire for changes.");
+                        <?php } ?>
+
                         window.location='q_page1.php?pid=<?=$_GET['pid']?>&addtopat=1';
                 </script>
                 <?

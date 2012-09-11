@@ -1865,7 +1865,7 @@ $image = mysql_fetch_assoc($itype_my);
                         <div>
                             <span>
                                 <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
-                                     <option>Select Type</option>
+                                     <option value="">Select Type</option>
                                      <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
@@ -2042,7 +2042,7 @@ $image = mysql_fetch_assoc($itype_my);
                         <div>
                             <span>
                                 <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
-                                     <option>Select Type</option>
+                                     <option value="">Select Type</option>
                                      <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>

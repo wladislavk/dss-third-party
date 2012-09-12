@@ -36,7 +36,7 @@ function send_text(but){
     success: function( data ) {
         var r = $.parseJSON(data);
         if(r.success){  
-          $('#sent_text').html("Text sent").show('slow');
+             $('#sent_text').html("We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.").show('slow');
         }else{
           if(r.error == "cell"){
                 $('#sent_text').html("Error: Cell phone not found.").show('slow');   
@@ -52,7 +52,9 @@ function send_text(but){
     }
   });
 }
-
+$(document).ready(function(){
+  send_text($('#access_but'));
+});
 </script>
 
 
@@ -64,7 +66,7 @@ function send_text(but){
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
-        <button onclick="send_text(this)">Text Access Code</button>
+        <button id="access_but" onclick="send_text(this)">Text Access Code</button>
 
      <p id="sent_text" class="error"><?= $error; ?></p>
      <div class="field">

@@ -109,6 +109,21 @@ if($_POST['q_page2sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                for($i=0;$i<$num_surgery;$i++){
+                        if($_POST['surgery_id_'.$i]==0){
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".date('y-m-d', strtotime($_POST['surgery_date_'.$i]))."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                }
+                                else{ $s=''; }
+                        }else{
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }else{
+                                        $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }
+                        }
+                        mysql_query($s);
+                }
 		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
                 mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Added Successfully";

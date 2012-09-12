@@ -214,7 +214,7 @@ $injurytohead = $_POST['injurytohead'];
 			premedcheck = '".s_for($_POST["premedcheck"])."',
                 	premed = '".s_for($_POST["premeddet"])."'
                 	where 
-                	parent_patientid='".$_SESSION["pid"]."'";
+                	patientid='".$_SESSION["pid"]."'";
                 mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
 
 		$msg = "Added Successfully";
@@ -289,7 +289,6 @@ $injurytohead = $_POST['injurytohead'];
                 future_dental_det = '".s_for($future_dental_det)."',
                 drymouth_text = '".s_for($drymouth_text)."'
 		where patientid = '".s_for($_SESSION['pid'])."'";
-		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
                 mysql_query("UPDATE dental_patients SET history_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
                 mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
@@ -298,7 +297,7 @@ $injurytohead = $_POST['injurytohead'];
                         premedcheck = '".s_for($_POST["premedcheck"])."',
                         premed = '".s_for($_POST["premeddet"])."' 
                         where 
-                        parent_patientid='".$_SESSION["pid"]."'";
+                        patientid='".$_SESSION["pid"]."'";
                 mysql_query($ped_sql) or die($ped_sql." | ".mysql_error());
 		//echo $ed_sql;
 		$msg = "Edited Successfully";
@@ -368,7 +367,7 @@ $no_allergens = st($myarray['no_allergens']);
 $no_medications = st($myarray['no_medications']);
 $no_history = st($myarray['no_history']);
 $orthodontics = st($myarray['orthodontics']);
-$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."' ORDER BY parent_patientid DESC";
+$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $pmy = mysql_query($psql);
 $pmyarray = mysql_fetch_array($pmy);
 $premedcheck = st($pmyarray["premedcheck"]);

@@ -124,7 +124,10 @@ table {  width: 700px; margin:0 auto; }
 input.selected { background-color:#0f3; border:solid 1px #0f3;}
 input.button1 { font-size:20px; background:#fff; }
 </style>
-<form action="patient_changes.php" method="post">
+<?php
+if(mysql_num_rows($cq)>0){
+?>
+<form action="patient_changes.php?pid=<?= $_GET['pid']; ?>" method="post">
 <table>
   <tr>
     <th style>Field</th>
@@ -267,12 +270,13 @@ input.button1 { font-size:20px; background:#fff; }
     <td><input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
   <?php } ?>
   </tr>
-<?php } ?>
+<?php  } ?>
 </table>
 </div>
 <input type="submit" name="submit"  style="float:right; margin-right:30px;" value="Submit" />
 <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
 </form>
+<?php } ?>
 <br /><br />
 
 <script type="text/javascript">

@@ -172,7 +172,7 @@ if($_POST['q_page1sub'] == 1)
         if($exist_row['symptoms_status'] == 0)
         {
 
-$pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
+$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 

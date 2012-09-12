@@ -1307,7 +1307,20 @@ while($od_r = mysql_fetch_assoc($od_q)){
                                 $q = mysql_query($s);
                                 $n = mysql_num_rows($q);
                                 $pat = mysql_fetch_assoc($q);
-                                if($n>0){ ?>
+$contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
+        p.firstname as patfirstname, p.lastname as patlastname
+        FROM dental_patient_contacts pc 
+        INNER JOIN dental_patients p ON pc.patientid=p.patientid
+        WHERE p.docid='".$_SESSION['docid']."' AND
+                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$contacts_my = mysql_query($contacts_sql);
+$total_contacts = mysql_num_rows($contacts_my);
+$insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
+        WHERE p.docid='".$_SESSION['docid']."' AND
+                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$insurance_my = mysql_query($insurance_sql);
+$total_insurance = mysql_num_rows($insurance_my);
+                                if(($n+$total_contactsi+$total_insurance)>0){ ?>
 <a class="warning" href="patient_changes.php?pid=<?=$_GET['pid'];?>">
 <span>Warning! Patient has updated their profile via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>

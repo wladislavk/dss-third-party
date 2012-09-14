@@ -19,7 +19,7 @@ require_once('includes/preauth_functions.php');
   while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
   }
-
+$flow_pg2_info_rev = array_reverse($flow_pg2_info);
 
 $i = 0;
   while($i < count($order)){
@@ -49,23 +49,43 @@ $i = 0;
 
 
 $segments = Array();
+$segments[15] = "Baseline Sleep Test";
 $segments[2] = "Consult";
 $segments[4] = "Impressions";
-$segments[5] = "Delaying Treatment / Waiting";
-$segments[14] = "Not a Candidate";
-$segments[6] = "Refused Treatment";
-$segments[3] = "Sleep Study";
+$segments[7] = "Device Delivery";
 $segments[8] = "Check / Follow Up";
-$segments[9] = "Patient Non-Compliant";
 $segments[10] = "Home Sleep Test";
+$segments[3] = "Sleep Study";
 $segments[11] = "Treatment Complete";
 $segments[12] = "Annual Recall";
+$segments[14] = "Not a Candidate";
+$segments[5] = "Delaying Treatment / Waiting";
+$segments[9] = "Patient Non-Compliant";
+$segments[6] = "Refused Treatment";
 $segments[13] = "Termination";
-
-?><table>
+/*
+Baseline Sleep Test [ADD this item]
+Consult 
+Impressions 
+Device Delivery [ALREADY on previous FS but not shown now] 
+Check / Follow Up 
+Home Sleep Test
+Sleep Study 
+Treatment Complete 
+Annual Recall 
+Not a Candidate 
+Delaying Treatment / Waiting 
+Patient Non-Compliant 
+Refused Treatment 
+Termination 
+*/
+?>
+<div style="margin:0 20px;width: 500px; float: left;">
+<table>
     <tr>
 	<th>Steps</th>
-	<th>Done Today</th>
+	<th>Done</th>
+	<th>Date</th>
 	<th>Next Appt</th>
     </tr>
 
@@ -78,11 +98,14 @@ foreach($segments as $segment => $label){
   </td>
   <td>
 <?php
-if($x = array_search($segment, $order)){
+if($x = array_search($segment, array_reverse($order, true))){
   $x++;
-  $datesched = ($flow_pg2_info[$x]['date_scheduled']!='0' && $flow_pg2_info[$x]['date_scheduled']!='')?date('m/d/Y', $flow_pg2_info[$x]['date_scheduled']):'';
-  if($flow_pg2_info[$x]['date_completed']!='0' && $flow_pg2_info[$x]['date_completed']!=''){
-    $datecomp = date('m/d/Y', $flow_pg2_info[$x]['date_completed']);
+  $s = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND stepid='".$x."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+  $datesched = ($r['date_scheduled']!='0' && $r['date_scheduled']!='' && $r['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($r['date_scheduled'])):'';
+  if($r['date_completed']!='0' && $r['date_completed']!=''){
+    $datecomp = date('m/d/Y', strtotime($r['date_completed']));
     $completed= true;
   }else{
     $datecomp = '';
@@ -94,8 +117,12 @@ if($x = array_search($segment, $order)){
   $completed = false;
 }
 
-?>
-    <input class="completed_today" type="checkbox" <?= ($completed)?'checked="checked"':''; ?> name="completed_<?= $segment; ?>" value="<?= $segment; ?>" />
+?>   
+	<button id="completed_<?= $segment; ?>" class="completed_today addButton">Completed</button>
+
+  </td>
+  <td>
+    <span id="datecomp_<?= $segment; ?>"><?= $datecomp; ?></span>
   </td>
   <td>
     <input class="next_sched" id="<?= $segment; ?>" type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
@@ -107,14 +134,13 @@ if($x = array_search($segment, $order)){
 
 
 </table>
+</div>
 
-
-
+<div style="width:400px; float:left;">
 <table width="98%">
   <tr>
+    <th>Date</th>
     <th>Treatment</th>
-    <th>Completed</th>
-    <th>Scheduled</th>
     <th>Letters</th>
   </tr>
 
@@ -159,12 +185,14 @@ $i = 0;
 
 
   $letterlink = "";
+	$letter_count = 0;
         foreach ($dental_letters[$step] as $letter) {
                 $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
                 $lid = $letter['letterid'];
                 $template = "/manage/edit_letter.php";
                 $gendate = date('m/d/Y', $letter['generated_date']);
                 if ($lid != '') {
+			$letter_count += count($contacts['patient'])+count($contacts['md_referrals'])+count($contacts['mds']);
                         foreach ($contacts['patient'] as $contact) {
                                 $preferred = "";
                                 if ($contact['preferredcontact'] == "email") {
@@ -201,7 +229,7 @@ $i = 0;
                                 if ($contact['preferredcontact'] == "fax") {
                                         $preferred = "(F)";
                                 }
-                                }
+                                
                                 $name = $letter['name'] . " - " . $preferred . " " . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
                                 if ($letter['deleted'] == 1) {
                                         $letterlink .= "<span style=\"text-decoration:line-through;\">$name (USER DELETED)</span><br />";
@@ -237,21 +265,21 @@ $i = 0;
                                 }
                         }
                 }
+	}
 ?>
+<?php if($datecomp){ ?>
   <tr>
+    	<td>
+                <?= $datecomp; ?>
+        </td>
 	<td>
 		<?= $segments[$order[$i]]; ?>
 	</td>
 	<td>
-		<?= $datecomp; ?>
-	</td>
-	<td>
-		<?= $datesched; ?>
-	</td>
-	<td>
-		<?= $letterlink; ?>
+		<?= $letter_count; ?> Letters
 	</td>
   </tr>
+<?php } ?>
 <?php
   $i++;
 }
@@ -264,24 +292,24 @@ $i = 0;
 
 
 </table>
-
-
+</div>
+<div style="clear:both;"></div>
 
 <script type="text/javascript">
 
 $('.completed_today').click(function(){
-  var id = $(this).val();
-  var c = $(this).is(":checked")?1:0;
+  var id = $(this).attr('id').substring(10);
                                     $.ajax({
                                         url: "includes/update_appt_today.php",
                                         type: "post",
-                                        data: {id: id, c: c, pid: <?= $_GET['pid']; ?>},
+                                        data: {id: id, pid: <?= $_GET['pid']; ?>},
                                         success: function(data){
 						//alert(data);
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
 						  $('#'+id).val('');
+						  $('#datecomp_'+id).text(r.datecomp);
                                                 }
                                         },
                                         failure: function(data){

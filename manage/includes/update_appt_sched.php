@@ -12,15 +12,6 @@ clean_steps($pid);
         if (!empty($fsData_array['steparray'])) {
                 $order = explode(",",$fsData_array['steparray']);
         }
-	if(in_array($id, $order)){
-		unset($order[array_search($id, $order)]);
-		$new_steparray = implode($order, ',');
-			$u = "UPDATE dental_flow_pg2_info set 
-			date_scheduled='".$sched."'
-                        WHERE segmentid = ".$o."
-                                AND patientid=".$pid;				
-			mysql_query($u);
-	}else{
 		$new_steparray = $fsData_array['steparray'].",".$id;
 		$stepid=count($order)+1;
 		$s = "INSERT INTO dental_flow_pg2_info SET
@@ -30,8 +21,7 @@ clean_steps($pid);
 			date_scheduled = '".$sched."'";
 		mysql_query($s); 
 		$fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";	
-		$s = mysql_query($fsData_sql);
-	}
+		$q = mysql_query($fsData_sql);
 
 
         $steparray_query = "SELECT steparray FROM dental_flow_pg2 WHERE patientid = '".$pid."';";
@@ -85,8 +75,7 @@ clean_steps($pid);
 
 
 
-
-if($s){
+if($q){
   echo '{"success":true}';
 }else{
   echo '{"error":true}';

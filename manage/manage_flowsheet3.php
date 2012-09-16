@@ -2,7 +2,9 @@
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
-
+?>
+<link rel="stylesheet" href="css/flowsheet.css" />
+<?php
 
         $fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$_GET['pid']."';";
         $fsData_query = mysql_query($fsData_sql);        $fsData_array = mysql_fetch_array($fsData_query);
@@ -14,7 +16,7 @@ require_once('includes/preauth_functions.php');
 
 
 
-  $flow_pg2_info_query = "SELECT stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
+  $flow_pg2_info_query = "SELECT id, stepid, UNIX_TIMESTAMP(date_scheduled) as date_scheduled, UNIX_TIMESTAMP(date_completed) as date_completed, delay_reason, noncomp_reason, study_type, description, letterid FROM dental_flow_pg2_info WHERE patientid = '".$_GET['pid']."' ORDER BY stepid ASC;";
   $flow_pg2_info_res = mysql_query($flow_pg2_info_query);
   while ($row = mysql_fetch_assoc($flow_pg2_info_res)) {
     $flow_pg2_info[$row['stepid']] = $row;
@@ -42,6 +44,7 @@ $i = 0;
         $delayreason = strtolower($flow_pg2_info[$step]['delay_reason']);
         $noncompreason = strtolower($flow_pg2_info[$step]['noncomp_reason']);
         $description = $flow_pg2_info[$step]['description'];
+	$id = $flow_pg2_info[$step]['id'];
 
   //echo $datecomp;
   $i++;
@@ -59,8 +62,8 @@ $segments[3] = "Sleep Study";
 $segments[11] = "Treatment Complete";
 $segments[12] = "Annual Recall";
 $segments[14] = "Not a Candidate";
-$segments[5] = "Delaying Treatment / Waiting";
-$segments[9] = "Patient Non-Compliant";
+$segments[5] = "Delaying Tx / Waiting";
+$segments[9] = "Pt. Non-Compliant";
 $segments[6] = "Refused Treatment";
 $segments[13] = "Termination";
 /*
@@ -86,7 +89,7 @@ Termination
 	<th>Steps</th>
 	<th>Done</th>
 	<th>Date</th>
-	<th>Next Appt</th>
+	<th>Next Appt/Due</th>
     </tr>
 
 <?php
@@ -118,7 +121,7 @@ if($x = array_search($segment, array_reverse($order, true))){
 }
 
 ?>   
-	<button id="completed_<?= $segment; ?>" class="completed_today addButton">Completed</button>
+	<button id="completed_<?= $segment; ?>" class="completed_today addButton <?= ($completed)?"completedButton":"notCompletedButton"; ?>">Completed</button>
 
   </td>
   <td>
@@ -168,7 +171,7 @@ $i = 0;
         $delayreason = strtolower($flow_pg2_info[$step]['delay_reason']);
         $noncompreason = strtolower($flow_pg2_info[$step]['noncomp_reason']);
         $description = $flow_pg2_info[$step]['description'];
-
+	$id = $flow_pg2_info[$step]['id']; 
   foreach ($flow_pg2_info as $row) {
                 if ($row['letterid'] != "") {
                         $letters[$row['stepid']] = trim($row['letterid'], ',');
@@ -268,15 +271,18 @@ $i = 0;
 	}
 ?>
 <?php if($datecomp){ ?>
-  <tr>
+  <tr id="completed_row_<?= $id; ?>">
     	<td>
-                <?= $datecomp; ?>
+                <input class="completed_date" id="completed_date_<?= $id; ?>" onchange="update_completed_date('<?= $id; ?>');" type="text" value="<?= $datecomp; ?>" />
         </td>
 	<td>
 		<?= $segments[$order[$i]]; ?>
 	</td>
 	<td>
 		<?= $letter_count; ?> Letters
+	</td>
+	<td>
+		<a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton">Delete</a>	
 	</td>
   </tr>
 <?php } ?>
@@ -326,7 +332,7 @@ $('.next_sched').blur(function(){
                                         type: "post",
                                         data: {id: id, sched: sched, pid: <?= $_GET['pid']; ?>},
                                         success: function(data){
-						//alert(data);
+						alert(data);
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
@@ -343,7 +349,48 @@ $('.next_sched').blur(function(){
                                   });
 })
 
+function delete_segment(id){
+  if(confirm('Are you sure you want to delete this appointment?')){
+	                                    $.ajax({
+                                        url: "includes/delete_appt.php",
+                                        type: "post",
+                                        data: {id: id, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        $('#completed_row_'+id).remove();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+  }else{
+	return false;
+  }
 
+}
+
+function update_completed_date(id){
+  comp_date = $('#completed_date_'+id).val();
+                                            $.ajax({
+                                        url: "includes/update_appt.php",
+                                        type: "post",
+                                        data: {id: id, comp_date: comp_date, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+}
 </script>
 
 <?php include "includes/bottom.htm";?>

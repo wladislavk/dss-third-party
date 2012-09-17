@@ -5,6 +5,270 @@ $r = mysql_fetch_assoc($q);
 
 
 ?>
+<?php
+                                $pid = $_GET['pid'];
+  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+?>
+<?php if($num_face==0){ ?>
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
+                <img src="images/add_patient_photo.png" />
+        </a>
+<?php }else{
+  while($image = mysql_fetch_array($itype_my)){
+   echo "<img src='q_file/".$image['image_file']."' width='150' style='float:right;' />";
+  }
+
+}
+
+$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_page1id = st($myarray['q_page1id']);
+$exam_date = st($myarray['exam_date']);
+$ess = st($myarray['ess']);
+$tss = st($myarray['tss']);
+$chief_complaint_text = st($myarray['chief_complaint_text']);
+$complaintid = st($myarray['complaintid']);
+$other_complaint = st($myarray['other_complaint']);
+$additional_paragraph = st($myarray['additional_paragraph']);
+$energy_level = st($myarray['energy_level']);
+$snoring_sound = st($myarray['snoring_sound']);
+$wake_night = st($myarray['wake_night']);
+$breathing_night = st($myarray['breathing_night']);
+$morning_headaches = st($myarray['morning_headaches']);
+$hours_sleep = st($myarray['hours_sleep']);
+$quit_breathing = st($myarray['quit_breathing']);
+$bed_time_partner = st($myarray['bed_time_partner']);
+$sleep_same_room = st($myarray['sleep_same_room']);
+$told_you_snore = st($myarray['told_you_snore']);
+$main_reason = st($myarray['main_reason']);
+$main_reason_other = st($myarray['main_reason_other']);
+$sleep_qual = st($myarray['sleep_qual']);
+
+
+
+
+?>
+Preferred Name: <?=$r['preferred_name']; ?>
+Age: <?php
+$diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
+
+$years = floor($diff / (365*60*60*24));
+                echo $years;
+?>
+DOB: <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
+<br />
+
+
+  <?php
+     $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
+     $last_q = mysql_query($last_sql);
+     $last_r = mysql_fetch_assoc($last_q);
+?>
+
+Last seen: <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
+
+  For: <?= $last_r['last_treatment']; ?>
+
+      Referred By: 
+    <?php
+$rs = $r['referred_source'];
+  if($rs == DSS_REFERRED_PHYSICIAN){
+  $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
+        $referredby_my = mysql_query($referredby_sql);
+        $referredby_myarray = mysql_fetch_array($referredby_my);
+
+        $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+        $referredbythis .= " - ". $referredby_myarray['contacttype'];
+  echo $referredbythis;
+  }elseif($rs == DSS_REFERRED_PATIENT){
+  $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
+        $referredby_my = mysql_query($referredby_sql);
+        $referredby_myarray = mysql_fetch_array($referredby_my);
+
+        $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
+  echo $referredbythis ." - Patient";
+  }else{
+   echo $dss_referred_labels[$rs].": ".$r['referred_notes'];
+  }
+?>
+<br />
+
+
+
+
+
+<?php
+                $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
+                                FROM dental_summ_sleeplab ss 
+                                JOIN dental_patients p on ss.patiendid=p.patientid
+                                LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
+                        WHERE 
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                $result = mysql_query($sleepstudies);
+                $numsleepstudy = mysql_num_rows($result);
+                $sleepstudy = mysql_fetch_assoc($result);
+
+?>
+  Sleep Test? <?= ($numsleepstudy > 0)?'Yes':'No'; ?>
+      Diagnosis: <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?>
+      AHI/RDI: <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
+      Low O2: <?= $sleepstudy['o2nadir']; ?>
+      T < 90%: <?= $sleepstudy['t9002']; ?>
+
+<br />
+
+Name: <?= $r['firstname']; ?> <?= $r['lastname']; ?> 
+Home Phone: <?= $r['home_phone']; ?>
+Cell Phone: <?= $r['cell_phone']; ?>
+Work Phone: <?= $r['work_phone']; ?>
+
+<br />
+
+Reason for seeking tx:
+<?php
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$c_q = mysql_query($c_sql);
+$c_r = mysql_fetch_assoc($c_q);
+echo $c_r['chief_complaint_text'];
+?>
+
+
+
+Medical Caregivers:
+
+    <?php
+	$patid = $_GET['pid'];
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docsleep WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Sleep MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+
+
+
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docpcp WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Primary Care:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+
+
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docdentist WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Dentist:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+
+
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docent WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>ENT:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
+                ON c.contactid=p.docmdother WHERE p.patientid=".$patid;
+        $d_q = mysql_query($d_sql);
+        if($d = mysql_fetch_assoc($d_q)){
+                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Other MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
+        }
+
+?>
+<br />
+CPAP 
+
+    <div style="width:80%;">
+        <?php
+          $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+          $pat_my = mysql_query($pat_sql);
+          $pat_myarray = mysql_fetch_array($pat_my);
+          if($pat_myarray['cpap']=="No"){
+
+            ?>Patient has not previously attempted CPAP therapy.<?php
+
+          }else{
+        //echo $pat_myarray['cpap'];
+        ?>
+    <label>
+
+
+      <span>On average how many nights per week do you wear your CPAP?
+                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $nights_wear_cpap; ?>" class="field text addr tbox" name="nights_wear_
+cpap" id="nights_wear_cpap">
+                                                        <br>
+                                                </span>
+
+
+      <span>
+                                                        On average how many hours each night do you wear your CPAP?
+                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $percent_night_cpap; ?>" class="field text addr tbox" name="percent_ni
+ght_cpap" id="percent_night_cpap">
+                                                        <br>
+                                                </span>
+
+    <div style="height:10px;"></div>
+
+
+
+    <span style="font-weight:bold;">Problems w/ CPAP</span><br />
+        <textarea name="textarea8" id="textarea" cols="68" rows="5"><?=$problem_cpap;?></textarea>
+      </label>
+
+
+     <?php } ?>
+
+     </div>
+
+
+Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />
+                        &nbsp;&nbsp;
+                        <br /><br />
+      Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br />
+
+
+    Notes/Personal:
+      
+
+       <?php include("dss_notes.php"); ?>
+
+ History of Surgery or other Treatment Attempts:<br />
+      <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
+<br /><br />
+ROM:
+    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
+
+Best Eccovision&nbsp;&nbsp;
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+<br >
+    Device
+        <select name="dentaldevice" style="width:250px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+
+
 <table width="95%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto;">
 <tr>
   <td width="50%">
@@ -381,11 +645,6 @@ if($num_loc > 1){
     <span style="font-weight:bold;">Problems w/ CPAP</span><br />
         <textarea name="textarea8" id="textarea" cols="68" rows="5"><?=$problem_cpap;?></textarea>
       </label>
-
-
-
-
-
 
 
      <?php } ?>

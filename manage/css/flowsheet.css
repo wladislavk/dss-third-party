@@ -1,6 +1,17 @@
 .addButton.notCompletedButton{
-  background:#ccc;
+  background:#ddd;
   color:#5C8DB8;
 }
 
-.next_sched{ width: 80px; }
+.addButton.notCompletedButton:hover{
+  background:#5C8DB8;
+  color:#fff;
+}
+.completed_date, .next_sched{ width: 80px; }
+
+a.deleteButton{
+  font-size:11px;
+  font-weight: normal;
+  padding: 2px;
+  }
+

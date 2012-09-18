@@ -121,14 +121,14 @@ if($x = array_search($segment, array_reverse($order, true))){
 }
 
 ?>   
-	<button id="completed_<?= $segment; ?>" class="completed_today addButton <?= ($completed)?"completedButton":"notCompletedButton"; ?>">Completed</button>
+	<button id="completed_<?= $segment; ?>" class="completed_today addButton <?= ($completed)?"completedButton":"notCompletedButton"; ?>"><?= ($completed)?"Completed":"Not Done"; ?></button>
 
   </td>
   <td>
     <span id="datecomp_<?= $segment; ?>"><?= $datecomp; ?></span>
   </td>
   <td>
-    <input class="next_sched" id="<?= $segment; ?>" type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
+    <input class="next_sched flow_calendar" id="<?= $segment; ?>" type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
   </td>
 </tr>
 <?php
@@ -146,6 +146,22 @@ if($x = array_search($segment, array_reverse($order, true))){
     <th>Treatment</th>
     <th>Letters</th>
   </tr>
+
+  <tr id="completed_row_temp" style="display:none;">
+        <td>
+                <input class="completed_date flow_comp_calendar" id="completed_date_" type="text" value="" />
+        </td>
+        <td>
+                <span class="title">Test</span>
+        </td>
+        <td>
+                <a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+        </td>
+        <td>
+                <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>
+        </td>
+  </tr>
+
 
 <?php
 $segments[1] = "Initial Contact";
@@ -273,16 +289,16 @@ $i = 0;
 <?php if($datecomp){ ?>
   <tr id="completed_row_<?= $id; ?>">
     	<td>
-                <input class="completed_date" id="completed_date_<?= $id; ?>" onchange="update_completed_date('<?= $id; ?>');" type="text" value="<?= $datecomp; ?>" />
+                <input class="completed_date flow_comp_calendar" id="completed_date_<?= $id; ?>" type="text" value="<?= $datecomp; ?>" />
         </td>
 	<td>
 		<?= $segments[$order[$i]]; ?>
 	</td>
 	<td>
-		<?= $letter_count; ?> Letters
+		<a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
 	</td>
 	<td>
-		<a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton">Delete</a>	
+		<a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>	
 	</td>
   </tr>
 <?php } ?>
@@ -316,6 +332,15 @@ $('.completed_today').click(function(){
                                                 }else{
 						  $('#'+id).val('');
 						  $('#datecomp_'+id).text(r.datecomp);
+						  var $tr = $('#completed_row_temp');
+ 						  var $clone = $tr.clone();
+						  $clone.attr('id', 'completed_row_'+r.id);
+                                                  $clone.find('.title').text(r.title);
+                                                  $clone.find('.completed_date').val(r.datecomp);
+						  $clone.find('.deleteButton').attr('onclick', "return delete_segment('"+r.id+"');");
+						  $tr.after($clone);
+						  $clone.show();
+						  //$('#completed_row_temp').clone().insertAfter('#completed_row_temp').find('.title').val('adfa').show();
                                                 }
                                         },
                                         failure: function(data){
@@ -324,15 +349,14 @@ $('.completed_today').click(function(){
                                   });
 });
 
-$('.next_sched').blur(function(){
-  var id = $(this).attr("id");
-  var sched = $(this).val();
+function update_next_sched(id){
+  var sched = $('#'+id).val();
                                     $.ajax({
                                         url: "includes/update_appt_sched.php",
                                         type: "post",
                                         data: {id: id, sched: sched, pid: <?= $_GET['pid']; ?>},
                                         success: function(data){
-						alert(data);
+						//alert(data);
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
@@ -347,7 +371,7 @@ $('.next_sched').blur(function(){
                                                 //alert('fail');
                                         }
                                   });
-})
+}
 
 function delete_segment(id){
   if(confirm('Are you sure you want to delete this appointment?')){
@@ -373,7 +397,8 @@ function delete_segment(id){
 
 }
 
-function update_completed_date(id){
+function update_completed_date(cid){
+  id = cid.substring(15);
   comp_date = $('#completed_date_'+id).val();
                                             $.ajax({
                                         url: "includes/update_appt.php",

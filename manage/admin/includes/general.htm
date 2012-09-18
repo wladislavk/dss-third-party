@@ -750,6 +750,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
   } elseif ($parent == true) {
 		$letter_query = "UPDATE dental_letters SET deleted='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
+		return $letter_result;
   } else {
     $select_letter = "SELECT patientid, stepid, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
 		$select_result = mysql_query($select_letter);

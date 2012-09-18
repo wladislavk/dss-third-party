@@ -1322,7 +1322,7 @@ $insurance_my = mysql_query($insurance_sql);
 $total_insurance = mysql_num_rows($insurance_my);
                                 if(($n+$total_contactsi+$total_insurance)>0){ ?>
 <a class="warning" href="patient_changes.php?pid=<?=$_GET['pid'];?>">
-<span>Warning! Patient has updated their profile via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+<span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
 
                                 <? } 
@@ -1332,7 +1332,7 @@ $total_insurance = mysql_num_rows($insurance_my);
         $exist_row = mysql_fetch_assoc($exist_q);
 	if($exist_row['symptoms_status']==2 || $exist_row['treatments_status']==2 || $exist_row['history_status']==2 || $exist_row['sleep_status']==2){ ?>
 <a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
-<span>Warning! Patient has updated their questionnaire via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+<span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
 	<?php
 	}

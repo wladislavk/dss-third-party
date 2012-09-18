@@ -112,7 +112,7 @@ if($_POST['q_page2sub'] == 1)
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".date('y-m-d', strtotime($_POST['surgery_date_'.$i]))."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
                                 }
                                 else{ $s=''; }
                         }else{
@@ -172,7 +172,7 @@ if($_POST['q_page2sub'] == 1)
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".date('y-m-d', strtotime($_POST['surgery_date_'.$i]))."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
                                 }
 				else{ $s=''; }
                         }else{

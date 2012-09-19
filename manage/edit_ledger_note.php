@@ -78,7 +78,9 @@ echo '<option value="'.$p['userid'].'" '.(($p['userid']==$n['producerid'])?'sele
             </td>
         </tr>
         <tr>
-		<td class="frmhead"></td>
+		<td class="frmhead">              <a href="/manage/manage_ledger.php?delnoteid=<?= $_GET['ed']; ?>&amp;pid=<?= $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a></td>
 		<td class="frmhead"><input type="submit" value="Edit Note" /></td>
 	</tr>
 

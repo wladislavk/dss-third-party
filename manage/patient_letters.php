@@ -161,11 +161,11 @@ $source = $r['referred_source'];
 	} else {
 		// Patient: Salutation Lastname, Firstname
 		$dental_letters[$key]['sentto'] = '';
-		$dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>") : ("");
+		$dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>") : ("");
 		// MD: Salutation Lastname, Firstname - Contact Type
-		$dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : ("")). "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" />Delete</a>") : ("");
+		$dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : ("")). "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>") : ("");
 		// MD Referral: Salutation Lastname, Firstname - Contact Type
-		$dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" />Delete</a>") : ("");
+		$dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>") : ("");
 	}
   // Determine if letter is older than 7 days
   if (floor((time() - $letter['generated_date']) / $seconds_per_day) > 7 && $status == "pending") {
@@ -314,17 +314,17 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 				  foreach($pending_letters[$i]['patient'] as $pat){
 					?><br /><?php
                                         echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
-					?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" />Delete</a><?php
+					?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
 				  }
 				  foreach($pending_letters[$i]['mds'] as $md){
 					?><br /><?php
                                         echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
                                   }
                                   foreach($pending_letters[$i]['md_referrals'] as $md_referral){
                                         ?><br /><?php
                                         echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
                                   }
 				  ?></div><?php
 				}else{
@@ -343,6 +343,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 <script type="text/javascript">
 
   function delete_pending_letter(lid, type, rid, par){
+	if(confirm('Are you sure you want to delete this letter?')){
                                       $.ajax({
                                         url: "includes/letter_delete.php",
                                         type: "post",
@@ -358,6 +359,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
                                                 //alert('fail');
                                         }
                                   });
+	}
   }
 
 </script>

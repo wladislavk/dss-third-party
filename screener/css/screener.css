@@ -34,7 +34,9 @@ body{
 .sepH_b.ui-buttonset{ float:left;}
 #sect3 .buttonset, #sect4 .buttonset{float:left;}
 #sect3 .sepH_b{ clear:both; margin-top:10px; height: 30px;}
-#sect3 label{font-size:16px; }
+#sect3 label, #sect4 label{font-size:16px; }
+#sect3 label.question, #sect4 label.question{ display:block; padding-top:8px;}
+#sect4 .half{ margin-bottom:7px; }
 
 #sect2{ font-size:16px; }
 #sect2 .sepH_b { height:25px; }

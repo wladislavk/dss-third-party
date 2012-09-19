@@ -60,6 +60,11 @@ if(isset($_GET['risk'])){
 if(isset($_GET['contacted'])){
   $sql .= " AND contacted = ".mysql_real_escape_string($_GET['contacted'])." ";
 }
+if(isset($_GET['contacted_risk'])){
+  $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['contacted_risk'])." ";
+  $sql .= " AND contacted = 0 ";
+}
+
   $sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -97,6 +102,12 @@ $my=mysql_query($sql) or die(mysql_error());
 <?php }else{ ?>
 <a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
 <?php } ?>
+<?php if($_GET['contacted_risk']>=10){ ?>
+<a href="manage_screeners.php" class="addButton">Show All</a>
+<?php }else{ ?>
+<a href="manage_screeners.php?contacted_risk=10" class="addButton">Show High/Severe NOT Contacted</a>
+<?php } ?>
+
 
 </div>
 
@@ -105,6 +116,8 @@ $my=mysql_query($sql) or die(mysql_error());
 	<p>Showing High/Severe Patients only</p>
 <?php }elseif(isset($_GET['contacted']) && $_GET['contacted']==0){ ?>
 	<p>Showing NOT contacted patients only</p>
+<?php }elseif($_GET['contacted_risk']>=10){ ?>
+        <p>Showing High/Severe NOT contacted patients only</p>
 <?php } ?>
 </div>
 

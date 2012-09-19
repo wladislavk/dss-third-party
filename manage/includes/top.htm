@@ -6,6 +6,7 @@ require_once('includes/constants.inc');
 require_once('includes/authorization_functions.php');
 require_once('includes/general_functions.php');
 require_once('includes/notifications.php');
+require_once('includes/patient_changes.php');
 if($_SESSION['userid'] == '')
 {
 	?>
@@ -1306,6 +1307,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
 	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
                                 $q = mysql_query($s);
                                 $n = mysql_num_rows($q);
+				$n = num_patient_changes($_GET['pid']);
                                 $pat = mysql_fetch_assoc($q);
 $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
         p.firstname as patfirstname, p.lastname as patlastname

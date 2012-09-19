@@ -48,7 +48,9 @@ if(isset($_REQUEST['sortdir'])){
 	
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT s.*, u.name,
-	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total
+	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total,
+	epworth_reading + epworth_public + epworth_passenger + epworth_lying + epworth_talking + epworth_lunch + epworth_traffic AS ep_total,
+        rx_cpap + rx_blood_pressure + rx_hypertension + rx_heart_disease + rx_stroke + rx_apnea + rx_diabetes + rx_lung_disease + rx_insomnia + rx_depression + rx_narcolepsy + rx_medication + rx_restless_leg + rx_headaches + rx_heartburn AS sect3_total 
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
 	WHERE s.docid='".$_SESSION['docid']."' ";
@@ -174,15 +176,17 @@ $my=mysql_query($sql) or die(mysql_error());
                                 <td valign="top">
                                         <?= st($myarray["phone"]); ?> 
                                 </td>
-					<?php if($myarray["survey_total"] < 8 ){ ?>		
-						<td valign="top" class="risk_low">Low</td>
-                                        <?php }elseif($myarray["survey_total"] < 10 ){ ?>
-						<td valign="top" class="risk_moderate">Moderate</td>
-                                        <?php }elseif($myarray["survey_total"] < 16 ){ ?>
-						<td valign="top" class="risk_high">High</td>
-                                        <?php }else{ ?>
-						<td valign="top" class="risk_severe">Severe</td>
-					<?php } ?>
+        <?php
+	if($myarray['survey_total'] > 15 || $myarray['ep_total'] > 18 || $myarray['sect3_total'] > 3){
+		?><td valign="top" class="risk_severe">Severe</td><?php
+        }else if($myarray['survey_total'] > 11 || $myarray['ep_total'] > 14 || $myarray['sect3_total'] > 2){
+		?><td valign="top" class="risk_high">High</td><?php
+        }else if($myarray['survey_total'] || $myarray['ep_total'] > 9 || $myarray['sect3_total'] > 1){
+		?><td valign="top" class="risk_moderate">Moderate</td><?php
+        }else{
+		?><td valign="top" class="risk_low">Low</td><?php
+        }
+?>
 				<td valign="top">
 					<?= ($myarray['rx_cpap']>0)?'Yes':'No'; ?>
 				</td>
@@ -192,56 +196,56 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?php
 						$diagnosis = array();
-						if($myarray['rx_blood_pressure']==1){
+						if($myarray['rx_blood_pressure']>0){
 							array_push($diagnosis, 'High blood pressure');
 						}
-                                                if($myarray['rx_hypertension']==1){
+                                                if($myarray['rx_hypertension']>0){
                                                         array_push($diagnosis, 'Hypertension');
                                                 }
-                                                if($myarray['rx_heart_disease']==1){
+                                                if($myarray['rx_heart_disease']>0){
                                                         array_push($diagnosis, 'Heart disease');
                                                 }
-                                                if($myarray['rx_stroke']==1){
+                                                if($myarray['rx_stroke']>0){
                                                         array_push($diagnosis, 'Stroke');
                                                 }
 
-                                                if($myarray['rx_apnea']==1){
+                                                if($myarray['rx_apnea']>0){
                                                         array_push($diagnosis, 'Sleep apnea');
                                                 }
 
-                                                if($myarray['rx_diabetes']==1){
+                                                if($myarray['rx_diabetes']>0){
                                                         array_push($diagnosis, 'Diabetes');
                                                 }
 
-                                                if($myarray['rx_lung_disease']==1){
+                                                if($myarray['rx_lung_disease']>0){
                                                         array_push($diagnosis, 'Lung disease');
                                                 }
 
-                                                if($myarray['rx_insomnia']==1){
+                                                if($myarray['rx_insomnia']>0){
                                                         array_push($diagnosis, 'Insomnia');
                                                 }
 
-                                                if($myarray['rx_depression']==1){
+                                                if($myarray['rx_depression']>0){
                                                         array_push($diagnosis, 'Depression');
                                                 }
 
-                                                if($myarray['rx_narcolepsy']==1){
+                                                if($myarray['rx_narcolepsy']>0){
                                                         array_push($diagnosis, 'Narcolepsy');
                                                 }
 
-                                                if($myarray['rx_medication']==1){
+                                                if($myarray['rx_medication']>0){
                                                         array_push($diagnosis, 'Sleeping medication');
                                                 }
 
-                                                if($myarray['rx_restless_leg']==1){
+                                                if($myarray['rx_restless_leg']>0){
                                                         array_push($diagnosis, 'Restless Leg Syndrome');
                                                 }
 
-                                                if($myarray['rx_headaches']==1){
+                                                if($myarray['rx_headaches']>0){
                                                         array_push($diagnosis, 'Morning headaches');
                                                 }
 
-                                                if($myarray['rx_heartburn']==1){
+                                                if($myarray['rx_heartburn']>0){
                                                         array_push($diagnosis, 'Heartburn (Gastroesophageal Reflux)');
                                                 }
 

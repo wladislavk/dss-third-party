@@ -402,6 +402,7 @@ if($_POST["patientsub"] == 1)
 		$pass = $l['password'];
 		if($login == ''){
 	                $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+			$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
         	        $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
                 	$cq = mysql_query($csql);
 	                $carray = array();
@@ -485,6 +486,7 @@ mysql_query($s1);
 	{
         //echo('in');
 		$clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+		$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
 		$csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
 		$cq = mysql_query($csql);
 		$carray = array();

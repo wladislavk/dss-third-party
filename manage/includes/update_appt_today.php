@@ -14,20 +14,9 @@ $pid = $_REQUEST['pid'];
 		$new_steparray = $fsData_array['steparray'].",".$id;
 		$stepid=count($order)+1;
 		$numsteps = $stepid;
-		$s = "SELECT * from dental_flow_pg2_info WHERE segmentid=".$id." AND patientid=".$pid;
-		$q = mysql_query($s);
+		//$s = "SELECT * from dental_flow_pg2_info WHERE segmentid=".$id." AND patientid=".$pid;
+		//$q = mysql_query($s);
 		//echo mysql_num_rows($q);
-		    $s = "INSERT INTO dental_flow_pg2_info SET
-			patientid= ".$pid.",
-			stepid = ".$stepid.",
-			segmentid = ".$id.",
-			date_completed = CURDATE()";
-		mysql_query($s); 
-		$insert_id=mysql_insert_id();
-                $new_steparray = $fsData_array['steparray'].",".$id;
-                $stepid=count($order)+1;
-        $fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";
-        $s = mysql_query($fsData_sql);
 
 
         if ($id == "8") { // Follow-Up/Check
@@ -51,26 +40,53 @@ $pid = $_REQUEST['pid'];
                                                                 $consulted = true;
                                                         }
                                                         // Delaying Treatment / Waiting
-                                                        if ($consulted == true && $value == "5") {
+                                                        if ($consulted == true && $id == "5") {
                                                                 $letterid[] = trigger_letter10($pid, $numsteps);
                                                         }
                                                         // Refused Treatment
-                                                        if ($consulted == true && $value == "6") {
+                                                        if ($consulted == true && $id == "6") {
                                                                 $letterid[] = trigger_letter8($pid, $numsteps);
                                                                 $letterid[] = trigger_letter11($pid, $numsteps);
                                                         }
                                                         // Patient Non Compliant
-                                                        if ($value == "9") {
+                                                        if ($id == "9") {
                                                                 $letterid[] = trigger_letter17($pid, $numsteps);
                                                         }
                                                         // Treatment Complete
-                                                        if ($value == "11") {
+                                                        if ($id == "11") {
                                                                 $letterid[] = trigger_letter19($pid, $numsteps);
                                                         }
-                                                        if ($value == "14") {
+                                                        if ($id == "14") {
                                                                 $letterid[] = trigger_letter7($pid, $numsteps);
                                                         }
 
+
+
+		    $letterid = array_unique($letterid);
+                    $letteridlist = implode(",", $letterid);
+
+
+                    $s = "INSERT INTO dental_flow_pg2_info SET
+                        patientid= ".$pid.",
+                        stepid = ".$stepid.",
+                        segmentid = ".$id.",
+			letterid = '".$letteridlist."',
+                        date_completed = CURDATE()";
+                mysql_query($s);
+                $insert_id=mysql_insert_id();
+                $new_steparray = $fsData_array['steparray'].",".$id;
+                $stepid=count($order)+1;        $fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";        $s = mysql_query($fsData_sql);
+
+
+$dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$pid."' AND (letterid IN(".$letteridlist.") OR parentid IN(".$letteridlist.")) ORDER BY stepid ASC;";
+  $dental_letters_res = mysql_query($dental_letters_query);
+  $dental_letters = array();
+  $letter_count = 0;
+  while ($row = mysql_fetch_assoc($dental_letters_res)) {
+    $dental_letters[] = $row;
+                $contacts = get_contact_info((($row['topatient'] == "1") ? $row['patientid'] : ''), $row['md_list'], $row['md_referral_list']);
+                        $letter_count += count($contacts['patient'])+count($contacts['md_referrals'])+count($contacts['mds']);
+	}
 
 
 
@@ -94,7 +110,7 @@ $segments[13] = "Termination";
 $title = $segments[$id];
 
 if($s){
-  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "title":"'.$title.'"}';
+  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "title":"'.$title.'", "letters":"'.$letter_count.'"}';
 }else{
   echo '{"error":true}';
 }

@@ -48,24 +48,13 @@ clean_steps($pid);
                 $consulted = true;
         }
         $letterid = array();
-        if ($sched != "" && !$letter && $topstep == "2") { // Consultation
+        if ($id == "2") { // Consultation
 //              $letterid[] = trigger_letter5($_GET['pid'], $numsteps);
                 $letterid[] = trigger_letter6($pid, $numsteps);
         }
-        if ($consulted == true && $sched != "" && !$letter && $topstep == "4") { // Impressions
+        if ($consulted == true && $id == "4") { // Impressions
                 $letterid[] = trigger_letter9($pid, $numsteps);
                 //$letterid[] = trigger_letter13($pid, $numsteps);
-        }
-        if ($datecomp != "" && !$letter && $topstep == "8") { // Follow-Up/Check
-                $trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$_GET['pid']."';";
-                $trigger_result = mysql_query($trigger_query);
-                $numrows = (mysql_num_rows($trigger_result));
-                if ($numrows > 0) {
-                        $letterid[] = trigger_letter16($pid, $numsteps);
-                }
-        }
-        if ($datecomp != "" && !$letter && $topstep == "13") { // Termination
-                $letterid[] = trigger_letter24($pid, $numsteps);
         }
 
 

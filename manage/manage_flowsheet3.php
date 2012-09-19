@@ -128,7 +128,7 @@ if($x = array_search($segment, array_reverse($order, true))){
     <span id="datecomp_<?= $segment; ?>"><?= $datecomp; ?></span>
   </td>
   <td>
-    <input class="next_sched flow_calendar" id="<?= $segment; ?>" type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
+    <input class="next_sched flow_next_calendar" id="<?= $segment; ?>" type="text" name="next_sched_<?= $segment; ?>" value="<?= $datesched; ?>" />
   </td>
 </tr>
 <?php
@@ -154,7 +154,7 @@ if($x = array_search($segment, array_reverse($order, true))){
         <td>
                 <span class="title">Test</span>
         </td>
-        <td>
+        <td class="letters">
                 <a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
         </td>
         <td>
@@ -195,7 +195,7 @@ $i = 0;
   }
 //print_r($letters);
   $letter_list = implode(",", $letters);
-  $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list."))ORDER BY stepid ASC;";
+  $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$letter_list.") OR parentid IN(".$letter_list.")) ORDER BY stepid ASC;";
   $dental_letters_res = mysql_query($dental_letters_query);
   $dental_letters = array();
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
@@ -295,7 +295,11 @@ $i = 0;
 		<?= $segments[$order[$i]]; ?>
 	</td>
 	<td>
+		<?php if($letter_count > 0){ ?>
 		<a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+		<?php }else{ ?>
+			0 Letters
+		<?php } ?>
 	</td>
 	<td>
 		<a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>	
@@ -337,6 +341,11 @@ $('.completed_today').click(function(){
 						  $clone.attr('id', 'completed_row_'+r.id);
                                                   $clone.find('.title').text(r.title);
                                                   $clone.find('.completed_date').val(r.datecomp);
+						  if(r.letters>0){
+						  	$clone.find('.letters').html('<a href="patient_letters.php?pid=<?= $_GET['pid']; ?>">'+r.letters+' Letters</a>');
+						  }else{
+                           				$clone.find('.letters').text('0 Letters');
+						  }
 						  $clone.find('.deleteButton').attr('onclick', "return delete_segment('"+r.id+"');");
 						  $tr.after($clone);
 						  $clone.show();

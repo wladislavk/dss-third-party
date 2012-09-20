@@ -14,7 +14,7 @@ $query = "SELECT patient_notes FROM dental_patients WHERE patientid='".$_GET['pi
 $array = mysql_query($query);
 
 while($notes = mysql_fetch_array($array)){
-echo " <textarea name=\"notecontent\" id=\"notecontent\" cols=\"105\" rows=\"5\">".$notes['patient_notes']."</textarea>";
+echo " <textarea name=\"notecontent\" id=\"notecontent\" cols=\"110\" rows=\"3\">".$notes['patient_notes']."</textarea>";
 }
 
 ?>

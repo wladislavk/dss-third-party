@@ -56,7 +56,6 @@ $pending_letters = mysql_num_rows($dental_letters_res);
   <li><a href="#" onclick="show_sect('letters')" id="link_letters">LETTERS <?= ($pending_letters>0)?"(".$pending_letters.")":''; ?></a></li>
   <li><a href="#" onclick="show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
   <li><a href="#" onclick="show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
-  <li><a href="#" onclick="show_sect('contacts')" id="link_contacts">CONTACTS</a></li>
 </ul>
 
   <div id="sections">
@@ -80,9 +79,6 @@ $pending_letters = mysql_num_rows($dental_letters_res);
 	</div>
 	<div id="sect_subj">
 		<?php include 'summ_subj.php'; ?>
-	</div>
-	<div id="sect_contacts">
-		<?php include 'summ_contacts.php'; ?>
 	</div>
   </div>
 <div class="clear"></div>

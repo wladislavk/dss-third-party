@@ -104,23 +104,57 @@ $rs = $r['referred_source'];
 
 
 <?php
+                $baseline_sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
+                                FROM dental_summ_sleeplab ss 
+                                JOIN dental_patients p on ss.patiendid=p.patientid
+                                LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
+                        WHERE 
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
+				(ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
+				ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
+                $baseline_result = mysql_query($baseline_sleepstudies);
+                $baseline_numsleepstudy = mysql_num_rows($baseline_result);
+                $baseline_sleepstudy = mysql_fetch_assoc($baseline_result);
+	if($baseline_numsleepstudy>0){
+	}else{
+  	        $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
+                                FROM dental_summ_sleeplab ss 
+                                JOIN dental_patients p on ss.patiendid=p.patientid
+                                LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
+                        WHERE 
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
+                                (ss.sleeptesttype='PSG' OR ss.sleeptesttype='HST') AND
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
+                $result = mysql_query($sleepstudies);
+                $numsleepstudy = mysql_num_rows($result);
+                $baseline_sleepstudy = mysql_fetch_assoc($result);
+	
+        }
+
+?>
+  Baseline Sleep Test? <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?>
+      Diagnosis: <?= $baseline_sleepstudy['ins_diagnosis']." - ".$baseline_sleepstudy['description']; ?>
+      AHI/RDI: <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?>
+      Low O2: <?= $baseline_sleepstudy['o2nadir']; ?>
+      T < 90%: <?= $baseline_sleepstudy['t9002']; ?>
+
+<?php
                 $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
                                 FROM dental_summ_sleeplab ss 
                                 JOIN dental_patients p on ss.patiendid=p.patientid
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
-                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id DESC;";
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
                 $sleepstudy = mysql_fetch_assoc($result);
-
 ?>
-  Sleep Test? <?= ($numsleepstudy > 0)?'Yes':'No'; ?>
+  Recent Sleep Test 
       Diagnosis: <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?>
       AHI/RDI: <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
       Low O2: <?= $sleepstudy['o2nadir']; ?>
       T < 90%: <?= $sleepstudy['t9002']; ?>
-
 <br />
 
 Name: <?= $r['firstname']; ?> <?= $r['lastname']; ?> 
@@ -138,57 +172,56 @@ $c_r = mysql_fetch_assoc($c_q);
 echo $c_r['chief_complaint_text'];
 ?>
 
-
+<br /><br />
 
 Medical Caregivers:
 
-    <?php
-	$patid = $_GET['pid'];
-        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
-                ON c.contactid=p.docsleep WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
-                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Sleep MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
-        }
-
-
-
-
-        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
-                ON c.contactid=p.docpcp WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
-                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Primary Care:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
-        }
-
-
-
-        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
-                ON c.contactid=p.docdentist WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
-                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Dentist:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
-        }
-
-
-
-        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
-                ON c.contactid=p.docent WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
-                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>ENT:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
-        }
-
-        $d_sql = "SELECT c.* FROM dental_contact c INNER JOIN dental_patients p 
-                ON c.contactid=p.docmdother WHERE p.patientid=".$patid;
-        $d_q = mysql_query($d_sql);
-        if($d = mysql_fetch_assoc($d_q)){
-                echo "<label style=\"display:block;width:300px; float:left; padding-bottom:10px;\"><span style=\"width:100px; display:block; float:left;\"><strong>Other MD:</strong></span>".$d['firstname']." ".$d['lastname']."</label><br />";
-        }
-
-?>
+<?php include 'summ_contacts.php'; ?>
 <br />
-CPAP 
+
+ROM:
+    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
+
+Best Eccovision&nbsp;&nbsp;
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+<br >
+    Device
+        <select name="dentaldevice" style="width:250px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+
+<br /><br />
+
+
+Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />
+                        &nbsp;&nbsp;
+                        <br /><br />
+      Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br />
+
+
+    Notes/Personal:
+      
+
+       <?php include("dss_notes.php"); ?>
+
+
+
+
+
+ History of Surgery or other Treatment Attempts:<br />
+      <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
+<br /><br />
+CPAP
 
     <div style="width:80%;">
         <?php
@@ -223,9 +256,15 @@ ght_cpap" id="percent_night_cpap">
 
 
 
+
+
+
+<br />
     <span style="font-weight:bold;">Problems w/ CPAP</span><br />
         <textarea name="textarea8" id="textarea" cols="68" rows="5"><?=$problem_cpap;?></textarea>
       </label>
+
+
 
 
      <?php } ?>
@@ -233,41 +272,16 @@ ght_cpap" id="percent_night_cpap">
      </div>
 
 
-Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />
-                        &nbsp;&nbsp;
-                        <br /><br />
-      Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br />
 
 
-    Notes/Personal:
-      
 
-       <?php include("dss_notes.php"); ?>
 
- History of Surgery or other Treatment Attempts:<br />
-      <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
-<br /><br />
-ROM:
-    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
 
-Best Eccovision&nbsp;&nbsp;
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
-<br >
-    Device
-        <select name="dentaldevice" style="width:250px">
-        <option value=""></option>
-        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                                                                $device_my = mysql_query($device_sql);
-                                                                while($device_myarray = mysql_fetch_array($device_my))
-                                                                {
-                ?>
-                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
-                                                                 <?php
-                                                                 }
-                                                                ?>
-    </select>
-        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
 
+
+
+
+<br /><br /><br /><br />
 
 <table width="95%" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0" style="margin:0 auto;">
 <tr>

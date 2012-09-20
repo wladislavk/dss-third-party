@@ -58,16 +58,6 @@ Sleep Studies:
         </tr>
   <tr>
                 <td valign="top" class="odd">
-                Copy Requested
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Request From
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
                 Diagnosing Phys.
                 </td>
         </tr>
@@ -110,16 +100,6 @@ Sleep Studies:
   <tr>
                 <td valign="top" class="odd">
                 T &le; 90% O<sub>2</sub>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Sleep Efficiency
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                CPAP Level
                 </td>
         </tr>
   <tr>

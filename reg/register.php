@@ -5,6 +5,7 @@
   }
 
 include 'includes/header.php';
+include 'includes/completed.php';
 ?>
 <link rel="stylesheet" href="css/register.css" />
 <!--[if IE]>
@@ -93,11 +94,11 @@ include 'includes/header.php';
                         <label class="lbl_a"><strong>3.</strong> Last Name <span class="req">*</span></label>
 			<input class="inpt_a validate" type="text" name="lastname" id="lastname" value="<?= $p['lastname']; ?>" />
 		</div>
-		<div class="sepH_b third">
+		<div class="sepH_b third clear">
                         <label class="lbl_a"><strong>4.</strong> Preferred Name</label>
                         <input class="inpt_a" type="text" name="preferred_name" id="preferred_name" value="<?= $p['preferred_name']; ?>" />
                 </div>
-                <div class="sepH_b clear">
+                <div class="sepH_b half">
 			<input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?= $p['email']; ?>" />
                         <label class="lbl_a"><strong>5.</strong> Email:</label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
@@ -179,7 +180,7 @@ include 'includes/header.php';
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>13.</strong> Zip:</label><input class="inpt_a " type="text" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>13.</strong> Zip:</label><input class="inpt_a validate" type="text" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
@@ -203,12 +204,18 @@ include 'includes/header.php';
                 <div class="sepH_b half" id="dob_div">
                         <label class="lbl_a"><strong>1.</strong> Birthday:</label>
 				<?php
-					$dob_month = date('m', strtotime($p['dob']));
-                                        $dob_day = date('j', strtotime($p['dob']));
-                                        $dob_year = date('Y', strtotime($p['dob']));
+					if($p['dob']!=''){
+						$dob_month = date('m', strtotime($p['dob']));
+                                        	$dob_day = date('j', strtotime($p['dob']));
+                                        	$dob_year = date('Y', strtotime($p['dob']));
+					}else{
+						$dob_month = '';
+                                                $dob_day = '';
+                                                $dob_year = '';
+					}
 				?>
                                 <select class="validate" id="dob_month" name="dob_month">
-                                        <option value=''>Month</option>
+                                        <option <?= ($dob_month=='')?'selected="selected"':''; ?> value=''>Month</option>
                                         <?php
                                                 for($i=1;$i<=12;$i++){ ?>
                                                         <option <?= (($dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -252,16 +259,16 @@ include 'includes/header.php';
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>4.</strong> Spouse/Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
                 </div>
-                <div class="sepH_b clear">
+                <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a validate ssnmask" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
                 </div>
-                <div class="sepH_b">
+                <div class="sepH_b half">
                         <label class="lbl_a"><strong>6.</strong> Prefered Method of Contact:</label><select class="inpt_a validate" name="preferredcontact">
                                 <option value="paper" <?= ($p['preferredcontact']=="paper")?'selected="selected"':'';?>>Paper Mail</option>
                                 <option value="email" <?= ($p['preferredcontact']=="email")?'selected="selected"':'';?>>Email</option>
                                 </select>
                 </div>
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>7.</strong> Emergency Contact Name:</label><input class="inpt_a" type="text" name="emergency_name" value="<?= $p['emergency_name']; ?>" />
                 </div>
                 <div class="sepH_b third">
@@ -306,7 +313,7 @@ include 'includes/header.php';
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>1.</strong> Do you have Medicare?</label>
 				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
-				<input type="radio" name="p_m_ins_type" class="validate" value="7" <?= ($p['p_m_ins_type'] != 'Select Type' && $p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
+				<input type="radio" name="p_m_ins_type" class="validate" value="7" <?= ($p['p_m_ins_type'] != '' && $p['p_m_ins_type'] != 'Select Type' && $p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
                 </div>
                 <div class="sepH_b">
                         <label id='p_m_ins_description' class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your <?= ($p['p_m_ins_type'] == '1')?'MEDICARE ':'';?>insurance card.</label>
@@ -332,9 +339,15 @@ include 'includes/header.php';
                 <div class="sepH_b clear" id="ins_dob_div">
                         <label class="lbl_a"><strong>6.</strong> Insured Date of Birth:</label>
                                 <?php
-                                        $ins_dob_month = date('m', strtotime($p['ins_dob']));
-                                        $ins_dob_day = date('j', strtotime($p['ins_dob']));
-                                        $ins_dob_year = date('Y', strtotime($p['ins_dob']));
+					if($p['ins_dob']!=''){
+                                        	$ins_dob_month = date('m', strtotime($p['ins_dob']));
+                                        	$ins_dob_day = date('j', strtotime($p['ins_dob']));
+                                        	$ins_dob_year = date('Y', strtotime($p['ins_dob']));
+					}else{
+						$ins_dob_month = '';
+                                                $ins_dob_day = '';
+                                                $ins_dob_year = '';
+					}
                                 ?>
                                 <select id="ins_dob_month" name="ins_dob_month" class="validate">
                                         <option value=''>Month</option>
@@ -472,9 +485,15 @@ include 'includes/header.php';
                 <div class="sepH_b clear" id="ins2_dob_div">
                         <label class="lbl_a"><strong>5.</strong> Insured Date of Birth:</label>
                                 <?php
-                                        $ins2_dob_month = date('m', strtotime($p['ins2_dob']));
-                                        $ins2_dob_day = date('j', strtotime($p['ins2_dob']));
-                                        $ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
+					if($p['ins2_dob']){
+                                        	$ins2_dob_month = date('m', strtotime($p['ins2_dob']));
+                                        	$ins2_dob_day = date('j', strtotime($p['ins2_dob']));
+                                        	$ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
+					}else{
+						$ins2_dob_month = '';
+                                                $ins2_dob_day = '';
+                                                $ins2_dob_year = '';
+					}
                                 ?>
                                 <select name="ins2_dob_month" id="ins2_dob_month" class="validate">
                                         <option value=''>Month</option>
@@ -779,7 +798,7 @@ $(document).ready(function(){
                 <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a extphonemask" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
                 </div>
-                <div class="sepH_b half">
+                <div class="sepH_b clear">
                         <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>
                 </div>
 	</div>
@@ -799,13 +818,24 @@ $(document).ready(function(){
 											<div class="last sepH_c">
 												<h3 class="sepH_b">Congratulations!</h3>
 												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
+ <?php
+                                                                                                if(!$questionnaire_completed){
+                                                                                                ?>
 
 												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next Dental Sleep Solutions visit!</p>
+<?php } ?>
 											</div>
 
 											<div class="cf">
 												<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+												<?php
+												if(!$questionnaire_completed){
+												?>
 												<a href="symptoms.php" class="fr btn btn_d">Start Questionnaire</a>
+												<?php }else{
+                                                                                                ?>
+                                                                                                <a href="index.php" class="fr btn btn_d">View Dashboard</a>
+                                                                                                <?php } ?>
 											</div>
 										</div>
 									</div>

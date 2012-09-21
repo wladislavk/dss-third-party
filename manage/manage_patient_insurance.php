@@ -81,10 +81,13 @@ mysql_query($psql);
   </script>
   <?php
 }elseif(isset($_REQUEST['delid'])){
+$pcsql = "SELECT patientid, insurancetype FROM dental_patient_insurance WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
+$pcq = mysql_query($pcsql);
+$pcr = mysql_fetch_assoc($pcq);
 $dsql = "DELETE FROM dental_patient_insurance WHERE id='".mysql_real_escape_string($_REQUEST['delid'])."'";
 mysql_query($dsql);
 ?>  <script type="text/javascript">
-        window.location = "manage_patient_insurance.php";
+        window.location = "patient_changes.php?pid=<?= $pcr['patientid']; ?>";
   </script>
 <?php
 }

@@ -1,23 +1,7 @@
 <?php 
 include "includes/header.php";
+include 'includes/questionnaire_sections.php';
 ?>
-<script type="text/javascript">
-edited = false;
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			edited = true;
-			//window.onbeforeunload = confirmExit;
-		});
-		$('#q_page2frm').submit(function() {
-			window.onbeforeunload = null;
-		});
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
-</script>
-
 
 <?php
 if($_POST['q_page2sub'] == 1)
@@ -85,32 +69,13 @@ if($_POST['q_page2sub'] == 1)
 	if($polysomnographic == '')
 		$polysomnographic = 0;
 	
-	/*echo "polysomnographic - ".$polysomnographic."<br>";
-	echo "sleep_center_name - ".$sleep_center_name."<br>";
-	echo "sleep_study_on - ".$sleep_study_on."<br>";
-	echo "confirmed_diagnosis - ".$confirmed_diagnosis."<br>";
-	echo "rdi - ".$rdi."<br>";
-	echo "ahi - ".$ahi."<br>";
-	echo "cpap - ".$cpap."<br>";
-	echo "intolerance - ".$intolerance."<br>";
-	echo "other_intolerance - ".$other_intolerance ."<br>";
-	echo "other_therapy - ".$other_therapy ."<br>";
-	echo "int_arr - ".$int_arr ."<br>";
-	echo "other - ".$other_arr ."<br>";
-	echo "affidavit - ".$affidavit ."<br>";
-	echo "type_study - ".$type_study ."<br>";
-	echo "nights_wear_cpap - ".$nights_wear_cpap ."<br>";
-	echo "percent_night_cpap - ".$percent_night_cpap ."<br>";
-	echo "custom_diagnosis - ".$custom_diagnosis ."<br>";
-	echo "sleep_study_by - ".$sleep_study_by."<br>";*/
 	
-	
-        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page2 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
 	{
 		$ins_sql = " insert into dental_q_page2 set 
-		parent_patientid = '".s_for($_SESSION['pid'])."',
+		patientid = '".s_for($_SESSION['pid'])."',
 		polysomnographic = '".s_for($polysomnographic)."',
 		sleep_center_name_text = '".s_for($sleep_center_name_text)."',
 		sleep_study_on = '".s_for($sleep_study_on)."',
@@ -144,7 +109,23 @@ if($_POST['q_page2sub'] == 1)
 		ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 		
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-		
+                for($i=0;$i<$num_surgery;$i++){
+                        if($_POST['surgery_id_'.$i]==0){
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                }
+                                else{ $s=''; }
+                        }else{
+                                if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
+                                        $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }else{
+                                        $s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+                                }
+                        }
+                        mysql_query($s);
+                }
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Added Successfully";
 		?>
 		<script type="text/javascript">
@@ -184,15 +165,16 @@ if($_POST['q_page2sub'] == 1)
                 dd_who = '".s_for($dd_who)."',
                 dd_experience = '".s_for($dd_experience)."',
 		surgery = '".s_for($surgery)."'
-		where parent_patientid = '".s_for($_SESSION['pid'])."'";
+		where patientid = '".s_for($_SESSION['pid'])."'";
 		
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
                 for($i=0;$i<$num_surgery;$i++){
                         if($_POST['surgery_id_'.$i]==0){
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_REQUEST['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+                                        $s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_SESSION['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
                                 }
+				else{ $s=''; }
                         }else{
                                 if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
                                         $s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'";
@@ -202,7 +184,8 @@ if($_POST['q_page2sub'] == 1)
                         }
                         mysql_query($s);
                 }
-
+		mysql_query("UPDATE dental_patients SET treatments_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = "Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -214,13 +197,21 @@ if($_POST['q_page2sub'] == 1)
 	}
 }
 
-$pat_sql = "select * from dental_patients where parent_patientid='".s_for($_SESSION['pid'])."'";
+
+        $exist_sql = "SELECT treatments_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['treatments_status'] == 0)
+        {
+
+
+$pat_sql = "select * from dental_patients where patientid='".s_for($_SESSION['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 
-$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' OR parent_patientid='".$_SESSION['pid']."' ORDER BY parent_patientid DESC";
+$sql = "select * from dental_q_page2 where patientid='".$_SESSION['pid']."' ";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -301,6 +292,20 @@ if($cpap == '')
 		}
 
 	}	
+	function chk_who(){
+                fa = document.q_page2frm;
+                
+                if(fa.dd_fab[1].checked)
+                {
+                        $('.dd_fab_options').hide();
+                }
+                else
+                {
+                        $('.dd_fab_options').show();
+                }
+
+	}
+
         function chk_dd()
         {       
                 fa = document.q_page2frm;
@@ -418,7 +423,7 @@ if($cpap == '')
                             <label class="lbl_a">Are you currently using CPAP?</label>
                             <input type="radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
 
-                            <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
+                            <input type="radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap();$('#nights_wear_cpap').val(0);$('#percent_night_cpap').val(0);"  />
                             No
                         </div>
                    
@@ -495,14 +500,19 @@ if($cpap == '')
 		    </div>
 		    <div class="dd_options sepH_b half">
 			<label class="lbl_a">Was it fabricated by a dentist?</label>
-                            <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> />
+                            <input type="radio" name="dd_fab" value="Yes" <? if($dd_fab == 'Yes') echo " checked";?> onclick="chk_who();" />
                             Yes
 
-                            <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> />
+                            <input type="radio" name="dd_fab" value="No" <? if($dd_fab == 'No') echo " checked";?> onclick="chk_who();" />
                             No
 				<br /><br />
+				<div class="dd_fab_options">
 				<label class="lbl_a">Who?</label>
 				<input class="inpt_a" type="text" id="dd_who" name="dd_who" value="<?= $dd_who; ?>" />
+				</div>
+<script type="text/javascript">
+  chk_who();
+</script>
 	 	    </div>
 		    <div class="dd_options">
 			<label class="lbl_a">Describe your experience</label>
@@ -574,7 +584,7 @@ if($cpap == '')
                                                                 other_chk1();
                                                    </script>
                         </div>
-
+<p class="confirm_text">Thank you for completing the Treatments Questionnaire! Please click the box below to confirm and record your answers.</p>
 <div align="right">
     <input type="submit" name="q_pagebtn" class="next btn btn_d" value="Save and Proceed"  />
     &nbsp;&nbsp;&nbsp;
@@ -582,6 +592,9 @@ if($cpap == '')
 </div>
 </form>
 
+<?php }else{
+show_section_completed($_SESSION['pid']);
+} ?>
 
 <? include "includes/footer.php";?>
 

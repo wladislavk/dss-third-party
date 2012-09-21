@@ -2,6 +2,25 @@
 include "includes/top.htm";
 require_once('includes/patient_info.php');
 if ($patient_info) {
+
+
+if($_GET['own']==1){
+  $c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $c_q = mysql_query($c_sql);
+  $changed = mysql_num_rows($c_q);
+  $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  mysql_query($own_sql);
+                ?>
+                <script type="text/javascript">
+			<?php if($changed>0){ ?>
+				alert("Warning! Patient has made changes to the Questionnaire. Please review the patient's ENTIRE questionnaire for changes.");
+			<?php } ?>
+                        window.location='q_page2.php?pid=<?=$_GET['pid']?>&addtopat=1';
+                </script>
+                <?
+                die();
+
+}
 ?>
 
 <script type="text/javascript">
@@ -229,6 +248,34 @@ if($pat_myarray['patientid'] == '')
 	<?
 	die();
 }
+
+
+        $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0)
+        {
+                ?>
+                <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It has not been edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please
+                        <a href="q_page2.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+                <?php
+
+        }elseif($exist_row['symptoms_status'] != 2 && $exist_row['sleep_status'] != 2 && $exist_row['treatments_status'] != 2 && $exist_row['history_status'] != 2 &&
+                $exist_row['symptoms_status'] != 3 && $exist_row['sleep_status'] != 3 && $exist_row['treatments_status'] != 3 && $exist_row['history_status'] != 3)
+        {
+                ?>
+                <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It is currently being edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please
+                        <a href="q_page2.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.</div>
+                <?php
+
+        }else{
+
+                if($exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['history_status'] == 2){
+                ?>                                <div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. All patient changes are visible below. Review each page of the Questionnaire then
+                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.</div>
+                <?php
+
+                }
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
@@ -803,7 +850,7 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 <br /><br />	
 
 <?php
-
+} //end treatment status check
 } else {  // end pt info check
 	print "<div style=\"width: 65%; margin: auto;\">Patient Information Incomplete -- Please complete the required fields in Patient Info section to enable this page.</div>";
 }

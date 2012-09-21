@@ -14,9 +14,9 @@ require_once '../../manage/admin/includes/config.php';
     echo '{"error":"limit"}';
     die();
   }
-  if($r['access_code']==''){
+  if($r['access_code']=='' || strtotime($r['access_code_date']) < time()-86400){
                 $recover_hash = rand(100000, 999999);//substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
-                $ins_sql = "UPDATE dental_patients set registration_status=1, access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set registration_status=1, access_code='".$recover_hash."', access_code_date = NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
   }else{
 	$recover_hash = $r['access_code'];

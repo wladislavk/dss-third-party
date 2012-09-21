@@ -11,7 +11,20 @@ lo_timer=setInterval("auto_logout()",timer_length);
 }
 function auto_logout()
 {
-window.location = 'logout.php';
-
+                                    $.ajax({
+                                        url: "includes/check_logout.php",
+                                        type: "post",
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.reset_time){
+							lo_timer=setInterval("auto_logout()",r.reset_time);
+                                                }else{
+							window.location = 'logout.php';
+                                                }
+                                        },
+                                        failure: function(data){
+                                               window.location = 'logout.php';
+                                        }
+                                  });
 }
 

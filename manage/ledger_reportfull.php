@@ -22,6 +22,7 @@ select
 		dl.service_date,
 		dl.entry_date,
 		dl.amount,
+		dl.paid_amount,
 		dl.status, 
 		dl.description,
 		p.name, 
@@ -41,6 +42,7 @@ select
                 dlp.id,
                 dlp.payment_date,
                 dlp.entry_date,
+		'',
 		dlp.amount,
 		'',
 		'',
@@ -243,22 +245,22 @@ background:#999999;
 				<td valign="top" align="right" width="10%">
           <?php
 	if($myarray[0] == 'ledger'){
+	  if($myarray["amount"] <> 0){
           echo $myarray["amount"];
 	  $tot_charges += $myarray["amount"];
+	  }
 	}
           ?>
 
 					&nbsp;
 				</td>
 				<td valign="top" align="right" width="10%">
-				<?php if($myarray[0]=='ledger_payment'){ ?>
-					<? if(st($myarray["amount"]) <> 0) {?>
-	                	<?=number_format(st($myarray["amount"]),2);?>
+					<? if(st($myarray["paid_amount"]) <> 0) {?>
+	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
-						$tot_credit += st($myarray["amount"]);
+						$tot_credit += st($myarray["paid_amount"]);
 					}?>
 					&nbsp;
-					<?php } ?>
 				</td>
 				<td valign="top" width="5%">&nbsp;
          <? if($myarray["status"] == 1){

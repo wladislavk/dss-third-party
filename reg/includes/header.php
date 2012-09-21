@@ -1,5 +1,7 @@
+<?php session_start(); ?>
 <?php include '../manage/admin/includes/config.php'; ?>
 <?php include '../manage/includes/constants.inc'; ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
     <title>Dental Sleep Solutions :: Registration</title>

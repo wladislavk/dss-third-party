@@ -91,6 +91,7 @@ Filter by type: <select name="myjumpbox"
                 <ul id="contact_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
+		</div>
 <script type="text/javascript">
 $(document).ready(function(){
   setup_autocomplete('contact_name', 'contact_hints', 'contact', '', 'list_contacts_and_companies.php');
@@ -109,7 +110,6 @@ $(document).ready(function(){
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>

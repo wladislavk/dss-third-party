@@ -84,6 +84,33 @@ if($_REQUEST["delclaimid"] != "")
         die();
 	
 }
+
+if($_REQUEST["delnoteid"] != "")
+{
+
+	$sql = "DELETE FROM dental_ledger_note WHERE id='".mysql_real_escape_string($_REQUEST['delnoteid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+        $q = mysql_query($sql);
+         if($q){
+
+          $msg= "Deleted Successfully";
+         }else{
+          $msg = "Error deleting.";
+        }
+        ?>
+        <script type="text/javascript">
+                //alert("Deleted Successfully");
+                <?php if($_GET['popup']==1){ ?>
+                  parent.window.location.reload();
+                <?php }else{ ?>
+                  window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+                <?php } ?>
+        </script>
+        <?
+        die();
+
+}
+
+
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my); 

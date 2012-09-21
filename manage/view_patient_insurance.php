@@ -47,7 +47,7 @@ mysql_query($psql);
   mysql_query($d);
   ?>
   <script type="text/javascript">
-        parent.window.location = "manage_patient_insurance.php";
+        parent.window.location = "patient_changes.php?pid=<?= $pcr['patientid']; ?>";
   </script>
 	<?php	
 }

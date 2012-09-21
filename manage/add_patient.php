@@ -402,6 +402,7 @@ if($_POST["patientsub"] == 1)
 		$pass = $l['password'];
 		if($login == ''){
 	                $clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+			$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
         	        $csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
                 	$cq = mysql_query($csql);
 	                $carray = array();
@@ -485,6 +486,7 @@ mysql_query($s1);
 	{
         //echo('in');
 		$clogin = strtolower(substr($_POST["firstname"],0,1).$_POST["lastname"]);
+		$clogin = ereg_replace("[^A-Za-z]", "", $clogin);
 		$csql = "SELECT login FROM dental_patients WHERE login LIKE '".$clogin."%'";
 		$cq = mysql_query($csql);
 		$carray = array();
@@ -622,13 +624,13 @@ mysql_query($s1);
 		ip_address='".$_SERVER['REMOTE_ADDR']."',
 		preferredcontact='".s_for($_POST["preferredcontact"])."';";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-
+		$pid = mysql_insert_id();
+		
 		if(isset($_POST['location'])){
                 	$loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
                 	mysql_query($loc_query);
 		}
 
-                $pid = mysql_insert_id();
    		trigger_letter1and2($pid);
 
                 if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
@@ -1642,7 +1644,7 @@ function show_referredby(t, rs){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', <?= $_GET['pid']; ?>);
+  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', '<?= $_GET['pid']; ?>');
 });
 </script>
 					</div>
@@ -1866,7 +1868,7 @@ $image = mysql_fetch_assoc($itype_my);
                         <div>
                             <span>
                                 <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
-                                     <option>Select Type</option>
+                                     <option value="">Select Type</option>
                                      <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
@@ -2043,7 +2045,7 @@ $image = mysql_fetch_assoc($itype_my);
                         <div>
                             <span>
                                 <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
-                                     <option>Select Type</option>
+                                     <option value="">Select Type</option>
                                      <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                      <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
                                      <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
@@ -2099,7 +2101,7 @@ $image = mysql_fetch_assoc($itype_my);
         
         
 		
-		      <?php if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
+		      <?php //if((isset($_GET['pid']) && isset($_GET['ed'])) || (isset($_GET['pid']) && isset($_GET['addtopat']))){?>
 		    	  <tr>
 	      <td colspan="2">
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</font>	      
@@ -2187,7 +2189,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
+  setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
 });
 </script>
                                         </div>
@@ -2218,7 +2220,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
+  setup_autocomplete('docdentist_name', 'docdentist_hints', 'docdentist', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
 });
 </script>
                                         </div>
@@ -2260,7 +2262,7 @@ $(document).ready(function(){
                 </ul>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php', 'contact', <?= $_GET['pid']; ?>);
+  setup_autocomplete('docmdother_name', 'docmdother_hints', 'docmdother', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
 });
 </script>
                                         </div>
@@ -2302,7 +2304,7 @@ $(document).ready(function(){
 	
 		    </tr>
 		    
-		    <?php } ?>
+		    <?php //} ?>
 		    
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

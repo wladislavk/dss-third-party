@@ -1,24 +1,10 @@
 <?php
-session_start();
-require_once('admin/includes/config.php');
-require_once('includes/constants.inc');
-include("includes/sescheck.php");
-require_once('includes/general_functions.php');
+include "includes/top.htm";
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
-</head>
-<body class="solid">
-
 <?php
+$num_changes = 0;
+
 $psql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $pq = mysql_query($psql);
 $p = mysql_fetch_assoc($pq);
@@ -135,11 +121,13 @@ parent.window.location = parent.window.location;
 <style type="text/css">
 .duplicate{ display:none; }
 table {  width: 700px; margin:0 auto; }
-table, td{ color:#fff;}
 input.selected { background-color:#0f3; border:solid 1px #0f3;}
 input.button1 { font-size:20px; background:#fff; }
 </style>
-<form action="patient_changes.php" method="post">
+<?php
+if(mysql_num_rows($cq)>0){
+?>
+<form action="patient_changes.php?pid=<?= $_GET['pid']; ?>" method="post">
 <table>
   <tr>
     <th style>Field</th>
@@ -148,7 +136,7 @@ input.button1 { font-size:20px; background:#fff; }
     <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br />Patient Data</th>
   </tr>
 </table>
-<div style="overflow:auto; height:300px;">
+<div> 
 <table >
 <?php
   foreach($fields as $field => $label){
@@ -162,6 +150,7 @@ input.button1 { font-size:20px; background:#fff; }
 	<input type="hidden" class="accepted" id="accepted_<?= $field; ?>"  name="accepted_<?= $field; ?>" />
     	<input type="hidden" class="value" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
 	<?php
+	$num_changes++;
     }
 
     if(in_array($field, $doc_fields)){ ?>
@@ -281,12 +270,14 @@ input.button1 { font-size:20px; background:#fff; }
     <td><input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" /></td>
   <?php } ?>
   </tr>
-<?php } ?>
+<?php  } ?>
 </table>
 </div>
-<input type="submit" name="submit" value="Submit" />
+<input type="submit" name="submit"  style="float:right; margin-right:30px;" value="Submit" />
 <input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
 </form>
+<?php } ?>
+<br /><br />
 
 <script type="text/javascript">
 function updateField(f, v){
@@ -309,7 +300,10 @@ function updateAll(v){
   $('.change_row').each(function(){
     $(this).find('.doc_field').removeClass('selected');
     $(this).find('.pat_field').removeClass('selected');
+    $(this).find('.doc_field_extra').removeClass('selected');
+    $(this).find('.pat_field_extra').removeClass('selected');
     $(this).find('.'+v+'_field').addClass('selected');
+    $(this).find('.'+v+'_field_extra').addClass('selected');
     val = $(this).find('.'+v+'_field').val();
     $(this).find('.value').val(val);
     $(this).find('.accepted').val(v);
@@ -318,5 +312,19 @@ function updateAll(v){
 </script>
 
 
-</body>
-</html>
+<?php include 'patient_contacts.php'; ?>
+
+
+<?php include 'patient_insurance.php'; ?>
+
+<?php
+if($num_changes == 0){
+  ?>
+    <script type="text/javascript">
+      window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
+    </script>
+  <?php
+}
+?>
+
+<?php include 'includes/bottom.htm'; ?>

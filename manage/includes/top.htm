@@ -6,6 +6,7 @@ require_once('includes/constants.inc');
 require_once('includes/authorization_functions.php');
 require_once('includes/general_functions.php');
 require_once('includes/notifications.php');
+require_once('includes/patient_changes.php');
 if($_SESSION['userid'] == '')
 {
 	?>
@@ -1234,6 +1235,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
      <li><a href="ledger_reportfull.php">Ledger</a></li>
      <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
      <li><a href="#">Performance</a></li>
+     <li><a href="manage_screeners.php">Pt. Screener</a></li>
   </ul>
 </li>
 
@@ -1306,14 +1308,37 @@ while($od_r = mysql_fetch_assoc($od_q)){
 	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
                                 $q = mysql_query($s);
                                 $n = mysql_num_rows($q);
+				$n = num_patient_changes($_GET['pid']);
                                 $pat = mysql_fetch_assoc($q);
-                                if($n>0){ ?>
-<a class="warning" href="#" onclick="loadPopup('patient_changes.php?pid=<?=$_GET['pid'];?>');return false;">
-<span>Warning! Patient has updated their profile via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+$contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
+        p.firstname as patfirstname, p.lastname as patlastname
+        FROM dental_patient_contacts pc 
+        INNER JOIN dental_patients p ON pc.patientid=p.patientid
+        WHERE p.docid='".$_SESSION['docid']."' AND
+                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$contacts_my = mysql_query($contacts_sql);
+$total_contacts = mysql_num_rows($contacts_my);
+$insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
+        WHERE p.docid='".$_SESSION['docid']."' AND
+                p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$insurance_my = mysql_query($insurance_sql);
+$total_insurance = mysql_num_rows($insurance_my);
+                                if(($n+$total_contactsi+$total_insurance)>0){ ?>
+<a class="warning" href="patient_changes.php?pid=<?=$_GET['pid'];?>">
+<span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
 
                                 <? } 
 
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+	if($exist_row['symptoms_status']==2 || $exist_row['treatments_status']==2 || $exist_row['history_status']==2 || $exist_row['sleep_status']==2){ ?>
+<a class="warning" href="q_page1.php?pid=<?= $_GET['pid']; ?>&addtopat=1" >
+<span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+</a>
+	<?php
+	}
 
 
   }

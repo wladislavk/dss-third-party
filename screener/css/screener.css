@@ -1,0 +1,42 @@
+body{
+  background:#CFE6F7;
+  }
+.clear{ clear:both; }
+.fifth{ width:19%; float:left; display:block;}
+.third{ width:32%; float:left; display:block;}
+.half{width:49%; float:left; display:block;}
+.half.num{width:44%;}
+.half.string{width:55%;}
+.formEl_a .fifth .inpt_a{ width:150px; }
+.formEl_a .third .inpt_a{ width:200px; }
+.formEl_a .half .inpt_a{ width: 300px; }
+.formEl_a .half.num .lbl_in{width:325px; display:block; float:left; padding-top:6px;}
+.formEl_a .half.num .inpt_in{width:50px; float:left;}
+.formEl_a .half.string .lbl_in{width:315px; display:block; float:left; padding-top:6px;}
+.formEl_a .half.string .inpt_in{width:180px; float:left;}
+.formEl_a .lbl_in{ width:455px; display:block; float:left; padding-left:7px;padding-top:6px;}
+.formEl_a .inpt_in{width:70px; float:left;}
+.formEl_a .lbl_in2{ width:255px; text-align:right; display:block; float:left; padding-right:7px;padding-top:6px;}
+.formEl_a .inpt_in2{width:150px; float:left;}
+.formEl_a input[type="radio"]{ width: 20px; height: 20px; }
+.legend{ width:300px; margin:10px auto; border:solid 1px #ccc; padding:10px;}
+
+.btn_large{
+  font: 700 24px/50px Helvetica, Arial, sans-serif;
+  background-image: url(../images/grd_dl.png);
+  }
+
+.btn_medium{
+  font: 700 18px/36px Helvetica, Arial, sans-serif;
+  background-image: url(../images/grd_dl.png);
+  }
+
+.sepH_b.ui-buttonset{ float:left;}
+#sect3 .buttonset, #sect4 .buttonset{float:left;}
+#sect3 .sepH_b{ clear:both; margin-top:10px; height: 30px;}
+#sect3 label, #sect4 label{font-size:16px; }
+#sect3 label.question, #sect4 label.question{ display:block; padding-top:8px;}
+#sect4 .half{ margin-bottom:7px; }
+
+#sect2{ font-size:16px; }
+#sect2 .sepH_b { height:25px; }

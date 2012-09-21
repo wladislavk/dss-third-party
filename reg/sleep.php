@@ -1,23 +1,8 @@
 <?php 
 include "includes/header.php";
+include 'includes/questionnaire_sections.php';
 ?>
 <link rel="stylesheet" href="css/questionnaire.css" />
-<script type="text/javascript">
-edited = false;
-	$(document).ready(function() {
-		$(':input:not(#patient_search)').change(function() { 
-			edited = true;
-			//window.onbeforeunload = confirmExit;
-		});
-		$('#q_sleepfrm').submit(function() {
-				window.onbeforeunload = null;
-		});
-	});
-  function confirmExit()
-  {
-    return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-  }
-</script>
 <?php
 if($_POST['q_sleepsub'] == 1)
 {
@@ -68,23 +53,24 @@ if($_POST['q_sleepsub'] == 1)
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
         {
 		$ed_sql = "insert into dental_q_page1 set
                         ess='".mysql_real_escape_string($_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
-                        parent_patientid='".$_SESSION['pid']."'";
+                        patientid='".$_SESSION['pid']."'";
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
         }else{
                 $ed_sql = "update dental_q_page1 set
                         ess='".mysql_real_escape_string($_POST['epTot'])."',
                         tss='".s_for($tot_score)."'
-                        WHERE parent_patientid='".$_SESSION['pid']."'";
+                        WHERE patientid='".$_SESSION['pid']."'";
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 	}
-
+                mysql_query("UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
                 $msg = "Added Successfully";
                 ?>
                 <script type="text/javascript">
@@ -113,24 +99,26 @@ if($_POST['q_sleepsub'] == 1)
                 where thortonid = '".s_for($_POST['ted'])."'";
 
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT patientid FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         if(mysql_num_rows($exist_q) == 0)
         {
                 $ed_sql = "insert into dental_q_page1 set
                         ess='".mysql_real_escape_string($_POST['epTot'])."',
                         tss='".s_for($tot_score)."',
-                        parent_patientid='".$_SESSION['pid']."'";
+                        patientid='".$_SESSION['pid']."'";
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
         }else{
 
 		$ed_sql = "update dental_q_page1 set
 			ess='".mysql_real_escape_string($_POST['epTot'])."',
 			tss='".s_for($tot_score)."'
-			WHERE parent_patientid='".$_SESSION['pid']."'";
+			WHERE patientid='".$_SESSION['pid']."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		//echo $ed_sql;
 	}
+                mysql_query("UPDATE dental_patients SET sleep_status=1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
+                mysql_query("UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE symptoms_status=1 AND sleep_status=1 AND treatments_status=1 AND history_status=1 AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'");
 		$msg = " Edited Successfully";
 		?>
 		<script type="text/javascript">
@@ -141,6 +129,13 @@ if($_POST['q_sleepsub'] == 1)
 		die();
 	}
 }
+
+
+        $exist_sql = "SELECT sleep_status, symptoms_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_q = mysql_query($exist_sql);
+        $exist_row = mysql_fetch_assoc($exist_q);
+        if($exist_row['sleep_status'] == 0 && ($exist_row['symptoms_status'] == 0 || $exist_row['symptoms_status']==1))
+        {
 
 $sql = "select * from dental_thorton where patientid='".$_SESSION['pid']."'";
 $my = mysql_query($sql);
@@ -383,7 +378,7 @@ cal_analaysis(0);
 
 
 
-
+<p class="confirm_text">Thank you for completing the Epworth/Thorton Questionnaire! Please click the box below to confirm and record your answers. </p>
 
 
 <div align="right">
@@ -391,6 +386,8 @@ cal_analaysis(0);
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>
-
+<?php }else{
+show_section_completed($_SESSION['pid']);
+} ?>
 <? include "includes/footer.php";?>
 

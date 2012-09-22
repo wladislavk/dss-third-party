@@ -301,10 +301,10 @@ $pat_r = mysql_fetch_assoc($pat_q);
   <tr>	
 		<td valign="top" class="odd">
 		<select name="sleeptesttype">
-      <option value="PSG Titration">PSG Titration</option>    
-      <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Baseline">HST Baseline</option>
+      <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Titration">HST Titration</option>
+      <option value="PSG Titration">PSG Titration</option>    
     </select>	
 <script type="text/javascript">
 function show_new_study(){
@@ -507,10 +507,10 @@ $device = mysql_result($device_result, 0);
   <tr>	
 		<td valign="top" class="odd">
                 <select name="sleeptesttype">
-                   <option <?= ($s_lab['sleeptesttype']=="PSG Titration")?'selected="selected"':''; ?> value="PSG Titration">PSG</option>
-	           <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
-     		   <option <?= ($s_lab['sleeptesttype']=="HST Baseline")?'selected="selected"':''; ?> value="HST Baseline">HST Baseline</option>
-      		   <option <?= ($s_lab['sleeptesttype']=="HST Titration")?'selected="selected"':''; ?> value="HST Titration">HST Titration</option>
+                   <option <?= ($s_lab['sleeptesttype']=="HST Baseline")?'selected="selected"':''; ?> value="HST Baseline">HST Baseline</option>
+                   <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
+                   <option <?= ($s_lab['sleeptesttype']=="HST Titration")?'selected="selected"':''; ?> value="HST Titration">HST Titration</option>
+                   <option <?= ($s_lab['sleeptesttype']=="PSG Titration")?'selected="selected"':''; ?> value="PSG Titration">PSG Titration</option>
 
                 </select>
 

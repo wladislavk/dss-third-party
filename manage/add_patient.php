@@ -658,12 +658,7 @@ mysql_query($s1);
       $segmentid = '1';
       $scheduled = strtotime($copyreqdate);
       $gen_date = date('Y-m-d H:i:s', strtotime($_POST["copyreqdate"]));
-      $steparray_query = "INSERT INTO dental_flow_pg2 (`patientid`, `steparray`) VALUES ('".$pid."', '".$segmentid."');";
       $flow_pg2_info_query = "INSERT INTO dental_flow_pg2_info (`patientid`, `stepid`, `segmentid`, `date_scheduled`, `date_completed`) VALUES ('".$pid."', '".$stepid."', '".$segmentid."', '".$scheduled."', '".$gen_date."');";
-      $steparray_insert = mysql_query($steparray_query);
-      if (!$steparray_insert) {
-        $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact to Flowsheet Page 2";
-      }
       $flow_pg2_info_insert = mysql_query($flow_pg2_info_query);
       if (!$flow_pg2_info_insert) {
         $message = "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Initial Contact Information to Flowsheet Page 2";

@@ -4,23 +4,11 @@ require_once 'letter_triggers.php';
 $id = $_REQUEST['id'];
 $c = $_REQUEST['c'];
 $pid = $_REQUEST['pid'];
-        $fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$pid."';";
-        $fsData_query = mysql_query($fsData_sql);
-        $fsData_array = mysql_fetch_array($fsData_query);
-
-        if (!empty($fsData_array['steparray'])) {
-                $order = explode(",",$fsData_array['steparray']);
-        }
-		$new_steparray = $fsData_array['steparray'].",".$id;
-		$stepid=count($order)+1;
-		$numsteps = $stepid;
-		//$s = "SELECT * from dental_flow_pg2_info WHERE segmentid=".$id." AND patientid=".$pid;
-		//$q = mysql_query($s);
-		//echo mysql_num_rows($q);
+		$numsteps = null;
 
 
         if ($id == "8") { // Follow-Up/Check
-                $trigger_query = "SELECT dental_flow_pg2.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2  JOIN dental_flow_pg2_info ON dental_flow_pg2.patientid=dental_flow_pg2_info.patientid WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2.steparray LIKE '%7%8%' AND dental_flow_pg2.patientid = '".$pid."';";
+                $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
                 $trigger_result = mysql_query($trigger_query);
                 $numrows = (mysql_num_rows($trigger_result));
                 if ($numrows > 0) {
@@ -28,8 +16,7 @@ $pid = $_REQUEST['pid'];
                 }
         }
         if ($id == "13") { // Termination
-		echo trigger_letter24($pid, $numsteps); 
-                //$letterid[] = trigger_letter24($pid, $numsteps);
+                $letterid[] = trigger_letter24($pid, $numsteps);
         }
 
                                                         $consult_query = "SELECT stepid, date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' ORDER BY stepid DESC LIMIT 1;";
@@ -68,14 +55,11 @@ $pid = $_REQUEST['pid'];
 
                     $s = "INSERT INTO dental_flow_pg2_info SET
                         patientid= ".$pid.",
-                        stepid = ".$stepid.",
                         segmentid = ".$id.",
 			letterid = '".$letteridlist."',
                         date_completed = CURDATE()";
                 mysql_query($s);
                 $insert_id=mysql_insert_id();
-                $new_steparray = $fsData_array['steparray'].",".$id;
-                $stepid=count($order)+1;        $fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";        $s = mysql_query($fsData_sql);
 
 
 $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$pid."' AND (letterid IN(".$letteridlist.") OR parentid IN(".$letteridlist.")) ORDER BY stepid ASC;";

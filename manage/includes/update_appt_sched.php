@@ -5,41 +5,13 @@ $id = $_REQUEST['id'];
 $sched = ($_REQUEST['sched']!='')?date('Y-m-d', strtotime($_REQUEST['sched'])):'';
 $pid = $_REQUEST['pid'];
 clean_steps($pid);
-        $fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$pid."';";
-        $fsData_query = mysql_query($fsData_sql);
-        $fsData_array = mysql_fetch_array($fsData_query);
-
-        if (!empty($fsData_array['steparray'])) {
-                $order = explode(",",$fsData_array['steparray']);
-        }
-		$new_steparray = $fsData_array['steparray'].",".$id;
-		$stepid=count($order)+1;
 		$s = "INSERT INTO dental_flow_pg2_info SET
 			patientid= ".$pid.",
-			stepid = ".$stepid.",
 			segmentid = ".$id.",
 			date_scheduled = '".$sched."'";
-		mysql_query($s); 
-		$fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";	
-		$q = mysql_query($fsData_sql);
+		$q = mysql_query($s); 
 
 
-        $steparray_query = "SELECT steparray FROM dental_flow_pg2 WHERE patientid = '".$pid."';";
-        $steparray_result = mysql_query($steparray_query);
-        $result_array = mysql_fetch_array($steparray_result);
-        $flowsheet_segments = explode(",", $result_array['steparray']);
-	$numsteps = (count($flowsheet_segments));
-        $topstep = array_pop($flowsheet_segments);
-	$topstep = array_pop($flowsheet_segments);
-        $segment_query = "SELECT segmentid, date_scheduled, date_completed, letterid FROM dental_flow_pg2_info WHERE stepid = '".$numsteps."' AND segmentid = '".$topstep."' AND patientid = '".$pid."' ORDER BY stepid DESC LIMIT 1;";
-        $segment_result = mysql_query($segment_query);
-        while ($row = mysql_fetch_assoc($segment_result)) {
-                $laststep = $row;
-        }
-
-        if (!empty($laststep['letterid'])) {
-                $letter = true;
-        }
         $consult_query = "SELECT stepid, date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' ORDER BY stepid DESC LIMIT 1;";
         $consult_result = mysql_query($consult_query);
         $consult_stepid = mysql_result($consult_result, 0, 0);
@@ -72,39 +44,21 @@ if($q){
 ?>
 
 <?php
-function clean_steps($pid){
+function clean_steps($pid){ //Deletes not completed steps and clears scheduled
 	
-	$s = "SELECT stepid, segmentid, date_scheduled, date_completed from dental_flow_pg2_info where patientid=".$pid;
+	$s = "SELECT id, segmentid, date_scheduled, date_completed from dental_flow_pg2_info where patientid=".$pid;
 	$q = mysql_query($s);
 	while($r = mysql_fetch_assoc($q)){
 	  if( $r['date_completed']==''){
-		        $fsData_sql = "SELECT `steparray` FROM `dental_flow_pg2` WHERE `patientid` = '".$pid."';";
-        		$fsData_query = mysql_query($fsData_sql);
-        		$fsData_array = mysql_fetch_array($fsData_query);
-
-        		if (!empty($fsData_array['steparray'])) {
-                		$order = explode(",",$fsData_array['steparray']);
-        		}
-                unset($order[array_search($r['segmentid'], $order)]);
-                $order = array_values($order);
-                $new_steparray = implode($order, ',');
-        $fsData_sql = "UPDATE `dental_flow_pg2` SET steparray='".mysql_real_escape_string($new_steparray)."' WHERE `patientid` = '".$pid."';";
-        $s = mysql_query($fsData_sql);
                 $s = "DELETE FROM dental_flow_pg2_info
-                        WHERE segmentid = ".$r['segmentid']."
+                        WHERE id = ".$r['id']."
                                 AND patientid=".$pid;
                 mysql_query($s);
-                foreach($order as $i => $o){
-                        $u = "UPDATE dental_flow_pg2_info set stepid=".($i+1)."
-                        WHERE segmentid = ".$o."
-                                AND patientid=".$pid;
-                        mysql_query($u);
-                }
 
 	  }else{
 		mysql_query("UPDATE dental_flow_pg2_info set 
                         date_scheduled=''
-                        WHERE stepid=".$r['stepid']);
+                        WHERE id=".$r['id']);
 	  }
 	}
 

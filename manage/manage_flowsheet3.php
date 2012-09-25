@@ -87,7 +87,7 @@ if($r){
   <tr>
     <th>Date</th>
     <th>Treatment</th>
-    <th>Letters</th>
+    <th style="width: 80px">Letters</th>
   </tr>
 
   <tr id="completed_row_temp" style="display:none;">
@@ -125,6 +125,37 @@ $segments[1] = "Initial Contact";
         </td>
         <td>
                 <span class="title"><?= $segments[$row['segmentid']]; ?></span>
+                <?php
+                switch($row['segmentid']){
+                        case 3: //sleep study
+                                ?><br /><input class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" type="text" style="width:50px;" value="<?= $row['study_type']; ?>" /><?php
+                                break;
+			case 5: //Delay
+				?>
+<select class="delay_reason" id="delay_reason_<?php echo $id; ?>" name="data[<?php echo $id; ?>][delay_reason]" style="width:94px;">
+<option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
+<option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
+<option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
+<option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
+<option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+</select><br />
+<a id="reason_btn<?php echo $step; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
+				<?php
+				break;
+			case 9: //
+				?><br />
+	<select class="noncomp_reason" id="noncomp_reason<?php echo $id; ?>" name="data[<?php echo $id; ?>][noncomp_reason]" style="width:94px;">
+<option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
+<option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
+<option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
+<option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+</select><br />
+<a id="reason_btn<?php echo $step; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
+				<?php
+				break;
+                }
+                ?>
+
         </td>
         <td class="letters">
 		<?php
@@ -264,6 +295,70 @@ function update_completed_date(cid){
                                         }
                                   });
 }
+
+$('.delay_reason').change(function(){
+  id = $(this).attr('id').substring(13);
+  reason = $(this).val();
+                                    $.ajax({
+                                        url: "includes/flow_delay_reason_update.php",
+                                        type: "post",
+                                        data: {id: id, reason: reason, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+
+
+$('.noncomp_reason').change(function(){
+  id = $(this).attr('id').substring(14);
+  reason = $(this).val();
+                                    $.ajax({
+                                        url: "includes/flow_noncomp_reason_update.php",
+                                        type: "post",
+                                        data: {id: id, reason: reason, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+
+
+
+$('.study_type').blur(function(){
+  id = $(this).attr('id').substring(11);
+  type = $(this).val();
+                                    $.ajax({
+                                        url: "includes/flow_study_type_update.php",
+                                        type: "post",
+                                        data: {id: id, type: type, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+
 </script>
 
 <?php include "includes/bottom.htm";?>

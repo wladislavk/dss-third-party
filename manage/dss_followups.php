@@ -104,6 +104,13 @@ function show_new_followup(){
   
   <tr >
   	    <td >
+<?php
+$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$myex = mysql_query($sqlex);
+$myarrayex = mysql_fetch_array($myex);
+$dentaldevice = st($myarrayex['dentaldevice']);
+?>
+
       <select name="devadd" style="width:150px;">
         <?php
         $device_sql = "select * from dental_device where status=1 order by sortby";
@@ -112,7 +119,7 @@ function show_new_followup(){
 								while($device_myarray = mysql_fetch_array($device_my))
 								{	
                 ?>  
-								 <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+								 <option <?= ($dentaldevice == $device_myarray['deviceid'])?'selected="selected"':''; ?> value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
 								 <?php
 								 }
 								?>

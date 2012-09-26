@@ -48,6 +48,18 @@ $main_reason = st($myarray['main_reason']);
 $main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
+$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$myex = mysql_query($sqlex);
+$myarrayex = mysql_fetch_array($myex);
+
+$i_opening_from = st($myarrayex['i_opening_from']);
+$protrusion_from = st($myarrayex['protrusion_from']);
+$protrusion_to = st($myarrayex['protrusion_to']);
+$protrusion_equals = st($myarrayex['protrusion_equal']);
+$r_lateral_from = st($myarrayex['r_lateral_from']);
+$l_lateral_from = st($myarrayex['l_lateral_from']);
+$dentaldevice = st($myarrayex['dentaldevice']);
+$dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
 
 
 

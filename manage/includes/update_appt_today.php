@@ -76,6 +76,7 @@ $dental_letters_query = "SELECT patientid, stepid, letterid, UNIX_TIMESTAMP(gene
 
 
 $segments = Array();
+$segments[1] = "Initial Contact";
 $segments[15] = "Baseline Sleep Test";
 $segments[2] = "Consult";
 $segments[4] = "Impressions";

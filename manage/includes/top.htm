@@ -1263,7 +1263,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
   <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
     <div id="patient_nav">
       <ul>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Flow Sheet</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>

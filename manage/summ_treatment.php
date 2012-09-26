@@ -1,4 +1,9 @@
+<?php include 'appointment_summary.php'; ?>
+
 <?php
+
+
+
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);

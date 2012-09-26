@@ -439,6 +439,12 @@ function addstudylab(v){
 	</tr>
   <tr>	
 		<td valign="top" class="even" style="height:25px;">
+<?php
+$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$myex = mysql_query($sqlex);
+$myarrayex = mysql_fetch_array($myex);
+$dentaldevice = st($myarrayex['dentaldevice']);
+?>
 		<select name="dentaldevice" style="width:150px;">
 <option value="">SELECT</option>
         <?php
@@ -448,7 +454,7 @@ function addstudylab(v){
 								while($device_myarray = mysql_fetch_array($device_my))
 								{	
                 ?>  
-								 <option value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+								 <option <?= ($dentaldevice == $device_myarray['deviceid'])?'selected="selected"':''; ?> value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
 								 <?php
 								 }
 								?>

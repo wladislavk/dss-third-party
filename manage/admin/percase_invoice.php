@@ -24,8 +24,8 @@ if(isset($_POST['submit'])){
     if(isset($_POST['service_date_'.$id])){
       $up_sql = "UPDATE dental_ledger SET " .
         " percase_date = '".date('Y-m-d', strtotime($_POST['service_date_'.$id]))."', " .
-        " percase_name = '".$_POST['name_'.$id]."', " .
-        " percase_amount = '".$_POST['amount_'.$id]."', " .
+        " percase_name = '".mysql_real_escape_string($_POST['name_'.$id])."', " .
+        " percase_amount = '".mysql_real_escape_string($_POST['amount_'.$id])."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."' " .
         " WHERE ledgerid = '".$id."'";

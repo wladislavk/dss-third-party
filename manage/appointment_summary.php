@@ -68,7 +68,7 @@ $segments[1] = "Initial Contact";
 <option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
 <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a id="reason_btn<?php echo $step; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
+<a id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
                                 <?php
                                 break;
                         case 9: //
@@ -79,12 +79,28 @@ $segments[1] = "Initial Contact";
 <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
 <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a id="reason_btn<?php echo $step; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
+<a id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
                                 <?php
                                 break;
-			case 7:
-			        ?><br /><input class="device_date flow_device_calendar" id="device_date_<?php echo $id; ?>" name="data[<?php echo $id; ?>][device_date]" type="text" style="width:100px;" value="<?= ($row['device_date']!='')?date('m/d/Y', strtotime($row['device_date'])):''; ?>" /><?php
-                                break;
+			case 4:
+$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$myex = mysql_query($sqlex);
+$myarrayex = mysql_fetch_array($myex);
+$dentaldevice = st($myarrayex['dentaldevice']);
+?>
+        <select class="dentaldevice" id="dentaldevice_<?php echo $id; ?>" style="width:150px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+			?></select><?php
+
+				break;
                 }
                 ?>
 
@@ -138,6 +154,9 @@ function delete_segment(id){
                                                 //alert(data);
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
+						  if(r.error == 'sent'){
+							//alert('Letter sent');
+						  }
                                                 }else{
                                                         $('#completed_row_'+id).remove();
                                                 }
@@ -173,30 +192,11 @@ function update_completed_date(cid){
                                   });
 }
 
-function update_device_date(cid){
-  id = cid.substring(12);
-  device_date = $('#device_date_'+id).val();
-                                            $.ajax({
-                                        url: "includes/flow_device_update.php",
-                                        type: "post",
-                                        data: {id: id, device_date: device_date, pid: <?= $_GET['pid']; ?>},
-                                        success: function(data){
-                                                //alert(data);
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-}
 
 
-
-$('.delay_reason').change(function(){
+$(document).delegate('.delay_reason', "change", function(){
   id = $(this).attr('id').substring(13);
+alert(id);
   reason = $(this).val();
                                     $.ajax({
                                         url: "includes/flow_delay_reason_update.php",
@@ -207,6 +207,9 @@ $('.delay_reason').change(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
+							if(reason == "other"){
+							  $(document).find('#reason_btn'+id).show();
+							}
                                                 }
                                         },
                                         failure: function(data){
@@ -216,7 +219,7 @@ $('.delay_reason').change(function(){
 });
 
 
-$('.noncomp_reason').change(function(){
+$(document).delegate('.noncomp_reason', "change", function(){
   id = $(this).attr('id').substring(14);
   reason = $(this).val();
                                     $.ajax({
@@ -228,6 +231,10 @@ $('.noncomp_reason').change(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
+                                                        if(reason == "other"){
+                                                          $(document).find('#reason_btn'+id).show();
+                                                        }
+
                                                 }
                                         },
                                         failure: function(data){
@@ -237,6 +244,25 @@ $('.noncomp_reason').change(function(){
 });
 
 
+$('.dentaldevice').change(function(){
+  id = $(this).attr('id').substring(13);
+  device = $(this).val();
+                                    $.ajax({
+                                        url: "includes/flow_device_update.php",
+                                        type: "post",
+                                        data: {id: id, device: device, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
 
 
 
@@ -263,4 +289,33 @@ $('.study_type').blur(function(){
                                         }
                                   });
 });
+
+
+
 </script>
+
+
+<div id="delay_reason_tmp" style="display:none;">
+<select class="delay_reason" id="delay_reason_" style="width:94px;">
+<option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
+<option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
+<option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
+<option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
+<option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+</select><br />
+<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
+</div>
+
+<div id="noncomp_reason_tmp" style="display:none;">
+        <select class="noncomp_reason" id="noncomp_reason_" style="width:94px;">
+<option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
+<option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
+<option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
+<option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
+</select><br />
+<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
+</div>
+
+
+
+

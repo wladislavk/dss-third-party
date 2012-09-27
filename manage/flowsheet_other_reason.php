@@ -5,31 +5,15 @@ include("includes/sescheck.php");
 
 if($_POST["other_reason"] == 1)
 {
-	$stepid_query = "SELECT stepid FROM dental_flow_pg2_info WHERE stepid = '".$_REQUEST['ed']."';";
-	$stepid_res = mysql_query($stepid_query);
-	$numrows = mysql_num_rows($stepid_res);
-	if($numrows > 0)
-	{
 		$ed_sql = "update dental_flow_pg2_info 
 		set 
 		description = '".s_for($_POST['reason'])."'
 		where 
-		stepid='".$_REQUEST['ed']."' AND patientid='".$_REQUEST['pid']."';";
+		id='".$_REQUEST['ed']."' AND patientid='".$_REQUEST['pid']."';";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());	
-	}
-	else
-	{
-		$ins_sql = "insert into dental_flow_pg2_info
-		set 
-		patientid = '".s_for($_REQUEST['pid'])."',
-		stepid = '".s_for($_REQUEST['ed'])."',
-		segmentid = '".s_for($_REQUEST['sid'])."',
-		description = '".s_for($_POST['reason'])."';";
-		mysql_query($ins_sql) or die($ins_sql.mysql_error());
-	}
 	?>	
 	<script type="text/javascript">
-		parent.window.location='manage_flowsheet3.php?page=page2&pid=<?=$_GET["pid"]?>';		
+		parent.disablePopup1();
 	</script>	
 	<?php
 	die();

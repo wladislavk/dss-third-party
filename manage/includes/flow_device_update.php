@@ -1,12 +1,11 @@
 <?php
 require_once '../admin/includes/config.php';
 $id = $_REQUEST['id'];
-$device_date = $_REQUEST['device_date'];
+$d = $_REQUEST['device'];
 $pid = $_REQUEST['pid'];
-		$s = "update dental_flow_pg2_info set device_date='".date('Y-m-d', strtotime(mysql_real_escape_string($device_date)))."' WHERE id=".mysql_real_escape_string($id)." AND patientid=".mysql_real_escape_string($pid);
-		$q = mysql_query($s);
-	
-	mysql_query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysql_real_escape_string($device_date)))."' where patientid='".$pid."'");
+
+$sql = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($d)."' where patientid='".$pid."'";
+$q = mysql_query($sql);
 
 if($q){
   echo '{"success":true}';

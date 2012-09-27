@@ -33,6 +33,14 @@ parent.disablePopup1();
 </head>
 <body>
 <?php
+  $s = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+?>
+
+<h2 style="margin-top:20px;">What device will you make for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
+
+<?php
 $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $myex = mysql_query($sqlex);
 $myarrayex = mysql_fetch_array($myex);

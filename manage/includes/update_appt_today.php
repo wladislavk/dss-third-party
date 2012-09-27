@@ -5,8 +5,20 @@ $id = $_REQUEST['id'];
 $c = $_REQUEST['c'];
 $pid = $_REQUEST['pid'];
 		$numsteps = null;
+$impression = true;
+$create = true; //default to insert record if checks pass
 
+if($id == "7"){  //device deliver - check if impressions are done
 
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE segmentid='4' AND patientid='".mysql_real_escape_string($pid)."' AND date_completed!='' AND date_completed IS NOT NULL";
+  $imp_q = mysql_query($imp_s);
+  $imp_n = mysql_num_rows($imp_q);
+  if($imp_n == 0){
+	$impression=false;
+  }
+}
+
+if($create){
         if ($id == "8") { // Follow-Up/Check
                 $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
                 $trigger_result = mysql_query($trigger_query);
@@ -94,8 +106,11 @@ $segments[13] = "Termination";
 
 $title = $segments[$id];
 
+
+}
+$impression_json = ($impression)?'true':'false';
 if($s){
-  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "title":"'.$title.'", "letters":"'.$letter_count.'"}';
+  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "title":"'.$title.'", "letters":"'.$letter_count.'", "impression":'.$impression_json.'}';
 }else{
   echo '{"error":true}';
 }

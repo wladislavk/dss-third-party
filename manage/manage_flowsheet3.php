@@ -112,7 +112,29 @@ $('.completed_today').click(function(){
 						  $clone.find('.deleteButton').attr('onclick', "return delete_segment('"+r.id+"');");
 						  $tr.after($clone);
 						  $clone.show();
-						  if(id==4){
+                                                  if(id==9){
+                                                        var $r = $('#noncomp_reason_tmp');
+                                                        var $reason = $r.clone();
+							$t = $clone.find('.title');
+							$reason.find('.noncomp_reason').attr('id', 'noncomp_reason'+r.id);
+						 	$reason.find('.reason_btn').attr('id', 'reason_btn'+r.id);
+							$reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=9');");
+                                                        $t.after($reason);
+                                                        $reason.show();
+                                                  }
+                                                  if(id==5){
+                                                        var $r = $('#delay_reason_tmp');
+                                                        var $reason = $r.clone();
+                                                        $t = $clone.find('.title');
+                                                        $reason.find('.delay_reason').attr('id', 'delay_reason_'+r.id);
+                                                        $reason.find('.reason_btn').attr('id', 'reason_btn'+r.id);
+                                                        $reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=5');");
+                                                        $t.after($reason);
+                                                        $reason.show();
+                                                  }
+
+
+						  if(id==4 || !r.impression){
 							loadPopup('includes/impression_device.php?pid=<?= $_GET['pid']; ?>');
 						  }else if(id==1){
 

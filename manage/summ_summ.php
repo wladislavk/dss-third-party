@@ -73,17 +73,64 @@ $years = floor($diff / (365*60*60*24));
 ?>
 DOB: <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
 <br />
-
+    Device
+        <select name="dentaldevice" style="width:250px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+Duration: (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
+<br />
 
   <?php
      $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
      $last_q = mysql_query($last_sql);
      $last_r = mysql_fetch_assoc($last_q);
 ?>
+<br />
+Name: <?= $r['firstname']; ?> <?= $r['lastname']; ?>
+Home Phone: <?= $r['home_phone']; ?>
+Cell Phone: <?= $r['cell_phone']; ?>
+Work Phone: <?= $r['work_phone']; ?>
 
+<br />
 Last seen: <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
 
   For: <?= $last_r['last_treatment']; ?>
+
+<?php
+  $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_scheduled DESC";
+  $next_q = mysql_query($next_sql);
+  $next_r = mysql_fetch_assoc($next_q);
+
+$segments = Array();
+$segments[15] = "Baseline Sleep Test";
+$segments[2] = "Consult";
+$segments[4] = "Impressions";
+$segments[7] = "Device Delivery";
+$segments[8] = "Check / Follow Up";
+$segments[10] = "Home Sleep Test";
+$segments[3] = "Sleep Study";
+$segments[11] = "Treatment Complete";
+$segments[12] = "Annual Recall";
+$segments[14] = "Not a Candidate";
+$segments[5] = "Delaying Tx / Waiting";
+$segments[9] = "Pt. Non-Compliant";
+$segments[6] = "Refused Treatment";
+$segments[13] = "Termination";
+$segments[1] = "Initial Contact";
+
+?>
+Next appt: <?= $segments[$next_r['segmentid']]; ?> On: <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
+<br /><br />
 
       Referred By: 
     <?php
@@ -169,13 +216,6 @@ $rs = $r['referred_source'];
       T < 90%: <?= $sleepstudy['t9002']; ?>
 <br />
 
-Name: <?= $r['firstname']; ?> <?= $r['lastname']; ?> 
-Home Phone: <?= $r['home_phone']; ?>
-Cell Phone: <?= $r['cell_phone']; ?>
-Work Phone: <?= $r['work_phone']; ?>
-
-<br />
-
 Reason for seeking tx:
 <?php
 $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
@@ -197,22 +237,6 @@ ROM:
 Best Eccovision&nbsp;&nbsp;
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
 <br >
-    Device
-        <select name="dentaldevice" style="width:250px">
-        <option value=""></option>
-        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-                                                                $device_my = mysql_query($device_sql);
-                                                                while($device_myarray = mysql_fetch_array($device_my))
-                                                                {
-                ?>
-                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
-                                                                 <?php
-                                                                 }
-                                                                ?>
-    </select>
-        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
-
-<br /><br />
 
 
 Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />

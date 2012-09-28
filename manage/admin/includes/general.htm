@@ -843,4 +843,37 @@ function get_sort_dir($sort_by, $sort_compare_to, $current_sort_dir = 'asc') {
     
     return $direction;
 }
+
+
+function time_ago_format($seconds_ago){
+  $second = 1;
+  $minute = 60 * $second;
+  $hour = 60 * $minute;
+  $day = 24 * $hour;
+  $month = 30 * $day;
+
+  if ($seconds_ago < 0)
+  {
+    return "not yet";
+  }
+  if ($seconds_ago < $minute)
+  {
+    return $seconds_ago == 1 ? "one second" : $seconds_ago + " seconds";
+  }
+  if ($seconds_ago < $hour)
+  {
+    return floor($seconds_ago/$minute)." minutes";
+  }
+  if ($seconds_ago < $day)
+  {
+    return floor($seconds_ago/$hour) . " hours";
+  }
+  if( $seconds_ago < $month)
+  {
+    return floor($seconds_ago/$day) . " days";
+  }
+  return floor($seconds_ago/$month) . " months";
+}
+
+
 ?>

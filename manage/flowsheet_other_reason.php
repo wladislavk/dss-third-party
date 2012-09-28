@@ -34,7 +34,7 @@ if($_POST["other_reason"] == 1)
 <body>
 
 	<?php
-  $thesql = "SELECT stepid, segmentid, description from dental_flow_pg2_info WHERE stepid='".$_REQUEST['ed']."' AND patientid='".$_REQUEST['pid']."';";
+  $thesql = "SELECT id, segmentid, description from dental_flow_pg2_info WHERE id='".$_REQUEST['ed']."' AND patientid='".$_REQUEST['pid']."';";
 	$themy = mysql_query($thesql);
 	$segment = mysql_fetch_array($themy);
 	

@@ -117,6 +117,8 @@ $('.completed_today').click(function(){
                                                         var $reason = $r.clone();
 							$t = $clone.find('.title');
 							$reason.find('.noncomp_reason').attr('id', 'noncomp_reason'+r.id);
+                                                        $reason.find('.old_noncomp_reason').attr('id', 'old_noncomp_reason_'+r.id);
+                                                        $reason.find('.noncomp_reason').attr('onfocus', "$('#old_noncomp_reason_"+r.id+"').val($(this).val());");
 						 	$reason.find('.reason_btn').attr('id', 'reason_btn'+r.id);
 							$reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=9');");
                                                         $t.after($reason);
@@ -127,6 +129,8 @@ $('.completed_today').click(function(){
                                                         var $reason = $r.clone();
                                                         $t = $clone.find('.title');
                                                         $reason.find('.delay_reason').attr('id', 'delay_reason_'+r.id);
+							$reason.find('.old_delay_reason').attr('id', 'old_delay_reason_'+r.id);
+							$reason.find('.delay_reason').attr('onfocus', "$('#old_delay_reason_"+r.id+"').val($(this).val());");
                                                         $reason.find('.reason_btn').attr('id', 'reason_btn'+r.id);
                                                         $reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=5');");
                                                         $t.after($reason);
@@ -139,6 +143,11 @@ $('.completed_today').click(function(){
 						  }else if(id==1){
 
 						  }
+
+
+
+							$('#completed_'+id).removeClass('notCompletedButton').addClass('completedButton').text('Completed');
+
                                                 }
                                         },
                                         failure: function(data){

@@ -61,25 +61,27 @@ $segments[1] = "Initial Contact";
                                 break;
                         case 5: //Delay
                                 ?>
-<select class="delay_reason" id="delay_reason_<?php echo $id; ?>" name="data[<?php echo $id; ?>][delay_reason]" style="width:94px;">
+<input type="hidden" value="<?= $row['delay_reason']; ?>" id="old_delay_reason_<?= $id; ?>" />
+<select class="delay_reason" onfocus="$('#old_delay_reason_<?= $id; ?>').val(this.value);" id="delay_reason_<?php echo $id; ?>" name="data[<?php echo $id; ?>][delay_reason]" style="width:94px;">
 <option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
 <option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
 <option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
 <option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
 <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
+<a id="reason_btn<?php echo $id; ?>" <?= ($row['delay_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Show Reason</a>
                                 <?php
                                 break;
                         case 9: //
                                 ?><br />
-        <select class="noncomp_reason" id="noncomp_reason<?php echo $id; ?>" name="data[<?php echo $id; ?>][noncomp_reason]" style="width:94px;">
+<input type="hidden" value="<?= $row['noncomp_reason']; ?>" id="old_noncomp_reason_<?= $id; ?>" />
+        <select class="noncomp_reason" onfocus="$('#old_noncomp_reason_<?= $id; ?>').val(this.value);" id="noncomp_reason<?php echo $id; ?>" name="data[<?php echo $id; ?>][noncomp_reason]" style="width:94px;">
 <option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
 <option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
 <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
 <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
+<a id="reason_btn<?php echo $id; ?>" <?= ($row['noncomp_reason']!='other')?'style="display:none;"':''; ?> onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Show Reason</a>
                                 <?php
                                 break;
 			case 4:
@@ -198,8 +200,13 @@ function update_completed_date(cid){
 
 $(document).delegate('.delay_reason', "change", function(){
   id = $(this).attr('id').substring(13);
-alert(id);
   reason = $(this).val();
+   if($('#old_delay_reason_'+id).val()=="other" && reason !="other"){
+	if(!confirm('Are you sure you want to change the reason?')){
+		$(this).val($('#old_delay_reason_'+id).val());
+		return false;
+	}
+    }
                                     $.ajax({
                                         url: "includes/flow_delay_reason_update.php",
                                         type: "post",
@@ -211,7 +218,10 @@ alert(id);
                                                 }else{
 							if(reason == "other"){
 							  $(document).find('#reason_btn'+id).show();
-							}
+							  loadPopup('flowsheet_other_reason.php?ed='+id+'&pid=112&sid=5');
+							}else{
+                                                                $(document).find('#reason_btn'+id).hide();
+                                                        }
                                                 }
                                         },
                                         failure: function(data){
@@ -224,6 +234,12 @@ alert(id);
 $(document).delegate('.noncomp_reason', "change", function(){
   id = $(this).attr('id').substring(14);
   reason = $(this).val();
+   if($('#old_noncomp_reason_'+id).val()=="other" && reason !="other"){
+        if(!confirm('Are you sure you want to change the reason?')){
+                $(this).val($('#old_noncomp_reason_'+id).val());
+                return false;
+        }
+    }
                                     $.ajax({
                                         url: "includes/flow_noncomp_reason_update.php",
                                         type: "post",
@@ -235,7 +251,10 @@ $(document).delegate('.noncomp_reason', "change", function(){
                                                 }else{
                                                         if(reason == "other"){
                                                           $(document).find('#reason_btn'+id).show();
-                                                        }
+							  loadPopup('flowsheet_other_reason.php?ed='+id+'&pid=112&sid=5');
+                                                        }else{
+								$(document).find('#reason_btn'+id).hide();
+							}	
 
                                                 }
                                         },
@@ -298,6 +317,7 @@ $('.study_type').blur(function(){
 
 
 <div id="delay_reason_tmp" style="display:none;">
+<input type="hidden" class="old_delay_reason" id="old_delay_reason_" />
 <select class="delay_reason" id="delay_reason_" style="width:94px;">
 <option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
 <option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
@@ -305,17 +325,18 @@ $('.study_type').blur(function(){
 <option <?php print ($row['delay_reason'] == "sleep study") ? "selected " : ""; ?>value="sleep study">Sleep Study</option>
 <option <?php print ($row['delay_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Other Reason</a>
+<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=5');" href="Javascript: ;">Show Reason</a>
 </div>
 
 <div id="noncomp_reason_tmp" style="display:none;">
+<input type="hidden" class="old_noncomp_reason" id="old_noncomp_reason_" />
         <select class="noncomp_reason" id="noncomp_reason_" style="width:94px;">
 <option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
 <option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
 <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
 <option <?php print ($row['noncomp_reason'] == "other") ? "selected " : ""; ?>value="other">Other</option>
 </select><br />
-<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Other Reason</a>
+<a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Show Reason</a>
 </div>
 
 

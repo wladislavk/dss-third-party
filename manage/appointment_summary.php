@@ -107,13 +107,15 @@ $dentaldevice = st($myarrayex['dentaldevice']);
         </td>
         <td class="letters">
                 <?php
-                $dental_letters_query = "SELECT topatient, md_list, md_referral_list FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND (letterid IN(".$row['letterid'].") OR parentid IN(".$row['letterid'].")) ORDER BY stepid ASC;";
+                $dental_letters_query = "SELECT topatient, md_list, md_referral_list FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND info_id ='".$id."' ORDER BY stepid ASC;";
                 $dlq = mysql_query($dental_letters_query);
-                $dlr = mysql_fetch_assoc($dlq);
-                $topatient = ($dlr['topatient'])?1:0;
-                $md_list= ($dlr['md_list']!='')?count(explode(',',$dlr['md_list'])):0;
-                $md_referral_list = ($dlr['md_referral_list']!='')?count(explode(',',$dlr['md_referral_list'])):0;
-                $letter_count = $topatient+$md_list+$md_referral_list;
+		$letter_count = 0;
+                while($dlr = mysql_fetch_assoc($dlq)){
+                  $topatient = ($dlr['topatient'])?1:0;
+                  $md_list= ($dlr['md_list']!='')?count(explode(',',$dlr['md_list'])):0;
+                  $md_referral_list = ($dlr['md_referral_list']!='')?count(explode(',',$dlr['md_referral_list'])):0;
+                  $letter_count += $topatient+$md_list+$md_referral_list;
+		}
                 if($letter_count >0){
                 ?>
                         <a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>

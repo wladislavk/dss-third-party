@@ -38,14 +38,10 @@ function update_needed(v, f){
                 f.elements["scheddate"].style.visibility='visible';
                 showWhere(f);
                 autoselect(v,f);
-                f.elements['interpolation'][0].style.visibility='visible';
-                f.elements['interpolation'][1].style.visibility='visible';
         }else{
                 f.elements["scheddate"].style.visibility='hidden';
                 hideWhere(f);
                 autoselect(v,f);
-                f.elements['interpolation'][0].style.visibility='hidden';
-                f.elements['interpolation'][1].style.visibility='hidden';
         }
 }
 
@@ -99,7 +95,6 @@ function autoselect(selectedOption, f) {
   $needed = s_for($_POST['needed']);
   $scheddate = s_for($_POST['scheddate']);
   $completed = s_for($_POST['completed']);
-  $interpolation = s_for($_POST['interpolation']);
   $patientid = $_GET['pid']; 
 	$s = "SELECT filename from dental_summ_sleeplab WHERE id='".$id."'";
 	$prevfile_result = mysql_query($s);
@@ -151,7 +146,6 @@ function autoselect(selectedOption, f) {
 `needed` = '".$needed."',
 `scheddate` = '".$scheddate."',
 `completed` = '".$completed."',
-`interpolation` = '".$interpolation."',
 WHERE id='".$id."'
 ";
   $run_q = mysql_query($q);
@@ -195,7 +189,6 @@ if($uploaded){
   $needed = s_for($_POST['needed']);
   $scheddate = s_for($_POST['scheddate']);
   $completed = s_for($_POST['completed']);
-  $interpolation = s_for($_POST['interpolation']);
   $patientid = $_GET['pid'];
                 if($_FILES["ss_file"]["name"] <> '')
                 {
@@ -237,10 +230,9 @@ if($uploaded){
 `needed`,
 `scheddate`,
 `completed`,
-`interpolation`,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
@@ -294,12 +286,12 @@ $pat_r = mysql_fetch_assoc($pat_q);
 <form id="new_sleep_study_form" action="#" method="POST" style="float:left; width:185px;display:none;" enctype="multipart/form-data">
 <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
 	<tr>
-		<td valign="top" class="even">
+		<td valign="top" class="odd">
 		<input type="text" onchange="validateDate('date');" maxlength="255" style="width: 100px;" tabindex="10" class="field text addr tbox calendar" name="date" id="date" value="<?= date('m/d/Y'); ?>">	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" class="odd">
+		<td valign="top" class="even">
 		<select name="sleeptesttype">
       <option value="HST Baseline">HST Baseline</option>
       <option value="PSG Baseline">PSG Baseline</option>
@@ -323,14 +315,6 @@ if(f.sleeptesttype.value == "HST"){
 </script>
 		</td>
 </tr>
-  <tr>
-                <td valign="top" class="even">
-                                <div name="interpolationdiv">
-                                                <input type="radio" name="interpolation" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="interpolation" value="No"><span>No</span>
-                                </div>
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="odd">
 <script type="text/javascript">
@@ -506,12 +490,12 @@ $device = mysql_result($device_result, 0);
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
 <table id="sleepstudyscrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>
-		<td valign="top" class="even">
+		<td valign="top" class="odd">
 		<input type="text" name="date" id="date<?= $s_lab['id']; ?>" class="calendar" value="<?php echo $s_lab['date']; ?>" />	
 		</td>
 	</tr>
   <tr>	
-		<td valign="top" class="odd">
+		<td valign="top" class="even">
                 <select name="sleeptesttype">
                    <option <?= ($s_lab['sleeptesttype']=="HST Baseline")?'selected="selected"':''; ?> value="HST Baseline">HST Baseline</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
@@ -522,13 +506,6 @@ $device = mysql_result($device_result, 0);
 
 		</td>
 </tr>
-  <tr>
-                <td valign="top" class="even">
-                                                <input type="radio" name="interpolation" value="Yes" <?= ($s_lab['interpolation']=="Yes")?'checked="checked"':''; ?>><label for="interpolation">Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="interpolation" value="No" <?= ($s_lab['interpolation']=="No")?'checked="checked"':''; ?>><label for="interpolation">No</label>
-                </td>
-        </tr>
-
   <tr>		
 		<td valign="top" class="odd"> 
                 <select name="place" class="place_select" onchange="addstudylab(this.value)">

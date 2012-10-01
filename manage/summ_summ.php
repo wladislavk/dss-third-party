@@ -129,7 +129,8 @@ $segments[13] = "Termination";
 $segments[1] = "Initial Contact";
 
 ?>
-Next appt: <?= $segments[$next_r['segmentid']]; ?> On: <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
+<br />
+Next appt: <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
 <br /><br />
 
       Referred By: 

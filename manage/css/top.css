@@ -68,7 +68,7 @@
   line-height: 30px;
   }
 
-#patient_nav li a:hover, #patient_nav li a.active{
+#patient_nav li a:hover, #patient_nav li a.nav_active{
   background: #fff;
   text-decoration: none;
 }

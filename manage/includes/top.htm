@@ -1263,16 +1263,16 @@ while($od_r = mysql_fetch_assoc($od_q)){
   <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
     <div id="patient_nav">
       <ul>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'active':'';?>" <?php {echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'active':'';?>" <?php {echo "href='patient_letters.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
-        <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
-        <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'ex_page'))?'active':'';?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>
-        <li class="last"><a class="<?= ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'active':'';?>" href="add_patient.php?ed=<?= $_GET['pid'] ?>&preview=1&addtopat=1&pid=<?= $_GET['pid'] ?>">Patient Info</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='patient_letters.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
+        <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
+        <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>
+        <li class="last"><a class="<?= ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?= $_GET['pid'] ?>&preview=1&addtopat=1&pid=<?= $_GET['pid'] ?>">Patient Info</a></li>
       </ul>
 
 

@@ -771,35 +771,6 @@ $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strt
 
   </td>
   </tr>
-  <script type="text/javascript">
-        function checkIncisal(){
-                min = Number($('#ir_min').val());
-                max = Number($('#ir_max').val());
-                range = (max-min);
-                $('#ir_range').val(range);
-                pos = Number($('#i_pos').val());
-                dist = Math.abs(pos-min); 
-                perc = (dist/range)
-                $('#initial_device_titration_equal_h').val(Math.round(dist));
-                $('#i_perc').val(Math.round(perc*100));
-                if(min != '' && max != ''){
-                        if((range)<0){
-                                alert('Minimum must be less than maximum');
-                                $('#ir_min').focus();
-                                return false;
-                        }
-                        if(pos<min || pos>max){
-                                alert('Incisal Position value must be between minimum and maximum range.');
-                                $('#i_pos').focus();
-                                return false;
-                        }
-                }
-                return true;
-        }
-        $('document').ready( function(){
-                checkIncisal();
-        })
-  </script>
   <tr>
   <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
   <td colspan="2">

@@ -481,10 +481,7 @@ $crossbite = st($myarray['crossbite']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                            <input type="text" name="missing" value="<?=$missing?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
-
-                                                        <!--<button onclick="Javascript: loadPopup('missing_teeth_form.php?fid=<?=$_GET['fid']?>&pid=<?=$_GET['pid']?>&mt='+document.ex_page4frm.missing.value); getElementById('popupContact').style.top = '200px'; getElementById('popupContact').style.height = '500px'; return false;">Perio Chart</button>-->
+                            <?=$missing?>
                                                         <button onclick="Javascript: $('#perio_chart').toggle('slow'); return false;">Perio Chart</button>
 
                         </span>
@@ -509,8 +506,6 @@ $crossbite = st($myarray['crossbite']);
                                                         {
 							if(!strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {
                                                         ?>
-                                                                <input type="checkbox" id="exam_teeth" name="exam_teeth[]" value="<?=st($exam_teeth_myarray['exam_teethid'])?>" <? if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($exam_teeth_myarray['exam_teeth']);?><br />
                                                         <?
 							}
@@ -524,8 +519,7 @@ $crossbite = st($myarray['crossbite']);
                                 <span style="color:#000000; padding-top:0px;">
                                 Other Items<br />
                             </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_exam_teeth" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_exam_teeth;?></textarea>
+                            <?=$other_exam_teeth;?>
                         </span>
                     </div>
                     <br />
@@ -535,8 +529,7 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span style="color:#000000;">
                             <label class="exam_label">Caries Tooth #</label>
-                            <input type="text" name="caries" value="<?=$caries?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); return false;">Change</button>
+                            <?=$caries?>
                         </span>
                     </div>
                     <br />
@@ -545,8 +538,7 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span style="color:#000000;">
                             <label class="exam_label">Wear Facets Tooth #</label>
-                            <input type="text" name="where_facets" value="<?=$where_facets?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=where_facets&fval='+document.ex_page4frm.where_facets.value); return false;">Change</button>
+                            <?=$where_facets?>
                         </span>
                     </div>
                     <br />
@@ -555,8 +547,7 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span style="color:#000000;">
                                 <label class="exam_label">Cracked or Fractured Tooth #</label>
-                            <input type="text" name="cracked_fractured" value="<?=$cracked_fractured?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); return false;">Change</button>
+                            <?=$cracked_fractured?>
                         </span>
                     </div>
                     <br />
@@ -565,12 +556,13 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span style="color:#000000;">
                                 <label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label>
-                            <input type="text" name="old_worn_inadequate_restorations" value="<?=$old_worn_inadequate_restorations?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); return false;">Change</button>
+                            <?=$old_worn_inadequate_restorations?>
                         </span>
                     </div>
                     <br />
                 <?php } ?>
+		<?php if($dental_class_right != "" || $dental_division_right != "" || $dental_class_left != "" || $dental_division_left != ""){
+		?>
                     <label class="desc" id="title0" for="Field0">
                         DENTAL RELATIONSHIP
                     </label>
@@ -593,38 +585,10 @@ $crossbite = st($myarray['crossbite']);
                                 </tr>
                                 <tr>
                                         <td valign="top">
-                                        <input type="radio" name="dental_class_right" value="I (normal)" <? if($dental_class_right == 'I (normal)') echo " checked";?> style="width:10px;" />
-                                        I (normal)
+                                        <?= $dental_class_right;?>
                                     </td>
                                     <td valign="top">
-                                        <input type="radio" name="dental_division_right" value="1" <? if($dental_division_right == '1') echo " checked";?> style="width:10px;" />
-                                        1
-                                    </td>
-                                </tr>
-                                <tr>
-                                        <td valign="top">
-                                        <input type="radio" name="dental_class_right" value="II (Retrognathic)(Retruded Lower Jaw)" <? if($dental_class_right == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
-                                        II (Retrognathic)
-                                        <br />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        (Retruded Lower Jaw)
-                                    </td>
-                                    <td valign="top">
-                                        <input type="radio" name="dental_division_right" value="2" <? if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
-                                        2
-                                    </td>
-                                </tr>
-                                <tr>
-                                        <td valign="top">
-                                        <input type="radio" name="dental_class_right" value="III (Prognathic)(Protruded Lower Jaw)" <? if($dental_class_right == 'III (Prognathic)(Protruded Lower Jaw)')
- echo " checked";?> style="width:10px;" />
-                                        III (Prognathic)
-                                        <br />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        (Protruded Lower Jaw)
-                                    </td>
-                                    <td valign="top">&nbsp;
-
+                                        <?= $dental_division_right;?>
                                     </td>
                                 </tr>
                             </table>
@@ -648,37 +612,10 @@ $crossbite = st($myarray['crossbite']);
                                 </tr>
                                 <tr>
                                         <td valign="top">
-                                        <input type="radio" name="dental_class_left" value="I (normal)" <? if($dental_class_left == 'I (normal)') echo " checked";?> style="width:10px;" />
-                                        I (normal)
+                                        <?= $dental_class_left;?>
                                     </td>
                                     <td valign="top">
-                                        <input type="radio" name="dental_division_left" value="1" <? if($dental_division_left == '1') echo " checked";?> style="width:10px;" />
-                                        1
-                                    </td>
-                                </tr>
-                                <tr>
-                                        <td valign="top">
-                                        <input type="radio" name="dental_class_left" value="II (Retrognathic)(Retruded Lower Jaw)" <? if($dental_class_left == 'II (Retrognathic)(Retruded Lower Jaw)') echo " checked";?> style="width:10px;" />
-                                        II (Retrognathic)
-                                        <br />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        (Retruded Lower Jaw)
-                                    </td>
-                                    <td valign="top">
-                                        <input type="radio" name="dental_division_left" value="2" <? if($dental_division_right == '2') echo " checked";?> style="width:10px;" />
-                                        2
-                                    </td>
-                                </tr>
-                                <tr>
-                                        <td valign="top">
-                                        <input type="radio" name="dental_class_left" value="III (Prognathic)(Protruded Lower Jaw)" <? if($dental_class_left == 'III (Prognathic)(Protruded Lower Jaw)') echo " checked";?> style="width:10px;" />
-                                        III (Prognathic)
-                                        <br />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        (Protruded Lower Jaw)
-                                    </td>
-                                    <td valign="top">&nbsp;
-
+                                     <?=$dental_division_left;?>
                                     </td>
                                 </tr>
                             </table>
@@ -686,6 +623,7 @@ $crossbite = st($myarray['crossbite']);
                         </span>
                         </div>
                     <br />
+		<?php } ?>
 <div class="clear"></div>
                 <?php if($additional_paragraph != ''){ ?>
                     <label class="desc clear" id="title0" for="Field0">
@@ -694,7 +632,7 @@ $crossbite = st($myarray['crossbite']);
 
                     <div>
                         <span>
-                                <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
+                                <?=$additional_paragraph;?>
                         </span>
                     </div>
                     <br />
@@ -707,8 +645,7 @@ $crossbite = st($myarray['crossbite']);
                         <span>
                             <label class="exam_label">Teeth in Crossbite</label>
 
-                            <input type="text" name="crossbite" value="<?=$crossbite;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=crossbite&fval=<?=$crossbite;?>');  return false;">Chart</button>
+                            <?=$crossbite;?>
                         </span>
                     </div>
                     <br />
@@ -718,9 +655,7 @@ $crossbite = st($myarray['crossbite']);
                         <span>
                                 <label class="exam_label">The initial tooth contact was between</label>
 
-                            <input type="text" name="initial_tooth" id="initial_tooth" value="<?=$initial_tooth;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=initial_tooth&fval=<?=$initial_tooth;?>'); return false;">Chart</button>
-                            <button onclick="Javascript: $('#initial_tooth').val('Bilateral and even initial contact'); return false;">Bilateral and even initial contact</button>
+                            <?=$initial_tooth;?>
                         </span>
                     </div>
                     <br />
@@ -729,8 +664,7 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span>
                                 <label class="exam_label">Open proximal contact(s) present between teeth numbers</label>
-                            <input type="text" name="open_proximal" value="<?=$open_proximal;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=open_proximal&fval=<?=$open_proximal;?>'); return false;">Chart</button>
+                            <?=$open_proximal;?>
                         </span>
                     </div>
                     <br />
@@ -740,8 +674,7 @@ $crossbite = st($myarray['crossbite']);
                         <span>
                                 <label class="exam_label">Diastema(s) present between teeth numbers</label>
 
-                            <input type="text" name="deistema" value="<?=$deistema;?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=deistema&fval=<?=$deistema;?>'); return false;">Chart</button>
+                            <?=$deistema;?>
                         </span>
                     </div>
                     <br />
@@ -759,6 +692,13 @@ $neck_measurement = st($myarray['neck_measurement']);
 $additional_paragraph = st($myarray['additional_paragraph']);
 $tongue = st($myarray['tongue']);
 
+$bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
+$bmi_my = mysql_query($bmi_sql);
+$bmi_myarray = mysql_fetch_array($bmi_my);
+$bmi = st($bmi_myarray['bmi']);
+$feet = st($bmi_myarray['feet']);
+$inches = st($bmi_myarray['inches']);
+$weight = st($bmi_myarray['weight']);
 ?>
 
                     <label class="desc" id="title0" for="Field0">
@@ -770,7 +710,7 @@ $tongue = st($myarray['tongue']);
                                 Blood Pressure
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
-                            <input id="blood_pressure" name="blood_pressure" type="text" class="field text addr tbox" value="<?=$blood_pressure;?>" tabindex="1" maxlength="255" style="width:75px;" />
+                            <?=$blood_pressure;?>
                         </span>
                         </div>
                     <br />
@@ -783,14 +723,7 @@ $tongue = st($myarray['tongue']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
-                            <select name="pulse" id="pulse" class="field text addr tbox" style="width:50px;" tabindex="2">
-                                <? for($i=50;$i<=150;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($pulse == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
+                                                                        <?= $pulse;?>
                         </span>
                         </div>
                     <br />
@@ -800,14 +733,7 @@ $tongue = st($myarray['tongue']);
                         <span>
                                 Neck Measurement
                             &nbsp;&nbsp;&nbsp;
-                            <select name="neck_measurement" id="neck_measurement" class="field text addr tbox" style="width:50px;" tabindex="3">
-                                <? for($i=5;$i<=29;$i+=.5)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($neck_measurement == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
+                                                                        <?= $neck_measurement;?>
                             inches
                         </span>
                         </div>
@@ -816,59 +742,21 @@ $tongue = st($myarray['tongue']);
                     <label class="desc" id="title0" for="Field0">
                        HEIGHT/WEIGHT
                     </label>
-    <ul style="width:50%; float:left;">
                 <?php if($feet != ''){ ?>
-                <li>
-                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
-                                <option value="0">Feet</option>
-                                <? for($i=1;$i<9;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
-                            <?php
-                                showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
-                            ?>
+                             <?= $feet;?>
                             <label for="feet">Feet</label>
-                </li>
                 <?php } ?>
                 <?php if($inches != ''){ ?>
-                <li>
-                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-                                <option value="-1">Inches</option>
-                                <? for($i=0;$i<12;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
+                                                                        <?= $inches;?>
                             <label for="inches">Inches</label>
-                </li>
                 <?php } ?>
                 <?php if($weight != ''){ ?>
-                <li>
-                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
-                                <option value="0">Weight</option>
-                                <? for($i=80;$i<=500;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
-
+                                                                        <?= $weight;?>
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                </li>
                 <?php } ?>
                 <?php if($bmi != ''){ ?>
-                <li>
                                 <span style="color:#000000; padding-top:2px;">BMI</span>
-                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
-                </li>
-                <?php } ?>
+                                <?=$bmi?>
                                 <label for="inches">
                                 &lt; 18.5 is Underweight
                                 <br />
@@ -880,9 +768,12 @@ $tongue = st($myarray['tongue']);
                                 <br />
                                 &gt; 30 is Obese
                             </label>
+                <?php } ?>
+		<?php if($tongue != "" || $additional_paragraph!= ""){ ?>
                     <label class="desc" id="title0" for="Field0">
                         AIRWAY EVALUATION
                         <br />
+			<?php if($tongue != ""){ ?>
                         <span class="form_info">Tongue</span>
                         <br />
                     </label>
@@ -894,10 +785,9 @@ $tongue = st($myarray['tongue']);
 
                                                         while($tongue_myarray = mysql_fetch_array($tongue_my))
                                                         {
-							if(!strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false){
+							if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false){
+							}else{
                                                         ?>
-                                                                <input type="checkbox" id="tongue" name="tongue[]" value="<?=st($tongue_myarray['tongueid'])?>" tabindex="9" <? if(strpos($tongue,'~'.st($tongue_myarray['tongueid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($tongue_myarray['tongue']);?><br />
                                                         <?
 							}
@@ -907,6 +797,7 @@ $tongue = st($myarray['tongue']);
                    </div>
 
                                         <br />
+			<?php } ?>
                 <?php if($additional_paragraph != ''){ ?>
                                         <label class="desc" id="title0" for="Field0">
                                                 Additional Paragraph
@@ -914,11 +805,12 @@ $tongue = st($myarray['tongue']);
 
                                         <div>
                                                 <span>
-                                                        <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
+                                                        <?=$additional_paragraph;?>
                                                 </span>
                                         </div>
                                         <br />
                 <?php } ?>
+		<?php } ?>
 <?php
 
 $sql = "select * from dental_ex_page2 where patientid='".$_GET['pid']."'";
@@ -941,28 +833,33 @@ $tonsils_grade = st($myarray['tonsils_grade']);
 
                     <div>
                         <span>
-                                <table width="100%" cellpadding="3" cellspacing="1" border="0">
+                                <table width="200px" cellpadding="3" cellspacing="1" border="0">
                                 <tr>
+				  <? if($mallampati == 'Class I'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/class1.jpg" height="201" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="mallampati" value="Class I" <? if($mallampati == 'Class I') echo " checked";?> /> Class I
+                                        Class I
                                     </td>
+				 <? }elseif($mallampati == 'Class II'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/class2.jpg" height="201" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="mallampati" value="Class II" <? if($mallampati == 'Class II') echo " checked";?> /> Class II
+					Class II
                                     </td>
+                                 <? }elseif($mallampati == 'Class III'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/class3.jpg" height="201" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="mallampati" value="Class III" <? if($mallampati == 'Class III') echo " checked";?> /> Class III
-                                    </td>
+					Class III
+				    </td>
+                                 <? }elseif($mallampati == 'Class IV'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/class4.jpg" height="201" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="mallampati" value="Class IV" <? if($mallampati == 'Class IV') echo " checked";?> /> Class IV
+					Class IV
                                     </td>
+				<? } ?>
                                 </tr>
                             </table>
                         </span>
@@ -975,14 +872,17 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                 <?php if($tonsils != ''){ ?>
                     <div>
                         <span>
-                                <input type="checkbox" id="tonsils" name="tonsils[]" value="Present" <? if(strpos($tonsils,'~Present~') === false) {} else { echo " checked";}?> />
+                            <? if(strpos($tonsils,'~Present~') === false) {} else { ?>
                             Present
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="checkbox" id="tonsils" name="tonsils[]" value="Obstructive" <? if(strpos($tonsils,'~Obstructive~') === false) {} else { echo " checked";}?> />
+			    <? } ?>
+                            <? if(strpos($tonsils,'~Obstructive~') === false) {} else { ?> 
                             Obstructive
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="checkbox" id="tonsils" name="tonsils[]" value="Purulent" <? if(strpos($tonsils,'~Purulent~') === false) {} else { echo " checked";}?> />
+			    <? } ?>
+                            <? if(strpos($tonsils,'~Purulent~') === false) {} else { ?>
                             Purulent
+			    <? } ?>
                         </span>
                    </div>
                    <br />
@@ -990,43 +890,49 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                 <?php if($tonsils_grade != ''){ ?>
                    <div>
                         <span>
-                                <table width="100%" cellpadding="3" cellspacing="1" border="0">
+                                <table width="200px" cellpadding="3" cellspacing="1" border="0">
                                 <tr>
+					<? if($tonsils_grade == 'Grade 0'){ ?>
                                         <td valign="top" width="20%" align="center">
                                         <img src="images/grade0.png" height="188" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="tonsils_grade" value="Grade 0" <? if($tonsils_grade == 'Grade 0') echo " checked";?> /> Grade 0
+					Grade 0
                                         <br /><br />
                                         Absent
                                     </td>
+					<? }elseif($tonsils_grade == 'Grade 1'){ ?>
                                         <td valign="top" width="20%" align="center">
                                         <img src="images/grade1.png" height="188" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="tonsils_grade" value="Grade 1" <? if($tonsils_grade == 'Grade 1') echo " checked";?> /> Grade 1
+					Grade 1
                                         <br /><br />
                                         Small within the tonsillar fossa
                                     </td>
+                                        <? }elseif($tonsils_grade == 'Grade 2'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/grade2.png" height="188" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="tonsils_grade" value="Grade 2" <? if($tonsils_grade == 'Grade 2') echo " checked";?> /> Grade 2
+					Grade 2
                                         <br /><br />
                                         Extends beyond the tonsillar pillar
                                     </td>
+                                        <? }elseif($tonsils_grade == 'Grade 3'){ ?>
                                         <td valign="top" width="25%" align="center">
                                         <img src="images/grade3.png" height="188" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="tonsils_grade" value="Grade 3" <? if($tonsils_grade == 'Grade 3') echo " checked";?> /> Grade 3
+					Grade 3
                                         <br /><br />
                                         Hypertrophic but not touching in midline
                                     </td>
+                                        <? }elseif($tonsils_grade == 'Grade 4'){ ?>
                                         <td valign="top" width="20%" align="center">
                                         <img src="images/grade4.png" height="188" width="131" border="0" />
                                         <br />
-                                        <input type="radio" name="tonsils_grade" value="Grade 4" <? if($tonsils_grade == 'Grade 4') echo " checked";?> /> Grade 4
+					Grade 4
                                         <br /><br />
                                         Hypertrophic and touching in midline
                                     </td>
+					<? } ?>
                                 </tr>
                             </table>
                         </span>
@@ -1060,6 +966,7 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                                 OTHER AIRWAY ITEMS
                         </span>
                     </label>
+			<?php if($maxilla != "" || $other_maxilla !=""){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Maxilla
                     </label>
@@ -1072,10 +979,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($maxilla_myarray = mysql_fetch_array($maxilla_my))
                                                         {
-							if(!strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false){
+							if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') !== false){
                                                         ?>
-                                                                <input type="checkbox" id="maxilla" name="maxilla[]" value="<?=st($maxilla_myarray['maxillaid'])?>" <? if(strpos($maxilla,'~'.st($maxilla_myarray['maxillaid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($maxilla_myarray['maxilla']);?><br />
                                                         <?
 							}
@@ -1086,16 +991,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                 <?php if($other_maxilla != ''){ ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_maxilla" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_maxilla;?></textarea>
+                            <?=$other_maxilla;?>
                         </span>
                     </div>
                     <br />
                 <?php } ?>
-
+		<?php } ?>
+		<?php if($mandible!='' || $other_mandible !=''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Mandible
                     </label>
@@ -1105,12 +1007,10 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                                 <?
                                                         $mandible_sql = "select * from dental_mandible where status=1 order by sortby";
                                                         $mandible_my = mysql_query($mandible_sql);
-
                                                         while($mandible_myarray = mysql_fetch_array($mandible_my))
                                                         {
-							if(!strpos($mandible,'~'.st($mandible_array['mandibleid']).'~') === false ) {
+							if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') !== false ) {
                                                         ?>
-                                                                <input type="checkbox" id="mandible" name="mandible[]" value="<?=st($mandible_myarray['mandibleid'])?>" <? if(strpos($mandible,'~'.st($mandible_myarray['mandibleid']).'~') === false) {} else { echo " checked";}?> />
                                 &nbsp;&nbsp;
                                 <?=st($mandible_myarray['mandible']);?><br />
                                                         <?
@@ -1122,15 +1022,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                 <?php if($other_mandible != ''){ ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_mandible" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_mandible;?></textarea>
+                            <?=$other_mandible;?>
                         </span>
                     </div>
                     <br />
                 <?php } ?>
+		<?php } ?>
+		<?php if($soft_palate!='' || $other_soft_palate!=''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Soft Palate
                     </label>
@@ -1143,10 +1041,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($soft_palate_myarray = mysql_fetch_array($soft_palate_my))
                                                         {
-							if(!strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {
+							if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') !== false) {
                                                         ?>
-                                                                <input type="checkbox" id="soft_palate" name="soft_palate[]" value="<?=st($soft_palate_myarray['soft_palateid'])?>" <? if(strpos($soft_palate,'~'.st($soft_palate_myarray['soft_palateid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($soft_palate_myarray['soft_palate']);?><br />
                                                         <?
 							}
@@ -1157,15 +1053,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 		<?php if($other_soft_palate != ''){ ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_soft_palate" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_soft_palate;?></textarea>
+                            <?=$other_soft_palate;?>
                         </span>
                     </div>
                     <br />
 		<?php } ?>
+		<?php } ?>
+		<?php if($uvula!='' || $other_uvula!=''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Uvula
                     </label>
@@ -1175,21 +1069,10 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
                        <?php
                                                         $uvula_sql = "select * from dental_uvula where status=1 order by sortby";
                                                         $uvula_my = mysql_query($uvula_sql);
-                                                        //$uvula_prearray = mysql_fetch_array($uvula_my);
-
-                                                        ?>
-                      <!--<input type="checkbox" name="uvula[]" id="uvula" onclick="showMe('uvuladiv')" value="1" <?php if(in_array("1", $uvula_prearray)){ echo "checked=\"checked\""; }?> >&nbsp;&nbsp;&nbsp;&nbsp;Not Clinically Present<br />
-                      
-                      <div id="uvuladiv" <?php if(in_array("1", $uvula_prearray)){ echo "style=\"display:none;\""; }?>> 
-                      -->
-                                <?
-
                                                         while($uvula_myarray = mysql_fetch_array($uvula_my))
                                                         {
-							if(!strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {
+							if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') !== false) {
                                                         ?>
-                                                                <input type="checkbox" id="uvula" name="uvula[]" value="<?=st($uvula_myarray['uvulaid'])?>" <? if(strpos($uvula,'~'.st($uvula_myarray['uvulaid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($uvula_myarray['uvula']);?><br />
                                                         <?
 							}
@@ -1201,15 +1084,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 		<?php if($other_uvula != '') { ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_uvula" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_uvula;?></textarea>
+                            <?=$other_uvula;?>
                         </span>
                     </div>
                     <br />
 		<? } ?>
+		<? } ?>
+		<?php if($gag_reflex!='' || $other_gag_reflex!=''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Gag Reflex
                     </label>
@@ -1222,10 +1103,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($gag_reflex_myarray = mysql_fetch_array($gag_reflex_my))
                                                         {
-							if(!strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {
+							if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') !== false) {
                                                         ?>
-                                                                <input type="checkbox" id="gag_reflex" name="gag_reflex[]" value="<?=st($gag_reflex_myarray['gag_reflexid'])?>" <? if(strpos($gag_reflex,'~'.st($gag_reflex_myarray['gag_reflexid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($gag_reflex_myarray['gag_reflex']);?><br />
                                                         <?
                                                         }
@@ -1236,15 +1115,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 		<?php if( $other_gag_reflex != ''){ ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_gag_reflex" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_gag_reflex;?></textarea>
+                            <?=$other_gag_reflex;?>
                         </span>
                     </div>
                     <br />
 		<?php } ?>
+		<?php } ?>
+		<?php if($nasal_passages!=''||$other_nasal_passages!=''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         Nasal Passages
                     </label>
@@ -1257,10 +1134,8 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 
                                                         while($nasal_passages_myarray = mysql_fetch_array($nasal_passages_my))
                                                         {
-							if(!strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {
+							if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') !== false) {
                                                         ?>
-                                                                <input type="checkbox" id="nasal_passages" name="nasal_passages[]" value="<?=st($nasal_passages_myarray['nasal_passagesid'])?>" <? if(strpos($nasal_passages,'~'.st($nasal_passages_myarray['nasal_passagesid']).'~') === false) {} else { echo " checked";}?> />
-                                &nbsp;&nbsp;
                                 <?=st($nasal_passages_myarray['nasal_passages']);?><br />
                                                         <?
                                                         }
@@ -1271,17 +1146,13 @@ $other_nasal_passages = st($myarray['other_nasal_passages']);
 		<?php if($other_nasal_passages != ''){ ?>
                     <div class="ta_half">
                         <span>
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_nasal_passages" class="field text addr tbox" style="width:650px; height:100px;"><?=$other_nasal_passages;?></textarea>
+                            <?=$other_nasal_passages;?>
                         </span>
                     </div>
                     <br />
 
 		<?php } ?>
-
+		<?php } ?>
 <?php
 
 $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
@@ -1382,7 +1253,6 @@ if($jointid <> '')
                         <span class="ex_p5_3" style="padding-left:10px;" >
                             3 - Severe
                         </span>
-        <br />  <button onclick="setDefaults();return false;">Set all to 0</button>
 
                     </div>
 
@@ -1430,40 +1300,10 @@ if($jointid <> '')
 			<?php if($chk != '' || $chkR != ''){ ?>
                                 <tr>
                                         <td valign="top">
-                                                                                <select id="palpation_<?=st($palpation_myarray['palpationid']);?>" name="palpation_<?=st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
-                                                                                        <option value=""></option>
-                                                                                        <option value="0" <? if($chk == '0') echo " selected";?> class="ex_p5_0">
-                                                                                                0
-                                                                                        </option>
-                                                                                        <option value="1" <? if($chk == '1') echo " selected";?> class="ex_p5_1">
-                                                                                                1
-                                                                                        </option>
-                                                                                        <option value="2" <? if($chk == '2') echo " selected";?> class="ex_p5_2">
-                                                                                                2
-                                                                                        </option>
-                                                                                        <option value="3" <? if($chk == '3') echo " selected";?> class="ex_p5_3">
-                                                                                                3
-                                                                                        </option>
-
-                                                                                </select>
+                                                                                        <?= $chk; ?>
                                      </td>
                                      <td valign="top">
-                                        <select id="palpationR_<?=st($palpation_myarray['palpationid']);?>" name="palpationR_<?=st($palpation_myarray['palpationid']);?>" class="field text addr tbox" style="width:50px;">
-                                                                                        <option value=""></option>
-                                                                                        <option value="0" <? if($chkR == '0') echo " selected";?> class="ex_p5_0">
-                                                                                                0
-                                                                                        </option>
-                                                                                        <option value="1" <? if($chkR == '1') echo " selected";?> class="ex_p5_1">
-                                                                                                1
-                                                                                        </option>
-                                                                                        <option value="2" <? if($chkR == '2') echo " selected";?> class="ex_p5_2">
-                                                                                                2
-                                                                                        </option>
-                                                                                        <option value="3" <? if($chkR == '3') echo " selected";?> class="ex_p5_3">
-                                                                                                3
-                                                                                        </option>
-
-                                                                                </select>
+                                                                                        <?= $chkR;?>
                                      </td>
                                      <td valign="top">
                                         <span>
@@ -1489,7 +1329,7 @@ if($jointid <> '')
 
                     <div>
                         <span>
-                                <textarea name="additional_paragraph_pal" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph_pal;?></textarea>
+                                <?=$additional_paragraph_pal;?>
                         </span>
                     </div>
                     <br />
@@ -1515,10 +1355,8 @@ if($jointid <> '')
 
                                                                                 while($joint_exam_myarray = mysql_fetch_array($joint_exam_my))
                                                                                 {
-										if(!strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {
+										if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') !== false) {
                                                                                 ?>
-                                                                                        <input type="checkbox" id="joint_exam" name="joint_exam[]" value="<?=st($joint_exam_myarray['joint_examid'])?>" <? if(strpos($joint_exam,'~'.st($joint_exam_myarray['joint_examid']).'~') === false) {} else { echo " checked";}?> style="width:10px;" />
-                                                                                        &nbsp;&nbsp;
                                                                                         <?=st($joint_exam_myarray['joint_exam']);?><br />
                                                                                 <?
 										}
@@ -1547,18 +1385,7 @@ if($jointid <> '')
                                                                                                                 <?=st($joint_myarray['joint']);?></span>
                                                     </td>
                                                     <td valign="top">
-                                                        <select id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:50px;">
-                                                            <option value=""></option>
-                                                            <option value="L" <? if($chkJ == 'L') echo " selected";?> >
-                                                                L
-                                                            </option>
-                                                            <option value="R" <? if($chkJ == 'R') echo " selected";?>>
-                                                                R
-                                                            </option>
-                                                            <option value="B" <? if($chkJ == 'B') echo " selected";?>>
-                                                                B
-                                                            </option>
-                                                        </select>
+                                                            <?= $chkJ;?> 
                                                                                                         </td>
                                                                                                 </tr>
                                                                                         <?
@@ -1573,8 +1400,6 @@ if($jointid <> '')
 
                         </span>
                     </div>
-
-
 
 
 
@@ -1594,18 +1419,11 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" name="i_opening_from" class="field text addr tbox" style="width:50px;" value="<?=$i_opening_from;?>">
+                                        <?=$i_opening_from;?>
                                         </span>
                                     </td>
                                 </tr>
 
-                               <script type="text/javascript">
-                                  function updateProtrusion(){
-                                        pval = Math.abs($('#protrusion_to').val() - $('#protrusion_from').val());
-                                        $('#protrusion_equal').val(pval);
-
-                                  }
-                               </script>
 			                        <?php } ?>
                         <?php if($protrusion_from != '' || $protrusion_to != '') { ?>
                                <tr>
@@ -1613,13 +1431,12 @@ if($jointid <> '')
                                     <span>George Scale</span>
                                     </td>
                                         <td valign="top">
-                                        <input type="text" id="protrusion_from" name="protrusion_from" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_from;?>">
+                                        <?=$protrusion_from;?>
                                         &nbsp;&nbsp;&nbsp;
                                         to
                                         &nbsp;&nbsp;&nbsp;
-                                        <input type="text" id="protrusion_to" name="protrusion_to" onkeyup="updateProtrusion();" class="field text addr tbox" style="width:50px;" value="<?=$protrusion_to;?>">
+					<?=$protrusion_to;?>
 
-                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1630,7 +1447,9 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo abs($protrusion_to-($protrusion_from));?>">                                     </td>
+					<?php echo abs($protrusion_to-($protrusion_from));?>
+					</span>
+                                     </td>
                                 </tr>
                         <?php } ?>
                         <?php if($l_lateral_from != '') { ?>
@@ -1642,7 +1461,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" name="l_lateral_from" class="field text addr tbox" style="width:50px;" value="<?=$l_lateral_from;?>">
+                                        <?=$l_lateral_from;?>
                                         </span>
                                     </td>
                                 </tr>
@@ -1656,7 +1475,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" name="r_lateral_from" class="field text addr tbox" style="width:50px;" value="<?=$r_lateral_from;?>">
+                                        <?=$r_lateral_from;?>
                                         </span>
                                     </td>
                                 </tr>
@@ -1668,19 +1487,11 @@ if($jointid <> '')
                                         Deviation
                                         </span>
                                                                                 &nbsp;&nbsp;
-                                                                                <select id="deviation_r_l" name="deviation_r_l" class="field text addr tbox" style="width:60px;">
-                                                                                        <option value=""></option>
-                                                                                        <option value="Right" <? if($deviation_r_l == 'Right') echo " selected";?> >
-                                                                                                Right
-                                                                                        </option>
-                                                                                        <option value="Left" <? if($deviation_r_l == 'Left') echo " selected";?>>
-                                                                                                Left
-                                                                                        </option>
-                                                                                </select>
+                                                                                        <?= $deviation_r_l;?> 
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" name="deviation_from" class="field text addr tbox" style="width:50px;" value="<?=$deviation_from;?>">
+                                        <?=$deviation_from;?>
                                         </span>
                                     </td>
                                 </tr>
@@ -1692,61 +1503,53 @@ if($jointid <> '')
                                         Deflection
                                         </span>
                                                                                 &nbsp;
-                                                                                <select id="deflection_r_l" name="deflection_r_l" class="field text addr tbox" style="width:60px;">
-                                                                                        <option value=""></option>
-                                                                                        <option value="Right" <? if($deflection_r_l == 'Right') echo " selected";?> >
-                                                                                                Right
-                                                                                        </option>
-                                                                                        <option value="Left" <? if($deflection_r_l == 'Left') echo " selected";?>>
-                                                                                                Left
-                                                                                        </option>
-                                                                                </select>
+                                                                                        <?= $deflection_r_l;?>
                                     </td>
                                     <td valign="top">
                                         <span>
-                                        <input type="text" name="deflection_from" class="field text addr tbox" style="width:50px;" value="<?=$deflection_from;?>">
+                                        <?=$deflection_from;?>
                                         </span>
                                     </td>
                                 </tr>
                         <?php } ?>
                             </table>
-                            <input type="checkbox" name="range_normal" value="1" <? if($range_normal == 1) echo " checked"; ?>/>
+                            <? if($range_normal == 1){ ?>
                             Within normal limits
 
                             <br /><br />
 
                            NOTE: (Normal range of motion has been noted Vertical 40 - 50mm,  Lateral 12mm, Protrusive 9mm)
+			   <? } ?>
                         </span>
                         </div>
                     <br />
                         <?php if($additional_paragraph_rm != '') { ?>
                     <label class="desc" id="title0" for="Field0">
                         Additional Paragraph
-                        /
-                        <button onclick="Javascript: loadPopupRefer('select_custom_all.php?fr=ex_page5frm&tx=additional_paragraph_rm'); return false;">Custom Text</button>
                     </label>
 
                     <div>
                         <span>
-                                <textarea name="additional_paragraph_rm" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph_rm;?></textarea>
+                                <?=$additional_paragraph_rm;?>
                         </span>
                     </div>
                     <br />
                         <?php } ?>
-
                     <label class="desc" id="title0" for="Field0">
                         Craniomandibular Screening
                     </label>
 
                     <div>
                         <span>
-                                <input type="checkbox" name="screening_aware" value="1" <? if($screening_aware == 1) echo " checked"; ?>/>
+                            <? if($screening_aware == 1){ ?>
                             Patient is aware of a temporomandibular disorder
 
                                 <br /><br>
-                                <input type="checkbox" name="screening_normal" value="1" <? if($screening_normal == 1) echo " checked"; ?>/>
+			   <?php } ?>
+	
+                            <? if($screening_normal == 1){ ?>
                             Within normal limits
+			    <?php } ?>
                         </span>
                         </div>
                     <br />
-

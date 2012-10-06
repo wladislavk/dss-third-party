@@ -1,3 +1,4 @@
+<div style="width:48%; float:left;">
 <?php 
 
 //include "includes/top.htm";
@@ -13,33 +14,40 @@ if ($patient_info) {
 
 ?>
 <h3 style="margin-left: 30px; font-size:30px;float:left;" >You are able to do the following:</h3>
-<a href="manage_flowsheet3.php?pid=<?= $_GET['pid']; ?>&addtopat=1" style="float:right; margin:0 20px 0 0; color:#000; text-decoration:none; font-size:14px; cursor:pointer;">Return to Flowsheet</a>
 
-<div class="vob_item">
+<a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item
 <?php
   $errors = claim_errors($_GET['pid'], true);
   if(count($errors)>0){
-    ?><div class="vob_x"></div><?php
+    ?>error<?php
   }else{
-    ?><div class="vob_check"></div><?php
+    ?>success<?php
   } ?>
-<div class="vob_icon vob_request"></div>
-Request<br />Verification of Benefits
-</div>
+">
+<div class="vob_icon vob_insurance"></div>
+  Insurance Information
+</a>
 
 
-<div class="vob_item">
+<a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&addtopat=1&sect=sleep" class="vob_item
 <?php
   $errors = claim_errors($_GET['pid']);
   if(count($errors)>0){
-    ?><div class="vob_x"></div><?php
+    ?>error<?php
   }else{
-    ?><div class="vob_check"></div><?php
+    ?>success<?php
   } ?>
-<div class="vob_icon vob_file"></div>
-File<br />Insurance Claim
+">
+<div class="vob_icon vob_study"></div>
+Sleep Study w/ Diagnosis
+</a>
+
+
+
 </div>
-<div class="clear"></div>
+<div style="width:48%; float:left;">
+
+
 
 <h3 style="margin-left: 30px; font-size:30px;" >The following items are needed:</h3>
 <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item">
@@ -117,7 +125,7 @@ if(mysql_num_rows($flowresult) <= 0){
 </a>
 
 
-
+</div>
 <div class="clear"></div>
 <?php
 
@@ -129,5 +137,4 @@ if(mysql_num_rows($flowresult) <= 0){
 
 //include "includes/bottom.htm";
 ?>
-
 

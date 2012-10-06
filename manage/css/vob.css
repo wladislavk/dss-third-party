@@ -1,13 +1,26 @@
 
 .vob_item{
-  margin-left:150px;
-  font-size: 30px;
+  margin-left:50px;
+  font-size: 20px;
   clear:both;
-  height: 130px;
+  height: 60px;
   margin-top:20px;
   display:block;
   color:#000;
   text-decoration:none;
+  }
+
+a.vob_item.error{
+  padding-left:30px;
+  background: url(../images/icons/red_x.png) no-repeat 0 10px;
+  color: #f33;
+  }
+
+
+a.vob_item.success{
+  padding-left:30px;
+  background: url(../images/icons/check_done.png) no-repeat 0 10px;
+  color:#999;
   }
 
 .vob_check{
@@ -22,24 +35,26 @@
 
 .vob_x{
   margin-top:14px;
-  width:72px;
-  height:66px;
+  width:24px;
+  height:26px;
   display:block;
   float: left;
-  background: url(../images/red_x.png) no-repeat 0 0;
+  background: url(../images/icons/red_x.png) no-repeat 0 0;
   }
 
 .vob_item span{
   padding-top:25px;
   display:block;
 }
+
 .vob_icon{
-  width: 101px;
-  height: 111px;
+  width: 49px;
+  height: 49px;
   display: block;
   float:left;
-  margin: 0 20px;
+  margin: 0 15px;
   }
+
 
 .vob_request{
   background: url(../images/request_vob.png) no-repeat center center;
@@ -49,12 +64,16 @@
   background: url(../images/file_insurance.png) no-repeat center center;
   }
 
-.vob_insurance{
-  background: url(../images/insurance_info.png) no-repeat center center;
+.error .vob_insurance{
+  background: url(../images/icons/insurance_info.png) no-repeat center center;
+  }
+
+.success .vob_insurance{
+  background: url(../images/icons/insurance_info_done.png) no-repeat center center;
   }
 
 .vob_study{
-  background: url(../images/sleep_study.png) no-repeat center center;
+  background: url(../images/icons/sleep_study.png) no-repeat center center;
   }
 
 .vob_rx{

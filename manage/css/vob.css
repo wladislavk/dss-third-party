@@ -1,3 +1,64 @@
+.ins_header{
+  padding: 20px 0 0 80px;
+  font-weight: bold;
+  font-size: 18px;
+  height: 60px;
+  border-bottom: solid 3px #000;
+  width: 300px;
+  margin: 0 auto;
+  }
+
+.vob_header{
+  background: url(../images/icons/request_vob_icon.png) no-repeat 0 0;
+  }
+
+.claim_header{
+  background: url(../images/icons/file_insurance_icon.png) no-repeat 0 0;
+  }
+
+.vob_medicare{
+  background: url(../images/icons/red_x.png) no-repeat 0 10px;
+  margin-left:50px;
+  font-size: 20px;
+  padding-left:40px;
+  clear:both;
+  height: 60px;
+  margin-top:20px;
+  display:block;
+  color:#000;
+  }
+
+a.vob_request{
+  background: url(../images/icons/request_vob_button.png) no-repeat 0 0;
+  width: 249px;
+  height: 73px;
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+a.vob_request:hover{
+  background: url(../images/icons/request_vob_button_hover.png) no-repeat 0 0;
+  }
+
+a.vob_request.new{
+  background: url(../images/icons/request_new_vob_button.png) no-repeat 0 0;
+  width: 249px;
+  height: 73px;
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+a.vob_request.new:hover{
+  background: url(../images/icons/request_new_vob_button_hover.png) no-repeat 0 0;
+  }
+.sub_note{
+  width: 300px;
+  float: right;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: 20px;
+  }
 
 .vob_item{
   margin-left:50px;
@@ -10,7 +71,7 @@
   text-decoration:none;
   }
 
-a.vob_item.error{
+.vob_item.error{
   padding-left:30px;
   background: url(../images/icons/red_x.png) no-repeat 0 10px;
   color: #f33;
@@ -72,15 +133,28 @@ a.vob_item.success{
   background: url(../images/icons/insurance_info_done.png) no-repeat center center;
   }
 
-.vob_study{
+.error .vob_study{
   background: url(../images/icons/sleep_study.png) no-repeat center center;
   }
 
-.vob_rx{
-  background: url(../images/rx.png) no-repeat center center;
+.success .vob_study{
+  background: url(../images/icons/sleep_study_done.png) no-repeat center center;
   }
 
-.vob_lomn{
-  background: url(../images/LOMN.png) no-repeat center center;
+.error .vob_rx{
+  background: url(../images/icons/rx.png) no-repeat center center;
+  }
+
+.success .vob_rx{
+  background: url(../images/icons/rx_done.png) no-repeat center center;
+  }
+
+
+.error .vob_lomn{
+  background: url(../images/icons/LOMN.png) no-repeat center center;
+  }
+
+.success .vob_lomn{
+  background: url(../images/icons/LOMN_done.png) no-repeat center center;
   }
 

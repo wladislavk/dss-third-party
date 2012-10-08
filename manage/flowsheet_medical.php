@@ -1,3 +1,4 @@
+<div >
 <?php
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -6,8 +7,8 @@ $flow = mysql_fetch_array($flowresult);
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
-                $rximgid = $flow['rx_imgid'];
-                $lomnimgid = $flow['lomn_imgid'];
+    $rximgid = $flow['rx_imgid'];
+    $lomnimgid = $flow['lomn_imgid'];
 if ($rximgid != "") {
         $sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$rximgid."';";
         $result = mysql_query($sql);
@@ -22,15 +23,12 @@ if ($lomnimgid != "") {
 
 
 ?>
-<div style="width:600px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
-<table width="610px" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
+<div style="width:400px; clear:both; height:20px; margin:0 auto; padding-top:3px; padding-left:10px;" class="col_head tr_bg_h">MEDICAL INSURANCE</div>
+<table width="100%" <?php print (!$medins  ? 'class="yellow"' : ''); ?> align="center">
 <tr style="vertical-align:middle;">
 <td>
 <h3>Procedure</h3>
 	</td>
-	<td>
-	<h3>Requested</h3>
-</td>
 <td>
 <h3>Received</h3>
 </td>
@@ -41,9 +39,6 @@ if ($lomnimgid != "") {
 <tr>
 <td>
 Rx.
-</td>
-<td>
-<input id="rxreq" name="rxreq" type="text" class="field text addr tbox calendar" value="<?php echo $rxreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxreq');" />
 </td>
 <td>
 <input id="rxrec" name="rxrec" type="text" class="field text addr tbox calendar" value="<?php echo $rxrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxrec');" onClick="<?php print ($rximgid == "" ? "alert('You must upload an image before Rx can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
@@ -69,9 +64,6 @@ Rx.
 L.O.M.N.
 </td>
 <td>
-<input id="lomnreq" name="lomnreq" type="text" class="field text addr tbox calendar" value="<?php echo $lomnreq; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnreq');" />
-</td>
-<td>
 <input id="lomnrec" name="lomnrec" type="text" class="field text addr tbox calendar" value="<?php echo $lomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('lomnrec');" onClick="<?php print ($lomnimgid == "" ? "alert('You must upload an image before LOMN can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
 </td>
 <td>
@@ -92,4 +84,4 @@ L.O.M.N.
 
 
 </table>
-
+</div>

@@ -1,5 +1,6 @@
 <?php
 
+
 function claim_errors( $pid, $medicare = false ){
   $errors = array();
 
@@ -150,6 +151,79 @@ $e_text .= '\n'.$e;
 }
 return $e_text;
 }
+
+
+function create_vob( $pid ){
+
+  $sql = "SELECT "
+       . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
+       . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
+       . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
+       . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
+       . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
+       . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
+       . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "       . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
+       . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
+       . "  d.userid as 'doc_id', p.home_phone as 'patient_phone'  "
+       . "FROM "
+       . "  dental_patients p  "
+       . "  LEFT JOIN dental_contact r ON p.referred_by = r.contactid  "
+       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  JOIN dental_users d ON p.docid = d.userid "
+       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
+       . "WHERE "
+       . "  p.patientid = ".$pid;
+  $my = mysql_query($sql);
+  $my_array = mysql_fetch_array($my);
+
+  $sleepstudies = "SELECT diagnosis FROM dental_summ_sleeplab WHERE (diagnosis IS NOT NULL && diagnosis != '') AND filename IS NOT NULL AND patiendid = '".$pid."' ORDER BY id DESC LIMIT 1;";
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosis = $d['diagnosis'];
+  //print_r($my_array);exit;
+  $sd = date('Y-m-d H:i:s');
+  $sql = "INSERT INTO dental_insurance_preauth ("
+       . "  patient_id, doc_id, ins_co, ins_rank, ins_phone, patient_ins_group_id, "
+       . "  patient_ins_id, patient_firstname, patient_lastname, patient_phone, patient_add1, "
+       . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
+       . "  insured_first_name, insured_last_name, insured_dob, doc_npi, referring_doc_npi, "
+       . "  trxn_code_amount, diagnosis_code, doc_medicare_npi, doc_tax_id_or_ssn, "
+       . "  front_office_request_date, status, userid, viewed "
+       . ") VALUES ("
+       . "  " . $pid . ", "
+       . "  " . $my_array['doc_id'] . ", "
+       . "  '" . $my_array['ins_co'] . "', "
+       . "  '" . $my_array['ins_rank'] . "', "
+       . "  '" . $my_array['ins_phone'] . "', "
+       . "  '" . $my_array['patient_ins_group_id'] . "', "
+       . "  '" . $my_array['patient_ins_id'] . "', "
+       . "  '" . $my_array['patient_firstname'] . "', "
+       . "  '" . $my_array['patient_lastname'] . "', "
+       . "  '" . $my_array['patient_phone'] . "', "
+       . "  '" . $my_array['patient_add1'] . "', "
+       . "  '" . $my_array['patient_add2'] . "', "
+       . "  '" . $my_array['patient_city'] . "', "
+       . "  '" . $my_array['patient_state'] . "', "
+       . "  '" . $my_array['patient_zip'] . "', "
+       . "  '" . $my_array['patient_dob'] . "', "
+       . "  '" . $my_array['insured_first_name'] . "', "
+       . "  '" . $my_array['insured_last_name'] . "', "
+       . "  '" . $my_array['insured_dob'] . "', "
+       . "  '" . $my_array['doc_npi'] . "', "
+       . "  '" . $my_array['referring_doc_npi'] . "', "
+       . "  '" . $my_array['trxn_code_amount'] . "', "
+       . "  '" . $diagnosis . "', "
+       . "  '" . $my_array['doc_medicare_npi'] . "', "
+       . "  '" . $my_array['doc_tax_id_or_ssn'] . "', "
+       . "  '" . $sd . "', "
+       . DSS_PREAUTH_PENDING . ", "
+       . "  '" . $_SESSION['userid'] . "', "
+       . 1
+       . ")";
+  return mysql_query($sql);
+}
+
 
 
 ?>

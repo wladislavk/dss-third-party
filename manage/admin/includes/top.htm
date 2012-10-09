@@ -97,7 +97,7 @@ $num_pending_claims = mysql_num_rows($my);
                 <li><a href="/manage/admin/manage_vobs.php?status=0">VOBs (<?= $num_pending_preauth; ?>)</a></li>
                 <li><a href="/manage/admin/manage_claims.php?status=0">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
                 <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
-                <li class="dir">Users
+                <li class="dir">USERS
                         <ul>
                                 <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
                                 <li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>
@@ -237,6 +237,12 @@ $num_pending_claims = mysql_num_rows($my);
                                                 <li><a href="/manage/admin/manage_plan_text.php">Plan / Progress Text</a></li>
 					</ul>
 				</li>
+                                <li class="dir">Flowsheet
+                                        <ul>
+                                                <li><a href="/manage/admin/manage_flowsheet_steps.php">Steps</a></li>
+                                        </ul>
+                                </li>
+
 			</ul>
 		</li>
         </ul>

@@ -875,5 +875,8 @@ function time_ago_format($seconds_ago){
   return floor($seconds_ago/$month) . " months";
 }
 
+function date_in_words_until($date){
+  return time_ago_format(strtotime($date) - date('U'));
+}
 
 ?>

@@ -2,9 +2,136 @@
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
+
+$last_sql = "SELECT * FROM dental_flow_pg2_info info
+		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
+		WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' order by steps.section DESC, steps.sort_by DESC";
+$last_q = mysql_query($last_sql);
+$last = mysql_fetch_assoc($last_q);
+$last_segment = $last['segmentid'];
+$last_rank = 0;
+mysql_query("SET @rank=0");
+$rank_sql = "SELECT @rank:=@rank+1 as rank, id from dental_flowsheet_steps ORDER BY section ASC, sort_by ASC";
+$rank_query = mysql_query($rank_sql);
+while($rank_r = mysql_fetch_assoc($rank_query)){
+  if($last['segmentid']==$rank_r['id']){
+    $last_rank = $rank_r['rank'];
+  }
+}
+$arrow_height = ($last_rank*20-10);
 ?>
 <link rel="stylesheet" href="css/flowsheet.css" />
 
+<div id="treatment_div">
+<h3>1) What did you do today?</h3>
+<div id="treatment_list">
+<div id="arrow_div" style="height:<?= $arrow_height; ?>px;"></div>
+<ul class="treatment sect1">
+<?php 
+
+$step_sql = "SELECT * from dental_flowsheet_steps WHERE section=1 ORDER BY sort_by ASC";
+$step_q = mysql_query($step_sql);
+
+while($step = mysql_fetch_assoc($step_q)){
+if($step['id'] == $last['segmentid']){
+  $class = "last";
+}else{
+  $class = "";
+}
+?>
+
+<li class="<?= $class; ?>"><a id="completed_<?= $step['id']; ?>" class="completed_today"><?= $step['name']; ?></a></li>
+
+<?php
+}
+
+?>
+</ul>
+
+<ul class="treatment sect2">
+<?php
+
+$step_sql = "SELECT * from dental_flowsheet_steps WHERE section=2 ORDER BY sort_by ASC";
+$step_q = mysql_query($step_sql);
+
+while($step = mysql_fetch_assoc($step_q)){
+if($step['id'] == $last['segmentid']){
+  $class = "last";
+}else{
+  $class = "";
+}
+?>
+
+<li class="<?= $class; ?>"><a id="completed_<?= $step['id']; ?>" class="completed_today"><?= $step['name']; ?></a></li>
+
+<?php 
+}
+
+?>
+</ul>
+
+<ul class="treatment sect3">
+<?php
+
+$step_sql = "SELECT * from dental_flowsheet_steps WHERE section=3 ORDER BY sort_by ASC";
+$step_q = mysql_query($step_sql);
+
+while($step = mysql_fetch_assoc($step_q)){
+if($step['id'] == $last['segmentid']){
+  $class = "last";
+}else{
+  $class = "";
+}
+?>
+
+<li class="<?= $class; ?>"><a id="completed_<?= $step['id']; ?>" class="completed_today"><?= $step['name']; ?></a></li>
+
+<?php 
+}
+
+?>
+</ul>
+</div>
+</div>
+
+<div id="step2">
+<h3>2) What will you do next?</h3>
+<div id="sched_div">
+<?php
+  $sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND date_scheduled != '' AND date_scheduled IS NOT NULL AND date_scheduled != '0000-00-00'";
+  $sched_q = mysql_query($sched_sql);
+  $sched_r = mysql_fetch_assoc($sched_q);
+  $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
+		JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
+		WHERE next.parent_id='".mysql_real_escape_string($last['segmentid'])."'
+		ORDER BY next.sort_by ASC"; 
+  $next_q = mysql_query($next_sql);
+?>
+  <div id="next_step_div">
+    <label>Select Next Appointment</label>
+    <select id="next_step">
+      <option value="">SELECT NEXT STEP</option>
+      <?php
+        while($next_r = mysql_fetch_assoc($next_q)){
+          ?><option value="<?= $next_r['id']; ?>" <?= ($next_r['id']==$sched_r['segmentid'])?'selected="selected"':''; ?>><?= $next_r['name']; ?></option><?php
+        }
+      ?>
+    </select>
+  </div>
+  <div id="next_step_date_div">
+    <label>Schedule On/After</label>
+    <input id="next_step_date" class="flow_next_calendar" type="text" value="<?= ($sched_r['date_scheduled']!='')?date('m/d/Y', strtotime($sched_r['date_scheduled'])):''; ?>" />
+    <?= date_in_words_until($sched_r['date_scheduled']); ?>
+  </div>
+<div class="clear"></div>
+</div>
+<h3 style="width:500px; text-align:center;">Treatment Summary</h3>
+<div id="appt_summ" style="width:500px;">
+        <?php include 'appointment_summary.php'; ?>
+</div>
+
+</div>
+<? /*
 <?php
 $segments = Array();
 $segments[1] = "Initial Contact";
@@ -82,6 +209,7 @@ if($r){
 <div style="width:500px; float:left;">
 	<?php include 'appointment_summary.php'; ?>
 </div>
+*/ ?>
 <div style="clear:both;"></div>
 
 <script type="text/javascript">
@@ -146,7 +274,7 @@ $('.completed_today').click(function(){
 
 
 
-							$('#completed_'+id).removeClass('notCompletedButton').addClass('completedButton').text('Completed');
+							//$('#completed_'+id).removeClass('notCompletedButton').addClass('completedButton').text('Completed');
 
                                                 }
                                         },
@@ -156,8 +284,16 @@ $('.completed_today').click(function(){
                                   });
 });
 
-function update_next_sched(id){
-  var sched = $('#'+id).val();
+
+$('#next_step').change( function(){
+  update_next_sched();
+});
+
+
+function update_next_sched(){
+  var id = $('#next_step').val();
+  var sched = $('#next_step_date').val();
+  if(id!=''&&sched!=''){
                                     $.ajax({
                                         url: "includes/update_appt_sched.php",
                                         type: "post",
@@ -167,17 +303,13 @@ function update_next_sched(id){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-							$('.next_sched').each(function(){
-							    if($(this).attr("id")!=id){
-								$(this).val('');
-							    }
-							});
                                                 }
                                         },
                                         failure: function(data){
                                                 //alert('fail');
                                         }
                                   });
+  }
 }
 
 </script>

@@ -375,7 +375,7 @@ function patientabc(fa)
 			alert("Plan Name is a Required Field");
 			fa.p_m_ins_plan.focus();
 			return false;
-		} else if(trim(fa.p_m_ins_type.value) == "Select Type") {
+		} else if(trim(fa.p_m_ins_type.value) == "") {
 			alert("Insurance Type is a Required Field");
 			fa.p_m_ins_type.focus();
 			return false;
@@ -426,7 +426,7 @@ function patientabc(fa)
 			alert("Plan Name is a Required Field");
 			fa.s_m_ins_plan.focus();
 			return false;
-		} else if(trim(fa.s_m_ins_type.value) == "Select Type") {
+		} else if(trim(fa.s_m_ins_type.value) == "") {
 			alert("Insurance Type is a Required Field");
 			fa.s_m_ins_type.focus();
 			return false;

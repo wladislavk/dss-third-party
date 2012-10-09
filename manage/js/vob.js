@@ -10,6 +10,7 @@ $(document).ready(function(){
                                                 if(r.error){
                                                 }else{
 							alert('VOB submitted');
+							window.location.reload();
                                                 }
                                         },
                                         failure: function(data){

@@ -1,3 +1,6 @@
+a{
+  cursor: pointer;
+  }
 .ins_header{
   padding: 20px 0 0 80px;
   font-weight: bold;
@@ -10,6 +13,16 @@
 
 .vob_header{
   background: url(../images/icons/request_vob_icon.png) no-repeat 0 0;
+  }
+
+.ins_header .sub_text{
+  clear:both;
+  font-size: 12px;
+  display: block;
+  }
+
+.ins_header .sub_text .highlight{
+  color: #f30;
   }
 
 .claim_header{
@@ -52,6 +65,7 @@ a.vob_request.new:hover{
   background: url(../images/icons/request_new_vob_button_hover.png) no-repeat 0 0;
   }
 .sub_note{
+  font-style: italic;
   width: 300px;
   float: right;
   color: #aaa;

@@ -1,23 +1,45 @@
+
 <?php
 
   if($_GET['rx']==1){
+?>
+<div id="loader" style="position:absolute;width:100%; height:98%;">
+<img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
+</div>
+<?php
     $file = $_FILES['rx_file'];
     if ($file["name"] <> '') {
       $rximgid = save_insurance_image($file, 6);
       $rxrec = date("m/d/Y");
       $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$rximgid."', rxrec='".$rxrec."' WHERE pid = '".$_GET['pid']."';";
       mysql_query($rx_sql);
+      ?>
+      <script type="text/javascript">
+        $('#loader').hide();
+      </script>
+      <?php
     }
   }
 
 
   if($_GET['lomn']==1){
+?>
+<div id="loader" style="position:absolute;width:100%; height:98%;">
+<img style="margin:100px 0 0 45%" src="images/DSS-ajax-animated_loading-gif.gif" />
+</div>
+<?php
+
     $file = $_FILES['lomn_file'];
     if ($file["name"] <> '') {
       $lomnimgid = save_insurance_image($file, 7);
       $lomnrec = date("m/d/Y");
       $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$lomnimgid."', lomnrec='".$lomnrec."' WHERE pid = '".$_GET['pid']."';";
       mysql_query($lomn_sql);
+      ?>
+      <script type="text/javascript">
+        $('#loader').hide();
+      </script>
+      <?php
     }
 
 
@@ -120,6 +142,13 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
 <div class="ins_header vob_header">
 Request<br />
 Verification of Benefits
+<?php
+if($ins_error || $study_error){
+?>
+<span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
+<?php
+}
+?>
 </div>
 
 
@@ -160,7 +189,9 @@ Verification CANNOT be requested*
 <div class="vob_icon vob_study"></div>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
-
+<span class="sub_note">*Verification of Benefits can be requested<br /<br />>after the items above are completed</span>
+<div class="clear"></div>
+<br /><br />
 <?php } ?>
 
 </div>
@@ -169,6 +200,14 @@ Verification CANNOT be requested*
 <div class="ins_header claim_header">
 File<br />
 Insurance Claim
+<?php
+if($ins_error || $study_error || !$rx || !$lomn){
+?>
+<span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
+<?php
+}
+?>
+
 </div>
 <?php
 if(!$ins_error && !$study_error && $rx && $lomn){ ?>
@@ -228,6 +267,16 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <form id="lomn_form" action="manage_insurance.php?pid=<?= $_GET['pid']; ?>&addtopat=1&lomn=1" enctype="multipart/form-data" method="post" style="display:none;">
 <input name="lomn_file" type="file" id="lomn_file" />
 </form>
+
+<?php
+if($ins_error || $study_error || !$rx || !$lomn){
+?>
+<span class="sub_note">*Insurance Claims can be filed after<br />the items above are completed</span>
+<div class="clear"></div>
+<br /><br />
+<?php
+}
+?>
 
 <?php } ?>
 

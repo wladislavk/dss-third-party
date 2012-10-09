@@ -64,16 +64,16 @@ $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strt
 
 
 ?>
-Preferred Name: <?=$r['preferred_name']; ?>
-Age: <?php
+<strong>Preferred Name:</strong> <?=$r['preferred_name']; ?>
+ <strong>Age:</strong> <?php
 $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
 
 $years = floor($diff / (365*60*60*24));
                 echo $years;
 ?>
-DOB: <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
+ <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
 <br />
-    Device
+    <strong>Device</strong>
         <select name="dentaldevice" style="width:250px">
         <option value=""></option>
         <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
@@ -86,8 +86,8 @@ DOB: <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
                                                                  }
                                                                 ?>
     </select>
-        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
-Duration: (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
+        <strong>Date</strong> <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+<strong>Duration:</strong> (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
 <br />
 
   <?php
@@ -96,15 +96,15 @@ Duration: (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
      $last_r = mysql_fetch_assoc($last_q);
 ?>
 <br />
-Name: <?= $r['firstname']; ?> <?= $r['lastname']; ?>
-Home Phone: <?= $r['home_phone']; ?>
-Cell Phone: <?= $r['cell_phone']; ?>
-Work Phone: <?= $r['work_phone']; ?>
+<strong>Name:</strong> <?= $r['firstname']; ?> <?= $r['lastname']; ?><br />
+<strong>Home Phone:</strong> <?= $r['home_phone']; ?><br />
+<strong>Cell Phone:</strong> <?= $r['cell_phone']; ?><br />
+<strong>Work Phone:</strong> <?= $r['work_phone']; ?><br />
 
 <br />
-Last seen: <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
+<strong>Last seen:</strong> <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
 
-  For: <?= $last_r['last_treatment']; ?>
+  <strong>For:</strong> <?= $last_r['last_treatment']; ?>
 
 <?php
   $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_scheduled DESC";
@@ -130,10 +130,10 @@ $segments[1] = "Initial Contact";
 
 ?>
 <br />
-Next appt: <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
+<strong>Next appt:</strong> <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
 <br /><br />
 
-      Referred By: 
+      <strong>Referred By:</strong> 
     <?php
 $rs = $r['referred_source'];
   if($rs == DSS_REFERRED_PHYSICIAN){
@@ -192,11 +192,11 @@ $rs = $r['referred_source'];
         }
 
 ?>
-  Baseline Sleep Test? <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?>
-      Diagnosis: <?= $baseline_sleepstudy['ins_diagnosis']." - ".$baseline_sleepstudy['description']; ?>
-      AHI/RDI: <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?>
-      Low O2: <?= $baseline_sleepstudy['o2nadir']; ?>
-      T < 90%: <?= $baseline_sleepstudy['t9002']; ?>
+  <strong>Baseline Sleep Test?</strong> <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?><br />
+      <strong>Diagnosis:</strong> <?= $baseline_sleepstudy['ins_diagnosis']." - ".$baseline_sleepstudy['description']; ?><br />
+      <strong>AHI/RDI:</strong> <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?><br />
+      <strong>Low O2:</strong> <?= $baseline_sleepstudy['o2nadir']; ?><br />
+      <strong>T < 90%:</strong> <?= $baseline_sleepstudy['t9002']; ?><br />
 
 <?php
                 $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
@@ -209,15 +209,15 @@ $rs = $r['referred_source'];
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
                 $sleepstudy = mysql_fetch_assoc($result);
-?>
-  Recent Sleep Test 
-      Diagnosis: <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?>
-      AHI/RDI: <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
-      Low O2: <?= $sleepstudy['o2nadir']; ?>
-      T < 90%: <?= $sleepstudy['t9002']; ?>
+?><br />
+  <strong>Recent Sleep Test</strong><br />
+      <strong>Diagnosis:</strong> <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?><br />
+      <strong>AHI/RDI:</strong> <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?><br />
+      <strong>Low O2:</strong> <?= $sleepstudy['o2nadir']; ?><br />
+      <strong>T < 90%:</strong> <?= $sleepstudy['t9002']; ?><br />
 <br />
 
-Reason for seeking tx:
+<strong>Reason for seeking tx:</strong>
 <?php
 $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $c_q = mysql_query($c_sql);
@@ -227,26 +227,83 @@ echo $c_r['chief_complaint_text'];
 
 <br /><br />
 
-Medical Caregivers:
+          <?php if($ess != ''){ ?>
+          <strong>Baseline Epworth Sleepiness Score:</strong> <?= $ess; ?>
+          <br />
+          <?php } ?>
+          <?php if($tss != ''){ ?>
+          <strong>Baseline Thornton Snoring Scale:</strong> <?= $tss; ?>
+          <?php } ?>
+
+          <?php if($cheif_complaint_text != ''){ ?>
+                    <label style="display:block;">
+                        What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
+                    </label>
+                        <?= $chief_complaint_text; ?>
+          <?php } ?>
+<?php
+if($complaintid <> '')
+{
+        $comp_arr1 = split('~',$complaintid);
+
+        foreach($comp_arr1 as $i => $val)
+        {
+                $comp_arr2 = explode('|',$val);
+
+                $compid[$i] = $comp_arr2[0];
+                $compseq[$i] = $comp_arr2[1];
+        }
+}
+?>
+
+<?php if($complaintid != '' || in_array('0', $compid)){ ?>
+<h3>Complaints</h3>
+<ul>
+                <?php if($complaintid != ''){ ?>
+                    <?
+                                        $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
+                                        $complaint_my = mysql_query($complaint_sql);
+                                        $complaint_number = mysql_num_rows($complaint_my);
+                                        while($complaint_myarray = mysql_fetch_array($complaint_my))
+                                        {
+                                                if(@array_search($complaint_myarray['complaintid'],$compid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else
+                                                {
+                                                   #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+                                                        ?><li><?= $complaint_myarray['complaint']; ?></li><?php
+                                                }
+                                        }
+?>
+<?php } ?>
+<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
+<li><?= $other_complaint; ?></li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+<strong>Medical Caregivers:</strong>
 
 <?php include 'summ_contacts.php'; ?>
 <br />
 
-ROM:
-    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
-
-Best Eccovision&nbsp;&nbsp;
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+<strong>ROM:</strong>
+    <strong>Vertical</strong>&nbsp;<?php echo $i_opening_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp; <strong>Right</strong> <?php echo $r_lateral_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp;  <strong>Left</strong> <?php echo $l_lateral_from; ?>mm
+<br />
+<strong>Best Eccovision</strong>&nbsp;&nbsp;
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Horizontal:</strong> <?php echo $optimum_echovision_hor; ?>mm  <strong>Vertical:</strong> <?php echo $optimum_echovision_ver; ?>mm
 <br >
 
 
-Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></strong><br />
+<strong>Bed Partner:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $bed_time_partner ?><br />
                         &nbsp;&nbsp;
                         <br /><br />
-      Same room:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $sleep_same_room; ?></strong><br />
+      <strong>Same room:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sleep_same_room; ?><br />
 
 
-    Notes/Personal:
+    <strong>Notes/Personal:</strong>
       
 
        <?php include("dss_notes.php"); ?>
@@ -255,10 +312,10 @@ Bed Partner:&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $bed_time_partner ?></str
 
 
 
- History of Surgery or other Treatment Attempts:<br />
-      <textarea name="history_surgery" id="textarea3" cols="45" rows="5"><?=$other_therapy_att;?></textarea>
+ <strong>History of Surgery or other Treatment Attempts:</strong><br />
+      <?=$other_therapy_att;?>
 <br /><br />
-CPAP
+<strong>CPAP</strong>
 
     <div style="width:80%;">
         <?php
@@ -275,30 +332,12 @@ CPAP
     <label>
 
 
-      <span>On average how many nights per week do you wear your CPAP?
-                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $nights_wear_cpap; ?>" class="field text addr tbox" name="nights_wear_
-cpap" id="nights_wear_cpap">
-                                                        <br>
-                                                </span>
-
-
-      <span>
-                                                        On average how many hours each night do you wear your CPAP?
-                                                        <input type="text" style="width: 50px;" maxlength="50" value="<?php echo $percent_night_cpap; ?>" class="field text addr tbox" name="percent_ni
-ght_cpap" id="percent_night_cpap">
-                                                        <br>
-                                                </span>
-
-    <div style="height:10px;"></div>
-
-
-
 
 
 
 <br />
     <span style="font-weight:bold;">Problems w/ CPAP</span><br />
-        <textarea name="textarea8" id="textarea" cols="68" rows="5"><?=$problem_cpap;?></textarea>
+        <?=$problem_cpap;?>
       </label>
 
 
@@ -307,6 +346,153 @@ ght_cpap" id="percent_night_cpap">
      <?php } ?>
 
      </div>
+
+
+
+<?php
+$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_page2id = st($myarray['q_page2id']);
+$polysomnographic = st($myarray['polysomnographic']);
+$sleep_center_name_text = st($myarray['sleep_center_name_text']);
+$sleep_study_on = st($myarray['sleep_study_on']);
+$confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
+$rdi = st($myarray['rdi']);
+$ahi = st($myarray['ahi']);
+$cpap = st($myarray['cpap']);
+$cur_cpap = st($myarray['cur_cpap']);
+$intolerance = st($myarray['intolerance']);
+$other_intolerance = st($myarray['other_intolerance']);
+$other = st($myarray['other']);
+$affidavit = st($myarray['affidavit']);
+$type_study = st($myarray['type_study']);
+$nights_wear_cpap = st($myarray['nights_wear_cpap']);
+$percent_night_cpap = st($myarray['percent_night_cpap']);
+$custom_diagnosis = st($myarray['custom_diagnosis']);
+$sleep_study_by = st($myarray['sleep_study_by']);
+$triedquittried = st($myarray['triedquittried']);
+$timesovertime = st($myarray['timesovertime']);
+
+if($cpap == '')
+        $cpap = 'No';
+?>
+                                <?php if($polysomnographic != ''){ ?>
+                    <div>
+                        <span>
+                                                        <strong>Have you had a sleep study</strong>
+
+<?= ($polysomnographic == '1')?'Yes':'No'; ?>
+<?php if($polysomnographic == '1'){ ?>
+                                <?php if($sleep_center_name_text != ''){ ?>
+                            <strong>At</strong> <?=$sleep_center_name_text;?>
+                                <? } ?>
+                                <?php if($sleep_study_on != ''){ ?>
+                            <strong>Date</strong>
+                            <?=$sleep_study_on;?>
+                                <? } ?>
+<?php } ?>
+                        </span>
+                    </div>
+                <?php } ?>
+                    <label class="desc" id="title0" for="Field0">
+                        CPAP Intolerance
+                    </label>
+                                <?php if($cpap != ''){ ?>
+                    <div>
+                        <span>
+                                <strong>Have you tried CPAP?</strong>
+                            <?= $cpap;?>
+                </span>
+                        </div>
+                                <? } ?>
+                                <?php if($cur_cpap != ''){  ?>
+                    <div class="cpap_options">
+                        <span>
+                                <strong>Are you currently using CPAP?</strong>
+                            <?= $cur_cpap;?>
+                        </span>
+                        </div>
+
+                                <? } ?>
+                                <?php if($nights_wear_cpap != ''){ ?>
+                                        <div class="cpap_options2">                        <span>
+                                                        <strong>If currently using CPAP, how many nights / week do you wear it?</strong> <?=$nights_wear_cpap;?>
+                                                        <br />&nbsp;
+                                                </span>
+                                        </div>
+                                <? } ?>
+                                                                                            <?php if($percent_night_cpap != ''){ ?>
+                                        <div class="cpap_options2">
+                        <span>
+                                                        <strong>How many hours each night do you wear it?</strong> <?=$percent_night_cpap;?>
+
+                                                        <br />&nbsp;
+                                                </span>
+                                        </div>
+                                <? } ?>
+                                <?php if($intolerance != ''){ ?>
+                        <div id="cpap_options" class="cpap_options">
+                        <span>
+                                <strong>What are your chief complaints about CPAP?</strong>
+
+                            <br />
+                            <?
+                                                        $intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
+                                                        $intolerance_my = mysql_query($intolerance_sql);
+
+                                                        while($intolerance_myarray = mysql_fetch_array($intolerance_my))
+                                                        {
+                                                        ?>
+                                                                <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { ?>
+<?=st($intolerance_myarray['intolerance']);?><br />
+<?php }?> 
+                                                        <?
+                                                        }
+                                                        ?>
+                        </span>
+                                        </div>
+                                <? } ?>
+                                <?php if($other_intolerance != ''){ ?>
+                    <br />
+                    <div class="cpap_options">
+                        <span class="cpap_other_text">
+                                <span style="color:#000000; padding-top:0px;">
+                                <strong>Other Items</strong><br />
+                            </span>
+                            <?=$other_intolerance;?>
+                                                        <br />&nbsp;
+                        </span>
+                    </div>
+                                <? } ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -825,89 +1011,6 @@ Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_
 
 <!-- TREATMENT -->
 
-<?php
-$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
-
-$q_page1id = st($myarray['q_page1id']);
-$exam_date = st($myarray['exam_date']);
-$ess = st($myarray['ess']);
-$tss = st($myarray['tss']);
-$chief_complaint_text = st($myarray['chief_complaint_text']);
-$complaintid = st($myarray['complaintid']);
-$other_complaint = st($myarray['other_complaint']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$energy_level = st($myarray['energy_level']);
-$snoring_sound = st($myarray['snoring_sound']);
-$wake_night = st($myarray['wake_night']);
-$breathing_night = st($myarray['breathing_night']);
-$morning_headaches = st($myarray['morning_headaches']);
-$hours_sleep = st($myarray['hours_sleep']);
-$quit_breathing = st($myarray['quit_breathing']);
-$bed_time_partner = st($myarray['bed_time_partner']);
-$sleep_same_room = st($myarray['sleep_same_room']);
-$told_you_snore = st($myarray['told_you_snore']);
-$main_reason = st($myarray['main_reason']);
-$main_reason_other = st($myarray['main_reason_other']);
-$sleep_qual = st($myarray['sleep_qual']);
-
-if($complaintid <> '')
-{
-        $comp_arr1 = split('~',$complaintid);
-
-        foreach($comp_arr1 as $i => $val)
-        {
-                $comp_arr2 = explode('|',$val);
-
-                $compid[$i] = $comp_arr2[0];
-                $compseq[$i] = $comp_arr2[1];
-        }
-}
-?>
-          <?php if($ess != ''){ ?>
-          Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
-          <br />
-          <?php } ?>
-          <?php if($tss != ''){ ?>
-          Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
-          <?php } ?>
-
-          <?php if($cheif_complaint_text != ''){ ?>
-                    <label style="display:block;">
-                        What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
-                    </label>
-                        <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
-          <?php } ?>
-
-<?php if($complaintid != '' || in_array('0', $compid)){ ?>
-<h3>Complaints</h3>
-<ul>
-                <?php if($complaintid != ''){ ?>
-                    <?
-                                        $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-                                        $complaint_my = mysql_query($complaint_sql);
-                                        $complaint_number = mysql_num_rows($complaint_my);
-                                        while($complaint_myarray = mysql_fetch_array($complaint_my))
-                                        {
-                                                if(@array_search($complaint_myarray['complaintid'],$compid) === false)
-                                                {
-                                                        $chk = '';
-                                                }
-                                                else
-                                                {
-                                                   #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
-                                                        ?><li><?= $complaint_myarray['complaint']; ?></li><?php
-                                                }
-                                        }
-
-?>
-<?php } ?>
-<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
-<li><?= $other_complaint; ?></li>
-<?php } ?>
-</ul>
-<?php } ?>
 
 <h3>Subjective Signs/Symptoms</h3>
 
@@ -1020,150 +1123,4 @@ if($complaintid <> '')
                         </span>
                     </div>
 
-
-
-<?php
-/******************************
-*
-*
-* Q_PAGE2
-*
-*/
-
-$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
-
-$q_page2id = st($myarray['q_page2id']);
-$polysomnographic = st($myarray['polysomnographic']);
-$sleep_center_name_text = st($myarray['sleep_center_name_text']);
-$sleep_study_on = st($myarray['sleep_study_on']);
-$confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
-$rdi = st($myarray['rdi']);
-$ahi = st($myarray['ahi']);
-$cpap = st($myarray['cpap']);
-$cur_cpap = st($myarray['cur_cpap']);
-$intolerance = st($myarray['intolerance']);
-$other_intolerance = st($myarray['other_intolerance']);
-$other = st($myarray['other']);
-$affidavit = st($myarray['affidavit']);
-$type_study = st($myarray['type_study']);
-$nights_wear_cpap = st($myarray['nights_wear_cpap']);
-$percent_night_cpap = st($myarray['percent_night_cpap']);
-$custom_diagnosis = st($myarray['custom_diagnosis']);
-$sleep_study_by = st($myarray['sleep_study_by']);
-$triedquittried = st($myarray['triedquittried']);
-$timesovertime = st($myarray['timesovertime']);
-
-if($cpap == '')
-        $cpap = 'No';
-?>
-                                <?php if($polysomnographic != ''){ ?>
-                    <div>
-                        <span>
-                                                        Have you had a sleep study
-
-<?= ($polysomnographic == '1')?'Yes':'No'; ?>
-<?php if($polysomnographic == '1'){ ?>
-                                <?php if($sleep_center_name_text != ''){ ?>
-                            At <?=$sleep_center_name_text;?>
-                                <? } ?>
-                                <?php if($sleep_study_on != ''){ ?>
-                            Date
-                            <?=$sleep_study_on;?>
-                                <? } ?>
-<?php } ?>
-                        </span>
-                    </div>
-                <?php } ?>
-                    <label class="desc" id="title0" for="Field0">
-                        CPAP Intolerance
-                    </label>
-                                <?php if($cpap != ''){ ?>
-                    <div>
-                        <span>
-                                Have you tried CPAP?
-                            <input type="radio" class="cpap_radio" name="cpap" value="Yes" <? if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
-                            Yes
-
-                            <input type="radio" class="cpap_radio" name="cpap" value="No" <? if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
-                            No
-
-                </span>
-                        </div>
-                                <? } ?>
-                                <?php if($cur_cpap != ''){  ?>
-                    <div class="cpap_options">
-                        <span>
-                                Are you currently using CPAP?
-                            <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="Yes" <? if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />                            Yes
-
-                            <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="No" <? if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
-                            No
-
-                        </span>
-                        </div>
-
-                                <? } ?>
-                                <?php if($nights_wear_cpap != ''){ ?>
-                                        <div class="cpap_options2">                        <span>
-                                                        If currently using CPAP, how many nights / week do you wear it? <input id="nights_wear_cpap" name="nights_wear_cpap" type="text" class="field text addr tbox" value="<?=$nights_wear_cpap;?>" maxlength="255" style="width:225px;" />
-                                                        <br />&nbsp;
-                                                </span>
-                                        </div>
-                                <? } ?>
-                                                                                            <?php if($percent_night_cpap != ''){ ?>
-                                        <div class="cpap_options2">
-                        <span>
-                                                        How many hours each night do you wear it? <input id="percent_night_cpap" name="percent_night_cpap" type="text" class="field text addr tbox" value="<?=$percent_night_cpap;?>" maxlength="255" style="width:225px;" />
-
-                                                        <br />&nbsp;
-                                                </span>
-                                        </div>
-                                <? } ?>
-                                <?php if($intolerance != ''){ ?>
-                        <div id="cpap_options" class="cpap_options">
-                        <span>
-                                What are your chief complaints about CPAP?
-
-                            <br />
-
-                            <?
-                                                        $intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
-                                                        $intolerance_my = mysql_query($intolerance_sql);
-
-                                                        while($intolerance_myarray = mysql_fetch_array($intolerance_my))
-                                                        {
-                                                        ?>
-                                                                <input type="checkbox" id="intolerance" name="intolerance[]" value="<?=st($intolerance_myarray['intoleranceid'])?>" <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
-                                <?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
-                                                                <input type="checkbox" disabled="disabled" <? if(strpos($pat_row['intolerance'],'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
-                                <?php } ?>
-                                &nbsp;&nbsp;
-                                <?=st($intolerance_myarray['intolerance']);?><br />
-                                                        <?
-                                                        }
-                                                        ?>
-                                        <input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" />
-                                <?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
-                                                                <input type="checkbox" disabled="disabled" <? if(strpos($pat_row['intolerance'],'~'.st('0~')) === false) {} else { echo " checked";}?> />
-                                <?php } ?>
-
-&nbsp;&nbsp; Other<br />
-                        </span>
-                                        </div>
-                                <? } ?>
-                                <?php if($other_intolerance != ''){ ?>
-                    <br />
-                    <div class="cpap_options">
-                        <span class="cpap_other_text">
-                                <span style="color:#000000; padding-top:0px;">
-                                Other Items<br />
-                            </span>
-                            (Enter Each on Different Line)<br />
-                            <textarea name="other_intolerance" class="field text addr tbox" style="width:650px; height:100px;" ><?=$other_intolerance;?></textarea>
-                                                        <br />&nbsp;
-                        </span>
-                    </div>
-                                <? } ?>
 

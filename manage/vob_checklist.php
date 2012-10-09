@@ -87,16 +87,15 @@
                 }
                 }
 
-
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
+$flow = mysql_fetch_assoc($flowresult);
 if(mysql_num_rows($flowresult) <= 0){
   $rx = false;
   $lomn = false;
 }else{
-    $rx = ($flow['rxrec']=='');
-    $lomn = ($flow['lomnrec']=='');
-
+    $rx = ($flow['rxrec']!='');
+    $lomn = ($flow['lomnrec']!='');
 }
 ?>
 <script type="text/javascript" src="js/vob.js"></script>

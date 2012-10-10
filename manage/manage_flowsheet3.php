@@ -98,7 +98,7 @@ if($step['id'] == $last['segmentid']){
 <h3>2) What will you do next?</h3>
 <div id="sched_div">
 <?php
-  $sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND date_scheduled != '' AND date_scheduled IS NOT NULL AND date_scheduled != '0000-00-00'";
+  $sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=0";
   $sched_q = mysql_query($sched_sql);
   $sched_r = mysql_fetch_assoc($sched_q);
   $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
@@ -120,8 +120,8 @@ if($step['id'] == $last['segmentid']){
   </div>
   <div id="next_step_date_div">
     <label>Schedule On/After</label>
-    <input id="next_step_date" class="flow_next_calendar" type="text" value="<?= ($sched_r['date_scheduled']!='')?date('m/d/Y', strtotime($sched_r['date_scheduled'])):''; ?>" />
-    <?= date_in_words_until($sched_r['date_scheduled']); ?>
+    <input id="next_step_date" class="flow_next_calendar" type="text" value="<?= ($sched_r['date_scheduled']!='' && $sched_r['date_scheduled']!="0000-00-00")?date('m/d/Y', strtotime($sched_r['date_scheduled'])):''; ?>" />
+    <span id="next_step_until"><?= date_in_words_until($sched_r['date_scheduled']); ?></span>
   </div>
 <div class="clear"></div>
 </div>
@@ -240,6 +240,9 @@ $('.completed_today').click(function(){
 						  $clone.find('.deleteButton').attr('onclick', "return delete_segment('"+r.id+"');");
 						  $tr.after($clone);
 						  $clone.show();
+						  $('#next_step').val('');
+						  $('#next_step_date').val('');
+						  $('#next_step_until').text('');
                                                   if(id==9){
                                                         var $r = $('#noncomp_reason_tmp');
                                                         var $reason = $r.clone();
@@ -293,7 +296,6 @@ $('#next_step').change( function(){
 function update_next_sched(){
   var id = $('#next_step').val();
   var sched = $('#next_step_date').val();
-  if(id!=''&&sched!=''){
                                     $.ajax({
                                         url: "includes/update_appt_sched.php",
                                         type: "post",
@@ -309,7 +311,6 @@ function update_next_sched(){
                                                 //alert('fail');
                                         }
                                   });
-  }
 }
 
 </script>

@@ -24,10 +24,13 @@ if($create){
                         patientid= ".$pid.",
                         segmentid = ".$id.",
                         letterid = '".$letteridlist."',
+			appointment_type = 1,
                         date_completed = CURDATE()";
-                mysql_query($s);
+                $q = mysql_query($s);
                 $insert_id=mysql_insert_id();
-
+		if($q){ 
+		  mysql_query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($pid)."'");
+		}
 
         if ($id == "8") { // Follow-Up/Check
                 $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";

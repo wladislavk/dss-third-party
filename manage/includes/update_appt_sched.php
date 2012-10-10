@@ -8,6 +8,7 @@ clean_steps($pid);
 		$s = "INSERT INTO dental_flow_pg2_info SET
 			patientid= ".$pid.",
 			segmentid = ".$id.",
+			appointment_type = 0,
 			date_scheduled = '".$sched."'";
 		$q = mysql_query($s); 
 
@@ -45,7 +46,11 @@ if($q){
 
 <?php
 function clean_steps($pid){ //Deletes not completed steps and clears scheduled
-	
+
+  $s = "DELETE FROM dental_flow_pg2_info where patientid='".mysql_real_escape_string($pid)."' AND appointment_type=0";
+  mysql_query($s);
+
+/*	
 	$s = "SELECT id, segmentid, date_scheduled, date_completed from dental_flow_pg2_info where patientid=".$pid;
 	$q = mysql_query($s);
 	while($r = mysql_fetch_assoc($q)){
@@ -61,7 +66,7 @@ function clean_steps($pid){ //Deletes not completed steps and clears scheduled
                         WHERE id=".$r['id']);
 	  }
 	}
-
+*/
 } 
 
 

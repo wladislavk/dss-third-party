@@ -18,7 +18,7 @@ while($rank_r = mysql_fetch_assoc($rank_query)){
     $last_rank = $rank_r['rank'];
   }
 }
-$arrow_height = ($last_rank*20-10);
+$arrow_height = ($last_rank*20);
 ?>
 <link rel="stylesheet" href="css/flowsheet.css" />
 
@@ -28,15 +28,18 @@ $arrow_height = ($last_rank*20-10);
 <div id="arrow_div" style="height:<?= $arrow_height; ?>px;"></div>
 <ul class="treatment sect1">
 <?php 
-
-$step_sql = "SELECT * from dental_flowsheet_steps WHERE section=1 ORDER BY sort_by ASC";
+mysql_query("SET @step_rank=0");
+$step_sql = "SELECT s.*, @step_rank:=@step_rank+1 as rank from dental_flowsheet_steps s WHERE s.section=1 ORDER BY s.sort_by ASC";
 $step_q = mysql_query($step_sql);
-
 while($step = mysql_fetch_assoc($step_q)){
 if($step['id'] == $last['segmentid']){
   $class = "last";
 }else{
-  $class = "";
+    if($step['rank'] < $last_rank){
+      $class="completed_step";
+    }else{
+      $class = "";
+    }
 }
 ?>
 
@@ -267,7 +270,25 @@ $('.completed_today').click(function(){
                                                         $t.after($reason);
                                                         $reason.show();
                                                   }
+						  if(id==3){
+                                                        var $r = $('#sleep_study_titration_tmp');
+                                                        var $type = $r.clone();
+                                                        $t = $clone.find('.title');
+                                                        $type.find('.study_type').attr('id', 'study_type_'+r.id);
+                                                        $t.after($type);
+                                                        $type.show();
+							loadPopup('includes/flowsheet_study_type_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
+                                                  }
 
+                                                  if(id==15){
+                                                        var $r = $('#sleep_study_baseline_tmp');
+                                                        var $type = $r.clone();
+                                                        $t = $clone.find('.title');
+                                                        $type.find('.study_type').attr('id', 'study_type_'+r.id);
+                                                        $t.after($type);
+                                                        $type.show();
+							loadPopup('includes/flowsheet_study_type_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
+                                                  }
 
 						  if(id==4 || !r.impression){
 							loadPopup('includes/impression_device.php?pid=<?= $_GET['pid']; ?>');
@@ -313,6 +334,9 @@ function update_next_sched(){
                                   });
 }
 
+function updateStudyType(id, val){
+  $('#study_type_'+id).val(val);
+}
 </script>
 
 <?php include "includes/bottom.htm";?>

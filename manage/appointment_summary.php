@@ -29,8 +29,7 @@ $segments[2] = "Consult";
 $segments[4] = "Impressions";
 $segments[7] = "Device Delivery";
 $segments[8] = "Check / Follow Up";
-$segments[10] = "Home Sleep Test";
-$segments[3] = "Sleep Study";
+$segments[3] = "Titration Sleep Study";
 $segments[11] = "Treatment Complete";
 $segments[12] = "Annual Recall";
 $segments[14] = "Not a Candidate";
@@ -57,7 +56,22 @@ $segments[1] = "Initial Contact";
                 <?php
                 switch($row['segmentid']){
                         case 3: //sleep study
-                                ?><br /><input class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" type="text" style="width:50px;" value="<?= $row['study_type']; ?>" /><?php
+					?><br />
+					<select class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
+						<option value="">Select Type</option>
+						<option value="HST Titration" <?= ($row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
+                                                <option value="PSG Titration" <?= ($row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
+					</select>
+					<?php
+                                break;
+                        case 15: //sleep study
+                                        ?><br />
+                                        <select class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
+                                                <option value="">Select Type</option>
+                                                <option value="HST Baseline" <?= ($row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
+                                                <option value="PSG Baseline" <?= ($row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
+					</select>
+                                        <?php
                                 break;
                         case 5: //Delay
                                 ?>
@@ -290,8 +304,7 @@ $('.dentaldevice').change(function(){
 
 
 
-
-$('.study_type').blur(function(){
+$(document).delegate('.study_type', "change", function(){
   id = $(this).attr('id').substring(11);
   type = $(this).val();
                                     $.ajax({
@@ -339,6 +352,20 @@ $('.study_type').blur(function(){
 <a class="reason_btn" id="reason_btn<?php echo $id; ?>" style="display:none;" onclick="Javascript: loadPopup('flowsheet_other_reason.php?ed=<?=$id?>&pid=<?=$_GET['pid']?>&sid=9');" href="Javascript: ;">Show Reason</a>
 </div>
 
+<div id="sleep_study_titration_tmp" style="display:none;">
+  <select class="study_type" id="study_type_" style="width:150px;">
+    <option value="">Select Type</option>
+    <option value="HST Titration" <?= ($row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
+    <option value="PSG Titration" <?= ($row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
+  </select>
+</div>
+<div id="sleep_study_baseline_tmp" style="display:none;">
+  <select class="study_type" id="study_type_" style="width:150px;">
+    <option value="">Select Type</option>
+    <option value="HST Baseline" <?= ($row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
+    <option value="PSG Baseline" <?= ($row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
+  </select>
+</div>
 
 
 

@@ -23,8 +23,13 @@ a.deleteButton{
 ul.treatment{
   list-style: none;
   margin: 0;
-  width: 200px;
+  width: 220px;
+  padding: 0;
+  }
+
+ul.treatment li{
   padding: 0 10px;
+  width: 200px;
   }
 
 ul.treatment a{
@@ -33,7 +38,7 @@ ul.treatment a{
   display: block;
   }
 
-ul.treatment.sect1{
+ul.treatment.sect1 .completed_step, ul.treatment.sect1 .last{
   background: #99f;
   }
 

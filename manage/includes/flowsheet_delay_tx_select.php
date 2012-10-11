@@ -9,12 +9,16 @@ require_once('../includes/general_functions.php');
 <?php
 if(isset($_REQUEST['submit']))
 {
-$sqlex = "update dental_flow_pg2_info set study_type='".mysql_real_escape_string($_REQUEST['study_type'])."' where id='".mysql_real_escape_string($_GET['id'])."' AND patientid='".$_GET['pid']."'";
+$sqlex = "update dental_flow_pg2_info set delay_reason='".mysql_real_escape_string($_REQUEST['delay_reason'])."' where id='".mysql_real_escape_string($_GET['id'])."' AND patientid='".$_GET['pid']."'";
 $qex = mysql_query($sqlex);
 ?>
 <script type="text/javascript">
-parent.updateStudyType('<?= $_GET['id']; ?>', '<?= $_REQUEST['study_type']; ?>');
+parent.updateDelayReason('<?= $_GET['id']; ?>', '<?= $_REQUEST['delay_reason']; ?>');
 parent.disablePopup1();
+<?php
+if($_REQUEST['delay_reason']=='other'){ ?>
+parent.loadPopup('flowsheet_other_reason.php?ed=<?=$_GET['id'];?>&pid=<?=$_GET['pid']; ?>&sid=5');
+<?php } ?>
 </script>
 
 <?php
@@ -39,7 +43,7 @@ parent.disablePopup1();
   $r = mysql_fetch_assoc($q);
 ?>
 
-<h2 style="margin-top:20px;">What type of sleep test will be performed on <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
+<h2 style="margin-top:20px;">What is the reason for delaying treatment for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
 
 <?php
 $sql = "select * from dental_flow_pg2_info where id='".$_GET['id']."' AND patientid='".$_GET['pid']."'";
@@ -48,18 +52,14 @@ $r = mysql_fetch_array($q);
 $sid = st($r['segmentid']);
 ?>
 <form action="#" method="post">
-     Study Type    
-        <select name="study_type" style="width:250px">
-        <option value=""></option>
-	<?php
-	if($sid==3){ ?>
-	  <option value="HST Titration">HST Titration</option>
-	  <option value="PSG Titration">PSG Titration</option>
-        <?php }elseif($sid==15) { ?>
-          <option value="HST Baseline">HST Baseline</option>
-          <option value="PSG Baseline">PSG Baseline</option>
-	<?php } ?>
-    </select>
+     Reason
+<select name="delay_reason" width="250px">
+<option value="insurance">Insurance</option>
+<option value="dental work">Dental Work</option>
+<option value="deciding">Deciding</option>
+<option value="sleep study">Sleep Study</option>
+<option value="other">Other</option>
+</select>
     <input type="submit" name="submit" value="Submit" />
 </form>
 </body>

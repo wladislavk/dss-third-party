@@ -29,10 +29,10 @@ INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values 
 INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (10, 'Home Sleep Test', 7, 1, NOW());
 INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (3, 'Sleep Study', 8, 1, NOW());
 INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (11, 'Treatment Complete', 9, 1, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (12, 'Annual Recall', 1, 2, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (14, 'Not a Candidate', 1, 3, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (5, 'Delaying Tx/Waiting', 2, 3, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (9, 'Pt. Non-compliant', 3, 3, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (6, 'Refused Treatment', 4, 3, NOW());
-INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (13, 'Termination', 5, 3, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (12, 'Annual Recall', 10, 1, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (14, 'Not a Candidate', 1, 2, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (5, 'Delaying Tx/Waiting', 2, 2, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (9, 'Pt. Non-compliant', 3, 2, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (6, 'Refused Treatment', 4, 2, NOW());
+INSERT into dental_flowsheet_steps (id, name, sort_by, section, adddate) values (13, 'Termination', 5, 2, NOW());
 

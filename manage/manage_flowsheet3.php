@@ -5,20 +5,32 @@ require_once('includes/preauth_functions.php');
 
 $last_sql = "SELECT * FROM dental_flow_pg2_info info
 		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
-		WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' order by steps.section DESC, steps.sort_by DESC";
+		 WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_completed DESC, info.id DESC";
 $last_q = mysql_query($last_sql);
 $last = mysql_fetch_assoc($last_q);
-$last_segment = $last['segmentid'];
-$last_rank = 0;
+if($last['section']==1){
+$final_sql = "SELECT * FROM dental_flow_pg2_info info
+		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
+		WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND section=1
+		order by steps.section DESC, steps.sort_by DESC";
+}else{
+$final_sql = "SELECT * FROM dental_flow_pg2_info info
+                JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
+                WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' order by steps.section DESC, steps.sort_by DESC";
+}
+$final_q = mysql_query($final_sql);
+$final = mysql_fetch_assoc($final_q);
+$final_segment = $final['segmentid'];
+$final_rank = 0;
 mysql_query("SET @rank=0");
 $rank_sql = "SELECT @rank:=@rank+1 as rank, id from dental_flowsheet_steps ORDER BY section ASC, sort_by ASC";
 $rank_query = mysql_query($rank_sql);
 while($rank_r = mysql_fetch_assoc($rank_query)){
-  if($last['segmentid']==$rank_r['id']){
-    $last_rank = $rank_r['rank'];
+  if($final['segmentid']==$rank_r['id']){
+    $final_rank = $rank_r['rank'];
   }
 }
-$arrow_height = ($last_rank*20);
+$arrow_height = ($final_rank*20);
 ?>
 <link rel="stylesheet" href="css/flowsheet.css" />
 
@@ -32,20 +44,24 @@ mysql_query("SET @step_rank=0");
 $step_sql = "SELECT s.*, @step_rank:=@step_rank+1 as rank from dental_flowsheet_steps s WHERE s.section=1 ORDER BY s.sort_by ASC";
 $step_q = mysql_query($step_sql);
 while($step = mysql_fetch_assoc($step_q)){
-if($step['id'] == $last['segmentid']){
+if($step['id'] == $final['segmentid']){
   $class = "last";
 }else{
-    if($step['rank'] < $last_rank){
+    if($step['rank'] < $final_rank){
       $class="completed_step";
     }else{
       $class = "";
     }
 }
+  if($step['id']==1){
+    ?><li class="<?= $class; ?>"><?= $step['name']; ?></li><?php
+  }else{
 ?>
 
 <li class="<?= $class; ?>"><a id="completed_<?= $step['id']; ?>" class="completed_today"><?= $step['name']; ?></a></li>
 
 <?php
+  }
 }
 
 ?>
@@ -55,28 +71,6 @@ if($step['id'] == $last['segmentid']){
 <?php
 
 $step_sql = "SELECT * from dental_flowsheet_steps WHERE section=2 ORDER BY sort_by ASC";
-$step_q = mysql_query($step_sql);
-
-while($step = mysql_fetch_assoc($step_q)){
-if($step['id'] == $last['segmentid']){
-  $class = "last";
-}else{
-  $class = "";
-}
-?>
-
-<li class="<?= $class; ?>"><a id="completed_<?= $step['id']; ?>" class="completed_today"><?= $step['name']; ?></a></li>
-
-<?php 
-}
-
-?>
-</ul>
-
-<ul class="treatment sect3">
-<?php
-
-$step_sql = "SELECT * from dental_flowsheet_steps WHERE section=3 ORDER BY sort_by ASC";
 $step_q = mysql_query($step_sql);
 
 while($step = mysql_fetch_assoc($step_q)){
@@ -228,6 +222,7 @@ $('.completed_today').click(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
+						  $('#next_step').html(r.next_steps);
 						  $('#'+id).val('');
 						  $('#datecomp_'+id).text(r.datecomp);
 						  var $tr = $('#completed_row_temp');
@@ -257,6 +252,8 @@ $('.completed_today').click(function(){
 							$reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=9');");
                                                         $t.after($reason);
                                                         $reason.show();
+							loadPopup('includes/flowsheet_noncomp_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
+
                                                   }
                                                   if(id==5){
                                                         var $r = $('#delay_reason_tmp');
@@ -269,6 +266,8 @@ $('.completed_today').click(function(){
                                                         $reason.find('.reason_btn').attr('onclick', "Javascript: loadPopup('flowsheet_other_reason.php?ed="+r.id+"&pid=<?=$_GET['pid']?>&sid=5');");
                                                         $t.after($reason);
                                                         $reason.show();
+							loadPopup('includes/flowsheet_delay_tx_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
+
                                                   }
 						  if(id==3){
                                                         var $r = $('#sleep_study_titration_tmp');
@@ -337,6 +336,13 @@ function update_next_sched(){
 function updateStudyType(id, val){
   $('#study_type_'+id).val(val);
 }
+function updateDelayReason(id, val){
+  $('#delay_reason_'+id).val(val);
+}
+function updateNoncompReason(id, val){
+  $('#noncomp_reason'+id).val(val);
+}
+
 </script>
 
 <?php include "includes/bottom.htm";?>

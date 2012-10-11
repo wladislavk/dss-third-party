@@ -109,11 +109,19 @@ $segments[13] = "Termination";
 
 $title = $segments[$id];
 
-
+$next = "<option value=''>SELECT NEXT STEP</option>";
+        $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
+                JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
+                WHERE next.parent_id='".mysql_real_escape_string($id)."'
+                ORDER BY next.sort_by ASC";
+  $next_q = mysql_query($next_sql);
+        while($next_r = mysql_fetch_assoc($next_q)){
+          $next .= "<option value='".$next_r['id']."'>".$next_r['name']."</option>";
+        }
 }
 $impression_json = ($impression)?'true':'false';
 if($s){
-  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "title":"'.$title.'", "letters":"'.$letter_count.'", "impression":'.$impression_json.'}';
+  echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "next_steps":"'.$next.'", "title":"'.$title.'", "letters":"'.$letter_count.'", "impression":'.$impression_json.'}';
 }else{
   echo '{"error":true}';
 }

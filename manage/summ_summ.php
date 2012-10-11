@@ -95,13 +95,98 @@ $years = floor($diff / (365*60*60*24));
      $last_q = mysql_query($last_sql);
      $last_r = mysql_fetch_assoc($last_q);
 ?>
-<br />
+<div class="half">
+<h4>Contact</h4>
+<div class="box">
 <strong>Name:</strong> <?= $r['firstname']; ?> <?= $r['lastname']; ?><br />
 <strong>Home Phone:</strong> <?= $r['home_phone']; ?><br />
 <strong>Cell Phone:</strong> <?= $r['cell_phone']; ?><br />
 <strong>Work Phone:</strong> <?= $r['work_phone']; ?><br />
+</div>
 
+
+<h4>Complaints</h4>
+<div class="box">
+<strong>Reason for seeking tx:</strong>
+<?php
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$c_q = mysql_query($c_sql);
+$c_r = mysql_fetch_assoc($c_q);
+echo $c_r['chief_complaint_text'];
+?>
+<?php if($complaintid != '' || in_array('0', $compid)){ ?>
+<strong>Other Complaints</strong>
+<ul>
+                <?php if($complaintid != ''){ ?>
+                    <?
+                                        $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
+                                        $complaint_my = mysql_query($complaint_sql);
+                                        $complaint_number = mysql_num_rows($complaint_my);
+                                        while($complaint_myarray = mysql_fetch_array($complaint_my))
+                                        {
+                                                if(@array_search($complaint_myarray['complaintid'],$compid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else
+                                                {
+                                                   #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+                                                        ?><li><?= $complaint_myarray['complaint']; ?></li><?php
+                                                }
+                                        }
+?>
+<?php } ?>
+<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
+<li><?= $other_complaint; ?></li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+<strong>Bed Partner:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $bed_time_partner ?><br />
+                        &nbsp;&nbsp;
+      <strong>Same room:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sleep_same_room; ?><br />
+                                <?php if($quit_breathing != ''){ ?>
+                                        How many times per night does your bedtime partner notice you quit breathing?
+                                            <?= $quit_breathing;?>
+                                <? } ?>
+
+
+</div>
+
+<h4>History</h4>
+<div class="box">
+<strong>ROM:</strong>
+    <strong>Vertical</strong>&nbsp;<?php echo $i_opening_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp; <strong>Right</strong> <?php echo $r_lateral_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp;  <strong>Left</strong> <?php echo $l_lateral_from; ?>mm
 <br />
+<strong>Best Eccovision</strong>&nbsp;&nbsp;
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Horizontal:</strong> <?php echo $optimum_echovision_hor; ?>mm  <strong>Vertical:</strong> <?php echo $optimum_echovision_ver; ?>mm
+<br >
+          <?php if($ess != ''){ ?>
+          <strong>Baseline Epworth Sleepiness Score:</strong> <?= $ess; ?>
+          <br />
+          <?php } ?>
+          <?php if($tss != ''){ ?>
+          <strong>Baseline Thornton Snoring Scale:</strong> <?= $tss; ?>
+          <?php } ?>
+<br />
+ <strong>History of Surgery or other Treatment Attempts:</strong><br />
+      <?=$other_therapy_att;?>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="half">
+<h4>Appt:</h4>
+<div class="box">
 <strong>Last seen:</strong> <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
 
   <strong>For:</strong> <?= $last_r['last_treatment']; ?>
@@ -131,8 +216,7 @@ $segments[1] = "Initial Contact";
 ?>
 <br />
 <strong>Next appt:</strong> <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
-<br /><br />
-
+<br />
       <strong>Referred By:</strong> 
     <?php
 $rs = $r['referred_source'];
@@ -157,12 +241,11 @@ $rs = $r['referred_source'];
    echo $dss_referred_labels[$rs].": ".$r['referred_notes'];
   }
 ?>
-<br />
 
+</div>
 
-
-
-
+<h4>Sleep Tests</h4>
+<div class="box">
 <?php
                 $baseline_sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
                                 FROM dental_summ_sleeplab ss 
@@ -170,14 +253,14 @@ $rs = $r['referred_source'];
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
-				(ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
-				ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
+                                (ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
                 $baseline_result = mysql_query($baseline_sleepstudies);
                 $baseline_numsleepstudy = mysql_num_rows($baseline_result);
                 $baseline_sleepstudy = mysql_fetch_assoc($baseline_result);
-	if($baseline_numsleepstudy>0){
-	}else{
-  	        $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
+        if($baseline_numsleepstudy>0){
+        }else{
+                $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
                                 FROM dental_summ_sleeplab ss 
                                 JOIN dental_patients p on ss.patiendid=p.patientid
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
@@ -188,7 +271,7 @@ $rs = $r['referred_source'];
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
                 $baseline_sleepstudy = mysql_fetch_assoc($result);
-	
+
         }
 
 ?>
@@ -214,110 +297,14 @@ $rs = $r['referred_source'];
       <strong>Diagnosis:</strong> <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?><br />
       <strong>AHI/RDI:</strong> <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?><br />
       <strong>Low O2:</strong> <?= $sleepstudy['o2nadir']; ?><br />
-      <strong>T < 90%:</strong> <?= $sleepstudy['t9002']; ?><br />
-<br />
-
-<strong>Reason for seeking tx:</strong>
-<?php
-$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$c_q = mysql_query($c_sql);
-$c_r = mysql_fetch_assoc($c_q);
-echo $c_r['chief_complaint_text'];
-?>
-
-<br /><br />
-
-          <?php if($ess != ''){ ?>
-          <strong>Baseline Epworth Sleepiness Score:</strong> <?= $ess; ?>
-          <br />
-          <?php } ?>
-          <?php if($tss != ''){ ?>
-          <strong>Baseline Thornton Snoring Scale:</strong> <?= $tss; ?>
-          <?php } ?>
-
-          <?php if($cheif_complaint_text != ''){ ?>
-                    <label style="display:block;">
-                        What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
-                    </label>
-                        <?= $chief_complaint_text; ?>
-          <?php } ?>
-<?php
-if($complaintid <> '')
-{
-        $comp_arr1 = split('~',$complaintid);
-
-        foreach($comp_arr1 as $i => $val)
-        {
-                $comp_arr2 = explode('|',$val);
-
-                $compid[$i] = $comp_arr2[0];
-                $compseq[$i] = $comp_arr2[1];
-        }
-}
-?>
-
-<?php if($complaintid != '' || in_array('0', $compid)){ ?>
-<h3>Complaints</h3>
-<ul>
-                <?php if($complaintid != ''){ ?>
-                    <?
-                                        $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
-                                        $complaint_my = mysql_query($complaint_sql);
-                                        $complaint_number = mysql_num_rows($complaint_my);
-                                        while($complaint_myarray = mysql_fetch_array($complaint_my))
-                                        {
-                                                if(@array_search($complaint_myarray['complaintid'],$compid) === false)
-                                                {
-                                                        $chk = '';
-                                                }
-                                                else
-                                                {
-                                                   #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
-                                                        ?><li><?= $complaint_myarray['complaint']; ?></li><?php
-                                                }
-                                        }
-?>
-<?php } ?>
-<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
-<li><?= $other_complaint; ?></li>
-<?php } ?>
-</ul>
-<?php } ?>
-
-<strong>Medical Caregivers:</strong>
-
-<?php include 'summ_contacts.php'; ?>
-<br />
-
-<strong>ROM:</strong>
-    <strong>Vertical</strong>&nbsp;<?php echo $i_opening_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp; <strong>Right</strong> <?php echo $r_lateral_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp;  <strong>Left</strong> <?php echo $l_lateral_from; ?>mm
-<br />
-<strong>Best Eccovision</strong>&nbsp;&nbsp;
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Horizontal:</strong> <?php echo $optimum_echovision_hor; ?>mm  <strong>Vertical:</strong> <?php echo $optimum_echovision_ver; ?>mm
-<br >
+      <strong>T < 90%:</strong> <?= $sleepstudy['t9002']; ?>
 
 
-<strong>Bed Partner:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $bed_time_partner ?><br />
-                        &nbsp;&nbsp;
-                        <br /><br />
-      <strong>Same room:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sleep_same_room; ?><br />
+</div>
 
+<h4>CPAP</h4>
+<div class="box">
 
-    <strong>Notes/Personal:</strong>
-      
-
-       <?php include("dss_notes.php"); ?>
-
-
-
-
-
- <strong>History of Surgery or other Treatment Attempts:</strong><br />
-      <?=$other_therapy_att;?>
-<br /><br />
-<strong>CPAP</strong>
-
-    <div style="width:80%;">
         <?php
           $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
           $pat_my = mysql_query($pat_sql);
@@ -330,24 +317,12 @@ if($complaintid <> '')
         //echo $pat_myarray['cpap'];
         ?>
     <label>
-
-
-
-
-
 <br />
     <span style="font-weight:bold;">Problems w/ CPAP</span><br />
         <?=$problem_cpap;?>
       </label>
 
-
-
-
      <?php } ?>
-
-     </div>
-
-
 
 <?php
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
@@ -447,7 +422,7 @@ if($cpap == '')
                                                         ?>
                                                                 <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { ?>
 <?=st($intolerance_myarray['intolerance']);?><br />
-<?php }?> 
+<?php }?>
                                                         <?
                                                         }
                                                         ?>
@@ -471,6 +446,28 @@ if($cpap == '')
 
 
 
+</div>
+
+
+</div>
+
+
+<div class="clear"></div>
+
+
+<h4>Medical Caregivers:</h4>
+<div class="box">
+<?php include 'summ_contacts.php'; ?>
+</div>
+
+
+
+
+    <h4>Notes/Personal:</h4>
+      
+<div class="box">
+       <?php include("dss_notes.php"); ?>
+</div>
 
 
 
@@ -478,25 +475,9 @@ if($cpap == '')
 
 
 
+<?php 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
 
 
 
@@ -1123,4 +1104,4 @@ Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_
                         </span>
                     </div>
 
-
+*/ ?>

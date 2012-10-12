@@ -285,7 +285,80 @@ background:#999999;
 		</a>
         </td>
         <td valign="top">
-	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($myarray['ledger'])); ?></a>
+		<?php
+$ledger_sql = "select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                '' as paid_amount,
+                dl.status,
+                dl.primary_claim_id,
+                '' as payer,
+                '' as payment_type,
+                di.status as claim_status
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
+                        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
+                GROUP BY dl.ledgerid
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                p.name,
+                '',
+                '',
+                dlp.amount,
+                '',
+                dl.primary_claim_id,
+                dlp.payer,
+                dlp.payment_type,
+                ''
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
+                        AND dlp.amount != 0
+  UNION
+        select 
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                p.name,
+                dl.description,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.primary_claim_id,
+                tc.type,
+                '',
+                ''      
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
+                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+
+";
+$ledger_total = 0;
+$ledger_q = mysql_query($ledger_sql);
+while($ledger_r = mysql_fetch_assoc($ledger_q)){
+   $ledger_total += $ledger_r["amount"];
+   $ledger_total -= $ledger_r["paid_amount"];
+}
+?>
+
+	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($ledger_total)); ?></a>
         </td>
         <?php }else{ ?>
 

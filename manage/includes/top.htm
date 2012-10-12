@@ -89,6 +89,11 @@ $c_res = mysql_query($c_query);
 $num_c = mysql_num_rows($c_res);
 
 
+$bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.docid = '".$docid."'";
+$bounce_res = mysql_query($bounce_query);
+$num_bounce = mysql_num_rows($bounce_res);
+
+
 $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
 $preauth_res = mysql_query($preauth_query);
 $num_rejected_preauth = mysql_num_rows($preauth_res);
@@ -1241,7 +1246,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
 
 <?php
   $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
-  $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c;
+  $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
 ?>
 <li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
   <ul>
@@ -1251,6 +1256,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
       <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
       <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
       <li><a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?= $num_rejected_preauth; ?>)</a></li>
+      <li><a href="manage_email_bounces.php">Email Bounces (<?= $num_bounce; ?>)</a></li>
       <li><a href="manage_tasks.php">Tasks (<?= $num_tasks; ?>)</a></li>
   </ul>
 
@@ -1339,6 +1345,17 @@ $total_insurance = mysql_num_rows($insurance_my);
 </a>
 	<?php
 	}
+
+
+        $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+        $email_q = mysql_query($email_sql);
+        if(mysql_num_rows($email_q)>0){ ?>
+<a class="warning" href="add_patient.php?ed=<?= $_GET['pid']; ?>&pid=<?= $_GET['pid']; ?>&addtopat=1" >
+<span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
+</a>
+        <?php
+        }
+
 
 
   }

@@ -1,6 +1,9 @@
 <?php include 'includes/top.htm';
 require_once('includes/patient_info.php');
 require_once('admin/includes/general.htm');
+?>
+<link rel="stylesheet" href="css/letters.css" />
+<?php
 if ($patient_info) { 
 
 function userid_asc($a, $b) {
@@ -337,17 +340,17 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 				  foreach($pending_letters[$i]['patient'] as $pat){
 					?><br /><?php
                                         echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
-					?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+					?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
 				  }
 				  foreach($pending_letters[$i]['mds'] as $md){
 					?><br /><?php
                                         echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
                                   }
                                   foreach($pending_letters[$i]['md_referrals'] as $md_referral){
                                         ?><br /><?php
                                         echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
                                   }
 				  ?></div><?php
 				}else{
@@ -413,12 +416,46 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 		$method = $sent_letters[$i]['send_method'];
     $generated = date('m/d/Y', $sent_letters[$i]['generated_date']);
     $delivered = ($sent_letters[$i]['delivery_date'] != '' )?date('m/d/Y', $sent_letters[$i]['delivery_date']):'';
+    $total_contacts = $sent_letters[$i]['total_contacts'];
+    $id = $sent_letters[$i]['id'];
+
     if ($sent_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;
     }
-		print "<tr><td>$userid</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td><td>$delivered</td></tr>";
+	?>
+		<tr><td><?= $userid; ?></td>
+		<td><a href="<?= $url; ?>"><?= $subject; ?></a></td>
+		<td>
+                        <?php
+                                if($total_contacts>1){
+                                  ?><a href="#" onclick="$('#contacts_<?= $id; ?>').toggle();return false;"><?= $sentto; ?></a>
+                                  <div style="display:none;" id="contacts_<?= $id; ?>">
+                                  <?php
+                                  foreach($sent_letters[$i]['patient'] as $pat){
+                                        ?><br /><?php
+                                        echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
+                                  }
+                                  foreach($sent_letters[$i]['mds'] as $md){
+                                        ?><br /><?php
+                                        echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
+                                  }
+                                  foreach($sent_letters[$i]['md_referrals'] as $md_referral){
+                                        ?><br /><?php
+                                        echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
+                                  }
+                                  ?></div><?php
+                                }else{
+                                  echo $sentto;
+                                }
+                        ?>
+
+		</td>
+		<td><?= $method; ?></td>
+		<td><?= $generated; ?></td>
+		<td><?= $delivered; ?></td></tr>
+	<?php
 		$i++;
   }
 ?>

@@ -31,7 +31,9 @@ if($_REQUEST["delid"] != "")
 
 	
 $sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
-
+if(isset($_GET['unpaid'])){
+  $sql .= " AND i.status =  ".DSS_CLAIM_PENDING." AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";
+}
 if(isset($_GET['sort2'])){
   if($_GET['sort2']=='patient'){
     $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
@@ -140,7 +142,13 @@ while($myarrayp = mysql_fetch_array($myp))
 <option value="<?= DSS_CLAIM_DISPUTE; ?>" <?= ($_GET['filter']== DSS_CLAIM_DISPUTE)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_DISPUTE]; ?></option>
 <option value="<?= DSS_CLAIM_REJECTED; ?>" <?= ($_GET['filter']== DSS_CLAIM_REJECTED)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_REJECTED]; ?></option>
 </select>
-
+<div style="float: right; margin-right: 20px;">
+<?php if(!isset($_GET['unpaid'])){ ?>
+<a href="manage_claims.php?unpaid=45" class="addButton">Show Unpaid Claims 45 day+</a>
+<?php }else{ ?>
+  <a href="manage_claims.php" class="addButton">Show All</a>
+<?php } ?>
+</div>
 <script type="text/javascript">
 
 function updateClaims(v){

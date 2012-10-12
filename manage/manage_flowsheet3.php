@@ -2,7 +2,16 @@
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
-
+?>
+<script type="text/javascript">
+  var new_appt = false;
+window.onbeforeunload = function() {
+    if(new_appt){
+      return "Warning! You did not indicate a next appointment and scheduled date for <?= $thename; ?> in Box 2. Are you sure you want to leave this page without doing this?";
+    }
+ };
+</script>
+<?php
 $last_sql = "SELECT * FROM dental_flow_pg2_info info
 		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
 		 WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_completed DESC, info.id DESC";
@@ -222,6 +231,7 @@ $('.completed_today').click(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
+						  new_appt = true;
 						  $('#next_step').html(r.next_steps);
 						  $('#'+id).val('');
 						  $('#datecomp_'+id).text(r.datecomp);
@@ -325,6 +335,7 @@ function update_next_sched(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
+						  new_appt = false;
                                                 }
                                         },
                                         failure: function(data){

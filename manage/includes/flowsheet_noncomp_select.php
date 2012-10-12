@@ -43,7 +43,7 @@ parent.loadPopup('flowsheet_other_reason.php?ed=<?=$_GET['id'];?>&pid=<?=$_GET['
   $r = mysql_fetch_assoc($q);
 ?>
 
-<h2 style="margin-top:20px;">What is the reason for non-compliant for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
+<h2 style="margin-top:20px;">What is the reason <?= $r['firstname']." ".$r['lastname']; ?> is non-compliant?</h2>
 
 <?php
 $sql = "select * from dental_flow_pg2_info where id='".$_GET['id']."' AND patientid='".$_GET['pid']."'";

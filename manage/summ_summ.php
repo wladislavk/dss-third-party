@@ -12,7 +12,7 @@ $r = mysql_fetch_assoc($q);
 $num_face = mysql_num_rows($itype_my);
 ?>
 <?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
+        <a href="#" style="float:right;" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
                 <img src="images/add_patient_photo.png" />
         </a>
 <?php }else{

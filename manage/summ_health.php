@@ -73,6 +73,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
         $drymouth_text = $myarray['drymouth_text'];
 
 ?>
+<h3 class="sect_header">Medications / Allergies</h3>
+<div class="box">
 		<label class="desc" id="title0" for="Field0" style="width:90%;">
                             Premedication
                             <span id="req_0" class="req">*</span>
@@ -130,8 +132,11 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                           <?php } ?>
                         </span>
                     </div>
-
                           <?php } ?>
+</div>
+
+<h3 class="sect_header">Health History</h3>
+<div class="box">
                           <?php if($other_history != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%;">
                         Medical History
@@ -433,14 +438,11 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         <span>
                                 Additional Paragraph<br />
                             <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
-                            <?php
-                                showPatientValue('dental_q_page3', $_GET['pid'], 'additional_paragraph', $pat_row['additional_paragraph'], $additional_paragraph, true, $showEdits);
-                            ?>
 
                         </span>
                     </div>
                 <?php } ?>
-
+</div>
 <?php
 $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);

@@ -1,4 +1,7 @@
+<h3 class="sect_header">Treatment Summary</h3>
+<div class="box">
 <?php include 'appointment_summary.php'; ?>
+</div>
 
 <?php
 
@@ -26,6 +29,8 @@ if($dd_wearing == '' &&
   $surgery == '' &&
   $other_therapy == ''){
 ?>
+<h3 class="sect_header">Previous Treatments</h3>
+<div class="box">
 
 <p>No previous treatments documented.</p>
 
@@ -133,3 +138,4 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
                         </div>
 	<? } ?>
 <?php } ?>
+</div>

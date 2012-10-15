@@ -17,8 +17,9 @@ a.deleteButton{
 
 #treatment_div{
   margin-left: 50px;
-  width: 300px;
+  width: 220px;
   float: left;
+margin-right: 100px;
   }
 ul.treatment{
   list-style: none;
@@ -68,7 +69,6 @@ ul.treatment.sect2{
   background: pink;
   border:solid 2px #000;
   padding: 20px;
-  margin-bottom: 50px;
   }
 #sched_div #next_step_div, #next_step_date_div{
   float: left;
@@ -88,3 +88,9 @@ ul.treatment.sect2{
   width: 80px;
   }
 
+.sub_text{
+  width: 160px;
+  float:right;
+  font-size: 10px;
+  margin-top:5px;
+  }

@@ -44,7 +44,7 @@ $arrow_height = ($final_rank*20);
 <link rel="stylesheet" href="css/flowsheet.css" />
 
 <div id="treatment_div">
-<h3>1) What did you do today?</h3>
+<h3>1) What did you do today?*</h3>
 <div id="treatment_list">
 <div id="arrow_div" style="height:<?= $arrow_height; ?>px;"></div>
 <ul class="treatment sect1">
@@ -98,10 +98,11 @@ if($step['id'] == $last['segmentid']){
 ?>
 </ul>
 </div>
+<span class="sub_text">*Click a treatment above to add it to the Treatment Summary</span>
 </div>
 
 <div id="step2">
-<h3>2) What will you do next?</h3>
+<h3>2) What will you do next?*</h3>
 <div id="sched_div">
 <?php
   $sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=0";
@@ -131,7 +132,8 @@ if($step['id'] == $last['segmentid']){
   </div>
 <div class="clear"></div>
 </div>
-<h3 style="width:500px; text-align:center;">Treatment Summary</h3>
+<span class="sub_text" style="width:280px;">*After Step 1, choose the next patient treatment and date</span>
+<h3 style="width:500px; text-align:center; margin-top:40px;">Treatment Summary</h3>
 <div id="appt_summ" style="width:500px;">
         <?php include 'appointment_summary.php'; ?>
 </div>

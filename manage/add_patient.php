@@ -1101,9 +1101,22 @@ if(p){
 if(document.getElementById('p_m_dss_file_yes').checked || document.getElementById('p_m_dss_file_no').checked){
   //ok
 }else{
+  if($('#p_m_relation').val()!='' ||
+	$('#p_m_partyfname').val()!='' ||
+        $('#p_m_partymname').val()!='' ||
+        $('#p_m_partylname').val()!='' ||
+        $('#ins_dob').val()!='' ||
+        $('#p_m_ins_co').val()!='' ||
+        $('#p_m_party').val()!='' ||
+        $('#p_m_ins_grp').val()!='' ||
+        $('#p_m_ins_plan').val()!='' ||
+        $('#p_m_ins_type').val()!=''){
+
   alert('Is DSS filing insurance?  Please select Yes or No.');
   return false;
+  }
 }
+
 }
 if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
   alert('DSS must file Primary Insurance in order to file Secondary Insurance.');

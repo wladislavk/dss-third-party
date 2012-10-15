@@ -41,7 +41,7 @@ while($rank_r = mysql_fetch_assoc($rank_query)){
 }
 $arrow_height = ($final_rank*20);
 
-$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and segmentid!='' AND date_scheduled != '' AND date_scheduled != '0000-00-00' AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $sched_q = mysql_query($sched_sql);
 $sched_appt = (mysql_num_rows($sched_q)>0);
 
@@ -238,8 +238,7 @@ $('.completed_today').click(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-						  $('#treatment_list').removeClass('current_step');
-						  $('#sched_div').addClass('current_step');	
+						  update_current_step();
 						  $('#next_step').html(r.next_steps);
 						  $('#'+id).val('');
 						  $('#datecomp_'+id).text(r.datecomp);
@@ -343,8 +342,7 @@ function update_next_sched(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-						  $('#treatment_list').addClass('current_step');
-                                                  $('#sched_div').removeClass('current_step');
+						  update_current_step();
                                                 }
                                         },
                                         failure: function(data){
@@ -361,6 +359,16 @@ function updateDelayReason(id, val){
 }
 function updateNoncompReason(id, val){
   $('#noncomp_reason'+id).val(val);
+}
+
+function update_current_step(){
+  if($('#next_step').val() != '' && $('#next_step_date').val() != ''){
+    $('#treatment_list').addClass('current_step');
+    $('#sched_div').removeClass('current_step');
+  }else{
+    $('#treatment_list').removeClass('current_step');
+    $('#sched_div').addClass('current_step');
+  }
 }
 
 </script>

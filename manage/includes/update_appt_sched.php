@@ -7,11 +7,10 @@ $pid = $_REQUEST['pid'];
 clean_steps($pid);
 		$s = "INSERT INTO dental_flow_pg2_info SET
 			patientid= ".$pid.",
-			segmentid = ".$id.",
+			segmentid = '".$id."',
 			appointment_type = 0,
 			date_scheduled = '".$sched."'";
 		$q = mysql_query($s); 
-
 		$info_id = mysql_insert_id();
 
         $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";

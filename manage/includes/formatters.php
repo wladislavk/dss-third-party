@@ -54,9 +54,9 @@ function format_ledger($balance) {
     $neg = true;
     $balance = abs($balance);
   }
-  if ($neg) {
+  if (!$neg) {
     return "<span class=\"red\">($$balance)</span>";
-  } else if ($balance > 0) {
+  } else if ($balance < 0) {
     return "<span class=\"green\">$$balance</span>";
   } else {
     return "$$balance";

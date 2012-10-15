@@ -38,7 +38,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			Patient Name
 		</td>
 		<td valign="top" class="col_head">
-			Email
+			Problem Email Address
 		</td>
 		<td valign="top" class="col_head">
 			Action
@@ -60,8 +60,10 @@ $my=mysql_query($sql) or die(mysql_error());
 		?>
 			<tr> 
 				<td valign="top">
+				  <a href="add_patient.php?pid=<?= $myarray["patientid"]; ?>&ed=<?= $myarray["patientid"]; ?>">
 					<?=st($myarray["firstname"]);?>&nbsp;
                     <?=st($myarray["lastname"]);?> 
+			</a>
 				</td>
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $myarray["email"];?>&nbsp;

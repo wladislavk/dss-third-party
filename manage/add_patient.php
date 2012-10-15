@@ -306,7 +306,11 @@ if($_POST["patientsub"] == 1)
 		cell_phone = '".s_for(num($_POST["cell_phone"]))."', 
 		best_time = '".s_for($_POST["best_time"])."',
 		best_number = '".s_for($_POST["best_number"])."',
-		email = '".s_for($_POST["email"])."', 
+		email = '".s_for($_POST["email"])."',";
+if($_POST['email'] != $s_r['email']){
+  $ed_sql .= "email_bounce = 0,";
+}
+$ed_sql .=" 
 		patient_notes = '".s_for($_POST["patient_notes"])."', 
 		p_d_party = '".s_for($_POST["p_d_party"])."', 
 		p_d_relation = '".s_for($_POST["p_d_relation"])."', 

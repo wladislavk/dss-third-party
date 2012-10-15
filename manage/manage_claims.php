@@ -133,6 +133,11 @@ while($myarrayp = mysql_fetch_array($myp))
 </table>
 
 <span class="admin_head">Submitted Claims</span>
+<?php
+if(isset($_GET['unpaid'])){
+?>
+<span style="margin-left:10px">(Showing Unpaid Claims Greater than 45 Days Old)</span>
+<? } ?>
 <label style="margin-left:20px;">Filter by status</label> 
 <select onchange="updateClaims(this.value)">
 <option value="100"  <?= ($_GET['filter']== 100)?'selected="selected"':''; ?>>All</option>

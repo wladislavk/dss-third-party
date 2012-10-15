@@ -49,5 +49,21 @@ $(document).ready( function(){
   });
 
 
+  $('input.calendar_device_date').each(function(){
+        var cid = $(this).attr("id");
+        if(cid){
+                Calendar.setup({
+                        inputField : cid,
+                        trigger    : cid,
+                        fdow       : 0,
+                        align      : "Bl///T/",
+                        onSelect   : function() { this.hide(); update_dental_device_date(cid); },
+                        dateFormat : "%m/%d/%Y"
+                });
+        }
+
+
+  });
+
 });
 

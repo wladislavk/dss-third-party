@@ -74,7 +74,7 @@ $years = floor($diff / (365*60*60*24));
  <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
 <br />
     <strong>Device</strong>
-        <select name="dentaldevice" style="width:250px">
+        <select id="dental_device" name="dentaldevice" style="width:250px">
         <option value=""></option>
         <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
                                                                 $device_my = mysql_query($device_sql);
@@ -86,8 +86,14 @@ $years = floor($diff / (365*60*60*24));
                                                                  }
                                                                 ?>
     </select>
-        <strong>Date</strong> <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
-<strong>Duration:</strong> (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
+        <strong>Date</strong> <input id="dental_device_date" name="dentaldevice_date" type="text" class="calendar_device_date" value="<?= $dentaldevice_date; ?>" />
+<strong>Duration:</strong>
+<?php
+if($dentaldevice_date!=''){ ?>
+ (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
+<?php }else{ ?>
+(N/A)
+<?php } ?>
 <br />
 
   <?php
@@ -1105,3 +1111,47 @@ Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_
                     </div>
 
 */ ?>
+
+
+<script type="text/javascript">
+
+$('#dental_device').change( function(){
+  var val = $('#dental_device').val();
+                                    $.ajax({
+                                        url: "includes/summ_device_update.php",
+                                        type: "post",
+                                        data: {device: val, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+});
+
+
+function update_dental_device_date(){
+  var val = $('#dental_device_date').val();
+                                    $.ajax({
+                                        url: "includes/summ_device_date_update.php",
+                                        type: "post",
+                                        data: {device_date: val, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+}
+
+</script>

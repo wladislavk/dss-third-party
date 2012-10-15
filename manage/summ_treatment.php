@@ -3,9 +3,10 @@
 <?php include 'appointment_summary.php'; ?>
 </div>
 
+<h3 class="sect_header">Previous Treatments</h3>
+<div class="box">
+
 <?php
-
-
 
 $sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -29,9 +30,6 @@ if($dd_wearing == '' &&
   $surgery == '' &&
   $other_therapy == ''){
 ?>
-<h3 class="sect_header">Previous Treatments</h3>
-<div class="box">
-
 <p>No previous treatments documented.</p>
 
 <?php

@@ -40,12 +40,17 @@ while($rank_r = mysql_fetch_assoc($rank_query)){
   }
 }
 $arrow_height = ($final_rank*20);
+
+$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$sched_q = mysql_query($sched_sql);
+$sched_appt = (mysql_num_rows($sched_q)>0);
+
 ?>
 <link rel="stylesheet" href="css/flowsheet.css" />
 
 <div id="treatment_div">
 <h3>1) What did you do today?*</h3>
-<div id="treatment_list">
+<div id="treatment_list" <?= ($sched_appt)?'class="current_step"':''; ?>>
 <div id="arrow_div" style="height:<?= $arrow_height; ?>px;"></div>
 <ul class="treatment sect1">
 <?php 
@@ -103,7 +108,7 @@ if($step['id'] == $last['segmentid']){
 
 <div id="step2">
 <h3>2) What will you do next?*</h3>
-<div id="sched_div">
+<div id="sched_div" <?= (!$sched_appt)?'class="current_step"':''; ?>>
 <?php
   $sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=0";
   $sched_q = mysql_query($sched_sql);
@@ -233,7 +238,8 @@ $('.completed_today').click(function(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-						  new_appt = true;
+						  $('#treatment_list').removeClass('current_step');
+						  $('#sched_div').addClass('current_step');	
 						  $('#next_step').html(r.next_steps);
 						  $('#'+id).val('');
 						  $('#datecomp_'+id).text(r.datecomp);
@@ -337,7 +343,8 @@ function update_next_sched(){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-						  new_appt = false;
+						  $('#treatment_list').addClass('current_step');
+                                                  $('#sched_div').removeClass('current_step');
                                                 }
                                         },
                                         failure: function(data){

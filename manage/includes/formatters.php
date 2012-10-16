@@ -50,16 +50,10 @@ function format_date($date = null, $past = false) {
 }
 
 function format_ledger($balance) {
-  if ($balance < 0) {
-    $neg = true;
-    $balance = abs($balance);
-  }
-  if (!$neg) {
+  if ($balance > 0) {
     return "<span class=\"red\">($$balance)</span>";
-  } else if ($balance < 0) {
+  } else{ 
     return "<span class=\"green\">$$balance</span>";
-  } else {
-    return "$$balance";
   }
 }
 

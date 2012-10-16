@@ -36,6 +36,6 @@ $template = "
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%</p>";
+%franchisee_fullname%</p>";
 
 ?>

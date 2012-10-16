@@ -119,6 +119,19 @@ $c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mys
 $c_q = mysql_query($c_sql);
 $c_r = mysql_fetch_assoc($c_q);
 echo $c_r['chief_complaint_text'];
+if($complaintid <> '')
+{
+        $comp_arr1 = split('~',$complaintid);
+
+        foreach($comp_arr1 as $i => $val)
+        {
+                $comp_arr2 = explode('|',$val);
+
+                $compid[$i] = $comp_arr2[0];
+                $compseq[$i] = $comp_arr2[1];
+        }
+}
+
 ?>
 <?php if($complaintid != '' || in_array('0', $compid)){ ?>
 <strong>Other Complaints</strong>
@@ -133,6 +146,7 @@ echo $c_r['chief_complaint_text'];
                                                 if(@array_search($complaint_myarray['complaintid'],$compid) === false)
                                                 {
                                                         $chk = '';
+								
                                                 }
                                                 else
                                                 {

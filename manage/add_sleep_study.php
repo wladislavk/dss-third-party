@@ -145,7 +145,7 @@ function autoselect(selectedOption, f) {
 `testnumber` = '".$testnumber."',
 `needed` = '".$needed."',
 `scheddate` = '".$scheddate."',
-`completed` = '".$completed."',
+`completed` = '".$completed."'
 WHERE id='".$id."'
 ";
   $run_q = mysql_query($q);

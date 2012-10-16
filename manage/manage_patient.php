@@ -358,7 +358,7 @@ while($ledger_r = mysql_fetch_assoc($ledger_q)){
 }
 ?>
 
-	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger($ledger_total)); ?></a>
+	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($ledger_total,0))); ?></a>
         </td>
         <?php }else{ ?>
 

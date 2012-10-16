@@ -39,9 +39,9 @@ $template = "
 
 <p>Dear Sir or Madam:</p>
 
-<p>I received your denial of coverage for the Mandibular Repositioning Device that has been prescribed for %patient_fullname% by Dr. %franchisee_fullname% and I am writing on behalf of our patient to appeal that decision.  You have based your decision on [(INSERT REASON WHY THEY ARE DENYING HERE)].</p>
+<p>I received your denial of coverage for the Mandibular Repositioning Device that has been prescribed for %patient_fullname% by %franchisee_fullname% and I am writing on behalf of our patient to appeal that decision.  You have based your decision on [(INSERT REASON WHY THEY ARE DENYING HERE)].</p>
 
-<p>%patient_lastname% has been prescribed a Mandibular Repositioning Device by Dr. %franchisee_fullname% to treat %his/her% documented sleep apnea.  This is neither an oral splint or appliance, nor a dental splint or dental brace.  It is a Mandibular Repositioning Device, specifically considered as Durable Medical Equipment, and specifically coded as a MEDICAL treatment for a MEDICAL diagnosis.  While these appliances are intraoral, they are not meant to treat the teeth.  Instead, they reposition the jaw and tongue to open up the airway. Because the treatment is used to treat a medical condition it cannot be considered \"dental.\"</p>
+<p>%patient_lastname% has been prescribed a Mandibular Repositioning Device by %franchisee_fullname% to treat %his/her% documented sleep apnea.  This is neither an oral splint or appliance, nor a dental splint or dental brace.  It is a Mandibular Repositioning Device, specifically considered as Durable Medical Equipment, and specifically coded as a MEDICAL treatment for a MEDICAL diagnosis.  While these appliances are intraoral, they are not meant to treat the teeth.  Instead, they reposition the jaw and tongue to open up the airway. Because the treatment is used to treat a medical condition it cannot be considered \"dental.\"</p>
 
 <p>It is gross negligence to deny payment for a Mandibular Repositioning Device under these circumstances.</p>
 
@@ -53,6 +53,6 @@ $template = "
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%</p>";
+%franchisee_fullname%</p>";
 
 ?>

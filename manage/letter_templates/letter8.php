@@ -38,6 +38,6 @@ Dear %contact_firstname%:</p>
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%</p>";
+%franchisee_fullname%</p>";
 
 ?>

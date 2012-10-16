@@ -43,7 +43,17 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
+//$sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
+$sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
+        (
+        select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate desc
+        ) as n
+        LEFT JOIN dental_users u on u.userid=n.signed_id
+        LEFT JOIN dental_notes p ON p.notesid = n.parentid
+        group by n.parentid
+        order by n.procedure_date DESC, n.adddate desc
+        ";
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

@@ -98,7 +98,7 @@ $template = "
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%<br />
+%franchisee_fullname%<br />
 <br />
 cc:<br />  %nonpcp_mds%<br />
 %ccpatient_fullname%</p>";

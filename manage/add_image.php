@@ -57,31 +57,22 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 `place` ,
 `diagnosising_doc`,
 `diagnosising_npi`,
-`apnea` ,
-`hypopnea` ,
 `ahi` ,
 `ahisupine` ,
 `rdi` ,
 `rdisupine` ,
 `o2nadir` ,
 `t9002` ,
-`sleepefficiency` ,
-`cpaplevel` ,
 `dentaldevice` ,
 `devicesetting` ,
 `diagnosis` ,
 `filename` ,
 `notes`,
 `testnumber`,
-`needed`,
-`scheddate`,
-`completed`,
-`interpolation`,
-`copyreqdate`,
 `sleeplab`,
 `patiendid`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$apnea."','".$hypopnea."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$sleepefficiency."','".$cpaplevel."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$needed."', '".$scheddate."', '".$completed."', '".$interpolation."', '".$copyreqdate."', '".$sleeplab."', '".$patientid."')";
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."')";
   $run_q = mysql_query($q);
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";

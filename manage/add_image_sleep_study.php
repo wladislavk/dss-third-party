@@ -30,43 +30,12 @@ background:#edeb46;
                 </td></tr>
   <tr>
                 <td valign="top" class="odd">
-                Needed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Date Scheduled
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Completed
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Interpretation
-                </td>
-        </tr>
-
-  <tr>
-                <td valign="top" class="odd">
                 Place
                 </td>
         </tr>
   <tr>
                 <td valign="top" class="even">
                 Diagnosis
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Copy Requested
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Request From
                 </td>
         </tr>
   <tr>
@@ -82,16 +51,6 @@ background:#edeb46;
   <tr>
                 <td valign="top" class="odd">
                 File
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Apnea
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                Hypopnia
                 </td>
         </tr>
   <tr>
@@ -122,16 +81,6 @@ background:#edeb46;
   <tr>
                 <td valign="top" class="odd">
                 T &le; 90% O<sub>2</sub>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                Sleep Efficiency
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                CPAP Level
                 </td>
         </tr>
   <tr>
@@ -192,34 +141,6 @@ if(f.sleeptesttype.value == "HST"){
 </script>
                 </td>
 </tr>
- <tr>
-                <td valign="top" class="odd">
- <input type="radio" name="needed" id="needed1" value="Yes" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='visible';showWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='visible';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='visible';">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                <input type="radio" name="needed" id="needed2" value="No" onclick="document.getElementById('sleepsched<?php echo $i; ?>').style.visibility='hidden';hideWhere(this.form);autoselect(this,document.sleepstudyadd.completed);document.getElementById('interpretation<?php echo $i; ?>1').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>2').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>3').style.visibility='hidden';document.getElementById('interpretation<?php echo $i; ?>4').style.visibility='hidden';">No
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                                                <input name="scheddate" id="scheddate" type="text" class="field text addr tbox calendar" style="width:100px;" maxlength="255" onChange="validateDate('scheddate');" />
-
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                                                                <input type="radio" name="completed" value="Yes"><span>Yes</span> <span id="req_0" class="req">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="completed" value="No"><span>No</span>
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                                <div name="interpolationdiv">
-                                                <input type="radio" name="interpolation" value="Yes"><span>Yes</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <input type="radio" name="interpolation" value="No"><span>No</span>
-                                </div>
-                </td>
-        </tr>
   <tr>
                 <td valign="top" class="odd">
 <script type="text/javascript">
@@ -266,26 +187,6 @@ function addstudylab(v){
                             </select> <span id="req_0" class="req">*</span>
                 </td>
         </tr>
-  <tr>
-        <td valign="top" class="odd">
-                                                <input name="copyreqdate" id="copyreqdate" type="text" class="field text addr tbox calendar" style="width:100px;" maxlength="255" />
-        </td>
-  </tr>
-  <tr>
-                <td valign="top" class="even">                                                                <select name="sleeplab">
-                                <option value="">SELECT</option>
-                                                <?php
-            $sleeplabquery = "SELECT * FROM dental_sleeplab WHERE docid=".$_SESSION['docid'];
-            $sleeplabres = mysql_query($sleeplabquery);
-            while($sleeplab = mysql_fetch_array($sleeplabres)){
-            ?>
-
-                                                <option value="<?php echo $sleeplab['sleeplabid']; ?>"><?php echo $sleeplab['company']; ?></option>
-                                                <?php } ?>
-                                                </select>
-
-                </td>
-        </tr>
         <tr>
                 <td valign="top" class="odd">
                   <input style="width:100px;" type="text" name="diagnosising_doc" />
@@ -317,16 +218,6 @@ function addstudylab(v){
         </tr>
   <tr>
                 <td valign="top" class="even">
-                <input type="text" name="apnea" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="hypopnea" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
                 <input type="text" name="ahi" />
                 </td>
         </tr>
@@ -353,16 +244,6 @@ function addstudylab(v){
   <tr>
                 <td valign="top" class="odd">
                 <input type="text" name="t9002" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="even">
-                <input type="text" name="sleepefficiency" />
-                </td>
-        </tr>
-  <tr>
-                <td valign="top" class="odd">
-                <input type="text" name="cpaplevel" />
                 </td>
         </tr>
   <tr>

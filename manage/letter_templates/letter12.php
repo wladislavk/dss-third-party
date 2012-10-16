@@ -43,7 +43,7 @@ $template = "
 <br />
 <br />
 <br />
-Dr. %franchisee_fullname%</p>
+%franchisee_fullname%</p>
 
 <p>cc:<br />  %other_mds%</p>";
 

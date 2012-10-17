@@ -19,8 +19,7 @@ if(isset($_REQUEST['sid'])){
 ?>
 <link rel="stylesheet" href="css/summ.css" />
 
-<div>TOP SECTION</div>
-
+<!-- PUT TOP SECTION HERE -->
                 <?php
 $notes_sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
         (

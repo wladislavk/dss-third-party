@@ -85,8 +85,9 @@ echo $memo_array['memo'] . "<br /><hr />";
   <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
   <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
 
+<?php if($num_bounce !=0 ){?>
   <a href="manage_email_bounces.php" class="notification <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><?= $num_bounce;?> Email Bounces</a>
-
+<?php } ?>
 <!--
   <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
   <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>

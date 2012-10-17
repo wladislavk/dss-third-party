@@ -329,10 +329,11 @@ $second_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
 $sleep_center_name = st($q2_myarray['place']);
 //$dentaldevice = st($q2_myarray['device']);
 
-$dd_sql = "select dd.device FROM dental_ex_page5 ex LEFT JOIN dental_device dd ON dd.deviceid=ex.dentaldevice WHERE ex.patientid='".$patientid."'";
+$dd_sql = "select dd.device, ex.dentaldevice_date FROM dental_ex_page5 ex LEFT JOIN dental_device dd ON dd.deviceid=ex.dentaldevice WHERE ex.patientid='".$patientid."'";
 $dd_q = mysql_query($dd_sql);
 $dd_r = mysql_fetch_assoc($dd_q);
 $dentaldevice = $dd_r['device'];
+$delivery_date = ($dd_r['dentaldevice_date'] != '') ? date('F d, Y', strtotime($dd_r['dentaldevice_date'])):'';
 
 
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$sleep_center_name."';";
@@ -358,7 +359,7 @@ while ($row = mysql_fetch_assoc($subj2_result)) {
 // Device Delivery Date
 $device_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 7 ORDER BY stepid DESC LIMIT 1;";
 $device_result = mysql_query($device_query);
-$delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
+//$delivery_date = date('F d, Y', strtotime(mysql_result($device_result, 0)));
 
 
 // Delay Reason and Description

@@ -75,17 +75,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 ?>
 <h3 class="sect_header">Medications / Allergies</h3>
 <div class="box">
+		<?php if($premedcheck!=''){ ?>
 		<label class="desc" id="title0" for="Field0" style="width:90%;">
                             Premedication
                             <span id="req_0" class="req">*</span>
+				<?= ($premedcheck)?"- Yes":"- No";?>
                         </label><br />
                         <div>
-			  <?php if($premedcheck != ''){ ?>
-                            <span>
-                                Have you been told you should receive pre-medication before dental procedures?
-                                <?= ($premedcheck)?"Yes":"No";?>
-                            </span>
-                          <?php } ?>
                           <?php if($premeddet != ''){ ?>
                             <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
                                 What medication(s) and why do you require it?<br />
@@ -93,17 +89,13 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             </span>
                           <?php } ?>
                        </div>
-
+		<?php } ?>
                           <?php if($allergenscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
-                        Allergens
+                        Allergens <?= ($allergenscheck)?"- Yes":"- No"; ?>
                     </label><br />
                     <div>
                         <span>
-                            <span>
-                                Do you have any known allergens (for example: aspirin, latex, penicillin, etc)?
-                             	<?= ($allergenscheck)?"Yes":"No"; ?>
-                    </span>
                           <?php if($other_allergens != ''){ ?>
                             <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
                                 Please list everything you are allergic to:<br />
@@ -116,14 +108,10 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                           <?php if($medicationscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
-                        Current Medications
+                        Current Medications <?= ($medicationscheck)?"- Yes":"- No"; ?>
                     </label><br />
                     <div>
                         <span>
-                            <span>
-                                Are you currently taking any medications?
-                                <?= ($medicationscheck)?"Yes":"No"; ?>
-                            </span>
                           <?php if($other_medications != ''){ ?>
                         <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
                                 Please list all medication you are currently taking: <br />
@@ -825,6 +813,7 @@ $tonsils = st($myarray['tonsils']);
 $tonsils_grade = st($myarray['tonsils_grade']);
 
 ?>
+<div class="half">
                 <?php if($mallampati != ''){ ?>
                     <label class="desc" id="title0" for="Field0">
                         AIRWAY EVALUATION(continued)
@@ -868,6 +857,8 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         </div>
                     <br />
                 <?php } ?>
+</div>
+<div class="half">
                     <label class="desc" id="title0" for="Field0">
                         TONSILS
                     </label>
@@ -941,7 +932,7 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                         </div>
                     <br />
                 <?php } ?>
-
+</div>
 <?php
 
 $sql = "select * from dental_ex_page3 where patientid='".$_GET['pid']."'";

@@ -129,8 +129,6 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
                     </label>
                     <div>
                         <span>
-                            Please comment about other therapy attempts and how each impacted your snoring and apnea and sleep quality.
-                            <br />
 				<?=$other_therapy;?>
                         </span>
                         </div>

@@ -297,6 +297,51 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   }
 }
 
+
+
+// Function to Create Letters
+function create_welcome_letter ($templateid, $md_list, $docid) {
+
+  $gen_date = date('Y-m-d H:i:s');
+  $status = '0';
+  $delivered = '0';
+  $deleted = '0';
+  $columns = "templateid";
+  $values = "'".mysql_real_escape_string($templateid)."'";
+  if ($status == 1) {
+    $columns .= ", date_sent";
+    $values .= ", NOW()";
+  }
+  if (isset($md_list)) {
+    $columns .= ", md_list";
+    $values .= ", '".mysql_real_escape_string($md_list)."'";
+  }
+  if (isset($status)) {
+                $columns .= ", status";
+                $values .= ", '".mysql_real_escape_string($status)."'";
+        }
+  if (isset($deleted)) {
+                $columns .= ", deleted";
+                $values .= ", '".mysql_real_escape_string($deleted)."'";
+        }
+
+  $columns .= ", generated_date, delivered, docid, userid";
+  $values .= ", '$gen_date', '$delivered', '". $docid ."', '". $docid ."'";
+  $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
+  $letter_insert = mysql_query($letter_query);
+  if(!$letter_insert) {
+    return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
+  } else {
+    $id = mysql_insert_id();
+    // If parent and recipient ids are set, clear the recipient id from the parent
+
+    return $id;
+  }
+}
+
+
+
+
 function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
 		return false;

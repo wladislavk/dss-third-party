@@ -8,7 +8,7 @@ mysql_query($s);
 }
 
 $rec_disp = 20;
-$sql = "SELECT * from dental_patients where email_bounce=1 ORDER BY lastname ASC, firstname ASC";
+$sql = "SELECT * from dental_patients where email_bounce=1 AND docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY lastname ASC, firstname ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $my=mysql_query($sql) or die(mysql_error());

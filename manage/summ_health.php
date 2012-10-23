@@ -418,7 +418,6 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             <?= $tobacco;?>
 
                         </span>
-                                        </div>
                 <br /><br />
                 <?php } ?>
                 <?php if($additional_paragraph != ''){ ?>

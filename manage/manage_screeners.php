@@ -191,13 +191,13 @@ $my=mysql_query($sql) or die(mysql_error());
                                 </td>
         <?php
 	if($myarray['survey_total'] > 15 || $myarray['ep_total'] > 18 || $myarray['sect3_total'] > 3){
-		?><td valign="top" class="risk_severe">Severe</td><?php
+		?><td valign="top" class="risk_severe"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Severe</a></td><?php
         }else if($myarray['survey_total'] > 11 || $myarray['ep_total'] > 14 || $myarray['sect3_total'] > 2){
-		?><td valign="top" class="risk_high">High</td><?php
-        }else if($myarray['survey_total'] || $myarray['ep_total'] > 9 || $myarray['sect3_total'] > 1){
-		?><td valign="top" class="risk_moderate">Moderate</td><?php
+		?><td valign="top" class="risk_high"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">High</a></td><?php
+        }else if($myarray['survey_total'] > 7 || $myarray['ep_total'] > 9 || $myarray['sect3_total'] > 1){
+		?><td valign="top" class="risk_moderate"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Moderate</a></td><?php
         }else{
-		?><td valign="top" class="risk_low">Low</td><?php
+		?><td valign="top" class="risk_low"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Low</a></td><?php
         }
 ?>
 				<td valign="top">
@@ -276,6 +276,44 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="manage_screeners.php?delid=<?= $myarray['id']; ?>&page=<?= $_REQUEST['page']; ?>" onclick="return confirm('Are you sure you want to delete this screener?');">Delete</a>
 				</td>
 			</tr>
+			<tr id="details_<?= $myarray['id']; ?>" style="display:none;">
+			<td colspan="2" valign="top">
+				<strong>Epworth Sleepiness Score</strong><br />
+				<?= $myarray['epworth_reading']; ?> - Sitting and reading<br />
+                                <?= $myarray['epworth_public']; ?> - Sitting inactive in a public place (e.g. a theater or meeting)<br />
+                                <?= $myarray['epworth_passenger']; ?> - As a passenger in a car for an hour without a break<br />
+                                <?= $myarray['epworth_lying']; ?> - Lying down to rest in the afternoon when circumstances permit<br />
+                                <?= $myarray['epworth_talking']; ?> - Sitting and talking to someone<br />
+                                <?= $myarray['epworth_lunch']; ?> - Sitting quietly after a lunch without alcohol<br />
+                                <?= $myarray['epworth_traffic']; ?> - In a car, while stopped for a few minutes in traffic
+
+			</td>
+			<td colspan="4" valign="top">
+			<strong>Health Symptoms</strong><br />
+			<?= ($myarray['breathing']>0)?'Yes':'No'; ?> - Have you ever been told you stop breathing while asleep?<br />
+                        <?= ($myarray['driving']>0)?'Yes':'No'; ?> - Have you ever fallen asleep or nodded off while driving?<br />
+                        <?= ($myarray['gasping']>0)?'Yes':'No'; ?> - Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?<br />
+                        <?= ($myarray['sleepy']>0)?'Yes':'No'; ?> - Do you feel excessively sleepy during the day?<br />
+                        <?= ($myarray['snore']>0)?'Yes':'No'; ?> - Do you snore or have you ever been told that you snore?<br />
+                        <?= ($myarray['weight_gain']>0)?'Yes':'No'; ?> - Have you had weight gain and found it difficult to lose?<br />
+                        <?= ($myarray['blood_pressure']>0)?'Yes':'No'; ?> - Have you taken medication for, or been diagnosed with high blood pressure?<br />
+                        <?= ($myarray['jerk']>0)?'Yes':'No'; ?> - Do you kick or jerk your legs while sleeping?<br />
+                        <?= ($myarray['burning']>0)?'Yes':'No'; ?> - Do you feel burning, tingling or crawling sensations in your legs when you wake up?<br />
+                        <?= ($myarray['headaches']>0)?'Yes':'No'; ?> - Do you wake up with headaches during the night or in the morning?<br />
+                        <?= ($myarray['falling_asleep']>0)?'Yes':'No'; ?> - Do you have trouble falling asleep?<br />
+                        <?= ($myarray['staying_asleep']>0)?'Yes':'No'; ?> - Do you have trouble staying asleep once you fall asleep?
+			</td>
+			<td colspan="4" valign="top">
+			<strong>Co-morbidity</strong><br />
+			<?php
+			foreach($diagnosis as $d){
+				echo $d."<br />";
+			}
+			?>
+			</td>
+			</tr>
+
+
 	<? 	}
 	}?>
 </table>

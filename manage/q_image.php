@@ -176,7 +176,7 @@ $itype_my = mysql_query($itype_sql);
 					<?php } ?>	
 				</td>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
                     

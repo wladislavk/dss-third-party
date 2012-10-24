@@ -36,7 +36,7 @@ if($_POST["ledgerub"] == 1)
 	$entry_date = $_POST['entry_date'];
 	$description = $_POST['description'];
 	$amount = $_POST['amount'];
-	$paid_amount = $_POST['paid_amount'];
+	$paid_amount = str_replace(',', '',$_POST['paid_amount']);
 	$transaction_type = $_POST['transaction_type'];
 	$transaction_code = $_POST['transaction_code'];
     $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
@@ -135,7 +135,7 @@ if($_POST["ledgerub"] == 1)
         $description = $trow[1];
         $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
         $amount = $_POST['amount'];
-        $paid_amount = $_POST['paid_amount'];
+        $paid_amount = str_replace(',','',$_POST['paid_amount']);
 
 $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
 $claim_q = mysql_query($claim_sql);
@@ -231,7 +231,7 @@ xmlhttp.onreadystatechange=function()
   var pco = name.substr(5,1);
   xmlhttp.open("GET","add_ledger_entry_process_edit.php?q="+str+"&pco="+pco,true);
   xmlhttp.send();
-  if (str==2||str==3){
+  if (str==2||str==3||str==6){
   document.getElementById("tr_amount").style.display = "none";
   document.getElementById("tr_paid_amount").style.display = "table-row";
 
@@ -354,7 +354,7 @@ xmlhttp.onreadystatechange=function()
 		{
 			fa = document.ledgerfrm;
 			
-			if(fa.transaction_type.value == "Payment")
+			if(fa.transaction_type.value == "6")
 			{
 				document.getElementById("tr_paid_amount").style.display = '';
 				
@@ -492,7 +492,7 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_amount" <?= ($transaction_type==2||$transaction_type==3)?'style="display:none;"':''?>>
+		<tr id="tr_amount" <?= ($transaction_type==2||$transaction_type==3||$transaction_type==6)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Amount
             </td>
@@ -501,12 +501,12 @@ echo "</select>";
 				<span class="red">*</span>
             </td>
         </tr>
-		<tr id="tr_paid_amount"  <?= ($transaction_type!=2&&$transaction_type!=3)?'style="display:none;"':''?>>
+		<tr id="tr_paid_amount"  <?= ($transaction_type!=2&&$transaction_type!=3&&$transaction_type!=6)?'style="display:none;"':''?>>
         	<td valign="top" class="frmhead">
 				Paid Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2);};?>"  maxlength="255"/>
+				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -554,7 +554,7 @@ $e_text .= implode($errors, ', ');
     </table>
     </form>
 	<script type="text/javascript">
-		change_t()
+		//change_t()
 	</script> 
 	
 	

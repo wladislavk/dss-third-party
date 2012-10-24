@@ -14,11 +14,11 @@ function uploadImage($image, $file_path, $profile = false){
   list($width,$height)=getimagesize($uploadedfile);
   if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
 
-    if($extension=="jpg" || $extension=="jpeg" )
+    if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
     {
       $src = imagecreatefromjpeg($uploadedfile);
     }
-    elseif($extension=="png")
+    elseif(strtolower($extension)=="png")
     {
       $src = imagecreatefrompng($uploadedfile);
     }

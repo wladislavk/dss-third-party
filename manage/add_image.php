@@ -138,7 +138,7 @@ if($_POST["imagesub"] == 1)
                         $lastdot = strrpos($fname,".");
                         $name = substr($fname,0,$lastdot);
                         $extension2 = substr($fname,$lastdot+1);
-			switch($extension2){
+			switch(strtolower($extension2)){
 			  case 'jpg':
 			  case 'jpeg':
 				$source = imagecreatefromjpeg($_FILES["image_file_".$i]["tmp_name"]);
@@ -167,7 +167,7 @@ if($_POST["imagesub"] == 1)
                         $banner1 .= ".".$extension;
 
 		// Output
-                        switch($extension){
+                        switch(strtolower($extension)){
                           case 'jpg':
                           case 'jpeg':
                 		imagejpeg($thumb, "q_file/".$banner1);

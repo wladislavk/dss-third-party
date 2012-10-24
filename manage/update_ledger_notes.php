@@ -26,7 +26,8 @@ eraseCookie('tempforledgerentry');
 ?>
 <script type="text/javascript">
 alert('Note successfully added!');
-history.go(-1);
+parent.window.location = parent.window.location;
+//history.go(-1);
 </script>
 <?php
 }

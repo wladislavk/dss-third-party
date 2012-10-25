@@ -376,7 +376,8 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= $alcohol;?>
-
+			</span>
+		   </div>
                             <br /><br />
                 <?php } ?>
                 <?php if($sedative != ''){ ?>

@@ -469,6 +469,11 @@ function deliver_letter($letterid, $message) {
 		// Send Fax	
 		if ($send_method == 'fax') {
 			$subject = "Dental Sleep Solutions";
+			include 'class.fax.php';
+                	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
+                	$fileType = "pdf";
+			$fts = new FTSSamples();
+			$fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
 			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
 		if (true){ //($email_success || $fax_success || $send_method == 'paper') {

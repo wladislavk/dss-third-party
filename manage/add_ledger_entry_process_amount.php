@@ -22,6 +22,6 @@ $r = ($t==2||$t==3||$t==6)?'':'readonly="readonly"';
 if(($t!=2&&$t!=3)&&$row[0]==''){
 echo "0";
 }else{
-echo '<input '.$r.' value="'.$row[0].'" type="text" id="form['.$pco.'][amount]" name="form['.$pco.'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;">';
+echo '<input '.$r.' class="dollar_input" onkeypress="return is_dollar_input(event);" value="'.$row[0].'" type="text" id="form['.$pco.'][amount]" name="form['.$pco.'][amount]" style="margin: 0; float: left; width:75px;margin-right:10px;">';
 }
 ?> 

@@ -497,7 +497,7 @@ echo "</select>";
 				Amount
             </td>
         	<td valign="top" class="frmdata">
-				<span id="amount_span"><input readonly="readonly" name="amount" type="text" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
+				<span id="amount_span"><input readonly="readonly" name="amount" type="text" onkeypress="return is_dollar_input(event);" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -506,7 +506,7 @@ echo "</select>";
 				Paid Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
+				<input id="paid_amount" name="paid_amount" type="text" onkeypress="return is_dollar_input(event);" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -561,6 +561,19 @@ $e_text .= implode($errors, ', ');
 	
 </body>
 </html>
+<script type="text/javascript">
+
+function is_dollar_input(evt){
+
+         var charCode = (evt.which) ? evt.which : event.keyCode
+
+         if (charCode != 44 && charCode != 45 && charCode !=46 && (charCode < 48 || charCode > 57) )
+            return false;
+
+         return true;
+
+}
+</script>
 
 
 <?php

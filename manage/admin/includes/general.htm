@@ -487,10 +487,13 @@ function deliver_letter($letterid, $message) {
 		}
 
 		// Get Doctor's Name and Email
-		$sql = "SELECT name, email FROM dental_users WHERE userid = '".$docid."';";
+		$sql = "SELECT name, email, phone, use_digital_fax, fax FROM dental_users WHERE userid = '".$docid."';";
 		$result = mysql_query($sql);
 		$doc_name = mysql_result($result, 0, 0);
 		$doc_email = mysql_result($result, 0, 1);
+		$doc_phone = mysql_result($result, 0, 2);
+		$use_digital_fax = mysql_result($result, 0, 3);
+		$doc_fax = mysql_result($result, 0, 4);
 
 		// Send Email
 		if ($send_method == 'email') {
@@ -500,8 +503,40 @@ function deliver_letter($letterid, $message) {
 		// Create PDF
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
-		if($send_method == 'fax'){
-			$cover = "<b>CONFIDENTAL FAX</b><br /><br />".$to_name."<br />".$fax;
+		if($send_method == 'fax' && $use_digital_fax){
+			$cover = "
+<table>
+<tr>
+<td><img src=\"/manage/images/logo.gif\" /></td>
+<td><center>
+<b>HEALTH INFORMATION<br />
+FAX COVER SHEET</b>
+</center>
+</td>
+</tr>
+</table>
+<br /><br /><br />
+<b>DATE:</b> ".date('m/d/Y')."<br />
+<br />
+<b>TO:</b><br />
+NAME: ".$to_name."<br />
+PHONE: ".$phone."<br />
+FAX: ".$fax."
+<br /><br />
+<b>FROM:</b><br />
+NAME: ".$doc_name."<br />
+PHONE: ".$doc_phone."<br />
+FAX: ".$doc_fax."<br /><br />
+
+TOTAL NUMBER OF PAGES:  %NUM_PAGES%
+<br /><br />
+<b>IF YOU RECEIVE THIS FAX IN ERROR, PLEASE CONTACT THE SENDER IMMEDIATELY AND THEN DESTROY THE FAXED MATERIALS.
+<br /><br />
+CONFIDENTIALITY NOTICE:</b><br />
+The documents accompanying this transmission contain legally privileged health information. This information is intended only for the use of the individual or entity named above. The authorized recipient of this information is prohibited from disclosing this information to any other party unless required to do so by law or regulation and is required to destroy the information after its stated need has been fulfilled. 
+<br /><br />
+If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or action taken in reliance on the contents of these documents is strictly prohibited. If you have received this information in error, please notify the sender and the privacy officer immediately and arrange for the return or destruction of these documents. 
+";
 		}else{
 			$cover = '';
 		}
@@ -517,7 +552,7 @@ function deliver_letter($letterid, $message) {
 		$letter_result = mysql_query($letter_query);
 	
 		// Send Fax	
-		if ($send_method == 'fax') {
+		if ($send_method == 'fax' && $use_digital_fax) {
 			$subject = "Dental Sleep Solutions";
 			include 'class.fax.php';
                 	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
@@ -798,6 +833,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	$pdf->SetFont('dejavusans', '', 10);
 
 	if($cover != ''){
+		$cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
 		$pdf->AddPage();
   		$pdf->writeHTML($cover, true, false, true, false, '');
 	}

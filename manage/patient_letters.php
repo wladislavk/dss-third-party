@@ -135,7 +135,8 @@ foreach ($dental_letters as $key => $letter) {
 	$correspondance = array();
 	$correspondance = mysql_fetch_assoc($template_res);
 	$dental_letters[$key]['id'] = $letter['letterid'];
-	if (!empty($letter['pdf_path'])) {
+        $dental_letters[$key]['status'] == $letter['status'];
+	if (!empty($letter['pdf_path']) && $letter['status'] != DSS_LETTER_SEND_FAILED) {
 		$dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
 	} else {
 		$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid']."&goto=letter";
@@ -203,7 +204,7 @@ $source = $r['referred_source'];
 $pending_letters = array();
 $sent_letters = array();
 foreach ($dental_letters as $letter) {
-	if ($letter['status'] == "0") {
+	if ($letter['status'] == "0" || $letter['status'] == DSS_LETTER_SEND_FAILED) {
 		$pending_letters[] = $letter;
 	} else {
 		$sent_letters[] = $letter;
@@ -321,15 +322,22 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     $id = $pending_letters[$i]['id'];
     $subject = $pending_letters[$i]['subject'];
     $sentto = $pending_letters[$i]['sentto'];
+    $status = $pending_letters[$i]['status'];
     $total_contacts = $pending_letters[$i]['total_contacts'];
     $generated = date('m/d/Y', $pending_letters[$i]['generated_date']);
     if ($pending_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
-    } else {
+    } elseif ($pending_letters[$i]['status'] == DSS_LETTER_SEND_FAILED) {
+      $alert = " bgcolor=\"#FF9696\"";
+    } else  {
       $alert = null;
     }
 	?>
-		<tr<?= $alert; ?>><td><a href="<?= $url; ?>"><?= $subject; ?></a></td>
+		<tr<?= $alert; ?>><td><a href="<?= $url; ?>"><?= $subject; ?></a>
+			<?php if ($pending_letters[$i]['status'] == DSS_LETTER_SEND_FAILED) { ?>
+				- Send failed
+			<?php } ?>
+		</td>
 		
 		<td>
 			<?php

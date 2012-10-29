@@ -232,3 +232,8 @@ $dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";
 
 define('DSS_PERCASE_PENDING', 0);
 define('DSS_PERCASE_INVOICED', 1);
+
+
+define('DSS_LETTER_PENDING', 0);
+define('DSS_LETTER_SENT', 1);
+define('DSS_LETTER_SEND_FAILED', 2);

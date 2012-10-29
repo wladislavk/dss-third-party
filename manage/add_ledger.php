@@ -35,7 +35,7 @@ if($_POST["ledgerub"] == 1)
 	$service_date = $_POST['service_date'];
 	$entry_date = $_POST['entry_date'];
 	$description = $_POST['description'];
-	$amount = $_POST['amount'];
+	$amount = str_replace(',','',$_POST['amount']);
 	$paid_amount = str_replace(',', '',$_POST['paid_amount']);
 	$transaction_type = $_POST['transaction_type'];
 	$transaction_code = $_POST['transaction_code'];
@@ -134,7 +134,7 @@ if($_POST["ledgerub"] == 1)
         $transaction_code = $trow[0];
         $description = $trow[1];
         $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
-        $amount = $_POST['amount'];
+        $amount = str_replace(',','',$_POST['amount']);
         $paid_amount = str_replace(',','',$_POST['paid_amount']);
 
 $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
@@ -497,7 +497,7 @@ echo "</select>";
 				Amount
             </td>
         	<td valign="top" class="frmdata">
-				<span id="amount_span"><input readonly="readonly" name="amount" type="text" onkeypress="return is_dollar_input(event);" class="tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
+				<span id="amount_span"><input readonly="readonly" name="amount" type="text" class="dollar_input tbox" value="<?php echo $amount; ?>"  maxlength="255"/></span>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -506,7 +506,7 @@ echo "</select>";
 				Paid Amount
             </td>
         	<td valign="top" class="frmdata">
-				<input id="paid_amount" name="paid_amount" type="text" onkeypress="return is_dollar_input(event);" class="tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
+				<input id="paid_amount" name="paid_amount" type="text"  class="dollar_input tbox" value="<?php if(isset($paid_amount)){ echo number_format($paid_amount,2,'.','');};?>"  maxlength="255"/>
 				<span class="red">*</span>
             </td>
         </tr>
@@ -902,4 +902,6 @@ function format_phone($num, $a){
 
 
 ?>
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/manage/js/masks.js"></script>
 

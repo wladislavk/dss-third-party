@@ -64,7 +64,7 @@ $sqlinsertqry .= "INSERT INTO `dental_ledger_payment` (
 foreach($_POST[form] as $form){
 
 $sqlinsertqry .= "(
-".$_POST['ledgerid'].", '".date('Y-m-d', strtotime($form[service_date]))."', '".date('Y-m-d', strtotime($form[entry_date]))."', '".$form['amount']."', '".$form[payment_type]."', '".$form[payer]."'
+".$_POST['ledgerid'].", '".date('Y-m-d', strtotime($form[service_date]))."', '".date('Y-m-d', strtotime($form[entry_date]))."', '".str_replace(',','',$form['amount'])."', '".$form[payment_type]."', '".$form[payer]."'
 ),";
 
 

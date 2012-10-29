@@ -10,7 +10,7 @@ entry_date='".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['entry_dat
 payment_date='".mysql_real_escape_string(date('Y-m-d',strtotime($_POST['payment_date_'.$p['id']])))."',
 payer='".mysql_real_escape_string($_POST['payer_'.$p['id']])."',
 payment_type='".mysql_real_escape_string($_POST['payment_type_'.$p['id']])."',
-amount='".mysql_real_escape_string($_POST['amount_'.$p['id']])."'
+amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount_'.$p['id']]))."'
 WHERE id='".mysql_real_escape_string($p['id'])."'";
 mysql_query($s);
 }

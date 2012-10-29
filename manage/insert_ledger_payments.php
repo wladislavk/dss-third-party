@@ -197,7 +197,7 @@ while($row = mysql_fetch_assoc($lq)){
 $id = $row['ledgerid'];
 if($_POST['amount_'.$id]!=''){
 $sqlinsertqry .= "(
-".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".$_POST['amount_'.$id]."', '".$_POST['payment_type']."', '".$_POST['payer']."'
+".$id.", '".date('Y-m-d', strtotime($_POST['payment_date_'.$id]))."', '".date('Y-m-d')."', '".str_replace(',','',$_POST['amount_'.$id])."', '".$_POST['payment_type']."', '".$_POST['payer']."'
 ),";
 }
 

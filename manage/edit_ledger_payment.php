@@ -79,7 +79,7 @@ while($p = mysql_fetch_array($p_sql)){
 </select>
 </span> 
 
-<span style="margin: 0 10px 0 0; float:left;"><input type="text" name="amount_<?= $p['id']; ?>" value="<?= $p['amount']; ?>" /></span>
+<span style="margin: 0 10px 0 0; float:left;"><input type="text" class="dollar_input" name="amount_<?= $p['id']; ?>" value="<?= $p['amount']; ?>" /></span>
 <div style="clear:both"></div>
 </div>
 <?php } ?>
@@ -97,3 +97,6 @@ while($p = mysql_fetch_array($p_sql)){
 </form>
 </body>
 </html> 
+
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/manage/js/masks.js"></script>

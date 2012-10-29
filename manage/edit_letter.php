@@ -13,7 +13,7 @@ if($_GET['backoffice'] == '1') {
 $letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method FROM dental_letters where letterid = ".$letterid.";";
+$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method, status FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
 while ($row = mysql_fetch_assoc($letter_result)) {
   $templateid = $row['templateid'];
@@ -25,6 +25,7 @@ while ($row = mysql_fetch_assoc($letter_result)) {
   $md_referrals = explode(",", $md_referral_list);
 	$altered_template = $row['template'];
 	$method = $row['send_method'];
+  $status = $row['status'];
 }
 
 // Pending and Sent Contacts
@@ -1363,6 +1364,11 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%nonpcp_mds%";
 	$nonpcp_mds = "";
 	$count = 1;
+
+
+
+
+
 	foreach ($md_contacts as $index => $md) {
 		if ($md['type'] != "md_referral" && $md['contacttype'] != 'Primary Care Physician') {
 			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
@@ -1388,8 +1394,13 @@ foreach ($letter_contacts as $key => $contact) {
  	}
 	// Print Letter Body		
 
-  ?>
+        if($status == DSS_LETTER_SEND_FAILED){
+        ?>
+        <div style="width: 100%; text-align: center;">Sending of letter failed. Letter was attempted to be sent to <a href="#" onclick="loadPopup('add_contact.php?ed=<?= $contact['id']; ?>'); return false;"><?= $contact['firstname'] . " " . $contact['lastname']; ?></a></div>
+        <?php
+        }
 
+?>
 	<div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		<div align="left" style="width: 40%; padding: 3px; float: left">
 			Letter <?php print $key+1; ?> of <?php print count($letter_contacts); ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?>

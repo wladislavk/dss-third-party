@@ -42,7 +42,7 @@ class FTSSamples
 		$url .= "&FileName=" . urlencode($fileName);
 		$url .= "&FileType=" . urlencode($fileType);
 		
-		echo "URL: " . $url;
+		//echo "URL: " . $url;
 		
 		//reference primary file to fax
 		$postData = array('file'=>"@$filePath");
@@ -86,7 +86,8 @@ class FTSSamples
 			{
 				//get transmissionid which is needed for OutboundFaxStatus, OutboundFaxDownload
 				$responseTransmissionId = (string)$xResponseData->Delivery->attributes()->TransmissionId;
-			}			
+			}
+			return true;			
 		}
 		else
 		{
@@ -96,13 +97,14 @@ class FTSSamples
 			$xwsResultCode = (int)$headers["XwsResultCode"];
 			$xwsResultInfo = $headers["XwsResultInfo"];
 			
-			echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
+			//echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
 			
 			//get error information from response headers
 			$xwsErrorCode = (int)$headers["XwsErrorCode"];
 			$xwsErrorInfo = $headers["XwsErrorInfo"];
 			
-			echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
+			//echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
+                        return $headers;
 		}		
 	}
 }

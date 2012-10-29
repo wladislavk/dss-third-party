@@ -387,6 +387,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 
 // Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {
+        $send_success = true;
 	if (!isset($letterid)) {
 		return false;
 	} else {
@@ -454,15 +455,19 @@ function deliver_letter($letterid, $message) {
 		// Create PDF
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
+		if($send_method == 'fax'){
+			$cover = "<b>CONFIDENTAL FAX</b><br /><br />".$to_name."<br />".$fax;
+		}else{
+			$cover = '';
+		}
 		$html = $message;
-
 		$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$docid."';";
 		$franchisee_result = mysql_query($franchisee_query);
 		while ($row = mysql_fetch_assoc($franchisee_result)) {
         		$fi = $row;
 		}
 		$footerText = $fi['name'].' '.$fi['practice'].' '.$fi['address'].' '.$fi['city'].' '.$fi['state'].' '.$fi['zip'];
-		create_pdf($title, $filename, $html, null, '', $footerText);
+		create_pdf($title, $filename, $html, null, '', $footerText, $cover);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
 	
@@ -473,10 +478,17 @@ function deliver_letter($letterid, $message) {
                 	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
                 	$fileType = "pdf";
 			$fts = new FTSSamples();
-			$fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+			if($fax_send !== true){
+			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
+				$send_success = false;
+			  }else{
+				$send_success = false;
+			  }
+			}
 			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
-		if (true){ //($email_success || $fax_success || $send_method == 'paper') {
+		if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
 			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			$letter_result = mysql_query($letter_query);
 			if (!$letter_result) {
@@ -484,12 +496,20 @@ function deliver_letter($letterid, $message) {
 			}
 			if ($send_method == 'paper') {
 				return "paper";
-      }
+      			}
+
+		}else{
+			$letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
+                        $letter_result = mysql_query($letter_query);
+			return "Letter could not be sent.";
+		}
+		/*
 		} elseif (!$email_success) {
 			return "Email could not be sent";
 		} elseif (!$fax_success) {
 			return "Fax could not be sent";
 		}
+		*/
 	}
 }
 
@@ -672,7 +692,7 @@ class MYPDF extends TCPDF {
         }
 }
 
-function create_pdf($title, $filename, $html, $fax = null, $header, $footer) {	
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '') {	
 	// create new PDF document
   if ($fax) {
 		global $pdf_header, $pdf_footer;
@@ -731,6 +751,11 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer) {
 
 	// set font
 	$pdf->SetFont('dejavusans', '', 10);
+
+	if($cover != ''){
+		$pdf->AddPage();
+  		$pdf->writeHTML($cover, true, false, true, false, '');
+	}
 
 	// add a page
 	$pdf->AddPage();

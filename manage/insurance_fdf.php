@@ -346,7 +346,7 @@ $sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi F
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);

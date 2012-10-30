@@ -1102,7 +1102,7 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
@@ -1113,7 +1113,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);

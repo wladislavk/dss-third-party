@@ -4,6 +4,7 @@ require_once('includes/config.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once '../includes/general_functions.php';
+require_once '../includes/constants.inc';
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -64,6 +65,9 @@ if($_POST["usersub"] == 1)
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+
+			mysql_query("DELETE FROM dental_user_admin WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
+			mysql_query("INSERT INTO dental_user_admin SET userid='".mysql_real_escape_string($_POST["ed"])."', adminid='".mysql_real_escape_string($_POST["adminid"])."'");
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -118,6 +122,7 @@ if($_POST["usersub"] == 1)
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
                         mysql_query($custom_sql) or die($custom_sql.mysql_error());
 
+			mysql_query("INSERT INTO dental_user_admin SET userid='".mysql_real_escape_string($userid)."', adminid='".mysql_real_escape_string($_POST["adminid"])."'");
 
 			$msg = "Added Successfully";
 			?>
@@ -143,7 +148,9 @@ if($_POST["usersub"] == 1)
 <body>
 
     <?
-    $thesql = "select * from dental_users where userid='".$_REQUEST["ed"]."'";
+    $thesql = "select u.*, a.adminid from dental_users u 
+		LEFT JOIN dental_user_admin a ON u.userid = a.userid
+		where u.userid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
@@ -177,6 +184,7 @@ if($_POST["usersub"] == 1)
 		$status = $_POST['status'];
 		$use_patient_portal = $_POST['use_patient_portal'];
 		$use_digital_fax = $_POST['use_digital_fax'];
+		$adminid = $_POST['adminid'];
 	}
 	else
 	{
@@ -208,6 +216,7 @@ if($_POST["usersub"] == 1)
 		$status = st($themyarray['status']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
+		$adminid = st($themyarray['adminid']);
 		$but_text = "Add ";
 	}
 	
@@ -478,6 +487,22 @@ if($_POST["usersub"] == 1)
             	<select name="status" class="tbox">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Backoffice User
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="adminid" class="tbox">
+			<?php
+			  $bu_sql = "SELECT * FROM admin WHERE admin_access='".DSS_ADMIN_ACCESS_ADMIN."'";
+			  $bu_q = mysql_query($bu_sql);
+			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+ 			    <option value="<?= $bu_r['adminid']; ?>" <?= ($bu_r['adminid'] == $adminid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+			  <?php } ?>
                 </select>
             </td>
         </tr>

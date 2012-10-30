@@ -24,7 +24,14 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
+if(is_super($_SESSION['admin_access'])){
 $sql = "select * from dental_users where user_access=2 order by username";
+}else{
+  $sql = "SELECT u.* FROM dental_users u 
+		INNER JOIN dental_user_admin ua ON ua.userid = u.userid
+		WHERE u.user_access=2 AND ua.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+		ORDER BY username";
+}
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

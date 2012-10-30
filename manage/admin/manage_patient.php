@@ -21,7 +21,15 @@ if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 	die();
 }
 
+if(is_super($_SESSION['admin_access'])){
 $doc_sql = "select * from dental_users where user_access=2 order by username";
+}else{
+  $doc_sql = "SELECT u.* FROM dental_users u 
+                INNER JOIN dental_user_admin ua ON ua.userid = u.userid
+                WHERE u.user_access=2 AND ua.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+                ORDER BY username";
+}
+
 $doc_my = mysql_query($doc_sql);
 
 $doc_my1 = mysql_query($doc_sql) or die(mysql_error());

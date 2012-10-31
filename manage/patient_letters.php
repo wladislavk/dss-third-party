@@ -1,4 +1,10 @@
 <?php include 'includes/top.htm';
+
+if(!$use_letters){
+  ?><h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3><?php
+  die();
+}
+
 require_once('includes/patient_info.php');
 require_once('admin/includes/general.htm');
 ?>

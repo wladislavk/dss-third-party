@@ -1,4 +1,9 @@
 <?php include 'includes/top.htm'; 
+
+if(!$use_letters){
+  ?><h3 style="width:100%; text-align:center;">Letters feature has been disabled.</h3><?php
+  die();
+}
 ?>
 <link rel="stylesheet" href="css/letters.css" />
 <?php

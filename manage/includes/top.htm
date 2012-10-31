@@ -1362,5 +1362,11 @@ $total_insurance = mysql_num_rows($insurance_my);
 
 
   }
+
+  $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+  $use_letters = ($r['use_letters']=='1');
+
 ?>
 

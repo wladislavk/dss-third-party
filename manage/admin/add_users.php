@@ -62,6 +62,7 @@ if($_POST["usersub"] == 1)
                                 mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
+				use_letters = '".s_for($_POST['use_letters'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -112,6 +113,7 @@ if($_POST["usersub"] == 1)
                                 mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
+				use_letters = '".s_for($_POST['use_letters'])."',
 				status = '".s_for($_POST["status"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -184,6 +186,7 @@ if($_POST["usersub"] == 1)
 		$status = $_POST['status'];
 		$use_patient_portal = $_POST['use_patient_portal'];
 		$use_digital_fax = $_POST['use_digital_fax'];
+		$use_letters = $_POST['use_letters'];
 		$adminid = $_POST['adminid'];
 	}
 	else
@@ -216,6 +219,7 @@ if($_POST["usersub"] == 1)
 		$status = st($themyarray['status']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
+		$use_letters = st($themyarray['use_letters']);
 		$adminid = st($themyarray['adminid']);
 		$but_text = "Add ";
 	}
@@ -478,6 +482,17 @@ if($_POST["usersub"] == 1)
                         <input type="checkbox" name="use_digital_fax" value="1" <? if($use_digital_fax == 1) echo " checked='checked'";?> />
             </td>
         </tr>
+
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Letters Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

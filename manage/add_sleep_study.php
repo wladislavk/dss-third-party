@@ -321,7 +321,7 @@ if(f.sleeptesttype.value == "HST"){
 
 function addstudylab(v){
   if(v == 'add'){
-    parent.loadPopupRefer('add_sleeplab.php?r=flowsheet');
+    parent.loadPopup('add_sleeplab.php?r=flowsheet');
   }
 }
 

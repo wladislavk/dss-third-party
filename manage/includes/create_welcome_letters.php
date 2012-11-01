@@ -31,7 +31,7 @@ while($contact = mysql_fetch_assoc($q)){
 function create_welcome_letter ($templateid, $md_list, $docid) {
 
   $gen_date = date('Y-m-d H:i:s');
-  $status = '0';
+  $status = '1';
   $delivered = '0';
   $deleted = '0';
   $columns = "templateid";
@@ -57,7 +57,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
   $values .= ", '$gen_date', '$delivered', '". $docid ."', '". $docid ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
 echo $letter_query;
-  $letter_insert = mysql_query($letter_query);
+  //$letter_insert = mysql_query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
   } else {

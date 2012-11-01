@@ -125,7 +125,7 @@ $('#new_followup_but').show();
 
 <!-- IFRAME for FOLLOW UPS-->
 
-<iframe height="563" width="100%" id="followup_frame" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
+<iframe height="533" width="100%" id="followup_frame" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
 
 <!-- IFRAME for FOLLOW UPS-->
 

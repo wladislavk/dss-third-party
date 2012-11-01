@@ -482,7 +482,15 @@ while ($row = mysql_fetch_assoc($reason_result)) {
 }
 $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description']));
 
+
 // Load $template
+
+  $letter_sql = "SELECT body FROM dental_letter_templates WHERE id='".mysql_real_escape_string($templateid)."'";
+  $letter_q = mysql_query($letter_sql);
+  $letter_r = mysql_fetch_assoc($letter_q);
+  $template = $letter_r['body'];
+
+/*
 switch ($templateid) {
 	case 1:
 		require_once("letter_templates/letter1.php");
@@ -563,6 +571,8 @@ switch ($templateid) {
                 require_once("letter_templates/letter99.php");
                 break;
 }
+*/
+
 
 if (!empty($altered_template)) $template = html_entity_decode($altered_template);
 

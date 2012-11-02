@@ -8,6 +8,7 @@ $s = "SELECT dc.* FROM dental_contact dc
 $q = mysql_query($s);
 while($contact = mysql_fetch_assoc($q)){
   $cid = $contact['contactid'];
+echo $cid;
   $docid = $contact['docid']; 
   $l_sql = "SELECT * from dental_letters where md_list LIKE '%".$cid."%' OR md_referral_list like '%".$cid."%'";
   $l_q = mysql_query($l_sql);
@@ -21,17 +22,15 @@ while($contact = mysql_fetch_assoc($q)){
   $pat_q = mysql_query($pat_sql);
   $pat_num = mysql_num_rows($pat_q); 
   if($l_num==0 && $pat_num==0){
-    create_welcome_letter('1', $cid, $docid);
-    create_welcome_letter('2', $cid, $docid);
+    create_welcome_letters('1', $cid, $docid);
+    create_welcome_letters('2', $cid, $docid);
   }
 }
 
-
 // Function to Create Letters
-function create_welcome_letter ($templateid, $md_list, $docid) {
-
+function create_welcome_letters ($templateid, $md_list, $docid) {
   $gen_date = date('Y-m-d H:i:s');
-  $status = '1';
+  $status = '0';
   $delivered = '0';
   $deleted = '0';
   $columns = "templateid";
@@ -57,7 +56,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
   $values .= ", '$gen_date', '$delivered', '". $docid ."', '". $docid ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
 echo $letter_query;
-  //$letter_insert = mysql_query($letter_query);
+  $letter_insert = mysql_query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
   } else {

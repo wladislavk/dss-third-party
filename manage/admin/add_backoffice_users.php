@@ -5,6 +5,7 @@ include("includes/sescheck.php");
 include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
+require_once 'includes/access.php';
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
@@ -44,6 +45,11 @@ if($_POST["usersub"] == 1)
 				status = '".mysql_real_escape_string($_POST["status"])."' 
 			where adminid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+		
+			if(is_super($_SESSION['admin_access'])){
+                          mysql_query("DELETE FROM admin_company WHERE adminid='".mysql_real_escape_string($_POST["ed"])."'");
+                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+                        }
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -74,6 +80,12 @@ if($_POST["usersub"] == 1)
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $adminid = mysql_insert_id();			
 
+                        if(is_super($_SESSION['admin_access'])){
+                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+                        }else{
+                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($adminid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+                        }
+
 
 			$msg = "Added Successfully";
 			?>
@@ -99,7 +111,9 @@ if($_POST["usersub"] == 1)
 <body>
 
     <?
-    $thesql = "select * from admin where adminid='".$_REQUEST["ed"]."'";
+    $thesql = "select a.*, ac.companyid from admin  a
+		LEFT JOIN admin_company ac ON a.adminid = ac.adminid
+		where a.adminid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
@@ -111,6 +125,7 @@ if($_POST["usersub"] == 1)
 		$email = $_POST['email'];
 		$admin_access = $_POST['admin_access'];
 		$status = $_POST['status'];
+		$companyid = $_POST['companyid'];
 	}
 	else
 	{
@@ -119,6 +134,7 @@ if($_POST["usersub"] == 1)
 		$name = st($themyarray['name']);
 		$email = st($themyarray['email']);
 		$status = st($themyarray['status']);
+		$companyid = st($themyarray['companyid']);
 		$admin_access = $themyarray['admin_access'];
 		$but_text = "Add ";
 	}
@@ -213,6 +229,23 @@ if($_POST["usersub"] == 1)
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
+               Company 
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="companyid" class="tbox">
+			<?php
+			$c_sql = "SELECT * FROM companies ORDER BY name asc";
+			$c_q = mysql_query($c_sql);
+			while($c_r = mysql_fetch_assoc($c_q)){ ?>
+				<option value="<?= $c_r['id']; ?>" <?= ($companyid == $c_r['id'])?'selected="selected"':''; ?>><?= $c_r['name']; ?></option>	
+			<?php } ?>
+                </select>
+            </td>
+        </tr>
+
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
                 Status
             </td>
             <td valign="top" class="frmdata">
@@ -230,8 +263,8 @@ if($_POST["usersub"] == 1)
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["adminid"]?>" />
                 <input type="submit" value=" <?=$but_text?> User" class="button" />
-                <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                <?php if($themyarray["adminid"] != '' && $_SESSION['admin_access']==1){ ?>
+                    <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?=$themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

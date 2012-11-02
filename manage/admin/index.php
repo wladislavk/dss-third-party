@@ -10,7 +10,9 @@ if($_POST["loginsub"] == 1)
       
         $pass = gen_password($_POST['password'], $salt_row['salt']);
 
-	$check_sql = "SELECT * FROM admin where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
+	$check_sql = "SELECT a.*, ac.companyid  FROM admin a 
+		LEFT JOIN admin_company ac ON a.adminid = ac.adminid
+		where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
 	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 
@@ -21,6 +23,8 @@ if($_POST["loginsub"] == 1)
 		$_SESSION['adminuserid']=$check_myarray['adminid'];
                 session_register("admin_access");
                 $_SESSION['admin_access']=$check_myarray['admin_access'];
+		session_register("companyid");
+		$_SESSION['companyid']=$check_myarray['companyid'];
 		?>
 		<script type="text/javascript">
 			window.location.replace('home.php');

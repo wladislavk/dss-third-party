@@ -3,10 +3,8 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "" && is_admin($_SESSION['admin_access']))
 {
-	$del_sql = "delete from admin where adminid='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from companies where id='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
-
-	mysql_query("DELETE FROM admin_company WHERE adminid='".$_REQUEST["delid"]."'");
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -26,7 +24,10 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from admin order by admin_access ASC, username ASC";
+$sql = "select c.*, count(ac.adminid) as num_admin from companies c
+	 LEFT JOIN admin_company ac ON ac.companyid = c.id
+	 group by c.id
+	 order by name ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -41,15 +42,15 @@ $num_users=mysql_num_rows($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Backoffice Users
+	Manage Companies 
 </span>
 <br />
 <br />
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="addButton">
-		Add New Backoffice User
+	<button onclick="Javascript: loadPopup('add_company.php');" class="addButton">
+		Add New Company
 	</button>
 	&nbsp;&nbsp;
 </div>
@@ -71,11 +72,11 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Username	
-		</td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="60%">
 			Name
+		</td>
+		<td valign="top" class="col_head">
+ 			Number of Admins
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Action
@@ -94,30 +95,17 @@ $num_users=mysql_num_rows($my);
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
-			if($myarray["admin_access"] == 1)
-			{
-				$tr_class = "tr_super";
-			}
-			elseif($myarray["admin_access"] == 2)
-			{
-				$tr_class = "tr_admin";
-			}
-                        else
-                        {
-                                $tr_class = "tr_basic";
-                        }
 
 		?>
-			<tr class="<?=$tr_class;?>">
-				<td valign="top">
-					<?=st($myarray["username"]);?>
-				</td>
+			<tr>
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
-						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_backoffice_users.php?ed=<?=$myarray["adminid"];?>');" class="editlink" title="EDIT">
+					<?= st($myarray["num_admin"]); ?>
+				</td>		
+				<td valign="top">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
                     

@@ -5,6 +5,7 @@ include("includes/sescheck.php");
 include_once('includes/password.php');
 include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
+require_once 'includes/access.php';
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -67,9 +68,11 @@ if($_POST["usersub"] == 1)
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
-			mysql_query("DELETE FROM dental_user_admin WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
-			mysql_query("INSERT INTO dental_user_admin SET userid='".mysql_real_escape_string($_POST["ed"])."', adminid='".mysql_real_escape_string($_POST["adminid"])."'");
-			
+			if(is_super($_SESSION['admin_access'])){
+			  mysql_query("DELETE FROM dental_user_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
+			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			}
+
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
@@ -123,8 +126,12 @@ if($_POST["usersub"] == 1)
                         mysql_query($code_sql) or die($code_sql.mysql_error());
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
                         mysql_query($custom_sql) or die($custom_sql.mysql_error());
-
-			mysql_query("INSERT INTO dental_user_admin SET userid='".mysql_real_escape_string($userid)."', adminid='".mysql_real_escape_string($_POST["adminid"])."'");
+			
+			if(is_super($_SESSION['admin_access'])){
+			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			}else{
+  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+			}		
 
 			$msg = "Added Successfully";
 			?>
@@ -150,8 +157,8 @@ if($_POST["usersub"] == 1)
 <body>
 
     <?
-    $thesql = "select u.*, a.adminid from dental_users u 
-		LEFT JOIN dental_user_admin a ON u.userid = a.userid
+    $thesql = "select u.*, c.companyid from dental_users u 
+		LEFT JOIN dental_user_company c ON u.userid = c.userid
 		where u.userid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
@@ -187,7 +194,7 @@ if($_POST["usersub"] == 1)
 		$use_patient_portal = $_POST['use_patient_portal'];
 		$use_digital_fax = $_POST['use_digital_fax'];
 		$use_letters = $_POST['use_letters'];
-		$adminid = $_POST['adminid'];
+		$companyid = $_POST['companyid'];
 	}
 	else
 	{
@@ -220,7 +227,7 @@ if($_POST["usersub"] == 1)
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
-		$adminid = st($themyarray['adminid']);
+		$companyid = st($themyarray['companyid']);
 		$but_text = "Add ";
 	}
 	
@@ -505,22 +512,23 @@ if($_POST["usersub"] == 1)
                 </select>
             </td>
         </tr>
-
+<?php if(is_super($_SESSION['admin_access'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Backoffice User
+                 Admin Company
             </td>
             <td valign="top" class="frmdata">
-                <select name="adminid" class="tbox">
+                <select name="companyid" class="tbox">
 			<?php
-			  $bu_sql = "SELECT * FROM admin WHERE admin_access='".DSS_ADMIN_ACCESS_ADMIN."'";
+			  $bu_sql = "SELECT * FROM companies ORDER BY name ASC";
 			  $bu_q = mysql_query($bu_sql);
 			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
- 			    <option value="<?= $bu_r['adminid']; ?>" <?= ($bu_r['adminid'] == $adminid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+ 			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
 			  <?php } ?>
                 </select>
             </td>
         </tr>
+<?php } ?>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

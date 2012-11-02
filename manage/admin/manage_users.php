@@ -28,8 +28,8 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $sql = "SELECT u.* FROM dental_users u 
-		INNER JOIN dental_user_admin ua ON ua.userid = u.userid
-		WHERE u.user_access=2 AND ua.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+		INNER JOIN dental_user_company uc ON uc.userid = u.userid
+		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'
 		ORDER BY username";
 }
 $my = mysql_query($sql);

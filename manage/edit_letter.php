@@ -13,7 +13,7 @@ if($_GET['backoffice'] == '1') {
 $letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method, status FROM dental_letters where letterid = ".$letterid.";";
+$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method, status, docid FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
 while ($row = mysql_fetch_assoc($letter_result)) {
   $templateid = $row['templateid'];
@@ -26,6 +26,7 @@ while ($row = mysql_fetch_assoc($letter_result)) {
 	$altered_template = $row['template'];
 	$method = $row['send_method'];
   $status = $row['status'];
+  $docid = $row['docid'];
 }
 
 // Pending and Sent Contacts
@@ -172,7 +173,7 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email FROM dental_users WHERE userid = '".$did."';";
+$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;

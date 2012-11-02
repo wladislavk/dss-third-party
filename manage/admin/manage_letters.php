@@ -156,7 +156,7 @@ $oldest_letter = '0';
 }
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -168,7 +168,7 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -196,7 +196,8 @@ if (count($dental_letters) % $page_limit) {
 
 foreach ($dental_letters as $key => $letter) {
   // Get Franchisee Name
-  $franchisee_query = "SELECT dental_users.name FROM dental_users JOIN dental_patients ON dental_patients.docid=dental_users.userid WHERE dental_patients.patientid = '".$letter['patientid']."';";
+  //$franchisee_query = "SELECT dental_users.name FROM dental_users JOIN dental_patients ON dental_patients.docid=dental_users.userid WHERE dental_patients.patientid = '".$letter['patientid']."';";
+  $franchisee_query = "SELECT dental_users.name FROM dental_users WHERE userid='".$letter['docid']."'";
   $result = mysql_query($franchisee_query);
   $dental_letters[$key]['franchisee'] = mysql_result($result, 0);
 	// Get Username

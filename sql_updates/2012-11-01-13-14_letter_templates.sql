@@ -4,9 +4,8 @@ ALTER TABLE dental_letter_templates ADD COLUMN default_letter tinyint(1) not nul
 update dental_letter_templates SET default_letter=1;
 
 UPDATE dental_letter_templates SET body="
-<p>%franchisee_fullname%<br />
-%franchisee_practice%<br />
-%franchisee_addr%
+<p>%company%<br />
+%company_addr%
 </p>
 <p>&nbsp;</p>
 <p>%todays_date%</p>

@@ -19,6 +19,11 @@ CREATE TABLE `admin_company` (
 CREATE TABLE `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255),
+  `add1` varchar(100),
+  `add2` varchar(100),
+  `city` varchar(100),
+  `state` varchar(100),
+  `zip` varchar(15),
   `status` tinyint(1) not null default 0,
   `adddate` datetime,
   `ip_address` varchar(50),

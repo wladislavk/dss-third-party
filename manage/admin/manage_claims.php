@@ -58,7 +58,7 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if(is_super($_SESSION['admin_accss'])){
+if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "

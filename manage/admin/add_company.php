@@ -11,6 +11,11 @@ if($_POST["compsub"] == 1)
 		{
 			$ed_sql = "update companies set 
 				name = '".mysql_real_escape_string($_POST["name"])."',
+                                add1 = '".mysql_real_escape_string($_POST["add1"])."', 
+                                add2 = '".mysql_real_escape_string($_POST["add2"])."', 
+                                city = '".mysql_real_escape_string($_POST["city"])."', 
+                                state = '".mysql_real_escape_string($_POST["state"])."', 
+                                zip = '".mysql_real_escape_string($_POST["zip"])."', 
 				status = '".mysql_real_escape_string($_POST["status"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -31,6 +36,11 @@ if($_POST["compsub"] == 1)
 
 			$ins_sql = "insert into companies set 
 				name = '".mysql_real_escape_string($_POST["name"])."', 
+                                add1 = '".mysql_real_escape_string($_POST["add1"])."', 
+                                add2 = '".mysql_real_escape_string($_POST["add2"])."', 
+                                city = '".mysql_real_escape_string($_POST["city"])."', 
+                                state = '".mysql_real_escape_string($_POST["state"])."', 
+                                zip = '".mysql_real_escape_string($_POST["zip"])."', 
 				status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -68,11 +78,21 @@ if($_POST["compsub"] == 1)
 	if($msg != '')
 	{
 		$name = $_POST['name'];
+		$add1 = $_POST['add1'];
+		$add2 = $_POST['add2'];
+		$city = $_POST['city'];
+		$state = $_POST['state'];
+		$zip = $_POST['zip'];   	
 		$status = $_POST['status'];
 	}
 	else
 	{
 		$name = st($themyarray['name']);
+		$add1 = st($themyarray['add1']);
+                $add2 = st($themyarray['add2']);
+                $city = st($themyarray['city']);
+                $state = st($themyarray['state']);
+                $zip = st($themyarray['zip']);
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
@@ -111,6 +131,51 @@ if($_POST["compsub"] == 1)
             <td valign="top" class="frmdata">
                 <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Address 1
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="add1" type="text" name="add1" value="<?=$add1;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Address 2
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="add2" type="text" name="add2" value="<?=$add2;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                City
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="city" type="text" name="city" value="<?=$city;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                State
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="state" type="text" name="state" value="<?=$state;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Postal Code
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="zip" type="text" name="zip" value="<?=$zip;?>" class="tbox" />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

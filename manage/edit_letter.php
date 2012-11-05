@@ -179,6 +179,18 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
 
+
+// Get Company Name and Address
+$company_query = "SELECT c.* FROM companies c 
+		JOIN dental_user_company uc ON c.id = uc.companyid
+		WHERE uc.userid = '".$docid."';";
+echo $company_query;
+$company_result = mysql_query($company_query);
+while ($row = mysql_fetch_assoc($company_result)) {
+        $company_info = $row;
+}
+
+
 // Consult Appointment Date
 $consult_query = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 2 ORDER BY stepid DESC LIMIT 1;";
 $consult_result = mysql_query($consult_query);
@@ -731,6 +743,10 @@ if ($_POST != array()) {
 		}else{
          	       $replace[] = "";
        		} 
+                $search[] = "%company%";
+                $replace[] = "<strong>" . $company_info['name'] . "</strong>";
+                $search[] = "%company_addr%";
+                $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
 		$search[] = "%franchisee_fullname%";
 		$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 		$search[] = "%franchisee_lastname%";
@@ -1148,6 +1164,11 @@ foreach ($letter_contacts as $key => $contact) {
 	}else{
 		$replace[] = "";
 	} 
+                $search[] = "%company%";
+                $replace[] = "<strong>" . $company_info['name'] . "</strong>";
+                $search[] = "%company_addr%";
+                $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
+
 	$search[] = "%franchisee_fullname%";
 	$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
 	$search[] = "%franchisee_lastname%";

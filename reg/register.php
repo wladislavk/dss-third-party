@@ -19,6 +19,7 @@ include 'includes/completed.php';
                 $(document).ready(function(){
                                 //lga_fusionCharts.chart_k();
                                 lga_wizard.init();
+
                         });
         </script>
 
@@ -568,7 +569,7 @@ include 'includes/completed.php';
                         <label class="lbl_a"><strong>6i.</strong> Email</label>
                         <input class="inpt_a" id="s_m_ins_email" name="s_m_ins_email" type="text" value="<?= $s_m_r['email']; ?>" />     
                 </div>
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a validate" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">

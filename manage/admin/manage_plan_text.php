@@ -54,16 +54,29 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 <form name="planfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
+		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head">
 			Enter Plan/Progress Text:
 			<textarea name="plan_text" style="width:99%; height:200px;"><?=st($myarray['plan_text']);?></textarea>
 		</td>
+			
+                        <?php }else{ ?>
+				                <td valign="top" class="col_head">
+                        Enter Plan/Progress Text:
+				</td></tr>
+				<tr><td valign="top">
+                                <?= $myarray['plan_text']; ?>
+			</td>
+                        <?php } ?>
+
 	</tr>
 	<tr>
 		<td valign="top" align="center">
+			<?php if(is_super($_SESSION['admin_access'])){ ?>
 			<input type="hidden" name="ed" value="<?=st($myarray['plan_textid']);?>" />
 			<input type="hidden" name="plansub" value="1" />
 			<input type="submit" name="planbtn" value="Submit" />
+			<?php } ?>
 		</td>
 	</tr>
 </table>

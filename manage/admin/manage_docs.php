@@ -2,8 +2,7 @@
 include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
-if(isset($_GET['delid'])){
-
+if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
 $del = "DELETE FROM dental_document WHERE documentid='".mysql_real_escape_string($_GET['delid'])."'";
 mysql_query($del);
 
@@ -51,6 +50,7 @@ if(isset($_POST['add_doc'])){
 
 <span class="admin_head">Documents</span>
 
+<?php if(is_super($_SESSION['admin_access'])){ ?>
 <strong>Add Document</strong> 
 <form action="#" method="post" enctype="multipart/form-data">
 <label>Name:</label> <input type="text" name="name" />
@@ -70,7 +70,7 @@ if(isset($_POST['add_doc'])){
 <label>File:</label> <input type="file" name="attachment" />
 <input type="submit" name="add_doc" value="Add" />
 </form>
-
+<?php } ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
@@ -107,7 +107,9 @@ if(isset($_POST['add_doc'])){
                 </td>
 		<?php } ?>
                 <td>
+			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" />Edit</a>
+			<?php } ?>
                         <a target="_blank" href="../q_file/<?= $doc['filename']; ?>">View</a>
                 </td>
         </tr>

@@ -3,7 +3,7 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
-if(isset($_GET['delid']) && $_SESSION['admin_access']==1){
+if(isset($_GET['delid']) && is_super($_SESSION['admin_access'])){
 
 $del = "DELETE FROM dental_document_category WHERE categoryid='".mysql_real_escape_string($_GET['delid'])."'";
 mysql_query($del);
@@ -37,13 +37,14 @@ if(isset($_POST['add_cat'])){
 
 <span class="admin_head">Categories</span>
 
+<?php if(is_super($_SESSION['admin_access'])){ ?>
 <strong>Add Category</strong>
 <form action="#" method="post">
 <label>Name:</label> <input type="text" name="name" />
 <label>Active:</label> <input type="checkbox" name="status" value="1" checked="checked" />
 <input type="submit" name="add_cat" value="Add" />
 </form>
-
+<?php } ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
@@ -72,7 +73,9 @@ if(isset($_POST['add_cat'])){
 			<?= ($cat['status'])?'Active':'Inactive'; ?>
                 </td>
 		<td>
+			<?php if(is_super($_SESSION['admin_access'])){ ?>
 			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>">Edit</a>
+			<?php } ?>
 			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>">View</a>
 		</td>
         </tr>

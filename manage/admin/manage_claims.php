@@ -57,6 +57,8 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
+
+if(is_super($_SESSION['admin_accss'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
@@ -80,7 +82,32 @@ $sql = "SELECT "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
-    
+}else{
+$sql = "SELECT "
+     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
+     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.primary_fdf, claim.secondary_fdf, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     //. "  dif.filename as eob, " 
+     . "  CASE claim.status 
+                WHEN ".DSS_CLAIM_PENDING." THEN 1
+                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
+                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
+                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
+                WHEN ".DSS_CLAIM_SENT." THEN 5
+                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
+                WHEN ".DSS_CLAIM_REJECTED." THEN 7
+                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
+                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
+                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
+       END AS status_order "
+     . "FROM "
+     . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
+     . "  JOIN dental_users users ON claim.docid = users.userid "
+     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'"
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+}
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 
 // filter based on select lists above table

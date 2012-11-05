@@ -44,14 +44,14 @@ $num_users=mysql_num_rows($my);
 <br />
 <br />
 
-
+<?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_custom_text.php');" class="addButton">
 		Add New Custom Text
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<?php } ?>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -113,10 +113,11 @@ $num_users=mysql_num_rows($my);
 				</td>
 						
 				<td valign="top">
+					<?php if(is_super($_SESSION['admin_access'])){ ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_custom_text.php?ed=<?=$myarray["customid"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
-                    
+                   			<?php } ?> 
 				</td>
 			</tr>
 	<? 	}

@@ -88,13 +88,23 @@ if(isset($_REQUEST['order_submit'])){
 								ORDER BY next_order ASC, step.section ASC, step.sort_by ASC";
 							$next_q = mysql_query($next_sql);
 							while($next = mysql_fetch_assoc($next_q)){ ?>
+								<?php if(is_super($_SESSION['admin_access'])){ ?>
 								<input name="next_<?= $next['id']; ?>" type="text" maxlength="2" style="width:20px;" value="<?= $next['next_order']; ?>" />
-								<?= $next['name']; ?>		
-								<br />
+								<?= $next['name']; ?>
+									<br />
+								<?php }else{ ?>
+									<?php if($next['next_order']){ ?>
+									<?= $next['next_order']; ?>
+									<?= $next['name']; ?>
+									<br />
+									<?php } ?>
+								<?php } ?>
 					<?php		}
 						?>
+						<?php if(is_super($_SESSION['admin_access'])){ ?>
 						<input type="hidden" name="parent_id" value="<?= $myarray['id']; ?>" />
 						<input type="submit" name="order_submit" value="Save order" />
+						<?php } ?>
 						</form>
 					</div>
 
@@ -102,7 +112,11 @@ if(isset($_REQUEST['order_submit'])){
 						
 				<td valign="top">
 					<a href="Javascript:;"  onclick="$('#next_<?= $myarray['id'];?>').toggle()" class="editlink" title="EDIT">
-						Change Next	
+						<?php if(is_super($_SESSION['admin_access'])){ ?>
+							Change Next	
+						<?php }else{ ?>
+							View Next
+						<?php } ?>
 					</a>
                     
 				</td>

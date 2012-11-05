@@ -41,7 +41,13 @@ if(isset($_GET['bounce'])){
 
 if(isset($_REQUEST['email'])){
 
-	$s = "SELECT * FROM dental_patients WHERE email like '%".$_REQUEST['email']."%' AND parent_patientid IS NULL ORDER BY email ASC";
+	if(is_super($_SESSION['admin_access'])){
+	  $s = "SELECT * FROM dental_patients WHERE email like '%".$_REQUEST['email']."%' AND parent_patientid IS NULL ORDER BY email ASC";
+	}else{
+	  $s = "SELECT p.* FROM dental_patients p 
+		JOIN dental_user_company uc ON uc.userid = p.docid
+		WHERE uc.companyid = '".mysql_real_escape_string($_SESSION['companyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
+	}
 	$q = mysql_query($s);
 	if(mysql_num_rows($q)==0){
 		?><h3>NO RESULTS</h3><?php

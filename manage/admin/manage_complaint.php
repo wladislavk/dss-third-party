@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_complaint where complaintid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -68,13 +68,14 @@ if($_POST['sortsub'] == 1)
 <br />
 <br />
 
-
+<?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_complaint.php');" class="addButton">
 		Add New Chief Complaint
 	</button>
 	&nbsp;&nbsp;
 </div>
+<?php } ?>
 
 <br />
 <div align="center" class="red">
@@ -134,14 +135,19 @@ if($_POST['sortsub'] == 1)
 				</td>
 				
 				<td valign="top" align="center">
-					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					<? if(is_super($_SESSION['admin_access'])){ ?>
+					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					<?php }else{ ?>
+					  <?= $myarray['sortby']; ?>
+					<?php } ?>
 				</td>	
 						
 				<td valign="top">
+					<? if(is_super($_SESSION['admin_access'])){ ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_complaint.php?ed=<?=$myarray["complaintid"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
-                    
+                    			<?php } ?>
 				</td>
 			</tr>
 	<? 	}
@@ -151,8 +157,10 @@ if($_POST['sortsub'] == 1)
 				
 			</td>
 			<td valign="top" class="col_head" colspan="4">
+				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />
 				<input type="submit" value=" Change " class="button" />
+				<?php } ?>
 			</td>
 		</tr>
 		<?

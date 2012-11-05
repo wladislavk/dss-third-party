@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_fcontact where contactid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -44,14 +44,14 @@ $num_contact=mysql_num_rows($my);
 <br />
 <br />
 &nbsp;
-
+<?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_fcontact.php');" class="addButton">
 		Add Franchise or Corporate Contact
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<?php } ?>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -113,10 +113,11 @@ $num_contact=mysql_num_rows($my);
 					<?=st($myarray["company"]);?>
 				</td>
 				<td valign="top">
+					<?php if(is_super($_SESSION['admin_access'])){ ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_fcontact.php?ed=<?=$myarray["contactid"];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
-                    
+                    			<?php } ?>
 				</td>
 			</tr>
 	<? 	}

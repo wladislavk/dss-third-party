@@ -32,7 +32,14 @@ WHERE du.docid=0
  group by du.name, du.username, du.userid";
 echo $sql;
 */
-$sql = "SELECT * FROM dental_users du WHERE du.docid=0";
+if(is_super($_SESSION['admin_access'])){
+  $sql = "SELECT du.* FROM dental_users du 
+                WHERE du.docid=0";
+}else{
+  $sql = "SELECT du.* FROM dental_users du 
+		JOIN dental_user_company uc ON uc.userid = du.userid
+		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'";
+}
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

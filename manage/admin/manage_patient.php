@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."' OR parent_patientid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -25,8 +25,8 @@ if(is_super($_SESSION['admin_access'])){
 $doc_sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $doc_sql = "SELECT u.* FROM dental_users u 
-                INNER JOIN dental_user_admin ua ON ua.userid = u.userid
-                WHERE u.user_access=2 AND ua.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'
+                INNER JOIN dental_user_company uc ON uc.userid = u.userid
+                WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'
                 ORDER BY username";
 }
 

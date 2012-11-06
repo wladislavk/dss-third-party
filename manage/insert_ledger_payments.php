@@ -80,6 +80,52 @@ $image_sql = "INSERT INTO dental_insurance_file (
                 )";
      mysql_query($image_sql);    
 }
+  }elseif($claim['status']==DSS_CLAIM_PAID_PATIENT){
+    $new_status = DSS_CLAIM_PATIENT_DISPUTE;
+    $msg = 'Disputed Primary Insurance';
+if($_FILES["attachment"]["name"]!=''){
+$image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+                claimtype,
+                filename,
+                description,
+                status,
+                adddate,
+                ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'primary',
+                '".$banner1."',
+                '".mysql_escape_string($_POST['dispute_reason'])."',
+                '".$new_status."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);
+}
+  }elseif($claim['status']==DSS_CLAIM_PAID_SEC_PATIENT){
+    $new_status = DSS_CLAIM_SEC_PATIENT_DISPUTE;
+    $msg = 'Disputed Secondary Insurance';
+if($_FILES["attachment"]["name"]!=''){
+$image_sql = "INSERT INTO dental_insurance_file (
+                claimid,
+                claimtype,
+                filename,
+                description,
+                status,
+                adddate,
+                ip_address)
+              VALUES (
+                ".mysql_real_escape_string($_POST['claimid']).",
+                'secondary',
+                '".$banner1."',
+                '".mysql_escape_string($_POST['dispute_reason'])."',
+                '".$new_status."',
+                now(),
+                '".s_for($_SERVER['REMOTE_ADDR'])."'
+                )";
+     mysql_query($image_sql);
+}
   }
 }else{
 

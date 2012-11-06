@@ -116,9 +116,9 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
 	if($_REQUEST['status'] == DSS_CLAIM_PENDING){
-	   	$sql .= " claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.") ";
+	   	$sql .= " claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
 	}elseif($_REQUEST['status'] == DSS_CLAIM_SENT){
-                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.") ";
+                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
         }else{
         	$sql .= "  claim.status = " . $_REQUEST['status'] . " ";
 	}
@@ -302,7 +302,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					while($eobr = mysql_fetch_assoc($eobq)){
 						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" class="editlink" title="EDIT">View <?= $eobr['claimtype']; ?> EOB</a>
 				<?php } ?>
-<?php if($myarray['status'] == DSS_CLAIM_DISPUTE){
+<?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
             if(mysql_num_rows($sq)>0){
@@ -313,7 +313,7 @@ $my=mysql_query($sql) or die(mysql_error());
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
 
         <?php } 
-          }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE){
+          }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
             if(mysql_num_rows($sq)>0){

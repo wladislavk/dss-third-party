@@ -1,0 +1,6 @@
+body{ background: #CFE6F7; }
+.progress li{ padding:2px 0; }
+.progress .details { font-size:12px; }
+.progress a{ padding-left:20px; font-size: 16px;}
+.progress .complete { background: url(../images/ok_ico.png) no-repeat 0 2px; color:#000;}
+.progress .incomplete{ background: url(../images/error_ico.png) no-repeat 0 2px; color:#900; }

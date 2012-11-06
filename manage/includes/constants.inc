@@ -240,6 +240,9 @@ $dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_ADMIN] = "Admin User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";
 
+define('DSS_USER_ACCESS_STAFF', 1);
+define('DSS_USER_ACCESS_DOCTOR', 2);
+
 define('DSS_PERCASE_PENDING', 0);
 define('DSS_PERCASE_INVOICED', 1);
 

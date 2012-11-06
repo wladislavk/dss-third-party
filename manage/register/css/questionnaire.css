@@ -1,0 +1,19 @@
+.fifth{ width:19%; float:left; display:block;}
+.third{ width:32%; float:left; display:block;}
+.half{width:49%; float:left; display:block;}
+.half.num{width:44%;}
+.half.string{width:55%;}
+.formEl_a .fifth .inpt_a{ width:150px; }
+.formEl_a .third .inpt_a{ width:200px; }
+.formEl_a .half .inpt_a{ width: 300px; }
+.formEl_a .half.num .lbl_in{width:325px; display:block; float:left; padding-top:6px;}
+.formEl_a .half.num .inpt_in{width:50px; float:left;}
+.formEl_a .half.string .lbl_in{width:315px; display:block; float:left; padding-top:6px;}
+.formEl_a .half.string .inpt_in{width:180px; float:left;}
+.formEl_a .half .lbl_in{ width:355px; text-align:right; display:block; float:left; padding-right:7px;padding-top:6px;}
+.formEl_a .half .inpt_in{width:70px; float:left;}
+.formEl_a .half .lbl_in2{ width:255px; text-align:right; display:block; float:left; padding-right:7px;padding-top:6px;}
+.formEl_a .half .inpt_in2{width:150px; float:left;}
+.legend{ width:300px; margin:10px auto; border:solid 1px #ccc; padding:10px;}
+
+.confirm_text { font-size:14px; }

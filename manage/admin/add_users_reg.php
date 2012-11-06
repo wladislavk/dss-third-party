@@ -1,0 +1,181 @@
+<?php 
+session_start();
+require_once('includes/config.php');
+include("includes/sescheck.php");
+include_once('includes/password.php');
+include_once '../includes/general_functions.php';
+require_once '../includes/constants.inc';
+require_once 'includes/access.php';
+if($_POST["usersub"] == 1)
+{
+	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
+	$query_check=mysql_query($sel_check);
+        $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
+        $query_check2=mysql_query($sel_check2);
+
+	if(mysql_num_rows($query_check)>0)
+	{
+		$msg="Username already exist. So please give another Username.";
+		?>
+		<script type="text/javascript">
+			alert("<?=$msg;?>");
+			window.location="#add";
+		</script>
+		<?
+	} 
+	elseif(mysql_num_rows($query_check2)>0)
+        {
+                $msg="Email already exist. So please give another Email.";
+                ?>
+                <script type="text/javascript">
+                        alert("<?=$msg;?>");
+                        window.location="#add";
+                </script>
+                <?
+        }
+        else
+	{
+
+			$recover_hash = hash('sha256', $r['patientid'].$_POST['email'].rand());
+
+			$ins_sql = "insert into dental_users set user_access=".DSS_USER_ACCESS_DOCTOR.",
+				name = '".s_for($_POST["name"])."', 
+				email = '".s_for($_POST["email"])."', 
+				use_patient_portal = '0',
+				use_digital_fax = '0',
+				use_letters = '0',
+				status = '2',
+				recover_hash='".$recover_hash."',
+				recover_time=NOW(),
+				adddate=now(),
+				ip_address='".$_SERVER['REMOTE_ADDR']."'";
+			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+                        $userid = mysql_insert_id();			
+                        $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
+                        mysql_query($code_sql) or die($code_sql.mysql_error());
+                        $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
+                        mysql_query($custom_sql) or die($custom_sql.mysql_error());
+			
+			if(is_super($_SESSION['admin_access'])){
+			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
+			}else{
+  			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+			}		
+		
+			//send registration email.
+  $m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td width='400'>
+<h2>Register</h2><p>Please click the following link to register.</p>
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register.php?id=".$userid."&hash=".$recover_hash."</a></p>
+</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td>
+<h3>Didn't request this change or need assistance?</h3>
+<p><b>Contact us at ".$n." or at<br>
+patient@dentalsleepsolutions.com</b></p></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+</table>
+</center></body></html>
+";
+$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Content-type: text/html' ."\r\n" .
+                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "Dental Sleep Solutions Account Activation";
+                $mail = mail($_POST['email'], $subject, $m, $headers);
+
+			$msg = "Added Successfully";
+			?>
+			<script type="text/javascript">
+				//alert("<?=$msg;?>");
+				parent.window.location='manage_users.php?msg=<?=$msg;?>';
+			</script>
+			<?
+			die();
+	}
+}
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+</head>
+<body>
+	<?php
+		$name = $_POST['name'];
+		$email = $_POST['email'];
+		$companyid = $_POST['companyid'];
+	?>
+	
+	<br /><br />
+	
+	<? if($msg != '') {?>
+    <div align="center" class="red">
+        <? echo $msg;?>
+    </div>
+    <? }?>
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
+    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+        <tr>
+            <td colspan="2" class="cat_head">
+               Add User 
+               <? if($name <> "") {?>
+               		&quot;<?=$name;?>&quot;
+               <? }?>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Email
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+<?php if(is_super($_SESSION['admin_access'])){ ?>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 Admin Company
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="companyid" class="tbox">
+			<?php
+			  $bu_sql = "SELECT * FROM companies ORDER BY name ASC";
+			  $bu_q = mysql_query($bu_sql);
+			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+ 			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+			  <?php } ?>
+                </select>
+            </td>
+        </tr>
+<?php } ?>
+        <tr>
+            <td  colspan="2" align="center">
+                <span class="red">
+                    * Required Fields					
+                </span><br />
+                <input type="hidden" name="usersub" value="1" />
+                <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
+                <input type="submit" value=" Add User" class="button" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

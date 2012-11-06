@@ -1,7 +1,7 @@
 <? 
 include "includes/top.htm";
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
+if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -51,6 +51,12 @@ $num_users=mysql_num_rows($my);
 <br />
 <br />
 
+<div align="right">
+        <button onclick="Javascript: loadPopup('add_users_reg.php');" class="addButton">
+                Add New Registration User
+        </button>
+        &nbsp;&nbsp;
+</div>
 
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_users.php');" class="addButton">
@@ -130,6 +136,10 @@ $num_users=mysql_num_rows($my);
 			{
 				$tr_class = "tr_active";
 			}
+			elseif($myarray["status"] == 2)
+			{
+				$tr_class = "tr_unregistered";
+			}
 			else
 			{
 				$tr_class = "tr_inactive";
@@ -147,12 +157,14 @@ $num_users=mysql_num_rows($my);
 				</td>
 				
 				<td valign="top">
+					<?php if($myarray['status']!=2){ ?>
 					<form action="login_as.php" method="post" target="Doctor_Login">
 						<input type="hidden" name="username" value="<?=st($myarray["username"]);?>">
 						<input type="hidden" name="password" value="<?=st($myarray["password"]);?>">
 			            <input type="hidden" name="loginsub" value="1">
 			            <input type="submit" name="btnsubmit" value=" Login " class="addButton">			
 					</form>
+					<?php } ?>
 				</td>
 			           <td valign="top" align="center">
                     <a href="manage_locations.php?docid=<?=$myarray["userid"];?>" class="dellink" title="locations">

@@ -49,6 +49,28 @@ if($_REQUEST["delid"] != ""  && $_SESSION['admin_access']==1) {
 	die();
 }
 
+if($_REQUEST['sendid']!=''){
+  $sendid = $_REQUEST['sendid'];
+  $send_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+  $send_q = mysql_query($send_sql);
+  $send_r = mysql_fetch_assoc($send_q);
+  $status = $send_r['status'];
+  if($status == DSS_CLAIM_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }
+
+}
+
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -311,8 +333,10 @@ $my=mysql_query($sql) or die(mysql_error());
 
            <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-
-        <?php } 
+		<br />
+	 <?php } ?>
+		<a href="manage_claims.php?sendid=<?= $myarray['insuranceid']; ?>">Resend</a>
+	 <?php
           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
@@ -322,8 +346,9 @@ $my=mysql_query($sql) or die(mysql_error());
 
            <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-
+	   <br />
         <?php }
+		?><a href="manage_claims.php?sendid=<?= $myarray['insuranceid']; ?>">Resend</a><?php
            } ?>
 
 				</td>

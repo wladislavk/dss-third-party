@@ -138,8 +138,13 @@ $image_sql = "INSERT INTO dental_insurance_file (
       if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
 
         if($pat['p_m_ins_type']==1){ //medicare
-	  $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
-          $new_status = DSS_CLAIM_SEC_SENT;
+	  if($pat['s_m_ins_ass']=="Yes"){
+	    $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
+            $new_status = DSS_CLAIM_SEC_SENT;
+	  }else{
+            $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Paid to Patient".';
+            $new_status = DSS_CLAIM_PAID_SEC_PATIENT;
+          }
         }else{
 	  $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
           $new_status = DSS_CLAIM_SEC_PENDING;

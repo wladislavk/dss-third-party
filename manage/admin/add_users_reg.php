@@ -68,7 +68,7 @@ if($_POST["usersub"] == 1)
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Register</h2><p>Please click the following link to register.</p>
-<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register.php?id=".$userid."&hash=".$recover_hash."</a></p>
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/register.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/managei/register/register.php?id=".$userid."&hash=".$recover_hash."</a></p>
 </td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td>
 <h3>Didn't request this change or need assistance?</h3>

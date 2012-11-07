@@ -20,8 +20,12 @@ include 'includes/completed.php';
         </script>
 
 <?php
-  $sql = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($_GET['id'])."'";
+  $sql = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($_GET['id'])."' AND recover_hash='".mysql_real_escape_string($_GET['hash'])."'";
   $q = mysql_query($sql);
+if(mysql_num_rows($q) == 0){
+  ?><h3>User not found</h3><?php
+  die();
+}
   $p = mysql_fetch_assoc($q);
 ?>
 				<div id="content_wrapper">
@@ -29,22 +33,18 @@ include 'includes/completed.php';
 
 						<h2 class="sepH_c">Step-by-Step User Registration</h2>
 	<form action="register.php" id="register_form" method="post">
-		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
+		<input type="hidden" id="userid" name="userid" value="<?= $_GET['id']; ?>" />
+                <input type="hidden" id="hash" name="hash" value="<?= $_GET['hash']; ?>" />
 							<ul id="status" class="cf">
 							<?php $pagenum = 1; ?>
-							<?php if(!$p['registered']){ ?>
 								<li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
-							<?php } ?>
-								<li <?= (!$p['registered'])?'':'class="active"'; ?>><span class="large"><?= $pagenum++; ?>. Contact Info</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. Personal Info</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. Insurance</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. 2nd Insurance</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. Employer</span></li>
-								<li><span class="large"><?= $pagenum++; ?>. Contacts</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Contact Info</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Mailing Info</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Additional Info</span></li>
+								<li><span class="large"><?= $pagenum++; ?>. Login Info</span></li>
 							</ul>
 							<div id="register" class="wizard" style="height:1400px;">
 								<div class="items formEl_a">
-                                                        <?php if(!$p['registered']){ ?>
                                                                         <div class="page">
                                                                                 <div class="pageInside">
                                                                                         <div class="cf">
@@ -61,13 +61,11 @@ include 'includes/completed.php';
 											</div>
 										</div>
 																						
-<?php } ?>
-
 									<div class="page">
 										<div class="pageInside">
 											<div class="cf">
 												<div class="dp25">
-													<h3 class="sepH_a">Welcome!</h3>
+													<h3 class="sepH_a">Conact Information</h3>
 													<p class="s_color small">Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
 												</div>
 												<div class="dp75">
@@ -87,13 +85,13 @@ include 'includes/completed.php';
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>4.</strong> Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?= $p['fax']; ?>" />
                 </div>
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>5.</strong> Address 1: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="add1" value="<?= $p['add1']; ?>" />
+                <div class="sepH_b half clear">
+                        <label class="lbl_a"><strong>5.</strong> Practice: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="practice" value="<?= $p['practice']; ?>" />
                 </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>6.</strong> Address 2:</label><input class="inpt_a" type="text" name="add2" value="<?= $p['add2']; ?>" />
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6.</strong> Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="address" value="<?= $p['address']; ?>" />
                 </div>
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>7.</strong> City: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="city" value="<?= $p['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
@@ -171,429 +169,36 @@ include 'includes/completed.php';
                                                                                 <div class="pageInside">
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
-                                                                                                        <h3 class="sepH_a">Personal Information</h3>
+                                                                                                        <h3 class="sepH_a">Mailing Information</h3>
                                                                                                         <p class="s_color small">This information helps us verify your insurance coverage and allows us to contact someone you designate in the event of an emergency.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
-                <div class="sepH_b half" id="dob_div">
-                        <label class="lbl_a"><strong>1.</strong> Birthday:</label>
-				<?php
-					if($p['dob']!=''){
-						$dob_month = date('m', strtotime($p['dob']));
-                                        	$dob_day = date('j', strtotime($p['dob']));
-                                        	$dob_year = date('Y', strtotime($p['dob']));
-					}else{
-						$dob_month = '';
-                                                $dob_day = '';
-                                                $dob_year = '';
-					}
-				?>
-                                <select class="validate" id="dob_month" name="dob_month">
-                                        <option <?= ($dob_month=='')?'selected="selected"':''; ?> value=''>Month</option>
-                                        <?php
-                                                for($i=1;$i<=12;$i++){ ?>
-                                                        <option <?= (($dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }
-                                        ?>
-                                </select>
-                                <select class="validate" id="dob_day" name="dob_day">
-                                        <option value=''>Day</option>
-                                        <?php
-                                                for($i=1;$i<=31;$i++){ ?> 
-                                                     <option <?= (($dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }                                        
-                                        ?>
-                                </select>
-                                <select class="validate" id="dob_year" name="dob_year">
-                                        <option value=''>Year</option>
-                                        <?php               
-                                        for($i=(date('Y'))-10;$i>=1902;$i--){ ?>                                                                                                                
-						<option <?= (($dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>                                 
-                                        <?php }  
-                                        ?>
-                                </select>
-
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>1.</strong> Mailing Practice Name:</label>
+			<input class="inpt_a" type="text" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
 		</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Gender:</label><select class="inpt_a validate" name="gender">
-				<option value=''>Select</option>
-				<option value="Male" <?= ($p['gender']=="Male")?'selected="selected"':'';?>>Male</option>
-                                <option value="Female" <?= ($p['gender']=="Female")?'selected="selected"':'';?>>Female</option>
-				</select>
-                </div>
-                <div class="sepH_b clear half">
-                        <label class="lbl_a"><strong>3.</strong> Marital Status:</label><select class="inpt_a validate" name="marital_status">
-                                <option value=''>Select</option>
-                                <option value="Married" <?= ($p['marital_status']=="Married")?'selected="selected"':'';?>>Married</option>
-                                <option value="Single" <?= ($p['marital_status']=="Single")?'selected="selected"':'';?>>Single</option>
-                                <option value="Life Partner" <?= ($p['marital_status']=="Life Partner")?'selected="selected"':'';?>>Life Partner</option>
-				<option value="Minor" <?= ($p['marital_status']=="Minor")?'selected="selected"':'';?>>Minor</option>
-                                </select>
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Spouse/Partner Name:</label><input class="inpt_a" type="text" name="partner_name" value="<?= $p['partner_name']; ?>" />
+                        <label class="lbl_a"><strong>2.</strong> Mailing Name:</label>
+                        <input class="inpt_a" type="text" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>5.</strong> Social Security #:</label><input class="inpt_a validate ssnmask" type="text" name="ssn" value="<?= $p['ssn']; ?>" />
+                        <label class="lbl_a"><strong>3.</strong> Mailing Phone:</label>
+                        <input class="inpt_a phonemask" type="text" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6.</strong> Prefered Method of Contact:</label><select class="inpt_a validate" name="preferredcontact">
-                                <option value="paper" <?= ($p['preferredcontact']=="paper")?'selected="selected"':'';?>>Paper Mail</option>
-                                <option value="email" <?= ($p['preferredcontact']=="email")?'selected="selected"':'';?>>Email</option>
-                                </select>
+                        <label class="lbl_a"><strong>4.</strong> Mailing Address:</label>
+                        <input class="inpt_a" type="text" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7.</strong> Emergency Contact Name:</label><input class="inpt_a" type="text" name="emergency_name" value="<?= $p['emergency_name']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Mailing City:</label>
+			<input class="inpt_a" type="text" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>8.</strong> Emergency Contact Relationship:</label><input class="inpt_a" type="text" name="emergency_relationship" value="<?= $p['emergency_relationship']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Emergency Contact Number:</label><input class="inpt_a  extphonemask" type="text" name="emergency_number" value="<?= $p['emergency_number']; ?>" />
-		</div>
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>10.</strong> Do you have medical insurance?</label>
-			<?php
-			  if($p['has_p_m_ins']=='' && $p['p_m_ins_co']!=''){
-			    $p['has_p_m_ins'] = "Yes";
-			  }
-			?>
-                        <input class="validate" onclick="updateNext('Yes', 1);" type="radio" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes
-                        <input onclick="updateNext('No', 1);" type="radio" id="has_p_m_ins_no" name="has_p_m_ins" <?= ($p['has_p_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
-                </div>
-                                                                                                                <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<a href="javascript:void(0)" id="ins1Next1" class="fr next btn btn_d" <?= ($p['has_p_m_ins']=="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
-<a href="javascript:void(0)" id="ins1Next3" class="fr next3 btn btn_d" <?= ($p['has_p_m_ins']!="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
-                                                                                                                </div>
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-
-
-                                                                        <div class="page">
-                                                                                <div class="pageInside">
-                                                                                        <div class="cf">
-                                                                                                <div class="dp25">
-                                                                                                        <h3 class="sepH_a">Medical Insurance</h3>
-                                                                                                        <p class="s_color small">Please complete all fields on this page to allow Dental Sleep Solutions to verify your medical insurance coverage.  Failure to accurately complete these fields may result in insurance delays and even denial of coverage.  Refer to your medical insurance card for this information.</p>
-                                                                                                </div>
-                                                                                                <div class="dp75">
-                                                                                                        <div>
-                                                                                                                <div class="form_errors" style="display:none"></div>
- 
-                <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>1.</strong> Do you have Medicare?</label>
-				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
-				<input type="radio" name="p_m_ins_type" class="validate" value="7" <?= ($p['p_m_ins_type'] != '' && $p['p_m_ins_type'] != 'Select Type' && $p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
-                </div>
-                <div class="sepH_b">
-                        <label id='p_m_ins_description' class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your <?= ($p['p_m_ins_type'] == '1')?'MEDICARE ':'';?>insurance card.</label>
-                </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>2.</strong> Your relationship to primary insured:</label><select class="inpt_a validate" id="p_m_relation" name="p_m_relation" class="field text addr tbox" style="width:200px;">
-                                                                        <option value="" <? if($p['p_m_relation'] == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($p['p_m_relation'] == 'Self') echo " selected";?>>Self</option>      
-                                            				<option value="Spouse" <? if($p['p_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($p['p_m_relation'] == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($p['p_m_relation'] == 'Other') echo " selected";?>>Other</option>
-                                                                </select>
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>3.</strong> Insured First Name:</label><input class="inpt_a validate" id="p_m_partyfname" name="p_m_partyfname" type="text" value="<?=$p['p_m_partyfname']?>" maxlength="255" />
-		</div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Insured Middle Name:</label><input class="inpt_a" id="p_m_partymname" name="p_m_partymname" type="text" value="<?=$p['p_m_partymname']?>" maxlength="255" />
-		</div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> Insured Last Name:</label><input class="inpt_a validate" id="p_m_partylname" name="p_m_partylname" type="text" value="<?=$p['p_m_partylname']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b clear" id="ins_dob_div">
-                        <label class="lbl_a"><strong>6.</strong> Insured Date of Birth:</label>
-                                <?php
-					if($p['ins_dob']!=''){
-                                        	$ins_dob_month = date('m', strtotime($p['ins_dob']));
-                                        	$ins_dob_day = date('j', strtotime($p['ins_dob']));
-                                        	$ins_dob_year = date('Y', strtotime($p['ins_dob']));
-					}else{
-						$ins_dob_month = '';
-                                                $ins_dob_day = '';
-                                                $ins_dob_year = '';
-					}
-                                ?>
-                                <select id="ins_dob_month" name="ins_dob_month" class="validate">
-                                        <option value=''>Month</option>
-                                        <?php
-                                                for($i=1;$i<=12;$i++){ ?>
-                                                        <option <?= (($ins_dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }
-                                        ?>
-                                </select>
-                                <select id="ins_dob_day" name="ins_dob_day" class="validate">
-                                        <option value=''>Day</option>
-                                        <?php
-                                                for($i=1;$i<=31;$i++){ ?>
-                                                     <option <?= (($ins_dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }
-                                        ?>
-                                </select>
-                                <select id="ins_dob_year" name="ins_dob_year" class="validate">
-                                        <option value=''>Year</option>
-                                        <?php
-                                        for($i=(date('Y'))-12;$i>=1915;$i--){ ?>                                                                                                    
-                                                <option <?= (($ins_dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                        <?php }
-                                        ?>
-                                </select>
-
-       	  	</div>
-			<?php
-				$p_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='1' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-				$p_m_q = mysql_query($p_m_sql);
-				$p_m_r = mysql_fetch_assoc($p_m_q);
-                                if(mysql_num_rows($p_m_q)=='0'){
-                                        $p_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                        $p_m_q = mysql_query($p_m_sql);
-                                        $p_m_r = mysql_fetch_assoc($p_m_q);
-                                }
-
-			?>
-			<input type="hidden" id="p_m_patient_insuranceid" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>7a.</strong> Insurance Company</label>
-			<input class="inpt_a validate" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
-           	</div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>7b.</strong> Address 1</label>
-                        <input class="inpt_a validate" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>7c.</strong> Address 2</label>
-                        <input class="inpt_a" id="p_m_ins_address2" name="p_m_ins_address2" type="text" value="<?= $p_m_r['address2']; ?>" />
-                </div>
-                <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7d.</strong> City</label>
-                        <input class="inpt_a validate" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7e.</strong> State</label>
-                        <input class="inpt_a validate" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7f.</strong> Zip</label>
-                        <input class="inpt_a validate" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7g.</strong> Phone</label>
-                        <input class="inpt_a extphonemask validate" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7h.</strong> Fax</label>
-                        <input class="inpt_a phonemask" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7i.</strong> Email</label>
-                        <input class="inpt_a" id="p_m_ins_email" name="p_m_ins_email" type="text" value="<?= $p_m_r['email']; ?>" />
-                </div>
-
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>8.</strong> Insurance ID.</label><input class="inpt_a validate" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Group #</label><input class="inpt_a validate" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>10.</strong> Plan Name</label><input class="inpt_a validate" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
-<br />
-                </div>
-		<div class="sepH_b clear">
-			<label class="lbl_a"><strong>11.</strong> Do you have secondary medical insurance?</label>
-			<input class="validate" onclick="updateNext('Yes', 2);" type="radio" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="Yes")?'checked="checked"':''; ?> value="Yes" />Yes 
-			<input onclick="updateNext('No', 2);" type="radio" id="has_s_m_ins_no" name="has_s_m_ins" <?= ($p['has_s_m_ins']=="No")?'checked="checked"':''; ?> value="No" />No</span>
-		</div>
-                                                                                                                <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<a href="javascript:void(0)" id="ins2Next1" class="fr next btn btn_d" <?=($p['has_s_m_ins']=="No")?'style="display:none;"':'';?>>Proceed &raquo;</a>
-<a href="javascript:void(0)" id="ins2Next2" class="fr next2 btn btn_d" <?=($p['has_s_m_ins']!="No")?'style="display:none;"':'';?> >Proceed &raquo;</a>
-                                                                                                                </div>
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-
-                                                                        <div class="page">
-                                                                                <div class="pageInside">
-                                                                                        <div class="cf">
-                                                                                                <div class="dp25">
-                                                                                                        <h3 class="sepH_a">Secondary Insurance</h3>
-                                                                                                        <p class="s_color small">Do you have additional insurance in addition to primary insurance coverage?  If so, please accurately complete all fields on this page to help Dental Sleep Solutions maximize your potential insurance coverage.  Refer to your medical insurance card for this information.</p>
-                                                                                                </div>
-                                                                                                <div class="dp75">
-                                                                                                        <div>
-                                                                                                                <div class="form_errors" style="display:none"></div>
-
-                <div class="sepH_b">
-                        <label class="lbl_a">Please complete the information below for the PRIMARY INSURED PARTY listed on your SECONDARY insurance card.</label>
-                </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>1.</strong> Your relationship to primary insured:</label><select class="inpt_a validate" id="s_m_relation" name="s_m_relation" >
-                                                                        <option value="" <? if($p['s_m_relation'] == '') echo " selected";?>>None</option>
-                                                                        <option value="Self" <? if($p['s_m_relation'] == 'Self') echo " selected";?>>Self</option>
-                                                                        <option value="Spouse" <? if($p['s_m_relation'] == 'Spouse') echo " selected";?>>Spouse</option>
-                                                                        <option value="Child" <? if($p['s_m_relation'] == 'Child') echo " selected";?>>Child</option>
-                                                                        <option value="Other" <? if($p['s_m_relation'] == 'Other') echo " selected";?>>Other</option>
-                                                                </select>
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>2.</strong> Insured First Name:</label><input class="inpt_a validate" id="s_m_partyfname" name="s_m_partyfname" type="text" value="<?=$p['s_m_partyfname']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>3.</strong> Insured Middle Name:</label><input class="inpt_a" id="s_m_partymname" name="s_m_partymname" type="text" value="<?=$p['s_m_partymname']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> Insured Last Name:</label><input class="inpt_a validate" id="s_m_partylname" name="s_m_partylname" type="text" value="<?=$p['s_m_partylname']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b clear" id="ins2_dob_div">
-                        <label class="lbl_a"><strong>5.</strong> Insured Date of Birth:</label>
-                                <?php
-					if($p['ins2_dob']){
-                                        	$ins2_dob_month = date('m', strtotime($p['ins2_dob']));
-                                        	$ins2_dob_day = date('j', strtotime($p['ins2_dob']));
-                                        	$ins2_dob_year = date('Y', strtotime($p['ins2_dob']));
-					}else{
-						$ins2_dob_month = '';
-                                                $ins2_dob_day = '';
-                                                $ins2_dob_year = '';
-					}
-                                ?>
-                                <select name="ins2_dob_month" id="ins2_dob_month" class="validate">
-                                        <option value=''>Month</option>
-                                        <?php
-                                                for($i=1;$i<=12;$i++){ ?>
-                                                        <option <?= (($ins2_dob_month==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }
-                                        ?>
-                                </select>
-                                <select name="ins2_dob_day" id="ins2_dob_day" class="validate">
-                                        <option value=''>Day</option>
-                                        <?php
-                                                for($i=1;$i<=31;$i++){ ?>
-                                                     <option <?= (($ins2_dob_day==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                                <?php }
-                                        ?>
-                                </select>
-                                <select name="ins2_dob_year" id="ins2_dob_year" class="validate">
-                                        <option value=''>Year</option>
-                                        <?php
-                                        for($i=(date('Y'))-12;$i>=1915;$i--){ ?>                                                                                                    
-                                                <option <?= (($ins2_dob_year==$i)?'selected="selected"':''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                                        <?php }
-                                        ?>
-                                </select>
-
-                </div>
-                        <?php
-                                $s_m_sql = "SELECT * FROM dental_patient_insurance WHERE insurancetype='2' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-                                $s_m_q = mysql_query($s_m_sql);
-                                $s_m_r = mysql_fetch_assoc($s_m_q);
-				if(mysql_num_rows($s_m_q)=='0'){
-					$s_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-					$s_m_q = mysql_query($s_m_sql);
-					$s_m_r = mysql_fetch_assoc($s_m_q);
-				}
-                        ?>
-                        <input type="hidden" id="s_m_patient_insuranceid" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
-                        <input class="inpt_a validate" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6b.</strong> Address 1</label>
-                        <input class="inpt_a validate" id="s_m_ins_address1" name="s_m_ins_address1" type="text" value="<?= $s_m_r['address1']; ?>" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6c.</strong> Address 2</label>
-                        <input class="inpt_a" id="s_m_ins_address2" name="s_m_ins_address2" type="text" value="<?= $s_m_r['address2']; ?>" />
-                </div>
-                <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>6d.</strong> City</label>
-                        <input class="inpt_a validate" id="s_m_ins_city" name="s_m_ins_city" type="text" value="<?= $s_m_r['city']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6e.</strong> State</label>
-                        <input class="inpt_a validate" id="s_m_ins_state" name="s_m_ins_state" type="text" value="<?= $s_m_r['state']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6f.</strong> Zip</label>
-                        <input class="inpt_a validate" id="s_m_ins_zip" name="s_m_ins_zip" type="text" value="<?= $s_m_r['zip']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6g.</strong> Phone</label>
-                        <input class="inpt_a extphonemask validate" i="s_m_ins_phone" name="s_m_ins_phone" type="text" value="<?= $s_m_r['phone']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6h.</strong> Fax</label>
-                        <input class="inpt_a phonemask" id="s_m_ins_fax" name="s_m_ins_fax" type="text" value="<?= $s_m_r['fax']; ?>" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6i.</strong> Email</label>
-                        <input class="inpt_a" id="s_m_ins_email" name="s_m_ins_email" type="text" value="<?= $s_m_r['email']; ?>" />     
-                </div>
-                <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7.</strong> Insurance ID.</label><input class="inpt_a validate" id="s_m_party" name="s_m_ins_id" type="text" value="<?=$p['s_m_ins_id']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>8.</strong> Group #</label><input class="inpt_a validate" id="s_m_ins_grp" name="s_m_ins_grp" type="text" value="<?=$p['s_m_ins_grp']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Plan Name</label><input class="inpt_a validate" id="s_m_ins_plan" name="s_m_ins_plan" type="text" value="<?=$p['s_m_ins_plan']?>" maxlength="255" />
-                </div>
-                                                                                                                <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-
-<a href="javascript:void(0)" id="insNext" class="fr next btn btn_d">Proceed &raquo;</a>
-                                                                                                                </div>
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
-
-
-
-                                                                        <div class="page">
-                                                                                <div class="pageInside">
-                                                                                        <div class="cf">
-                                                                                                <div class="dp25">
-                                                                                                        <h3 class="sepH_a">Employer Information</h3>
-                                                                                                        <p class="s_color small">Please provide your employer information.</p>
-                                                                                                </div>
-                                                                                                <div class="dp75">
-                                                                                                        <div>
-                                                                                                                <div class="form_errors" style="display:none"></div>
-
-
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>1.</strong> Employer:</label><input class="inpt_a" id="employer" name="employer" type="text" value="<?php echo $p['employer']; ?>" maxlength="255"/>
-                </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>2.</strong> Address 1:</label><input class="inpt_a" id="emp_add1" name="emp_add1" type="text" value="<?=$p['emp_add1']?>" maxlength="255"/>
-                </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>3.</strong> Address 2:</label><input class="inpt_a" id="emp_add2" name="emp_add2" type="text" value="<?=$p['emp_add2']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>4.</strong> City:</label><input class="inpt_a" id="emp_city" name="emp_city" type="text" value="<?=$p['emp_city']?>" maxlength="255" />
-                </div>
-                <div class="sepH_b third">
-			<?php $s = $p['emp_state']; ?>
-                        <label class="lbl_a"><strong>5.</strong> State:</label>
-			<select  data-placeholder="Choose a state..." class="chzn-select" id="emp_state" name="emp_state">
+                        <?php $s = $p['mailing_state']; ?>
+                        <label class="lbl_a"><strong>6.</strong> Mailing State: <span class="req">*</span></label>
+        <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="mailing_state" name="mailing_state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
                                 <option <?= ($s=='AL')?'selected="selected"':'' ?> value="AL">AL - Alabama</option>
@@ -646,34 +251,79 @@ include 'includes/completed.php';
                                 <option <?= ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
                                 <option <?= ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
                                 <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
-			</select>
-
+                        </select>
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6.</strong> Zip Code:</label><input class="inpt_a" id="emp_zip" name="emp_zip" type="text" value="<?=$p['emp_zip']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>7.</strong> Mailing Zip:</label><input class="inpt_a" type="text" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
                 </div>
-                <div class="sepH_b clear half">
-                        <label class="lbl_a"><strong>7.</strong> Phone:</label><input class="inpt_a extphonemask" id="emp_phone" name="emp_phone" type="text" value="<?=$p['emp_phone']?>" maxlength="255" />
+                                                                                                                <div class="cf">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+
+
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Additional Information</h3>
+                                                                                                        <p class="s_color small">Please complete all fields on this page to allow Dental Sleep Solutions to verify your medical insurance coverage.  Failure to accurately complete these fields may result in insurance delays and even denial of coverage.  Refer to your medical insurance card for this information.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div>
+                                                                                                                <div class="form_errors" style="display:none"></div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>1.</strong> NPI Number:</label><input class="inpt_a validate" id="npi" name="npi" type="text" value="<?=$p['npi']?>" maxlength="255" />
+		</div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>2.</strong> Medicare DME Number:</label><input class="inpt_a validate" id="medicare_npi" name="medicare_npi" type="text" value="<?=$p['medicare_npi']?>" maxlength="255" />
+		</div>
+                <div class="sepH_b half clear">
+                        <label class="lbl_a"><strong>3.</strong> Tax ID or SSN:</label><input class="inpt_a validate" id="tax_id_or_ssn" name="tax_id_or_ssn" type="text" value="<?=$p['tax_id_or_ssn']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>8.</strong> Fax:</label><input class="inpt_a phonemask" id="emp_fax" name="emp_fax" type="text" value="<?=$p['emp_fax']?>"   maxlength="255" />
-		</div>
+                        <label class="lbl_a"><strong>4.</strong> EIN or SSN:</label>
+			<input class="" name="ein" type="checkbox" value="1" <?= ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
+			<input class="" name="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
+                </div>
+                                                                                                                <div class="cf clear">
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
 
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Login Information</h3>
+                                                                                                        <p class="s_color small">Do you have additional insurance in addition to primary insurance coverage?  If so, please accurately complete all fields on this page to help Dental Sleep Solutions maximize your potential insurance coverage.  Refer to your medical insurance card for this information.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div>
+                                                                                                                <div class="form_errors" style="display:none"></div>
+
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?=$p['username']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Password:</label><input class="inpt_a validate" id="password" name="password" type="password" maxlength="255" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Retype Password:</label><input class="inpt_a validate" name="confirm_password" type="password" maxlength="255" />
+                </div>
                                                                                                                 <div class="cf">
-	<? if($p['has_p_m_ins']=="No"){
-		$showPrev = "prev3";
-	}else{
-	  if($p['has_s_m_ins']=="No"){
-		$showPrev = "prev2";
-	  }else{
-		$showPrev = "prev1";
-	  }
-	}
-	?>
-			<a href="javascript:void(0)" id="insPrev1" class="fl prev btn btn_a" <?= ($showPrev!='prev1')?'style="display:none;"':''; ?>>&laquo; Back</a>
-                        <a href="javascript:void(0)" id="insPrev2" class="fl prev2 btn btn_a" <?= ($showPrev!='prev2')?'style="display:none;"':''; ?>>&laquo; Back</a>
-                        <a href="javascript:void(0)" id="insPrev3" class="fl prev3 btn btn_a" <?= ($showPrev!='prev3')?'style="display:none;"':''; ?>>&laquo; Back</a>
+															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
 
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
@@ -682,136 +332,17 @@ include 'includes/completed.php';
                                                                                         </div>
                                                                                 </div>
                                                                         </div>
-                                                                        <div class="page">
-                                                                                <div class="pageInside">
-                                                                                        <div class="cf">
-                                                                                                <div class="dp25">
-                                                                                                        <h3 class="sepH_a">Medical Contacts</h3>
-                                                                                                        <p class="s_color small">Dental Sleep Solutions cares about providing the best possible treatment to you.  We regularly contact your other medical providers to make them aware of your progress throughout treatment.  This helps ensure all your medical providers coordinate care to maximize the effectiveness of your treatment.  Please list your other healthcare providers here.</p>
-                                                                                                </div>
-                                                                                                <div class="dp75">
-                                                                                                        <div>
-                                                                                                                <div class="form_errors" style="display:none"></div>
-<?php 
-$types = array(DSS_PATIENT_CONTACT_SLEEP, DSS_PATIENT_CONTACT_PRIMARY, DSS_PATIENT_CONTACT_DENTIST, DSS_PATIENT_CONTACT_ENT, DSS_PATIENT_CONTACT_OTHER);
-foreach($types as $t){
-                switch($t){
-                        case '1':
-                                $cid = $p['docsleep'];
-                                break;
-                        case '2':
-                                $cid = $p['docpcp'];
-                                break;
-                        case '3':
-                                $cid = $p['docdentist'];
-                                break;
-                        case '4':
-                                $cid = $p['docent'];
-                                break;
-                        case '5':
-                                $cid = $p['docmdother'];
-                                break;
-			default:
-				$cid = 0;
-				break;
 
-                }
-		$pcnum = 0;
-		if($cid == 0){
-			$pcsql = "SELECT * from dental_patient_contacts WHERE contacttype='".$t."' AND patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
-			$pcq = mysql_query($pcsql);
-			$pc = mysql_fetch_assoc($pcq);
-			$pcnum = mysql_num_rows($pcq);
-		}
 
-                                $csql = "SELECT firstname, lastname FROM dental_contact WHERE contactid='".$cid."'";
-                                $cq = mysql_query($csql);
-				$cr = mysql_fetch_assoc($cq);
-                                $cname = $cr['firstname']. " ".$cr['lastname'];
-?>
-		<h5 class="clear"><?= $dss_patient_contact_labels[$t]; ?></h5>
-                                        <div id="pc_<?= $t; ?>_person" <?= ($pcnum!=0)?'style="display:none;"':''; ?>>
-			<label class="lbl_a"><strong>1.</strong> Name:</label>
-			
 
-                                        <input type="text" class="inpt_a dr" id="pc_<?= $t; ?>_name" onclick="updateval(this)" autocomplete="off" name="pc_<?= $t; ?>_name" value="<?= ($cname!=' ')?$cname:'Type doctor name'; ?>" style="width:300px;" />
-<br />
-        <div id="pc_<?= $t; ?>_hints" class="search_hints" style="margin-top:20px; display:none;">
-                <ul id="pc_<?= $t; ?>_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-        </div><script type="text/javascript">
-$(document).ready(function(){
-  setup_autocomplete('pc_<?= $t; ?>_name', 'pc_<?= $t; ?>_hints', 'pc_<?= $t; ?>_referred_by', 'pc_<?= $t; ?>_referred_source', 'list_referrers.php', '<?= $t; ?>');
-});
-</script>
-
-                            </div>
-        <input type="hidden" id="pc_<?= $t; ?>_contactid" name="pc_<?= $t; ?>_contactid" value="<?= $cid; ?>" /> 
-	<input type="hidden" id="pc_<?= $t; ?>_patient_contactid" name="pc_<?= $t; ?>_patient_contactid" value="<?= $pc['id']; ?>" />
-	<div id="pc_<?= $t; ?>_input_div" <?= ($pcnum>0)?'':'style="display:none;"'; ?>>
-		<div class="sepHb half">
-                        <label class="lbl_a"><strong>1.</strong> First Name:</label><input class="inpt_a" id="pc_<?= $t; ?>_firstname" name="pc_<?= $t; ?>_firstname" type="text" value="<?=$pc['firstname']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Last Name:</label><input class="inpt_a" id="pc_<?= $t; ?>_lastname" name="pc_<?= $t; ?>_lastname" type="text" value="<?=$pc['lastname']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>3.</strong> Address 1:</label><input class="inpt_a" id="pc_<?= $t; ?>_address1" name="pc_<?= $t; ?>_address1" type="text" value="<?=$pc['address1']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Address 2:</label><input class="inpt_a" id="pc_<?= $t; ?>_address2" name="pc_<?= $t; ?>_address2" type="text" value="<?=$pc['address2']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>5.</strong> City:</label><input class="inpt_a" id="pc_<?= $t; ?>_city" name="pc_<?= $t; ?>_city" type="text" value="<?=$pc['city']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>6.</strong> State:</label><input class="inpt_a" id="pc_<?= $t; ?>_state" name="pc_<?= $t; ?>_state" type="text" value="<?=$pc['state']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Zip:</label><input class="inpt_a" id="pc_<?= $t; ?>_zip" name="pc_<?= $t; ?>_zip" type="text" value="<?=$pc['zip']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>8.</strong> Phone:</label><input class="inpt_a extphonemask" id="pc_<?= $t; ?>_phone" name="pc_<?= $t; ?>_phone" type="text" value="<?=$pc['phone']?>"   maxlength="100" />
-                </div>
-                <div class="sepH_b clear">
-                        <button onclick="cancel('<?= $t; ?>'); return false;" class="fl btn btn_a">Cancel</button>
-                </div>
-	</div>
-
-<?php } ?>
-                                                                                                                <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-                                                                                                                        <button type="submit" name="update" class="fr next btn btn_d">Submit &raquo;</button>
-                                                                                                                </div>
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                </div>
-                                                                        </div>
 <div class="page">
 										<div class="pageInside">
 											<div class="last sepH_c">
 												<h3 class="sepH_b">Congratulations!</h3>
 												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
- <?php
-                                                                                                if(!$questionnaire_completed){
-                                                                                                ?>
-
-												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next Dental Sleep Solutions visit!</p>
-<?php } ?>
-											</div>
 
 											<div class="cf">
-												<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-												<?php
-												if(!$questionnaire_completed){
-												?>
-												<a href="symptoms.php" class="fr btn btn_d">Start Questionnaire</a>
-												<?php }else{
-                                                                                                ?>
-                                                                                                <a href="index.php" class="fr btn btn_d">View Dashboard</a>
-                                                                                                <?php } ?>
+                                                                                                <a href="../index.php" class="fr btn btn_d">Home</a>
 											</div>
 										</div>
 									</div>

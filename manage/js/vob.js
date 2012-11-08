@@ -20,7 +20,7 @@ $(document).ready(function(){
 
   });
 
-
+/*
   $('#rx_item').click( function(){
     $('#rx_file').click();
   });
@@ -36,6 +36,6 @@ $(document).ready(function(){
   $('#lomn_file').change( function(){
     $('#lomn_form').submit();
   });
-
+*/
 
 });

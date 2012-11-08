@@ -188,7 +188,7 @@ Verification CANNOT be requested*
 <div class="vob_icon vob_study"></div>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
-<span class="sub_note">*Verification of Benefits can be requested<br /<br />>after the items above are completed</span>
+<span class="sub_note">*Verification of Benefits can be requested<br />after the items above are completed</span>
 <div class="clear"></div>
 <br /><br />
 <?php } ?>
@@ -236,7 +236,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
 
-<a id="rx_item" class="vob_item
+<a id="rx_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=6&itro=1');" class="vob_item
 <?php
   if(!$rx){
     ?>error<?php
@@ -251,7 +251,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <form id="rx_form" action="manage_insurance.php?pid=<?= $_GET['pid']; ?>&addtopat=1&rx=1" enctype="multipart/form-data" method="post" style="display:none;">
 <input name="rx_file" type="file" id="rx_file" />
 </form>
-<a id="lomn_item"  class="vob_item
+<a id="lomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=7&itro=1');"  class="vob_item
 <?php
   if(!$lomn){
     ?>error<?php

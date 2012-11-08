@@ -180,7 +180,7 @@ lga_wizard = {
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {
 					//var r = $.parseJSON(data);
-					alert(data);
+					//alert(data);
                         	        //$('#form_summary').html(data);
                                 	//alert(data);
                         	});

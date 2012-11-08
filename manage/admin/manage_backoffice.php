@@ -26,7 +26,14 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from admin order by admin_access ASC, username ASC";
+$sql = "select a.*, c.id as company_id, c.name as company_name
+	 from admin a
+	LEFT join admin_company ac ON a.adminid=ac.adminid
+	LEFT JOIN companies c ON ac.companyid=c.id";
+if(isset($_GET['cid'])){
+  $sql .= " WHERE c.id=".mysql_real_escape_string($_GET['cid'])." ";
+}
+$sql .= " order by admin_access ASC, username ASC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -45,7 +52,18 @@ $num_users=mysql_num_rows($my);
 </span>
 <br />
 <br />
-
+<?php
+  if(isset($_GET['cid'])){
+?>
+<div style="float:left; margin-left:20px;">
+        <a href="manage_backoffice.php" class="addButton">
+                View All 
+        </a>
+        &nbsp;&nbsp;
+</div>
+<?php
+  }
+?>
 
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="addButton">
@@ -76,6 +94,12 @@ $num_users=mysql_num_rows($my);
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Name
+		</td>
+		<td valign="top" class="col_head" width="20%">
+			Company
+		</td>
+		<td valign="top" class="col_head" width="20%">
+			Permissions
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			Action
@@ -115,7 +139,12 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
-						
+				<td valign="top">
+					<a href="manage_backoffice.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
+				</td>
+                                <td valign="top">               
+					<?= $dss_admin_access_labels[$myarray["admin_access"]]; ?>
+                                </td>		
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_backoffice_users.php?ed=<?=$myarray["adminid"];?>');" class="editlink" title="EDIT">
 						Edit

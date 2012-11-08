@@ -25,10 +25,18 @@ else
 	
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-$sql = "select * from dental_users where user_access=2 order by username";
+$sql = "select u.*, c.id as company_id, c.name as company_name from dental_users u
+	LEFT JOIN dental_user_company uc ON uc.userid = u.userid
+        LEFT JOIN companies c ON c.id=uc.companyid
+		 where u.user_access=2 ";
+if(isset($_GET['cid'])){
+  $sql .= " AND c.id='".mysql_real_escape_string($_GET['cid'])."' ";
+}
+	 $sql .= " order by u.username";
 }else{
-  $sql = "SELECT u.* FROM dental_users u 
+  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
 		INNER JOIN dental_user_company uc ON uc.userid = u.userid
+		INNER JOIN companies c ON c.id=uc.companyid
 		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'
 		ORDER BY username";
 }
@@ -50,6 +58,19 @@ $num_users=mysql_num_rows($my);
 </span>
 <br />
 <br />
+
+<?php
+  if(isset($_GET['cid'])){
+?>
+<div style="float:left; margin-left:20px;">
+        <a href="manage_users.php" class="addButton">
+                View All 
+        </a>
+        &nbsp;&nbsp;
+</div>
+<?php
+  }
+?>
 
 
 <div align="right">
@@ -97,6 +118,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Staff
 		</td>
+		<td valign="top" class="col_head" width="10%">
+                        Company 
+                </td>
 		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
@@ -168,7 +192,13 @@ $num_users=mysql_num_rows($my);
 					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="staff">
                     	<?=st($staff_myarray['staff_count']);?></a>
 				</td>	
-						
+			 	<td valign="top" align="center">
+					<?php if(is_super($_SESSION['admin_access'])){ ?>
+                                        	<a href="manage_users.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
+					<?php }else{ ?>
+						<?= $myarray["company_name"]; ?>
+					<?php } ?>
+				</td>			
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">
 						Edit

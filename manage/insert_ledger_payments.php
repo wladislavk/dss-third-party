@@ -34,6 +34,17 @@ if($_POST['dispute']==1){
                         @move_uploaded_file($_FILES["attachment"]["tmp_name"],"q_file/".$banner1);
                         @chmod("q_file/".$banner1,0777);
          }
+
+          $note_sql = "INSERT INTO dental_ledger_note SET
+                service_date = CURDATE(),
+                entry_date = CURDATE(),
+                private = 1,
+                docid = '".$_SESSION['docid']."',
+                patientid = '".$_POST['patientid']."',
+                producerid = '".$_SESSION['userid']."',
+                note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
+  mysql_query($note_sql);
+
   if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
     $new_status = DSS_CLAIM_DISPUTE;
     $msg = 'Disputed Primary Insurance';
@@ -57,6 +68,7 @@ if($_FILES["attachment"]["name"]!=''){
                 )";
      mysql_query($image_sql);   
 }
+
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
     $new_status = DSS_CLAIM_SEC_DISPUTE;
     $msg = 'Disputed Secondary Insurance';

@@ -105,6 +105,11 @@ $num_pending_claims = mysql_num_rows($my);
                                   			if(is_super($_SESSION['admin_access'])){
                                  		?>
                                 		<li><a href="/manage/admin/manage_companies.php">Companies</a></li>
+						<?php } ?>
+		
+						<?php
+                                                        if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])){
+						?>
 						<li><a href="/manage/admin/manage_backoffice.php">Backoffice Accounts</a></li>
 						<?php } ?>
 						<li><a href="/manage/admin/manage_users.php">User Accounts</a></li>

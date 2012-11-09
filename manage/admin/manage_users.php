@@ -72,14 +72,14 @@ $num_users=mysql_num_rows($my);
   }
 ?>
 
-
+<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_users.php');" class="addButton">
 		Add New User
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<?php } ?>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -103,13 +103,15 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
+		<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="20%">
 			Letterhead
 		</td>       
 		<td valign="top" class="col_head" width="10%">
 			Login As
 		</td>
-		<td valign="top" class="col_head" width="10">
+		<?php } ?>
+		<td valign="top" class="col_head" width="10%">
 			Locations
 		</td>
 		<td valign="top" class="col_head" width="10%">
@@ -118,12 +120,16 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Staff
 		</td>
+		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head" width="10%">
                         Company 
                 </td>
+		<?php } ?>
+		<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
+		<?php } ?>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
@@ -166,6 +172,7 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
+				<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
 					<a href="/manage/admin/letterhead.php?uid=<?=st($myarray["userid"]);?>">Update Images</a>
 				</td>
@@ -178,6 +185,7 @@ $num_users=mysql_num_rows($my);
 			            <input type="submit" name="btnsubmit" value=" Login " class="addButton">			
 					</form>
 				</td>
+				<?php } ?>
 			           <td valign="top" align="center">
                     <a href="manage_locations.php?docid=<?=$myarray["userid"];?>" class="dellink" title="locations">
                         <?=st($loc_myarray['loc_count']);?></a>
@@ -192,19 +200,19 @@ $num_users=mysql_num_rows($my);
 					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="staff">
                     	<?=st($staff_myarray['staff_count']);?></a>
 				</td>	
+				<?php if(is_super($_SESSION['admin_access'])){ ?>
 			 	<td valign="top" align="center">
-					<?php if(is_super($_SESSION['admin_access'])){ ?>
                                         	<a href="manage_users.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
-					<?php }else{ ?>
-						<?= $myarray["company_name"]; ?>
-					<?php } ?>
 				</td>			
+				<?php } ?>
+				<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
                     
 				</td>
+				<?php } ?>
 			</tr>
 	<? 	}
 	}?>

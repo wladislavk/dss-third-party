@@ -26,12 +26,20 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select a.*, c.id as company_id, c.name as company_name
+if(is_super($_SESSION['admin_access'])){
+  $sql = "select a.*, c.id as company_id, c.name as company_name
 	 from admin a
 	LEFT join admin_company ac ON a.adminid=ac.adminid
 	LEFT JOIN companies c ON ac.companyid=c.id";
-if(isset($_GET['cid'])){
-  $sql .= " WHERE c.id=".mysql_real_escape_string($_GET['cid'])." ";
+  if(isset($_GET['cid'])){
+    $sql .= " WHERE c.id=".mysql_real_escape_string($_GET['cid'])." ";
+  }
+}elseif(is_admin($_SESSION['admin_access'])){
+  $sql = "select a.*, c.id as company_id, c.name as company_name
+         from admin a
+        LEFT join admin_company ac ON a.adminid=ac.adminid
+        LEFT JOIN companies c ON ac.companyid=c.id";
+    $sql .= " WHERE c.id=".mysql_real_escape_string($_SESSION['companyid'])." ";
 }
 $sql .= " order by admin_access ASC, username ASC";
 $my = mysql_query($sql);
@@ -95,9 +103,11 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
+		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head" width="20%">
 			Company
 		</td>
+		<?php } ?>
 		<td valign="top" class="col_head" width="20%">
 			Permissions
 		</td>
@@ -139,9 +149,11 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
+				                <?php if(is_super($_SESSION['admin_access'])){ ?>
 				<td valign="top">
 					<a href="manage_backoffice.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
 				</td>
+						<?php } ?>
                                 <td valign="top">               
 					<?= $dss_admin_access_labels[$myarray["admin_access"]]; ?>
                                 </td>		

@@ -464,18 +464,18 @@ if(mysql_num_rows($rl_q)){
   $rl_r = mysql_fetch_assoc($rl_q);
   if($rl_r['lomn_imgid']!=''){
 ?>
-<tr class="image_sect lomn_update" style="display:none;">
+<tr class="image_sect lomn_update" <?= ($_GET['sh']==7)?'':'style="display:none;"'; ?>>
   <td valign="top" colspan="2" class="frmhead">
-    <input type="checkbox" value="1" name="lomn_update" /> Update LOMN
+    <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
   </td>
 </tr>
 <?php
  }
 if($rl_r['rx_imgid']!=''){ 
 ?>
-<tr class="image_sect rx_update" style="display:none;">
+<tr class="image_sect rx_update" <?= ($_GET['sh']==6)?'':'style="display:none;"'; ?>>
   <td valign="top" colspan="2" class="frmhead">
-    <input type="checkbox" value="1" name="rx_update" /> Update RX
+    <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
   </td>
 </tr>
 

@@ -49,6 +49,70 @@ if($_REQUEST["delid"] != ""  && $_SESSION['admin_access']==1) {
 	die();
 }
 
+if($_REQUEST['sendid']!=''){
+  $sendid = $_REQUEST['sendid'];
+  $send_sql = "SELECT i.*, f.description AS dispute_description FROM dental_insurance i
+		LEFT JOIN dental_insurance_file f ON f.claimid=i.insuranceid
+		WHERE insuranceid='".mysql_real_escape_string($sendid)."'
+		ORDER BY f.id DESC";
+  $send_q = mysql_query($send_sql);
+  $send_r = mysql_fetch_assoc($send_q);
+  $status = $send_r['status'];
+  if($status == DSS_CLAIM_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
+    mysql_query($new_sql);
+  }
+
+  $note_sql = "INSERT INTO dental_ledger_note SET
+		service_date = CURDATE(),
+		entry_date = CURDATE(),
+		private = 1,
+		docid = '".$send_r['docid']."',
+		patientid = '".$send_r['patientid']."',
+		admin_producerid = '".$_SESSION['adminuserid']."',
+		note = 'Disputed insurance claim ".$sendid." re-filed with insurance company.'";
+  mysql_query($note_sql);
+}
+
+if($_REQUEST['cancelid']!=''){
+  $cancelid = $_REQUEST['cancelid'];
+  $cancel_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
+  $cancel_q = mysql_query($cancel_sql);
+  $cancel_r = mysql_fetch_assoc($cancel_q);
+  $status = $cancel_r['status'];
+  if($status == DSS_CLAIM_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
+    mysql_query($new_sql);
+  }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
+    mysql_query($new_sql);
+  }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+    $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
+    mysql_query($new_sql);
+  }
+  $note_sql = "INSERT INTO dental_ledger_note SET
+                service_date = CURDATE(),
+                entry_date = CURDATE(),
+                private = 1,
+                docid = '".$cancel_r['docid']."',
+                patientid = '".$cancel_r['patientid']."',
+                admin_producerid = '".$_SESSION['adminuserid']."',
+                note = 'Disputed insurance claim ".$cancelid." canceled after communication with office.'";
+  mysql_query($note_sql);
+}
+
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -308,22 +372,24 @@ $my=mysql_query($sql) or die(mysql_error());
             if(mysql_num_rows($sq)>0){
             $file = mysql_fetch_assoc($sq);
             ?>
-
-           <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+	   <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-
-        <?php } 
+		<br />
+	 <?php } ?>
+		<a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a>
+                <a href="manage_claims.php?status=<?= $_GET['status']; ?>&cancelid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will CANCEL the disputed claim and notify the frontoffice. Proceed?')">Cancel Dispute</a>
+	 <?php
           }elseif($myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='secondary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
             $sq = mysql_query($s);
             if(mysql_num_rows($sq)>0){
             $file = mysql_fetch_assoc($sq);
             ?>
-
-           <a href="../q_file/<?= $file['filename']; ?>" target="_blank" class="editlink">EOB</a>
+	   <br />
            <a href="javascript:alert('Dispute Reason:\n<?= $file['description']; ?>');">Reason</a>
-
+	   <br />
         <?php }
+		?><a href="manage_claims.php?status=<?= $_GET['status']; ?>&sendid=<?= $myarray['insuranceid']; ?>" onclick="return confirm('This will mark the disputed claim as sent and notify the frontoffice. Proceed?')">Mark Complete</a><?php
            } ?>
 
 				</td>

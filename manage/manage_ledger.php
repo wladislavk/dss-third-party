@@ -239,8 +239,27 @@ $sql = "select
 		'',
 		''	
 	from dental_ledger_note n
-		LEFT JOIN dental_users p on n.producerid=p.userid
+		JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
+  UNION
+        select 
+                'note',
+                n.id,
+                n.service_date,
+                n.entry_date,
+                concat('Note - Backoffice ID - ', p.adminid),
+                n.note,
+                '',
+                '',
+                n.private,
+                '',
+                '',
+                '',
+                ''      
+        from dental_ledger_note n
+                JOIN admin p on n.admin_producerid=p.adminid
+                        where n.patientid='".s_for($_GET['pid'])."'       
+
   UNION
 	select
 		'claim',
@@ -459,7 +478,7 @@ return s;
 				$tr_class = "tr_inactive";
 			}
 			$tr_class = "tr_active";
-                        if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row'; }
+                        if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row status_'.$myarray['status']; }
 			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
 			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }
 		?>

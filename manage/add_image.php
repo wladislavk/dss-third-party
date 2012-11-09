@@ -251,6 +251,30 @@ if($uploaded){
 			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 			
 			mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+			$imageid = mysql_insert_id();
+			if($_POST['imagetypeid']==6){
+			  $rx_sql = "SELECT rx_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+			  $rx_q = mysql_query($rx_sql);
+			  $rx_r = mysql_fetch_assoc($rx_q);
+			  if($rx_r['rx_imgid']=='' || $_POST['rx_update']==1){
+			      $rx_sql = "UPDATE dental_flow_pg1 SET rx_imgid='".$imageid."', rxrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+      			    mysql_query($rx_sql);
+
+			  }
+			}
+
+                        if($_POST['imagetypeid']==7){
+                          $lomn_sql = "SELECT lomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+                          $lomn_q = mysql_query($lomn_sql);
+                          $lomn_r = mysql_fetch_assoc($lomn_q);
+                          if($lomn_r['lomn_imgid']=='' || $_POST['lomn_update']==1){
+                            $lomn_sql = "UPDATE dental_flow_pg1 SET lomn_imgid='".$imageid."', lomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+                            mysql_query($lomn_sql);
+
+                          }
+                        }
+
+
 			$msg = "Uploaded Successfully";
 			if ($_REQUEST['flow'] == "1") {
 				?>
@@ -376,8 +400,16 @@ if($uploaded){
 							<? 
 							$itype_sql = "select * from dental_imagetype where status=1 order by sortby";
 							$itype_my = mysql_query($itype_sql);
+							if($_GET['itro']==1){
+							  ?><input type="hidden" id="imagetypeid" name="imagetypeid" value="<?= $_GET['sh']; ?>" /><?php
+							  while($itype_myarray = mysql_fetch_array($itype_my)){
+                                                                if($imagetypeid == st($itype_myarray['imagetypeid'])){
+                                                                                echo $itype_myarray['imagetype'];
+                                                                }
+							  }
+							}else{
 							?>
-							<select id="imagetypeid" name="imagetypeid" class="field text addr tbox">
+							<select id="imagetypeid" name="imagetypeid" class="field text addr tbox" >
 								<option value=""></option>
 								<? while($itype_myarray = mysql_fetch_array($itype_my))
 								{?>
@@ -387,6 +419,7 @@ if($uploaded){
 								<? }?>
 								<option value="0">Clinical Photos (Pre-Tx)</option>
 							</select>
+							<?php } ?>
 						</span> 
 						<span id="req_0" class="req">*</span>
                     </li>
@@ -409,8 +442,46 @@ if($uploaded){
 		$('#orig_file').show();
                 $('#sleep_study').hide();
 	}
+
+        if($(this).val() == '6'){
+	  $('.lomn_update').hide();
+	  $('.rx_update').show();	
+	}else if($(this).val() == '7'){
+          $('.lomn_update').show();
+          $('.rx_update').hide();
+        }else{
+          $('.lomn_update').hide();
+          $('.rx_update').hide();
+	}
+
   });
 </script>
+
+<?php
+$rl_sql = "SELECT rx_imgid, lomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
+$rl_q = mysql_query($rl_sql);
+if(mysql_num_rows($rl_q)){
+  $rl_r = mysql_fetch_assoc($rl_q);
+  if($rl_r['lomn_imgid']!=''){
+?>
+<tr class="image_sect lomn_update" <?= ($_GET['sh']==7)?'':'style="display:none;"'; ?>>
+  <td valign="top" colspan="2" class="frmhead">
+    <input type="checkbox" value="1" name="lomn_update" /> Use this LOMN for insurance claims
+  </td>
+</tr>
+<?php
+ }
+if($rl_r['rx_imgid']!=''){ 
+?>
+<tr class="image_sect rx_update" <?= ($_GET['sh']==6)?'':'style="display:none;"'; ?>>
+  <td valign="top" colspan="2" class="frmhead">
+    <input type="checkbox" value="1" name="rx_update" /> Use this RX for insurance claims
+  </td>
+</tr>
+
+<?php
+}
+ } ?>
         <tr class="image_sect"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

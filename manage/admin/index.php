@@ -4,7 +4,7 @@ include('includes/config.php');
 include_once('includes/password.php');
 if($_POST["loginsub"] == 1)
 {
-        $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."'";
+        $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."' AND status=1";
         $salt_q = mysql_query($salt_sql);
         $salt_row = mysql_fetch_assoc($salt_q);
       

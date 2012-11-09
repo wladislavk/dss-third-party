@@ -1,3 +1,5 @@
 tr.claim td { color: #00f; }
 tr.claimless td { color: #00f; }
 tr.claim.completed td { color: #004f00; }
+
+tr.claim.status_2 td, tr.claim.status_8 td, tr.claim.status_10 td, tr.claim.status_12 td{ color:#f00; }

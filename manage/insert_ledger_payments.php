@@ -34,6 +34,17 @@ if($_POST['dispute']==1){
                         @move_uploaded_file($_FILES["attachment"]["tmp_name"],"q_file/".$banner1);
                         @chmod("q_file/".$banner1,0777);
          }
+
+          $note_sql = "INSERT INTO dental_ledger_note SET
+                service_date = CURDATE(),
+                entry_date = CURDATE(),
+                private = 1,
+                docid = '".$_SESSION['docid']."',
+                patientid = '".$_POST['patientid']."',
+                producerid = '".$_SESSION['userid']."',
+                note = 'Insurance claim ".$_POST['claimid']." disputed because: ".mysql_escape_string($_POST['dispute_reason']).".'";
+  mysql_query($note_sql);
+
   if($claim['status']==DSS_CLAIM_SENT || $claim['status']==DSS_CLAIM_PAID_INSURANCE){
     $new_status = DSS_CLAIM_DISPUTE;
     $msg = 'Disputed Primary Insurance';
@@ -57,6 +68,7 @@ if($_FILES["attachment"]["name"]!=''){
                 )";
      mysql_query($image_sql);   
 }
+
   }elseif($claim['status']==DSS_CLAIM_SEC_SENT || $claim['status']==DSS_CLAIM_PAID_SEC_INSURANCE){
     $new_status = DSS_CLAIM_SEC_DISPUTE;
     $msg = 'Disputed Secondary Insurance';
@@ -138,8 +150,13 @@ $image_sql = "INSERT INTO dental_insurance_file (
       if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
 
         if($pat['p_m_ins_type']==1){ //medicare
-	  $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
-          $new_status = DSS_CLAIM_SEC_SENT;
+	  if($pat['s_m_ins_ass']=="Yes"){
+	    $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
+            $new_status = DSS_CLAIM_SEC_SENT;
+	  }else{
+            $msg = 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Paid to Patient".';
+            $new_status = DSS_CLAIM_PAID_SEC_PATIENT;
+          }
         }else{
 	  $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
           $new_status = DSS_CLAIM_SEC_PENDING;

@@ -49,7 +49,10 @@ if($_POST["usersub"] == 1)
 			if(is_super($_SESSION['admin_access'])){
                           mysql_query("DELETE FROM admin_company WHERE adminid='".mysql_real_escape_string($_POST["ed"])."'");
                           mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
-                        }
+                        }elseif(is_super($_SESSION['admin_access'])){
+                          mysql_query("DELETE FROM admin_company WHERE adminid='".mysql_real_escape_string($_POST["ed"])."'");
+                          mysql_query("INSERT INTO admin_company SET adminid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
+			}
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -220,13 +223,16 @@ if($_POST["usersub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <select name="admin_access" class="tbox">
+			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
+			<?php } ?>
                         <option value="<?= DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
                 </select>
             </td>
         </tr>
 
+	<?php if(is_super($_SESSION['admin_access'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                Company 
@@ -242,7 +248,7 @@ if($_POST["usersub"] == 1)
                 </select>
             </td>
         </tr>
-
+	<?php } ?>
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

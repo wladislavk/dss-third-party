@@ -80,9 +80,17 @@ if($_POST["loginsub"] == 1)
 		$ins_id = mysql_insert_id();
 		
 		$_SESSION['loginid']=$ins_id;
-		
+	
+
 		?>
+		<!--[if lte IE 7]>
+                <script type="text/javascript">
+	  	  alert('This application does not support old versions of IE. For best performance please use Chrome, Firefox or IE8+');
+                </script>
+		<![endif]-->
 		<script type="text/javascript">
+
+
 			window.location.replace('index.php');
 		</script>
 		<?

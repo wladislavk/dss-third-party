@@ -209,3 +209,18 @@ lga_wizard = {
         }
 
 };
+
+$(document).ready(function(){
+$('#billing_mailing').click(function(){
+  if($(this).is(':checked')){
+    $('#mailing_name').val($('#name').val());
+    $('#mailing_practice').val($('#practice').val());
+    $('#mailing_phone').val($('#phone').val());
+    $('#mailing_address').val($('#address').val());
+    $('#mailing_city').val($('#city').val());
+    $('#mailing_state').val($('#state').val());
+    $('#mailing_zip').val($('#zip').val());    
+  }
+
+});
+});

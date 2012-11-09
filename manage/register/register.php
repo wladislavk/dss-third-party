@@ -53,7 +53,7 @@ if(mysql_num_rows($q) == 0){
                                                                                                         <p>Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
 <br />
                                                                                                                 <div class="cf">
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
 
 	                                                                                                </div>
@@ -80,23 +80,23 @@ if(mysql_num_rows($q) == 0){
                         <label class="lbl_a"><strong>2.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?= $p['phone']; ?>" />
+                        <label class="lbl_a"><strong>3.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?= $p['phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?= $p['fax']; ?>" />
+                        <label class="lbl_a"><strong>4.</strong> Office Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?= $p['fax']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>5.</strong> Practice: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="practice" value="<?= $p['practice']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Practice Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="practice" name="practice" value="<?= $p['practice']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6.</strong> Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="address" value="<?= $p['address']; ?>" />
+                        <label class="lbl_a"><strong>6.</strong> Practice Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="address" name="address" value="<?= $p['address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7.</strong> City: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="city" value="<?= $p['city']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Practice City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="city" name="city" value="<?= $p['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
 			<?php $s = $p['state']; ?>
-                        <label class="lbl_a"><strong>8.</strong> State: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>8.</strong> Practice State: <span class="req">*</span></label>
 	<select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
@@ -154,10 +154,10 @@ if(mysql_num_rows($q) == 0){
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>9.</strong> Practice Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="zip" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
 														</div>
 													</div>
 												</div>
@@ -175,25 +175,28 @@ if(mysql_num_rows($q) == 0){
                                                                                                 <div class="dp75">
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>1.</strong> Mailing Practice Name:</label>
-			<input class="inpt_a" type="text" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
+		<div class="sepH_b">
+			<input type="checkbox" id="billing_mailing"> My billing information is the same as my mailing information.
 		</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Mailing Name:</label>
-                        <input class="inpt_a" type="text" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
+                        <label class="lbl_a"><strong>1.</strong> Physician's Mailing Name:</label>
+                        <input class="inpt_a" type="text" id="mailing_name" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
                 </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>2.</strong> Mailing Practice Name:</label>
+			<input class="inpt_a" type="text" id="mailing_practice" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
+		</div>
                 <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>3.</strong> Mailing Phone:</label>
-                        <input class="inpt_a phonemask" type="text" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
+                        <input class="inpt_a phonemask" type="text" id="mailing_phone" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>4.</strong> Mailing Address:</label>
-                        <input class="inpt_a" type="text" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
+                        <input class="inpt_a" type="text" id="mailing_address" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>5.</strong> Mailing City:</label>
-			<input class="inpt_a" type="text" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
+			<input class="inpt_a" type="text" id="mailing_city" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <?php $s = $p['mailing_state']; ?>
@@ -255,11 +258,11 @@ if(mysql_num_rows($q) == 0){
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Mailing Zip:</label><input class="inpt_a" type="text" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Mailing Zip:</label><input class="inpt_a" type="text" id="mailing_zip" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
                 </div>
                                                                                                                 <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -293,8 +296,8 @@ if(mysql_num_rows($q) == 0){
 			<input class="" name="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
                 </div>
                                                                                                                 <div class="cf clear">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -323,9 +326,9 @@ if(mysql_num_rows($q) == 0){
                         <label class="lbl_a"><strong>3.</strong> Retype Password:</label><input class="inpt_a validate" name="confirm_password" type="password" maxlength="255" />
                 </div>
                                                                                                                 <div class="cf">
-															<a href="javascript:void(0)" class="fl prev btn btn_a">&laquo; Back</a>
+															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
 
-<a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -342,7 +345,7 @@ if(mysql_num_rows($q) == 0){
 												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
 
 											<div class="cf">
-                                                                                                <a href="../index.php" class="fr btn btn_d">Home</a>
+                                                                                                <a href="../index.php" class="fr btn btn_dL">Home</a>
 											</div>
 										</div>
 									</div>

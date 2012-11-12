@@ -2,7 +2,7 @@
 .third{ width:32%; float:left;  display:block;}
 .half{width:49%; float:left; display:block;}
 .third .inpt_a{ width:180px; }
-.half .inpt_a{ width: 260px; }
+.half .inpt_a{ width: 280px; }
 
 .formel_a .inpt_a.dr { background: url(../images/icons/doctor.png) no-repeat 2px 3px; padding-left:25px; }
 .json_patient { font-weight: bold; }
@@ -12,3 +12,6 @@
 .contact_add { font-size:14px; padding-left:20px; background: url(../images/icons/user2.png) no-repeat 0 0; }
 
 #register .s_color{ color: #000; }
+
+.pass_valid{ background-image: url(../images/ok_ico.png); background-position:373px 6px; background-repeat: no-repeat;}
+.pass_invalid{ background-image: url(../images/error_ico.png); background-position:373px 6px; background-repeat: no-repeat;}

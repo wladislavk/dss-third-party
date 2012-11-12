@@ -25,25 +25,8 @@
     <script type="text/javascript" src="js/lagu.js"></script>
     <script type="text/javascript" src="lib/harvesthq-chosen/chosen.jquery.min.js"></script>
     <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript">
-	lo_timer = '';
-function set_interval()
-{
-lo_timer=setInterval("auto_logout()",1800000);
-}
-function reset_interval()
-{
-clearInterval(lo_timer);
-lo_timer=setInterval("auto_logout()",1800000);
-}
-function auto_logout()
-{
-window.location = 'logout.php';
-
-}
-    </script>
   </head>
-  <body class="fixed" onload="set_interval()">
+  <body class="fixed" >
     <!-- quick access sliding panel -->
     <div id="slide_wrapper">
         <div class="wrapper" id="slide_panel">

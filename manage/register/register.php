@@ -20,10 +20,18 @@ include 'includes/completed.php';
         </script>
 
 <?php
-  $sql = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($_GET['id'])."' AND recover_hash='".mysql_real_escape_string($_GET['hash'])."'";
+  $sql = "SELECT * from dental_users 
+		WHERE userid='".mysql_real_escape_string($_GET['id'])."' AND 
+		status='2' AND 
+		recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
+		recover_time > date_sub(now(), INTERVAL 1 DAY)";
   $q = mysql_query($sql);
-if(mysql_num_rows($q) == 0){
-  ?><h3>User not found</h3><?php
+if(mysql_num_rows($q) == 0 || $_GET['hash']==''){
+  ?>
+  <script type="text/javascript">
+    window.location = '../login.php';
+  </script>
+  <?php
   die();
 }
   $p = mysql_fetch_assoc($q);
@@ -179,24 +187,24 @@ if(mysql_num_rows($q) == 0){
 			<input type="checkbox" id="billing_mailing"> My billing information is the same as my mailing information.
 		</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>1.</strong> Physician's Mailing Name:</label>
-                        <input class="inpt_a" type="text" id="mailing_name" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
+                        <label class="lbl_a"><strong>1.</strong> Physician's Mailing Name: <span class="req">*</span></label>
+                        <input class="inpt_a validate" type="text" id="mailing_name" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Mailing Practice Name:</label>
-			<input class="inpt_a" type="text" id="mailing_practice" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
+                        <label class="lbl_a"><strong>2.</strong> Mailing Practice Name: <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" id="mailing_practice" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
 		</div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Mailing Phone:</label>
-                        <input class="inpt_a phonemask" type="text" id="mailing_phone" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
+                        <label class="lbl_a"><strong>3.</strong> Mailing Phone: <span class="req">*</span></label>
+                        <input class="inpt_a phonemask validate" type="text" id="mailing_phone" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Mailing Address:</label>
-                        <input class="inpt_a" type="text" id="mailing_address" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
+                        <label class="lbl_a"><strong>4.</strong> Mailing Address: <span class="req">*</span></label>
+                        <input class="inpt_a validate" type="text" id="mailing_address" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>5.</strong> Mailing City:</label>
-			<input class="inpt_a" type="text" id="mailing_city" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Mailing City: <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" id="mailing_city" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <?php $s = $p['mailing_state']; ?>
@@ -258,7 +266,7 @@ if(mysql_num_rows($q) == 0){
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Mailing Zip:</label><input class="inpt_a" type="text" id="mailing_zip" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Mailing Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="mailing_zip" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
                 </div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
@@ -292,12 +300,12 @@ if(mysql_num_rows($q) == 0){
                 </div>
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>4.</strong> EIN or SSN:</label>
-			<input class="" name="ein" type="checkbox" value="1" <?= ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
-			<input class="" name="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
+			<input class="" name="ein" id="ein" type="checkbox" value="1" <?= ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
+			<input class="" name="ssn" id="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
                 </div>
                                                                                                                 <div class="cf clear">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
-<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
+<a href="javascript:void(0)" onclick="return checkComplete()" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -320,10 +328,10 @@ if(mysql_num_rows($q) == 0){
                         <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?=$p['username']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>2.</strong> Password:</label><input class="inpt_a validate" id="password" name="password" type="password" maxlength="255" />
+                        <label class="lbl_a"><strong>2.</strong> Password:</label><input class="inpt_a validate" id="password" name="password" type="password" onkeyup="checkPass()" maxlength="255" />
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>3.</strong> Retype Password:</label><input class="inpt_a validate" name="confirm_password" type="password" maxlength="255" />
+                        <label class="lbl_a"><strong>3.</strong> Retype Password:</label><input class="inpt_a validate" id="password2" name="confirm_password" type="password" onkeyup="checkPass()" maxlength="255" />
                 </div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
@@ -345,7 +353,7 @@ if(mysql_num_rows($q) == 0){
 												<p  class="sepH_b">Thank you for completing your new patient information!  Your responses have been securely stored.</p>
 
 											<div class="cf">
-                                                                                                <a href="../index.php" class="fr btn btn_dL">Home</a>
+                                                                                                <a href="../index.php" class="fr btn btn_dL">Click to Log On</a>
 											</div>
 										</div>
 									</div>
@@ -364,6 +372,24 @@ function cancel(n){
   $('#pc_'+n+'_input_div input').val('');
 }
 
+
+function checkPass(){
+  var p1 = $('#password').val();
+  var p2 = $('#password2').val();
+if(p1!='' || p2!=''){
+if(p1!=p2){
+  $('#password2').addClass('pass_invalid');
+  $('#password2').removeClass('pass_valid');
+}else{
+  $('#password2').addClass('pass_valid');
+  $('#password2').removeClass('pass_invalid');
+}
+}else{
+  $('#password2').removeClass('pass_valid');
+  $('#password2').removeClass('pass_invalid');  
+}
+
+}
 
 </script>
 <?php include 'includes/footer.php'; ?>

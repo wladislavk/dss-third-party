@@ -9,6 +9,22 @@
   return arg == value;
  }, "Value must equal arg.");
 
+ $.validator.addMethod("valueLength", function(value, element, arg){
+  return parseInt(value.length, 10) >= 5;
+ }, "Value must equal arg.");
+
+ $.validator.addMethod("einOrSsn", function(value, element, arg){
+  if(value != ''){
+    ein = $('#ein').is(':checked');
+    ssn = $('#ssn').is(':checked');
+    if(!ssn && !ein ){
+	return false;
+    }
+  }
+  return true;
+  
+ }, "Value must equal arg.");
+
 lga_wizard = {
 	init: function(){
 		//wizard form submit
@@ -31,11 +47,11 @@ lga_wizard = {
 
 		                // adjust height after items have been scrolled
                 api.onSeek(function(event, i) {
-			if(api.getIndex()==5){
-			  $("#register").animate({ height : 1400 }, 300);
-			}else{
                           var page = root.find(".page").eq(api.getIndex());
-                          $("#register").animate({ height : (page.height()) }, 300);
+                          $("#register").animate({ height : (page.height()+170) }, 300);
+			  $("#main_section").animate({ height : (page.height()+250) }, 300);
+			if(api.getIndex()==5){
+			  disable_registration();
 			}
                 });
 		
@@ -109,11 +125,12 @@ lga_wizard = {
 			    city: "required",
 			    state: "required",
                             zip: "required",
-			    npi: "required",
-			    medicare_npi: "required",
-			    tax_id_or_ssn: "required",
+			    tax_id_or_ssn: {
+				einOrSsn: true,
+			    },
 			    username: {
                                 required: true,
+				valueLength: "5",
                                 remote: {
                                         url: "includes/check_username.php",
                                         type: "post",
@@ -132,7 +149,14 @@ lga_wizard = {
 			    confirm_password: { 
 				required: true,
 				valueEquals: $("#password").val()
-			    } 
+			    },
+			    mailing_name: "required",
+                            mailing_practice: "required",
+			    mailing_phone: "required",
+                            mailing_address: "required",
+                            mailing_city: "required",
+                            mailing_state: "required",
+                            mailing_zip: "required"
                         },
     errorPlacement: function(error, element) {
         error.appendTo(element.parent());
@@ -149,25 +173,41 @@ lga_wizard = {
                             city: "This field is required",
                             state: "This field is required",
                             zip: "This field is required",
-			    npi: "This field is required",
-			    medicare_npi: "This field is required",
-			    tax_id_or_ssn: "This field is required",
+			    tax_id_or_ssn: {
+				einOrSsn: "Must select EIN or SSN"
+			    },
 			    username: {
                                 required: "This field is required",
+				valueLength: "Username must be 5 characters long",
                                 remote: "Error: The username you have entered is either invalid or already in use. Please enter a different username."
                                 },
                             password: "This field is required",
                             confirm_password: { 
 				required: "This field is required",
 				valueEquals: 'Must match password' 
-				}
+				},
+                            mailing_name: "This field is required",
+                            mailing_practice: "This field is required",
+			    mailing_phone: "This field is required",
+                            mailing_address: "This field is required",
+                            mailing_city: "This field is required",
+                            mailing_state: "This field is required",
+                            mailing_zip: "This field is required"
                         }
 					}).element($(this));
 				
 					if(validator == false){	notValid = true	}
 			})
 
-
+				if(!notValid){
+					if(api.getIndex()==3){
+					  if($('#npi').val()=='' ||
+						$('#medicare_npi').val()=='' ||
+						$('#tax_id_or_ssn').val()==''){
+						notValid = !confirm("Notice: You will not be able to generate or file insurance claims until these fields are completed. Click Cancel to complete them now, or OK to proceed and complete later."); 
+					  } 
+					}
+				}
 
 				if(notValid == true){ 
 					var page = root.find(".page").eq(api.getIndex());
@@ -219,8 +259,26 @@ $('#billing_mailing').click(function(){
     $('#mailing_address').val($('#address').val());
     $('#mailing_city').val($('#city').val());
     $('#mailing_state').val($('#state').val());
+    $('#mailing_state_chzn .chzn-single span').text($('#state option:selected').text());
     $('#mailing_zip').val($('#zip').val());    
   }
+  
+});
+});
 
-});
-});
+function disable_registration(){
+
+                                  $.ajax({
+                                        url: "includes/disable_registration.php",
+                                        type: "post",
+                                        data: {id: $("#userid").val()},
+                                        async: false,
+                                        success: function(data){
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+}
+

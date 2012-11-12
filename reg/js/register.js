@@ -30,7 +30,8 @@ lga_wizard = {
 			  $("#register").animate({ height : 1400 }, 300);
 			}else{
                           var page = root.find(".page").eq(api.getIndex());
-                          $("#register").animate({ height : (page.height()) }, 300);
+                          $("#register").animate({ height : (page.height()+170) }, 300);
+                          $("#main_section").animate({ height : (page.height()+250) }, 300);
 			}
                 });
 		
@@ -227,7 +228,8 @@ lga_wizard = {
 
 				if(notValid == true){ 
 					var page = root.find(".page").eq(api.getIndex());
-                        		$("#register").animate({ height : (page.height()) }, 300);
+                          		$("#register").animate({ height : (page.height()+170) }, 300);
+                          		$("#main_section").animate({ height : (page.height()+250) }, 300);
 					return false; 
 				}
 			}

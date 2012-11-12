@@ -305,7 +305,7 @@ if(mysql_num_rows($q) == 0 || $_GET['hash']==''){
                 </div>
                                                                                                                 <div class="cf clear">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
-<a href="javascript:void(0)" onclick="return checkComplete()" class="fr next btn btn_dL">Proceed &raquo;</a>
+<a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>

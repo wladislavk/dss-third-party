@@ -9,7 +9,20 @@ require_once('../includes/general_functions.php');
 <?php
 if(isset($_REQUEST['submit']))
 {
-$sqlex = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+$q = mysql_query($sql);
+if(mysql_num_rows($q)==0){
+  $sqlex = "INSERT INTO dental_ex_page5 set 
+                dentaldevice='".mysql_real_escape_string($d)."', 
+                patientid='".$pid."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+}else{
+
+  $sqlex = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
+}
 $qex = mysql_query($sqlex);
 ?>
 <script type="text/javascript">

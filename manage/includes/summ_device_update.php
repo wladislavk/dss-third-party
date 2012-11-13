@@ -1,9 +1,22 @@
 <?php
+session_start();
 require_once '../admin/includes/config.php';
 $d = $_REQUEST['device'];
 $pid = $_REQUEST['pid'];
 
-$s = "UPDATE dental_ex_page5 set dentaldevice='".mysql_real_escape_string($d)."' where patientid='".$pid."'";
+$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+$q = mysql_query($sql);
+if(mysql_num_rows($q)==0){
+  $s = "INSERT INTO dental_ex_page5 set 
+		dentaldevice='".mysql_real_escape_string($d)."', 
+		patientid='".$pid."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+}else{
+  $s = "UPDATE dental_ex_page5 set dentaldevice='".mysql_real_escape_string($d)."' where patientid='".$pid."'";
+}
 $q = mysql_query($s);
 if($q){
   echo '{"success":true}';

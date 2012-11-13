@@ -9,7 +9,20 @@ $pid = $_REQUEST['pid'];
 		$r = mysql_fetch_assoc($q);
 
 		if($r['segmentid'] == 7){ //Update dental device date for device delivery step
-			mysql_query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysql_real_escape_string($comp_date)))."' where patientid='".$pid."'");
+			$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+			$q = mysql_query($sql);
+			if(mysql_num_rows($q)==0){
+  				$s = "INSERT INTO dental_ex_page5 set 
+                			dentaldevice='".mysql_real_escape_string($d)."', 
+                			patientid='".$pid."',
+                			userid = '".s_for($_SESSION['userid'])."',
+               	 			docid = '".s_for($_SESSION['docid'])."',
+                			adddate = now(),
+                			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+			}else{
+
+				mysql_query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysql_real_escape_string($comp_date)))."' where patientid='".$pid."'");
+			}
 		}
 
 

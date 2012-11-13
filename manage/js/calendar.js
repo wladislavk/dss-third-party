@@ -7,7 +7,7 @@ $(document).ready( function(){
         		inputField : cid,
         		trigger    : cid,
 			fdow	   : 0,
-			align	   : "Bl///T/",
+			align	   : "Bl////",
         		onSelect   : function() { this.hide() },
         		dateFormat : "%m/%d/%Y"
       		});

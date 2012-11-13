@@ -815,7 +815,102 @@ if($jointid <> '')
 			</ul>
 		</td>
 	</tr>
-    
+ 	<tr>
+		<td>
+  <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
+  <tr valign="top">
+    <td width="17%" height="4">ROM:&nbsp;&nbsp;</td>
+    <td colspan="2">
+    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
+&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+  </tr>
+
+  <tr>
+  <td width="17%" height="4">Incisal Edge Range:&nbsp;&nbsp;</td>
+  <td colspan="2">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input disabled="disabled" type="text" name="ir_range" id="ir_range" size="5" value="<?php echo $protrusion_to-($protrusion_from); ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Incisal Range (minimum):&nbsp;&nbsp; <input type="text" name="ir_min" id="ir_min" size="5" value="<?php echo $protrusion_from; ?>" onchange="checkIncisal()" /> (maximum) <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
+
+  </td>
+  </tr>
+  <script type="text/javascript">
+        function checkIncisal(){
+                min = Number($('#ir_min').val());
+                max = Number($('#ir_max').val());
+                range = (max-min);
+                $('#ir_range').val(range);
+                pos = Number($('#i_pos').val());
+                dist = Math.abs(pos-min); 
+                perc = (dist/range)
+                $('#initial_device_titration_equal_h').val(Math.round(dist));
+                $('#i_perc').val(Math.round(perc*100));
+                if(min != '' && max != ''){
+                        if((range)<0){
+                                alert('Minimum must be less than maximum');
+                                $('#ir_min').focus();
+                                return false;
+                        }
+                        if(pos<min || pos>max){
+                                alert('Incisal Position value must be between minimum and maximum range.');
+                                $('#i_pos').focus();
+                                return false;
+                        }
+                }
+                return true;
+        }
+        $('document').ready( function(){
+                checkIncisal();
+        })
+  </script>
+  <tr>
+  <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
+  <td colspan="2">
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+  </td>
+  </tr>
+   <tr valign="top">
+    <td height="4">
+        Device
+    </td>
+    <td colspan="2">
+
+    Device
+        <select name="dentaldevice" style="width:250px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                               <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+    </td>
+
+  </tr>
+  <tr>
+  <td width="17%" height="4">Initial Device Setting&nbsp;&nbsp;</td>
+  <td colspan="2">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Incisal Position <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Distance from minimum range<input disabled="disabled" type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm
+(<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo $initialdevsettingp; ?>" />%)
+  </td>
+  </tr>
+
+  </table>
+  <br />
+
+<div align="right">
+<input type="hidden" name="summarysub" value="1" />
+<input type="hidden" name="ed" value="<?=$summaryid;?>" />
+    <input type="submit" name="summarybtn" onclick="return checkIncisal();" value="Save" />
+</div>
+   
     
 </table>
 

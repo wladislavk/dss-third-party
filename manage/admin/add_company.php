@@ -45,8 +45,10 @@ if($_POST["compsub"] == 1)
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-                        $adminid = mysql_insert_id();			
+                        $companyid = mysql_insert_id();			
 
+			$l_sql = "INSERT INTO dental_letter_templates (name, body, companyid, triggerid) SELECT name, body, '".$companyid."', id FROM dental_letter_templates WHERE default_letter=1";
+			mysql_query($l_sql);
 
 			$msg = "Added Successfully";
 			?>

@@ -184,7 +184,7 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 $company_query = "SELECT c.* FROM companies c 
 		JOIN dental_user_company uc ON c.id = uc.companyid
 		WHERE uc.userid = '".$docid."';";
-echo $company_query;
+//echo $company_query;
 $company_result = mysql_query($company_query);
 while ($row = mysql_fetch_assoc($company_result)) {
         $company_info = $row;
@@ -498,7 +498,7 @@ $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description'
 
 // Load $template
 
-  $letter_sql = "SELECT body FROM dental_letter_templates WHERE id='".mysql_real_escape_string($templateid)."'";
+  $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid=1 AND triggerid='".mysql_real_escape_string($templateid)."'";
   $letter_q = mysql_query($letter_sql);
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];

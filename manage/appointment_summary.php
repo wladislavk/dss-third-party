@@ -99,6 +99,7 @@ $segments[1] = "Initial Contact";
                                 <?php
                                 break;
 			case 4:
+			case 7:
 $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $myex = mysql_query($sqlex);
 $myarrayex = mysql_fetch_array($myex);

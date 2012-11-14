@@ -16,6 +16,13 @@ if(mysql_num_rows($q)==0){
 }else{
   $s = "UPDATE dental_ex_page5 set dentaldevice_date='".mysql_real_escape_string($d)."' where patientid='".$pid."'";
 }
+
+                        $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysql_real_escape_string($pid)." ORDER BY date_completed DESC";
+                        $last_q = mysql_query($last_sql);
+                        $last_r = mysql_fetch_assoc($last_q);
+			$u = "UPDATE dental_flow_pg2_info SET date_completed='".mysql_real_escape_string($d)."' WHERE id='".$last_r['id']."'";
+			mysql_query($u);
+
 $q = mysql_query($s);
 if($q){
   echo '{"success":true}';

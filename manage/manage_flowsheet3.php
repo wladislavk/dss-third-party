@@ -305,8 +305,7 @@ $('.completed_today').click(function(){
                                                         $type.show();
 							loadPopup('includes/flowsheet_study_type_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
                                                   }
-
-						  if(id==4 || !r.impression){
+						  if((id==4 || id==7) && !r.impression){
 							loadPopup('includes/impression_device.php?pid=<?= $_GET['pid']; ?>');
 						  }else if(id==1){
 

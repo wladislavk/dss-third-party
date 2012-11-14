@@ -83,11 +83,6 @@ if($_POST["loginsub"] == 1)
 	
 
 		?>
-		<!--[if lte IE 7]>
-                <script type="text/javascript">
-	  	  alert('This application does not support old versions of IE. For best performance please use Chrome, Firefox or IE8+');
-                </script>
-		<![endif]-->
 		<script type="text/javascript">
 
 
@@ -108,6 +103,14 @@ if($_POST["loginsub"] == 1)
 	}
 }
 ?>
+
+<!--[if lte IE 7]>
+<div id="alert_container">
+  This application does not support old versions of IE.<br />For best performance please use Chrome, Firefox or IE8+
+</div>
+<![endif]-->
+
+
 <div id="login_container">
 <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">

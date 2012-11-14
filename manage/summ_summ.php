@@ -48,6 +48,73 @@ $main_reason = st($myarray['main_reason']);
 $main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
+if(isset($_POST['device_submit'])){
+$sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+$q = mysql_query($sql);
+$row = mysql_fetch_assoc($q);
+$num = mysql_num_rows($q);
+if($num > 0){
+$ex_ed_sql = " update dental_ex_page5 set 
+                protrusion_from = '".s_for($_POST['ir_min'])."',
+                protrusion_to = '".s_for($_POST['ir_max'])."',
+                protrusion_equal = '".s_for($_POST['ir_range'])."',
+                i_opening_from = '".s_for($_POST['i_opening_from'])."',
+                l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
+                r_lateral_from = '".s_for($_POST['r_lateral_from'])."',
+                dentaldevice = '".s_for($_POST['dentaldevice'])."',
+                dentaldevice_date = '".s_for($_POST['dentaldevice_date'])."'
+        where ex_page5id = '".$row['ex_page5id']."'";
+mysql_query($ex_ed_sql);
+}else{
+$ex_ins_sql = " insert dental_ex_page5 set 
+                patientid = '".s_for($_GET['pid'])."',
+                protrusion_from = '".s_for($_POST['ir_min'])."',
+                protrusion_to = '".s_for($_POST['ir_max'])."',
+                protrusion_equal = '".s_for($_POST['ir_range'])."',
+                i_opening_from = '".s_for($_POST['i_opening_from'])."',
+                l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
+                r_lateral_from = '".s_for($_POST['r_lateral_from'])."',
+                dentaldevice = '".s_for($_POST['dentaldevice'])."',
+                dentaldevice_date = '".s_for($_POST['dentaldevice_date'])."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                mysql_query($ex_ins_sql) or die($ex_ins_sql." | ".mysql_error());
+}
+$sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$q = mysql_query($sql);
+$row = mysql_fetch_assoc($q);
+$num = mysql_num_rows($q);
+
+        if($num==0)
+        {
+                $ins_sql = " insert into dental_summary set 
+                patientid = '".s_for($_GET['pid'])."',
+                initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
+                initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
+                initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
+                optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
+                optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+		mysql_query($ins_sql);
+	}else{
+		$ed_sql = "update dental_summary set 
+                initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
+                initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
+                initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
+                optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
+                optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
+		 where patientid = '".s_for($_GET['pid'])."'";
+		mysql_query($ed_sql);
+	}
+
+}
+
 $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $myex = mysql_query($sqlex);
 $myarrayex = mysql_fetch_array($myex);
@@ -60,6 +127,15 @@ $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 $dentaldevice = st($myarrayex['dentaldevice']);
 $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
+
+$sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
+$mys = mysql_query($sqls);
+$myarrays = mysql_fetch_array($mys);
+$initial_device_titration_1 = $myarrays['initial_device_titration_1'];
+$initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
+$initial_device_titration_equal_v = $myarrays['initial_device_titration_equal_v'];
+$optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
+$optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 
 
@@ -488,12 +564,99 @@ if($cpap == '')
 <div class="box">
        <?php include("dss_notes.php"); ?>
 </div>
+<br />
 
+<form action="" method="POST">
+  <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
+  <tr valign="top">
+    <td width="17%" height="4">ROM:&nbsp;&nbsp;</td>
+    <td colspan="2">
+    Vertical&nbsp;<input type="text" name="i_opening_from" id="textfield11" size="5" value="<?php echo $i_opening_from; ?>" /> mm&nbsp;&nbsp;&nbsp;&nbsp; Right <input type="text" name="r_lateral_from" id="textfield12" size="5" value="<?php echo $r_lateral_from; ?>" />mm&nbsp;&nbsp;&nbsp;&nbsp;  Left <input type="text" name="l_lateral_from" id="textfield13" size="5" value="<?php echo $l_lateral_from; ?>"/>mm
+&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+  </tr>
 
+  <tr>
+  <td width="17%" height="4">Incisal Edge Range:&nbsp;&nbsp;</td>
+  <td colspan="2">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input disabled="disabled" type="text" name="ir_range" id="ir_range" size="5" value="<?php echo $protrusion_to-($protrusion_from); ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Incisal Range (minimum):&nbsp;&nbsp; <input type="text" name="ir_min" id="ir_min" size="5" value="<?php echo $protrusion_from; ?>" onchange="checkIncisal()" /> (maximum) <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
 
+  </td>
+  </tr>
+  <script type="text/javascript">
+        function checkIncisal(){
+                min = Number($('#ir_min').val());
+                max = Number($('#ir_max').val());
+                range = (max-min);
+                $('#ir_range').val(range);
+                pos = Number($('#i_pos').val());
+                dist = Math.abs(pos-min); 
+                perc = (dist/range)
+                $('#initial_device_titration_equal_h').val(Math.round(dist));
+                $('#i_perc').val(Math.round(perc*100));
+                if(min != '' && max != ''){
+                        if((range)<0){
+                                alert('Minimum must be less than maximum');
+                                $('#ir_min').focus();
+                                return false;
+                        }
+                        if(pos<min || pos>max){
+                                alert('Incisal Position value must be between minimum and maximum range.');
+                                $('#i_pos').focus();
+                                return false;
+                        }
+                }
+                return true;
+        }
+        $('document').ready( function(){
+                checkIncisal();
+        })
+  </script>
+  <tr>
+  <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
+  <td colspan="2">
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Horizontal<input type="text" name="optimum_echovision_hor" id="optimum_echovision_hor" size="5" value="<?php echo $optimum_echovision_hor; ?>" />mm  Vertical<input type="text" name="optimum_echovision_ver" id="optimum_echovision_ver" size="5" value="<?php echo $optimum_echovision_ver; ?>" />mm
+  </td>
+  </tr>
+   <tr valign="top">
+    <td height="4">
+        Device
+    </td>
+    <td colspan="2">
 
+    Device
+        <select name="dentaldevice" style="width:250px">
+        <option value=""></option>
+        <?php        $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+                                                                $device_my = mysql_query($device_sql);
+                                                                while($device_myarray = mysql_fetch_array($device_my))
+                                                                {
+                ?>
+                                                               <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                                                                ?>
+    </select>
+        Date <input id="dentaldevice_date" name="dentaldevice_date" type="text" class="calendar" value="<?= $dentaldevice_date; ?>" />
+    </td>
 
+  </tr>
+  <tr>
+  <td width="17%" height="4">Initial Device Setting&nbsp;&nbsp;</td>
+  <td colspan="2">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Incisal Position <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Distance from minimum range<input disabled="disabled" type="text" name="initial_device_titration_equal_h" id="initial_device_titration_equal_h" size="5" value="<?php echo $initial_device_titration_equal_h; ?>" />mm
+(<input type="text" name="i_perc" id="i_perc" size="2" disabled="disabled" value="<?php echo $initialdevsettingp; ?>" />%)
+  </td>
+  </tr>
 
+  </table>
+
+<input type="submit" name="device_submit" value="Save" />
+
+</form>
 
 <?php 
 

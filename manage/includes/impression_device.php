@@ -9,12 +9,12 @@ require_once('../includes/general_functions.php');
 <?php
 if(isset($_REQUEST['submit']))
 {
-$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+$sql = "SELECT * FROM dental_ex_page5 where patientid='".$_GET['pid']."'";
 $q = mysql_query($sql);
 if(mysql_num_rows($q)==0){
   $sqlex = "INSERT INTO dental_ex_page5 set 
-                dentaldevice='".mysql_real_escape_string($d)."', 
-                patientid='".$pid."',
+                dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."', 
+                patientid='".$_GET['pid']."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
                 adddate = now(),

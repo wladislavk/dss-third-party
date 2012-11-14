@@ -10,7 +10,7 @@
  }, "Value must equal arg.");
 
  $.validator.addMethod("valueLength", function(value, element, arg){
-  return parseInt(value.length, 10) >= 5;
+  return parseInt(value.length, 10) >= parseInt(arg, 10);
  }, "Value must equal arg.");
 
  $.validator.addMethod("einOrSsn", function(value, element, arg){
@@ -23,7 +23,7 @@
   }
   return true;
   
- }, "Value must equal arg.");
+ }, "Please also select EIN or SSN");
 
 lga_wizard = {
 	init: function(){
@@ -145,7 +145,10 @@ lga_wizard = {
                                         }
                                 }
                             },
-			    password: "required",
+			    password: {
+				required: true,
+                                valueLength: "8",
+			    },
 			    confirm_password: { 
 				required: true,
 				valueEquals: $("#password").val()
@@ -174,14 +177,17 @@ lga_wizard = {
                             state: "This field is required",
                             zip: "This field is required",
 			    tax_id_or_ssn: {
-				einOrSsn: "Must select EIN or SSN"
+				einOrSsn: "Please also select EIN or SSN"
 			    },
 			    username: {
                                 required: "This field is required",
-				valueLength: "Username must be 5 characters long",
+				valueLength: "Username must be at least 5 characters",
                                 remote: "Error: The username you have entered is either invalid or already in use. Please enter a different username."
                                 },
-                            password: "This field is required",
+                            password: {
+				required: "This field is required",
+                                valueLength: "Password must be at least 8 characters"
+			    	},
                             confirm_password: { 
 				required: "This field is required",
 				valueEquals: 'Must match password' 

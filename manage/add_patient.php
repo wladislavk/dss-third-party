@@ -68,6 +68,8 @@ updateNumber2('s_m_ins_phone');
     $mdcontacts[] = $_POST['docdentist'];
     $mdcontacts[] = $_POST['docent'];
     $mdcontacts[] = $_POST['docmdother'];
+    $mdcontacts[] = $_POST['docmdother2'];
+    $mdcontacts[] = $_POST['docmdother3'];
     $recipients	= array();
     foreach ($mdcontacts as $contact) {
       if ($contact != "Not Set") {
@@ -376,6 +378,8 @@ $ed_sql .="
     docdentist = '".s_for($_POST["docdentist"])."',
     docent = '".s_for($_POST["docent"])."',
     docmdother = '".s_for($_POST["docmdother"])."',
+    docmdother2 = '".s_for($_POST["docmdother2"])."',
+    docmdother3 = '".s_for($_POST["docmdother3"])."',
     emergency_name = '".s_for($_POST["emergency_name"])."',
     emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
     emergency_number = '".s_for(num($_POST["emergency_number"]))."',
@@ -612,6 +616,8 @@ mysql_query($s1);
 		docdentist = '".s_for($_POST["docdentist"])."',
 		docent = '".s_for($_POST["docent"])."',
 		docmdother = '".s_for($_POST["docmdother"])."', 
+		docmdother2 = '".s_for($_POST["docmdother2"])."',
+    		docmdother3 = '".s_for($_POST["docmdother3"])."',
 		partner_name = '".s_for($_POST["partner_name"])."', 
 		emergency_name = '".s_for($_POST["emergency_name"])."',
     emergency_relationship = '".s_for($_POST["emergency_relationship"])."',
@@ -783,6 +789,8 @@ mysql_query($s1);
 		$docdentist = $_POST["docdentist"];
 		$docent = $_POST["docent"];
 		$docmdother = $_POST["docmdother"];
+		$docmdother2 = $_POST["docmdother2"];
+                $docmdother3 = $_POST["docmdother3"];
 		$emp_fax = $_POST["emp_fax"];
 		$plan_name = $_POST["plan_name"];
 		$group_number = $_POST["group_number"];
@@ -933,6 +941,23 @@ mysql_query($s1);
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+
+                $docmdother2 = st($themyarray["docmdother2"]);
+                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE contactid=".$docmdother2;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+
+                $docmdother3 = st($themyarray["docmdother3"]);
+                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE contactid=".$docmdother3;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+
 
 		$inactive = st($themyarray["inactive"]);
 		$partner_name = st($themyarray["partner_name"]);
@@ -2289,8 +2314,63 @@ $(document).ready(function(){
 		         
 		        
 
-		         
-		         
+		        
+
+                         <tr height="35">
+
+                       <td>
+
+                       <ul>
+                        <li  id="foli8" class="complex">
+                         <label style="display: block; float: left; width: 110px;">Other MD 2</label>
+                                        <input type="text" id="docmdother2_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
+<br />        <div id="docmdother2_hints" class="search_hints" style="display:none;">
+                <ul id="docmdother2_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docmdother2_name', 'docmdother2_hints', 'docmdother2', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docmdother2" id="docmdother2" value="<?=$docmdother2;?>" />
+
+                         </li>
+                         </ul>
+
+                         </td>
+                         </tr>
+ 
+		        
+
+
+                         <tr height="35">
+
+                       <td>
+
+                       <ul>
+                        <li  id="foli8" class="complex">
+                         <label style="display: block; float: left; width: 110px;">Other MD 3</label>
+                                        <input type="text" id="docmdother3_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
+<br />        <div id="docmdother3_hints" class="search_hints" style="display:none;">
+                <ul id="docmdother3_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('docmdother3_name', 'docmdother3_hints', 'docmdother3', '', 'list_contacts.php', 'contact', '<?= $_GET['pid']; ?>');
+});
+</script>
+                                        </div>
+<input type="hidden" name="docmdother3" id="docmdother3" value="<?=$docmdother3;?>" />
+
+                         </li>
+                         </ul>
+
+                         </td>
+                         </tr>
+ 
 		         
 		         
 		         </table>

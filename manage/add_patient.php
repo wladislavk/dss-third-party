@@ -2293,6 +2293,9 @@ $(document).ready(function(){
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Other MD</label>
                                         <input type="text" id="docmdother_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
+			<?php if($docmdother2=='' || $docmdother3==''){ ?>
+			<a href="#" id="add_new_md" onclick="add_md(); return false;">Add New MD</a>
+			<?php } ?>
 <br />        <div id="docmdother_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2311,12 +2314,29 @@ $(document).ready(function(){
 		         </td>
 		         </tr>
 		         
-		         
-		        
+<script type="text/javascript">
 
-		        
+  function add_md(){		      
+    if($('#docmdother2_tr').css('display') == 'none'){
+      $('#docmdother2_tr').css('display', 'table-row');
+    }else if($('#docmdother3_tr').css('display') == 'none'){
+      $('#docmdother3_tr').css('display', 'table-row');
+    }    
 
-                         <tr height="35">
+    if($('#docmdother2_tr').css('display') != 'none' && $('#docmdother3_tr').css('display') != 'none'){
+	$('#add_new_md').hide();
+    }
+
+  }
+
+  function cancel_md(md){
+    $('#'+md).val('');
+    $('#'+md+'_name').val('');
+    $('#'+md+'_tr').hide();
+  }
+</script>		        
+		
+                         <tr height="35" id="docmdother2_tr" <?= ($docmdother2=='')?'style="display:none;"':''; ?>>
 
                        <td>
 
@@ -2324,6 +2344,7 @@ $(document).ready(function(){
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 2</label>
                                         <input type="text" id="docmdother2_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
+			<a href="#" onclick="cancel_md('docmdother2'); return false;">Cancel</a>
 <br />        <div id="docmdother2_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother2_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2345,7 +2366,7 @@ $(document).ready(function(){
 		        
 
 
-                         <tr height="35">
+                         <tr height="35" id="docmdother3_tr" <?= ($docmdother3=='')?'style="display:none;"':''; ?>>
 
                        <td>
 
@@ -2353,6 +2374,8 @@ $(document).ready(function(){
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 3</label>
                                         <input type="text" id="docmdother3_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
+			<a href="#" onclick="cancel_md('docmdother3'); return false;">Cancel</a>
+
 <br />        <div id="docmdother3_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother3_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>

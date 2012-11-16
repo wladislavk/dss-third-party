@@ -88,7 +88,7 @@ function paging2($no_pages,$index_val,$vid,$index_val1 = 0)
 // Function to Get Contacts
 // Returns comma delimited list of contactids
 function get_mdcontactids ($pid) {
-  $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother FROM dental_patients where patientid = '".s_for($pid)."';";
+  $contact_sql = "SELECT docsleep, docpcp, docdentist, docent, docmdother, docmdother2, docmdother3 FROM dental_patients where patientid = '".s_for($pid)."';";
   $contact_res = mysql_query($contact_sql);
   $contactids = array();
   $row = mysql_fetch_array($contact_res, MYSQL_NUM);

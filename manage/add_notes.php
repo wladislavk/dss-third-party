@@ -7,11 +7,20 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
 include_once('admin/includes/password.php');
+
+
+        $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+        $sign_q = mysql_query($sign_sql);
+        $sign_r = mysql_fetch_assoc($sign_q);
+        $user_sign = $sign_r['sign_notes'];
+
+
 if($_POST["notesub"] == 1)
 {
 	$notes = $_POST['notes'];
    	$procedure_date = ($_POST['procedure_date']!='')?date('Y-m-d', strtotime($_POST['procedure_date'])):'';	
 	$editor_initials = $_POST['editor_initials'];
+
 
 	if($_POST['ed'] == '')
 	{
@@ -22,7 +31,7 @@ if($_POST["notesub"] == 1)
 		procedure_date = '".s_for($procedure_date)."',
 		userid = '".s_for($_SESSION['userid'])."',
 		docid = '".s_for($_SESSION['docid'])."',";
-		if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
+		if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)){
 		  $ins_sql .= "
 			signed_id='".s_for($_SESSION['userid'])."',
 			signed_on=now(),
@@ -85,7 +94,7 @@ if($_POST["notesub"] == 1)
                 procedure_date = '".s_for($procedure_date)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',";
-                if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
+                if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)){
                   $ins_sql .= "
                         signed_id='".s_for($_SESSION['userid'])."',
                         signed_on=now(),
@@ -331,7 +340,7 @@ if($pat_myarray['patientid'] == '')
 		<div id="submit_buttons">
                 <input type="submit" name="<?= ($_SESSION['docid'] == $_SESSION['userid'])?'unsign':'unsign_staff'; ?>" value=" <?=$but_unsigned_text?>" class="button" />
 		<?php 
-		  if($_SESSION['docid'] == $_SESSION['userid']){ ?>
+		  if($_SESSION['docid'] == $_SESSION['userid'] || $user_sign==1){ ?>
 		<input type="submit"  style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />
 		<?php }else{ ?>
 			<input type="button" onclick="staff_sign();return false;" style="margin-left: 20px;" name="sign" value=" <?=$but_signed_text?>" class="button" />		

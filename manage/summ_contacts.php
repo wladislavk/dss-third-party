@@ -56,6 +56,25 @@
 		  $docmdother_phone = $d['phone1'];
 		  $docmdother_fax = $d['fax'];
 
+                $docmdother2 = st($themyarray["docmdother2"]);
+                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE contactid=".$docmdother2;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docmdother2_name = $d['firstname']." ".$d['lastname'];
+                  $docmdother2_phone = $d['phone1'];
+                  $docmdother2_fax = $d['fax'];
+
+                $docmdother3 = st($themyarray["docmdother3"]);
+                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype, dc.phone1, dc.fax FROM dental_contact dc
+                                LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
+                        WHERE contactid=".$docmdother3;
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $docmdother3_name = $d['firstname']." ".$d['lastname'];
+                  $docmdother3_phone = $d['phone1'];
+                  $docmdother3_fax = $d['fax'];
 ?>
 <table width="100%">
   <tr>
@@ -100,6 +119,25 @@
     <td><?= $docmdother_fax; ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
+  <?php if($docmdother2!=''){ ?>
+  <tr>
+    <td>MD Other 2</td>
+    <td><?= $docmdother2_name; ?></td>
+    <td><?= $docmdother2_phone; ?></td>
+    <td><?= $docmdother2_fax; ?></td>
+    <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
+  </tr>
+  <?php
+  }
+  if($docmdother3!=''){ ?>
+  <tr>
+    <td>MD Other 3</td>
+    <td><?= $docmdother3_name; ?></td>
+    <td><?= $docmdother3_phone; ?></td>
+    <td><?= $docmdother3_fax; ?></td>
+    <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
+  </tr>
+  <?php } ?>
 </table>
 
 

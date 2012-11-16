@@ -9,11 +9,15 @@ $pid = $_REQUEST['pid'];
 		$r = mysql_fetch_assoc($q);
 
 		if($r['segmentid'] == 7){ //Update dental device date for device delivery step
+			$last_sql = "SELECT * FROM dental_flow_pg2_info WHERE patientid=".mysql_real_escape_string($pid)." ORDER BY date_completed DESC";
+			$last_q = mysql_query($last_sql);
+			$last_r = mysql_fetch_assoc($last_q);
+			if($id == $last_r['id']){
 			$sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
 			$q = mysql_query($sql);
 			if(mysql_num_rows($q)==0){
   				$s = "INSERT INTO dental_ex_page5 set 
-                			dentaldevice='".mysql_real_escape_string($d)."', 
+                			dentaldevice_date='".date('Y-m-d', strtotime(mysql_real_escape_string($comp_date)))."', 
                 			patientid='".$pid."',
                 			userid = '".s_for($_SESSION['userid'])."',
                	 			docid = '".s_for($_SESSION['docid'])."',
@@ -22,6 +26,7 @@ $pid = $_REQUEST['pid'];
 			}else{
 
 				mysql_query("UPDATE dental_ex_page5 SET dentaldevice_date='".date('Y-m-d', strtotime(mysql_real_escape_string($comp_date)))."' where patientid='".$pid."'");
+			}
 			}
 		}
 

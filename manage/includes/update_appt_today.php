@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../admin/includes/config.php';
 require_once 'letter_triggers.php';
 $id = $_REQUEST['id'];
@@ -8,14 +9,33 @@ $pid = $_REQUEST['pid'];
 $impression = true;
 $create = true; //default to insert record if checks pass
 
-if($id == "7"){  //device deliver - check if impressions are done
+if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 
-  $imp_s = "SELECT * from dental_flow_pg2_info WHERE segmentid='4' AND patientid='".mysql_real_escape_string($pid)."' AND date_completed!='' AND date_completed IS NOT NULL";
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND date_completed!='' AND date_completed IS NOT NULL";
   $imp_q = mysql_query($imp_s);
   $imp_n = mysql_num_rows($imp_q);
   if($imp_n == 0){
 	$impression=false;
   }
+}
+
+if($id == "7"){
+  $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+  $q = mysql_query($sql);
+  if(mysql_num_rows($q)==0){
+    $sqlex = "INSERT INTO dental_ex_page5 set 
+                dentaldevice_date=CURDATE(), 
+                patientid='".$pid."',
+                userid = '".s_for($_SESSION['userid'])."',
+                docid = '".s_for($_SESSION['docid'])."',
+                adddate = now(),
+                ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+  }else{
+ 
+    $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where patientid='".$pid."'";
+  }
+  $qex = mysql_query($sqlex);
+
 }
 
 if($create){

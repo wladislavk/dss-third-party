@@ -24,8 +24,13 @@ if(mysql_num_rows($q)==0){
   $sqlex = "update dental_ex_page5 set dentaldevice='".mysql_real_escape_string($_REQUEST['dentaldevice'])."' where patientid='".$_GET['pid']."'";
 }
 $qex = mysql_query($sqlex);
+$flow_sql = "UPDATE dental_flow_pg2_info SET
+		device_id='".mysql_real_escape_string($_REQUEST['dentaldevice'])."'
+		WHERE id='".mysql_real_escape_string($_GET['id'])."'";
+mysql_query($flow_sql);
 ?>
 <script type="text/javascript">
+parent.updateDentalDevice('<?= $_GET['id']; ?>', '<?= $_REQUEST['dentaldevice']; ?>');
 parent.disablePopup1();
 </script>
 

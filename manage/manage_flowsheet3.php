@@ -305,8 +305,18 @@ $('.completed_today').click(function(){
                                                         $type.show();
 							loadPopup('includes/flowsheet_study_type_select.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
                                                   }
-						  if((id==4 || id==7) && !r.impression){
-							loadPopup('includes/impression_device.php?pid=<?= $_GET['pid']; ?>');
+						  if((id==4 || id==7)){
+                                                        var $r = $('#dentaldevice_tmp');
+                                                        var $type = $r.clone();
+                                                        $t = $clone.find('.title');
+                                                        $type.find('.dentaldevice').attr('id', 'dentaldevice_'+r.id);
+                                                        $t.after($type);
+                                                        $type.show();
+							if(!r.impression){
+							  loadPopup('includes/impression_device.php?pid=<?= $_GET['pid']; ?>&id='+r.id);
+							}else{
+							  $('#dentaldevice_'+r.id).val(r.impression);
+							}
 						  }else if(id==1){
 
 						  }
@@ -358,6 +368,9 @@ function updateDelayReason(id, val){
 }
 function updateNoncompReason(id, val){
   $('#noncomp_reason'+id).val(val);
+}
+function updateDentalDevice(id, val){
+  $('#dentaldevice_'+id).val(val);
 }
 
 function update_current_step(){

@@ -215,7 +215,7 @@ if($_POST["staffsub"] == 1)
             </td>
         </tr>
 <td valign="top" class="frmhead">
-                Sign Notes? 
+                Sign Progress Notes? 
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" <?= ($sign_notes==1)?'checked="checked':''; ?> value="1" name="sign_notes" />

@@ -100,10 +100,10 @@ $segments[1] = "Initial Contact";
                                 break;
 			case 4:
 			case 7:
-$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
-$myex = mysql_query($sqlex);
-$myarrayex = mysql_fetch_array($myex);
-$dentaldevice = st($myarrayex['dentaldevice']);
+//$sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+//$myex = mysql_query($sqlex);
+//$myarrayex = mysql_fetch_array($myex);
+//$dentaldevice = st($myarrayex['dentaldevice']);
 ?>
         <select class="dentaldevice" id="dentaldevice_<?php echo $id; ?>" style="width:150px">
         <option value=""></option>
@@ -112,7 +112,7 @@ $dentaldevice = st($myarrayex['dentaldevice']);
                                                                 while($device_myarray = mysql_fetch_array($device_my))
                                                                 {
                 ?>
-                                                                 <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <option <?= ($device_myarray['deviceid']==$row['device_id'])?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
                                                                  <?php
                                                                  }
 			?></select><?php
@@ -286,7 +286,7 @@ $(document).delegate('.noncomp_reason', "change", function(){
 });
 
 
-$('.dentaldevice').change(function(){
+$(document).delegate('.dentaldevice', "change", function(){
   id = $(this).attr('id').substring(13);
   device = $(this).val();
                                     $.ajax({
@@ -374,5 +374,15 @@ $(document).delegate('.study_type', "change", function(){
   </select>
 </div>
 
-
-
+<div id="dentaldevice_tmp" style="display:none;">
+        <select class="dentaldevice" id="dentaldevice_" style="width:150px">
+        <option value=""></option>
+        <?php       
+	$device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+ 	$device_my = mysql_query($device_sql);
+	while($device_myarray = mysql_fetch_array($device_my)){    ?>
+		<option <?= ($device_myarray['deviceid']==$row['device_id'])?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+                                                                 <?php
+                                                                 }
+                        ?></select>
+</div>

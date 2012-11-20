@@ -16,6 +16,7 @@ if($_POST["compsub"] == 1)
                                 city = '".mysql_real_escape_string($_POST["city"])."', 
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
+				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -41,6 +42,7 @@ if($_POST["compsub"] == 1)
                                 city = '".mysql_real_escape_string($_POST["city"])."', 
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
+				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -85,6 +87,7 @@ if($_POST["compsub"] == 1)
 		$city = $_POST['city'];
 		$state = $_POST['state'];
 		$zip = $_POST['zip'];   	
+		$eligible_api_key = $_POST['eligible_api_key'];
 		$status = $_POST['status'];
 	}
 	else
@@ -95,6 +98,7 @@ if($_POST["compsub"] == 1)
                 $city = st($themyarray['city']);
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
+		$eligible_api_key = st($themyarray['eligible_api_key']);
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
@@ -180,6 +184,14 @@ if($_POST["compsub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Eligible API Key
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="zip" type="text" name="eligible_api_key" value="<?=$eligible_api_key;?>" class="tbox" />
+            </td>
+        </tr
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

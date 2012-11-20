@@ -320,8 +320,11 @@ $segments[1] = "Initial Contact";
 <div class="half">
 <h4>Appt:</h4>
 <div class="box">
-<strong>Last seen:</strong> <?= ($last_r['date_completed']!='')?date('m/d/Y', strtotime($last_r['date_completed'])):''; ?>
-
+<strong>Last seen:</strong> 
+<? if($last_r['date_completed']!=''){ ?>
+<?= time_ago_format(date('U')-strtotime($last_r['date_completed'])); ?> ago - 
+<?= ($last_r['date_completed']!='')?date('m/d/Y', strtotime($last_r['date_completed'])):''; ?>
+<?php } ?>
   <strong>For:</strong> <?= ($last_r['segmentid']!='')?$segments[$last_r['segmentid']]:''; ?>
 
 <?php

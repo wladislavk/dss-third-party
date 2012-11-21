@@ -24,6 +24,16 @@ if(mysql_num_rows($q)==0){
 			mysql_query($u);
 
 $q = mysql_query($s);
+
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+  $imp_q = mysql_query($imp_s);
+  $imp_r = mysql_fetch_assoc($imp_q);
+  $flow_sql = "UPDATE dental_flow_pg2_info SET
+                completed_date='".mysql_real_escape_string($d)."'
+                WHERE id='".mysql_real_escape_string($imp_r['id'])."'";
+  mysql_query($flow_sql);
+
+
 if($q){
   echo '{"success":true}';
 }else{

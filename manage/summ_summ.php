@@ -136,15 +136,22 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 
 ?>
-<strong>Preferred Name:</strong> <?=$r['preferred_name']; ?>
- <strong>Age:</strong> <?php
+<div style="margin-bottom:6px">
+<?php
+if($r['preferred_name']!=''){
+echo $r['preferred_name']." - "; 
+}else{
+  echo $r['firstname'] ." - ";
+}
+?>
+<?php
 $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
 
 $years = floor($diff / (365*60*60*24));
-                echo $years;
+                echo $years ." years old";
 ?>
  <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
-<br />
+</div>
     <strong>Device</strong>
         <select id="dental_device" name="dentaldevice" style="width:250px">
         <option value=""></option>
@@ -158,6 +165,14 @@ $years = floor($diff / (365*60*60*24));
                                                                  }
                                                                 ?>
     </select>
+<?php
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+  $imp_q = mysql_query($imp_s);
+  $imp_r = mysql_fetch_assoc($imp_q);
+  if($imp_r['segmentid']=='4'){
+    ?> Not delivered. Impressions taken <?= ($imp_r['date_completed'])?date('m/d/Y',strtotime($imp_r['date_completed'])):''; ?>
+  <?php
+  }else{ ?>
         <strong>Date</strong> <input id="dental_device_date" name="dentaldevice_date" type="text" class="calendar_device_date" value="<?= $dentaldevice_date; ?>" />
 <strong>Duration:</strong>
 <?php
@@ -165,11 +180,14 @@ if($dentaldevice_date!=''){ ?>
  (<?= time_ago_format(date('U') - strtotime($dentaldevice_date)); ?>)
 <?php }else{ ?>
 (N/A)
-<?php } ?>
+<?php }
+}
+ ?>
 <br />
 
   <?php
      $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysql_real_escape_string($_GET['pid'])."'";
+     $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".$_GET['pid']."' ORDER BY date_completed DESC, id DESC;";
      $last_q = mysql_query($last_sql);
      $last_r = mysql_fetch_assoc($last_q);
 ?>
@@ -177,12 +195,22 @@ if($dentaldevice_date!=''){ ?>
 <h4>Contact</h4>
 <div class="box">
 <strong>Name:</strong> <?= $r['firstname']; ?> <?= $r['lastname']; ?><br />
-<strong>Home Phone:</strong> <?= $r['home_phone']; ?><br />
-<strong>Cell Phone:</strong> <?= $r['cell_phone']; ?><br />
-<strong>Work Phone:</strong> <?= $r['work_phone']; ?><br />
+<strong>H)</strong> <?= format_phone($r['home_phone']); ?><br />
+<strong>C)</strong> <?= format_phone($r['cell_phone']); ?><br />
+<strong>W)</strong> <?= format_phone($r['work_phone']); ?><br />
 </div>
-
-
+<?php
+function format_phone($data){
+if(  preg_match( '/(\d{3})(\d{3})(\d{4})(\d*)$/', $data,  $matches ) )
+{
+    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+    if($matches[4]!=''){
+      $result .= ' x'.$matches[4];
+    }
+    return $result;
+}
+}
+?>
 <h4>Complaints</h4>
 <div class="box">
 <strong>Reason for seeking tx:</strong>
@@ -274,20 +302,7 @@ if($complaintid <> '')
 
 
 
-
-
-<div class="half">
-<h4>Appt:</h4>
-<div class="box">
-<strong>Last seen:</strong> <?= ($last_r['last_visit']!='')?date('m/d/Y', strtotime($last_r['last_visit'])):''; ?>
-
-  <strong>For:</strong> <?= $last_r['last_treatment']; ?>
-
 <?php
-  $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_scheduled DESC";
-  $next_q = mysql_query($next_sql);
-  $next_r = mysql_fetch_assoc($next_q);
-
 $segments = Array();
 $segments[15] = "Baseline Sleep Test";
 $segments[2] = "Consult";
@@ -304,10 +319,25 @@ $segments[9] = "Pt. Non-Compliant";
 $segments[6] = "Refused Treatment";
 $segments[13] = "Termination";
 $segments[1] = "Initial Contact";
+?>
+<div class="half">
+<h4>Appt:</h4>
+<div class="box">
+<strong>Last seen:</strong> 
+<? if($last_r['date_completed']!=''){ ?>
+<?= time_ago_format(date('U')-strtotime($last_r['date_completed'])); ?> ago - 
+<?= ($last_r['date_completed']!='')?date('m/d/Y', strtotime($last_r['date_completed'])):''; ?>
+<?php } ?>
+  <strong>For:</strong> <?= ($last_r['segmentid']!='')?$segments[$last_r['segmentid']]:''; ?>
+
+<?php
+  $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($_GET['pid'])."' ORDER BY date_scheduled DESC";
+  $next_q = mysql_query($next_sql);
+  $next_r = mysql_fetch_assoc($next_q);
 
 ?>
 <br />
-<strong>Next appt:</strong> <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!='')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
+<strong>Next appt:</strong> <?= $segments[$next_r['segmentid']]; ?> - <?= ($next_r['date_scheduled']!=''&&$next_r['date_scheduled']!='0000-00-00')?date('m/d/Y', strtotime($next_r['date_scheduled'])):''; ?>
 <br />
       <strong>Referred By:</strong> 
     <?php

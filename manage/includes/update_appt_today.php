@@ -11,11 +11,15 @@ $create = true; //default to insert record if checks pass
 
 if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 
-  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND date_completed!='' AND date_completed IS NOT NULL";
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
   $imp_q = mysql_query($imp_s);
   $imp_n = mysql_num_rows($imp_q);
   if($imp_n == 0){
 	$impression=false;
+  }else{
+    $imp_r = mysql_fetch_assoc($imp_q);
+    $impression = $imp_r['device_id'];
+
   }
 }
 
@@ -44,8 +48,11 @@ if($create){
                         patientid= ".$pid.",
                         segmentid = ".$id.",
                         letterid = '".$letteridlist."',
-			appointment_type = 1,
-                        date_completed = CURDATE()";
+			appointment_type = 1,";
+		    if($impression){
+			$s .= " device_id='".$impression."',";
+		    }		
+                     $s .=" date_completed = CURDATE()";
                 $q = mysql_query($s);
                 $insert_id=mysql_insert_id();
 		if($q){ 
@@ -139,7 +146,7 @@ $next = "<option value=''>SELECT NEXT STEP</option>";
           $next .= "<option value='".$next_r['id']."'>".$next_r['name']."</option>";
         }
 }
-$impression_json = ($impression)?'true':'false';
+$impression_json = ($impression)?$impression:'false';
 if($s){
   echo '{"success":true, "datecomp":"'.date('m/d/Y').'", "id":"'.$insert_id.'", "next_steps":"'.$next.'", "title":"'.$title.'", "letters":"'.$letter_count.'", "impression":'.$impression_json.'}';
 }else{

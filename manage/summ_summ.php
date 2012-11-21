@@ -136,9 +136,12 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 
 ?>
+<div style="margin-bottom:6px">
 <?php
 if($r['preferred_name']!=''){
 echo $r['preferred_name']." - "; 
+}else{
+  echo $r['firstname'] ." - ";
 }
 ?>
 <?php
@@ -148,7 +151,7 @@ $years = floor($diff / (365*60*60*24));
                 echo $years ." years old";
 ?>
  <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
-<br />
+</div>
     <strong>Device</strong>
         <select id="dental_device" name="dentaldevice" style="width:250px">
         <option value=""></option>

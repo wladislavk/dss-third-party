@@ -12,7 +12,7 @@ $q = mysql_query($info_sql);
 $last_sql = "SELECT id FROM dental_flow_pg2_info
 		WHERE appointment_type=1 AND
 			patientid='".$pid."'
-			AND segmentid='7'
+			AND (segmentid='7' OR segmentid='4')
 			order BY date_completed DESC, id DESC";
 $last_q = mysql_query($last_sql);
 $last_r = mysql_fetch_assoc($last_q);

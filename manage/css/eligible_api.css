@@ -1,0 +1,13 @@
+
+#eligible_api{
+  width:95%;
+  margin: 0 auto;
+  }
+
+#eligible_api label{
+  width: 200px;
+  text-align:right;
+  display: block;
+  float: left;
+  padding: 3px 10px 0 0;
+  }

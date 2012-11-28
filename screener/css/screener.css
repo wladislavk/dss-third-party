@@ -40,3 +40,7 @@ body{
 
 #sect2{ font-size:16px; }
 #sect2 .sepH_b { height:25px; }
+
+#results_div label{
+  font-weight: bold;
+  }

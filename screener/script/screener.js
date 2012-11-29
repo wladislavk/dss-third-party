@@ -115,7 +115,18 @@ function submit_screener(){
           $('#r_diagnosed').append('<li>Heartburn (Gastroesophageal Reflux)</li>');
         }
 
-
+	$('#results_div div').each( function(){
+  	  result = $(this).find('span').text();
+	  if(result == 0 || result =='' || result== 'No'){
+		$(this).hide();
+	  }else if(result == 1){
+                $(this).find('span').text('1 - Slight chance of dozing');
+          }else if(result == 2){
+                $(this).find('span').text('2 - Moderate chance of dozing');
+          }else if(result == 3){
+                $(this).find('span').text('3 - High chance of dozing');
+          }
+	});
 
 
 	//get scores

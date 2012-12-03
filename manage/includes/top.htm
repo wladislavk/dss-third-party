@@ -1042,8 +1042,10 @@ if(mysql_num_rows($od_q)==0 && mysql_num_rows($tod_q) == 0 && mysql_num_rows($to
    <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid']))?'?pid='.$_GET['pid']:''; ?>')" style="margin-top:27px;">+ Add Task</button>
 <!--</form>-->
     </div>
-<?php if($_SESSION['docid']==1 || $_SESSION['docid']==5){ ?>
+<?php if($_SESSION['docid']==5){ ?>
    <div style="float:right;width:141px;height:38px;background: url(images/ezsleep.png) no-repeat 0 0; margin:13px 15px 0 0;"></div> 
+<?php }elseif($_SESSION['docid']==1){ ?>
+  <div style="float:right;width:141px;height:38px;background: url(images/generic_company.png) no-repeat 0 0; margin:13px 15px 0 0;"></div>
 <?php } ?>
      <div style="clear:both;"></div>
   </div>

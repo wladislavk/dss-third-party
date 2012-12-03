@@ -853,7 +853,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
 	// output the HTML content
 	$pdf->writeHTML($html, true, false, true, false, '');
-
+        //Close and output PDF document
+        $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
 	//Close and output PDF document
 	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
 }

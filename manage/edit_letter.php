@@ -184,7 +184,7 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 $company_query = "SELECT c.* FROM companies c 
 		JOIN dental_user_company uc ON c.id = uc.companyid
 		WHERE uc.userid = '".$docid."';";
-echo $company_query;
+//echo $company_query;
 $company_result = mysql_query($company_query);
 while ($row = mysql_fetch_assoc($company_result)) {
         $company_info = $row;

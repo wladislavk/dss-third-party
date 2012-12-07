@@ -205,6 +205,7 @@ function validate_name(){
   }
 
   if(return_val){
+        $('.assessment_name').text($('#first_name_div input').val()+" "+$('#last_name_div input').val());
   	next_sect(2);
   }else{
     $('#name_error_box').html(error_text).show();

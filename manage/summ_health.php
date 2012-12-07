@@ -80,11 +80,10 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             Premedication
                             <span id="req_0" class="req">*</span>
 				<?= ($premedcheck)?"- Yes":"- No";?>
-                        </label><br />
+                        </label>
                         <div>
                           <?php if($premeddet != ''){ ?>
                             <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
-                                What medication(s) and why do you require it?<br />
                                 <?=$premeddet;?>
                             </span>
                           <?php } ?>
@@ -93,12 +92,11 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                           <?php if($allergenscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
                         Allergens <?= ($allergenscheck)?"- Yes":"- No"; ?>
-                    </label><br />
+                    </label>
                     <div>
                         <span>
                           <?php if($other_allergens != ''){ ?>
                             <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
-                                Please list everything you are allergic to:<br />
 				<?=$other_allergens;?>
                             </span>
                           <?php } ?>
@@ -109,12 +107,11 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                           <?php if($medicationscheck != ''){ ?>
                     <label class="desc" id="title0" for="Field0" style="width:90%">
                         Current Medications <?= ($medicationscheck)?"- Yes":"- No"; ?>
-                    </label><br />
+                    </label>
                     <div>
                         <span>
                           <?php if($other_medications != ''){ ?>
                         <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
-                                Please list all medication you are currently taking: <br />
 				<?=$other_medications;?>
                         </span>
                           <?php } ?>
@@ -132,7 +129,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                     <div>
                         <span>
                             <span>
-                                Please list all medical diagnoses and surgeries from birth until now (for example: heart attack, high blood pressure, asthma, stroke, hip replacement, HIV, diabetes, etc):
+				All medical diagnoses and surgeries:
                             </span>
                              <span id="h_det" >
 				<?=$other_history;?>
@@ -145,192 +142,149 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                     <label class="desc" id="title0" for="Field0">
                         Dental History
                     </label>
+			<table width="90%">
 		<?php if($dental_health != ''){ ?>
-                    <div>
-                        <span class="full">
-                                                        How would you describe your dental health?
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <?= $dental_health;?>
-                                                </span>
-                                        </div>
+                    <tr>
+                      <td>How would you describe your dental health?</td>
+                                <td><?= $dental_health;?></td>
+			<td></td>
+		    </tr>
                 <?php } ?>
-                <?php if($wisdom_extraction != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Have you ever had teeth extracted?</label>
+                <?php if($wisdom_extraction == 'Yes' || $wisdom_extraction_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you ever had teeth extracted?</td>
 
-                                                 <?= $wisdom_extraction;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <span id="wisdom_extraction_extra">Please describe: <?= $wisdom_extraction_text; ?>
-                                                </span>
-                                        </div>
+                                                 <td><?= $wisdom_extraction;?></td>
+                                                        <td id="wisdom_extraction_extra">Please describe: <?= $wisdom_extraction_text; ?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($removable != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Do you wear removable partials?</label>
+                <?php if($removable == 'Yes' || $removable_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you wear removable partials?</td>
 
-                                                        <?= $removable;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <span id="removable_extra">Please describe: <?= $removable_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td><?= $removable;?></td>
+                                                        <td id="removable_extra">Please describe: <?= $removable_text; ?>
+</td>
+                                        </tr>
                 <?php } ?>
-                <?php if($dentures != ''){ ?>
-                                       <div>
-                        <span>
-                                                        <label>Do you wear dentures?</label>
+                <?php if($dentures == 'Yes' || $dentures_text != ''){ ?>
+                                       <tr>
+                                                        <td>Do you wear dentures?</td>
 
-							<?= $dentures; ?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<td><?= $dentures; ?></td>
 
-                                                        <span id="dentures_extra">Please describe: <?= $dentures_text; ?>
+                                                        <td id="dentures_extra">Please describe: <?= $dentures_text; ?>
 
-</span>
-                                                </span>
-                                        </div>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($orthodontics != ''){ ?>
+                <?php if($orthodontics == 'Yes' || $year_completed != ''){ ?>
 
-                                        <div>
-                        <span>
-                                                        <label>Have you worn orthodontics (braces)?</label>
+                                        <tr>
+                                                        <td>Have you worn orthodontics (braces)?</td>
 
-                                                        <?= $orthodontics;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <td><?= $orthodontics;?></td>
 
-                                                        <span id="orthodontics_extra">Year completed: <?=$year_completed;?>
-                        </span>
-                                                </span>
-                                        </div>
+                                                        <td id="orthodontics_extra">Year completed: <?=$year_completed;?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($tmj_cp != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Does your TMJ (jaw joint) click or pop?</label>
-                                                        <?= $tmj_cp;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php if($tmj_cp == 'Yes' || $tmj_cp_text != ''){ ?>
+                                        <tr>
+                                                        <td>Does your TMJ (jaw joint) click or pop?</td>
+                                                        <td><?= $tmj_cp;?></td>
 
-                                                        <span id="tmj_cp_extra">Please describe: <?= $tmj_cp_text; ?>
+                                                        <td id="tmj_cp_extra">Please describe: <?= $tmj_cp_text; ?>
 
-</span>
-                                                </span>
-                                        </div>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($tmj_pain != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Do you have pain in this joint?</label>
-                                                        <?= $tmj_pain;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php if($tmj_pain == 'Yes' || $tmj_pain_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you have pain in this joint?</td>
+                                                        <td><?= $tmj_pain;?></td>
 
-                                                        <span id="tmj_pain_extra">Please describe: <?= $tmj_pain_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td id="tmj_pain_extra">Please describe: <?= $tmj_pain_text; ?>
+                                                </td>
+                                        </tr>
 
                 <?php } ?>
-                <?php if($tmj_surgery != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Have you had TMJ (jaw joint) surgery?</label>
-                                                        <?= $tmj_surgery;?>
+                <?php if($tmj_surgery == 'Yes' || $tmj_surgery_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you had TMJ (jaw joint) surgery?</td>
+                                                        <td><?= $tmj_surgery;?></td>
+                                                        <td id="tmj_surgery_extra">Please describe: <?= $tmj_surgery_text; ?>
+</td>
 
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <span id="tmj_surgery_extra">Please describe: <?= $tmj_surgery_text; ?>
-</span>
-
-                                                </span>
-                                        </div>
+                                        </tr>
                 <?php } ?>
-                <?php if($gum_prob != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Have you ever had gum problems?</label>
-                            				<?= $gum_prob;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php if($gum_prob == 'Yes' || $gum_prob_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you ever had gum problems?</td>
+                            				<td><?= $gum_prob;?></td>
 
-                                                        <span id="gum_prob_extra">Please describe: <?= $gum_prob_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td id="gum_prob_extra">Please describe: <?= $gum_prob_text; ?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($gum_surgery != ''){ ?>
+                <?php if($gum_surgery == 'Yes' || $gum_surgery_text != ''){ ?>
 
-                                        <div>
-                        <span>
-                                                        <label>Have you ever had gum surgery?</label>
+                                        <tr>
+                                                        <td>Have you ever had gum surgery?</td>
 
-                                                        <?= $gum_surgery; ?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <span id="gum_surgery_extra">Please describe: <?= $gum_surgery_text; ?>
-
-</span>
-                                                </span>
-                                        </div>
+                                                        <td><?= $gum_surgery; ?></td>
+                                                        <td id="gum_surgery_extra">Please describe: <?= $gum_surgery_text; ?>
+                                                </td>
+                                        </tr>
 
                 <?php } ?>
-                <?php if($drymouth != ''){ ?>
+                <?php if($drymouth == 'Yes' || $drymouth_text != ''){ ?>
 
-                                        <div>
-                        <span>
-                                                        <label>Do you have morning dry mouth?</label>
+                                        <tr>
+                                                        <td>Do you have morning dry mouth?</td>
 
-                                                        <?= $drymouth;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <span id="drymouth_extra">Please describe: <?= $drymouth_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td><?= $drymouth;?></td>
+                                                        <td id="drymouth_extra">Please describe: <?= $drymouth_text; ?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($injury != ''){ ?>
+                <?php if($injury == 'Yes' || $injury_text != ''){ ?>
 
-                                 <div>                        <span>
-                                                        <label>Have you ever had injury to your head, face, neck, mouth, or teeth?</label>
+                                 <tr>
+                                                        <td>Have you ever had injury to your head, face, neck, mouth, or teeth?</td>
 
-                                                        <?= $injury; ?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        <span id="injury_extra">Please describe: <?= $injury_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td><?= $injury; ?></td>
+                                                        <td id="injury_extra">Please describe: <?= $injury_text; ?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
-                <?php if($completed_future != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Are you planning to have dental work done in the near future?</label>
+                <?php if($completed_future == 'Yes' || $future_dental_det != ''){ ?>
+                                        <tr>
+                                                        <td>Are you planning to have dental work done in the near future?</td>
 
 
-                                                        <?=$completed_future;?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <td><?=$completed_future;?></td>
 
-<span id="completed_future_extra">Please describe: <?= $future_dental_det; ?>
-</span>
-                                                </span>
-                                        </div>
+<td id="completed_future_extra">Please describe: <?= $future_dental_det; ?>
+</td>
+                                        </tr>
                 <?php } ?>
-                <?php if($clinch_teeth != ''){ ?>
-                                        <div>
-                        <span>
-                                                        <label>Do you clinch or grind your teeth?</label>
+                <?php if($clinch_teeth == 'Yes' || $clinch_grind_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you clinch or grind your teeth?</td>
 
-                                                        <?= $clinch_grind; ?>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <td><?= $clinch_grind; ?></td>
 
-                                                        <span id="clinch_grind_extra">Please describe: <?= $clinch_grind_text; ?>
-</span>
-                                                </span>
-                                        </div>
+                                                        <td id="clinch_grind_extra">Please describe: <?= $clinch_grind_text; ?>
+                                                </td>
+                                        </tr>
                 <?php } ?>
+</table>
 <label class="desc" id="title0" for="Field0">
                         Family History
                     </label>
-                <?php if($family_hd != ''){ ?>
+                <?php if($family_hd == 'Yes'){ ?>
                     <div>
                         <span class="full">
                                 <label>Have genetic members of your family had Heart Disease?</label>
@@ -339,7 +293,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         </span>
                     </div>
                 <?php } ?>
-                <?php if($family_bp != ''){ ?>
+                <?php if($family_bp == 'Yes'){ ?>
                     <div>
                         <span>
                                 <label>High Blood Pressure?</label>
@@ -347,7 +301,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         </span>
                     </div>
                 <?php } ?>
-                <?php if($family_dia != ''){ ?>
+                <?php if($family_dia == 'Yes'){ ?>
                     <div>
                         <span>
                              <label>Diabetes?</label>
@@ -355,7 +309,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                                         </span>
                 </div>
                 <?php } ?>
-                <?php if($family_sd != ''){ ?>
+                <?php if($family_sd == 'Yes'){ ?>
                 <div>
                         <span>
                                 <label>Have any genetic members of your family been diagnosed or treated for a sleep disorder?</label>
@@ -369,20 +323,14 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                         SOCIAL HISTORY
                     </label>
                 <?php if($alcohol != ''){ ?>
-                    <div>
-                        <span class="full">
                                 Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
-                            <br />
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= $alcohol;?>
-			</span>
-		   </div>
                             <br /><br />
                 <?php } ?>
                 <?php if($sedative != ''){ ?>
                             Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
-                            <br />
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= $sedative;?>
@@ -391,7 +339,6 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                 <?php if($caffeine != ''){ ?>
 
                             Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?
-                            <br />
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= $caffeine;?>
@@ -403,7 +350,6 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <?= $smoke;?>
 
-                            <br />
 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <div id="smoke">If Yes, number of packs per day

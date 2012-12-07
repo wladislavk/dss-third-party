@@ -93,6 +93,9 @@ $bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.do
 $bounce_res = mysql_query($bounce_query);
 $num_bounce = mysql_num_rows($bounce_res);
 
+$unsigned_query = "SELECT * FROM dental_notes n WHERE n.signed_on IS NULL OR n.signed_on = '' AND n.docid = '".$_SESSION['docid']."'";
+$unsigned_res = mysql_query($unsigned_query);
+$num_unsigned = mysql_num_rows($unsigned_res);
 
 $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
 $preauth_res = mysql_query($preauth_query);

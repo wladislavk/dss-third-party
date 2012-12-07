@@ -42,10 +42,16 @@ if(isset($_GET['bounce'])){
 if(isset($_REQUEST['email'])){
 
 	if(is_super($_SESSION['admin_access'])){
-	  $s = "SELECT * FROM dental_patients WHERE email like '%".$_REQUEST['email']."%' AND parent_patientid IS NULL ORDER BY email ASC";
+	  $s = "SELECT p.*, u.name as user_name, c.name as company_name FROM dental_patients p
+		LEFT JOIN dental_users u ON u.userid = p.docid
+                LEFT JOIN dental_user_company uc ON uc.userid=p.docid
+                LEFT JOIN companies c ON c.id=uc.companyid
+		WHERE p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
 	}else{
-	  $s = "SELECT p.* FROM dental_patients p 
+	  $s = "SELECT p.*, u.name as user_name, c.name as company_name FROM dental_patients p 
 		JOIN dental_user_company uc ON uc.userid = p.docid
+		LEFT JOIN dental_users u ON u.userid = p.docid
+		LEFT JOIN companies c ON c.id=uc.companyid
 		WHERE uc.companyid = '".mysql_real_escape_string($_SESSION['companyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
 	}
 	$q = mysql_query($s);
@@ -56,6 +62,8 @@ if(isset($_REQUEST['email'])){
 		<tr>
 			<th>Name</th>
 			<th>Email</th>
+			<th>User</th>
+			<th>Company</th>
 			<th>Action</th>
 		</tr>
 	<?php
@@ -63,6 +71,8 @@ if(isset($_REQUEST['email'])){
 		?><tr> 
 			<td><?= $r['firstname']." ".$r['lastname']; ?></td>
 			<td><?= $r['email']; ?></td>
+			<td><?= $r['user_name']; ?></td>
+			<Td><?= $r['company_name']; ?></td>
 			<td><a style="margin-right:20px;" href="#" onclick="Javascript: loadPopup('add_patient.php?ed=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>');" class="editlink" title="EDIT">
 						Edit
 					</a>

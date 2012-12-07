@@ -138,8 +138,8 @@ function show_study_table(){
 }
 </script>
 
-        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 539px;overflow-x:scroll;">
-                    <iframe id="sleepstudies" height="512" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
+                    <iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
 
         </div>
 

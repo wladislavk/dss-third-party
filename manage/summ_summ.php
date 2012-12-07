@@ -234,6 +234,7 @@ if($complaintid <> '')
 
 ?>
 <?php if($complaintid != '' || in_array('0', $compid)){ ?>
+<br /><br />
 <strong>Other Complaints</strong>
 <ul>
                 <?php if($complaintid != ''){ ?>
@@ -276,7 +277,10 @@ if($complaintid <> '')
 <h4>History</h4>
 <div class="box">
 <strong>ROM:</strong>
-    <strong>Vertical</strong>&nbsp;<?php echo $i_opening_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp; <strong>Right</strong> <?php echo $r_lateral_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp;  <strong>Left</strong> <?php echo $l_lateral_from; ?>mm
+    <strong>Vertical</strong>&nbsp;<?php echo $i_opening_from; ?>mm&nbsp;&nbsp;&nbsp;&nbsp; 
+<strong>Left</strong> <?php echo $l_lateral_from; ?>mm
+&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Right</strong> <?php echo $r_lateral_from; ?>mm
 <br />
 <strong>Best Eccovision</strong>&nbsp;&nbsp;
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Horizontal:</strong> <?php echo $optimum_echovision_hor; ?>mm  <strong>Vertical:</strong> <?php echo $optimum_echovision_ver; ?>mm
@@ -376,7 +380,7 @@ $rs = $r['referred_source'];
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                                 (ss.sleeptesttype='PSG Baseline' OR ss.sleeptesttype='HST Baseline') AND
-                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id ASC;";
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
                 $baseline_result = mysql_query($baseline_sleepstudies);
                 $baseline_numsleepstudy = mysql_num_rows($baseline_result);
                 $baseline_sleepstudy = mysql_fetch_assoc($baseline_result);
@@ -398,9 +402,15 @@ $rs = $r['referred_source'];
 
 ?>
   <strong>Baseline Sleep Test?</strong> <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?><br />
+      <strong>Date:</strong> <? if($baseline_sleepstudy['date']!=''){ ?>
+<?= time_ago_format(date('U')-strtotime($baseline_sleepstudy['date'])); ?> ago -
+<?= date('m/d/Y', strtotime($baseline_sleepstudy['date'])); ?>
+<?php } ?>
+<br />
+
       <strong>Diagnosis:</strong> <?= $baseline_sleepstudy['ins_diagnosis']." - ".$baseline_sleepstudy['description']; ?><br />
-      <strong>AHI/RDI:</strong> <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?><br />
-      <strong>Low O2:</strong> <?= $baseline_sleepstudy['o2nadir']; ?><br />
+      <strong>AHI/RDI:</strong> <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?>
+      <strong>Low O2:</strong> <?= $baseline_sleepstudy['o2nadir']; ?>
       <strong>T < 90%:</strong> <?= $baseline_sleepstudy['t9002']; ?><br />
 
 <?php
@@ -410,15 +420,24 @@ $rs = $r['referred_source'];
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
-                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.id DESC;";
+                                ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
                 $sleepstudy = mysql_fetch_assoc($result);
+		if($sleepstudy['sleeptesttype']=='PSG Baseline' || $sleepstudy['sleeptesttype'] =='HST Baseline'){
+			$sleepstudy = '';
+		}
 ?><br />
   <strong>Recent Sleep Test</strong><br />
+      <strong>Date:</strong> <? if($sleepstudy['date']!=''){ ?>
+<?= time_ago_format(date('U')-strtotime($sleepstudy['date'])); ?> ago -
+<?= date('m/d/Y', strtotime($sleepstudy['date'])); ?>
+<?php } ?>
+<br />
+
       <strong>Diagnosis:</strong> <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?><br />
-      <strong>AHI/RDI:</strong> <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?><br />
-      <strong>Low O2:</strong> <?= $sleepstudy['o2nadir']; ?><br />
+      <strong>AHI/RDI:</strong> <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
+      <strong>Low O2:</strong> <?= $sleepstudy['o2nadir']; ?>
       <strong>T < 90%:</strong> <?= $sleepstudy['t9002']; ?>
 
 

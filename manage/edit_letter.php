@@ -306,7 +306,6 @@ WHERE
 (p.p_m_ins_type!='1' OR ((s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND 
 (s.diagnosising_npi IS NOT NULL && s.diagnosising_npi != ''))) AND 
 (s.diagnosis IS NOT NULL && s.diagnosis != '') AND 
-s.completed = 'Yes' AND 
 s.filename IS NOT NULL AND 
 s.patiendid='".$patientid."' AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST') ORDER BY sort_order ASC, s.date DESC, s.id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);

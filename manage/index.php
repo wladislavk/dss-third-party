@@ -93,6 +93,11 @@ echo $memo_array['memo'] . "<br /><hr />";
 <?php if($num_bounce !=0 ){?>
   <a href="manage_email_bounces.php" class="notification <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><?= $num_bounce;?> Email Bounces</a>
 <?php } ?>
+
+<?php if($num_unsigned !=0 ){?>
+  <a href="manage_unsigned_notes.php" class="notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><?= $num_unsigned;?> Unsigned Notes</a>
+<?php } ?>
+
 <!--
   <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
   <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>

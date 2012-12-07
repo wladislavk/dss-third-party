@@ -55,26 +55,12 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="dp50">
 <h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
                                                                                                         <p style="font-size:14px;">Over 40 million Americans suffer from a sleep disorder, and more than 20 million suffer from Obstructive Sleep Apnea (OSA). Despite this high prevalence, 93% of women and 82% of men with moderate to severe OSA remain UNDIAGNOSED and UNAWARE that they have a deadly disease. Please take this short questionnaire to determine your risk of OSA. Your information is securely stored and will never be shared without your consent.</p>
-</div>
-<div class="dp50">
-<img src="images/sleeping_couple.png" style="float:right;"/>
 <br />
-                                                                                                                <div class="cf">
-<a href="#" onclick="next_sect(1)" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
-                                                                                                                </div>
-</div>
-<div class="clear"></div>
-</div>
-
-<div class="sect" id="sect1">
-
-<h3>Contact Information</h3>
+<p>Please enter your contact information to complete this brief health assessment.</p>
 <br />
-<div class="msg_box msg_error" id="name_error_box" style="display:none;"></div>
-
 <div class="sepH_b clear" id="first_name_div">
-	<label class="lbl_a">First Name</label>
-	<input class="inpt_a" type="text" id="first_name" name="first_name" />
+        <label class="lbl_a">First Name</label>
+        <input class="inpt_a" type="text" id="first_name" name="first_name" />
 </div>
 
 <div class="sepH_b" id="last_name_div">
@@ -88,10 +74,19 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 
 
-<a href="#" onclick="return validate_name();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
-<div class="sect" id="sect2">
+<div class="dp50">
+<img src="images/sleeping_couple.png" style="float:right;"/>
+<br />
+                                                                                                                <div class="cf">
+<a href="#" onclick="return validate_name()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+</div>
+<div class="clear"></div>
+</div>
 
+<div class="sect" id="sect2">
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 <h3>Epworth Sleepiness Score</h3>
 <br />
 <p>How likely are you to sleep or doze in each of the following situations?</p>
@@ -161,6 +156,7 @@ if(!isset($_SESSION['screener_doc'])){
 <a href="#" onclick="return validate_epworth();" class="fr next btn btn_medium btn_d">Next</a>
 </div>
 <div class="sect" id="sect3">
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 <h3>Health Symptoms</h3>
   <p>Please answer the following questions about your sleep habits.</p>
 <div class="msg_box msg_error" id="sect3_error_box" style="display:none;"></div>
@@ -269,7 +265,7 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 
 <div class="sect" id="sect4">
-
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 <h3>Previous medical diagnoses</h3>
 <br />
   <div class="sepH_b" id="rx_cpap_div">
@@ -337,7 +333,7 @@ if(!isset($_SESSION['screener_doc'])){
 </div>
 
 <div class="sect" id="sectresults">
-
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 <h3>Your Results</h3>
 
 <p id="result_body"></p>

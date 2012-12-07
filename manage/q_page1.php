@@ -379,7 +379,7 @@ if($complaintid <> '')
     
     <tr>
 	<td valign="top" class="frmhead">
-	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" value="<?= $ess; ?>" />
+	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $ess; ?>" />
                             <?php
 				if($pat_row['ess']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
@@ -387,13 +387,109 @@ if($complaintid <> '')
                             ?>
 
 	  <br />
-	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" value="<?= $tss; ?>" />
+	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $tss; ?>" />
                             <?php
 				if($pat_row['tss']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
 				}
                             ?>
+	<?php
+	  $sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	  $sleep_q = mysql_query($sleep_sql);
+	  if(mysql_num_rows($sleep_q) == 0){
+	 	?>
+		<br />
+		<a href="q_sleep.php?pid=<?= $_GET['pid']; ?>">Complete sleep section</a>
+		<?php
+	  }else{
+		?>
+		 <br />
+                <a href="#" onclick="$('#sleep_results').toggle(); return false;">View results</a>
+		<div id="sleep_results" style="display:none;">
 
+                  <div style="width:48%; float:left;">
+                        <h3>Epworth</h3>
+		    <?php
+			$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+			$my = mysql_query($sql);
+			$myarray = mysql_fetch_array($my);
+
+			$q_sleepid = st($myarray['q_sleepid']);
+			$epworthid = st($myarray['epworthid']);
+			$analysis = st($myarray['analysis']);
+
+			if($epworthid <> '')
+			{
+        		$epworth_arr1 = split('~',$epworthid);
+
+        			foreach($epworth_arr1 as $i => $val)
+        			{
+                		$epworth_arr2 = explode('|',$val);
+
+                		$epid[$i] = $epworth_arr2[0];
+                		$epseq[$i] = $epworth_arr2[1];
+        			}
+			}
+
+
+                                        $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+                                        $epworth_my = mysql_query($epworth_sql);
+                                        $epworth_number = mysql_num_rows($epworth_my);
+                                        ?>
+
+                    <?
+                                        while($epworth_myarray = mysql_fetch_array($epworth_my))                                        {
+                                                if(@array_search($epworth_myarray['epworthid'],$epid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else                                                {
+                                                        $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
+                                                }
+
+					?>
+					<?= $chk; ?>
+					-	
+					<?=st($epworth_myarray['epworth']);?>
+					<br />
+					<?php
+					}
+			?>
+
+
+		  </div>
+		  <div style="width:48%; float:left;">
+			<h3>Thornton</h3>
+		    <?php
+			$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+			$my = mysql_query($sql);
+			$myarray = mysql_fetch_array($my);
+
+			$thortonid = st($myarray['thortonid']);
+			$snore_1 = st($myarray['snore_1']);
+			$snore_2 = st($myarray['snore_2']);
+			$snore_3 = st($myarray['snore_3']);
+			$snore_4 = st($myarray['snore_4']);
+			$snore_5 = st($myarray['snore_5']);
+
+			?>
+			<?= $snore_1; ?> - My snoring affects my relationship with my partner<br />
+			<?= $snore_2; ?> - My snoring causes my partner to be irritable or tired<br />
+			<?= $snore_3; ?> - My snoring requires us to sleep in separate rooms<br />
+			<?= $snore_4; ?> - My snoring is loud<br />
+			<?= $snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
+
+
+			<?php
+
+		    ?>
+
+		  </div>
+		</div>
+                <?php
+
+	  }
+	?>
 	</td>
     </tr>
     <tr>

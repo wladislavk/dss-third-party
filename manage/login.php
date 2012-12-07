@@ -45,7 +45,9 @@ if($_POST["loginsub"] == 1)
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 	
-	$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+	$check_sql = "SELECT dental_users.userid, username, name, user_access, docid, uc.companyid FROM dental_users 
+			LEFT JOIN dental_user_company uc ON dental_users.userid=uc.userid
+			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
 	$check_my = mysql_query($check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 
@@ -60,11 +62,13 @@ if($_POST["loginsub"] == 1)
 		session_register("name");
 		session_register("user_access");
 		session_register("docid");
+		session_register("companyid");
 		
 		$_SESSION['userid']=$check_myarray['userid'];
 		$_SESSION['username']=$check_myarray['username'];
 		$_SESSION['name']=$check_myarray['name'];
 		$_SESSION['user_access']=$check_myarray['user_access'];
+		$_SESSION['companyid']=$check_myarray['companyid'];
 		if($check_myarray['docid'] != 0)
 		{
 			$_SESSION['docid']=$check_myarray['docid'];
@@ -96,10 +100,10 @@ if($_POST["loginsub"] == 1)
 		$msg='Wrong username or password';
 		?>
 		<script type="text/javascript">
-			window.location.replace('login.php?msg=<?=$msg;?>');
+			//window.location.replace('login.php?msg=<?=$msg;?>');
 		</script>
 		<?
-		die();
+		//die();
 	}
 }
 ?>
@@ -119,13 +123,13 @@ if($_POST["loginsub"] == 1)
 	       Please Enter Your Login Information 
         </td>
     </tr>
-	<? if($_GET['msg']!="")
+	<? if($msg!="")
     {
     ?> 
         <tr bgcolor="#FFFFFF">
             <td colspan="2" >
                 <span class="red">
-					<?=$_GET['msg'];?>
+					<?=$msg;?>
                 </span>
             </td>
         </tr>
@@ -135,7 +139,7 @@ if($_POST["loginsub"] == 1)
         	User name
         </td>
         <td class="t_data">
-        	<input type="text" name="username">
+        	<input type="text" name="username" value="<?= $_POST['username']; ?>">
         </td>
     </tr>
     <tr bgcolor="#FFFFFF">

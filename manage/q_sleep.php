@@ -73,12 +73,34 @@ if($_POST['q_sleepsub'] == 1)
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+                $ess_score = 0;
+                $ess_score += $_POST['epworth_1'];
+                $ess_score += $_POST['epworth_3'];
+                $ess_score += $_POST['epworth_4'];
+                $ess_score += $_POST['epworth_5'];
+                $ess_score += $_POST['epworth_6'];
+                $ess_score += $_POST['epworth_7'];
+                $ess_score += $_POST['epworth_8'];
 
-		$msg = "Added Successfully";
+          $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          $page1_q = mysql_query($page1_sql);
+          if(mysql_num_rows($page1_q) == 0){
+                $ed_sql = " INSERT INTO dental_q_page1 set 
+                ess = '".s_for($ess_score)."',
+                tss = '".s_for($tot_score)."',
+                patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          }else{
+                $ed_sql = " update dental_q_page1 set 
+                ess = '".s_for($ess_score)."',
+                tss = '".s_for($tot_score)."'
+                WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          }
+                mysql_query($ed_sql);
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='q_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -102,12 +124,34 @@ if($_POST['q_sleepsub'] == 1)
 
                 mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
-		//echo $ed_sql;
+		$ess_score = 0;
+		$ess_score += $_POST['epworth_1'];
+                $ess_score += $_POST['epworth_3'];
+                $ess_score += $_POST['epworth_4'];
+                $ess_score += $_POST['epworth_5'];
+                $ess_score += $_POST['epworth_6'];
+                $ess_score += $_POST['epworth_7'];
+                $ess_score += $_POST['epworth_8'];
+
+          $page1_sql = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+          $page1_q = mysql_query($page1_sql);
+          if(mysql_num_rows($page1_q) == 0){
+                $ed_sql = " INSERT INTO dental_q_page1 set 
+                ess = '".s_for($ess_score)."',
+                tss = '".s_for($tot_score)."',
+                patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	  }else{
+                $ed_sql = " update dental_q_page1 set 
+                ess = '".s_for($ess_score)."',
+                tss = '".s_for($tot_score)."'
+		WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	  }
+		mysql_query($ed_sql);
 		$msg = " Edited Successfully";
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+			window.location='q_page1.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
 		die();
@@ -189,7 +233,6 @@ if($epworthid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
 	<input type="submit" name="q_sleepbtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
@@ -452,7 +495,6 @@ Epworth Sleep Questionnaire
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
     <input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>

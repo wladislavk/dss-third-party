@@ -15,7 +15,7 @@ $letterid = mysql_real_escape_string($_GET['lid']);
 // Select Letter
 $letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method, status, docid FROM dental_letters where letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
-while ($row = mysql_fetch_assoc($letter_result)) {
+$row = mysql_fetch_assoc($letter_result); 
   $templateid = $row['templateid'];
   $patientid = $row['patientid'];
   $topatient = $row['topatient'];
@@ -27,7 +27,7 @@ while ($row = mysql_fetch_assoc($letter_result)) {
 	$method = $row['send_method'];
   $status = $row['status'];
   $docid = $row['docid'];
-}
+
 
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
@@ -169,6 +169,12 @@ $patient_info = array();
 while ($row = mysql_fetch_assoc($patient_result)) {
         $patient_info = $row;
 }
+
+$c_sql = "SELECT companyid from dental_user_company WHERE userid='".$docid."'";
+$c_q = mysql_query($c_sql);
+$c_r = mysql_fetch_assoc($c_q);
+$companyid = $c_r['companyid'];
+
 $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
 $did = $patient_info['docid'];
 
@@ -497,7 +503,7 @@ $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description'
 
 // Load $template
 
-  $letter_sql = "SELECT body FROM dental_letter_templates WHERE id='".mysql_real_escape_string($templateid)."'";
+  $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysql_real_escape_string($companyid)."' AND triggerid='".mysql_real_escape_string($templateid)."'";
   $letter_q = mysql_query($letter_sql);
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];

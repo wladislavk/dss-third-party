@@ -207,7 +207,7 @@ class MDReferralFilter {
 }
 
 // Function to Create Letters
-function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null) {
+function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true) {
 
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
@@ -218,7 +218,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
     }
   }
 
-  if((!$topatient && !$md_referral_list && !$md_list)){ // || (!$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
+  if((!$topatient && !$md_referral_list && !$md_list) || ($check_recipeint && !$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
 	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);

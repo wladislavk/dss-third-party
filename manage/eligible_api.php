@@ -16,14 +16,32 @@
 <div id="eligible_api">
 
   <div>
-    <label>Payer Name</label>
-    <input type="input" id="payer_name" name="payer_name" value="<?= $r['company']; ?>" />
-    <span class="description">Insurance Company Name</span>
+    <label></label>
+    <?= $r['company']; ?>
   </div>
-  
+
+  <div>
+    <label>Payer Name</label>
+    <input type="input" id="payer_name" name="payer_name" value="" />
+    <span class="description">Insurance Company Name
+	<br />
+        <div id="payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+                <ul id="payer_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+        </div>
+     </span>
+  </div>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers.php');
+});
+
+</script>
+ 
   <div>
     <label>Payer ID</label>
-    <input type="input" id="payer_id" name="payer_id" value="112" />
+    <input type="input" id="payer_id" name="payer_id" />
     <span class="description">Insurance Company ID</span>
   </div>
 

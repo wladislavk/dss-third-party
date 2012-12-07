@@ -233,7 +233,6 @@ if($epworthid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
 	<input type="submit" name="q_sleepbtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
@@ -496,7 +495,6 @@ Epworth Sleep Questionnaire
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset Values to Zero" />
     <input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>

@@ -389,103 +389,108 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
   <a name="results"></a>
   <div id="results_div" style="display:none; clear:both;">
    <H4>Results</h4>
-    <div>
+   <div class="third">
+    <div class="check">
       <label>First name:</label>
       <span id="r_first_name"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Last name:</label>
       <span id="r_last_name"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Phone:</label>
       <span id="r_phone"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Sitting and reading:</label>
       <span id="r_epworth_reading"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Sitting inactive in a public place (e.g. a theater or meeting):</label>
       <span id="r_epworth_public"></span>
     </div>
-    <div>
+    <div class="check">
       <label>As a passenger in a car for an hour without a break:</label>
       <span id="r_epworth_passenger"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Lying down to rest in the afternoon when circumstances permit:</label>
       <span id="r_epworth_lying"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Sitting and talking to someone:</label>
       <span id="r_epworth_talking"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Sitting quietly after a lunch without alcohol:</label>
       <span id="r_epworth_lunch"></span>
     </div>
-    <div>
+    <div class="check">
       <label>In a car, while stopped for a few minutes in traffic:</label>
       <span id="r_epworth_traffic"></span>
     </div>
-    <div>
+  </div>
+  <div class="third">
+    <div class="check">
       <label>Have you ever been told you stop breathing while asleep?</label>
       <span id="r_breathing"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Have you ever fallen asleep or nodded off while driving?</label>
       <span id="r_driving"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
       <span id="r_gasping"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you feel excessively sleepy during the day?</label>
       <span id="r_sleepy"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you snore or have you ever been told that you snore?</label>
       <span id="r_snore"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Have you had weight gain and found it difficult to lose?</label>
       <span id="r_weight_gain"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
       <span id="r_blood_pressure"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you kick or jerk your legs while sleeping?</label>
       <span id="r_jerk"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</label>
       <span id="r_burning"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you wake up with headaches during the night or in the morning?</label>
       <span id="r_headaches"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you have trouble falling asleep?</label>
       <span id="r_falling_asleep"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Do you have trouble staying asleep once you fall asleep?</label>
       <span id="r_staying_asleep"></span>
     </div>
-    <div>
+    <div class="check">
       <label>Have you ever used CPAP before?</label>
       <span id="r_rx_cpap"></span>
     </div>
+   </div>
+   <div class="third">
     <div>
       <label>Please check any conditions for which you have been medically diagnosed or treated.</label>
       <ul id="r_diagnosed"></ul>
     </div>
-
+   </div>
   </div>
 </div>
 

@@ -286,7 +286,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 			</tr>
 			<tr id="details_<?= $myarray['id']; ?>" style="display:none;">
-			<td colspan="8" valign="top">
+			<td colspan="2" valign="top">
 				<strong>Epworth Sleepiness Score</strong><br />
 				<?php if($myarray['epworth_reading']>0) { ?>
 				<strong>Sitting and reading:</strong> <?= $myarray['epworth_reading']; ?> - <?= $epworth_labels[$myarray['epworth_reading']]; ?><br />
@@ -309,8 +309,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                 <?php if($myarray['epworth_traffic']>0) { ?>
                                 <strong>In a car, while stopped for a few minutes in traffic: </strong><?= $myarray['epworth_traffic']; ?> - <?= $epworth_labels[$myarray['epworth_traffic']]; ?><br />
 				<?php } ?>
-			<br />
-
+			</td><td valign="top" colspan="4">
 			<strong>Health Symptoms</strong><br />
 			<?= ($myarray['breathing']>0)?'<strong>Have you ever been told you stop breathing while asleep?</strong> Yes<br />':''; ?>
                         <?= ($myarray['driving']>0)?'<strong>Have you ever fallen asleep or nodded off while driving?</strong> Yes<br />':''; ?>
@@ -325,8 +324,7 @@ $my=mysql_query($sql) or die(mysql_error());
                         <?= ($myarray['falling_asleep']>0)?'<strong>Do you have trouble falling asleep?</strong> Yes<br />':''; ?>
                         <?= ($myarray['staying_asleep']>0)?'<strong>Do you have trouble staying asleep once you fall asleep?</strong> Yes<br />':''; ?>
 
-			<br /><br />
-
+			</td><td valign="top" colspan="4">
 			<strong>Co-morbidity</strong><br />
 			<?php
 			foreach($diagnosis as $d){

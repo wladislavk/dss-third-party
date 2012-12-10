@@ -233,8 +233,9 @@ if($complaintid <> '')
 }
 
 ?>
-<?php if($complaintid != '' || in_array('0', $compid)){ ?>
 <br /><br />
+
+<?php if($complaintid != '' || in_array('0', $compid)){ ?>
 <strong>Other Complaints</strong>
 <ul>
                 <?php if($complaintid != ''){ ?>

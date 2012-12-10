@@ -7,6 +7,7 @@ $unsigned_res = mysql_query($unsigned_query);
 
 
 ?>
+<h2 style="margin-left:20px;">Unsigned Progress Notes (<?= $num_unsigned; ?>)</h2>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <?php
 
@@ -69,11 +70,11 @@ while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
                                                         <span id="note_edit_<?= $myarray['notesid'];?>">
                                                         <? if(st($myarray["signed_id"]) == '') { ?>
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
-                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
+                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $unsigned_r['patientid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
                                                                 <?php if($myarray["docid"]==$_SESSION['userid']){ ?>
                                                                 /
-                                                                <a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
-                                                                <input type="checkbox" class="sign_chbx" name="sign[]" value="<?= $myarray['notesid']; ?>" />
+                                                                <a href="dss_summ.php?return=unsigned&pid=<?= $unsigned_r['patientid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
+                                                                <input type="checkbox" class="sign_chbx_<?= $unsigned_r['patientid']; ?>" name="sign[]" value="<?= $myarray['notesid']; ?>" />
                                                                 <?php } ?>
                                                         <? }else{ ?>
                                                                 Signed By: <?= $myarray["signed_name"]; ?>
@@ -94,11 +95,43 @@ while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
                                         </table>
                                 </td>
                         </tr>
-        <?      }
+        <?      } ?>
+<tr><td>
+        <button onClick="sign_notes('<?= $unsigned_r['patientid']; ?>'); return false;" class="addButton" style="float: right;">
+                Sign Selected Notes
+        </button>
+</td></tr>
+	<?php
         }?>
 </table>
 
-
+<script type="text/javascript">
+function sign_notes(pid){
+  sign_arr = new Array();
+  i=0;
+  $('.sign_chbx_'+pid+':checked').each(function(){
+    sign_arr[i++] = $(this).val();
+  });
+                                  $.ajax({
+                                        url: "includes/sign_notes.php",
+                                        type: "post",
+                                        data: {ids: sign_arr.join(',')},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                    $('.sign_chbx_'+pid+':checked').each(function(){
+                                                        id = $(this).val();
+                                                        $('#note_'+id).remove();
+                                                    });
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+}
+</script>
 
 <? include 'includes/bottom.htm';?>
 

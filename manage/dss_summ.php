@@ -15,6 +15,15 @@ if(isset($_REQUEST['sid'])){
 		AND notesid='".mysql_real_escape_string($_REQUEST['sid'])."'
                 AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($s);
+  if(isset($_REQUEST['return'])){
+    if($_REQUEST['return']=='unsigned'){
+    ?>
+    <script type="text/javascript">
+      window.location = 'manage_unsigned_notes.php';
+    </script>
+    <?php
+    }
+  }
 }
 ?>
 <link rel="stylesheet" href="css/summ.css" />

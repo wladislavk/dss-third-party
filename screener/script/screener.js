@@ -115,7 +115,7 @@ function submit_screener(){
           $('#r_diagnosed').append('<li>Heartburn (Gastroesophageal Reflux)</li>');
         }
 
-	$('#results_div div').each( function(){
+	$('#results_div div.check').each( function(){
   	  result = $(this).find('span').text();
 	  if(result == 0 || result =='' || result== 'No'){
 		$(this).hide();

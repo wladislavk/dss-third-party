@@ -89,7 +89,7 @@ $(document).ready(function(){
 
   <div>
     <label>Service Type Code</label>
-    <input type="input" id="service_type_code" name="service_type_code" />
+    <input type="input" id="service_type_code" name="service_type_code" value="30" />
     <span class="description">Optional. Use specific service coverage (diagnostic, lab, etc)</span>
   </div>
 
@@ -99,6 +99,7 @@ $(document).ready(function(){
 <div id="api_output"></div>
   <script type="text/javascript">
     $('#api_submit').click( function(){
+/*
                                   $.ajax({
                                         url: "https://eligibleapi.net/eligibility.asp",
                                         type: "get",
@@ -144,6 +145,33 @@ $(document).ready(function(){
                                                 alert('fail');
                                         }
                                   });
+*/
+
+                                  $.ajax({
+                                        url: "https://v16.eligibleapi.net:6443/status.json",
+                                        type: "get",
+                                        dataType: 'json',
+                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
+                                                payer_name: $('#payer_name').val(),
+                                                payer_id: $('#payer_id').val(),
+                                                provider_first_name: $('#provider_first_name').val(),
+                                                service_provider_last_name: $('#provider_last_name').val(),
+                                                service_provider_npi: $('#provider_npi').val(),
+                                                subscriber_id: $('#patient_member_id').val(),
+                                                subscriber_first_name: $('#patient_first_name').val(),
+                                                subscriber_last_name: $('#patient_last_name').val(),
+                                                subscriber_dob: $('#patient_dob').val(),
+						servicei_type_code: 30
+                                                },
+                                        complete: function(data){
+                                                $('#api_output').html(data.responseText);
+                                                //$('#api_output').html('');
+                                                var r = $.parseJSON(data.responseText);
+                                                response = r['health_care_eligibility_benefit_response'];
+
+					}
+				});
+
 	
     });
 

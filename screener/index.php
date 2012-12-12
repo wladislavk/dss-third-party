@@ -391,98 +391,102 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
    <H4>Results</h4>
    <div class="third">
     <div class="check">
-      <label>First name:</label>
-      <span id="r_first_name"></span>
+      <span id="r_first_name"></span> -
+      <label>First name</label>
     </div>
     <div class="check">
-      <label>Last name:</label>
-      <span id="r_last_name"></span>
+      <span id="r_last_name"></span> -
+      <label>Last name</label>
     </div>
     <div class="check">
-      <label>Phone:</label>
-      <span id="r_phone"></span>
+      <span id="r_phone"></span> - 
+      <label>Phone</label>
     </div>
     <div class="check">
-      <label>Sitting and reading:</label>
-      <span id="r_epworth_reading"></span>
+      <span id="r_epworth_reading"></span> -
+      <label>Sitting and reading</label>
     </div>
     <div class="check">
-      <label>Sitting inactive in a public place (e.g. a theater or meeting):</label>
-      <span id="r_epworth_public"></span>
+      <span id="r_epworth_public"></span> - 
+      <label>Sitting inactive in a public place (e.g. a theater or meeting)</label>
     </div>
     <div class="check">
-      <label>As a passenger in a car for an hour without a break:</label>
-      <span id="r_epworth_passenger"></span>
+      <span id="r_epworth_passenger"></span> -
+      <label>As a passenger in a car for an hour without a break</label>
     </div>
     <div class="check">
-      <label>Lying down to rest in the afternoon when circumstances permit:</label>
-      <span id="r_epworth_lying"></span>
+      <span id="r_epworth_lying"></span> - 
+      <label>Lying down to rest in the afternoon when circumstances permit</label>
     </div>
     <div class="check">
-      <label>Sitting and talking to someone:</label>
-      <span id="r_epworth_talking"></span>
+      <span id="r_epworth_talking"></span> - 
+      <label>Sitting and talking to someone</label>
     </div>
     <div class="check">
-      <label>Sitting quietly after a lunch without alcohol:</label>
-      <span id="r_epworth_lunch"></span>
+      <span id="r_epworth_lunch"></span> - 
+      <label>Sitting quietly after a lunch without alcohol</label>
     </div>
     <div class="check">
-      <label>In a car, while stopped for a few minutes in traffic:</label>
-      <span id="r_epworth_traffic"></span>
+      <span id="r_epworth_traffic"></span> - 
+      <label>In a car, while stopped for a few minutes in traffic</label>
+    </div>
+    <div>
+       <span id="r_ep_total"></span> - 
+       <label>Epworth Sleepiness Scale Total</label>
     </div>
   </div>
   <div class="third">
     <div class="check">
-      <label>Have you ever been told you stop breathing while asleep?</label>
       <span id="r_breathing"></span>
+      <label>Have you ever been told you stop breathing while asleep?</label>
     </div>
     <div class="check">
-      <label>Have you ever fallen asleep or nodded off while driving?</label>
       <span id="r_driving"></span>
+      <label>Have you ever fallen asleep or nodded off while driving?</label>
     </div>
     <div class="check">
-      <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
       <span id="r_gasping"></span>
+      <label>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
     </div>
     <div class="check">
-      <label>Do you feel excessively sleepy during the day?</label>
       <span id="r_sleepy"></span>
+      <label>Do you feel excessively sleepy during the day?</label>
     </div>
     <div class="check">
-      <label>Do you snore or have you ever been told that you snore?</label>
       <span id="r_snore"></span>
+      <label>Do you snore or have you ever been told that you snore?</label>
     </div>
     <div class="check">
-      <label>Have you had weight gain and found it difficult to lose?</label>
       <span id="r_weight_gain"></span>
+      <label>Have you had weight gain and found it difficult to lose?</label>
     </div>
     <div class="check">
-      <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
       <span id="r_blood_pressure"></span>
+      <label>Have you taken medication for, or been diagnosed with high blood pressure?</label>
     </div>
     <div class="check">
-      <label>Do you kick or jerk your legs while sleeping?</label>
       <span id="r_jerk"></span>
+      <label>Do you kick or jerk your legs while sleeping?</label>
     </div>
     <div class="check">
-      <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</label>
       <span id="r_burning"></span>
+      <label>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</label>
     </div>
     <div class="check">
-      <label>Do you wake up with headaches during the night or in the morning?</label>
       <span id="r_headaches"></span>
+      <label>Do you wake up with headaches during the night or in the morning?</label>
     </div>
     <div class="check">
-      <label>Do you have trouble falling asleep?</label>
       <span id="r_falling_asleep"></span>
+      <label>Do you have trouble falling asleep?</label>
     </div>
     <div class="check">
-      <label>Do you have trouble staying asleep once you fall asleep?</label>
       <span id="r_staying_asleep"></span>
+      <label>Do you have trouble staying asleep once you fall asleep?</label>
     </div>
     <div class="check">
-      <label>Have you ever used CPAP before?</label>
       <span id="r_rx_cpap"></span>
+      <label>Have you ever used CPAP before?</label>
     </div>
    </div>
    <div class="third">

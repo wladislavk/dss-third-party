@@ -138,6 +138,7 @@ function submit_screener(){
         ep += parseInt($('#epworth_talking').val(), 10);
         ep += parseInt($('#epworth_lunch').val(), 10);
         ep += parseInt($('#epworth_traffic').val(), 10);
+        $('#r_ep_total').text(ep);
 	var sect3 = 0;
 	sect3 += parseInt($("input[name=rx_cpap]:checked").val(), 10);
 	sect3 += $("input[name=rx_blood_pressure]").is(':checked')?2:0;

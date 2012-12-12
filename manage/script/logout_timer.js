@@ -1,12 +1,23 @@
 lo_timer = '';
 w_timer = '';
 timer_length = 60*60*1000;
-w_timer_length = 60*1000; // 1 minute for testing
+w_timer_length = 15*60*1000; 
+startTimeMS = 0;
 function set_interval()
 {
+startTimeMS = (new Date()).getTime();
 lo_timer=setInterval("auto_logout()",timer_length);
 w_timer=setInterval("warn_logout()",w_timer_length);
 }
+
+function update_logout_timer(){
+  t = timer_length - ( (new Date()).getTime() - startTimeMS );
+  m = Math.floor(t/60000);
+  $('#logout_time_remaining').text(m+" minutes");
+}
+
+setInterval("update_logout_timer()", 30000);
+
 function reset_interval()
 {
 clearInterval(lo_timer);

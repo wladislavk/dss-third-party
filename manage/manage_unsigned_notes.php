@@ -2,7 +2,23 @@
 include_once 'includes/constants.inc';
 include 'includes/top.htm';
 
-$unsigned_query = "SELECT distinct(patientid) FROM dental_notes n WHERE (n.signed_on IS NULL OR n.signed_on = '') AND n.docid = '".$_SESSION['docid']."'";
+
+
+//$unsigned_query = "SELECT distinct(patientid) FROM dental_notes n WHERE (n.signed_on IS NULL OR n.signed_on = '') AND n.docid = '".$_SESSION['docid']."' group by n.parentid order by n.signed_on DESC";
+
+
+//NEEDS OPTIMIZED
+$unsigned_query = "select distinct(patientid) from (select n.*, u.name signed_name, p.adddate as parent_adddate from
+        (
+        select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc
+        ) as n
+        LEFT JOIN dental_users u on u.userid=n.signed_id
+        LEFT JOIN dental_notes p ON p.notesid = n.parentid
+        group by n.parentid
+        order by n.procedure_date DESC, n.adddate desc) as m
+        where m.signed_on IS NULL OR m.signed_on = ''
+        ";
+
 $unsigned_res = mysql_query($unsigned_query);
 
 
@@ -24,7 +40,21 @@ while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
 </tr>
 
 <?php
-  $sql = "SELECT * from dental_notes n WHERE (n.signed_on IS NULL OR n.signed_on = '') AND n.patientid='".$unsigned_r['patientid']."' AND n.docid = '".$_SESSION['docid']."'";
+  //$sql = "SELECT * from dental_notes n WHERE (n.signed_on IS NULL OR n.signed_on = '') AND n.patientid='".$unsigned_r['patientid']."' AND n.docid = '".$_SESSION['docid']."'";
+
+//NEEDS OPTIMIZED
+$sql = "select * from (select n.*, u.name signed_name, p.adddate as parent_adddate from
+        (
+        select * from dental_notes where patientid='".$unsigned_r['patientid']."' AND status!=0 AND docid='".$_SESSION['docid']."' order by adddate desc
+        ) as n
+        LEFT JOIN dental_users u on u.userid=n.signed_id
+        LEFT JOIN dental_notes p ON p.notesid = n.parentid
+        group by n.parentid
+        order by n.procedure_date DESC, n.adddate desc) as m
+        where m.signed_on IS NULL OR m.signed_on = '' AND m.patientid='".$unsigned_r['patientid']."' AND 
+	m.docid = '".$_SESSION['docid']."'
+        ";
+
   $q = mysql_query($sql);
   while($myarray = mysql_fetch_assoc($q)){
     
@@ -107,6 +137,9 @@ while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
 
 <script type="text/javascript">
 function sign_notes(pid){
+  if(!confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?')){
+    return false;
+  }
   sign_arr = new Array();
   i=0;
   $('.sign_chbx_'+pid+':checked').each(function(){

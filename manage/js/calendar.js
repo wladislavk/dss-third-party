@@ -16,6 +16,22 @@ $(document).ready( function(){
 
   });
 
+  $('input.calendar_top').each(function(){
+        var cid = $(this).attr("id");
+        if(cid){
+                Calendar.setup({
+                        inputField : cid,
+                        trigger    : cid,
+                        fdow       : 0,
+                        align      : "T////",
+                        onSelect   : function() { this.hide() },
+                        dateFormat : "%m/%d/%Y"
+                });
+        }
+
+
+  });
+
   $('input.flow_next_calendar').each(function(){
         var cid = $(this).attr("id");
         if(cid){

@@ -314,7 +314,7 @@ if($pat_myarray['patientid'] == '')
 				Editor Initials: <input type="text" name="editor_initials" value="<?=$editor_initials ?>" maxlength="3" />
             </td>
         	<td class="frmdata">
-				Procedure Date: <span class="red">*</span> <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar" />
+				Procedure Date: <span class="red">*</span> <input type="text" id="procedure_date" name="procedure_date" value="<?=$procedure_date ?>" class="calendar_top" />
 				Added by: 
 				<?php
 					if(isset($_REQUEST['ed'])){

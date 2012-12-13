@@ -22,7 +22,7 @@
 
   <div style="clear:both;">
     <label>Payer Name</label>
-    <input type="input" id="payer_name" name="payer_name" value="" />
+    <input type="input" id="payer_name" name="payer_name" value="Type Insurance Here" onclick="clear_payer_name(this);" />
     <span class="description">Insurance Company Name
 	<br />
         <div id="payer_hints" class="search_hints" style="margin-top:20px; display:none; height: 200px; overflow-y:scroll;">
@@ -33,6 +33,13 @@
      </span>
   </div>
 <script type="text/javascript">
+
+function clear_payer_name(f){
+  if(f.value=="Type Insurance Here"){
+    $('#payer_name').val('');
+  }
+}
+
 $(document).ready(function(){
   setup_autocomplete('payer_name', 'payer_hints', 'payer_id', 'eligibiliy', 'list_ins_payers.php');
 });
@@ -161,13 +168,14 @@ $(document).ready(function(){
                                                 subscriber_first_name: $('#patient_first_name').val(),
                                                 subscriber_last_name: $('#patient_last_name').val(),
                                                 subscriber_dob: $('#patient_dob').val(),
-						servicei_type_code: 30
+						service_type_code: 30
                                                 },
                                         complete: function(data){
                                                 //$('#api_output').html(data.responseText);
                                                 $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
                                                 pr = r['primary_insurance'];
+if(pr){
 						din_ind = r.deductible_in_network.individual
                                                 din_fam = r.deductible_in_network.family
                                                 don_ind = r.deductible_out_network.individual
@@ -192,9 +200,10 @@ $(document).ready(function(){
                                                 $('#api_output').append('<h4>Family</h4>');
                                                 $('#api_output').append('Base Period: '+don_fam.base_period);
                                                 $('#api_output').append('<br />Remaining: '+don_fam.remaining);
-
+}else{
+$('#api_output').append("<h3>Error</h3>");
+}
 $('#api_output').append("<br/><br /><br />"+data.responseText);
-
 $('#api_output').show();
 					}
 				});

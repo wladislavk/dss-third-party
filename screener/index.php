@@ -389,7 +389,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
   <a name="results"></a>
   <div id="results_div" style="display:none; clear:both;">
    <H4>Results</h4>
-   <div class="half">
+   <div style="width:58%; float:left;">
     <div class="check">
       <label>First name:</label>
       <span id="r_first_name"></span>
@@ -436,7 +436,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
       <label>In a car, while stopped for a few minutes in traffic</label>
     </div>
   </div>
-  <div class="half">
+  <div style="width:38%;float:left;">
     <div><strong>Health Symptoms</strong></div>
     <div class="check">
       <span id="r_breathing"></span>

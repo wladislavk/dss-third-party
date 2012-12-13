@@ -240,7 +240,7 @@ function submit_screener(){
 
 
 function next_sect(sect){
-  if(sect==1){
+  if(sect==2){
 	$('#restart_nav').show();
   }
   $('.sect').hide();

@@ -41,7 +41,7 @@ function clear_payer_name(f){
 }
 
 $(document).ready(function(){
-  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', 'eligibiliy', 'list_ins_payers.php');
+  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers.php', 'eligibility');
 });
 
 </script>

@@ -1,7 +1,9 @@
 
 #eligible_api{
-  width:95%;
+  width:90%;
   margin: 0 auto;
+  border: solid 1px #000; 
+  padding: 20px;
   }
 
 #eligible_api label{
@@ -11,3 +13,11 @@
   float: left;
   padding: 3px 10px 0 0;
   }
+
+#api_output{
+  display: none;
+  border: solid 1px #000;
+  padding: 10px;
+  clear: both;
+  
+ }

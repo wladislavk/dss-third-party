@@ -389,18 +389,23 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
   <a name="results"></a>
   <div id="results_div" style="display:none; clear:both;">
    <H4>Results</h4>
-   <div class="third">
+   <div class="half">
     <div class="check">
-      <span id="r_first_name"></span> -
-      <label>First name</label>
+      <label>First name:</label>
+      <span id="r_first_name"></span>
     </div>
     <div class="check">
-      <span id="r_last_name"></span> -
-      <label>Last name</label>
+      <label>Last name:</label>
+      <span id="r_last_name"></span>
     </div>
     <div class="check">
-      <span id="r_phone"></span> - 
-      <label>Phone</label>
+      <label>Phone:</label>
+      <span id="r_phone"></span>
+    </div>
+    <div><strong>Epworth Sleepiness Scale</strong></div>
+    <div>
+       <span id="r_ep_total"></span> -
+       <label>Epworth Sleepiness Scale Total</label>
     </div>
     <div class="check">
       <span id="r_epworth_reading"></span> -
@@ -430,12 +435,9 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
       <span id="r_epworth_traffic"></span> - 
       <label>In a car, while stopped for a few minutes in traffic</label>
     </div>
-    <div>
-       <span id="r_ep_total"></span> - 
-       <label>Epworth Sleepiness Scale Total</label>
-    </div>
   </div>
-  <div class="third">
+  <div class="half">
+    <div><strong>Health Symptoms</strong></div>
     <div class="check">
       <span id="r_breathing"></span>
       <label>Have you ever been told you stop breathing while asleep?</label>
@@ -487,9 +489,8 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
     <div class="check">
       <span id="r_rx_cpap"></span>
       <label>Have you ever used CPAP before?</label>
-    </div>
-   </div>
-   <div class="third">
+    </div><br />
+    <div><strong>Co-morbidity</strong></div>
     <div>
       <label>Please check any conditions for which you have been medically diagnosed or treated.</label>
       <ul id="r_diagnosed"></ul>

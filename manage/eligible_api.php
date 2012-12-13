@@ -13,19 +13,19 @@
 ?>
 <form method="post">
 
-<div id="eligible_api">
-
+<div id="eligible_api" >
+<h3>EligibleAPI Instant Eligibility</h3>
   <div>
-    <label></label>
+    <label>Insurance from Pt Info:</label>
     <?= $r['company']; ?>
   </div>
 
-  <div>
+  <div style="clear:both;">
     <label>Payer Name</label>
     <input type="input" id="payer_name" name="payer_name" value="" />
     <span class="description">Insurance Company Name
 	<br />
-        <div id="payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+        <div id="payer_hints" class="search_hints" style="margin-top:20px; display:none; height: 200px; overflow-y:scroll;">
                 <ul id="payer_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
                 </ul>
@@ -34,7 +34,7 @@
   </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers.php');
+  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', 'eligibiliy', 'list_ins_payers.php');
 });
 
 </script>
@@ -94,7 +94,7 @@ $(document).ready(function(){
   </div>
 
 
-  <a id="api_submit" href="#" onclick="return false;">Submit Request</a>
+  <a id="api_submit" href="#" onclick="return false;" class="addButton">Submit Request</a>
 </form>
 <div id="api_output"></div>
   <script type="text/javascript">
@@ -164,11 +164,38 @@ $(document).ready(function(){
 						servicei_type_code: 30
                                                 },
                                         complete: function(data){
-                                                $('#api_output').html(data.responseText);
-                                                //$('#api_output').html('');
+                                                //$('#api_output').html(data.responseText);
+                                                $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
-                                                response = r['health_care_eligibility_benefit_response'];
+                                                pr = r['primary_insurance'];
+						din_ind = r.deductible_in_network.individual
+                                                din_fam = r.deductible_in_network.family
+                                                don_ind = r.deductible_out_network.individual
+                                                don_fam = r.deductible_out_network.family
 
+						$('#api_output').append('<h3>Primary Insurance</h3>');
+						$('#api_output').append('Name: '+pr.name);
+                                                $('#api_output').append('<br />Group Name: '+pr.group_name);
+                                                $('#api_output').append('<br />Status: '+r.coverage_status);
+                                                $('#api_output').append('<h3>Deductible In Network</h3>');
+                                                $('#api_output').append('<h4>Individual</h4>');
+                                                $('#api_output').append('Base Period: '+din_ind.base_period);
+                                                $('#api_output').append('<br />Remaining: '+din_ind.remaining);
+                                                $('#api_output').append('<h4>Family</h4>');
+                                                $('#api_output').append('Base Period: '+din_fam.base_period);
+                                                $('#api_output').append('<br />Remaining: '+din_fam.remaining);
+
+                                                $('#api_output').append('<h3>Deductible out of Network</h3>');
+                                                $('#api_output').append('<h4>Individual</h4>');
+                                                $('#api_output').append('Base Period: '+don_ind.base_period);
+                                                $('#api_output').append('<br />Remaining: '+don_ind.remaining);
+                                                $('#api_output').append('<h4>Family</h4>');
+                                                $('#api_output').append('Base Period: '+don_fam.base_period);
+                                                $('#api_output').append('<br />Remaining: '+don_fam.remaining);
+
+$('#api_output').append("<br/><br /><br />"+data.responseText);
+
+$('#api_output').show();
 					}
 				});
 

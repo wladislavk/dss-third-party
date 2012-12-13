@@ -47,6 +47,7 @@
 				}else{
 					var label = "person";
 				}
+
                                 var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
 					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient&in_field="+in_field+"&id_field="+id_field+"&search="+partial_name+"')");
                                         template_list_ref(newLi, "Add "+label+" with this name&#8230;")

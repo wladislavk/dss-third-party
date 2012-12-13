@@ -286,45 +286,45 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 			</tr>
 			<tr id="details_<?= $myarray['id']; ?>" style="display:none;">
-			<td colspan="2" valign="top">
+			<td colspan="4" valign="top">
 				<strong>Epworth Sleepiness Score</strong><br />
 				<?php if($myarray['epworth_reading']>0) { ?>
-				<strong>Sitting and reading:</strong> <?= $myarray['epworth_reading']; ?> - <?= $epworth_labels[$myarray['epworth_reading']]; ?><br />
+				<?= $myarray['epworth_reading']; ?> - <?= $epworth_labels[$myarray['epworth_reading']]; ?> - <strong>Sitting and reading:</strong> <br />
 				<?php } ?>
                                 <?php if($myarray['epworth_public']>0) { ?>
-                                <strong>Sitting inactive in a public place (e.g. a theater or meeting): </strong><?= $myarray['epworth_public']; ?> - <?= $epworth_labels[$myarray['epworth_public']]; ?><br />
+                                <?= $myarray['epworth_public']; ?> - <?= $epworth_labels[$myarray['epworth_public']]; ?> - <strong>Sitting inactive in a public place (e.g. a theater or meeting): </strong><br />
                                 <?php } ?>
                                 <?php if($myarray['epworth_passenger']>0) { ?>
-                                <strong>As a passenger in a car for an hour without a break: </strong><?= $myarray['epworth_passenger']; ?> - <?= $epworth_labels[$myarray['epworth_passenger']]; ?><br />
+                                <?= $myarray['epworth_passenger']; ?> - <?= $epworth_labels[$myarray['epworth_passenger']]; ?> - <strong>As a passenger in a car for an hour without a break: </strong><br />
                                 <?php } ?>
                                 <?php if($myarray['epworth_lying']>0) { ?>
-                                <strong>Lying down to rest in the afternoon when circumstances permit: </strong><?= $myarray['epworth_lying']; ?> - <?= $epworth_labels[$myarray['epworth_lying']]; ?><br />
+                                <?= $myarray['epworth_lying']; ?> - <?= $epworth_labels[$myarray['epworth_lying']]; ?> - <strong>Lying down to rest in the afternoon when circumstances permit: </strong><br />
                                 <?php } ?>
                                 <?php if($myarray['epworth_talking']>0) { ?>
-                                <strong>Sitting and talking to someone: </strong><?= $myarray['epworth_talking']; ?> - <?= $epworth_labels[$myarray['epworth_talking']]; ?><br />
+                                <?= $myarray['epworth_talking']; ?> - <?= $epworth_labels[$myarray['epworth_talking']]; ?> - <strong>Sitting and talking to someone: </strong><br />
                                 <?php } ?>
                                 <?php if($myarray['epworth_lunch']>0) { ?>
-                                <strong>Sitting quietly after a lunch without alcohol: </strong><?= $myarray['epworth_lunch']; ?> - <?= $epworth_labels[$myarray['epworth_lunch']]; ?> <br />
+                                <?= $myarray['epworth_lunch']; ?> - <?= $epworth_labels[$myarray['epworth_lunch']]; ?> - <strong>Sitting quietly after a lunch without alcohol: </strong><br />
                                 <?php } ?>
                                 <?php if($myarray['epworth_traffic']>0) { ?>
-                                <strong>In a car, while stopped for a few minutes in traffic: </strong><?= $myarray['epworth_traffic']; ?> - <?= $epworth_labels[$myarray['epworth_traffic']]; ?><br />
+                                <?= $myarray['epworth_traffic']; ?> - <?= $epworth_labels[$myarray['epworth_traffic']]; ?> - <strong>In a car, while stopped for a few minutes in traffic: </strong><br />
 				<?php } ?>
-			</td><td valign="top" colspan="4">
+			</td><td valign="top" colspan="6">
 			<strong>Health Symptoms</strong><br />
-			<?= ($myarray['breathing']>0)?'<strong>Have you ever been told you stop breathing while asleep?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['driving']>0)?'<strong>Have you ever fallen asleep or nodded off while driving?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['gasping']>0)?'<strong>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['sleepy']>0)?'<strong>Do you feel excessively sleepy during the day?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['snore']>0)?'<strong>Do you snore or have you ever been told that you snore?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['weight_gain']>0)?'<strong>Have you had weight gain and found it difficult to lose?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['blood_pressure']>0)?'<strong>Have you taken medication for, or been diagnosed with high blood pressure?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['jerk']>0)?'<strong>Do you kick or jerk your legs while sleeping?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['burning']>0)?'<strong>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['headaches']>0)?'<strong>Do you wake up with headaches during the night or in the morning?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['falling_asleep']>0)?'<strong>Do you have trouble falling asleep?</strong> Yes<br />':''; ?>
-                        <?= ($myarray['staying_asleep']>0)?'<strong>Do you have trouble staying asleep once you fall asleep?</strong> Yes<br />':''; ?>
+			<?= ($myarray['breathing']>0)?'Yes - <strong>Have you ever been told you stop breathing while asleep?</strong><br />':''; ?>
+                        <?= ($myarray['driving']>0)?'Yes - <strong>Have you ever fallen asleep or nodded off while driving?</strong><br />':''; ?>
+                        <?= ($myarray['gasping']>0)?'Yes - <strong>Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</strong><br />':''; ?>
+                        <?= ($myarray['sleepy']>0)?'Yes - <strong>Do you feel excessively sleepy during the day?</strong><br />':''; ?>
+                        <?= ($myarray['snore']>0)?'Yes - <strong>Do you snore or have you ever been told that you snore?</strong><br />':''; ?>
+                        <?= ($myarray['weight_gain']>0)?'Yes - <strong>Have you had weight gain and found it difficult to lose?</strong><br />':''; ?>
+                        <?= ($myarray['blood_pressure']>0)?'Yes - <strong>Have you taken medication for, or been diagnosed with high blood pressure?</strong><br />':''; ?>
+                        <?= ($myarray['jerk']>0)?'Yes - <strong>Do you kick or jerk your legs while sleeping?</strong><br />':''; ?>
+                        <?= ($myarray['burning']>0)?'Yes - <strong>Do you feel burning, tingling or crawling sensations in your legs when you wake up?</strong><br />':''; ?>
+                        <?= ($myarray['headaches']>0)?'Yes - <strong>Do you wake up with headaches during the night or in the morning?</strong><br />':''; ?>
+                        <?= ($myarray['falling_asleep']>0)?'Yes - <strong>Do you have trouble falling asleep?</strong><br />':''; ?>
+                        <?= ($myarray['staying_asleep']>0)?'Yes - <strong>Do you have trouble staying asleep once you fall asleep?</strong><br />':''; ?>
 
-			</td><td valign="top" colspan="4">
+			<br />
 			<strong>Co-morbidity</strong><br />
 			<?php
 			foreach($diagnosis as $d){

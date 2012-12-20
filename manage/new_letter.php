@@ -697,13 +697,12 @@ if (isset($_POST['submit'])) {
 			<td>Select a letter template: <select id="template" name="template">
 				<option value=""></option>
 				<?php
-				$templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
+				$templates = "SELECT id, name FROM dental_letter_templates WHERE default_letter=1 ORDER BY id ASC;";
 				$result = mysql_query($templates);
 				while ($row = mysql_fetch_assoc($result)) {
 					print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
 				}
 				?>
-					<option value="99">99 - Blank Letter</option>
 				</select>
 			</td>
 			<td style="padding-left: 20px;">Method of Sending: <select id="send_method" name="send_method">

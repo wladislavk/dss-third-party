@@ -87,7 +87,7 @@ if(!isset($_SESSION['screener_doc'])){
 
 <div class="sect" id="sect2">
 <h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
-<h3>Epworth Sleepiness Score</h3>
+<h3>Epworth Sleepiness Scale</h3>
 <br />
 <p>How likely are you to sleep or doze in each of the following situations?</p>
 <div class="formEl_a">
@@ -268,59 +268,32 @@ if(!isset($_SESSION['screener_doc'])){
 <h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 <h3>Previous medical diagnoses</h3>
 <br />
-  <div class="sepH_b" id="rx_cpap_div">
-        <div class="buttonset">
-        <input type="radio" id="rx_cpap1" name="rx_cpap" value="4" /><label for="rx_cpap1">Yes</label>
-        <input type="radio" id="rx_cpap2" name="rx_cpap" value="0" /><label for="rx_cpap2">No</label> 
-	</div>
-        <label class="question">Have you ever used CPAP before?</label>
-  </div>
 
 <br /><br />
   <p class="clear">Please check any conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
-	<input type="checkbox" name="rx_blood_pressure" value="1" />
-	<label>High blood pressure</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_heart_disease" value="1" />
-        <label>Heart disease</label>
+        <input type="checkbox" name="rx_heart_failure" value="1" />
+        <label>Heart Failure</label>
   </div>
    <div class="field half">
         <input type="checkbox" name="rx_stroke" value="1" />
         <label>Stroke</label>
   </div>
   <div class="field half">
-        <input type="checkbox" name="rx_apnea" value="1" />
-        <label>Sleep apnea</label>
+        <input type="checkbox" name="rx_hypertension" value="1" />
+        <label>Hypertension</label>
   </div>
   <div class="field half">
         <input type="checkbox" name="rx_diabetes" value="1" />
         <label>Diabetes</label>
   </div>
   <div class="field half">
-        <input type="checkbox" name="rx_lung_disease" value="1" />
-        <label>Lung Disease</label>
+        <input type="checkbox" name="rx_metabolic_syndrome" value="1" />
+        <label>Metabolic Syndrome</label>
   </div>
   <div class="field half">
-        <input type="checkbox" name="rx_insomnia" value="1" />
-        <label>Insomnia</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_depression" value="1" />
-        <label>Depression</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_medication" value="1" />
-        <label>Sleeping medication</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_restless_leg" value="1" />
-        <label>Restless leg syndrome</label>
-  </div>
-  <div class="field half">
-        <input type="checkbox" name="rx_headaches" value="1" />
-        <label>Morning headaches</label>
+        <input type="checkbox" name="rx_obesity" value="1" />
+        <label>Obesity</label>
   </div>
   <div class="field half">
         <input type="checkbox" name="rx_heartburn" value="1" />
@@ -383,7 +356,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 							<div id="regModal">
 								<h4 class="sepH_a">Survey Complete</h4>
 								<p class="sepH_c">Thank you for completing the survey. Please return this device to our staff or let them know you have completed the survey.</p>
-								<a href="index.php" class="btn btn_d">OK</a>
+								<a href="index.php" id="finish_ok" class="btn btn_d">OK</a>
 							</div>
 						</div>
   <a name="results"></a>

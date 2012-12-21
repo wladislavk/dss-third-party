@@ -29,20 +29,12 @@ $burning = $_REQUEST['burning'];
 $headaches = $_REQUEST['headaches'];
 $falling_asleep = $_REQUEST['falling_asleep'];
 $staying_asleep = $_REQUEST['staying_asleep'];
-$rx_cpap = $_REQUEST['rx_cpap'];
-$rx_blood_pressure = $_REQUEST['rx_blood_pressure'];
+$rx_metabolic_syndrome = $_REQUEST['rx_metabolic_syndrome'];
 $rx_hypertension = $_REQUEST['rx_hypertension'];
-$rx_heart_disease = $_REQUEST['rx_heart_disease'];
+$rx_heart_failure = $_REQUEST['rx_heart_failure'];
 $rx_stroke = $_REQUEST['rx_stroke'];
-$rx_apnea = $_REQUEST['rx_apnea'];
 $rx_diabetes = $_REQUEST['rx_diabetes'];
-$rx_lung_disease = $_REQUEST['rx_lung_disease'];
-$rx_insomnia = $_REQUEST['rx_insomnia'];
-$rx_depression = $_REQUEST['rx_depression'];
-$rx_narcolepsy = $_REQUEST['rx_narcolepsy'];
-$rx_medication = $_REQUEST['rx_medication'];
-$rx_restless_leg = $_REQUEST['rx_restless_leg'];
-$rx_headaches = $_REQUEST['rx_headaches'];
+$rx_obesity = $_REQUEST['rx_obesity'];
 $rx_heartburn = $_REQUEST['rx_heartburn'];
 
 /*
@@ -82,25 +74,19 @@ $s = "INSERT INTO dental_screener SET
         falling_asleep='".mysql_real_escape_string($falling_asleep)."',
         staying_asleep ='".mysql_real_escape_string($staying_asleep)."',
         rx_cpap = '".mysql_real_escape_string($rx_cpap)."',
-	rx_blood_pressure = '".mysql_real_escape_string($rx_blood_pressure)."',
+	rx_metabolic_syndrome = '".mysql_real_escape_string($rx_metabolic_syndrome)."',
         rx_hypertension = '".mysql_real_escape_string($rx_hypertension)."',
-        rx_heart_disease = '".mysql_real_escape_string($rx_heart_disease)."',
+        rx_heart_failure = '".mysql_real_escape_string($rx_heart_failure)."',
         rx_stroke = '".mysql_real_escape_string($rx_stroke)."',
-        rx_apnea = '".mysql_real_escape_string($rx_apnea)."',
         rx_diabetes = '".mysql_real_escape_string($rx_diabetes)."',
-        rx_lung_disease = '".mysql_real_escape_string($rx_lung_disease)."',
-        rx_insomnia = '".mysql_real_escape_string($rx_insomnia)."',
-        rx_depression = '".mysql_real_escape_string($rx_depression)."',
-        rx_narcolepsy = '".mysql_real_escape_string($rx_narcolepsy)."',
-        rx_medication = '".mysql_real_escape_string($rx_medication)."',
-        rx_restless_leg = '".mysql_real_escape_string($rx_restless_leg)."',
-        rx_headaches = '".mysql_real_escape_string($rx_headaches)."',
+        rx_obesity = '".mysql_real_escape_string($rx_obesity)."',
         rx_heartburn = '".mysql_real_escape_string($rx_heartburn)."',
 	adddate=now(),
 	ip_address='".$_SERVER['REMOTE_ADDR']."'
 	";
 if(mysql_query($s)){
-  echo '{"success":true}';
+  $id = mysql_insert_id();
+  echo '{"success":true, "id":"'.$id.'"}';
 }else{
   echo '{"error":true}';
 }

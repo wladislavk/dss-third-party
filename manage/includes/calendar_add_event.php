@@ -12,7 +12,7 @@ require_once 'checkemail.php';
 $s = "INSERT INTO dental_calendar
 	(start_date, end_date, event_id, description, category, producer_id, docid)
 	VALUES
-	('".$sd."', '".$ed."', '".$id."', '".$de."', '".$cat."', ".$pi.", '".$docid."')";
+	('".$sd."', '".$ed."', '".$id."', '".mysql_real_escape_string($de)."', '".$cat."', ".$pi.", '".$docid."')";
 if(mysql_query($s)){
   echo '{"success":true}';
 }else{

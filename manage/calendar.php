@@ -182,7 +182,7 @@ require_once('includes/formatters.php');
 			?>scheduler.addEvent({
 				start_date: "<?= date('d-m-Y H:i', strtotime($r['start_date'])); ?>",
 				end_date: "<?= date('d-m-Y H:i', strtotime($r['end_date'])); ?>",
-				text: "<?= $r['description']; ?>",
+				text: "<?= addslashes($r['description']); ?>",
 				category: "<?= $r['category']; ?>",
 				producer: "<?= $r['producer_id']; ?>",
 				id: "<?= $r['event_id']; ?>",

@@ -47,7 +47,7 @@ if(!isset($_SESSION['screener_doc'])){
     <div id="main">
         <div class="wrapper cf">
             <div class="cf brdrrad_a" id="main_section">
-<form class="formEl_a">
+<form class="formEl_a register">
 <input type="hidden" id="docid" name="docid" value="<?= $_SESSION['screener_doc']; ?>" />
 <input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
 
@@ -64,60 +64,6 @@ if(!isset($_SESSION['screener_doc'])){
 ?>
 <p>Please enter your information to complete this brief health assessment.</p>
 <br />
-<div class="sepH_b clear" id="first_name_div">
-        <label class="lbl_a">First Name</label>
-        <input class="inpt_a" type="text" id="first_name" name="first_name" value="<?php echo $r['first_name']; ?>" />
-</div>
-
-<div class="sepH_b" id="last_name_div">
-        <label class="lbl_a">Last Name</label>
-        <input class="inpt_a" type="text" id="last_name" name="last_name" value="<?php echo $r['last_name']; ?>" />
-</div>
-
-<div class="sepH_b" id="phone_div">
-        <label class="lbl_a">Phone Number</label>
-        <input class="inpt_a phonemask" type="text" id="phone" name="phone" value="<?php echo $r['phone']; ?>" />
-</div>
-
-<div class="sepH_b" id="gender_div">
-        <label class="lbl_a">Gender</label>
-        <input class="inpt_a" type="text" id="gender" name="gender" value="" />
-</div>
-
-<div class="sepH_b" id="address_div">
-        <label class="lbl_a">Address</label>
-        <input class="inpt_a" type="text" id="address" name="address" value="" />
-</div>
-
-<div class="sepH_b" id="city_div">
-        <label class="lbl_a">City</label>
-        <input class="inpt_a" type="text" id="city" name="city" value="" />
-</div>
-
-<div class="sepH_b" id="state_div">
-        <label class="lbl_a">State</label>
-        <input class="inpt_a" type="text" id="state" name="state" value="" />
-</div>
-
-<div class="sepH_b" id="zip_div">
-        <label class="lbl_a">Zip</label>
-        <input class="inpt_a" type="text" id="zip" name="zip" value="" />
-</div>
-
-<div class="sepH_b" id="weight_div">
-        <label class="lbl_a">Weight</label>
-        <input class="inpt_a" type="text" id="weight" name="weight" value="" />
-</div>
-
-<div class="sepH_b" id="height_div">
-        <label class="lbl_a">Height</label>
-        <input class="inpt_a" type="text" id="height" name="height" value="" />
-</div>
-
-<div class="sepH_b" id="neck_div">
-        <label class="lbl_a">Neck Size</label>
-        <input class="inpt_a" type="text" id="neck" name="neck" value="" />
-</div>
 
 <div class="sepH_b" id="email_div">
         <label class="lbl_a">Email</label>
@@ -138,6 +84,63 @@ if(!isset($_SESSION['screener_doc'])){
         <label class="lbl_a">Group#</label>
         <input class="inpt_a" type="text" id="group" name="group" value="" />
 </div>
+
+
+                                                                                                                <div class="cf">
+<a href="#" onclick="validate_register_0()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="sect" id="sect1">
+<div class="dp100">
+<h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
+
+
+
+
+<div class="sepH_b" id="gender_div">
+        <label class="lbl_a">Gender</label>
+        <div class="buttonset">
+        <input type="radio" id="gender1" name="gender" value="Male" /><label for="gender1">Male</label>
+        <input type="radio" id="gender2" name="gender" value="Female" /><label for="gender2">Female</label>
+        </div>
+</div>
+
+<div class="sepH_b" id="weight_div">
+        <label class="lbl_a">Weight</label>
+        <input class="inpt_a" type="text" id="weight" name="weight" value="" />
+</div>
+
+<div class="sepH_b" id="height_div">
+        <label class="lbl_a">Height</label>
+        <input class="inpt_a" type="text" id="height" name="height" value="" />
+</div>
+
+<div class="sepH_b" id="neck_div">
+        <label class="lbl_a">Neck Size</label>
+        <input class="inpt_a" type="text" id="neck" name="neck" value="" />
+</div>
+
+
+
+                                                                                                                <div class="cf">
+<a href="#" onclick="validate_register_1()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="sect" id="sect2">
+<div class="dp100">
+<h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
+
+
 
   <div class="sepH_b" id="disorder_div">
         <div class="buttonset">
@@ -161,107 +164,6 @@ if(!isset($_SESSION['screener_doc'])){
         <label class="question">If yes, do you use it every night?</label>
   </div>
 
-  <div class="sepH_b" id="breathing_div">
-        <div class="buttonset">
-        <input type="radio" id="breathing1" name="breathing" value="8" /><label for="breathing1">Yes</label>
-        <input type="radio" id="breathing2" name="breathing" value="0" /><label for="breathing2">No</label>
-        </div>
-        <label class="question">Have you ever been told you stop breathing while asleep?</label>
-  </div>
-<script>
-        $(function() {
-                $(".buttonset").buttonset();
-        });
-        </script>
-  <div class="sepH_b" id="driving_div">
-        <div class="buttonset">
-          <input type="radio" id="driving1" name="driving" value="6" /><label for="driving1">Yes</label>
-          <input type="radio" id="driving2" name="driving" value="0" /><label for="driving2">No</label>
-        </div>
-        <label class="question">Have you ever fallen asleep or nodded off while driving?</label>
-  </div>
-
-  <div class="sepH_b" id="gasping_div">
-        <div class="buttonset">
-        <input type="radio" name="gasping" value="6" id="gasping1" /><label for="gasping1">Yes</label>
-        <input type="radio" name="gasping" value="0" id="gasping2" /><label for="gasping2">No</label>
-        </div>
-        <label class="question">Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?</label>
-  </div>
-
-  <div class="sepH_b" id="sleepy_div">
-        <div class="buttonset">
-        <input type="radio" name="sleepy" value="4" id="sleepy1" /><label for="sleepy1">Yes</label>
-        <input type="radio" name="sleepy" value="0" id="sleepy2" /><label for="sleepy2">No</label>
-        </div>
-        <label class="question">Do you feel excessively sleepy during the day?</label>
-  </div>
-
-
-  <div class="sepH_b" id="snore_div">
-        <div class="buttonset">
-        <input type="radio" name="snore" value="4" id="snore1" /><label for="snore1">Yes</label>
-        <input type="radio" name="snore" value="0" id="snore2" /><label for="snore2">No</label>
-        </div>
-        <label class="question">Do you snore or have you ever been told that you snore?</label>
-  </div>
-
-  <div class="sepH_b" id="weight_gain_div">
-        <div class="buttonset">
-        <input type="radio" name="weight_gain" value="2" id="weight_gain1" /><label for="weight_gain1">Yes</label>
-        <input type="radio" name="weight_gain" value="0" id="weight_gain2" /><label for="weight_gain2">No</label>
-        </div>
-        <label class="question">Have you had weight gain and found it difficult to lose?</label>
-  </div>
-
-  <div class="sepH_b" id="blood_pressure_div">
-        <div class="buttonset">
-        <input type="radio" name="blood_pressure" value="2" id="blood_pressure1" /><label for="blood_pressure1">Yes</label>
-        <input type="radio" name="blood_pressure" value="0" id="blood_pressure2" /><label for="blood_pressure2">No</label>
-        </div>
-        <label class="question">Have you taken medication for, or been diagnosed with high blood pressure?</label>
-  </div>
-
-  <div class="sepH_b" id="jerk_div">
-        <div class="buttonset">
-        <input type="radio" name="jerk" value="3" id="jerk1" /><label for="jerk1">Yes</label>
-        <input type="radio" name="jerk" value="0" id="jerk2" /><label for="jerk2">No</label>
-        </div>
-        <label class="question">Do you kick or jerk your legs while sleeping?</label>
-  </div>
-
-  <div class="sepH_b" id="burning_div">
-        <div class="buttonset">
-        <input type="radio" name="burning" value="3" id="burning1" /><label for="burning1">Yes</label>
-        <input type="radio" name="burning" value="0" id="burning2" /><label for="burning2">No</label>
-        </div>
-        <label class="question">Do you feel burning, tingling or crawling sensations in your legs when you wake up? </label>
-  </div>
-
-
-  <div class="sepH_b" id="headaches_div">
-        <div class="buttonset">
-        <input type="radio" name="headaches" value="3" id="headaches1" /><label for="headaches1">Yes</label>
-        <input type="radio" name="headaches" value="0" id="headaches2" /><label for="headaches2">No</label>
-        </div>
-        <label class="question">Do you wake up with headaches during the night or in the morning?</label>
-  </div>
-
-  <div class="sepH_b" id="falling_asleep_div">
-        <div class="buttonset">
-        <input type="radio" name="falling_asleep" value="4" id="falling_asleep1" /><label for="falling_asleep1">Yes</label>
-        <input type="radio" name="falling_asleep" value="0" id="falling_asleep2" /><label for="falling_asleep2">No</label>
-        </div>
-        <label class="question">Do you have trouble falling asleep?</label>
-  </div>
-
-  <div class="sepH_b" id="staying_asleep_div">
-        <div class="buttonset">
-        <input type="radio" name="staying_asleep" value="4" id="staying_asleep1" /><label for="staying_asleep1">Yes</label>
-        <input type="radio" name="staying_asleep" value="0" id="staying_asleep2" /><label for="staying_asleep2">No</label>
-        </div>
-        <label class="question">Do you have trouble staying asleep once you fall asleep?</label>
-  </div>
 <br /><br />
   <p class="clear">Please check any conditions for which you have been medically diagnosed or treated.</p>
   <div class="field half">
@@ -293,19 +195,50 @@ if(!isset($_SESSION['screener_doc'])){
         <label>Heartburn (Gastroesophageal Reflux)</label>
   </div>
 
-
-
                                                                                                                 <div class="cf">
-<a href="#" onclick="submit_register()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+<a href="#" onclick="validate_register_2()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
                                                                                                                 </div>
+
 </div>
 <div class="clear"></div>
 </div>
 
 
+<div class="sect" id="sect3">
+<div class="dp100">
+<h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
+<div class="sepH_b" id="address_div">
+        <label class="lbl_a">Address</label>
+        <input class="inpt_a" type="text" id="address" name="address" value="" />
+</div>
+
+<div class="sepH_b" id="city_div">
+        <label class="lbl_a">City</label>
+        <input class="inpt_a" type="text" id="city" name="city" value="" />
+</div>
+
+<div class="sepH_b" id="state_div">
+        <label class="lbl_a">State</label>
+        <input class="inpt_a" type="text" id="state" name="state" value="" />
+</div>
+
+<div class="sepH_b" id="zip_div">
+        <label class="lbl_a">Zip</label>
+        <input class="inpt_a" type="text" id="zip" name="zip" value="" />
+</div>
+
+                                                                                                                <div class="cf">
+<a href="#" onclick="validate_register_3()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+                                                                                                                </div>
+</div>
+<div class="clear"></div>
+</div>
+
+</form>
+
 <div class="sect" id="sectfinish">
 <h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
-<h3>Your Results</h3>
+<h3>Thank you for registering</h3>
 
 <p id="result_body"></p>
 
@@ -313,7 +246,7 @@ if(!isset($_SESSION['screener_doc'])){
 						<div style="display:none">
 							<div id="regModal">
 								<h4 class="sepH_a">Survey Complete</h4>
-								<p class="sepH_c">Thank you for completing the survey. Please return this device to our staff or let them know you have completed the survey.</p>
+								<p class="sepH_c">Thank you for completing the registration.</p>
 								<a href="index.php" id="finish_ok" class="btn btn_d">OK</a>
 							</div>
 						</div>
@@ -333,6 +266,11 @@ if(!isset($_SESSION['screener_doc'])){
             <span class="fr">Copyright Dental Sleep Solutions 2012</span>
         </div>
     </div>
+<script>
+        $(function() {
+                $(".buttonset").buttonset();
+        });
+        </script>
 
   </body>
 </html>

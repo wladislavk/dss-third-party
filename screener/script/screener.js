@@ -485,3 +485,25 @@ $(document).ready(function(){
 					'hideOnOverlayClick': false
 				});
 });
+
+
+
+
+
+
+function validate_register_0(){
+  next_sect(1);
+}
+
+function validate_register_1(){
+  next_sect(2);
+}
+
+function validate_register_2(){
+  next_sect(3);
+}
+
+function validate_register_3(){
+  next_sect('finish');
+}
+

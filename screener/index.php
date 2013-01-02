@@ -47,7 +47,7 @@ if(!isset($_SESSION['screener_doc'])){
     <div id="main">
         <div class="wrapper cf">
             <div class="cf brdrrad_a" id="main_section">
-<form class="formEl_a">
+<form class="formEl_a screener">
 <input type="hidden" id="docid" name="docid" value="<?= $_SESSION['screener_doc']; ?>" />
 <input type="hidden" id="userid" name="userid" value="<?= $_SESSION['screener_user']; ?>" />
 

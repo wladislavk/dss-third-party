@@ -106,7 +106,7 @@ require_once('includes/formatters.php');
                         	$p_query = mysql_query($p_sql);
                         	while($p = mysql_fetch_array($p_query)){
                                 	?>case '<?= $p['userid']; ?>':
-						prod = '<?= $p['name']; ?>';
+						prod = '<?= addslashes($p['name']); ?>';
 						break;
 					<?php
                         	}
@@ -115,7 +115,22 @@ require_once('includes/formatters.php');
 					prod = 'None';
 					break;
 			}
-			return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
+			switch(event.patient){
+                                <?php
+                                $p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid'];
+                                $p_query = mysql_query($p_sql);
+                                while($p = mysql_fetch_array($p_query)){
+                                        ?>case '<?= $p['patientid']; ?>':
+                                                pat = '<?= addslashes($p['firstname'])." ".addslashes($p['lastname']); ?>';
+                                                break;
+                                        <?php
+                                }
+                                ?>
+                                default:
+                                        pat = 'None';
+                                        break;
+                        }
+			return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Patient:</b> "+pat+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
 		}
 		scheduler.templates.hour_scale = function(date){
             		var hour = date.getHours();
@@ -153,11 +168,16 @@ require_once('includes/formatters.php');
 			{ key: '', label: 'None' }
 		];
 		var patient = [
-                        { key: '', label: 'General' },
-                        { key: 'follow_up', label: 'Follow-up' },
-                        { key: 'sleep_test', label: 'Sleep Test' },
-                        { key: 'impressions', label: 'Impressions' },
-                        { key: 'new_patient', label: 'New Pt' }
+                        <?php
+                        $p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid'];
+                        $p_query = mysql_query($p_sql);
+                        while($p = mysql_fetch_array($p_query)){
+                                ?>{ key: '<?= $p['patientid']; ?>', label: '<?= addslashes($p['firstname'])." ".addslashes($p['lastname']); ?>'},<?php
+                        }
+
+                        ?>
+			{ key: '', label: 'None' }
+
                 ];
 
 		scheduler.createTimelineView({
@@ -185,11 +205,10 @@ require_once('includes/formatters.php');
 			{name:"description", height:130, map_to:"text", type:"textarea" , focus:true},
 			{name:"category", height:20, type:"select", options: category, map_to:"category" },
                         {name:"producer", height:20, type:"select", options: producer, map_to:"producer" },
-			{name:"patient", map_to:"patient", height:20, type:"combo", options: patient, filtering: true, script_path:"includes/calendar_patient.php", cache: false },
+			{name:"patient", map_to:"patient", height:20, type:"combo", options: patient, filtering: true,image_path: "/manage/3rdParty/dhtmlxCombo/codebase/imgs/" },
 			{name:"time", height:72, type:"time", map_to:"auto"}
 		]
                 scheduler.init('scheduler_here',null,"workweek");
-
 		<?php
 		$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']."'";
 		$q = mysql_query($sql);
@@ -200,6 +219,7 @@ require_once('includes/formatters.php');
 				text: "<?= addslashes($r['description']); ?>",
 				category: "<?= $r['category']; ?>",
 				producer: "<?= $r['producer_id']; ?>",
+				patient: "<?= $r['patientid']; ?>",
 				id: "<?= $r['event_id']; ?>",
 				table_id: "<?= $r['id']; ?>"
 			});<?php

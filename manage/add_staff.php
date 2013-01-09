@@ -37,6 +37,11 @@ if($_POST["staffsub"] == 1)
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
                                 practice = '".s_for($_POST["practice"])."',
+                                address = '".s_for($_POST["address"])."',
+                                city = '".s_for($_POST["city"])."',
+                                state = '".s_for($_POST["state"])."',
+                                zip = '".s_for($_POST["zip"])."',
+                                phone = '".s_for($_POST["phone"])."',
 				sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
@@ -66,7 +71,12 @@ if($_POST["staffsub"] == 1)
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
                                 practice = '".s_for($_POST["practice"])."',
-			sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+			                                address = '".s_for($_POST["address"])."',
+                                city = '".s_for($_POST["city"])."',
+                                state = '".s_for($_POST["state"])."',
+                                zip = '".s_for($_POST["zip"])."',
+                                phone = '".s_for($_POST["phone"])."',
+				sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -113,6 +123,11 @@ if($_POST["staffsub"] == 1)
                 $ein = $_POST['ein'];
                 $ssn = $_POST['ssn'];
                 $practice = $_POST['practice'];
+                $address = $_POST['address'];
+                $city = $_POST['city'];
+                $state = $_POST['state'];
+                $zip = $_POST['zip'];
+                $phone = $_POST['phone'];
                 $sign_notes = $_POST['sign_notes'];
 	}
 	else
@@ -131,6 +146,11 @@ if($_POST["staffsub"] == 1)
                 $ein = st($themyarray['ein']);
                 $ssn = st($themyarray['ssn']);
                 $practice = st($themyarray['practice']);
+                $address = st($themyarray['address']);
+                $city = st($themyarray['city']);
+                $state = st($themyarray['state']);
+                $zip = st($themyarray['zip']);
+                $phone = st($themyarray['phone']);
                 $sign_notes = st($themyarray['sign_notes']);
 		$but_text = "Add ";
 	}
@@ -225,6 +245,11 @@ if($_POST["staffsub"] == 1)
                 <input type="checkbox" <?= ($producer==1)?'checked="checked"':''; ?> value="1" id="producer" name="producer" />
             </td>
         </tr>
+	<tr class="producer_field" bgcolor"#ffffff;">
+	   <td colspan="2">
+Fields left blank below will default to the standard billing settings for your office.
+	   </td>
+	</tr>
         <tr class="producer_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 NPI
@@ -254,8 +279,8 @@ if($_POST["staffsub"] == 1)
                 EIN or SSN
             </td>
             <td valign="top" class="frmdata">
-		<input type="checkbox" <?= ($ein==1)?'checked="checked"':''; ?> value="1" name="ein" />
-		<input type="checkbox" <?= ($ssn==1)?'checked="checked"':''; ?> value="1" name="ssn" />
+		<input type="checkbox" <?= ($ein==1)?'checked="checked"':''; ?> value="1" name="ein" /> EIN 
+		<input type="checkbox" <?= ($ssn==1)?'checked="checked"':''; ?> value="1" name="ssn" /> SSN
             </td>
         </tr>
         <tr class="producer_field" bgcolor="#FFFFFF">
@@ -266,6 +291,53 @@ if($_POST["staffsub"] == 1)
                 <input type="text" name="practice" value="<?=$practice;?>" class="tbox" />
             </td>
         </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Address
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                City
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                State
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Zip
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
 <td valign="top" class="frmhead">
                 Sign Progress Notes?
             </td>

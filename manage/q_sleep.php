@@ -75,6 +75,7 @@ if($_POST['q_sleepsub'] == 1)
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
                 $ess_score = 0;
                 $ess_score += $_POST['epworth_1'];
+		$ess_score += $_POST['epworth_2'];
                 $ess_score += $_POST['epworth_3'];
                 $ess_score += $_POST['epworth_4'];
                 $ess_score += $_POST['epworth_5'];
@@ -126,6 +127,7 @@ if($_POST['q_sleepsub'] == 1)
 
 		$ess_score = 0;
 		$ess_score += $_POST['epworth_1'];
+                $ess_score += $_POST['epworth_2'];
                 $ess_score += $_POST['epworth_3'];
                 $ess_score += $_POST['epworth_4'];
                 $ess_score += $_POST['epworth_5'];
@@ -297,6 +299,7 @@ Epworth Sleep Questionnaire
 									}
 									*/
 									an_tot += parseInt($('#epworth_1').val());
+									an_tot += parseInt($('#epworth_2').val());
                                                                         an_tot += parseInt($('#epworth_3').val());
                                                                         an_tot += parseInt($('#epworth_4').val());
                                                                         an_tot += parseInt($('#epworth_5').val());

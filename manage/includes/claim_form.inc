@@ -1867,9 +1867,28 @@ input{text-transform:uppercase;}
 									<span class="num">17<span class="num_a">b.</span></span> 
 								</td>
 								<?php
-                      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+		      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['userid']."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
+			$phone = $userinfo['phone'];
+			$practice = $userinfo['practice'];
+			$address = $userinfo['address'];
+			$city = $userinfo['city'];
+			$state = $userinfo['state'];
+			$zip = $userinfo['zip'];
+			$npi = $userinfo['npi'];
+			$medicare_npi = $userinfo['medicare_npi'];
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+			if($phone == ""){ $phone = $docinfo['phone']; }
+			if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+			if($npi == ""){ $npi = $docinfo['npi']; }
+			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
                       ?>  
 								<td valign="top">
 									NPI
@@ -2310,17 +2329,38 @@ if (!$query) {
 												<span class="num">25.</span> 
 												Federal Tax I.D.Number
 												<br />
-												<input disabled="disabled" type="text" value="<?=$userinfo['tax_id_or_ssn'];?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
+												<?php
+												  if($userinfo['tax_id_or_ssn'] != ''){
+													$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+												  }else{
+                                                                                                        $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+												  }
+												?>
+												<input disabled="disabled" type="text" value="<?=$tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
 											<td valign="top" width="10%" align="center">
 												SSN
 												<br />
-												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($userinfo['ssn'] == "1") echo " checked";?> />
+                                                                                                <?php
+                                                                                                  if($userinfo['ssn'] != '' && $userinfo['provider']==1){
+                                                                                                        $ssn = $userinfo['ssn'];
+                                                                                                  }else{
+                                                                                                        $ssn = $docinfo['ssn'];
+                                                                                                  }
+                                                                                                ?>
+												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
 											</td>
 											<td valign="top" width="10%" align="center">
 												EIN
 												<br />
-												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($userinfo['ein'] == "1") echo " checked";?> />
+                                                                                                <?php
+                                                                                                  if($userinfo['ein'] != '' && $userinfo['provider']==1){
+                                                                                                        $ein = $userinfo['ein'];
+                                                                                                  }else{                                                                                          
+                                                                                                        $ein = $docinfo['ein'];
+                                                                                                  }
+                                                                                                ?>
+												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
 											</td>
 										</tr>
 									</table>
@@ -2462,7 +2502,7 @@ if ($is_pending) {
 											</td>
 											                
 											<td valign="top" width="90%">
-												<input disabled="disabled" type="text" value="<?php echo $userinfo['name'];?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+												<input disabled="disabled" type="text" value="<?php echo $practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2470,7 +2510,7 @@ if ($is_pending) {
 												<span class="small_cap">Address:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $userinfo['address'];?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2478,14 +2518,14 @@ if ($is_pending) {
 												<span class="small_cap">City/State/Zip:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 									</table>
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="service_info_a" class="inbox_line3" size="15" />
+									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.
@@ -2516,10 +2556,10 @@ if ($is_pending) {
 						Billing Provider Info & Ph#
 						<?php 
 							if($billing_provider_phone_code=='')
-								$billing_provider_phone_code = format_phone($userinfo['phone'], true);
+								$billing_provider_phone_code = format_phone($phone, true);
 
                                                         if($billing_provider_phone=='')
-                                                                $billing_provider_phone = format_phone($userinfo['phone'], false);
+                                                                $billing_provider_phone = format_phone($phone, false);
 
 						?>
 						<span class="style1">(
@@ -2533,7 +2573,7 @@ if ($is_pending) {
 									<span class="small_cap">Name:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $userinfo['name'];?>" name="billing_provider_name" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2541,7 +2581,7 @@ if ($is_pending) {
 									<span class="small_cap">Address:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $userinfo['address'];?>" name="billing_provider_address" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 							<tr>
@@ -2549,14 +2589,14 @@ if ($is_pending) {
 									<span class="small_cap">City/State/Zip:</span>		
 								</td>
 								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $userinfo['city'];?>, <?php echo $userinfo['state'];?> <?php echo $userinfo['zip'];?>" name="billing_provider_city" class="inbox_line3" size="40" />
+									<input type="text" disabled="disabled" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
 								</td>
 							</tr>
 						</table>
 						<span class="num_a">
 							a.
 						</span>
-						<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$userinfo['medicare_npi']:$userinfo['npi']; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
+						<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
 						
 						<span class="num_a">
 							b.

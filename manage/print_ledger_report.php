@@ -153,7 +153,7 @@ $num_users=mysql_num_rows($my);
 		}else{
 		  $i_date = $n_date = $l_date = '';
 		}
-
+/*
 $newquery = "select 
                 'ledger',
                 dl.ledgerid,
@@ -314,6 +314,16 @@ $newqueryid = "select
                       where i.docid='".$_SESSION['docid']."' ".$ipsql." ".$i_date." 
         GROUP BY i.insuranceid
 ";
+*/
+                if(isset($_GET['pid'])){
+                $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
+                }else{
+    $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
+    }
+                if($start_date)
+                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+
+
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{

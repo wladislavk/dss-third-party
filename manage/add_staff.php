@@ -4,6 +4,9 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include_once('admin/includes/password.php');
 include('includes/general_functions.php');
+?>
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php
 if($_POST["staffsub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -25,7 +28,21 @@ if($_POST["staffsub"] == 1)
 		{
                         $p = ($_POST['producer']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
-			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", sign_notes=".$n."  where userid='".$_POST["ed"]."'";
+			$ein = ($_POST['ein']==1)?1:0;
+			$ssn = ($_POST['ssn']==1)?1:0;
+			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
+				npi = '".s_for($_POST["npi"])."',
+                                medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
+                                ein = '".s_for($ein)."',
+                                ssn = '".s_for($ssn)."',
+                                practice = '".s_for($_POST["practice"])."',
+                                address = '".s_for($_POST["address"])."',
+                                city = '".s_for($_POST["city"])."',
+                                state = '".s_for($_POST["state"])."',
+                                zip = '".s_for($_POST["zip"])."',
+                                phone = '".s_for($_POST["phone"])."',
+				sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -45,7 +62,21 @@ if($_POST["staffsub"] == 1)
                         $password = gen_password($_POST['password'], $salt);
                         $p = ($_POST['producer']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
-			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['userid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                        $ein = ($_POST['ein']==1)?1:0;
+                        $ssn = ($_POST['ssn']==1)?1:0;
+			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['userid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
+                                npi = '".s_for($_POST["npi"])."',
+                                medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
+                                ein = '".s_for($ein)."',
+                                ssn = '".s_for($ssn)."',
+                                practice = '".s_for($_POST["practice"])."',
+			                                address = '".s_for($_POST["address"])."',
+                                city = '".s_for($_POST["city"])."',
+                                state = '".s_for($_POST["state"])."',
+                                zip = '".s_for($_POST["zip"])."',
+                                phone = '".s_for($_POST["phone"])."',
+				sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -86,6 +117,17 @@ if($_POST["staffsub"] == 1)
 		$phone = $_POST['phone'];
 		$status = $_POST['status'];
                 $producer = $_POST['producer'];
+		$npi = $_POST['npi'];
+                $medicare_npi = $_POST['medicare_npi'];
+                $tax_id_or_ssn = $_POST['tax_id_or_ssn'];
+                $ein = $_POST['ein'];
+                $ssn = $_POST['ssn'];
+                $practice = $_POST['practice'];
+                $address = $_POST['address'];
+                $city = $_POST['city'];
+                $state = $_POST['state'];
+                $zip = $_POST['zip'];
+                $phone = $_POST['phone'];
                 $sign_notes = $_POST['sign_notes'];
 	}
 	else
@@ -98,6 +140,17 @@ if($_POST["staffsub"] == 1)
 		$phone = st($themyarray['phone']);
 		$status = st($themyarray['status']);
                 $producer = st($themyarray['producer']);
+		$npi = st($themyarray['npi']);
+                $medicare_npi = st($themyarray['medicare_npi']);
+                $tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
+                $ein = st($themyarray['ein']);
+                $ssn = st($themyarray['ssn']);
+                $practice = st($themyarray['practice']);
+                $address = st($themyarray['address']);
+                $city = st($themyarray['city']);
+                $state = st($themyarray['state']);
+                $zip = st($themyarray['zip']);
+                $phone = st($themyarray['phone']);
                 $sign_notes = st($themyarray['sign_notes']);
 		$but_text = "Add ";
 	}
@@ -189,14 +242,107 @@ if($_POST["staffsub"] == 1)
                 Producer
             </td>
             <td valign="top" class="frmdata">
-                <input type="checkbox" <?= ($producer==1)?'checked="checked':''; ?> value="1" name="producer" />
+                <input type="checkbox" <?= ($producer==1)?'checked="checked"':''; ?> value="1" id="producer" name="producer" />
             </td>
         </tr>
+	<tr class="producer_field" bgcolor"#ffffff;">
+	   <td colspan="2">
+Fields left blank below will default to the standard billing settings for your office.
+	   </td>
+	</tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                NPI
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="npi" value="<?=$npi;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Medicare DME Number
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="medicare_npi" value="<?=$medicare_npi;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Tax ID or SSN
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                EIN or SSN
+            </td>
+            <td valign="top" class="frmdata">
+		<input type="checkbox" <?= ($ein==1)?'checked="checked"':''; ?> value="1" name="ein" /> EIN 
+		<input type="checkbox" <?= ($ssn==1)?'checked="checked"':''; ?> value="1" name="ssn" /> SSN
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Practice
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="practice" value="<?=$practice;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Address
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                City
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                State
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Zip
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
 <td valign="top" class="frmhead">
                 Sign Progress Notes?
             </td>
             <td valign="top" class="frmdata">
-                <input type="checkbox" <?= ($sign_notes==1)?'checked="checked':''; ?> value="1" name="sign_notes" />
+                <input type="checkbox" <?= ($sign_notes==1)?'checked="checked"':''; ?> value="1" name="sign_notes" />
             </td>
         </tr>
 
@@ -228,5 +374,23 @@ if($_POST["staffsub"] == 1)
         </tr>
     </table>
     </form>
+<script type="text/javascript">
+  $('#producer').click(function(){
+    if($(this).is(':checked')){
+      $('.producer_field').show();
+    }else{
+      $('.producer_field').hide();
+    }
+  });
+
+$(document).ready( function(){
+    if($('#producer').is(':checked')){
+      $('.producer_field').show();
+    }else{
+      $('.producer_field').hide();
+    }
+
+});
+</script>
 </body>
 </html>

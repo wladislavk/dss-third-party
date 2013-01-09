@@ -181,6 +181,12 @@ background:#999999;
 		}else{
     $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."'";
     }
+                if(isset($_GET['pid'])){
+                $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
+                }else{
+    $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
+    }
+
 
                 if(isset($_GET['pid'])){
                     $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
@@ -198,7 +204,7 @@ background:#999999;
                 }else{
                   $i_date = $n_date = $l_date = '';
                 }
-
+/*
 $newquery = "select 
                 'ledger',
                 dl.ledgerid,
@@ -254,7 +260,7 @@ $newquery = "select
         GROUP BY i.insuranceid
 ";
 
-
+*/
 
 
                 if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])

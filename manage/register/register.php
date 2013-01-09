@@ -21,12 +21,10 @@ include 'includes/completed.php';
 
 <?php
   $sql = "SELECT * from dental_users 
-		WHERE userid='".mysql_real_escape_string($_GET['id'])."' AND 
-		status='2' AND 
-		recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
-		recover_time > date_sub(now(), INTERVAL 1 DAY)";
+		WHERE userid='".mysql_real_escape_string($_SESSION['regid'])."' AND 
+		status='2'"; 
   $q = mysql_query($sql);
-if(mysql_num_rows($q) == 0 || $_GET['hash']==''){
+if(mysql_num_rows($q) == 0){
   ?>
   <script type="text/javascript">
     window.location = '../login.php';
@@ -41,8 +39,7 @@ if(mysql_num_rows($q) == 0 || $_GET['hash']==''){
 
 						<h2 class="sepH_c">Step-by-Step User Registration</h2>
 	<form action="register.php" id="register_form" method="post">
-		<input type="hidden" id="userid" name="userid" value="<?= $_GET['id']; ?>" />
-                <input type="hidden" id="hash" name="hash" value="<?= $_GET['hash']; ?>" />
+		<input type="hidden" id="userid" name="userid" value="<?= $_SESSION['regid']; ?>" />
 							<ul id="status" class="cf">
 							<?php $pagenum = 1; ?>
 								<li class="active"><span class="large"><?= $pagenum++; ?>. Welcome</span></li>
@@ -57,7 +54,7 @@ if(mysql_num_rows($q) == 0 || $_GET['hash']==''){
                                                                                 <div class="pageInside">
                                                                                         <div class="cf">
                                                                                                 <div class="dp100">
-                                                                                                        <h3 class="sepH_a">Welcome!</h3>
+                                                                                                        <h3 class="sepH_a">Welcome <?= $p['name']; ?>!</h3>
 													<p>Please accurately complete the information on the following pages in order to create your Dental Sleep Solutions software account. We're excited to work with you!</p>
 <br />
                                                                                                                 <div class="cf">

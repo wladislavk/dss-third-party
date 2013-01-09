@@ -10,7 +10,12 @@ require_once('includes/formatters.php');
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
+	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_editors.js" type="text/javascript" charset="utf-8"></script>
+        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script>
+        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js' type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8">
+ 	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css">
 <div style="clear: both">
 <span class="admin_head">
 	Calendar
@@ -67,6 +72,7 @@ require_once('includes/formatters.php');
 		scheduler.locale.labels.section_custom="Producer";
 		scheduler.locale.labels.section_category = "Appointment Type";
                 scheduler.locale.labels.section_producer = "Producer";
+		scheduler.locale.labels.section_patient = "Patient";
 		scheduler.locale.labels.workweek_tab = "W-Week"
                 scheduler.templates.event_class=function(start, end, event){
 
@@ -146,6 +152,14 @@ require_once('includes/formatters.php');
 			?>
 			{ key: '', label: 'None' }
 		];
+		var patient = [
+                        { key: '', label: 'General' },
+                        { key: 'follow_up', label: 'Follow-up' },
+                        { key: 'sleep_test', label: 'Sleep Test' },
+                        { key: 'impressions', label: 'Impressions' },
+                        { key: 'new_patient', label: 'New Pt' }
+                ];
+
 		scheduler.createTimelineView({
 			name:	"timeline",
 			x_unit:	"minute",
@@ -171,6 +185,7 @@ require_once('includes/formatters.php');
 			{name:"description", height:130, map_to:"text", type:"textarea" , focus:true},
 			{name:"category", height:20, type:"select", options: category, map_to:"category" },
                         {name:"producer", height:20, type:"select", options: producer, map_to:"producer" },
+			{name:"patient", map_to:"patient", height:20, type:"combo", options: patient, filtering: true, script_path:"includes/calendar_patient.php", cache: false },
 			{name:"time", height:72, type:"time", map_to:"auto"}
 		]
                 scheduler.init('scheduler_here',null,"workweek");
@@ -199,11 +214,12 @@ require_once('includes/formatters.php');
 		    var de = event_object.text;
                     var cat = event_object.category;
 		    var pi = event_object.producer;
+		    var pid = event_object.patient;
 		    var e_id = event_id;
                                   $.ajax({
                                         url: "includes/calendar_add_event.php",
                                         type: "post",
-                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi},
+                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
@@ -225,12 +241,13 @@ require_once('includes/formatters.php');
                     var de = event_object.text;
 		    var cat = event_object.category;
 		    var pi = event_object.producer;
+		    var pid = event_object.patient;
 		    var t_id = event_object.table_id
                     var e_id = event_id;
                                   $.ajax({
                                         url: "includes/calendar_update_event.php",
                                         type: "post",
-                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi},
+                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){

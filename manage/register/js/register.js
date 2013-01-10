@@ -121,6 +121,7 @@ lga_wizard = {
                             phone: {
                                 required: true
                             },
+			    practice: "required",
                             address: "required",
 			    city: "required",
 			    state: "required",
@@ -172,12 +173,13 @@ lga_wizard = {
 				email: "The field requires a valid email address"
 				},
                             phone: "This field is required",
+			    practice: "This field is required",
 			    address: "This field is required",
                             city: "This field is required",
                             state: "This field is required",
                             zip: "This field is required",
 			    tax_id_or_ssn: {
-				einOrSsn: "Please also select EIN or SSN"
+				einOrSsn: "Please also select EIN or SSN in next question"
 			    },
 			    username: {
                                 required: "This field is required",

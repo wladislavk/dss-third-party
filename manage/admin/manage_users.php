@@ -178,7 +178,11 @@ $num_users=mysql_num_rows($my);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php if($myarray["status"] == 2){
+					  echo "Registration emailed: ".(($myarray["registration_email_date"]!='')?date('m/d/Y H:i a', strtotime($myarray["registration_email_date"])):'');
+					}else{ ?>
+					  <?=st($myarray["username"]);?>
+					<?php } ?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["name"]);?>

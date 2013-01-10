@@ -138,6 +138,27 @@ function areaabc(fa)
 	}
 }
 
+function userregabc(fa){
+        if(trim(fa.name.value) == "" )
+        {
+                alert("Name is Required");
+                fa.name.focus();
+                return false;
+        }
+        if(trim(fa.phone.value) == "" )
+        {
+                alert("Cell Phone is Required");
+                fa.phone.focus();
+                return false;
+        }
+        if(trim(fa.email.value) == "" )
+        {
+                alert("Email is Required");
+                fa.email.focus();
+                return false;
+        }
+  return true;
+}
 function userabc(fa)
 {
 	if(trim(fa.username.value) == "" )

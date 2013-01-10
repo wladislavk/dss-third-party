@@ -56,13 +56,14 @@ if($_POST["usersub"] == 1)
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
-<h2>Register</h2><p>Please click the following link to register.</p>
-<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/register.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register/register.php?id=".$userid."&hash=".$recover_hash."</a></p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<h2>Create your Software Account</h2>
+<p>Welcome to the Dental Sleep Solutions&reg; Team! Please click the link below to activate your software account:
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."</a></p>
+</td><td width='200'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td>
-<h3>Didn't request this change or need assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p></td></tr>
+<h3>Need assistance?
+Contact us at 877-95-SNORE or at<br>
+Support@dentalsleepsolutions.com</b></h3></td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
@@ -74,7 +75,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
                 $subject = "Dental Sleep Solutions Account Activation";
                 $mail = mail($_POST['email'], $subject, $m, $headers);
-
+		if($mail){
+		  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
+		  mysql_query($e_sql);
+		}
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
@@ -110,7 +114,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userregabc(this)">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">

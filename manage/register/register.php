@@ -71,7 +71,7 @@ if(mysql_num_rows($q) == 0){
 											<div class="cf">
 												<div class="dp25">
 													<h3 class="sepH_a">Contact Information</h3>
-													<p class="s_color">Please complete these fields using the name of the dental provider and practice location as they appear on your Tax Statements. These fields must be completed accurately in order to ensure accurate filing of insurance claims.</p>
+													<p class="s_color">Please complete these fields using the name of the dental provider and practice location <strong>exactly as they appear on your Tax Statements.</strong> These fields must be completed accurately in order to ensure accurate filing of insurance claims.</p>
 												</div>
 												<div class="dp75">
 													<div>
@@ -346,7 +346,7 @@ if(mysql_num_rows($q) == 0){
 <div class="page">
 										<div class="pageInside">
 											<div class="last sepH_c">
-												<h3 class="sepH_b">Congratulations! Your new Dental Sleep Solutions® software account has been created!</h3>
+												<h3 class="sepH_b">Congratulations! Your new Dental Sleep Solutions&reg; software account has been created!</h3>
 												<p  class="sepH_b">You have successfully registered your software account! Click the button below to begin exploring your new software account.</p>
 
 											<div class="cf">

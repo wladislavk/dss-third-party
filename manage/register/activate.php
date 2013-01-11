@@ -1,6 +1,18 @@
 <?php include '../admin/includes/config.php'; ?>
 <?php require_once("../../reg/twilio/twilio.config.php");
 
+$status_sql = "SELECT status FROM dental_users where userid='".mysql_real_escape_string($_GET['id'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+if($status_r['status']!=2){
+  ?>
+  <script type="text/javascript">
+    window.location = "../login.php";
+  </script>
+  <?php
+  die();
+}
+
 $s = "SELECT du.email, du.phone FROM dental_users du 
 	WHERE du.userid='".mysql_real_escape_string($_GET['id'])."' AND
 		du.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND

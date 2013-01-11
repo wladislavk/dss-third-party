@@ -6,6 +6,11 @@ include_once('includes/password.php');
 include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
+?>
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="../js/masks.js"></script>
+<?php
 if($_POST["usersub"] == 1)
 {
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -138,7 +143,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Cell Phone
             </td>
             <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox phonemask" />
                 <span class="red">*</span>
             </td>
         </tr>

@@ -10,7 +10,7 @@ require_once '../../admin/includes/password.php';
     $q = mysql_query($s);
     if(mysql_num_rows($q)>0){
     	$r = mysql_fetch_assoc($q);
-                        $psql = "UPDATE dental_users set recover_hash='', access_code='' WHERE userid='".mysql_real_escape_string($r['userid'])."'";
+                        $psql = "UPDATE dental_users set access_code='' WHERE userid='".mysql_real_escape_string($r['userid'])."'";
                         mysql_query($psql);
                 session_register("regid");
                 $_SESSION['regid']=$r['userid'];

@@ -71,10 +71,10 @@ $num_users=mysql_num_rows($my);
 	Ledger Report
         <? if($_REQUEST['dailysub'] == 1)
         {?>
-            (<i><?= date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
+            (<i><?= date('m-d-Y', strtotime($start_date)); ?></i>)
         <? }
 
-        if($_REQUEST['weeklysub'] == 1)
+        if($_REQUEST['weeklysub'] == 1 || $_REQUEST['rangesub'] == 1)
         {?>
             (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
         <? }
@@ -378,26 +378,43 @@ $newquery = "select
                     
                     
 				<b>
-				<?php echo "$".number_format($tot_charge,2); ?>
-				&nbsp;
-				</b>
-			</td>
-			<td valign="top" align="right">
-				<b>
-				<?php echo "$".number_format($tot_credit,2);?>
-				&nbsp;
-				</b>
-			</td>
-			<td valign="top">&nbsp;
-				
-			</td>
-		</tr>
+			<?php echo "$".number_format($tot_charge,2); ?>
+			&nbsp;
+			</b>
+		</td>
+		<td valign="top" align="right">
+			<b>
+			<?php echo "$".number_format($tot_credit,2);?>
+			&nbsp;
+			</b>
+		</td>
+		<td valign="top">&nbsp;
+			
+		</td>
+	</tr>
+	<tr>
+                        <td valign="top" colspan="5" align="right">
+                                <b>Balance</b>
+                        </td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_charge-$tot_credit,2); ?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="right">
+                        </td>
+                        <td valign="top">&nbsp;
+
+                        </td>
+                </tr>
+
 
 </table>
- </div>
+</div>
 
 <div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
+	    <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

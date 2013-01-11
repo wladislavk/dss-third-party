@@ -179,7 +179,6 @@ require_once('includes/formatters.php');
 			{ key: '', label: 'None' }
 
                 ];
-
 		scheduler.createTimelineView({
 			name:	"timeline",
 			x_unit:	"minute",

@@ -2204,7 +2204,7 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
-       . "  ledger.*, trxn_code.modifier_codeid_1 as modcode, trxn_code.modifier_codeid_1 as modcode2, trxn_code.days_units as daysorunits, ";
+       . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
 if($insurancetype == '1'){
         $sql .= " user.medicare_npi ";
 }else{

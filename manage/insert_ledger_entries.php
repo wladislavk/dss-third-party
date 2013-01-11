@@ -57,6 +57,7 @@ $i = $_COOKIE['tempforledgerentry'];
 $d = 1;
 if(authorize($_POST['username'], $_POST['password'], DSS_USER_TYPE_ADMIN)){
 
+/*
 $file_claim = false;
 foreach($_POST[form] as $form){
   if($form['status']=='1'){
@@ -76,6 +77,7 @@ if($file_claim){
 }else{
   $claim_id = '';
 }
+*/
 
 $sqlinsertqry .= "INSERT INTO `dental_ledger` (
 `ledgerid` ,
@@ -101,6 +103,29 @@ if($form['status']==DSS_TRXN_PENDING){  $new_status = DSS_TRXN_PENDING;
 }else{
   $new_status = $form['status'];
 }
+
+if($form['status']==1){
+  $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($form['producer'])."'";
+  $pf_q = mysql_query($pf_sql);
+  $pf = mysql_fetch_assoc($pf_q);
+  if($pf['producer_files'] == '1'){
+    $claim_producer = $form['producer'];
+  }else{
+    $claim_producer = $_SESSION['docid'];
+  }
+  $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_POST['patientid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+  $q = mysql_query($s);
+  $n = mysql_num_rows($q);
+  if($n > 0){
+        $r = mysql_fetch_assoc($q);
+        $claim_id = $r['insuranceid'];
+  }else{
+        $claim_id = create_claim($_POST['patientid'], $claim_producer);
+  }
+}else{
+  $claim_id = '';
+}
+
 
 if($d <= $i){
 $descsql = "SELECT description, transaction_code FROM dental_transaction_code WHERE transaction_codeid='".$form[proccode]."' LIMIT 1;";
@@ -334,7 +359,7 @@ $insqry = mysql_query($sqlinsertqry2);
 
 <?php 
 
-function create_claim($pid){
+function create_claim($pid, $prod){
              $pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
@@ -631,6 +656,7 @@ if (empty($prior_authorization_number)) {
                 status = '".s_for(DSS_CLAIM_PENDING)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
+		producer = '".s_for($prod)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());

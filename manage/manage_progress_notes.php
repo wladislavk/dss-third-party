@@ -81,7 +81,7 @@ $num_users=mysql_num_rows($my);
 </div>
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('view_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton">
+	<button onclick="Javascript: loadPopupClean('view_notes.php?pid=<?=$_GET['pid'];?>');" class="addButton">
 		View All Notes
 	</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;
@@ -205,6 +205,11 @@ $num_users=mysql_num_rows($my);
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+<div id="popupClean" style="height:550px; width:750px;">
+    <a id="popupCleanClose"><button>X</button></a>
+    <iframe id="aj_clean" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupClean"></div>
 
 <br /><br />	
 

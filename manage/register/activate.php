@@ -4,7 +4,7 @@
 $status_sql = "SELECT status FROM dental_users where userid='".mysql_real_escape_string($_GET['id'])."'";
 $status_q = mysql_query($status_sql);
 $status_r = mysql_fetch_assoc($status_q);
-if($status_r['status']!=2){
+if($status_r['status']==1){
   ?>
   <script type="text/javascript">
     window.location = "../login.php";
@@ -22,7 +22,7 @@ $q = mysql_query($s);
       $r = mysql_fetch_assoc($q);
       }else{
 		?>
-		<h2>Unable to find registration</h2>
+		<h3 style="font-family:Helvetica, Arial, sans-serif;">We are unable to find the page you attempted to access. Please contact Dental Sleep Solutions&reg; for assistance.</h3>
 		<?php
 		die();
       }

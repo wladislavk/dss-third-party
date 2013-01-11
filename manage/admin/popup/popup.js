@@ -41,6 +41,25 @@ function loadPopupRefer(fa){
 }
 
 //loading popup with jQuery magic!
+function loadPopupClean(fa){
+        //centering with css
+        centerPopupClean();
+
+        document.getElementById("aj_clean").src = fa;
+
+        //loads popup only if it is disabled
+        if(popupStatus==0){
+                $("#backgroundPopupClean").css({
+                        "opacity": "0.7"
+                });
+                $("#backgroundPopupClean").fadeIn("slow");
+                $("#popupClean").fadeIn("slow");
+                popupStatus = 1;
+        }
+}
+
+
+//loading popup with jQuery magic!
 function loadPopup1(fa){
 	//centering with css
 	centerPopup1();
@@ -105,6 +124,9 @@ function disablePopupClean(){
         if(popupStatus==1){
                                 $("#backgroundPopup").fadeOut("slow");
                 $("#popupContact").fadeOut("slow");
+                                $("#backgroundPopupClean").fadeOut("slow");
+                $("#popupClean").fadeOut("slow");
+
                 eraseCookie('tempforledgerentry');
                 popupStatus = 0;
         }
@@ -131,7 +153,6 @@ function disablePopupRefClean(){
                 popupStatus = 0;
         }
 }
-
 
 //disabling popup with jQuery magic!
 function disablePopup1(){
@@ -188,6 +209,28 @@ function centerPopupRef(){
 }
 
 //centering popup
+function centerPopupClean(){
+        //request data for centering
+        var windowWidth = document.documentElement.clientWidth;
+        var windowHeight = document.documentElement.clientHeight;
+        var popupHeight = $("#popupClean").height();
+        var popupWidth = $("#popupClean").width();
+        var topPos = (windowHeight/2-popupHeight/2 + $(document).scrollTop()) + "px";
+        //centering
+        $("#popupClean").css({
+                "position": "absolute",
+                "top": topPos,
+                "left": windowWidth/2-popupWidth/2
+        });
+        //only need force for IE6
+
+        $("#backgroundPopupClean").css({
+                "height": windowHeight
+        });
+
+}
+
+//centering popup
 function centerPopup1(){
 	//request data for centering
 	var windowWidth = document.documentElement.clientWidth;
@@ -236,6 +279,14 @@ $(document).ready(function(){
         //Click out event!
         $("#backgroundPopupRef").click(function(){
                 disablePopupRef();
+        });
+        //Click the x event!
+        $("#popupCleanClose").click(function(){
+                disablePopupClean();
+        });
+        //Click out event!
+        $("#backgroundPopupClean").click(function(){
+                disablePopupClean();
         });
 
 	//Press Escape event!

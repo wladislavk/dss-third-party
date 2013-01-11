@@ -1889,6 +1889,15 @@ input{text-transform:uppercase;}
                         if($zip == ""){ $zip = $docinfo['zip']; }
 			if($npi == ""){ $npi = $docinfo['npi']; }
 			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+
+			$phone = $docinfo['phone']; 
+                        $practice = $docinfo['practice']; 
+                        $address = $docinfo['address']; 
+                        $city = $docinfo['city']; 
+                        $state = $docinfo['state']; 
+                        $zip = $docinfo['zip']; 
+                        $npi = $docinfo['npi'];
+                        $medicare_npi = $docinfo['medicare_npi'];
                       ?>  
 								<td valign="top">
 									NPI
@@ -2330,11 +2339,14 @@ if (!$query) {
 												Federal Tax I.D.Number
 												<br />
 												<?php
+												  
 												  if($userinfo['tax_id_or_ssn'] != ''){
 													$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
 												  }else{
                                                                                                         $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
 												  }
+												  
+													$tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
 												?>
 												<input disabled="disabled" type="text" value="<?=$tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
@@ -2347,6 +2359,7 @@ if (!$query) {
                                                                                                   }else{
                                                                                                         $ssn = $docinfo['ssn'];
                                                                                                   }
+													$ssn = $docinfo['ssn'];
                                                                                                 ?>
 												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
 											</td>
@@ -2359,6 +2372,7 @@ if (!$query) {
                                                                                                   }else{                                                                                          
                                                                                                         $ein = $docinfo['ein'];
                                                                                                   }
+													$ein = $docinfo['ein'];
                                                                                                 ?>
 												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
 											</td>

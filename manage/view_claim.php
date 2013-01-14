@@ -209,6 +209,10 @@ return s;
 </script>
 <br />
 <div align="right" style="clear: right;">
+	<a href="http://abert.dss.xforty.com/manage/insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>" class="addButton">
+		View 1500
+	</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;
         <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
                Make Payment 
         </button>

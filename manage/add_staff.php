@@ -37,11 +37,9 @@ if($_POST["staffsub"] == 1)
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
                                 practice = '".s_for($_POST["practice"])."',
-                                address = '".s_for($_POST["address"])."',
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-                                phone = '".s_for($_POST["phone"])."',
 				sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
@@ -71,11 +69,9 @@ if($_POST["staffsub"] == 1)
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
                                 practice = '".s_for($_POST["practice"])."',
-			                                address = '".s_for($_POST["address"])."',
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-                                phone = '".s_for($_POST["phone"])."',
 				sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
@@ -220,22 +216,6 @@ if($_POST["staffsub"] == 1)
             <td valign="top" class="frmdata">
                 <input type="text" name="email" value="<?=$email;?>" class="tbox" /> 
 		<span class="red">*</span>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Address
-            </td>
-            <td valign="top" class="frmdata">
-                <textarea name="address" class="tbox"><?=$address;?></textarea>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Phone
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
             </td>
         </tr>
 <td valign="top" class="frmhead">

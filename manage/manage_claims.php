@@ -29,8 +29,23 @@ if($_REQUEST["delid"] != "")
 }
 
 
+$pend_sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+$pend_sql .= " AND (i.status =  ".DSS_CLAIM_PENDING." OR i.status = ".DSS_CLAIM_SEC_PENDING.")" ;
+if(isset($_GET['sort2'])){
+  if($_GET['sort2']=='patient'){
+    $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
+  }else{
+    $sort = $_GET['sort2']." ".$_GET['dir2'];
+  }
+
+}
+$pend_sql .= " ORDER BY " . mysql_real_escape_string($sort);
+$pend_my=mysql_query($pend_sql) or die(mysql_error());
+
+
 	
 $sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+$sql .= " AND i.status !=  ".DSS_CLAIM_PENDING." AND i.status != ".DSS_CLAIM_SEC_PENDING;
 if(isset($_GET['unpaid'])){
   $sql .= " AND i.status =  ".DSS_CLAIM_PENDING." AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";
 }
@@ -61,47 +76,45 @@ $my=mysql_query($sql) or die(mysql_error());
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
-<table style="margin-bottom:20px;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <? if($total_rec > $rec_disp) {?>
+        <TR bgColor="#ffffff">
+                <TD  align="right" colspan="15" class="bp">
+                        Pages:
+                        <?
+                                 paging($no_pages,$index_val,"");
+                        ?>
+                </TD>
+        </TR>
+        <? }?>
         <tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= ($_GET['sort1'] == 'oldest')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
-			<a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=oldest&dir1=<?= ($_GET['sort1']=='oldest' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>">Oldest Transaction</a>
-		</td>
-                <td valign="top" class="col_head <?= ($_GET['sort1'] == 'patient')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
-                        <a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=patient&dir1=<?= ($_GET['sort1']=='patient' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=adddate&dir2=<?= ($_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
                 </td>
-		<td valign="top" class="col_head <?= ($_GET['sort1'] == 'num_ledger')?'arrow_'.strtolower($_GET['dir1']):''; ?>">
-			<a href="?filter=<?= $_GET['filter']; ?>&sort2=<?= $_GET['sort2']; ?>&dir2=<?=$_GET['dir2']; ?>&sort1=num_ledger&dir1=<?= ($_GET['sort1']=='num_ledger' && $_GET['dir1']=='ASC')?'DESC':'ASC'; ?>"># Transactions</a>
-		</td>
-                <td valign="top" class="col_head">
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'patient')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=patient&dir2=<?= ($_GET['sort2']=='patient' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
+                </td>
+                <td valign="top" class="col_head <?= ($_GET['sort2'] == 'status')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="20%">
+                        <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=status&dir2=<?= ($_GET['sort2']=='status' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Status</a>
+                </td>
+                <td valign="top" class="col_head" width="20%">
                         Action
                 </td>
         </tr>
-<?php
-$sqlp = "SELECT p.patientid, p.firstname, p.lastname, MIN(ledger.service_date) as oldest, count(ledger.ledgerid) AS num_ledger FROM dental_ledger ledger
-                         JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
-                         JOIN dental_users user ON user.userid = ledger.docid
-                         JOIN dental_patients p ON p.patientid = ledger.patientid
-                  WHERE 
-                         ledger.status = " . DSS_TRXN_PENDING ." 
-                         AND ledger.docid = " . $_SESSION['docid'] . "
-                         AND trxn_code.docid = " . $_SESSION['docid'] . "
-                         AND trxn_code.type = " . DSS_TRXN_TYPE_MED . "
-		GROUP BY p.patientid, p.firstname, p.lastname";
-if(isset($_GET['sort1'])){
-  if($_GET['sort1']=='patient'){
-    $sort = "p.lastname ".$_GET['dir1'].", p.firstname ".$_GET['dir1'];
-  }else{
-    $sort = $_GET['sort1']." ".$_GET['dir1'];
-  }
-
-}
-$sqlp .= " ORDER BY " . mysql_real_escape_string($sort);
-$myp=mysql_query($sqlp) or die(mysql_error());
-
-while($myarrayp = mysql_fetch_array($myp))
+        <? if(mysql_num_rows($pend_my) == 0)
+        { ?>
+                <tr class="tr_bg">
+                        <td valign="top" class="col_head" colspan="10" align="center">
+                                No Records
+                        </td>
+                </tr>
+        <?
+        }
+        else
+        {
+                while($pend_myarray = mysql_fetch_array($pend_my))
                 {
-                        if($myarray["status"] == 1)
+                        if($pend_myarray["status"] == 1)
                         {
                                 $tr_class = "tr_active";
                         }
@@ -111,26 +124,31 @@ while($myarrayp = mysql_fetch_array($myp))
                         }
                         $tr_class = "tr_active";
                 ?>
-                        <tr class="<?=$tr_class;?>">
-				<td valign="top">
-					<?= date('m-d-Y', strtotime($myarrayp['oldest'])); ?>
-				</td>
+                        <tr class="<?=$tr_class;?> status_<?= $pend_myarray['status']; ?> claim">
                                 <td valign="top">
-				<?= $myarrayp['firstname'].' '.$myarrayp['lastname']; ?>
+                        <?=date('m-d-Y H:i',strtotime(st($pend_myarray["adddate"])));?>
                                 </td>
-   				<td valign="top">
-					<?= $myarrayp['num_ledger']; ?>
-				</td>
                                 <td valign="top">
-        <button onclick="Javascript: window.location = 'insurance.php?pid=<?=$myarrayp['patientid'];?>';" class="addButton">
-                  View 
-            </button>
+                                        <?= $pend_myarray['firstname'].' '.$pend_myarray['lastname']; ?>
+                                </td>
+                                <td valign="top">
+                                    <?=$dss_claim_status_labels[$pend_myarray['status']];?>
+                                </td>
+                                <td valign="top">
+<a href="view_claim.php?claimid=<?=$pend_myarray["insuranceid"];?>&pid=<?= $pend_myarray['patientid']; ?>" class="editlink" title="EDIT">
+                                                View 
+                                        </a>
+
 
                                 </td>
                         </tr>
         <?      }
-?>
+        }?>
 </table>
+
+
+<br /><br /><br />
+
 
 <span class="admin_head">Submitted Claims</span>
 <?php
@@ -141,7 +159,6 @@ if(isset($_GET['unpaid'])){
 <label style="margin-left:20px;">Filter by status</label> 
 <select onchange="updateClaims(this.value)">
 <option value="100"  <?= ($_GET['filter']== 100)?'selected="selected"':''; ?>>All</option>
-<option value="<?= DSS_CLAIM_PENDING; ?>" <?= ($_GET['filter']== DSS_CLAIM_PENDING)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_PENDING]; ?></option>
 <option value="<?= DSS_CLAIM_PAID_INSURANCE; ?>" <?= ($_GET['filter']== DSS_CLAIM_PAID_INSURANCE)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_PAID_INSURANCE]; ?></option>
 <option value="<?= DSS_CLAIM_SENT; ?>" <?= ($_GET['filter']== DSS_CLAIM_SENT)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_SENT]; ?></option>
 <option value="<?= DSS_CLAIM_DISPUTE; ?>" <?= ($_GET['filter']== DSS_CLAIM_DISPUTE)?'selected="selected"':''; ?>><?= $dss_claim_status_labels[DSS_CLAIM_DISPUTE]; ?></option>

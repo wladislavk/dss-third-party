@@ -1,6 +1,6 @@
 <?php
 
-$sql = "select * from dental_insurance where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
+$sql = "select * from dental_insurance where (status=".DSS_CLAIM_PENDING." OR status=".DSS_CLAIM_SEC_PENDING.") AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
 $my=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -59,26 +59,89 @@ $my=mysql_query($sql) or die(mysql_error());
                                     <?=$dss_claim_status_labels[$myarray['status']];?>
                                 </td>
                                 <td valign="top">
-                    <?php if($myarray['status'] == DSS_CLAIM_PENDING){ ?>
-                                        <a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
+                                        <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="EDIT">
                                                 View 
                                         </a>
 
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                                 Delete 
-                                        </a>
-                        <?php }else{
-                                ?>
-                                        <a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?=$_GET['pid'];?>" class="editlink" title="EDIT">
-                                                View 
-                                        </a>
-                                <?php
-                                } ?>
                                 </td>
                         </tr>
           <? } ?>
         <? } ?>
+</table>
+
+<?php
+
+
+$sql = "select * from dental_insurance where status!=".DSS_CLAIM_PENDING." AND status!=".DSS_CLAIM_SEC_PENDING." AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
+$my=mysql_query($sql) or die(mysql_error());
+
+?>
+
+
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <? if($total_rec > $rec_disp) {?>
+        <TR bgColor="#ffffff">
+                <TD  align="right" colspan="15" class="bp">
+                        Pages:
+                        <?
+                                 paging($no_pages,$index_val,"");
+                        ?>
+                </TD>
+        </TR>
+        <? }?>
+        <tr class="tr_bg_h">
+                <td valign="top" class="col_head" width="60%">
+                        Date
+                </td>
+                <td valign="top" class="col_head" width="20%">
+                        Status
+                </td>
+                <td valign="top" class="col_head" width="20%">
+                        Action
+                </td>
+        </tr>
+        <? if(mysql_num_rows($my) == 0)
+        { ?>
+                <tr class="tr_bg">
+                        <td valign="top" class="col_head" colspan="10" align="center">
+                                No Records
+                        </td>
+                </tr>
+        <?
+        }
+        else
+        {
+                while($myarray = mysql_fetch_array($my))
+                {
+                        if($myarray["status"] == 1)
+                        {
+                                $tr_class = "tr_active";
+                        }
+                        else
+                        {
+                                $tr_class = "tr_inactive";
+                        }
+                        $tr_class = "tr_active";
+                ?>
+                        <tr class="<?=$tr_class;?>">
+                                <td valign="top">
+                        <?=date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+                                </td>
+                                <td valign="top">
+                                    <?=$dss_claim_status_labels[$myarray['status']];?>
+                                </td>
+                                <td valign="top">
+					<a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="EDIT">
+                                                View 
+                                        </a>
+
+                                </td>
+                        </tr>
+          <? } ?>
+        <? } ?>
+</table>
   <?php
+/*
     // Display a placeholder row for any ledger trxns that need added to a new claim
     $sql = "SELECT "
          . "  ledger.* "
@@ -135,6 +198,6 @@ $my=mysql_query($sql) or die(mysql_error());
     <td>n/a</td>
     <td>
     </td>
-
 </table>
-
+*/
+?>

@@ -56,7 +56,6 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-                                phone = '".s_for($_POST["phone"])."',
 				sign_notes=".$n." where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
@@ -92,7 +91,6 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-                                phone = '".s_for($_POST["phone"])."',
 			sign_notes=".$n;
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
@@ -213,7 +211,7 @@ if($_POST["staffsub"] == 1)
         <?php if($themyarray["userid"] == ''){ ?> 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Passsword
+                Password
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="password" value="<?=$password;?>" class="tbox" /> 

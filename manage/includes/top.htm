@@ -1291,7 +1291,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='manage_progress_notes.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='patient_letters.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
         <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>

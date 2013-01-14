@@ -112,14 +112,18 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $upq = mysql_query($upsql);
     $upr = mysql_fetch_assoc($upq);
     if($upr['num_ledger']>0){
-  	$s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysql_real_escape_string($claim_producer)." AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   	$q = mysql_query($s);
   	$n = mysql_num_rows($q);
   	if($n > 0){
           $r = mysql_fetch_assoc($q);
           $claim_id = $r['insuranceid'];
   	}else{
-          $claim_id = create_claim($_GET['pid']);
+          $claim_id = create_claim($_GET['pid'], $claim_producer);
   	}
 
 	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";

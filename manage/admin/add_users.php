@@ -299,7 +299,6 @@ if($_POST["usersub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

@@ -304,7 +304,6 @@ Fields left blank below will default to the standard billing settings for your o
             <td valign="top" class="frmdata">
                 <input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
                 <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
-                <span class="red">*</span>
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -313,7 +312,6 @@ Fields left blank below will default to the standard billing settings for your o
             </td>
             <td valign="top" class="frmdata">
                 <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -322,7 +320,6 @@ Fields left blank below will default to the standard billing settings for your o
             </td>
             <td valign="top" class="frmdata">
                 <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -331,7 +328,6 @@ Fields left blank below will default to the standard billing settings for your o
             </td>
             <td valign="top" class="frmdata">
                 <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -340,7 +336,6 @@ Fields left blank below will default to the standard billing settings for your o
             </td>
             <td valign="top" class="frmdata">
                 <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
 

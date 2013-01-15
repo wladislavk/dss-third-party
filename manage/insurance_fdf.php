@@ -413,6 +413,34 @@ $seventeenA = $qua_myarray['qualifier'];
 			$getuserinfo .= " FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $userquery = mysql_query($getuserinfo);
                       $userinfo = mysql_fetch_array($userquery);
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
 
 $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$diagnosis_1;
 $ins_diag_my = mysql_query($ins_diag_sql);
@@ -683,10 +711,28 @@ $c++;
   // re-calculate balance due
   //$balance_due = $total_charge - $amount_paid;
 
+if($userinfo['tax_id_or_ssn'] != ''){
+  $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+}else{
+  $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
+}
+
+if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
+  $ssn = $userinfo['ssn'];
+}else{
+  $ssn = $docinfo['ssn'];
+}
+
+if($userinfo['ein'] != '' && $userinfo['producer_files']==1){                                                                                                        
+  $ein = $userinfo['ein'];                                                                              
+}else{
+  $ein = $docinfo['ein'];                                                                                                  
+} 
+
 $fdf .= "
-  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".$userinfo['tax_id_or_ssn'].") >>
-  << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($userinfo['ssn'] == "1")?1:'').") >>
-  << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($userinfo['ein'] == "1")?1:'').") >>
+  << /T(".$field_path.".fed_tax_id_number_fill[0]) /V(".$tax_id_or_ssn.") >>
+  << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($ssn == "1")?1:'').") >>
+  << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($ein == "1")?1:'').") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".$patient_account_no.") >>
   << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".(($accept_assignment == "Yes")?1:'').") >>
   << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
@@ -698,15 +744,15 @@ $fdf .= "
   << /T(".$field_path.".balance_due_dollars_fill[0]) /V(".number_format($balance_due,0).") >>
   << /T(".$field_path.".balance_due_cents_fill[0]) /V(".fill_cents(floor(($balance_due-floor($balance_due))*100)).") >>
   
-  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
-  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($userinfo['phone'], true).") >>
-  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($userinfo['phone'], false).") >>
-  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($userinfo['name'])."\n".strtoupper($userinfo['address'])."\n".strtoupper($userinfo['city']).", ".strtoupper($userinfo['state'])." ".$userinfo['zip'].") >>
+  << /T(".$field_path.".service_facility_location_info_fill[0]) /V(".strtoupper($practice)."\n".strtoupper($address)."\n".strtoupper($city).", ".strtoupper($state)." ".$zip.") >>
+  << /T(".$field_path.".billing_provider_phone_areacode_fill[0]) /V(".format_phone($phone, true).") >>
+  << /T(".$field_path.".billing_provider_phone_number_fill[0]) /V(".format_phone($phone, false).") >>
+  << /T(".$field_path.".billing_provider_info_fill[0]) /V(".strtoupper($practice)."\n".strtoupper($address)."\n".strtoupper($city).", ".strtoupper($state)." ".$zip.") >>
   << /T(".$field_path.".signature_of_physician-supplier_signed_fill[0]) /V(".$signature_physician.") >>  
   << /T(".$field_path.".signature_of_physician-supplier_date_fill[0]) /V(".date('m/d/y').") >>
-  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".$userinfo['provider_id'].") >>
+  << /T(".$field_path.".service_facility_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
   << /T(".$field_path.".service_facility_other_id_b_fill[0]) /V(".$service_info_b_other.") >>
-  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".$userinfo['provider_id'].") >>
+  << /T(".$field_path.".billing_provider_NPI_a_fill[0]) /V(".(($insurancetype == '1')?$medicare_npi:$npi).") >>
   << /T(".$field_path.".billing_provider_other_id_b_fill[0]) /V(".$billing_provider_b_other.") >>
 ";
 

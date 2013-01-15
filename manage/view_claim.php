@@ -228,10 +228,6 @@ return s;
                 Add Note 
         </button>
         &nbsp;&nbsp;
-        <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
-               Reports 
-        </button>
-        &nbsp;&nbsp;
       
         <?php if($claim['status'] == DSS_CLAIM_DISPUTE){
             $s = "SELECT filename FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($_GET['claimid'])."'";

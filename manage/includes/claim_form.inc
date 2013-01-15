@@ -1869,11 +1869,15 @@ input{text-transform:uppercase;}
 							<tr>
 								<td valign="top">
 									<span class="num">17<span class="num_a">b.</span></span> 
-								</td>
 								<?php
-		      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['userid']."'";
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+
+		      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
                       $userquery = mysql_query($getuserinfo);
-                      $userinfo = mysql_fetch_array($userquery);
+                      if($userinfo = mysql_fetch_array($userquery)){
 			$phone = $userinfo['phone'];
 			$practice = $userinfo['practice'];
 			$address = $userinfo['address'];
@@ -1882,6 +1886,7 @@ input{text-transform:uppercase;}
 			$zip = $userinfo['zip'];
 			$npi = $userinfo['npi'];
 			$medicare_npi = $userinfo['medicare_npi'];
+		      }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
@@ -1893,16 +1898,7 @@ input{text-transform:uppercase;}
                         if($zip == ""){ $zip = $docinfo['zip']; }
 			if($npi == ""){ $npi = $docinfo['npi']; }
 			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
-
-			$phone = $docinfo['phone']; 
-                        $practice = $docinfo['practice']; 
-                        $address = $docinfo['address']; 
-                        $city = $docinfo['city']; 
-                        $state = $docinfo['state']; 
-                        $zip = $docinfo['zip']; 
-                        $npi = $docinfo['npi'];
-                        $medicare_npi = $docinfo['medicare_npi'];
-                      ?>  
+                      ?> 
 								<td valign="top">
 									NPI
 								</td>
@@ -2350,7 +2346,6 @@ if (!$query) {
                                                                                                         $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
 												  }
 												  
-													$tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
 												?>
 												<input disabled="disabled" type="text" value="<?=$tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
@@ -2358,12 +2353,11 @@ if (!$query) {
 												SSN
 												<br />
                                                                                                 <?php
-                                                                                                  if($userinfo['ssn'] != '' && $userinfo['provider']==1){
+                                                                                                  if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ssn = $userinfo['ssn'];
                                                                                                   }else{
                                                                                                         $ssn = $docinfo['ssn'];
                                                                                                   }
-													$ssn = $docinfo['ssn'];
                                                                                                 ?>
 												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
 											</td>
@@ -2371,12 +2365,11 @@ if (!$query) {
 												EIN
 												<br />
                                                                                                 <?php
-                                                                                                  if($userinfo['ein'] != '' && $userinfo['provider']==1){
+                                                                                                  if($userinfo['ein'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ein = $userinfo['ein'];
                                                                                                   }else{                                                                                          
                                                                                                         $ein = $docinfo['ein'];
                                                                                                   }
-													$ein = $docinfo['ein'];
                                                                                                 ?>
 												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
 											</td>

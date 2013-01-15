@@ -22,6 +22,7 @@ function reset_interval()
 {
 clearInterval(lo_timer);
 clearInterval(w_timer);
+startTimeMS = (new Date()).getTime();
 lo_timer=setInterval("auto_logout()",timer_length);
 w_timer=setInterval("warn_logout()",w_timer_length);
 $('#warn_logout').hide();

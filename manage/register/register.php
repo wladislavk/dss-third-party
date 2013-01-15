@@ -290,13 +290,17 @@ if(mysql_num_rows($q) == 0){
                         <label class="lbl_a"><strong>1.</strong> NPI Number:</label><input class="inpt_a validate" id="npi" name="npi" type="text" value="<?=$p['npi']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Medicare DME Number:</label><input class="inpt_a validate" id="medicare_npi" name="medicare_npi" type="text" value="<?=$p['medicare_npi']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>2.</strong> Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="medicare_npi" name="medicare_npi" type="text" value="<?=$p['medicare_npi']?>" maxlength="255" />
 		</div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Tax ID or SSN:</label><input class="inpt_a validate" id="tax_id_or_ssn" name="tax_id_or_ssn" type="text" value="<?=$p['tax_id_or_ssn']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>3.</strong> Medicare PTAN Number:</label><input class="inpt_a" id="medicare_ptan" name="medicare_ptan" type="text" value="<?=$p['medicare_ptan']?>" maxlength="255" />
                 </div>
+
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Is box 3 your EIN or SSN?</label>
+                        <label class="lbl_a"><strong>4.</strong> Tax ID or SSN:</label><input class="inpt_a validate" id="tax_id_or_ssn" name="tax_id_or_ssn" type="text" value="<?=$p['tax_id_or_ssn']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b half clear">
+                        <label class="lbl_a"><strong>5.</strong> Is box 4 your EIN or SSN?</label>
 			<input class="" name="ein" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ein" type="checkbox" value="1" <?= ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
 			<input class="" name="ssn" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
                 </div>

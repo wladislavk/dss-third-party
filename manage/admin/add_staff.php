@@ -48,6 +48,7 @@ if($_POST["staffsub"] == 1)
 				producer_files = ".$pf.",
                                 npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
                                 tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
@@ -83,6 +84,7 @@ if($_POST["staffsub"] == 1)
 				producer_files = ".$pf.",
                                 npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
                                 tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
                                 ein = '".s_for($ein)."',
                                 ssn = '".s_for($ssn)."',
@@ -135,6 +137,7 @@ if($_POST["staffsub"] == 1)
 		$producer_files = $_POST['producer_files'];
                 $npi = $_POST['npi'];
                 $medicare_npi = $_POST['medicare_npi'];
+                $medicare_ptan = $_POST['medicare_ptan'];
                 $tax_id_or_ssn = $_POST['tax_id_or_ssn'];
                 $ein = $_POST['ein'];
                 $ssn = $_POST['ssn'];
@@ -159,6 +162,7 @@ if($_POST["staffsub"] == 1)
 		$producer_files = st($themyarray['producer_files']);
                 $npi = st($themyarray['npi']);
                 $medicare_npi = st($themyarray['medicare_npi']);
+                $medicare_ptan = st($themyarray['medicare_ptan']);
                 $tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
                 $ein = st($themyarray['ein']);
                 $ssn = st($themyarray['ssn']);
@@ -280,10 +284,18 @@ Fields left blank below will default to the standard billing settings for your o
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Medicare DME Number
+                Medicare Provider (NPI/DME) Number
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="medicare_npi" value="<?=$medicare_npi;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="files_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Medicare PTAN Number
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="medicare_ptan" value="<?=$medicare_ptan;?>" class="tbox" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -386,8 +398,12 @@ Fields left blank below will default to the standard billing settings for your o
   $('#producer').click(function(){
     if($(this).is(':checked')){
       $('.producer_field').show();
+      if($('#producer_files').is(':checked')){
+        $('.files_field').show();
+      }
     }else{
       $('.producer_field').hide();
+      $('.files_field').hide();
     }
   });
   $('#producer_files').click(function(){
@@ -401,12 +417,13 @@ Fields left blank below will default to the standard billing settings for your o
 $(document).ready( function(){
     if($('#producer').is(':checked')){
       $('.producer_field').show();
+      if($('#producer_files').is(':checked')){
+        $('.files_field').show();
+      }else{
+        $('.files_field').hide();
+      }
     }else{
       $('.producer_field').hide();
-    }
-    if($('#producer_files').is(':checked')){
-      $('.files_field').show();
-    }else{
       $('.files_field').hide();
     }
 

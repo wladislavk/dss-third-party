@@ -26,6 +26,7 @@
                 mailing_zip = '".mysql_real_escape_string($_POST['mailing_zip'])."',
 		npi = '".mysql_real_escape_string($_POST['npi'])."',
                 medicare_npi = '".mysql_real_escape_string($_POST['medicare_npi'])."',
+                medicare_ptan = '".mysql_real_escape_string($_POST['medicare_ptan'])."',
                 tax_id_or_ssn = '".mysql_real_escape_string($_POST['tax_id_or_ssn'])."',
                 ein = '".mysql_real_escape_string($_POST['ein'])."',
                 ssn = '".mysql_real_escape_string($_POST['ssn'])."',

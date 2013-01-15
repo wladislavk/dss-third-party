@@ -42,6 +42,7 @@ if($_POST["usersub"] == 1)
 				user_access=2,
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
                                 ssn = '".s_for($_POST['ssn'])."',
                                 ein = '".s_for($_POST['ein'])."',
@@ -94,6 +95,7 @@ if($_POST["usersub"] == 1)
 				username = '".s_for($_POST["username"])."',
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
 				ssn = '".s_for($_POST['ssn'])."',
 				ein = '".s_for($_POST['ein'])."',
@@ -170,6 +172,7 @@ if($_POST["usersub"] == 1)
 		$username = $_POST['username'];
 		$npi = $_POST['npi'];
 		$medicare_npi = $_POST['medicare_npi'];
+                $medicare_ptan = $_POST['medicare_ptan'];
 		$tax_id_or_ssn = $_POST['tax_id_or_ssn'];
 		$ssn = $_POST['ssn'];
 		$ein = $_POST['ein'];
@@ -204,6 +207,7 @@ if($_POST["usersub"] == 1)
 		$username = st($themyarray['username']);
 		$npi = st($themyarray['npi']);
 		$medicare_npi = st($themyarray['medicare_npi']);
+                $medicare_ptan = st($themyarray['medicare_ptan']);
 		$tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
 		$ssn = st($themyarray['ssn']);
 		$ein = st($themyarray['ein']);
@@ -282,11 +286,20 @@ if($_POST["usersub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Medicare DME Number
+                Medicare Provider (NPI/DME) Number
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Medicare PTAN Number
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="tbox" />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

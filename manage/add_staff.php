@@ -27,10 +27,12 @@ if($_POST["staffsub"] == 1)
 		if($_POST["ed"] != "")
 		{
                         $p = ($_POST['producer']==1)?1:0;
+			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
 			$ein = ($_POST['ein']==1)?1:0;
 			$ssn = ($_POST['ssn']==1)?1:0;
 			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
+                                producer_files = ".$pf.",
 				npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
                                 tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
@@ -59,10 +61,12 @@ if($_POST["staffsub"] == 1)
                         $salt = create_salt();
                         $password = gen_password($_POST['password'], $salt);
                         $p = ($_POST['producer']==1)?1:0;
+			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
                         $ein = ($_POST['ein']==1)?1:0;
                         $ssn = ($_POST['ssn']==1)?1:0;
 			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['userid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
+                                producer_files = ".$pf.",
                                 npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
                                 tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."',
@@ -113,6 +117,7 @@ if($_POST["staffsub"] == 1)
 		$phone = $_POST['phone'];
 		$status = $_POST['status'];
                 $producer = $_POST['producer'];
+                $producer_files = $_POST['producer_files'];
 		$npi = $_POST['npi'];
                 $medicare_npi = $_POST['medicare_npi'];
                 $tax_id_or_ssn = $_POST['tax_id_or_ssn'];
@@ -136,6 +141,7 @@ if($_POST["staffsub"] == 1)
 		$phone = st($themyarray['phone']);
 		$status = st($themyarray['status']);
                 $producer = st($themyarray['producer']);
+                $producer_files = st($themyarray['producer_files']);
 		$npi = st($themyarray['npi']);
                 $medicare_npi = st($themyarray['medicare_npi']);
                 $tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
@@ -225,12 +231,20 @@ if($_POST["staffsub"] == 1)
                 <input type="checkbox" <?= ($producer==1)?'checked="checked"':''; ?> value="1" id="producer" name="producer" />
             </td>
         </tr>
-	<tr class="producer_field" bgcolor"#ffffff;">
+        <tr class="producer_field" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+               Producer bills insurance under their name?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($producer_files==1)?'checked="checked"':''; ?> value="1" id="producer_files" name="producer_files" />
+            </td>
+        </tr>
+	<tr class="files_field" bgcolor"#ffffff;">
 	   <td colspan="2">
 Fields left blank below will default to the standard billing settings for your office.
 	   </td>
 	</tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 NPI
             </td>
@@ -238,7 +252,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="text" name="npi" value="<?=$npi;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Medicare DME Number
             </td>
@@ -246,7 +260,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="text" name="medicare_npi" value="<?=$medicare_npi;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Tax ID or SSN
             </td>
@@ -254,7 +268,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 EIN or SSN
             </td>
@@ -263,7 +277,7 @@ Fields left blank below will default to the standard billing settings for your o
 		<input type="checkbox" <?= ($ssn==1)?'checked="checked"':''; ?> value="1" name="ssn" /> SSN
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Practice
             </td>
@@ -271,7 +285,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="text" name="practice" value="<?=$practice;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Address
             </td>
@@ -281,7 +295,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <span class="red">*</span>
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 City
             </td>
@@ -290,7 +304,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <span class="red">*</span>
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 State
             </td>
@@ -299,7 +313,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <span class="red">*</span>
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Zip
             </td>
@@ -308,7 +322,7 @@ Fields left blank below will default to the standard billing settings for your o
                 <span class="red">*</span>
             </td>
         </tr>
-        <tr class="producer_field" bgcolor="#FFFFFF">
+        <tr class="files_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Phone
             </td>
@@ -362,12 +376,24 @@ Fields left blank below will default to the standard billing settings for your o
       $('.producer_field').hide();
     }
   });
+  $('#producer_files').click(function(){
+    if($(this).is(':checked')){
+      $('.files_field').show();
+    }else{
+      $('.files_field').hide();
+    }
+  });
 
 $(document).ready( function(){
     if($('#producer').is(':checked')){
       $('.producer_field').show();
     }else{
       $('.producer_field').hide();
+    }
+    if($('#producer_files').is(':checked')){
+      $('.files_field').show();
+    }else{
+      $('.files_field').hide();
     }
 
 });

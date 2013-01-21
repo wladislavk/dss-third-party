@@ -20,7 +20,12 @@ if($_POST["compsub"] == 1)
 				status = '".mysql_real_escape_string($_POST["status"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			
+
+			$course_sql = "update content_type_profile SET
+					field_companyname_value='".mysql_real_escape_string($_POST["name"])."'
+                        		where field_companyid_value='".$_POST["ed"]."'";
+			mysql_query($course_sql, $course_con);			
+
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>

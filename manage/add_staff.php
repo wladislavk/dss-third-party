@@ -26,9 +26,15 @@ if($_POST["staffsub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
+                        $old_sql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
+                        $old_q = mysql_query($old_sql);
+                        $old_r = mysql_fetch_assoc($old_q);
+                        $old_username = $old_r['username'];
+
                         $p = ($_POST['producer']==1)?1:0;
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
+			$c = ($_POST['use_course']==1)?1:0;
 			$ein = ($_POST['ein']==1)?1:0;
 			$ssn = ($_POST['ssn']==1)?1:0;
 			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
@@ -43,8 +49,29 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
+				use_course = ".$c.",
 				sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+
+                        $course_sql = "UPDATE users set
+                                        name = '".mysql_real_escape_string($_POST["username"])."',
+                                        mail = '".mysql_real_escape_string($_POST["email"])."'
+                                WHERE name = '".mysql_real_escape_string($old_username)."'";
+                        mysql_query($course_sql, $course_con) or die($ed_sql." | ".mysql_error());
+
+                        $nv_sql = "SELECT n.nid, n.vid FROM node n
+                                        JOIN users u ON n.uid = u.uid
+                                        WHERE u.name='".$_POST['username']."'";
+                        $nv_q = mysql_query($nv_sql, $course_con);
+                        $nv_r = mysql_fetch_assoc($nv_q);
+                        $nid = $nv_r['nid'];
+                        $vid = $nv_r['vid'];
+
+                        $ctp_sql = "UPDATE content_type_profile SET
+                                                         field_dssusername_value = '".mysql_real_escape_string($_POST['name'])."'
+                                        WHERE nid='".mysql_real_escape_string($nid)."' AND  vid='".mysql_real_escape_string($vid)."'";
+                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -64,6 +91,7 @@ if($_POST["staffsub"] == 1)
                         $p = ($_POST['producer']==1)?1:0;
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
+			$c = ($_POST['use_course']==1)?1:0;
                         $ein = ($_POST['ein']==1)?1:0;
                         $ssn = ($_POST['ssn']==1)?1:0;
 			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['userid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
@@ -78,9 +106,71 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
+				use_course = ".$c.",
 				sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
-			
+	
+                        $userid = mysql_insert_id();
+
+                        $course_sql = "INSERT INTO users set
+                                        name = '".mysql_real_escape_string($_POST["username"])."',
+                                        mail = '".mysql_real_escape_string($_POST["email"])."',
+                                        status = '1'";
+                        mysql_query($course_sql, $course_con);
+                        $course_uid = mysql_insert_id($course_con);
+                        $roles_sql = "INSERT INTO users_roles SET
+                                        uid = '".mysql_real_escape_string($course_uid)."',
+                                        rid = '3'";
+                        mysql_query($roles_sql, $course_con) or die(mysql_error());
+                        $rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
+                        mysql_query($rev_sql, $course_con);
+                        $vid = mysql_insert_id($course_con);
+                        $profile_sql = "INSERT INTO node 
+                                                (type, status, title, vid, uid)
+                                        VALUES
+                                                ('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
+                        mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
+                        $nid = mysql_insert_id($course_con);
+                        $rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
+                        mysql_query($rev_sql);
+
+                        $docname_sql = "SELECT name from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                        $docname_q = mysql_query($docname_sql);
+                        $docname_r = mysql_fetch_assoc($docname_q);
+                        $docname = $docname_r['name'];
+                        $co_sql = "SELECT c.id, c.name from companies c
+                                        JOIN dental_user_company uc ON c.id = uc.companyid
+                                        JOIN dental_users u ON u.userid = uc.userid
+                                         WHERE u.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+                        $co_q = mysql_query($co_sql);
+                        $co_r = mysql_fetch_assoc($co_q);
+                        $cid = $co_r['id'];
+                        $cname = $co_r['name'];
+                        $ctp_sql = "INSERT INTO content_type_profile
+                                                (vid,
+                                                         nid,
+                                                         field_companyid_value,
+                                                         field_companyname_value,
+                                                         field_docid_value,
+                                                         field_docname_value,
+                                                         field_dssusername_value,
+                                                         field_dssuid_value)
+                                        VALUES
+                                                ('".mysql_real_escape_string($vid)."',
+                                                        '".mysql_real_escape_string($nid)."',
+                                                        '".mysql_real_escape_string($cid)."',
+                                                        '".mysql_real_escape_string($cname)."',
+                                                        '".mysql_real_escape_string($_SESSION['userid'])."',
+                                                        '".mysql_real_escape_string($docname)."',
+                                                        '".mysql_real_escape_string($_POST['name'])."',
+                                                        '".mysql_real_escape_string($userid)."')";
+                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+
+
+
+
+
+		
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
@@ -132,6 +222,7 @@ if($_POST["staffsub"] == 1)
                 $state = $_POST['state'];
                 $zip = $_POST['zip'];
                 $phone = $_POST['phone'];
+		$use_course = $_POST['use_course'];
                 $sign_notes = $_POST['sign_notes'];
 	}
 	else
@@ -157,6 +248,7 @@ if($_POST["staffsub"] == 1)
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
                 $phone = st($themyarray['phone']);
+		$use_course = st($themyarray['use_course']);
                 $sign_notes = st($themyarray['sign_notes']);
 		$but_text = "Add ";
 	}
@@ -338,12 +430,20 @@ Fields left blank below will default to the standard billing settings for your o
                 <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
             </td>
         </tr>
-
+        <tr>
 <td valign="top" class="frmhead">
                 Sign Progress Notes?
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" <?= ($sign_notes==1)?'checked="checked"':''; ?> value="1" name="sign_notes" />
+            </td>
+        </tr>
+        <tr>
+<td valign="top" class="frmhead">
+                Use Course?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($use_course==1)?'checked="checked"':''; ?> value="1" name="use_course" />
             </td>
         </tr>
 

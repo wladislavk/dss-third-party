@@ -32,5 +32,5 @@ $u_r = mysql_fetch_assoc($u_q);
 		mysql_query($user_sql, $course_con) or die($user_sql." | ".mysql_error());
 ?>
 <script type="text/javascript">
-  window.location='http://course.dss.xforty.com/drupal/autoauth';
+  window.location='/course/autoauth';
 </script>

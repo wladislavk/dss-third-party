@@ -204,7 +204,6 @@ background:#999999;
                 }else{
                   $i_date = $n_date = $l_date = '';
                 }
-/*
 $newquery = "select 
                 'ledger',
                 dl.ledgerid,
@@ -260,7 +259,51 @@ $newquery = "select
         GROUP BY i.insuranceid
 ";
 
-*/
+$newquery = "
+select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                p.name, 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                '' as payer,
+                '' as payment_type
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                p.name,
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                dlp.payer,
+                dlp.payment_type
+        from dental_ledger dl 
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0
+                        AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."' 
+";
 
 
                 if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])

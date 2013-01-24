@@ -1,6 +1,6 @@
 <? 
 //include "includes/top.htm";
-
+include "includes/constants.inc";
 
 if($_GET['dailysub']){
 $file = 'Ledger_Report_'.date('m-d-Y', strtotime($_GET['start_date']));
@@ -62,8 +62,58 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
 		}else{
     $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
     }
+
+$newquery = "
+select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                p.name, 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                '' as payer,
+                '' as payment_type,
+                dl.primary_claim_id
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                p.name,
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                dlp.payer,
+                dlp.payment_type,
+                ''
+        from dental_ledger dl 
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0
+                        AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."' 
+";
+
+
                 if($start_date)
-                   $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+                   //$newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
@@ -77,8 +127,15 @@ Svc Date,Entry Date,Patient,Producer,Description,Charges,Credits,Ins
                 	 echo date('m-d-Y',strtotime(st($myarray["service_date"]))).',';
                 	 echo date('m-d-Y',strtotime(st($myarray["entry_date"]))).',';
                 	 echo st($name).',';
-                	 echo st($myarray["producer"]).',';
-                	 echo st($myarray["description"]).',';
+                	 echo st($myarray["name"]).',';
+                        if($myarray[0]=='ledger_payment'){ 
+                          echo $dss_trxn_payer_labels[$myarray['payer']] ." Payment - ". $dss_trxn_pymt_type_labels[$myarray['payment_type']].",";
+                        }else{ 
+                          echo st($myarray["description"]);
+                          echo ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';
+			  echo ",";
+                        } 
+
                          echo number_format($myarray["amount"],2,'.','').',';
           $tot_charge += $myarray["amount"];
 

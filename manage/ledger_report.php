@@ -274,7 +274,8 @@ select
                 pat.firstname, 
                 pat.lastname,
                 '' as payer,
-                '' as payment_type
+                '' as payment_type,
+		dl.primary_claim_id
         from dental_ledger dl 
                 JOIN dental_patients as pat ON dl.patientid = pat.patientid
                 LEFT JOIN dental_users as p ON dl.producerid=p.userid 
@@ -295,7 +296,8 @@ select
                 pat.firstname,
                 pat.lastname,
                 dlp.payer,
-                dlp.payment_type
+                dlp.payment_type,
+		''
         from dental_ledger dl 
                 JOIN dental_patients pat on dl.patientid = pat.patientid
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
@@ -352,8 +354,12 @@ select
                 	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
+			<?php if($myarray[0]=='ledger_payment'){ ?>
+				<?= $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?= $dss_trxn_pymt_type_labels[$myarray['payment_type']]; ?>
+			<?php }else{ ?>
                 	<?=st($myarray["description"]);?>
                         <?= ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';?>
+			<?php } ?>
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php

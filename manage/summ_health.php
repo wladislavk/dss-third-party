@@ -128,9 +128,6 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                     </label>
                     <div>
                         <span>
-                            <span>
-				All medical diagnoses and surgeries:
-                            </span>
                              <span id="h_det" >
 				<?=$other_history;?>
                              </span>

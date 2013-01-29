@@ -45,6 +45,11 @@ lga_wizard = {
 		var root = $("#register").fancyscrollable();
 		var api = root.fancyscrollable();
 
+		function next_sect(){
+
+		  api.next();
+
+		}
 		                // adjust height after items have been scrolled
                 api.onSeek(function(event, i) {
                           var page = root.find(".page").eq(api.getIndex());

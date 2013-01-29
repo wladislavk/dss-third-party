@@ -345,6 +345,41 @@ if(mysql_num_rows($q) == 0){
                                                                                 </div>
                                                                         </div>
 
+                                                                        <div class="page">
+                                                                                <div class="pageInside">
+                                                                                        <div class="cf">
+                                                                                                <div class="dp25">
+                                                                                                        <h3 class="sepH_a">Payment Information</h3>
+                                                                                                        <p class="s_color">Please add a credit card for your account.</p>
+                                                                                                </div>
+                                                                                                <div class="dp75">
+                                                                                                        <div>
+                                                                                                                <div class="form_errors" style="display:none"></div>
+
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a card-number"/>
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>2.</strong> Card CVC:</label><input class="inpt_a card-cvc" id="card-cvc" name="card-cvc" type="text" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a card-expiry-month" id="card-expiry-month" name="card-expiry-month" type="text" /> 
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>3.</strong> Expiration Year (YYYY):</label><input class="inpt_a card-expiry-year" id="card-expiry-year" name="card-expiry-year" type="text" />
+                </div>
+                                                                                                                <div class="cf">
+                                                                                                                        <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
+
+<a href="#" onclick="add_cc(); return false;" class="fr btn btn_dL">Proceed &raquo;</a>
+                                                                                                                </div>
+                                                                                                        </div>
+                                                                                                </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                        </div>
+
+
 
 
 <div class="page">
@@ -393,4 +428,40 @@ if(p1!=p2){
 }
 
 </script>
+  <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+  <!-- jQuery is used only for this example; it isn't required to use Stripe -->
+  <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
+  <script type="text/javascript">
+    // this identifies your website in the createToken call below
+    Stripe.setPublishableKey('pk_test_V67pDOZ0wU2bEnfjc59lrK0l');
+
+    function stripeResponseHandler(status, response) {
+      if (response.error) {
+        // Show the errors on the form
+	alert(response.error.message);
+        //$('.payment-errors').text(response.error.message);
+        //$('.submit-button').prop('disabled', false);
+      } else {
+        var token = response.id;
+
+        alert(token);
+	$('a.next').click();
+      }
+    }
+
+      function add_cc(){
+        // Disable the submit button to prevent repeated clicks
+        Stripe.createToken({
+          number: $('.card-number').val(),
+          cvc: $('.card-cvc').val(),
+          exp_month: $('.card-expiry-month').val(),
+          exp_year: $('.card-expiry-year').val()
+        }, stripeResponseHandler);
+
+        // Prevent the form from submitting with the default action
+        return false;
+      }
+  </script>
+
+
 <?php include 'includes/footer.php'; ?>

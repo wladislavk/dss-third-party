@@ -81,19 +81,19 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Username		
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="20%">
 			Name		
 		</td>
-                <td valign="top" class="col_head" width="20%">
+                <td valign="top" class="col_head" width="17%">
                         E0486 (Last 30 days)
                 </td>
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="17%">
 			Unbilled E0486		
 		</td>
 		<td valign="top" class="col_head" width="10%">
 			History
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="16%">
 			Invoice
 		</td>
 	</tr>
@@ -150,6 +150,9 @@ $case30_q = mysql_query($case30_sql);
 				<td valign="top">
 					<a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="button" title="EDIT" style="padding:3px 5px;">
 						Create
+					</a>
+					<a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>')"  class="button" title="EDIT" style="padding:3px 5px;">
+						Bill
 					</a>
                     
 				</td>

@@ -25,6 +25,7 @@
     <script type="text/javascript" src="js/lagu.js"></script>
     <script type="text/javascript" src="lib/harvesthq-chosen/chosen.jquery.min.js"></script>
     <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="../js/masks.js"></script>
   </head>
   <body class="fixed" >
     <!-- quick access sliding panel -->

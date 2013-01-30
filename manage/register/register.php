@@ -357,21 +357,36 @@ if(mysql_num_rows($q) == 0){
                                                                                                                 <div class="form_errors" style="display:none"></div>
 
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a card-number"/>
+                        <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>2.</strong> Card CVC:</label><input class="inpt_a card-cvc" id="card-cvc" name="card-cvc" type="text" />
+                        <label class="lbl_a"><strong>2.</strong> Card CVC:</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a card-expiry-month" id="card-expiry-month" name="card-expiry-month" type="text" /> 
+                        <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
                 </div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>3.</strong> Expiration Year (YYYY):</label><input class="inpt_a card-expiry-year" id="card-expiry-year" name="card-expiry-year" type="text" />
+                        <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
                 </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>5.</strong> Name on Card:</label><input class="inpt_a card-name" id="card-name" name="card-name" type="text" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a card-zip zipmask" id="card-zip" name="card-zip" type="text" />
+                </div>
+
+<div id="loader" style="display:none;">
+<img src="../images/DSS-ajax-animated_loading-gif.gif" />
+</div>
+
                                                                                                                 <div class="cf">
                                                                                                                         <a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
 
-<a href="#" onclick="add_cc(); return false;" class="fr btn btn_dL">Proceed &raquo;</a>
+<a href="#" onclick="add_cc(); return false;" id="payment_proceed" class="fr btn btn_dL">Proceed &raquo;</a>
+<div id="loader" style="display:none;">
+<img src="../images/DSS-ajax-animated_loading-gif.gif" />
+</div>
+
                                                                                                                 </div>
                                                                                                         </div>
                                                                                                 </div>
@@ -396,6 +411,7 @@ if(mysql_num_rows($q) == 0){
 								</div>
 			</div></div>
 	</form>  
+
 <div style="clear:both;"></div>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -433,29 +449,58 @@ if(p1!=p2){
   <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
   <script type="text/javascript">
     // this identifies your website in the createToken call below
-    Stripe.setPublishableKey('pk_test_V67pDOZ0wU2bEnfjc59lrK0l');
+    Stripe.setPublishableKey('<?= DSS_STRIPE_PUB_KEY; ?>');
 
     function stripeResponseHandler(status, response) {
       if (response.error) {
         // Show the errors on the form
 	alert(response.error.message);
+             $('#loader').hide();
+             $('#payment_proceed').show();
         //$('.payment-errors').text(response.error.message);
         //$('.submit-button').prop('disabled', false);
       } else {
-        var token = response.id;
+	var address = $('#address').val()+" "+$('#city').val()+" "+ $('#state').val()+" "+$('#zip').val();
 
-        alert(token);
-	$('a.next').click();
+        var token = response.id;
+	$.ajax({
+          url: "includes/update_token.php",
+          type: "post",
+          data: {id: $("#userid").val(), name: $('#name').val(), address: address, email: $("#email").val(), token: token},
+          success: function(data){
+            $('#loader').hide();      
+	    $('#payment_proceed').show();
+            $('.card-number').val('');
+            $('.card-cvc').val('');
+            $('.card-expiry-month').val('');
+            $('.card-expiry-year').val('');
+            $('a.next').click();
+
+          },
+          failure: function(data){
+	     $('#loader').hide();
+	     $('#payment_proceed').show();
+             //alert('fail');
+          }
+        });
       }
     }
 
       function add_cc(){
+        if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
+	  alert('Please enter valid information for all fields');
+	  return false;
+	}
+        $('#loader').show();
+	$('#payment_proceed').hide();
         // Disable the submit button to prevent repeated clicks
         Stripe.createToken({
           number: $('.card-number').val(),
           cvc: $('.card-cvc').val(),
           exp_month: $('.card-expiry-month').val(),
-          exp_year: $('.card-expiry-year').val()
+          exp_year: $('.card-expiry-year').val(),
+	  name: $('.card-name').val(),
+	  address_zip: $('.card-zip').val()
         }, stripeResponseHandler);
 
         // Prevent the form from submitting with the default action

@@ -3,6 +3,11 @@ $(document).ready(function(){
         $('.extphonemask').mask('(~99) 999-9999? ext99999');
         $('.phonemask').mask('(~99) 999-9999');
         $('.ssnmask').mask('999-99-9999');
+	$('.ccmask').mask('?9999999999999999999');
+        $('.cvcmask').mask('999');
+	$('.mmmask').mask('99');
+	$('.yyyymask').mask('9999');
+        $('.zipmask').mask('99999');
 });
 
   $(document).delegate('.dollar_input', 'keydown', function(event){

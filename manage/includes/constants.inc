@@ -250,3 +250,6 @@ define('DSS_PERCASE_INVOICED', 1);
 define('DSS_LETTER_PENDING', 0);
 define('DSS_LETTER_SENT', 1);
 define('DSS_LETTER_SEND_FAILED', 2);
+
+define('DSS_STRIPE_PUB_KEY', 'pk_test_AwG89We9HPlSSaFDI1TZgnie');
+define('DSS_STRIPE_SEC_KEY', 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk');

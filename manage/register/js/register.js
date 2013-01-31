@@ -56,7 +56,7 @@ lga_wizard = {
                           $("#register").animate({ height : (page.height()+170) }, 300);
 			  $("#main_section").animate({ height : (page.height()+250) }, 300);
 			if(api.getIndex()==5){
-			  disable_registration();
+			  //disable_registration();
 			}
                 });
 		

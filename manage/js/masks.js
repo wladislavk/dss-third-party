@@ -1,12 +1,13 @@
 $(document).ready(function(){
 	$.mask.definitions['~']='[2-9]';
+        $.mask.definitions['#']='[0-1]';
         $('.extphonemask').mask('(~99) 999-9999? ext99999');
         $('.phonemask').mask('(~99) 999-9999');
         $('.ssnmask').mask('999-99-9999');
 	$('.ccmask').mask('?9999999999999999999');
         $('.cvcmask').mask('999');
-	$('.mmmask').mask('99');
-	$('.yyyymask').mask('9999');
+	$('.mmmask').mask('#9');
+	$('.yyyymask').mask('2099');
         $('.zipmask').mask('99999');
 });
 

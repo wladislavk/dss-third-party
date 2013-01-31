@@ -356,19 +356,19 @@ if(mysql_num_rows($q) == 0){
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
 
-                <div class="sepH_b">
+                <div class="sepH_b half">
                         <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
                 </div>
-                <div class="sepH_b">
+                <div class="sepH_b half">
                         <label class="lbl_a"><strong>2.</strong> Card CVC:</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
                 </div>
-                <div class="sepH_b">
+                <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
                 </div>
-                <div class="sepH_b">
+                <div class="sepH_b half">
                         <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
                 </div>
-                <div class="sepH_b">
+                <div class="sepH_b clear">
                         <label class="lbl_a"><strong>5.</strong> Name on Card:</label><input class="inpt_a card-name" id="card-name" name="card-name" type="text" />
                 </div>
                 <div class="sepH_b">
@@ -452,8 +452,10 @@ if(p1!=p2){
     Stripe.setPublishableKey('<?= DSS_STRIPE_PUB_KEY; ?>');
 
     function stripeResponseHandler(status, response) {
+console.log(response);
       if (response.error) {
         // Show the errors on the form
+//console.log(response.error);
 	alert(response.error.message);
              $('#loader').hide();
              $('#payment_proceed').show();
@@ -465,25 +467,30 @@ if(p1!=p2){
         var token = response.id;
 	$.ajax({
           url: "includes/update_token.php",
-          type: "post",
+          type: "get",
           data: {id: $("#userid").val(), name: $('#name').val(), address: address, email: $("#email").val(), token: token},
           success: function(data){
+	    console.log(data);
             $('#loader').hide();      
 	    $('#payment_proceed').show();
+	/*
             $('.card-number').val('');
             $('.card-cvc').val('');
             $('.card-expiry-month').val('');
             $('.card-expiry-year').val('');
             $('a.next').click();
-
+*/
           },
           failure: function(data){
+	     alert('f - '+data);
 	     $('#loader').hide();
 	     $('#payment_proceed').show();
              //alert('fail');
           }
         });
       }
+	             $('#loader').hide();
+             $('#payment_proceed').show();
     }
 
       function add_cc(){
@@ -492,7 +499,45 @@ if(p1!=p2){
 	  return false;
 	}
         $('#loader').show();
+        var address = $('#address').val()+" "+$('#city').val()+" "+ $('#state').val()+" "+$('#zip').val();
 	$('#payment_proceed').hide();
+	$.ajax({
+          url: "includes/update_token.php",
+          type: "post",
+          data: {id: $("#userid").val(), 
+		name: $('#name').val(), 
+		address: address, 
+		email: $("#email").val(),
+		cnumber: $('.card-number').val(),
+		cname: $('.card-name').val(),
+		exp_month: $('.card-expiry-month').val(),
+		exp_year: $('.card-expiry-year').val(),
+		cvc: $('.card-cvc').val(),
+		zip: $('.card-zip').val()
+	  },
+          success: function(data){
+            var r = $.parseJSON(data);
+            if(r.error){
+              $('#loader').hide();      
+              $('#payment_proceed').show();
+	      alert(r.error.message);
+	    }else{
+              $('.card-number').val('');
+              $('.card-cvc').val('');
+              $('.card-expiry-month').val('');
+              $('.card-expiry-year').val('');
+              $('a.next').click();
+	    }
+          },
+          failure: function(data){
+             alert('f - '+data);
+             $('#loader').hide();
+             $('#payment_proceed').show();
+             //alert('fail');
+          }
+        });
+
+	/*
         // Disable the submit button to prevent repeated clicks
         Stripe.createToken({
           number: $('.card-number').val(),
@@ -502,7 +547,7 @@ if(p1!=p2){
 	  name: $('.card-name').val(),
 	  address_zip: $('.card-zip').val()
         }, stripeResponseHandler);
-
+	*/
         // Prevent the form from submitting with the default action
         return false;
       }

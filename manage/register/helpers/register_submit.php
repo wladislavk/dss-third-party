@@ -37,8 +37,7 @@
                 $password = gen_password($_POST['password'], $salt);
 		$sql .= ", password='".$password."' 
 			, salt='".$salt."'
-			, recover_hash=''
-			, status='1' ";
+			, recover_hash=''";
 	}	
         $sql .= " WHERE userid='".mysql_real_escape_string($_POST['userid'])."'
                 ";

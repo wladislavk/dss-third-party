@@ -26,7 +26,9 @@ if($_POST["contactsub"] == 1)
 {
 	if($_POST["ed"] != "")
 	{
-		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
+		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."',
+		 dea_number = '".s_for($_POST["dea_number"])."'
+		 where contactid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		//echo $ed_sql.mysql_error();
@@ -41,7 +43,8 @@ if($_POST["contactsub"] == 1)
 	}
 	else
 	{
-		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',
+                 dea_number = '".s_for($_POST["dea_number"])."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$rid = mysql_insert_id();
 		$dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysql_real_escape_string($_POST["contacttypeid"]);
@@ -148,6 +151,7 @@ if($_POST["contactsub"] == 1)
 		$phone2 = $_POST['phone2'];
 		$fax = $_POST['fax'];
 		$email = $_POST['email'];
+		$dea_number = $_POST['dea_number'];
 		$national_provider_id = $_POST['national_provider_id'];
 		$qualifier = $_POST['qualifier'];
 		$qualifierid = $_POST['qualifierid'];
@@ -173,6 +177,7 @@ if($_POST["contactsub"] == 1)
 		$phone2 = st($themyarray['phone2']);
 		$fax = st($themyarray['fax']);
 		$email = st($themyarray['email']);
+		$dea_number = st($themyarray['dea_number']);
 		$national_provider_id = st($themyarray['national_provider_id']);
 		$qualifier = st($themyarray['qualifier']);
 		$qualifierid = st($themyarray['qualifierid']);
@@ -385,6 +390,20 @@ if($_POST["contactsub"] == 1)
 				</ul>
             </td>
         </tr>
+        <tr class="content physician">
+                <td valign="top" colspan="2" class="frmhead">
+                <ul>
+                        <li id="foli8" class="complex">
+                        <div>
+                            <span>
+                                <input id="dea_number" name="dea_number" type="text" class="field text addr tbox" value="<?= $dea_number; ?>" tabindex="11" maxlength="255" style="width:200px;" />
+                                <label for="dea_number">DEA License Number</label>
+                            </span>
+                        </div>
+                    </li>
+                                </ul>
+            </td>
+        </tr>
         <tr class="content physician"> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
@@ -483,7 +502,7 @@ if($_POST["contactsub"] == 1)
 </a>
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
 		<?php if($themyarray["contactid"] != ''){ ?>
-		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
                                                  Delete 
                                         </a>
 		<?php } ?>

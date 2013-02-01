@@ -551,12 +551,12 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			$cover = '';
 		}
 		$html = $message;
-		$franchisee_query = "SELECT name, practice, address, city, state, zip, email FROM dental_users WHERE userid = '".$docid."';";
+		$franchisee_query = "SELECT mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
 		$franchisee_result = mysql_query($franchisee_query);
 		while ($row = mysql_fetch_assoc($franchisee_result)) {
         		$fi = $row;
 		}
-		$footerText = $fi['name'].' '.$fi['practice'].' '.$fi['address'].' '.$fi['city'].' '.$fi['state'].' '.$fi['zip'];
+		$footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
 		create_pdf($title, $filename, $html, null, '', $footerText, $cover);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);

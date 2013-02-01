@@ -419,7 +419,7 @@ function validate_sect3(){
 
   if($('#jerk_div input:checked').val() == null){
     $('#jerk_div').addClass('error');
-    error_text += "<label for=\"jerk\" generated=\"true\" class=\"error\" style=\"\"><strong>Jerk</strong>: Please provide an answer</label>"
+    error_text += "<label for=\"jerk\" generated=\"true\" class=\"error\" style=\"\"><strong>Leg Kick</strong>: Please provide an answer</label>"
     return_val = false;
   }else{
     $('#jerk_div').removeClass('error');

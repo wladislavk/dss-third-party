@@ -151,10 +151,11 @@ $case30_q = mysql_query($case30_sql);
 					<a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="button" title="EDIT" style="padding:3px 5px;">
 						Create
 					</a>
+					<?php if($myarray['cc_id']!=''){ ?>
 					<a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>')"  class="button" title="EDIT" style="padding:3px 5px;">
-						Bill
+						Bill Card
 					</a>
-                    
+                    			<?php } ?>
 				</td>
 			</tr>
 	<? 	}

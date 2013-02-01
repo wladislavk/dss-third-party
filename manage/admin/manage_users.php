@@ -1,11 +1,32 @@
 <? 
 include "includes/top.htm";
-
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
+
+	$sql = "SELECT cc_id FROM dental_users where userid='".$_REQUEST["delid"]."'";
+	$q = mysql_query($sql);
+	$r = mysql_fetch_assoc();
+
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
-	
+	if($r['cc_id']!=''){
+	require_once '../3rdParty/stripe/lib/Stripe.php';
+	Stripe::setApiKey(DSS_STRIPE_SEC_KEY);
+        try{
+	  $cu = Stripe_Customer::retrieve($r['cc_id']);
+	  $cu->delete();
+        } catch(Stripe_CardError $e) {
+	  // Since it's a decline, Stripe_CardError will be caught
+	  $body = $e->getJsonBody();
+	  $err  = $body['error'];
+	  echo $err['message'];
+	} catch (Stripe_InvalidRequestError $e) {
+	  // Invalid parameters were supplied to Stripe's API
+	  $body = $e->getJsonBody();
+	  $err  = $body['error'];
+	  echo $err['message'];
+	} 
+	}
 	$msg= "Deleted Successfully";
 	?>
 	<script type="text/javascript">

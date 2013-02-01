@@ -33,6 +33,11 @@ if(mysql_num_rows($q) == 0){
   die();
 }
   $p = mysql_fetch_assoc($q);
+  $c_sql = "SELECT c.name from companies c 
+		JOIN dental_user_company uc ON uc.companyid=c.id
+			WHERE uc.userid='".mysql_real_escape_string($p['userid'])."'"; 
+  $c_q = mysql_query($c_sql);
+  $c_r = mysql_fetch_assoc($c_q);
 ?>
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
@@ -350,7 +355,7 @@ if(mysql_num_rows($q) == 0){
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
                                                                                                         <h3 class="sepH_a">Payment Information</h3>
-                                                                                                        <p class="s_color">Please add a credit card for your account.</p>
+                                                                                                        <p class="s_color">Please enter the credit card billing information to be associated with this account. You must supply a valid card in order to create your account.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>
@@ -360,19 +365,19 @@ if(mysql_num_rows($q) == 0){
                         <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Card CVC:</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
+                        <label class="lbl_a"><strong>2.</strong> Card CVC (security code):</label><input class="inpt_a card-cvc cvcmask" id="card-cvc" name="card-cvc" type="text" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
+                        <label class="lbl_a"><strong>3.</strong> Expiration Month (MM):</label><input class="inpt_a small card-expiry-month mmmask" id="card-expiry-month" name="card-expiry-month" type="text" /> 
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
+                        <label class="lbl_a"><strong>4.</strong> Expiration Year (YYYY):</label><input class="inpt_a small card-expiry-year yyyymask" id="card-expiry-year" name="card-expiry-year" type="text" />
                 </div>
-                <div class="sepH_b clear">
+                <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>5.</strong> Name on Card:</label><input class="inpt_a card-name" id="card-name" name="card-name" type="text" />
                 </div>
-                <div class="sepH_b">
-                        <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a card-zip zipmask" id="card-zip" name="card-zip" type="text" />
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
                 </div>
 
 <div id="loader" style="display:none;">
@@ -513,7 +518,8 @@ console.log(response);
 		exp_month: $('.card-expiry-month').val(),
 		exp_year: $('.card-expiry-year').val(),
 		cvc: $('.card-cvc').val(),
-		zip: $('.card-zip').val()
+		zip: $('.card-zip').val(),
+		company: "<?= addslashes($c_r['name']); ?>"
 	  },
           success: function(data){
             var r = $.parseJSON(data);

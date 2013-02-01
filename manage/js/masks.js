@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	$.mask.definitions['~']='[2-9]';
         $.mask.definitions['#']='[0-1]';
+	$.mask.definitions['%']='[0-9]';
         $('.extphonemask').mask('(~99) 999-9999? ext99999');
         $('.phonemask').mask('(~99) 999-9999');
         $('.ssnmask').mask('999-99-9999');
@@ -9,6 +10,7 @@ $(document).ready(function(){
 	$('.mmmask').mask('#9');
 	$('.yyyymask').mask('2099');
         $('.zipmask').mask('99999');
+	$('.dollarmask').mask('%%%%%%%');
 });
 
   $(document).delegate('.dollar_input', 'keydown', function(event){

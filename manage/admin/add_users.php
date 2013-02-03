@@ -37,11 +37,18 @@ if($_POST["usersub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
+
+			$old_sql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
+                        $old_q = mysql_query($old_sql);
+			$old_r = mysql_fetch_assoc($old_q);
+			$old_username = $old_r['username'];
+
 			$ed_sql = "update dental_users set 
 				username = '".s_for($_POST["username"])."',
 				user_access=2,
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
                                 ssn = '".s_for($_POST['ssn'])."',
                                 ein = '".s_for($_POST['ein'])."',
@@ -65,9 +72,49 @@ if($_POST["usersub"] == 1)
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
+				use_course = '".s_for($_POST['use_course'])."',
+                                use_course_staff = '".s_for($_POST['use_course_staff'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+
+                        $course_sql = "update content_type_profile SET
+                                        field_docname_value='".mysql_real_escape_string($_POST["name"])."'
+                                        where field_docid_value='".$_POST["ed"]."'";
+                        mysql_query($course_sql, $course_con);
+			
+			$course_sql = "UPDATE users set
+					name = '".mysql_real_escape_string($_POST["username"])."',
+					mail = '".mysql_real_escape_string($_POST["email"])."'
+				WHERE name = '".mysql_real_escape_string($old_username)."'";
+			mysql_query($course_sql, $course_con) or die($ed_sql." | ".mysql_error());
+
+                        if(is_super($_SESSION['admin_access'])){
+                          $cid = $_POST["companyid"];
+                        }else{
+                          $cid = $SESSION["companyid"];
+                        }
+
+			$nv_sql = "SELECT n.nid, n.vid FROM node n
+					JOIN users u ON n.uid = u.uid
+					WHERE u.name='".$_POST['username']."'";
+			$nv_q = mysql_query($nv_sql, $course_con);
+			$nv_r = mysql_fetch_assoc($nv_q);
+			$nid = $nv_r['nid'];
+			$vid = $nv_r['vid'];
+                        $cname_sql = "SELECT name from companies WHERE id='".mysql_real_escape_string($cid)."'";
+                        $cname_q = mysql_query($cname_sql);
+                        $cname_r = mysql_fetch_assoc($cname_q);
+                        $cname = $cname_r['name'];
+
+                        $ctp_sql = "UPDATE content_type_profile SET
+                                                         field_companyid_value = '".mysql_real_escape_string($cid)."',
+                                                         field_companyname_value = '".mysql_real_escape_string($cname)."',
+                                                         field_docname_value = '".mysql_real_escape_string($_POST['name'])."',
+                                                         field_dssusername_value = '".mysql_real_escape_string($_POST['name'])."'
+					WHERE nid='".mysql_real_escape_string($nid)."' AND  vid='".mysql_real_escape_string($vid)."'";
+                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+
 
 			if(is_super($_SESSION['admin_access'])){
 			  mysql_query("DELETE FROM dental_user_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
@@ -94,6 +141,7 @@ if($_POST["usersub"] == 1)
 				username = '".s_for($_POST["username"])."',
 				npi = '".s_for($_POST["npi"])."',
 				medicare_npi = '".s_for($_POST["medicare_npi"])."',
+                                medicare_ptan = '".s_for($_POST["medicare_ptan"])."',
 				tax_id_or_ssn = '".s_for($_POST["tax_id_or_ssn"])."', 
 				ssn = '".s_for($_POST['ssn'])."',
 				ein = '".s_for($_POST['ein'])."',
@@ -119,11 +167,72 @@ if($_POST["usersub"] == 1)
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
+                                use_course = '".s_for($_POST['use_course'])."',
+                                use_course_staff = '".s_for($_POST['use_course_staff'])."',
 				status = '".s_for($_POST["status"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
+
+                        $course_sql = "INSERT INTO users set
+                                        name = '".mysql_real_escape_string($_POST["username"])."',
+                                        mail = '".mysql_real_escape_string($_POST["email"])."',
+					status = '1'";
+                        mysql_query($course_sql, $course_con);
+			$course_uid = mysql_insert_id($course_con);
+			$roles_sql = "INSERT INTO users_roles SET
+					uid = '".mysql_real_escape_string($course_uid)."',
+					rid = '3'";
+			mysql_query($roles_sql, $course_con) or die(mysql_error());
+			$rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
+			mysql_query($rev_sql, $course_con);
+			$vid = mysql_insert_id($course_con);
+			$profile_sql = "INSERT INTO node 
+						(type, status, title, vid, uid)
+					VALUES
+						('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
+			mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
+			$nid = mysql_insert_id($course_con);
+			$rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
+			mysql_query($rev_sql);
+                        if(is_super($_SESSION['admin_access'])){
+                          $cid = $_POST["companyid"];
+                        }else{
+                          $cid = $SESSION["companyid"];
+                        }
+
+			$cname_sql = "SELECT name from companies WHERE id='".mysql_real_escape_string($cid)."'";
+			$cname_q = mysql_query($cname_sql);
+			$cname_r = mysql_fetch_assoc($cname_q);
+			$cname = $cname_r['name'];
+
+			$ctp_sql = "INSERT INTO content_type_profile
+						(vid,
+							 nid,
+							 field_companyid_value,
+							 field_companyname_value,
+							 field_docid_value,
+							 field_docname_value,
+							 field_dssusername_value,
+							 field_dssuid_value)
+					VALUES
+						('".mysql_real_escape_string($vid)."',
+							'".mysql_real_escape_string($nid)."',
+                                                        '".mysql_real_escape_string($cid)."',
+                                                        '".mysql_real_escape_string($cname)."',
+                                                        '".mysql_real_escape_string($userid)."',
+                                                        '".mysql_real_escape_string($_POST['name'])."',
+                                                        '".mysql_real_escape_string($_POST['name'])."',
+                                                        '".mysql_real_escape_string($userid)."')";
+			mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
+
+
+
+
+			
+
+
                         $code_sql = "insert into dental_transaction_code (transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, docid) SELECT transaction_code, description, place, modifier_code_1, modifier_code_2, days_units, type, sortby, ".$userid." FROM dental_transaction_code WHERE default_code=1";
                         mysql_query($code_sql) or die($code_sql.mysql_error());
                         $custom_sql = "insert into dental_custom (title, description, docid) SELECT title, description, ".$userid." FROM dental_custom WHERE default_text=1";
@@ -170,6 +279,7 @@ if($_POST["usersub"] == 1)
 		$username = $_POST['username'];
 		$npi = $_POST['npi'];
 		$medicare_npi = $_POST['medicare_npi'];
+                $medicare_ptan = $_POST['medicare_ptan'];
 		$tax_id_or_ssn = $_POST['tax_id_or_ssn'];
 		$ssn = $_POST['ssn'];
 		$ein = $_POST['ein'];
@@ -197,6 +307,8 @@ if($_POST["usersub"] == 1)
 		$use_digital_fax = $_POST['use_digital_fax'];
 		$use_letters = $_POST['use_letters'];
 		$use_eligible_api = $_POST['use_eligible_api'];
+		$use_course = $_POST['use_course'];
+		$use_course_staff = $_POST['use_course_staff'];
 		$companyid = $_POST['companyid'];
 	}
 	else
@@ -204,6 +316,7 @@ if($_POST["usersub"] == 1)
 		$username = st($themyarray['username']);
 		$npi = st($themyarray['npi']);
 		$medicare_npi = st($themyarray['medicare_npi']);
+                $medicare_ptan = st($themyarray['medicare_ptan']);
 		$tax_id_or_ssn = st($themyarray['tax_id_or_ssn']);
 		$ssn = st($themyarray['ssn']);
 		$ein = st($themyarray['ein']);
@@ -231,6 +344,8 @@ if($_POST["usersub"] == 1)
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
 		$use_eligible_api = st($themyarray['use_eligible_api']);
+                $use_course = st($themyarray['use_course']);
+                $use_course_staff = st($themyarray['use_course_staff']);
 		$companyid = st($themyarray['companyid']);
 		$but_text = "Add ";
 	}
@@ -282,11 +397,19 @@ if($_POST["usersub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Medicare DME Number
+                Medicare Provider (NPI/DME) Number
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Medicare PTAN Number
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="tbox" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -513,6 +636,24 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Course Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_course" value="1" <? if($use_course == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Staff Course Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

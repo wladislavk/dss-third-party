@@ -112,14 +112,18 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     $upq = mysql_query($upsql);
     $upr = mysql_fetch_assoc($upq);
     if($upr['num_ledger']>0){
-  	$s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+	$prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+  	$s = "SELECT insuranceid from dental_insurance where producer = '".mysql_real_escape_string($claim_producer)." AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   	$q = mysql_query($s);
   	$n = mysql_num_rows($q);
   	if($n > 0){
           $r = mysql_fetch_assoc($q);
           $claim_id = $r['insuranceid'];
   	}else{
-          $claim_id = create_claim($_GET['pid']);
+          $claim_id = create_claim($_GET['pid'], $claim_producer);
   	}
 
 	$update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
@@ -1865,11 +1869,15 @@ input{text-transform:uppercase;}
 							<tr>
 								<td valign="top">
 									<span class="num">17<span class="num_a">b.</span></span> 
-								</td>
 								<?php
-		      $getuserinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['userid']."'";
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+
+		      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
                       $userquery = mysql_query($getuserinfo);
-                      $userinfo = mysql_fetch_array($userquery);
+                      if($userinfo = mysql_fetch_array($userquery)){
 			$phone = $userinfo['phone'];
 			$practice = $userinfo['practice'];
 			$address = $userinfo['address'];
@@ -1878,6 +1886,7 @@ input{text-transform:uppercase;}
 			$zip = $userinfo['zip'];
 			$npi = $userinfo['npi'];
 			$medicare_npi = $userinfo['medicare_npi'];
+		      }
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
@@ -1889,7 +1898,7 @@ input{text-transform:uppercase;}
                         if($zip == ""){ $zip = $docinfo['zip']; }
 			if($npi == ""){ $npi = $docinfo['npi']; }
 			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
-                      ?>  
+                      ?> 
 								<td valign="top">
 									NPI
 								</td>
@@ -2195,7 +2204,7 @@ while ($mod_row = mysql_fetch_array($mod_my)) {
 $sql = "";
 if ($is_new_claim) {
   $sql = "SELECT "
-       . "  ledger.*, trxn_code.modifier_codeid_1 as modcode, trxn_code.modifier_codeid_1 as modcode2, trxn_code.days_units as daysorunits, ";
+       . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_1 as modcode2, trxn_code.days_units as daysorunits, ";
 if($insurancetype == '1'){
         $sql .= " user.medicare_npi ";
 }else{
@@ -2330,11 +2339,13 @@ if (!$query) {
 												Federal Tax I.D.Number
 												<br />
 												<?php
+												  
 												  if($userinfo['tax_id_or_ssn'] != ''){
 													$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
 												  }else{
                                                                                                         $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
 												  }
+												  
 												?>
 												<input disabled="disabled" type="text" value="<?=$tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
 											</td>
@@ -2342,7 +2353,7 @@ if (!$query) {
 												SSN
 												<br />
                                                                                                 <?php
-                                                                                                  if($userinfo['ssn'] != '' && $userinfo['provider']==1){
+                                                                                                  if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ssn = $userinfo['ssn'];
                                                                                                   }else{
                                                                                                         $ssn = $docinfo['ssn'];
@@ -2354,7 +2365,7 @@ if (!$query) {
 												EIN
 												<br />
                                                                                                 <?php
-                                                                                                  if($userinfo['ein'] != '' && $userinfo['provider']==1){
+                                                                                                  if($userinfo['ein'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ein = $userinfo['ein'];
                                                                                                   }else{                                                                                          
                                                                                                         $ein = $docinfo['ein'];

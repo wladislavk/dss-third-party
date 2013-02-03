@@ -71,10 +71,10 @@ $num_users=mysql_num_rows($my);
 	Ledger Report
         <? if($_REQUEST['dailysub'] == 1)
         {?>
-            (<i><?= date('m-d-Y', strtotime($_REQUEST['start_date'])); ?></i>)
+            (<i><?= date('m-d-Y', strtotime($start_date)); ?></i>)
         <? }
 
-        if($_REQUEST['weeklysub'] == 1)
+        if($_REQUEST['weeklysub'] == 1 || $_REQUEST['rangesub'] == 1)
         {?>
             (<i><?= date('m-d-Y', strtotime($start_date))?> - <?= date('m-d-Y', strtotime($end_date))?></i>)
         <? }
@@ -204,7 +204,6 @@ background:#999999;
                 }else{
                   $i_date = $n_date = $l_date = '';
                 }
-/*
 $newquery = "select 
                 'ledger',
                 dl.ledgerid,
@@ -260,7 +259,53 @@ $newquery = "select
         GROUP BY i.insuranceid
 ";
 
-*/
+$newquery = "
+select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                p.name, 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                '' as payer,
+                '' as payment_type,
+		dl.primary_claim_id
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                p.name,
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                dlp.payer,
+                dlp.payment_type,
+		''
+        from dental_ledger dl 
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0
+                        AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."' 
+";
 
 
                 if($_REQUEST['dailysub'] || $_REQUEST['weeklysub'] || $_REQUEST['monthlysub'] || $_REQUEST['rangesub'])
@@ -309,8 +354,12 @@ $newquery = "select
                 	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
+			<?php if($myarray[0]=='ledger_payment'){ ?>
+				<?= $dss_trxn_payer_labels[$myarray['payer']]; ?> Payment - <?= $dss_trxn_pymt_type_labels[$myarray['payment_type']]; ?>
+			<?php }else{ ?>
                 	<?=st($myarray["description"]);?>
                         <?= ($myarray['primary_claim_id'])?" (".$myarray['primary_claim_id'].")":'';?>
+			<?php } ?>
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
@@ -378,26 +427,43 @@ $newquery = "select
                     
                     
 				<b>
-				<?php echo "$".number_format($tot_charge,2); ?>
-				&nbsp;
-				</b>
-			</td>
-			<td valign="top" align="right">
-				<b>
-				<?php echo "$".number_format($tot_credit,2);?>
-				&nbsp;
-				</b>
-			</td>
-			<td valign="top">&nbsp;
-				
-			</td>
-		</tr>
+			<?php echo "$".number_format($tot_charge,2); ?>
+			&nbsp;
+			</b>
+		</td>
+		<td valign="top" align="right">
+			<b>
+			<?php echo "$".number_format($tot_credit,2);?>
+			&nbsp;
+			</b>
+		</td>
+		<td valign="top">&nbsp;
+			
+		</td>
+	</tr>
+	<tr>
+                        <td valign="top" colspan="5" align="right">
+                                <b>Balance</b>
+                        </td>
+                        <td valign="top" align="right">
+                                <b>
+                                <?php echo "$".number_format($tot_charge-$tot_credit,2); ?>
+                                &nbsp;
+                                </b>
+                        </td>
+                        <td valign="top" align="right">
+                        </td>
+                        <td valign="top">&nbsp;
+
+                        </td>
+                </tr>
+
 
 </table>
- </div>
+</div>
 
 <div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
+	    <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

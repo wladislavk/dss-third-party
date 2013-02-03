@@ -6,6 +6,11 @@ include_once('includes/password.php');
 include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
+?>
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="../js/masks.js"></script>
+<?php
 if($_POST["usersub"] == 1)
 {
         $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
@@ -29,6 +34,7 @@ if($_POST["usersub"] == 1)
 			$ins_sql = "insert into dental_users set user_access=".DSS_USER_ACCESS_DOCTOR.",
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 
+				phone = '".s_for($_POST["phone"])."',
 				use_patient_portal = '0',
 				use_digital_fax = '0',
 				use_letters = '0',
@@ -55,25 +61,29 @@ if($_POST["usersub"] == 1)
 <table width='600'>
 <tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
-<h2>Register</h2><p>Please click the following link to register.</p>
-<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/register.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/managei/register/register.php?id=".$userid."&hash=".$recover_hash."</a></p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<h2>Create your Software Account</h2>
+<p>Welcome to the Dental Sleep Solutions&reg; Team! Please click the link below to activate your software account:
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."</a></p>
+</td><td width='200'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
 <tr><td>
-<h3>Didn't request this change or need assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p></td></tr>
+<h3>Need assistance?
+Contact us at 877-95-SNORE or at<br>
+Support@dentalsleepsolutions.com</b></h3></td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>
 ";
-$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
                 $subject = "Dental Sleep Solutions Account Activation";
                 $mail = mail($_POST['email'], $subject, $m, $headers);
-
+		if($mail){
+		  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
+		  mysql_query($e_sql);
+		}
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
@@ -98,6 +108,7 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
 	<?php
 		$name = $_POST['name'];
 		$email = $_POST['email'];
+		$phone = $_POST['phone'];
 		$companyid = $_POST['companyid'];
 	?>
 	
@@ -108,7 +119,7 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userregabc(this)">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -125,6 +136,15 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
             <td valign="top" class="frmdata">
                 <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Cell Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox phonemask" />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

@@ -824,7 +824,7 @@ if($jointid <> '')
   </tr>
 <tr>
 <td>
-  <span style="padding-left:30px">Initial Position</span></td><td> <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm 
+  <span style="padding-left:30px">Incisal Edge Position (George/TAP Gauge Setting)</span></td><td> <input type="text" onchange="checkIncisal()" name="initial_device_titration_1" id="i_pos" size="5" value="<?php echo $initial_device_titration_1; ?>" />mm 
   </td></tr>
 <tr><td>
   <span style="padding-left:30px">Vertical</span></td><td><input type="text" name="initial_device_titration_equal_v" id="initial_device_titration_equal_v" size="5" value="<?php echo $initial_device_titration_equal_v; ?>" />mm

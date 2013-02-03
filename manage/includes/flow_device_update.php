@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../admin/includes/config.php';
 $id = $_REQUEST['id'];
 $d = $_REQUEST['device'];

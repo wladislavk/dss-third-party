@@ -1,7 +1,7 @@
 br.both{
 clear:both;
 }
-#backgroundPopup,#backgroundPopup2, #backgroundPopupRef{
+#backgroundPopup,#backgroundPopup2, #backgroundPopupRef, #backgroundPopupClean{
 display:none;
 position:fixed;
 _position:absolute; /* hack for internet explorer 6*/
@@ -13,7 +13,7 @@ background:#000000;
 border:1px solid #cecece;
 z-index:701;
 }
-#popupContact,#popupContact2, #popupRefer{
+#popupContact,#popupContact2, #popupRefer, #popupClean{
 display:none;
 position:fixed;
 _position:absolute; /* hack for internet explorer 6*/
@@ -25,7 +25,7 @@ z-index:702;
 padding:12px;
 font-size:13px;
 }
-#popupContactClose, #popupReferClose{
+#popupContactClose, #popupReferClose, #popupCleanClose{
 font-size:14px;
 line-height:14px;
 /*right:6px;*/

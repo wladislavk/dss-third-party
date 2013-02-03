@@ -44,7 +44,7 @@ $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
+//$sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 ?>
@@ -178,7 +178,11 @@ $num_users=mysql_num_rows($my);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["username"]);?>
+					<?php if($myarray["status"] == 2){
+					  echo "Registration emailed: ".(($myarray["registration_email_date"]!='')?date('m/d/Y H:i a', strtotime($myarray["registration_email_date"])):'');
+					}else{ ?>
+					  <?=st($myarray["username"]);?>
+					<?php } ?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["name"]);?>

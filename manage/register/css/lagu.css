@@ -70,7 +70,7 @@
 	/* header */
 		#header {padding:20px 0 10px;border-top:1px solid #f7f7fa}
 		#header .wrapper {position:relative}
-		.logo {position:relative;left:18px;top:0px; background: url(../images/dss_logo.gif) no-repeat 0 0; width:322px;height:60px; display:block;}
+		.logo {position:relative;left:18px;top:0px; background: url(../images/dss_logo.gif) no-repeat 0 0; width:350px;height:60px; display:block;}
 		.logo h1 {text-indent:-100000px;}
 
 	/* footer */

@@ -141,14 +141,24 @@ $claim_sql = "SELECT * FROM dental_ledger where ledgerid='".$_POST["ed"]."'";
 $claim_q = mysql_query($claim_sql);
 $claim_r = mysql_fetch_assoc($claim_q);
 if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $status==DSS_TRXN_PENDING){
-  $s = "SELECT insuranceid from dental_insurance where patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
+
+  $pf_sql = "SELECT producer_files FROM dental_users WHERE userid='".mysql_real_escape_string($claim_r['producerid'])."'";
+  $pf_q = mysql_query($pf_sql);
+  $pf = mysql_fetch_assoc($pf_q);
+  if($pf['producer_files'] == '1'){
+    $claim_producer = $claim_r['producerid'];
+  }else{
+    $claim_producer = $_SESSION['docid'];
+  }
+
+  $s = "SELECT insuranceid from dental_insurance where producer='".$claim_producer."' AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
   $q = mysql_query($s);
   $n = mysql_num_rows($q);
   if($n > 0){
         $r = mysql_fetch_assoc($q);
         $claim_id = $r['insuranceid'];
   }else{
-        $claim_id = create_claim($_GET['pid']);
+        $claim_id = create_claim($_GET['pid'], $claim_producer);
   }
 }else{
   $claim_id = '';
@@ -578,7 +588,7 @@ function is_dollar_input(evt){
 
 <?php
 
-function create_claim($pid){
+function create_claim($pid, $prod){
              $pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
@@ -878,6 +888,7 @@ if (empty($prior_authorization_number)) {
                 status = '".s_for(DSS_CLAIM_PENDING)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
+                producer = '".s_for($prod)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());

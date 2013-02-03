@@ -208,6 +208,11 @@ return s;
 
 </script>
 <br />
+<div style="float:left; margin-left:20px;">
+        <a href="insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>" class="addButton">
+                View 1500
+        </a>
+</div>
 <div align="right" style="clear: right;">
         <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
                Make Payment 
@@ -221,10 +226,6 @@ return s;
 	
         <button onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?=$_GET['pid'];?>');" class="addButton">
                 Add Note 
-        </button>
-        &nbsp;&nbsp;
-        <button onclick="Javascript: window.location = 'ledger.php?pid=<?=$_GET['pid'];?>'" class="addButton">
-               Reports 
         </button>
         &nbsp;&nbsp;
       

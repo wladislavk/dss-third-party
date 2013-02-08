@@ -383,6 +383,12 @@ function update_current_step(){
   }
 }
 
+window.onbeforeunload = function() {
+  if($('#next_step').val()==''){
+    return 'You did not select a next appointment for this patient in Step (2).';
+  }
+}
+
 </script>
 
 <?php include "includes/bottom.htm";?>

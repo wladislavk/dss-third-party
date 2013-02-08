@@ -150,7 +150,8 @@
                 docdentist = '".mysql_real_escape_string($_POST['pc_3_contactid'])."',
                 docent = '".mysql_real_escape_string($_POST['pc_4_contactid'])."',
                 docmdother = '".mysql_real_escape_string($_POST['pc_5_contactid'])."',
-                registered = '1'
+                registered = '1',
+		last_reg_sect = '".mysql_real_escape_string($_POST['last_reg_sect'])."'
                 WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'
                 ";
 

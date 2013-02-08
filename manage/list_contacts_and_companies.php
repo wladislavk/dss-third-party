@@ -21,6 +21,7 @@ $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, c.company, '"
         .               "      AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
 	.		"   OR "
 	.		"      (company LIKE '".$partial."%')) "
+	.		" AND merge_id IS NULL "
         .               " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
 $result = mysql_query($sql);
 

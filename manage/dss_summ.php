@@ -112,4 +112,5 @@ show_sect('<?= $_GET['sect']; ?>');
     show_sect('summ');
   }
 <?php } ?>
+
 </script>

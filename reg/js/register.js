@@ -23,7 +23,6 @@ lga_wizard = {
 		//initialize wizard
 		var root = $("#register").fancyscrollable();
 		var api = root.fancyscrollable();
-
 		                // adjust height after items have been scrolled
                 api.onSeek(function(event, i) {
 			if(api.getIndex()==5){
@@ -233,7 +232,9 @@ lga_wizard = {
 					return false; 
 				}
 			}
-			
+				if(api.getIndex()!=0){
+			 	  $('#last_reg_sect').val(api.getIndex());	
+				}
 	                        var post = $('#register_form').serializeObject();
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {
@@ -297,6 +298,7 @@ lga_wizard = {
 					return false;
 				}
 			});
+               api.move($('#last_reg_sect').val());
 	}
 
 };

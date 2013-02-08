@@ -159,7 +159,10 @@ Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/a
 
 Need Assistance?
 Contact us at ".$n." or at patient@dentalsleepsolutions.com
+
+
 "; 
+$body .= $email_footer;
 	$body	.= "\n\n";
 
 	$body	.= "--$mime_boundary\n";
@@ -188,6 +191,7 @@ patient@dentalsleepsolutions.com</b></p>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
 </center></body></html>";
+$body .= $email_footer;
 	$body	.= "\n\n";
 	// End email
 	$body	.= "--$mime_boundary--\n";
@@ -243,7 +247,7 @@ patient@dentalsleepsolutions.com</b></p>
 </table>
 </center></body></html>
 ";
-
+$m .= $email_footer;
 
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
@@ -523,9 +527,9 @@ mysql_query($s1);
 		into 
 		dental_patients 
 		set 
-		firstname = '".s_for($_POST["firstname"])."', 
-		lastname = '".s_for($_POST["lastname"])."', 
-		middlename = '".s_for($_POST["middlename"])."', 
+		firstname = '".s_for(ucfirst($_POST["firstname"]))."', 
+		lastname = '".s_for(ucfirst($_POST["lastname"]))."', 
+		middlename = '".s_for(ucfirst($_POST["middlename"]))."', 
                 preferred_name = '".s_for($_POST["preferred_name"])."',
 		login = '".$login."',
 		salt = '".$salt."',
@@ -1095,7 +1099,7 @@ if(p){
 }
 if(p){
   result = true;
-  if( /*d &&*/ i && i2){
+  if( /*d &&*/ i && i2 && clickedBut != "sendReg" && clickedBut != "sendRem"){
 		var result = true;
 		info = required_info(fa);
 		if (info.length == 0) {

@@ -253,3 +253,5 @@ define('DSS_LETTER_SEND_FAILED', 2);
 
 define('DSS_STRIPE_PUB_KEY', 'pk_test_AwG89We9HPlSSaFDI1TZgnie');
 define('DSS_STRIPE_SEC_KEY', 'sk_test_2Bwg6V5pLmm8Gbidwxc8Iwhk');
+
+$email_footer = "The contents of this message, together with any attachments, are intended only for the use of the individual or entity to which they are addressed and may contain information that is legally privileged, confidential and exempt from disclosure. If you are not the intended recipient, you are hereby notified that any dissemination, distribution or copying of this message, or any attachment, is strictly prohibited. If you have received this message in error, please notify the original sender or contact Dental Sleep Solutions immediately by telephone (941-757-4642) or by responding to this email and delete this message, along with any attachments, from your computer.";

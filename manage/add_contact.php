@@ -486,6 +486,9 @@ if($_POST["contactsub"] == 1)
 		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
                                         </a>
+                                    <a style="float:right;" href="duplicate_contact.php?winner=<?=$themyarray["contactid"];?>" title="DELETE">
+                                                 Duplicate 
+                                        </a>
 		<?php } ?>
             </td>
         </tr>

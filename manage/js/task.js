@@ -81,6 +81,11 @@ if($('#task_tom_list li').size()==0){
   $('.task_tom_header').hide();
 }
 
+if($('#task_fut_list li').size()==0){
+  $('.task_fut_header').hide();
+}
+
+
 if($('#task_tw_list li').size()==0){
   $('.task_tw_header').hide();
 }

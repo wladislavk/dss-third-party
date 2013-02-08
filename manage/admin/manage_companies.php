@@ -78,6 +78,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head">
  			Number of Admins
 		</td>
+		<td valign="top" class="col_head">
+			Logo
+		</td>
 		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
@@ -104,6 +107,12 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?= st($myarray["num_admin"]); ?>
 				</td>		
+                                <td valign="top">
+                                        <a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_logo.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
+                                                Edit
+                                        </a>
+
+                                </td>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
 						Edit

@@ -1,9 +1,9 @@
 <?php
 
-$s = "SELECT registered FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR patientid='".mysql_real_escape_string($_SESSION['pid'])."' ORDER BY registered DESC";
+$s = "SELECT last_reg_sect FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR patientid='".mysql_real_escape_string($_SESSION['pid'])."' ORDER BY last_reg_sect DESC";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
-if($r['registered']==1){
+if($r['last_reg_sect']==5){
 	$qp=1;
 }else{
 	$qp=0;

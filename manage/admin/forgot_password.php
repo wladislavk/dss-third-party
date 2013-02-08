@@ -25,6 +25,7 @@ if($_POST["emailsub"] == 1)
                 $message = "Please use this link to reset your password.
 
 http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
+$message .= $email_footer;
                 //$ins_id = mysql_insert_id();
                 $msg = mail($check_myarray['email'], $subject, $message, $headers);
 

@@ -352,29 +352,10 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
 
 
 
-function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
+function save_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
 		return false;
   }
-	// Find out preferred send_method
-	switch ($type) {
-		case "patient":
-			$sql = "SELECT preferredcontact FROM dental_patients WHERE patientid = '".$recipientid."';";
-			$result = mysql_query($sql);
-			$preferred = mysql_result($result, 0);
-			break;
-		case "md":
-			$sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
-			$result = mysql_query($sql);
-			$preferred = mysql_result($result, 0);
-
-			break;
-		case "md_referral":
-			$sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
-			$result = mysql_query($sql);
-			$preferred = mysql_result($result, 0);
-			break;
-	}
 	// Enable/Disable email
 	if ($preferred == "email") {
 		$sql = "SELECT templateid FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
@@ -385,14 +366,14 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		}
 	}
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-		$letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
+		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
 		$letter_result = mysql_query($letter_query);
     return mysql_error();
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
-			$status = '1';
+			$status = '0';
 			if ($type == 'patient') {
 				$topatient = '1';
 				$removepatient = '0';
@@ -422,6 +403,8 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status); 	
 		}
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
+                                $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";
+				mysql_query($update_edit);
 			if ($type == 'patient') {
 				$update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'md') {
@@ -436,6 +419,93 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 				return $letter;
 			}
 		}
+  }
+}
+
+function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
+  if (!isset($letterid)) {
+                return false;
+  }
+        // Find out preferred send_method
+        switch ($type) {
+                case "patient":
+                        $sql = "SELECT preferredcontact FROM dental_patients WHERE patientid = '".$recipientid."';";
+                        $result = mysql_query($sql);
+                        $preferred = mysql_result($result, 0);
+                        break;
+                case "md":
+                        $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
+                        $result = mysql_query($sql);
+                        $preferred = mysql_result($result, 0);
+
+                        break;
+                case "md_referral":
+                        $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$recipientid."';";
+                        $result = mysql_query($sql);
+                        $preferred = mysql_result($result, 0);
+                        break;
+        }
+        // Enable/Disable email
+        if ($preferred == "email") {
+                $sql = "SELECT templateid FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+                $result = mysql_query($sql);
+                $templateid = mysql_result($result, 0);
+                if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+                        $preferred = "paper";
+                }
+        }
+  if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
+                $letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
+                $letter_result = mysql_query($letter_query);
+    return mysql_error();
+  } else {
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+                $select_result = mysql_query($select_letter);
+                while ($row = mysql_fetch_assoc($select_result)) {
+                        $status = '1';
+                        if ($type == 'patient') {
+                                $topatient = '1';
+                                $removepatient = '0';
+                        } elseif ($type == 'md') {
+                                $md_list = $recipientid;
+                                $mds = explode(",", $row['md_list']);
+                                $key = array_search($recipientid, $mds);
+                                unset($mds[$key]);
+                                $new_mds = implode(",", $mds);
+                        } elseif ($type == 'md_referral') {
+                                $md_referral_list = $recipientid;
+                                $md_referrals = explode(",", $row['md_referral_list']);
+                                $key = array_search($recipientid, $md_referrals);
+                                unset($md_referrals[$key]);
+                                $new_md_referrals = implode(",", $mds);
+                        }
+                        if ($row['send_method'] == "") {
+                                $send_method = $preferred;
+                        } else {
+                                $send_method = $row['send_method'];
+                                if ($send_method == "email") {
+                                        if(empty($allowemail) && !in_array($templateid, $safeemails)) {
+                                                $send_method = "paper";
+                                        }
+                                }
+                        }
+                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status);
+                }
+                if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
+                        if ($type == 'patient') {
+                                $update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
+                        } elseif ($type == 'md') {
+                                $update_letters = "UPDATE dental_letters SET md_list='".$new_mds."' WHERE letterid='".$letterid."';";
+                        } elseif ($type == 'md_referral') {
+                                $update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
+                        }
+                        $update_result = mysql_query($update_letters);
+      if (!$update_result) {
+                                return mysql_error();
+                        } else {
+                                return $letter;
+                        }
+                }
   }
 }
 

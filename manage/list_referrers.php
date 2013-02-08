@@ -27,6 +27,7 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, '".DSS_REFERR
   .		" LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
   .			" WHERE ((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
+	.		" AND merge_id IS NULL "
         .               " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
 $result = mysql_query($sql);
 

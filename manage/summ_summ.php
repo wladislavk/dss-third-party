@@ -201,7 +201,7 @@ if($dentaldevice_date!=''){ ?>
 </div>
 <?php
 function format_phone($data){
-if(  preg_match( '/(\d{3})(\d{3})(\d{4})(\d*)$/', $data,  $matches ) )
+if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
 {
     $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
     if($matches[4]!=''){

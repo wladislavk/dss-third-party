@@ -3,6 +3,7 @@
 .clear{ clear:both; }
 .hide { display: none; }
 body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
+#user_agree{ color: #000; }
 #login_container{ height:300px; width:960px; margin:100px auto 0 auto;}
 #login_container h1{ text-indent:-99999px;background: url(../images/login_logo.gif) no-repeat 0 0; height:278px; width:343px; display:block; float:left; }
 .login_content { float:left; padding:20px 20px 20px 70px; width:507px; display:block;}
@@ -11,10 +12,13 @@ body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
 .login_content p { line-height:22px; }
 
 .field{ width: 500px; display: block; margin:15px 0;}
+.field.half{ width: 250px; float:left; }
+.fr{ float: right; }
 .field span { float:right;  }
 .field span a { text-decoration:none; font-size:12px; color:#00457c; }
+.field a#user_agree_but { text-decoration:none; color:#00457c; }
 .field span a:hover { color:#fff; }
-.field input { padding:10px; width: 500px; -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:none 0px #fff; font-size: 16px; color:#00457c; }
+.field input[type="text"],.field input[type="password"] { padding:10px; width: 500px; -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:none 0px #fff; font-size: 16px; color:#00457c; }
 .login_content button { padding:10px; -webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; border:none 0px #fff; font-size: 16px; cursor: pointer; background:#00457c; color:#fff;}
 .login_content button.large{ font-size:18px; padding: 15px; }
 .login_content button:hover { background:#fff; color:#00457c; }

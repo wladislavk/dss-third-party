@@ -26,9 +26,9 @@ else
 $i_val = $index_val * $rec_disp;
 $contact_type_holder = $_GET['contacttype'];
 if(isset($contact_type_holder)){
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' order by lastname";
+$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL order by lastname";
 }else{
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' order by lastname";
+$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL order by lastname ";
 }
 
 

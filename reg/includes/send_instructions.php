@@ -1,5 +1,6 @@
 <?php
 require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/includes/constants.inc';
 $t = $_POST['type'];
     $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."'";
     $q = mysql_query($s);
@@ -46,6 +47,7 @@ patient@dentalsleepsolutions.com</b></p>
 </table>
 </center></body></html>
 ";
+$m .= $email_footer;
 }else{
   $m = "<html><body><center>
 <table width='600'>

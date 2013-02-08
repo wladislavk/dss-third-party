@@ -19,7 +19,8 @@ if(isset($_REQUEST['deleteid'])){
 $dsql = "DELETE FROM dental_patients WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['deleteid'])."'";
 mysql_query($dsql);
 ?>  <script type="text/javascript">
-        window.location = "manage_patient.php";
+        alert("Duplicate patient removed.");
+        window.location = "add_patient.php?ed=<?= $_REQUEST['useid']; ?>&preview=1&addtopat=1&pid=<?= $_REQUEST['useid']; ?>";
   </script>
 <?php
 }elseif(isset($_REQUEST['createid'])){
@@ -37,18 +38,17 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_assoc($my);
 ?>
 <span class="admin_head" style="float:left;">
-	Warning: Possible Duplicates Patients
+	Warning: Possible Duplicate Patients
 </span>
-<a href="<?= $_SERVER['PHP_SELF']; ?>?deleteid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" onclick="return confirm('Are you sure you want to delete patient?');">Delete</a>
-<a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;">Create</a>
 <br />
 <br />
-<div align="center" class="red" style="clear:both;">
-	<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create" to add the patient to the software. If the patient IS a duplicate click "Delete" to remove the patient you just created and use the original patient listed below instead.</b>
+<div align="center" class="red" style="clear:both;padding:0 30px;">
+	<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> may be a duplicate - please check the list of similar patients below. If patient is NOT a duplicate click "Create as New Patient" to add the patient to the software. If the patient IS a duplicate click "Use This Patient" next to the correct patient to use the original patient instead.</b>
 	<!--<b>Patient <? echo $myarray['firstname']." ".$myarray['lastname'];?> might be a duplicate.  Please check below and click Create to add the patient, or if the patient is a duplicate click Delete to remove the patient you just created and use the old patient instead.</b>-->
 </div>
-
-
+<br />
+<a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-left:30px;font-size:14px;">Create as New Patient</a>
+<br /><br />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="25%">
@@ -79,6 +79,7 @@ $myarray = mysql_fetch_assoc($my);
                                         <?= st($s["phone"]); ?>
                                 </td>
 				<td valign="top">
+					<a href="<?= $_SERVER['PHP_SELF']; ?>?useid=<?= $s['id']; ?>&deleteid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
 				</td>
 				</tr>
 				<?php

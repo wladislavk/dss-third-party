@@ -29,11 +29,12 @@ function uploadImage($image, $file_path, $profile = false){
     if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
 	$resize_width = ($profile)?DSS_IMAGE_PROFILE_WIDTH:DSS_IMAGE_RESIZE_WIDTH;
 	$resize_height = ($profile)?DSS_IMAGE_PROFILE_HEIGHT:DSS_IMAGE_RESIZE_HEIGHT;
-
-    	if($width>$height){
+        $prop_width = $width/$max_width;
+        $prop_height = $height/$max_height;
+        if($prop_width>$prop_height){
       	  $newwidth=$resize_width;
       	  $newheight=($height/$width)*$newwidth;
-    	}elseif($height>$width){
+    	}elseif($prop_height>$prop_width){
       	  $newheight=$resize_height;
       	  $newwidth=($width/$height)*$newheight;
     	}else{
@@ -54,7 +55,7 @@ function uploadImage($image, $file_path, $profile = false){
     }
     elseif($extension=="png")
     {
-      imagepng($tmp,$file_path,60);
+      imagepng($tmp,$file_path,6);
     }
     else
     {

@@ -1,5 +1,4 @@
 <?php
- 
 if($_GET['backoffice'] == '1') {
   include 'admin/includes/top.htm';
 } else {
@@ -13,7 +12,9 @@ if($_GET['backoffice'] == '1') {
 $letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT templateid, patientid, topatient, md_list, md_referral_list, template, send_method, status, docid FROM dental_letters where letterid = ".$letterid.";";
+$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date FROM dental_letters l
+	LEFT JOIN dental_users u ON u.userid=l.edit_userid
+	 where l.letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
 $row = mysql_fetch_assoc($letter_result); 
   $templateid = $row['templateid'];
@@ -27,7 +28,8 @@ $row = mysql_fetch_assoc($letter_result);
 	$method = $row['send_method'];
   $status = $row['status'];
   $docid = $row['docid'];
-
+  $username = $row['username'];
+  $edit_date = $row['edit_date'];
 
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
@@ -592,7 +594,7 @@ switch ($templateid) {
 */
 
 
-if (!empty($altered_template)) $template = html_entity_decode($altered_template);
+if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = html_entity_decode($altered_template);
 
 ?>
 <form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$letterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
@@ -620,13 +622,13 @@ if ($_POST != array()) {
 		$search[] = "%salutation%";
 		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
 		$search[] = '%practice%';
-		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
+		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
 		$search[] = '%contact_email%';
 		$replace[] = "<strong>" . $letter_contacts[$key]['email'] . "</strong>";
 		$search[] = '%addr1%';
 		$replace[] = "<strong>" . $contact['add1'] . "</strong>";
 		$search[] = '%addr2%';
-		$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "<!--%addr2%-->";
+		$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "";
 		$search[] = '%insurance_id%';
 		$replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
 		$search[] = '%city%';
@@ -660,9 +662,9 @@ if ($_POST != array()) {
 		}
 		$search[] = '%referral_practice%';
 		if (!empty($ref_info['md_referrals'])) {
-			$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+			$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
 		} else {
-			$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+			$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
 		}
 		$search[] = '%ref_addr1%';
 		if (!empty($ref_info['md_referrals'])) {
@@ -672,9 +674,9 @@ if ($_POST != array()) {
 		}
 		$search[] = '%ref_addr2%';
 		if (!empty($ref_info['md_referrals'])) {
-			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
+			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
 		} else {
-			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "<!--%addr2%-->";
+			$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
 		}
 		$search[] = '%ref_city%';
 		if (!empty($ref_info['md_referrals'])) {
@@ -714,7 +716,7 @@ if ($_POST != array()) {
                 }
 		$search[] = '%ptreferral_practice%';
 		if (!empty($ptref_info['md_referrals'])) {
-			$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+			$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
 		}else{
                        $replace[] = "";
                 }
@@ -726,7 +728,7 @@ if ($_POST != array()) {
                 }
 		$search[] = '%ptref_addr2%';
 		if (!empty($ptref_info['md_referrals'])) {
-			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
+			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "";
 		}else{
                        $replace[] = "";
                 } 
@@ -1042,7 +1044,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%salutation%";
 	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
 	$search[] = '%practice%';
-	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "<!--%practice%-->";	
+	$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
         $search[] = '%insurance_id%';
         $replace[] = "<strong>" . $patient_info['p_m_ins_id'] . "</strong>";
 	$search[] = '%contact_email%';
@@ -1050,7 +1052,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = '%addr1%';
 	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
   $search[] = '%addr2%';
-	$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "<!--%addr2%-->";
+	$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "";
   $search[] = '%city%';
 	$replace[] = "<strong>" . $contact['city'] . "</strong>";
   $search[] = '%state%';
@@ -1081,9 +1083,9 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$search[] = '%referral_practice%';
 	if (!empty($ref_info['md_referrals'])) {
-		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
 	} else {
-		$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		$replace[] = ($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
 	}
 	$search[] = '%ref_addr1%';
 	if (!empty($ref_info['md_referrals'])) {
@@ -1093,9 +1095,9 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$search[] = '%ref_addr2%';
 	if (!empty($ref_info['md_referrals'])) {
-		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
+		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
 	} else {
-		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "<!--%addr2%-->";
+		$replace[] = ($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
 	}
 	$search[] = '%ref_city%';
 	if (!empty($ref_info['md_referrals'])) {
@@ -1135,7 +1137,7 @@ foreach ($letter_contacts as $key => $contact) {
         }
 		$search[] = '%ptreferral_practice%';
         if (!empty($ptref_info['md_referrals'])) {
-		$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "<!--%referral_practice%-->";	
+		$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
 	}else{
                 $replace[] = "";
         }
@@ -1147,7 +1149,7 @@ foreach ($letter_contacts as $key => $contact) {
         }
 		$search[] = '%ptref_addr2%';
         if (!empty($ptref_info['md_referrals'])) {
-		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "<!--%addr2%-->";
+		$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "";
 	}else{
                 $replace[] = "";
         } 
@@ -1470,11 +1472,11 @@ foreach ($letter_contacts as $key => $contact) {
 				<div id="letter<?=$key?>">
 				<?php print $letter[$key]; ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$key?>]" value="<?=htmlentities($new_template[$key])?>" />
+				<input type="hidden" name="new_template[<?=$key?>]" value="<?=htmlentities($letter[$key])?>" />
 			</td>
 		</tr>
 	</table>
-	<div align="right">
+	<div style="float:left;">
 		<input type="submit" name="reset_letter[<?=$key?>]" class="addButton" value="Reset" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<? if(!($_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)){ ?>
@@ -1482,6 +1484,16 @@ foreach ($letter_contacts as $key => $contact) {
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<? } ?>
 	</div>
+        <div style="float:right;">
+                <input type="submit" name="save_letter[<?=$key?>]" class="addButton" value="Save Changes" />
+        </div>
+        <?php 
+		if($username){ ?>
+	<div style="clear:both; width:100%; text-align:center;">
+			
+		Lasted edited by  <?= $username; ?> on <?= date('m/d/Y', strtotime($edit_date)); ?>
+	</div>
+	 <?php } ?>
 	</div>
 <br><br>
 
@@ -1533,6 +1545,28 @@ foreach ($letter_contacts as $key => $contact) {
 		<?php
 	}
   }
+
+        // Catch Post Send Submit Button and Send letters Here
+  if ($_POST['save_letter'][$key] != null && $numletters == $_POST['numletters']) {
+    if (count($letter_contacts) == 1) {
+                $parent = true;
+    }else{
+                $parent = false;
+    }
+                $type = $contact['type'];
+                $recipientid = $contact['id'];
+            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+        if(!$parent){
+                ?>
+                        <script type="text/javascript">
+                                window.location=window.location;
+                        </script>
+                <?php
+        }
+  }
+
+
+
 	// Catch Post Delete Button and Delete letters Here
   if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {

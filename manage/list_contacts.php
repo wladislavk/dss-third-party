@@ -18,8 +18,10 @@ $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERR
   .			" FROM dental_contact c"
   .             " LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
   .			" WHERE ((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
-        .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
-        .               " AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC";
+        .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%')"
+        .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
+        .               " AND docid = '" . $_SESSION['docid'] . "' "
+	.		" AND merge_id IS NULL ORDER BY lastname ASC";
 $result = mysql_query($sql);
 
 $patients = array();

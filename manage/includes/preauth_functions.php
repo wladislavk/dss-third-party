@@ -59,7 +59,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   $result = mysql_query($sleepstudies);
   $num = mysql_num_rows($result);
   if( $num <= 0 ){
-    array_push($errors, "Flow sheet - Missing completed sleep study");
+    array_push($errors, "Summary Sheet - Missing completed sleep study");
   }else{ 
 
 
@@ -132,7 +132,7 @@ if(mysql_num_rows($flowresult) <= 0){
 
 
     if($rxrec == '' || $lomnrec == '' ){
-       array_push($errors, "Medical insurance dates are not filled out - Flow Sheet");
+       array_push($errors, "Insurance - Rx and LOMN not completed");
      }
 
 

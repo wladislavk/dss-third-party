@@ -67,7 +67,6 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
   $md_list[$md_key] = $w_r['contactid'];
   $md_input = implode(",",$md_list);
   $up_sql = "UPDATE dental_letters SET md_list='".$md_input."' WHERE letterid='".$letters_r['letterid']."'";
-echo $up_sql;
   mysql_query($up_sql);
 }
 
@@ -103,8 +102,17 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
   $doc_sql = "UPDATE dental_patients SET docmdother3='".mysql_real_escape_string($w_r['contactid'])."' WHERE docmdother3='".mysql_real_escape_string($l_r['contactid'])."'";
   mysql_query($doc_sql);
 
+                $loser_name = ($l_r['firstname']!='' || $l_r['lastname']!='')?$l_r['firstname']." ".$l_r['lastname']:"";
+                $loser_name .= ($l_r['company']!='')?" (".$l_r['company'].")":"";
+                $winner_name = ($w_r['firstname']!='' || $w_r['lastname']!='')?$w_r['firstname']." ".$w_r['lastname']:"";
+                $winner_name .= ($w_r['company']!='')?" (".$w_r['company'].")":"";
 
-
+  ?>
+  <script type="text/javascript">
+    alert('Contact <?= $loser_name; ?> successfully merged with <?= $winner_name; ?>');
+    parent.window.location = "manage_contact.php"; 
+  </script>
+  <?php
 }
 
 ?>
@@ -125,24 +133,30 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 
+<?php
+
+                $p_sql = "SELECT dct.physician, dc.firstname, dc.lastname FROM dental_contacttype dct
+                                JOIN dental_contact dc ON dc.contacttypeid=dct.contacttypeid
+                                WHERE dc.contactid='".mysql_real_escape_string($_REQUEST['winner'])."'";
+                $p_q = mysql_query($p_sql);
+                $pr = mysql_fetch_assoc($p_q);
+
+
+?>
 	
-	<br /><br />
+<div style="background:#fff;height:352px; padding: 20px; margin:0 3px;">
+<h2 style="margin-top:0px;">Merge Duplicate Contacts</h2>
+
+<strong>1. You've selected the "winner" of the merge</strong>
+<p>This "<?= $pr['firstname']." ".$pr['lastname']; ?>" will be the "winner" of the merge. All info of the "loser" you choose below will be moved to "<?= $pr['firstname']." ".$pr['lastname']; ?>"</p>
+
+<strong>2. Next, choose the person you want to merge (the "loser")</strong>
+<p>You can only choose one person. If you'd like to merge more than two people together just go through the merge process again after the merge you are performing now is done.</p>
 	
-	<? if($msg != '') {?>
-    <div align="center" class="red">
-        <? echo $msg;?>
-    </div>
-    <? }?>
 
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
 	<input type="hidden" name="winner" value="<?= $_REQUEST['winner']; ?>" />
 	<?php
-		$p_sql = "SELECT dct.physician FROM dental_contacttype dct
-				JOIN dental_contact dc ON dc.contacttypeid=dct.contacttypeid
-				WHERE dc.contactid='".mysql_real_escape_string($_REQUEST['winner'])."'"; 
-		$p_q = mysql_query($p_sql);
-                $pr = mysql_fetch_assoc($p_q);
-
 		$sql = "SELECT dc.* FROM dental_contact dc 
 			JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid WHERE ";
  		if($pr['physician']==1){
@@ -150,22 +164,29 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
 		}else{
 		  $sql .= " (dct.physician IS NULL OR dct.physician=0 OR dct.physician='') ";
 		}
-		$sql .= " AND merge_id IS NULL ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
+		$sql .= " AND merge_id IS NULL AND docid='".$_SESSION['docid']."' AND contactid!='".mysql_real_escape_string($_REQUEST['winner'])."' ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
 		$q = mysql_query($sql);
         ?>
+<p>
 	<select name="loser">
 	  <?php while($r = mysql_fetch_assoc($q)){ ?>
 	  <?php
-		$name = ($r['firstname']!='' || $r['lastname']!='')?$r['firstname']." ".$r['lastname']:$r['company'];
+		$name = ($r['firstname']!='' || $r['lastname']!='')?$r['firstname']." ".$r['lastname']:"";
+		$name .= ($r['company']!='')?" (".$r['company'].")":"";
 	  ?>
 	  <option value="<?= $r['contactid']; ?>"><?= $name; ?></option>	
 	  <?php } ?>
 	</select>
+</p>
 <br />
-                <input name="merge_but" type="submit" value=" Merge Contact" class="button" />
+
+
+<strong>3. Finally, click "Merge these contacts"</strong>
+<p><input name="merge_but" type="submit" value=" Merge these contacts" class="button" /></p>
     </form>
 
       </div>
+</div>
 <script type="text/javascript" src="script/contact.js"></script>
 
 </body>

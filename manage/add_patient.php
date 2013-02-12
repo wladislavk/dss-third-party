@@ -1,5 +1,33 @@
 <?php
+if(!isset($_GET['noheaders'])){
 include "includes/top.htm";
+}else{
+
+session_start();
+require_once('admin/includes/config.php');
+include("includes/sescheck.php");
+require_once('includes/constants.inc');
+require_once('includes/authorization_functions.php');
+require_once('includes/general_functions.php');
+require_once('includes/notifications.php');
+require_once('includes/patient_changes.php');
+?>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/task.css" rel="stylesheet" type="text/css" />
+<link href="css/notifications.css" rel="stylesheet" type="text/css" />
+<link href="css/search-hints.css" rel="stylesheet" type="text/css">
+<link href="css/top.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="js/masks.js"></script>
+<script type="text/javascript" src="script/logout_timer.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<link rel="stylesheet" href="css/letter-form.css" type="text/css" />
+<link rel="stylesheet" href="css/form.css" type="text/css" />
+<script type="text/javascript" src="script/wufoo.js"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<?php
+}
 require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 
@@ -2496,7 +2524,11 @@ function updatePPAlert(){
 
     
   </div>
+<?php
+if(!isset($_GET['noheaders'])){
+?>
 <div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
+<?php } ?>
   </td>
 </tr>
 <!-- Stick Footer Section Here -->

@@ -483,11 +483,12 @@ if($_POST["contactsub"] == 1)
 </a>
                 <input type="submit" value=" <?=$but_text?> Contact" class="button" />
 		<?php if($themyarray["contactid"] != ''){ ?>
+                                    <a style="float:right;" href="duplicate_contact.php?winner=<?=$themyarray["contactid"];?>" title="Duplicate">
+                                                 Is This a Duplicate? 
+                                        </a>
+					<br />
 		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                  Delete 
-                                        </a>
-                                    <a style="float:right;" href="duplicate_contact.php?winner=<?=$themyarray["contactid"];?>" title="DELETE">
-                                                 Duplicate 
                                         </a>
 		<?php } ?>
             </td>

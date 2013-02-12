@@ -19,6 +19,7 @@ $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, c.company, '"
   .             " LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid"
   .			" WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')"
         .               "      AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
+        .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%')"
 	.		"   OR "
 	.		"      (company LIKE '".$partial."%')) "
 	.		" AND merge_id IS NULL "
@@ -29,7 +30,7 @@ $patients = array();
 $i = 0;
 while ($row = mysql_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['contactid'];
-  $patients[$i]['name'] = $row['company'] . " - " . $row['lastname'].", ".$row['firstname'] . " - " . $row['contacttype'];
+  $patients[$i]['name'] = $row['company'] . " - " . $row['lastname'].", ".$row['firstname'] . " " . $row['middlename'] . " - " . $row['contacttype'];
   $patients[$i]['source'] = $row['referral_type'];
   $i++;
 }

@@ -48,18 +48,23 @@ $myarray = mysql_fetch_assoc($my);
 </div>
 <br />
 <a href="<?= $_SERVER['PHP_SELF']; ?>?createid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-left:30px;font-size:14px;">Create as New Patient</a>
+<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&pid=<?= $myarray['patientid']; ?>&ed=<?= $myarray['patientid']; ?>'); return false;" class="addButton" style="font-size:14px;" >View</a>
+
 <br /><br />
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="25%">
 			Patient Name
 		</td>
-		<td valign="top" class="col_head" width="45%">
+		<td valign="top" class="col_head" width="40%">
 			Address
 		</td>
-               <td valign="top" class="col_head" width="15%">
+               <td valign="top" class="col_head" width="10%">
 			Phone
                 </td>
+		<td valign="top" class="col_head" width="10%">
+ 			View
+		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
@@ -78,6 +83,10 @@ $myarray = mysql_fetch_assoc($my);
                                 <td valign="top">
                                         <?= st($s["phone"]); ?>
                                 </td>
+				<td valign="top">
+					<a href="#" onclick="loadPopup('add_patient.php?noheaders=1&pid=<?= $s['id']; ?>&ed=<?= $s['id']; ?>'); return false;" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >View</a>
+
+				</td>
 				<td valign="top">
 					<a href="<?= $_SERVER['PHP_SELF']; ?>?useid=<?= $s['id']; ?>&deleteid=<?= $myarray['patientid']; ?>" class="addButton" style="margin-right:10px;float:right;font-size:14px;" >Use This Patient</a>
 				</td>

@@ -4,6 +4,15 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include_once('admin/includes/password.php');
 include('includes/general_functions.php');
+
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
+  ?><br />You do not have permissions to edit staff.<?php
+  die();
+}
+
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
@@ -35,6 +44,7 @@ if($_POST["staffsub"] == 1)
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
 			$c = ($_POST['use_course']==1)?1:0;
+			$s = ($_POST['manage_staff']==1)?1:0;
 			$ein = ($_POST['ein']==1)?1:0;
 			$ssn = ($_POST['ssn']==1)?1:0;
 			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
@@ -49,8 +59,11 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-				use_course = ".$c.",
-				sign_notes=".$n."  where userid='".$_POST["ed"]."'";
+				use_course = ".$c.", ";
+				if($_SESSION['docid']==$_SESSION['userid']){
+				  $ed_sql .= " manage_staff = ".$s.", ";
+				}
+				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
                         $course_sql = "UPDATE users set
@@ -92,6 +105,7 @@ if($_POST["staffsub"] == 1)
 			$pf = ($_POST['producer_files']==1)?1:0;
                         $n = ($_POST['sign_notes']==1)?1:0;
 			$c = ($_POST['use_course']==1)?1:0;
+                        $s = ($_POST['manage_staff']==1)?1:0;
                         $ein = ($_POST['ein']==1)?1:0;
                         $ssn = ($_POST['ssn']==1)?1:0;
 			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['userid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
@@ -106,8 +120,11 @@ if($_POST["staffsub"] == 1)
                                 city = '".s_for($_POST["city"])."',
                                 state = '".s_for($_POST["state"])."',
                                 zip = '".s_for($_POST["zip"])."',
-				use_course = ".$c.",
-				sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+				use_course = ".$c.", ";
+                                if($_SESSION['docid']==$_SESSION['userid']){
+                                  $ed_sql .= " manage_staff = ".$s.", ";
+                                }
+                                $ed_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 	
                         $userid = mysql_insert_id();
@@ -223,6 +240,7 @@ if($_POST["staffsub"] == 1)
                 $zip = $_POST['zip'];
                 $phone = $_POST['phone'];
 		$use_course = $_POST['use_course'];
+		$manage_staff = $_POST['manage_staff'];
                 $sign_notes = $_POST['sign_notes'];
 	}
 	else
@@ -249,6 +267,7 @@ if($_POST["staffsub"] == 1)
                 $zip = st($themyarray['zip']);
                 $phone = st($themyarray['phone']);
 		$use_course = st($themyarray['use_course']);
+		$manage_staff = st($themyarray['manage_staff']);
                 $sign_notes = st($themyarray['sign_notes']);
 		$but_text = "Add ";
 	}
@@ -446,7 +465,16 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="checkbox" <?= ($use_course==1)?'checked="checked"':''; ?> value="1" name="use_course" />
             </td>
         </tr>
-
+<?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
+        <tr>
+<td valign="top" class="frmhead">
+                Manage Staff?
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" <?= ($manage_staff==1)?'checked="checked"':''; ?> value="1" name="manage_staff" />
+            </td>
+        </tr>
+<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

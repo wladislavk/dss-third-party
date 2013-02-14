@@ -215,7 +215,7 @@ require_once('includes/formatters.php');
 			?>scheduler.addEvent({
 				start_date: "<?= date('d-m-Y H:i', strtotime($r['start_date'])); ?>",
 				end_date: "<?= date('d-m-Y H:i', strtotime($r['end_date'])); ?>",
-				text: "<?= str_replace("\n"," ",addslashes($r['description'])); ?>",
+				text: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
 				category: "<?= $r['category']; ?>",
 				producer: "<?= $r['producer_id']; ?>",
 				patient: "<?= $r['patientid']; ?>",

@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_users where user_access=1 and docid='".$_SESSION['userid']."' order by username";
+$sql = "select * from dental_users where user_access=1 and docid='".$_SESSION['docid']."' order by username";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -43,14 +43,19 @@ $num_users=mysql_num_rows($my);
 <br />
 <br />
 &nbsp;
-
+<?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){
+?>
 <div align="right">
 	<button onclick="Javascript: loadPopup('add_staff.php');" class="addButton">
 		Add New Staff
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<?php } ?>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -123,10 +128,17 @@ background:#999999;
                                         <?= ($myarray["producer"]==1)?"X":''; ?>
                                 </td>
 				<td valign="top">
+<?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){
+?>
+
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_staff.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">
 						Edit 
 					</a>
-                    
+<?php } ?>                    
 				</td>
 			</tr>
 	<? 	}

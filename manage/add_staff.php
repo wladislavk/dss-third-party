@@ -122,9 +122,9 @@ if($_POST["staffsub"] == 1)
                                 zip = '".s_for($_POST["zip"])."',
 				use_course = ".$c.", ";
                                 if($_SESSION['docid']==$_SESSION['userid']){
-                                  $ed_sql .= " manage_staff = ".$s.", ";
+                                  $ins_sql .= " manage_staff = ".$s.", ";
                                 }
-                                $ed_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                                $ins_sql .= " sign_notes=".$n." ,adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 	
                         $userid = mysql_insert_id();
@@ -313,7 +313,7 @@ if($_POST["staffsub"] == 1)
 	?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Passsword
+                Password
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="password" value="<?=$password;?>" class="tbox" /> 

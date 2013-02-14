@@ -190,7 +190,7 @@ Contact us at ".$n." or at patient@dentalsleepsolutions.com
 
 
 "; 
-$body .= $email_footer;
+$body .= DSS_EMAIL_FOOTER;
 	$body	.= "\n\n";
 
 	$body	.= "--$mime_boundary\n";
@@ -218,8 +218,7 @@ patient@dentalsleepsolutions.com</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center></body></html>";
-$body .= $email_footer;
+</center>".DSS_EMAIL_FOOTER."</body></html>";
 	$body	.= "\n\n";
 	// End email
 	$body	.= "--$mime_boundary--\n";
@@ -273,10 +272,8 @@ patient@dentalsleepsolutions.com</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center></body></html>
+</center>".DSS_EMAIL_FOOTER."</body></html>
 ";
-$m .= $email_footer;
-
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
@@ -1241,10 +1238,10 @@ function remove_notification(id){
 <?php
         if($_GET['search'] != ''){
 	  if(strpos($_GET['search'], ' ')){
-            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
-            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+            $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
+            $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
 	  }else{
-	    $firstname = $_GET['search'];	
+	    $firstname = ucfirst($_GET['search']);	
 	  }
         }
 
@@ -2598,5 +2595,15 @@ var cal3 = new calendar2(document.getElementById('dob'));
 var cal4 = new calendar2(document.getElementById('copyreqdate'));
 
 </script>
+
+<?php if(isset($_REQUEST['readonly'])){ ?>
+<script type="text/javascript">
+  $('input').attr('readonly', 'readonly');
+  $('select').attr('disabled', 'disabled');
+  $('input:submit, input:button, button, a').hide();
+</script>
+<?php } ?>
+
+
 </body>
 </html>

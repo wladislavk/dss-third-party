@@ -26,9 +26,11 @@ else
 $i_val = $index_val * $rec_disp;
 $contact_type_holder = $_GET['contacttype'];
 if(isset($contact_type_holder)){
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL order by lastname";
+$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL AND status=1 order by lastname";
+}elseif(isset($_GET['status'])){
+$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND status=".mysql_real_escape_string($_GET['status'])." order by lastname";
 }else{
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL order by lastname ";
+$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND status=1 order by lastname ";
 }
 
 
@@ -83,6 +85,7 @@ Filter by type: <select name="myjumpbox"
                                         	<?=st($ctype_myarray['contacttype']);?>
                                         </option>
                     <?php } ?>
+     <option value="manage_contact.php?status=2">In-active</option>
 </select>
 </form>
 <br /><br />
@@ -214,6 +217,10 @@ $(document).ready(function(){
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
-
+<div id="popupRefer" style="height:550px; width:750px;">
+    <a id="popupReferClose"><button>X</button></a>
+    <iframe id="aj_ref" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopupRef"></div>
 <br /><br />	
 <? include "includes/bottom.htm";?>

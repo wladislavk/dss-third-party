@@ -164,7 +164,7 @@ while($letters_r = mysql_fetch_assoc($letters_q)){
 		}else{
 		  $sql .= " (dct.physician IS NULL OR dct.physician=0 OR dct.physician='') ";
 		}
-		$sql .= " AND merge_id IS NULL AND docid='".$_SESSION['docid']."' AND contactid!='".mysql_real_escape_string($_REQUEST['winner'])."' ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
+		$sql .= " AND dc.status=1 AND merge_id IS NULL AND docid='".$_SESSION['docid']."' AND contactid!='".mysql_real_escape_string($_REQUEST['winner'])."' ORDER BY dc.lastname ASC, dc.firstname ASC, dc.company ASC";
 		$q = mysql_query($sql);
         ?>
 <p>

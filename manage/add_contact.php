@@ -41,7 +41,7 @@ if($_POST["contactsub"] == 1)
 	}
 	else
 	{
-		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$preferredcontact."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$rid = mysql_insert_id();
 		$dct_sql = "SELECT physician from dental_contacttype WHERE contacttypeid=".mysql_real_escape_string($_POST["contacttypeid"]);
@@ -156,6 +156,7 @@ if($_POST["contactsub"] == 1)
 		$contacttypeid = $_POST['contacttypeid'];
 		$notes = $_POST['notes'];
 		$preferredcontact = $_POST['preferredcontact'];
+		$status = $_POST['status'];
 	}
 	else
 	{
@@ -182,7 +183,7 @@ if($_POST["contactsub"] == 1)
 		$notes = st($themyarray['notes']);
 		$preferredcontact = st($themyarray['preferredcontact']);
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-		
+		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
 	
@@ -206,10 +207,10 @@ if($_POST["contactsub"] == 1)
 <?php
         if($_GET['search'] != ''){
           if(strpos($_GET['search'], ' ')){
-            $firstname = substr($_GET['search'], 0, strpos($_GET['search'], ' '));
-            $lastname = substr($_GET['search'], strpos($_GET['search'],' ')+1);
+            $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
+            $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
           }else{
-            $firstname = $_GET['search'];
+            $firstname = ucfirst($_GET['search']);
           }
         }
 

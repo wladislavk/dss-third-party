@@ -73,7 +73,7 @@ Support@dentalsleepsolutions.com</b></h3></td></tr>
 </table>
 </center></body></html>
 ";
-$m .= $email_footer;
+$m .= DSS_EMAIL_FOOTER;
 $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .

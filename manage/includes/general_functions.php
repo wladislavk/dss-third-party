@@ -109,7 +109,7 @@ patient@dentalsleepsolutions.com</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center></body></html>
+</center>".DSS_EMAIL_FOOTER."</body></html>
 ";
 }else{
   $m = "<html><body><center>
@@ -130,7 +130,7 @@ patient@dentalsleepsolutions.com</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center></body></html>
+</center>".DSS_EMAIL_FOOTER."</body></html>
 ";
 
 

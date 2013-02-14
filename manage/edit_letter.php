@@ -510,6 +510,7 @@ $noncomp['description'] = str_replace(".", "", strtolower($noncomp['description'
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];
 
+
 /*
 switch ($templateid) {
 	case 1:

@@ -59,7 +59,7 @@ $num_users=mysql_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
+<!--<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>-->
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -78,44 +78,49 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table" id="monthly_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<thead>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head">
+		<th valign="top" class="col_head">
 			Username		
-		</td>
-		<td valign="top" class="col_head">
+		</th>
+                <th valign="top" class="col_head">
+                        Company
+                </th>
+		<th valign="top" class="col_head">
 			Name		
-		</td>
-                <td valign="top" class="col_head">
+		</th>
+                <th valign="top" class="col_head">
                         Pt. Screened 
-                </td>
-		<td valign="top" class="col_head">
+                </th>
+		<th valign="top" class="col_head">
 			By user		
-		</td>
-		<td valign="top" class="col_head">
-			Completed SS
-		</td>
-                <td valign="top" class="col_head">
+		</th>
+		<th valign="top" class="col_head">
+			Completed Sleep Studies
+		</th>
+                <th valign="top" class="col_head">
                         Consult 
-		</td>
-		<td valign="top" class="col_head">
+		</th>
+		<th valign="top" class="col_head">
 			Impressions	
-		</td>
-                <td valign="top" class="col_head">
+		</th>
+                <th valign="top" class="col_head">
                         Letters Sent
-                </td>
-                <td valign="top" class="col_head">
+                </th>
+                <th valign="top" class="col_head">
                         VOBs Completed
-                </td>
-                <td valign="top" class="col_head">
+                </th>
+                <th valign="top" class="col_head">
                         Ins. Claims Sent
-                </td>
-                <td valign="top" class="col_head">
+                </th>
+                <th valign="top" class="col_head">
                         Ins. Claims Paid
-                </td>
+                </th>
 
 	</tr>
+</thead>
+<tbody>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -129,6 +134,15 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
+
+
+		$co_sql = "SELECT c.name FROM companies c 
+				JOIN dental_user_company uc ON uc.companyid = c.id
+				WHERE uc.userid='".$myarray['userid']."'";
+		$co_q = mysql_query($co_sql);
+		$co_r = mysql_fetch_assoc($co_q);
+		$company = $co_r['name'];
+
 		$screen_sql = "SELECT u.username, COUNT(s.id) AS num_screened FROM dental_screener s 
                 JOIN dental_users u ON u.userid=s.userid
         WHERE 
@@ -192,6 +206,9 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
 				<td valign="top">
 					<?=st($myarray["username"]);?>
 				</td>
+				<td valign="top">
+					<?= $company; ?>
+				</td>
                                 <td valign="top">
                                         <?=st($myarray["name"]);?>
                                 </td>
@@ -225,8 +242,8 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
 	<? 	}
 
 	}?>
+</tbody>
 </table>
-</form>
 
 
 <div id="popupContact">
@@ -236,4 +253,11 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<script type="text/javascript">
+$(document).ready(function() 
+    { 
+        $('#monthly_table').tablesorter(); 
+    } 
+); 
+</script>
 <? include "includes/bottom.htm";?>

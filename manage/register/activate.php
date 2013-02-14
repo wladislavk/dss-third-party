@@ -100,7 +100,7 @@ $(document).ready(function(){
        <input type="text" id="code" name="code" />
      </div>
      <div class="field half">
-        I accept the <a id="saas_agree_but" href="#saas_agree">user agreement</a> and <a id="hipaa_agree_but" href="#hipaa_agree">hipaa agreement</a>
+        I accept the <a id="saas_agree_but" href="#saas_agree">user agreement</a> and <a id="hipaa_agree_but" href="#hipaa_agree">HIPAA agreement</a>
         <input type="checkbox" id="agreement" name="agreement" />
      </div>
      <div class="field half">

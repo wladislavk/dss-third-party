@@ -3,14 +3,6 @@ require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/preauth_functions.php');
 ?>
-<script type="text/javascript">
-  var new_appt = false;
-window.onbeforeunload = function() {
-    if(new_appt){
-      return "Warning! You did not indicate a next appointment and scheduled date for <?= $thename; ?> in Box 2. Are you sure you want to leave this page without doing this?";
-    }
- };
-</script>
 <?php
 $last_sql = "SELECT * FROM dental_flow_pg2_info info
 		JOIN dental_flowsheet_steps steps on info.segmentid = steps.id
@@ -383,11 +375,6 @@ function update_current_step(){
   }
 }
 
-window.onbeforeunload = function() {
-  if($('#next_step').val()==''){
-    return 'You did not select a next appointment for this patient in Step (2).';
-  }
-}
 
 </script>
 

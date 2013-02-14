@@ -143,7 +143,7 @@ $(document).ready(function(){
 <div style="display:none">
 <div id="user_agree">
 <h3>PATIENT AGREEMENT</h3>
-<p>Dental Sleep Solutions Franchising, LLC (“DSS”) provides this patient health record website, "dentalsleepsolutions.com/patient" (the "PHR"), as a service for patients and doctors within our DSS health record network. The PHR allows patients to communicate with their doctors and dentists (“Treatment Providers”), review their health information, and access additional services. By using this site, you agree to the following User Agreement. If you do not agree to the User Agreement, do not use the PHR website.</p> 
+<p>Dental Sleep Solutions Franchising, LLC ("DSS") provides this patient health record website, "dentalsleepsolutions.com/patient" (the "PHR"), as a service for patients and doctors within our DSS health record network. The PHR allows patients to communicate with their doctors and dentists ("Treatment Providers"), review their health information, and access additional services. By using this site, you agree to the following User Agreement. If you do not agree to the User Agreement, do not use the PHR website.</p> 
 <h4>A Note about the PHR</h4>
 <p>Use of the PHR is not a substitute for the advice of your personal physician or other qualified health care professional. Always seek the advice of your physician or other qualified health care professional with any questions you may have regarding medical symptoms or a medical condition. If you think you have a medical emergency, contact your doctor or call 911.</p>
 <h4>Health Information</h4>
@@ -172,7 +172,7 @@ $(document).ready(function(){
 <p>Although DSS attempts to maintain the accuracy of the information featured on the PHR site, we make no guarantees as to its currency, completeness, or accuracy. The PHR may contain typographical errors, inaccuracies, or other errors or omissions. Requests to correct health information displayed within the PHR should be submitted directly to your Treatment Provider's office.</p> 
 <h4>Use of Site by children</h4>
 <p>We have no intention of accepting information from users under the age of 18. Please leave this site immediately if you under 18.</p> 
-<h4>User participation in online servicesi</h4>
+<h4>User participation in online services</h4>
 <p>Patients may use the PHR to view certain information reported by their Treatment Provider's DSS medical records, including medical history, appointments, and other content.</p> 
 <p>In addition, although this PHR displays certain information from your medical records, it does not necessarily display all information found in your medical history. If you think that your medical record information displayed on the PHR is inaccurate, you should contact your Treatment Provider's office. To request a complete copy of your medical record, please contact your Treatment Provider's office directly.</p> 
 <p>DSS provides you with a number of interactive online services to help you better manage your health. These services include the ability to securely communicate and transmit requests to your Treatment Provider's offices. You agree that you will not upload or transmit any content that infringes upon, misappropriates or violates any rights of any party.</p> 

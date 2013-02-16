@@ -3,8 +3,11 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
+
+	delete_contact_letters($_REQUEST["delid"]);
+
 	$del_sql = "delete from dental_contact where contactid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
+	//mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>

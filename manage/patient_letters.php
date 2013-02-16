@@ -124,7 +124,10 @@ $page2 = $_REQUEST['page2'];
 // Get doctor id
 $docid = $_SESSION['docid'];
 
-$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid JOIN dental_users ON dental_letters.userid=dental_users.userid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid JOIN dental_users ON dental_letters.userid=dental_users.userid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' 
+		AND (dental_letters.parentid IS NULL 
+			OR dental_letters.parentid=0)
+		AND dental_letters.templateid LIKE '".$filter."' GROUP BY dental_letters.letterid, dental_letters.parentid ORDER BY dental_letters.letterid ASC;";
 $letters_res = mysql_query($letters_query);
 if (!$letters_res) {
 	print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -157,7 +160,32 @@ $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 $source = $r['referred_source'];
 
-	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source);
+	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source, $letter['letterid']);
+
+
+	//  ADD IN CHILD LETTERS TO CONTACTS
+        $master_sql = "SELECT letterid, topatient, patientid, md_list, md_referral_list FROM dental_letters l
+			WHERE status=0 AND deleted=0 AND parentid='".$letter['letterid']."'";
+	$master_q = mysql_query($master_sql);
+	while($master_r = mysql_fetch_assoc($master_q)){
+		$master_contacts = get_contact_info((($master_r['topatient'] == "1") ? $master_r['patientid'] : ''), $master_r['md_list'],$master_r['md_referral_list'], $source, $master_r['letterid']);
+		if(count($contacts['patient']) && count($master_contacts['patient'])){
+		  //$contacts['patient'] = array_merge($contacts['patient'], $master_contacts['patient']);
+		}elseif(count($master_contacts['patient'])){
+                  $contacts['patient'] = $master_contacts['patient'];
+		}
+		if(count($contacts['mds']) && count($master_contacts['mds'])){
+                  $contacts['mds'] = array_merge($contacts['mds'], $master_contacts['mds']);
+		}elseif(count($master_contacts['mds'])){
+		  $contacts['mds'] = $master_contacts['mds'];
+		}
+		if(count($contacts['md_referrals']) && count($master_contacts['md_referrals'])){
+                  $contacts['md_referrals'] = array_merge($contacts['md_referrals'], $master_contacts['md_referrals']);
+		}elseif(count($master_contacts['md_referrals'])){
+		   $contacts['md_referrals'] = $master_contacts['md_referrals'];
+		}
+	}
+
 	//print_r($contacts); print "<br />";
 	$total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
 		$dental_letters[$key]['total_contacts'] = $total_contacts;
@@ -174,7 +202,7 @@ $source = $r['referred_source'];
 		if(isset($contacts['patient'][0])){
 			$dental_letters[$key]['sentto'] .= $contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname'];
  			if($letter['status']==0){
-			$dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['patientid']."', 1)\" class=\"delete_letter\" />Delete</a>";
+			$dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'patient', '".$contacts['patient'][0]['patientid']."', 1)\" class=\"delete_letter\" />Delete</a>";
 			}
    		}
 
@@ -184,7 +212,7 @@ $source = $r['referred_source'];
 			  $dental_letters[$key]['sentto'] .= " - " . $contacts['mds']['contacttype'];
 			}
                         if($letter['status']==0){
-			  $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
+			  $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
 			}
 		}
 
@@ -195,7 +223,7 @@ $source = $r['referred_source'];
                           $dental_letters[$key]['sentto'] .= " - " . $contacts['md_referrals']['contacttype'];
                         }
                         if($letter['status']==0){
-                          $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
+                          $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
                         }
                 }
 
@@ -354,17 +382,17 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 				  foreach($pending_letters[$i]['patient'] as $pat){
 					?><br /><?php
                                         echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
-					?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
+					?><a href="#" onclick="delete_pending_letter('<?= $pat['letterid']; ?>', 'patient', '<?= $pat['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
 				  }
 				  foreach($pending_letters[$i]['mds'] as $md){
 					?><br /><?php
                                         echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $md['letterid']; ?>', 'md', '<?= $md['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
                                   }
                                   foreach($pending_letters[$i]['md_referrals'] as $md_referral){
                                         ?><br /><?php
                                         echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
-                                        ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
+                                        ?><a href="#" onclick="delete_pending_letter('<?= $md_referral['letterid']; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0); return false;" class="delete_letter" />Delete</a><?php
                                   }
 				  ?></div><?php
 				}else{

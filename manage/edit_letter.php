@@ -9,7 +9,47 @@ if($_GET['backoffice'] == '1') {
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
 
-$letterid = mysql_real_escape_string($_GET['lid']);
+$masterid=$_GET['lid'];
+$master_sql = "SELECT * FROM dental_letters l
+		WHERE (l.letterid='".mysql_real_escape_string($_GET['lid'])."'
+			OR l.parentid='".mysql_real_escape_string($_GET['lid'])."')
+			AND status=0 AND deleted=0 ORDER BY edit_date DESC";
+$master_c = mysql_query($master_sql);
+$master_q = mysql_query($master_sql);
+$master_num = 0;
+$cur_letter_num = 0;
+$cur_template_num = 0;
+
+
+//TO COUNT NUMBER OF LETTERS
+while($master_r = mysql_fetch_assoc($master_c)){
+  $letterid = $master_r['letterid'];
+  $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
+  $othermd_result = mysql_query($othermd_query);
+  $md_array = array();
+  $md_referral_array = array();
+  while ($row = mysql_fetch_assoc($othermd_result)) {
+        if ($row['md_list'] != null) {
+                $md_array = array_merge($md_array, explode(",", $row['md_list']));
+        }
+        if ($row['md_referral_list'] != null) {
+                $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
+        }
+  }
+  $full_md_list = implode(",", $md_array);
+  $full_md_referral_list = implode(",", $md_referral_array);
+  $contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
+  $master_num += count($contacts['mds']);
+  $master_num += count($contacts['md_referrals']);
+  if($master_r['topatient']){ $master_num++; }
+}
+
+
+
+//LOOP THROUGH LETTERS
+while($master_r = mysql_fetch_assoc($master_q)){
+$letterid = $master_r['letterid'];
+//$letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
 $letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date FROM dental_letters l
@@ -598,7 +638,7 @@ switch ($templateid) {
 if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = html_entity_decode($altered_template);
 
 ?>
-<form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$letterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
+<form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$masterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
 <input type="hidden" name="numletters" value="<?=$numletters?>" />
 <?php
 if ($_POST != array()) {
@@ -999,17 +1039,18 @@ if ($_POST != array()) {
 		} else {
 			$replace[] = "<strong>" . $other_mds . "</strong>";
 		}
-
-		$new_template[$key] = html_entity_decode($new_template[$key]);
-    $new_template[$key] = str_replace($replace, $search, $_POST['letter'.$key]);
+//print_r($_POST['letter1']);
+		$new_template[$cur_template_num] = html_entity_decode($new_template[$cur_template_num]);
+    $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter'.$cur_template_num]);
     // Letter hasn't been edited, but a new template exists in hidden field
- 		if ($new_template[$key] == null && $_POST['new_template'][$key] != null) {
-			$new_template[$key] = $_POST['new_template'][$key];
+ 		if ($new_template[$cur_template_num] == null && $_POST['new_template'][$cur_template_num] != null) {
+			$new_template[$cur_template_num] = $_POST['new_template'][$cur_template_num];
     }
     // Template hasn't changed
-    if ($new_template[$key] == $template) {
-			$new_template[$key] = null;	
+    if ($new_template[$cur_template_num] == $template) {
+			$new_template[$cur_template_num] = null;	
     }
+    $cur_template_num++;
   }
   // Duplicate Letter Template
 	if (isset($_POST['duplicate_letter']) && !$duplicated) {
@@ -1027,7 +1068,16 @@ if ($_POST != array()) {
 		$new_template[$resetid] = null;
 	}
 }
+
 foreach ($letter_contacts as $key => $contact) {
+
+
+
+
+
+
+
+
 	// Token search and replace arrays
 	// search and replace 2 of 2
 	$search = array();
@@ -1428,10 +1478,10 @@ foreach ($letter_contacts as $key => $contact) {
 	} else {
 		$replace[] = "<strong>" . $other_mds . "</strong>";
 	}
- 	if ($new_template[$key] != null) {
-	  $letter[$key] = str_replace($search, $replace, $new_template[$key]);
+ 	if ($new_template[$cur_letter_num] != null) {
+	  $letter[$cur_letter_num] = str_replace($search, $replace, $new_template[$cur_letter_num]);
 	} else {
-	  $letter[$key] = str_replace($search, $replace, $template);
+	  $letter[$cur_letter_num] = str_replace($search, $replace, $template);
  	}
 	// Print Letter Body		
 
@@ -1444,10 +1494,10 @@ foreach ($letter_contacts as $key => $contact) {
 ?>
 	<div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		<div align="left" style="width: 40%; padding: 3px; float: left">
-			Letter <?php print $key+1; ?> of <?php print count($letter_contacts); ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?>
+			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?>
 		</div>
 		<div align="right" style="width:40%; padding: 3px; float: right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$key?>');return false;" >
+		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>');return false;" >
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1463,36 +1513,36 @@ foreach ($letter_contacts as $key => $contact) {
 			Word Document
 		</button>-->
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="send_letter[<?=$key?>]" class="addButton" value="Send Letter" />
+		<input type="submit" name="send_letter[<?=$cur_letter_num?>]" class="addButton" value="Send Letter" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
 
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
 		<tr>
 			<td valign="top">
-				<div id="letter<?=$key?>">
-				<?php print $letter[$key]; ?>
+				<div id="letter<?=$cur_letter_num?>">
+				<?php print $letter[$cur_letter_num]; ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$key?>]" value="<?=htmlentities($letter[$key])?>" />
+				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num])?>" />
 			</td>
 		</tr>
 	</table>
 	<div style="float:left;">
-		<input type="submit" name="reset_letter[<?=$key?>]" class="addButton" value="Reset" />
+		<input type="submit" name="reset_letter[<?=$cur_letter_num?>]" class="addButton" value="Reset" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<? if(!($_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)){ ?>
-		<input type="submit" name="delete_letter[<?=$key?>]" class="addButton" value="Delete" />
+		<input type="submit" name="delete_letter[<?=$cur_letter_num?>]" class="addButton" value="Delete" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<? } ?>
 	</div>
         <div style="float:right;">
-                <input type="submit" name="save_letter[<?=$key?>]" class="addButton" value="Save Changes" />
+                <input type="submit" name="save_letter[<?=$cur_letter_num?>]" class="addButton" value="Save Changes" />
         </div>
         <?php 
 		if($username){ ?>
 	<div style="clear:both; width:100%; text-align:center;">
 			
-		Lasted edited by  <?= $username; ?> on <?= date('m/d/Y', strtotime($edit_date)); ?>
+		Last edited by  <?= $username; ?> on <?= date('m/d/Y H:i:s a', strtotime($edit_date)); ?>
 	</div>
 	 <?php } ?>
 	</div>
@@ -1505,7 +1555,7 @@ foreach ($letter_contacts as $key => $contact) {
 <?php
 
 	// Catch Post Send Submit Button and Send letters Here
-  if ($_POST['send_letter'][$key] != null && $numletters == $_POST['numletters']) {
+  if ($_POST['send_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }else{
@@ -1514,7 +1564,7 @@ foreach ($letter_contacts as $key => $contact) {
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
 		if ($_GET['backoffice'] == '1') {
-			$message = $letter[$key];
+			$message = $letter[$cur_letter_num];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
 			$status = deliver_letter($letterid, $message);
@@ -1536,7 +1586,7 @@ foreach ($letter_contacts as $key => $contact) {
 			<?php
 			}
 		} else {
-	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
 		}
 	if(!$parent){
 		?>
@@ -1548,7 +1598,7 @@ foreach ($letter_contacts as $key => $contact) {
   }
 
         // Catch Post Send Submit Button and Send letters Here
-  if ($_POST['save_letter'][$key] != null && $numletters == $_POST['numletters']) {
+  if ($_POST['save_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
                 $parent = true;
     }else{
@@ -1556,7 +1606,7 @@ foreach ($letter_contacts as $key => $contact) {
     }
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
-            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
         if(!$parent){
                 ?>
                         <script type="text/javascript">
@@ -1569,7 +1619,7 @@ foreach ($letter_contacts as $key => $contact) {
 
 
 	// Catch Post Delete Button and Delete letters Here
-  if ($_POST['delete_letter'][$key] != null && $numletters == $_POST['numletters']) {
+  if ($_POST['delete_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
   		$parent = true;
     } else {
@@ -1577,7 +1627,7 @@ foreach ($letter_contacts as $key => $contact) {
 		}
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
-    delete_letter($letterid, $parent, $type, $recipientid, $new_template[$key]);
+    delete_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
 		if ($parent) {
 			if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
 				if($_REQUEST['goto']=='flowsheet'){
@@ -1637,21 +1687,19 @@ if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
 	<?php
 			}
 }
-
+$cur_letter_num++; //increment letter num to identify next letter;
 continue;
 
 } // End foreach loop through letters
 
-function is_physician($id){
-  $sql = "SELECT physician FROM dental_contacttype where contacttypeid='".mysql_real_escape_string($id)."'";
-  $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
-  return $r['physician'] == 1;
-}
 
 ?>
 </form>
+<?php
 
+
+} // END MASTER LOOP
+?>
 			</div>
 		</td>
 	</tr>
@@ -1660,6 +1708,14 @@ function is_physician($id){
 <!-- include footer -->
 
 <?php
+
+function is_physician($id){
+  $sql = "SELECT physician FROM dental_contacttype where contacttypeid='".mysql_real_escape_string($id)."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+  return $r['physician'] == 1;
+}
+
 
 if($_GET['backoffice'] == '1') {
   include 'admin/includes/bottom.htm';

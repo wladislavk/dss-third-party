@@ -19,16 +19,78 @@ $doc = mysql_fetch_assoc($doc_q);
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 
+
 <span class="admin_head">
-	Per-case Invoice History - <?= $doc['name']; ?> 	
-	<a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
+        Credit Card Billing History - <?= $doc['name']; ?>
+        <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
 </span>
 <br />
 
 
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+        <b><? echo $_GET['msg'];?></b>
 </div>
+
+<?php
+  $charge_sql = "SELECT * FROM dental_charge
+			WHERE userid='".mysql_real_escape_string($_GET['docid'])."'";
+  $charge_q = mysql_query($charge_sql);
+?>
+
+
+<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr class="tr_bg_h">
+                <td valign="top" class="col_head" width="40%">
+                        Date
+                </td>
+                <td valign="top" class="col_head" width="20%">
+                        Amount
+                </td>
+        </tr>
+        <? if(mysql_num_rows($charge_q) == 0)
+        { ?>
+                <tr class="tr_bg">
+                        <td valign="top" class="col_head" colspan="10" align="center">
+                                No Records
+                        </td>
+                </tr>
+        <?
+        }
+        else
+        {
+                while($charge_r = mysql_fetch_array($charge_q))
+                {
+                ?>
+                        <tr>
+                                <td valign="top">
+                                        <?=st(date('m/d/Y g:i a', strtotime($charge_r["charge_date"])));?>
+                                </td>
+                                <td valign="top" style="font-weight:bold;">
+                                        $<?php
+                                            echo st($charge_r["amount"]); ?>
+                                </td>
+                        </tr>
+        <?      }
+
+        }?>
+</table>
+</form>
+
+
+<br /><br />
+
+<span class="admin_head">
+        Per-case Invoice History - <?= $doc['name']; ?>
+        <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
+</span>
+<br />
+
+
+<div align="center" class="red">
+        <b><? echo $_GET['msg'];?></b>
+</div>
+
 
 &nbsp;
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">

@@ -488,7 +488,7 @@ if($_POST["contactsub"] == 1)
                                                  Is This a Duplicate? 
                                         </a>
 					<br />
-		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
                                                  Delete 
                                         </a>
 		<?php } ?>

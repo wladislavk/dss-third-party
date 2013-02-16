@@ -33,11 +33,16 @@ WHERE du.docid=0
 echo $sql;
 */
 if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT du.* FROM dental_users du 
+  $sql = "SELECT du.*, c.name AS company_name 
+                FROM dental_users du 
+                JOIN dental_user_company uc ON uc.userid = du.userid
+                JOIN companies c ON c.id=uc.companyid
                 WHERE du.docid=0";
 }else{
-  $sql = "SELECT du.* FROM dental_users du 
+  $sql = "SELECT du.*, c.name AS company_name 
+		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
+		JOIN companies c ON c.id=uc.companyid
 		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'";
 }
 $my = mysql_query($sql);
@@ -78,16 +83,19 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
+		<td valign="top" class="col_head" width="14%">
 			Username		
 		</td>
-		<td valign="top" class="col_head" width="20%">
+                <td valign="top" class="col_head" width="20%">
+                        Company
+                </td>
+		<td valign="top" class="col_head" width="15%">
 			Name		
 		</td>
-                <td valign="top" class="col_head" width="17%">
+                <td valign="top" class="col_head" width="15%">
                         E0486 (Last 30 days)
                 </td>
-		<td valign="top" class="col_head" width="17%">
+		<td valign="top" class="col_head" width="10%">
 			Unbilled E0486		
 		</td>
 		<td valign="top" class="col_head" width="10%">
@@ -133,6 +141,9 @@ $case30_q = mysql_query($case30_sql);
 				<td valign="top">
 					<?=st($myarray["username"]);?>
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["company_name"]);?>
+                                </td>
                                 <td valign="top">
                                         <?=st($myarray["name"]);?>
                                 </td>

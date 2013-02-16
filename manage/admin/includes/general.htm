@@ -147,17 +147,17 @@ function get_ptreferralids ($pid) {
 
 // Retrieve Names Salutation and more from Database
 // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
-function get_contact_info ($patient, $md_list, $md_referral_list, $referral_source = null) {
+function get_contact_info ($patient, $md_list, $md_referral_list, $referral_source = null, $letterid = 0) {
   $contact_info = array();
   if (isset($patient)) {
-    $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact FROM dental_patients WHERE patientid IN('".$patient."');";
+    $sql = "SELECT patientid AS id, salutation, firstname, lastname, add1, add2, city, state, zip, email, preferredcontact, ".$letterid." AS letterid FROM dental_patients WHERE patientid IN('".$patient."');";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['patient'][] = $row;
     }
   }
   if (isset($md_list) && $md_list != "") {
-    $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
+    $sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.firstname, dental_contact.lastname, dental_contact.middlename, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contacttype.contacttype, ".$letterid." AS letterid FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_list.");";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
       $contact_info['mds'][] = $row;
@@ -179,10 +179,11 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $referral_sour
 				p.email, 
 				'' as fax, 
 				p.preferredcontact, 
-				'' as contacttypeid 
+				'' as contacttypeid, 
+				".$letterid." AS letterid 
 			FROM dental_patients p WHERE p.patientid IN(".$md_referral_list.");";
 	}else{
-    		$sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
+    		$sql = "SELECT dental_contact.contactid AS id, dental_contact.salutation, dental_contact.lastname, dental_contact.middlename, dental_contact.firstname, dental_contact.company, dental_contact.add1, dental_contact.add2, dental_contact.city, dental_contact.state, dental_contact.zip, dental_contact.email, dental_contact.fax, dental_contact.preferredcontact, dental_contact.contacttypeid, ".$letterid." AS letterid FROM dental_contact LEFT JOIN dental_contacttype ON dental_contact.contacttypeid=dental_contacttype.contacttypeid WHERE dental_contact.contactid IN(".$md_referral_list.");";
 	}
     $result = mysql_query($sql);
     while ($row = mysql_fetch_assoc($result)) {
@@ -455,8 +456,10 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
                 }
         }
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
-                $letter_query = "UPDATE dental_letters SET status='1', date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
+                $letter_query = "UPDATE dental_letters SET parentid=null, status='1', date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
                 $letter_result = mysql_query($letter_query);
+                $parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
+                $parent_result = mysql_query($parent_query);
     return mysql_error();
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
@@ -938,13 +941,21 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
  * $template is for a modified template (including tokens) if the original template has been edited.
  */
 function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
+
+  $c_sql = "SELECT patientid, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid='".mysql_real_escape_string($letterid)."'";
+  $c_q = mysql_query($c_sql);
+  $c_r = mysql_fetch_assoc($c_q);
+  $contacts = get_contact_info((($c_r['topatient'] == "1") ? $c_r['patientid'] : ''), $c_r['md_list'], $c_r['md_referral_list']);
+  $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
   if (!isset($letterid)) {
 		return false;
-  } elseif ($parent == true) {
-		$letter_query = "UPDATE dental_letters SET deleted='1' WHERE letterid='".$letterid."';";
+  } elseif ($parent == true || $total_contacts == 1) {
+		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
+ 		$parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
+		$parent_result = mysql_query($parent_query);
 		return $letter_result;
-  } else {
+  }else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
@@ -984,6 +995,32 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 		}
   }
 }
+
+/**
+ * Deletes all pending letters for specified contact
+ *
+ */
+function delete_contact_letters($contact){
+  $l_sql = "SELECT * from dental_letters
+		WHERE FIND_IN_SET('".$contact."', md_list)
+			AND status=0";
+  $l_q = mysql_query($l_sql);
+  while($l_r = mysql_fetch_assoc($l_q)){
+    $lid = $l_r['letterid'];
+    delete_letter($lid, false, 'md', $contact);
+  }
+
+  $l_sql = "SELECT * from dental_letters
+                WHERE FIND_IN_SET('".$contact."', md_referral_list)
+                        AND status=0";
+  $l_q = mysql_query($l_sql);
+  while($l_r = mysql_fetch_assoc($l_q)){
+    $lid = $l_r['letterid'];
+    delete_letter($lid, false, 'md_referral', $contact);
+  }
+
+}
+
 
 /**
  * Returns a mysql resultset resource for dental_users table on success,

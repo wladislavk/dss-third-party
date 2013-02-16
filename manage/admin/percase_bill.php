@@ -25,14 +25,64 @@ if(isset($_POST['bill_submit'])){
     $amount = $_POST['amount']*100;
     Stripe::setApiKey(DSS_STRIPE_SEC_KEY);
 
-    Stripe_Charge::create(array(
+try{
+    $charge = Stripe_Charge::create(array(
       "amount" => $amount, # $15.00 this time
       "currency" => "usd",
       "customer" => $customerID)
     );
-    ?><h3>Billed <?= $_POST['amount']; ?>.</h3><?php
+} catch(Stripe_CardError $e) {
+  // Since it's a decline, Stripe_CardError will be caught
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'];
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
+} catch (Stripe_InvalidRequestError $e) {
+  // Invalid parameters were supplied to Stripe's API
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'];
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
+} catch (Stripe_AuthenticationError $e) {
+  // Authentication with Stripe's API failed
+  // (maybe you changed API keys recently)
+  return $e;
+} catch (Stripe_ApiConnectionError $e) {
+  // Network communication with Stripe failed
+  return $e;
+} catch (Stripe_Error $e) {
+  // Display a very generic error to the user, and maybe send
+  // yourself an email
+  return $e;
+} catch (Exception $e) {
+  // Something else happened, completely unrelated to Stripe
+  return $e;
+}
+
+  $stripe_charge = $charge->id;
+  $stripe_customer = $charge->customer;
+  $stripe_card_fingerprint = $charge->card->fingerprint;
+  $charge_sql = "INSERT INTO dental_charge SET
+			amount='".mysql_real_escape_string($_POST['amount'])."',
+                        userid='".mysql_real_escape_string($id)."',
+                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+                        charge_date=NOW(),
+                        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
+                        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
+                        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
+                        adddate=NOW(),
+                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
+  	mysql_query($charge_sql); 
+    ?><h3><?= $r['name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
+     ?><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+	die();
   }else{
     ?><h3>Not entered in Stripe.</h3><?php
+     ?><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+        die();
+
   }
 }
 ?>

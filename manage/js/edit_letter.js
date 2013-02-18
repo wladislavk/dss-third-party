@@ -17,5 +17,6 @@ function edit_letter(divid) {
 			theme_advanced_toolbar_align : "left"
 		});
 		textarea.focus();
+		$('.edit_'+divid).show();
 	}
 }

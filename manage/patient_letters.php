@@ -162,7 +162,6 @@ $source = $r['referred_source'];
 
 	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source, $letter['letterid']);
 
-
 	//  ADD IN CHILD LETTERS TO CONTACTS
         $master_sql = "SELECT letterid, topatient, patientid, md_list, md_referral_list FROM dental_letters l
 			WHERE status=0 AND deleted=0 AND parentid='".$letter['letterid']."'";
@@ -202,7 +201,7 @@ $source = $r['referred_source'];
 		if(isset($contacts['patient'][0])){
 			$dental_letters[$key]['sentto'] .= $contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname'];
  			if($letter['status']==0){
-			$dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'patient', '".$contacts['patient'][0]['patientid']."', 1)\" class=\"delete_letter\" />Delete</a>";
+			$dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['patient'][0]['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
 			}
    		}
 
@@ -212,7 +211,7 @@ $source = $r['referred_source'];
 			  $dental_letters[$key]['sentto'] .= " - " . $contacts['mds']['contacttype'];
 			}
                         if($letter['status']==0){
-			  $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
+			  $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['mds'][0]['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
 			}
 		}
 
@@ -223,7 +222,7 @@ $source = $r['referred_source'];
                           $dental_letters[$key]['sentto'] .= " - " . $contacts['md_referrals']['contacttype'];
                         }
                         if($letter['status']==0){
-                          $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
+                          $dental_letters[$key]['sentto'] .=  " <a href=\"#\" onclick=\"delete_pending_letter('".$contacts['md_referrals'][0]['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" class=\"delete_letter\" />Delete</a>";
                         }
                 }
 

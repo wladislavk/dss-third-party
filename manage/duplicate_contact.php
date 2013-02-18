@@ -50,6 +50,7 @@ $up_sql = "UPDATE dental_contact SET ";
 	if(!$first){
       	  $up_sql .= ", ".$field."='".$l_r[$field]."'";
 	}else{
+	  $up_sql .= $field."='".$l_r[$field]."'";
 	  $first = false;
 	}
     }

@@ -82,7 +82,7 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 <thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head">
-			Username		
+			Username&nbsp;&nbsp;		
 		</th>
                 <th valign="top" class="col_head">
                         Company
@@ -94,16 +94,16 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
                         Pt. Screened 
                 </th>
 		<th valign="top" class="col_head">
-			By user		
+			By user&nbsp;&nbsp;		
 		</th>
 		<th valign="top" class="col_head">
 			Completed Sleep Studies
 		</th>
                 <th valign="top" class="col_head">
-                        Consult 
+                        Consult&nbsp;&nbsp; 
 		</th>
 		<th valign="top" class="col_head">
-			Impressions	
+			Impressions&nbsp;&nbsp;	
 		</th>
                 <th valign="top" class="col_head">
                         Letters Sent

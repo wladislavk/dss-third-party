@@ -555,3 +555,20 @@ width:125px;
   margin-right: 10px;
   display: block;
   }
+
+.sort_table .col_head{
+  padding-right: 5px;
+  text-align: left;
+  }
+
+th.headerSortUp { 
+    background-image: url(../../images/arrow-white-up.gif); 
+    background-repeat: no-repeat;
+    background-position: right 10px;
+} 
+
+th.headerSortDown {
+    background-image: url(../../images/arrow-white-down.gif);
+    background-repeat: no-repeat;
+    background-position: right 10px;
+} 

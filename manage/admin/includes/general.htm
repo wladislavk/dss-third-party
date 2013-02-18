@@ -97,7 +97,9 @@ function get_mdcontactids ($pid) {
       $contacts = explode(",", $field);
       foreach ($contacts as $contact) {
 				if ($contact != "") {
-	        $contactids[] = $contact;
+		if(!in_array($contact, $contactids)){
+	          $contactids[] = $contact;
+		}
 				}
       }
     }
@@ -114,8 +116,11 @@ function get_mdreferralids ($pid) {
   $contact_res = mysql_query($contact_sql);
   $contactids = array();
   while ($row = mysql_fetch_array($contact_res, MYSQL_NUM)) {
-    $contactids[] = $row[0];
+        if(!in_array($row[0], $contactids)){
+    		$contactids[] = $row[0];
+	}
   }
+
   $contactid_list = implode(",", $contactids);
 
   return $contactid_list;
@@ -192,6 +197,28 @@ function get_contact_info ($patient, $md_list, $md_referral_list, $referral_sour
   }
 
   return $contact_info;
+}
+
+
+
+//get number of contacts for letter
+function num_letter_contacts($lid){
+  $sql = "SELECT topatient, md_list, md_referral_list FROM dental_letters l
+		WHERE letterid='".mysql_real_escape_string($lid)."' OR parentid='".mysql_real_escape_string($lid)."'";
+  $q = mysql_query($sql);
+  $num_contacts = 0;
+  while($r = mysql_fetch_assoc($q)){
+    if($r['topatient']==1){
+	$num_contacts++;
+    }
+if($r['md_list']!=''){
+    $num_contacts += count(explode(',',$r['md_list']));
+}
+if($r['md_referral_list']!=''){
+    $num_contacts += count(explode(',',$r['md_referral_list']));
+}
+  }
+  return $num_contacts;  
 }
 
 //To remove referral source from md list
@@ -932,6 +959,37 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	//Close and output PDF document
 	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
 }
+
+
+//reset letter
+function reset_letter($letterid){
+  $sql = "UPDATE dental_letters set template='', edit_userid=null, edit_date=null WHERE letterid='".mysql_real_escape_string($letterid)."'";
+  mysql_query($sql);
+}
+
+/**
+  * gets letters that were delivered for contact
+  */
+function get_contact_sent_letters($contactid){
+  $s = "SELECT * from dental_letters WHERE delivered=1 AND 
+		(FIND_IN_SET('".$contactid."', md_list) OR
+		FIND_IN_SET('".$contactid."', md_referral_list))";
+  $q = mysql_query($s);
+  $num = mysql_num_rows($q);
+  return $num;
+}
+
+/**
+  * gets letters that were not delivered for contact
+  */
+function get_contact_pending_letters($contactid){
+  $s = "SELECT * from dental_letters WHERE delivered=0 AND 
+                (FIND_IN_SET('".$contactid."', md_list) OR
+                FIND_IN_SET('".$contactid."', md_referral_list))";
+  $q = mysql_query($s);
+  return mysql_num_rows($q);
+}
+
 
 /* Set $parent to true if you want to delete the original letter including all contacts
  * if $parent is false or not set, one contact will be removed from the letter and a new letter will be created

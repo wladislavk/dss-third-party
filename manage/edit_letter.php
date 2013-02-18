@@ -1065,7 +1065,12 @@ if ($_POST != array()) {
 		foreach ($_POST['reset_letter'] as $key => $value) {
 			$resetid = $key;
 		}
+		reset_letter($letterid);
 		$new_template[$resetid] = null;
+		?><script type="text/javascript">
+			window.location=window.location;
+		  </script>
+		<?php
 	}
 }
 
@@ -1502,7 +1507,7 @@ foreach ($letter_contacts as $key => $contact) {
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<?php if($numletters > 1): ?>
-		<input type="submit" name="duplicate_letter[<?=$key?>]" class="addButton" value="Duplicate" />
+		<input type="submit" style="display:none;" name="duplicate_letter[<?=$key?>]" class="addButton edit_letter<?=$cur_letter_num?>" value="Duplicate" />
 		<?php endif; ?>
 		<!--&nbsp;&nbsp;&nbsp;&nbsp;
 		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?=$_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
@@ -1528,7 +1533,7 @@ foreach ($letter_contacts as $key => $contact) {
 		</tr>
 	</table>
 	<div style="float:left;">
-		<input type="submit" name="reset_letter[<?=$cur_letter_num?>]" class="addButton" value="Reset" />
+		<input type="submit" style="display:none;" name="reset_letter[<?=$cur_letter_num?>]" class="addButton edit_letter<?=$cur_letter_num?>" value="Reset" />
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<? if(!($_GET['backoffice'] == "1" && $_SESSION['admin_access']!=1)){ ?>
 		<input type="submit" name="delete_letter[<?=$cur_letter_num?>]" class="addButton" value="Delete" />
@@ -1536,13 +1541,13 @@ foreach ($letter_contacts as $key => $contact) {
 		<? } ?>
 	</div>
         <div style="float:right;">
-                <input type="submit" name="save_letter[<?=$cur_letter_num?>]" class="addButton" value="Save Changes" />
+                <input type="submit" style="display:none;" name="save_letter[<?=$cur_letter_num?>]" class="addButton edit_letter<?=$cur_letter_num?>" value="Save Changes" />
         </div>
         <?php 
 		if($username){ ?>
 	<div style="clear:both; width:100%; text-align:center;">
 			
-		Last edited by  <?= $username; ?> on <?= date('m/d/Y H:i:s a', strtotime($edit_date)); ?>
+		Last edited by  <?= $username; ?> on <?= date('m/d/Y h:i:s a', strtotime($edit_date)); ?>
 	</div>
 	 <?php } ?>
 	</div>
@@ -1607,7 +1612,8 @@ foreach ($letter_contacts as $key => $contact) {
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
             $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
-        if(!$parent){
+ 	    $num_contacts = num_letter_contacts($_GET['lid']);
+        if(!$parent || $num_contacts > 1){
                 ?>
                         <script type="text/javascript">
                                 window.location=window.location;

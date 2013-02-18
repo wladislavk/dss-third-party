@@ -7,7 +7,7 @@ if($_REQUEST["delid"] != "")
 	delete_contact_letters($_REQUEST["delid"]);
 
 	$del_sql = "delete from dental_contact where contactid='".$_REQUEST["delid"]."'";
-	//mysql_query($del_sql);
+	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -17,6 +17,23 @@ if($_REQUEST["delid"] != "")
 	</script>
 	<?
 	die();
+}
+
+if($_REQUEST["inactiveid"] != "")
+{
+
+
+        $in_sql = "update dental_contact set status='2'  where contactid='".$_REQUEST["inactiveid"]."'";
+        mysql_query($in_sql);
+
+        $msg= "Set to inactive";
+        ?>
+        <script type="text/javascript">
+                //alert("Deleted Successfully");
+                window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
+        </script>
+        <?
+        die();
 }
 
 $rec_disp = 20;

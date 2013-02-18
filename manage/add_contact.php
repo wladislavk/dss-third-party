@@ -3,6 +3,7 @@ session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include "includes/general_functions.php";
+include_once "admin/includes/general.htm";
 //include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -488,9 +489,21 @@ if($_POST["contactsub"] == 1)
                                                  Is This a Duplicate? 
                                         </a>
 					<br />
-		                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+		<?php
+			if(get_contact_sent_letters($themyarray["contactid"]) > 0){ ?>
+		                    <a style="float:right;" href="manage_contact.php?inactiveid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted.  This contact now will be marked as INACTIVE in your software and will no longer display in search results.');" class="dellink" target="_parent" title="DELETE">
                                                  Delete 
                                         </a>
+			<?php }elseif(get_contact_pending_letters($themyarray["contactid"])> 0){ ?>
+                                    <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');" class="dellink" target="_parent" title="DELETE">
+                                                 Delete 
+                                        </a>
+                        <?php }else{ ?>
+                                   <a style="float:right;" href="manage_contact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+                                                 Delete                                         </a>
+ 
+				<?php } ?>
+
 		<?php } ?>
             </td>
         </tr>

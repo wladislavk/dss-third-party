@@ -124,7 +124,7 @@ $segments[1] = "Initial Contact";
         </td>
         <td class="letters">
                 <?php
-                $dental_letters_query = "SELECT topatient, md_list, md_referral_list, status FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND info_id ='".$id."' ORDER BY stepid ASC;";
+                $dental_letters_query = "SELECT topatient, md_list, md_referral_list, status FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$_GET['pid']."' AND info_id ='".$id."' AND deleted=0 ORDER BY stepid ASC;";
                 $dlq = mysql_query($dental_letters_query);
 		$letter_count = 0;
 		$sent = false;

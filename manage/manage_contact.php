@@ -25,7 +25,7 @@ if($_REQUEST["inactiveid"] != "")
 
         $in_sql = "update dental_contact set status='2'  where contactid='".$_REQUEST["inactiveid"]."'";
         mysql_query($in_sql);
-
+        delete_contact_letters($_REQUEST["inactiveid"]);
         $msg= "Set to inactive";
         ?>
         <script type="text/javascript">

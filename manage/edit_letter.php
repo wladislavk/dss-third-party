@@ -9,17 +9,23 @@ if($_GET['backoffice'] == '1') {
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
 
+$status_sql = "SELECT status FROM dental_letters
+		WHERE letterid='".mysql_real_escape_string($_GET['lid'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+$parent_status = $status_r['status'];
+
+
 $masterid=$_GET['lid'];
 $master_sql = "SELECT * FROM dental_letters l
 		WHERE (l.letterid='".mysql_real_escape_string($_GET['lid'])."'
 			OR l.parentid='".mysql_real_escape_string($_GET['lid'])."')
-			AND status=0 AND deleted=0 ORDER BY edit_date DESC";
+			AND status='".$parent_status."' AND deleted=0 ORDER BY edit_date DESC";
 $master_c = mysql_query($master_sql);
 $master_q = mysql_query($master_sql);
 $master_num = 0;
 $cur_letter_num = 0;
 $cur_template_num = 0;
-
 
 //TO COUNT NUMBER OF LETTERS
 while($master_r = mysql_fetch_assoc($master_c)){
@@ -424,7 +430,7 @@ $device_result = mysql_query($device_query);
 
 
 // Delay Reason and Description
-$reason_query = "SELECT delay_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 5 AND letterid = '".$letterid."';";
+$reason_query = "SELECT delay_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 5 ORDER BY date_completed DESC LIMIT 1;";
 $reason_result = mysql_query($reason_query);
 while ($row = mysql_fetch_assoc($reason_result)) {
 	$delay = $row;

@@ -1061,7 +1061,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 function delete_contact_letters($contact){
   $l_sql = "SELECT * from dental_letters
 		WHERE FIND_IN_SET('".$contact."', md_list)
-			AND status=0";
+			AND status=0 AND delivered=0";
   $l_q = mysql_query($l_sql);
   while($l_r = mysql_fetch_assoc($l_q)){
     $lid = $l_r['letterid'];

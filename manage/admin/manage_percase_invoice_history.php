@@ -27,7 +27,7 @@ $doc = mysql_fetch_assoc($doc_q);
 <br />
 
 
-<div align="center" class="red">
+<div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
 
@@ -41,11 +41,17 @@ $doc = mysql_fetch_assoc($doc_q);
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
-                <td valign="top" class="col_head" width="40%">
+                <td valign="top" class="col_head" width="20%">
                         Date
                 </td>
                 <td valign="top" class="col_head" width="20%">
                         Amount
+                </td>
+                <td valign="top" class="col_head" width="30%">
+                        Customer 
+                </td>
+                <td valign="top" class="col_head" width="30%">
+                        Charge
                 </td>
         </tr>
         <? if(mysql_num_rows($charge_q) == 0)
@@ -70,6 +76,23 @@ $doc = mysql_fetch_assoc($doc_q);
                                         $<?php
                                             echo st($charge_r["amount"]); ?>
                                 </td>
+                                <td valign="top" style="font-weight:bold;">
+                                        <a href="https://manage.stripe.com/customers/<?php
+                                           echo st($charge_r["stripe_customer"]); ?>" target="_blank">
+						<?php
+                                           echo st($charge_r["stripe_customer"]); ?>
+					</a>
+                                </td>
+
+                                <td valign="top" style="font-weight:bold;">
+                                        <a href="https://manage.stripe.com/payments/<?php
+                                           echo st($charge_r["stripe_charge"]); ?>" target="_blank">
+                                                <?php
+                                           echo st($charge_r["stripe_charge"]); ?>
+                                        </a>
+
+                                </td>
+
                         </tr>
         <?      }
 
@@ -87,12 +110,11 @@ $doc = mysql_fetch_assoc($doc_q);
 <br />
 
 
-<div align="center" class="red">
+<div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
 
 
-&nbsp;
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">

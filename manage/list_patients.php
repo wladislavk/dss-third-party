@@ -25,6 +25,7 @@ $sql = "SELECT p.patientid, p.lastname, p.firstname, p.middlename, p.status AS s
 	.		" WHERE (((lastname LIKE '" . $names[0] . "%' OR firstname LIKE '" . $names[0] . "%')" 
 	.		" AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
 	.		" OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
+        .               " AND p.status=1 "
 	.		" AND docid = '" . $_SESSION['docid'] . "' ORDER BY lastname ASC;";
 $result = mysql_query($sql);
 

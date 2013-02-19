@@ -491,7 +491,7 @@ if($_POST["contactsub"] == 1)
 					<br />
 		<?php
 			if(get_contact_sent_letters($themyarray["contactid"]) > 0){ ?>
-		                    <a style="float:right;" href="manage_contact.php?inactiveid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted.  This contact now will be marked as INACTIVE in your software and will no longer display in search results.');" class="dellink" target="_parent" title="DELETE">
+		                    <a style="float:right;" href="manage_contact.php?inactiveid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.');" class="dellink" target="_parent" title="DELETE">
                                                  Delete 
                                         </a>
 			<?php }elseif(get_contact_pending_letters($themyarray["contactid"])> 0){ ?>

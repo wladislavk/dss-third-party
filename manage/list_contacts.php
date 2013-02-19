@@ -21,6 +21,7 @@ $sql = "SELECT c.contactid, c.lastname, c.firstname, c.middlename, '".DSS_REFERR
         .               " AND (lastname LIKE '" . $names[1] . "%' OR firstname LIKE '" . $names[1] . "%'))"
         .               " OR (firstname LIKE '" . $names[0] ."%' AND middlename LIKE '" .$names[1]."%' AND lastname LIKE '" . $names[2] . "%'))"
         .               " AND docid = '" . $_SESSION['docid'] . "' "
+        .               " AND c.status=1 "
 	.		" AND merge_id IS NULL ORDER BY lastname ASC";
 $result = mysql_query($sql);
 

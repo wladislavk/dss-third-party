@@ -35,14 +35,14 @@ try{
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
   die();
 } catch (Stripe_InvalidRequestError $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
-  echo $err['message'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
     ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
   die();
 } catch (Stripe_AuthenticationError $e) {

@@ -50,10 +50,19 @@ if(isset($_GET['pid']))
 {
 	$sql .= " AND p.patientid = ".$_GET['pid'];
 }
-if($_GET['sh'] != 2)
+if($_GET['sh'] == 1 OR !isset($_GET['sh']))
 {
 	$sql .= " AND p.status = 1";
 }
+if($_GET['sh'] == 2)
+{
+        $sql .= " AND (p.status = 1 OR p.status = 2)";
+}
+if($_GET['sh'] == 3)
+{
+        $sql .= " AND p.status = 2";
+}
+
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
@@ -81,6 +90,7 @@ $num_users=mysql_num_rows($my);
 	<select name="show" onchange="Javascript: window.location ='<?=$_SERVER['PHP_SELF'];?>?sh='+this.value;">
 		<option value="1">Active Patients</option>
 		<option value="2" <? if($_GET['sh'] == 2) echo " selected";?> >All Patients</option>
+                <option value="3" <? if($_GET['sh'] == 3) echo " selected";?> >In-active Patients</option>
 	</select>
 
 </span>

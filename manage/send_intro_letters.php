@@ -4,6 +4,13 @@ require($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/manage/includes/constants.inc');
+
+
+//DID NOT USE MASS CREATE SINGLE PDF DUE TO SPACING ISSUES
+//INSTEAD GENERATED SINGLE LETTERS AND USED SCRIPT TO COMBINE THEM
+//temporarily created addition export to new folder to keep separate
+
+
 /*
 // Extend the TCPDF class to create custom Header and Footer
 class NEWPDF extends TCPDF {
@@ -80,7 +87,7 @@ $sql = "SELECT l.*, lt.body FROM dental_letters l
 	JOIN dental_letter_templates lt ON l.templateid=lt.id
 	WHERE 
 	(l.templateid = 1 OR l.templateid = 2) AND
-	l.letterid > 4241 AND l.letterid < 4734";
+	status=0 and deleted=0 and deleted=0";
 $q = mysql_query($sql);
 while($r = mysql_fetch_assoc($q)){
   $template = $r['body'];

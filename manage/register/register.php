@@ -33,7 +33,7 @@ if(mysql_num_rows($q) == 0){
   die();
 }
   $p = mysql_fetch_assoc($q);
-  $c_sql = "SELECT c.name from companies c 
+  $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
 		JOIN dental_user_company uc ON uc.companyid=c.id
 			WHERE uc.userid='".mysql_real_escape_string($p['userid'])."'"; 
   $c_q = mysql_query($c_sql);
@@ -454,7 +454,7 @@ if(p1!=p2){
   <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
   <script type="text/javascript">
     // this identifies your website in the createToken call below
-    Stripe.setPublishableKey('<?= DSS_STRIPE_PUB_KEY; ?>');
+    Stripe.setPublishableKey('<?= $c_r['stripe_publishable_key']; ?>');
 
     function stripeResponseHandler(status, response) {
 console.log(response);
@@ -519,6 +519,7 @@ console.log(response);
 		exp_year: $('.card-expiry-year').val(),
 		cvc: $('.card-cvc').val(),
 		zip: $('.card-zip').val(),
+		companyid: "<?= addslashes($c_r['id']); ?>", 
 		company: "<?= addslashes($c_r['name']); ?>"
 	  },
           success: function(data){
@@ -536,7 +537,7 @@ console.log(response);
 	    }
           },
           failure: function(data){
-             alert('f - '+data);
+             //alert('f - '+data);
              $('#loader').hide();
              $('#payment_proceed').show();
              //alert('fail');

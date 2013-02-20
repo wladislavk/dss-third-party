@@ -23,7 +23,15 @@ if(isset($_POST['bill_submit'])){
   $customerID = $r['cc_id'];
   if($customerID!=''){
     $amount = $_POST['amount']*100;
-    Stripe::setApiKey(DSS_STRIPE_SEC_KEY);
+
+$key_sql = "SELECT stripe_secret_key FROM companies c 
+		JOIN dental_user_company uc
+			ON c.id = uc.companyid
+		 WHERE uc.userid='".mysql_real_escape_string($id)."'";
+$key_q = mysql_query($key_sql);
+$key_r= mysql_fetch_assoc($key_q);
+
+Stripe::setApiKey($key_r['stripe_secret_key']);
 
 try{
     $charge = Stripe_Charge::create(array(
@@ -48,17 +56,34 @@ try{
 } catch (Stripe_AuthenticationError $e) {
   // Authentication with Stripe's API failed
   // (maybe you changed API keys recently)
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo "Authentication Error. Please contact your Credit Card billing administrator to resolve this issue.";
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
 } catch (Stripe_ApiConnectionError $e) {
   // Network communication with Stripe failed
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
 } catch (Stripe_Error $e) {
   // Display a very generic error to the user, and maybe send
   // yourself an email
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+    ?><br /><br /><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
+  die();
+
 }
 
   $stripe_charge = $charge->id;

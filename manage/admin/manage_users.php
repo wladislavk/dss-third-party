@@ -5,13 +5,21 @@ if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 
 	$sql = "SELECT cc_id FROM dental_users where userid='".$_REQUEST["delid"]."'";
 	$q = mysql_query($sql);
-	$r = mysql_fetch_assoc();
+	$r = mysql_fetch_assoc($q);
 
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	if($r['cc_id']!=''){
 	require_once '../3rdParty/stripe/lib/Stripe.php';
-	Stripe::setApiKey(DSS_STRIPE_SEC_KEY);
+	$key_sql = "SELECT stripe_secret_key FROM companies c 
+                JOIN dental_user_company uc
+                        ON c.id = uc.companyid
+                 WHERE uc.userid='".mysql_real_escape_string($_REQUEST['delid'])."'";
+	$key_q = mysql_query($key_sql);
+	$key_r= mysql_fetch_assoc($key_q);
+
+	Stripe::setApiKey($key_r['stripe_secret_key']);
+
         try{
 	  $cu = Stripe_Customer::retrieve($r['cc_id']);
 	  $cu->delete();
@@ -93,7 +101,7 @@ $num_users=mysql_num_rows($my);
   }
 ?>
 
-<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
+<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 <div align="right">
         <button onclick="Javascript: loadPopup('add_users_reg.php');" class="addButton">
                 Add New Registration User
@@ -131,7 +139,7 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
+		<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="20%">
 			Letterhead
 		</td>       
@@ -153,7 +161,7 @@ $num_users=mysql_num_rows($my);
                         Company 
                 </td>
 		<?php } ?>
-		<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
+		<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
@@ -208,7 +216,7 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
-				<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
+				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
 					<a href="/manage/admin/letterhead.php?uid=<?=st($myarray["userid"]);?>">Update Images</a>
 				</td>
@@ -243,7 +251,7 @@ $num_users=mysql_num_rows($my);
                                         	<a href="manage_users.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
 				</td>			
 				<?php } ?>
-				<?php if(is_super($_SESSION['admin_accss']) || is_admin($_SESSION['admin_access'])) { ?>
+				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">
 						Edit

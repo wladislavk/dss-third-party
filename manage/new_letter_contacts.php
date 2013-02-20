@@ -11,10 +11,9 @@ if (isset($_POST['templateid']) && isset($_POST['patientid'])) {
 	$html = "No data received.";
 }
 
-$md_list = get_mdcontactids($patientid);
-$md_referral_list = get_mdreferralids($patientid);
+$md_list = get_mdcontactids($patientid, false);
+$md_referral_list = get_mdreferralids($patientid, false);
 $contactinfo = get_contact_info($patientid, $md_list, $md_referral_list);
-
 $contacts = array();
 $j = 0;
 //$contacts[$j]['html'] = "<input class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"$patientid\" />Patient: " . $contactinfo['patient'][0]['salutation'] . $contactinfo['patient'][0]['firstname'] . " " . $contactinfo['patient'][0]['lastname'] . "<br />";
@@ -33,6 +32,7 @@ foreach ($contactinfo['md_referrals'] as $md) {
   $contacts[$j]['name'] = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
   $contacts[$j]['email'] = $md['email'];
   $contacts[$j]['fax'] = $md['fax'];
+  $contacts[$j]['status'] = $md['status'];
   $j++;
 	$i++;
 }
@@ -45,6 +45,7 @@ foreach ($contactinfo['mds'] as $md) {
   $contacts[$j]['name'] = $md['name'] = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
   $contacts[$j]['email'] = $md['email'];
   $contacts[$j]['fax'] = $md['fax'];
+  $contacts[$j]['status'] = $md['status'];
   $j++;
 	$i++;
 }

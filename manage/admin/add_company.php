@@ -17,6 +17,8 @@ if($_POST["compsub"] == 1)
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
+				stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
+                                stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -48,6 +50,8 @@ if($_POST["compsub"] == 1)
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
+                                stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
+                                stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -93,6 +97,8 @@ if($_POST["compsub"] == 1)
 		$state = $_POST['state'];
 		$zip = $_POST['zip'];   	
 		$eligible_api_key = $_POST['eligible_api_key'];
+                $stripe_secret_key = $_POST['stripe_secret_key'];
+                $stripe_publishable_key = $_POST['stripe_publishable_key'];
 		$status = $_POST['status'];
 	}
 	else
@@ -104,6 +110,8 @@ if($_POST["compsub"] == 1)
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
 		$eligible_api_key = st($themyarray['eligible_api_key']);
+                $stripe_secret_key = st($themyarray['stripe_secret_key']);
+                $stripe_publishable_key = st($themyarray['stripe_publishable_key']);
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
@@ -196,7 +204,23 @@ if($_POST["compsub"] == 1)
             <td valign="top" class="frmdata">
                 <input id="zip" type="text" name="eligible_api_key" value="<?=$eligible_api_key;?>" class="tbox" />
             </td>
-        </tr
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Stripe SECRET Key
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="stripe_secret_key" type="text" name="stripe_secret_key" value="<?=$stripe_secret_key;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Stripe PUBLISHABLE Key
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="stripe_publishable_key" type="text" name="stripe_publishable_key" value="<?=$stripe_publishable_key;?>" class="tbox" />
+            </td>
+        </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

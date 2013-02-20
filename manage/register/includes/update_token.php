@@ -6,6 +6,7 @@ $id = $_REQUEST['id'];
 $token = $_REQUEST['token'];
 $email = $_REQUEST['email'];
 $name = $_REQUEST['name'];
+$companyid = $_REQUEST['companyid'];
 $company = $_REQUEST['company'];
 $address= $_REQUEST['address'];
 $desc = $name." - ".$company."  - ".$address;
@@ -15,7 +16,12 @@ $exp_month = $_REQUEST['exp_month'];
 $exp_year = $_REQUEST['exp_year'];
 $cvc = $_REQUEST['cvc'];
 $zip = $_REQUEST['zip'];
-Stripe::setApiKey(DSS_STRIPE_SEC_KEY);
+
+$key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysql_real_escape_string($companyid)."'";
+$key_q = mysql_query($key_sql);
+$key_r= mysql_fetch_assoc($key_q);
+
+Stripe::setApiKey($key_r['stripe_secret_key']);
 
 try {
 // create a Customer

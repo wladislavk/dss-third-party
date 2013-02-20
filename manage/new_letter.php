@@ -679,10 +679,18 @@ if (isset($_POST['submit'])) {
 			div.html("<input class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"" + contact.id + "\" />Patient: " + contact.name);
     }
 		if (contact.type == "md_referral") {
-			div.html("<input class=\"md_referral_checkbox\" type=\"checkbox\" name=\"contacts[md_referrals][" + index + "]\" value=\"" + contact.id + "\" />Referring MD: " + contact.name);
+                        if(contact.status==2){
+                                div.html("Referring MD: " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");
+                        }else{
+				div.html("<input class=\"md_referral_checkbox\" type=\"checkbox\" name=\"contacts[md_referrals][" + index + "]\" value=\"" + contact.id + "\" />Referring MD: " + contact.name);
+			}
 		}
 		if (contact.type == "md") {
-			div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />MD: " + contact.name);
+			if(contact.status==2){
+				div.html("MD: " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");	
+			}else{
+				div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />MD: " + contact.name);
+			}
 		}
 		return div;
   }

@@ -101,6 +101,10 @@ if($create){
 
 
 		    $letterid = array_unique($letterid);
+while(($key = array_search('0', $letterid)) !== false) {
+    unset($letterid[$key]);
+}
+if(count($letterid)>0){
                     $letteridlist = implode(",", $letterid);
 
 
@@ -111,11 +115,22 @@ $dental_letters_query = "SELECT patientid, letterid, UNIX_TIMESTAMP(generated_da
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
     $dental_letters[] = $row;
                 $contacts = get_contact_info((($row['topatient'] == "1") ? $row['patientid'] : ''), $row['md_list'], $row['md_referral_list']);
+ /*
+                        if(isset($contacts['patient'])){
+                                $letter_count += count($contacts['patient']);
+                        }
+                        if(isset($contacts['mds'])){
+                                $letter_count += count($contacts['mds']);
+                        }
+                        if(isset($contacts['md_referrals'])){
+                                $letter_count += count($contacts['md_referrals']);
+                        }
+*/
                         $letter_count += count($contacts['patient'])+count($contacts['md_referrals'])+count($contacts['mds']);
 	}
 
 
-
+}
 
 $segments = Array();
 $segments[1] = "Initial Contact";

@@ -430,7 +430,7 @@ $device_result = mysql_query($device_query);
 
 
 // Delay Reason and Description
-$reason_query = "SELECT delay_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 5 ORDER BY date_completed DESC LIMIT 1;";
+$reason_query = "SELECT delay_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 5 ORDER BY date_completed DESC, id DESC LIMIT 1;";
 $reason_result = mysql_query($reason_query);
 while ($row = mysql_fetch_assoc($reason_result)) {
 	$delay = $row;
@@ -541,7 +541,7 @@ $initess = mysql_result($initesstss_result, 0, 0);
 $inittss = mysql_result($initesstss_result, 0, 1);
 
 // Non Compliance Reason and Description
-$reason_query = "SELECT noncomp_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 9 AND letterid = '".$letterid."';";
+$reason_query = "SELECT noncomp_reason as reason, description FROM dental_flow_pg2_info WHERE patientid = '".$patientid."' AND segmentid = 9 ORDER BY date_completed DESC, id DESC LIMIT 1";
 $reason_result = mysql_query($reason_query);
 while ($row = mysql_fetch_assoc($reason_result)) {
 	$noncomp = $row;

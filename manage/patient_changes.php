@@ -319,8 +319,11 @@ function updateAll(v){
 
 <?php
 if($num_changes == 0){
+  //DELETE EXTRA ROW
+  mysql_query("DELETE FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'");
   ?>
     <script type="text/javascript">
+      alert("Patient Portal data is synced with your data");
       window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
     </script>
   <?php

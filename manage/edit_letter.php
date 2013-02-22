@@ -435,7 +435,7 @@ $reason_result = mysql_query($reason_query);
 while ($row = mysql_fetch_assoc($reason_result)) {
 	$delay = $row;
 }
-$delay['description'] = str_replace(".", "", strtolower($delay['description']));
+$delay['description'] = $delay['description'];
 
 // Select BMI
 $bmi_query = "SELECT bmi FROM dental_q_page1 WHERE patientid = '".$patientid."';";
@@ -546,7 +546,7 @@ $reason_result = mysql_query($reason_query);
 while ($row = mysql_fetch_assoc($reason_result)) {
 	$noncomp = $row;
 }
-$noncomp['description'] = str_replace(".", "", strtolower($noncomp['description']));
+$noncomp['description'] = $noncomp['description'];
 
 
 // Load $template

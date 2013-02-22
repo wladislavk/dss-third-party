@@ -155,7 +155,7 @@ $(document).ready(function(){
 */
 
                                   $.ajax({
-                                        url: "https://v16.eligibleapi.net:6443/status.json",
+                                        url: "https://v1.eligibleapi.net/plan/all.json",
                                         type: "get",
                                         dataType: 'json',
                                         data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',

@@ -116,14 +116,28 @@ Amount to charge credit card for <?= $r['name']; ?> $<input type="text" id="amou
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>
 <br /><br />
 
-<input type="submit" name="bill_submit"  value="Bill Credit Card" />
+<input type="submit" id="bill_submit" name="bill_submit"  value="Bill Credit Card" />
+<div id="loading_image" style="display:none;"><img src="../images/DSS-ajax-animated_loading-gif.gif" /></div>
 </form>
 
 
 <script type="text/javascript">
   function confirm_charge(){
+    $('#bill_submit').hide();
+    $('#loading_image').show();
     a = $('#amount').val();
-    return confirm("Credit card for <?= $r['name']; ?> will be charged $"+a+". Proceed?");
+    if(a == '' || a < .5){
+	alert('You must enter amount to be billed. Amount must be at least $0.50');
+        $('#bill_submit').show();
+    $('#loading_image').hide();
+	return false;
+    }
+    rval =  confirm("Credit card for <?= $r['name']; ?> will be charged $"+a+". Proceed?");
+    if(!rval){
+      $('#bill_submit').show();
+    $('#loading_image').hide();
+    }
+    return rval;
   }
 
   $(document).ready(function() {

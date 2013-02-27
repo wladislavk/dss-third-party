@@ -185,6 +185,11 @@ function userabc(fa)
 		fa.tax_id_or_ssn.focus();
 		return false;
 	}
+	if(!fa.ein.checked && !fa.ssn.checked){
+		alert("EIN or SSN is Required");
+		fa.ein.focus();
+		return false;
+        }
 	if(trim(fa.practice.value) == "" )
 	{
 		alert("Practice is Required");

@@ -127,7 +127,7 @@ $docid = $_SESSION['docid'];
 if ($status == 'pending') {
   $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters 
 		LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-		WHERE dental_letters.docid='".$docid."' AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+		WHERE dental_letters.docid='".$docid."' AND dental_letters.delivered=0 AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -139,7 +139,19 @@ if ($status == 'pending') {
 }
 
 if ($status == 'sent') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, dental_letters.pdf_path, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_patients.docid='".$docid."' AND dental_letters.status = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_query = "SELECT dental_letters.letterid, 
+dental_letters.templateid, 
+dental_letters.patientid, 
+UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+dental_letters.pdf_path, 
+dental_letters.topatient, 
+dental_letters.md_list, 
+dental_letters.md_referral_list, 
+dental_letters.send_method, 
+dental_patients.firstname, 
+dental_patients.lastname, 
+dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' OR dental_letters.delivered = '1') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -341,7 +353,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     $sentto = $dental_letters[$i]['sentto'];
 		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
-    $sent = date('m/d/Y', $dental_letters[$i]['date_sent']);
+    $sent = ($dental_letters[$i]['date_sent']!='')?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
     $id = $dental_letters[$i]['id'];
     $total_contacts = $dental_letters[$i]['total_contacts'];
     if ($dental_letters[$i]['old']) {

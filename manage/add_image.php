@@ -417,7 +417,7 @@ if($uploaded){
 										<?=st($itype_myarray['imagetype']);?>
 									</option>
 								<? }?>
-								<option value="0">Clinical Photos (Pre-Tx)</option>
+								<option value="0">Clinical Photos (Pre-Tx Batch)</option>
 							</select>
 							<?php } ?>
 						</span> 

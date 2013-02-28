@@ -63,7 +63,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bottom: 10px;">
 									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
 									Invoice Date: '.date('m/d/Y').'<br />
-									Payment Due: '.date('m/d/Y', strtotime(date() . " +7 day")).'
+									Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day")).'
 									</td>
 									</tr>							
 								</table>
@@ -280,7 +280,7 @@ $html .= '
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
-							Please make all checks payable to Dental Sleep Solutions Franchising, LLC. Payment is due within seven (7) days of invoice postmark. <b>Please include the receipt on the next page with payment.</b>
+							The amount above will be automatically debited from your account on file on '.date('m/d/Y', strtotime(date() . " +7 day")).'. DO NOT send a check or payment. If you dispute the amount above please contact us immediately. Please RETURN the Verification page following this invoice to confirm completed cases and total bill.
 							</td>
 							</tr>
 						</table>	
@@ -306,10 +306,10 @@ $html .= '
 </table>
 <br pagebreak="true"/>
  <span style="font-size:45px">
-INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - RECEIPT
+INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - VERIFICATION 
 </span>
-<span style="font-size:30px;">
-<i>Please include this receipt with your payment.</i>
+<span style="font-size:40px;">
+Please SIGN AND RETURN this Verification page. DO NOT send a check or payment.
 </span>
 <br />
 <br />
@@ -323,7 +323,7 @@ INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - RECEIPT
 om: 10px;">
 Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
                                                                         Invoice Date: '.date('m/d/Y').'<br />
-                                                                        Payment Due: '.date('m/d/Y', strtotime(date() . " +7 day")).'
+                                                                        Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day")).'
                                                                         </td>
                                                                         </tr>                                                   
                                                                 </table>                                                        </td>
@@ -335,7 +335,7 @@ Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
                                                                 <table width="196" border="0" cellspacing="0" cellpadding="0" >
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #444444; padding-bottom: 10px;">
-Paid to:
+Mail this page to:
                                                                         </td>
                                                                         </tr>
                                                                         <tr>

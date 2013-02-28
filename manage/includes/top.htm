@@ -844,7 +844,7 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
    WHERE (dt.status = '0' OR
         dt.status IS NULL) AND
         dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
-$task_q = mysql_query($task_sql);//." AND dt.due_date <= DATE_ADD(CURDATE(), INTERVAL 1 DAY);");
+$task_q = mysql_query($task_sql." AND dt.due_date <= CURDATE();");
 $num_tasks = mysql_num_rows($task_q);
 ?>
  <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
@@ -1120,7 +1120,8 @@ $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         dt.status IS NULL) AND
         (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') AND
  	dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$t_q = mysql_query($t_sql);
+$t_num_sql = $t_sql . " AND dt.due_date <= CURDATE();";
+$t_q = mysql_query($t_num_sql);
 $num_pat_tasks = mysql_num_rows($t_q);
 if($num_pat_tasks > 0){
 ?>
@@ -1342,7 +1343,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a> </li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a></li>
-        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='patient_letters.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
+        <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a></li>
         <li><a class="<?= ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?= $_GET['pid'] ?>">Images</a></li>
         <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Questionnaire</a></li>
         <li><a class="<?= (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?= $_GET['pid'] ?>&addtopat=1">Clinical Exam</a> </li>

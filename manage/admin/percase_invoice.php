@@ -66,7 +66,7 @@ if(isset($_POST['submit'])){
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Per-case  Invoice - <?= $doc['name']; ?>	
+	Invoicing - <?= $doc['name']; ?>	
 </span>
 <br />
 

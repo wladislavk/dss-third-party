@@ -23,6 +23,7 @@ if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
   }
 }
 
+
 if($id == "7"){
   $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
   $q = mysql_query($sql);
@@ -101,8 +102,10 @@ if($create){
 
 
 		    $letterid = array_unique($letterid);
+if($letterid){
 while(($key = array_search('0', $letterid)) !== false) {
     unset($letterid[$key]);
+}
 }
 if(count($letterid)>0){
                     $letteridlist = implode(",", $letterid);

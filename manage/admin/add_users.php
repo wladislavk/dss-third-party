@@ -380,28 +380,28 @@ if($_POST["usersub"] == 1)
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Username
+		<span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 NPI Number
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="npi" type="text" name="npi" value="<?=$npi?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Medicare Provider (NPI/DME) Number
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -415,15 +415,17 @@ if($_POST["usersub"] == 1)
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Tax ID or SSN
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                EIN or SSN
+                EIN or SSN<br />
+		(EIN or SSN is required)
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?> class="tbox" />
@@ -435,94 +437,94 @@ if($_POST["usersub"] == 1)
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Practice
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="practice" type="text" name="practice" value="<?=$practice?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
 	<?php if(!isset($_REQUEST['ed'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Password
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Re-type Password
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="password2" type="password" name="password2" value="<?=$password;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Name
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Email
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Address
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
 		<input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
                 <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 City
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 State
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Zip
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Phone
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
-                <span class="red">*</span>				
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -537,65 +539,65 @@ if($_POST["usersub"] == 1)
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Mailing Practice
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Name
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Address
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="mailing_address" class="tbox" id="mailing_address" value="<?= $mailing_address; ?>" />
                 <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing City
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing State
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Zip
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Phone
+                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="tbox" />
-                <span class="red">*</span>
             </td>
         </tr>
 

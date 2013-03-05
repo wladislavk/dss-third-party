@@ -5,7 +5,7 @@ require_once('../includes/constants.inc');
 include("../includes/sescheck.php");
 require_once('../includes/general_functions.php');
 ?>
-<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="../admin/script/jquery-1.6.2.min.js"></script>
 <?php
 if(isset($_REQUEST['submit']))
 {
@@ -43,11 +43,9 @@ parent.disablePopup1();
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<script language="javascript" type="text/javascript" src="../script/validation.js"></script>
 
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
+<script type="text/javascript" src="../script/wufoo.js"></script>
 </head>
 <body>
 <?php

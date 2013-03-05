@@ -403,7 +403,12 @@ $rs = $r['referred_source'];
 
 ?>
   <strong>Baseline Sleep Test?</strong> <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?><br />
-      <strong>Date:</strong> <? if($baseline_sleepstudy['date']!=''){ ?>
+      <strong>Type:</strong> <?= $baseline_sleepstudy['sleeptesttype']; ?>
+	<?php if($baseline_sleepstudy['filename']!=''){ ?>
+	  - <a href="./q_file/<?= $baseline_sleepstudy['filename'];?>">View Study</a>
+	<?php } ?>
+	<br />
+      <strong>Most Recent:</strong> <? if($baseline_sleepstudy['date']!=''){ ?>
 <?= time_ago_format(date('U')-strtotime($baseline_sleepstudy['date'])); ?> ago -
 <?= date('m/d/Y', strtotime($baseline_sleepstudy['date'])); ?>
 <?php } ?>
@@ -421,16 +426,20 @@ $rs = $r['referred_source'];
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
+				(ss.sleeptesttype!='PSG Baseline' AND ss.sleeptesttype!='HST Baseline') AND
                                 ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);
                 $sleepstudy = mysql_fetch_assoc($result);
-		if($sleepstudy['sleeptesttype']=='PSG Baseline' || $sleepstudy['sleeptesttype'] =='HST Baseline'){
-			$sleepstudy = '';
-		}
 ?><br />
-  <strong>Recent Sleep Test</strong><br />
-      <strong>Date:</strong> <? if($sleepstudy['date']!=''){ ?>
+  <strong>Recent Titration</strong><br />
+      <strong>Type:</strong> <?= $sleepstudy['sleeptesttype']; ?>
+        <?php if($sleepstudy['filename']!=''){ ?>
+          - <a href="./q_file/<?= $sleepstudy['filename'];?>">View Study</a>
+        <?php } ?>
+        <br />
+
+      <strong>Most Recent:</strong> <? if($sleepstudy['date']!=''){ ?>
 <?= time_ago_format(date('U')-strtotime($sleepstudy['date'])); ?> ago -
 <?= date('m/d/Y', strtotime($sleepstudy['date'])); ?>
 <?php } ?>

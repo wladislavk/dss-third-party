@@ -13,7 +13,7 @@
                 <span class="title">Test</span>
         </td>
         <td class="letters">
-                <a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+                <a href="dss_summ.php?sect=leters&pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
         </td>
         <td>
                 <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>
@@ -137,7 +137,7 @@ $segments[1] = "Initial Contact";
 		}
                 if($letter_count >0){
                 ?>
-                        <a href="patient_letters.php?pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+                        <a href="dss_summ.php?sect=letters&pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
                 <?php }else{ ?>
                         0 Letters
                 <?php } ?>

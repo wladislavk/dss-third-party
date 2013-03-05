@@ -1671,7 +1671,7 @@ foreach ($letter_contacts as $key => $contact) {
                         <?php
 
 		}
-
+	die();
     continue;
   }
 ?>

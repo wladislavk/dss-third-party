@@ -308,6 +308,7 @@ $html .= '
  <span style="font-size:45px">
 INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - VERIFICATION 
 </span>
+<br />
 <span style="font-size:40px;">
 Please SIGN AND RETURN this Verification page. DO NOT send a check or payment.
 </span>
@@ -383,7 +384,7 @@ om: 20px;">
 <td>
 
 Additional Cases?&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;No<br />
-If YES, please list all cases performed to-date that have not been previously invoiced and adjust total:
+If YES, please list all cases performed to-date that have not been previously invoiced:
 <br />
 <br />
 <table>
@@ -419,7 +420,7 @@ If YES, please list all cases performed to-date that have not been previously in
 <td align="right">
 Number of Additional Cases=__________<br />
 No Cases * $195=__________<br />
-<b>Adjusted Total:</b>__________
+<b>Total:</b>__________
 </td>
 </tr>
 </table>

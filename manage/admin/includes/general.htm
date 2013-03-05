@@ -1020,7 +1020,7 @@ function get_contact_pending_letters($contactid){
  * $template is for a modified template (including tokens) if the original template has been edited.
  */
 function delete_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
-
+$rval = '';
   $c_sql = "SELECT patientid, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid='".mysql_real_escape_string($letterid)."'";
   $c_q = mysql_query($c_sql);
   $c_r = mysql_fetch_assoc($c_q);
@@ -1028,7 +1028,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
   $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
   if (!isset($letterid)) {
 		return false;
-  } elseif ($parent == true || $total_contacts == 1) {
+  } elseif ( $total_contacts == 1) {
 		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
  		$parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
@@ -1053,7 +1053,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 				$md_referrals = explode(",", $row['md_referral_list']);
 				$key = array_search($recipientid, $md_referrals);
 				unset($md_referrals[$key]);
-				$new_md_referrals = implode(",", $mds);
+				$new_md_referrals = implode(",", $md_referrals);
 			}
 		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $row['send_method'], '', $deleted); 	
 		}
@@ -1066,6 +1066,7 @@ function delete_letter($letterid, $parent = null, $type, $recipientid, $template
 				$update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
 			}
 			$update_result = mysql_query($update_letters);
+
       if (!$update_result) {
 				return false;
 			} else {

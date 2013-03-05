@@ -297,6 +297,7 @@ $pat_r = mysql_fetch_assoc($pat_q);
       <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Titration">HST Titration</option>
       <option value="PSG Titration">PSG Titration</option>    
+      <option value="Oximeter">Oximeter</option>
     </select>	
 <script type="text/javascript">
 function show_new_study(){
@@ -501,7 +502,7 @@ $device = mysql_result($device_result, 0);
                    <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
                    <option <?= ($s_lab['sleeptesttype']=="HST Titration")?'selected="selected"':''; ?> value="HST Titration">HST Titration</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG Titration")?'selected="selected"':''; ?> value="PSG Titration">PSG Titration</option>
-
+		   <option <?= ($s_lab['sleeptesttype']=="Oximeter")?'selected="selected"':''; ?> value="Oximeter">Oximeter</option>
                 </select>
 
 		</td>

@@ -7,6 +7,7 @@ $c = $_REQUEST['c'];
 $pid = $_REQUEST['pid'];
 		$numsteps = null;
 $impression = true;
+$letterid = array();
 $create = true; //default to insert record if checks pass
 
 if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
@@ -100,13 +101,13 @@ if($create){
                                                         }
 
 
-
-		    $letterid = array_unique($letterid);
 if($letterid){
+		    $letterid = array_unique($letterid);
 while(($key = array_search('0', $letterid)) !== false) {
     unset($letterid[$key]);
 }
 }
+  $letter_count = 0;
 if(count($letterid)>0){
                     $letteridlist = implode(",", $letterid);
 
@@ -114,7 +115,6 @@ if(count($letterid)>0){
 $dental_letters_query = "SELECT patientid, letterid, UNIX_TIMESTAMP(generated_date) as generated_date, topatient, md_list, md_referral_list, pdf_path, status, delivered, dental_letter_templates.name, dental_letter_templates.template, deleted FROM dental_letters LEFT JOIN dental_letter_templates ON dental_letters.templateid=dental_letter_templates.id WHERE patientid = '".$pid."' AND (letterid IN(".$letteridlist.") OR parentid IN(".$letteridlist.")) ;";
   $dental_letters_res = mysql_query($dental_letters_query);
   $dental_letters = array();
-  $letter_count = 0;
   while ($row = mysql_fetch_assoc($dental_letters_res)) {
     $dental_letters[] = $row;
                 $contacts = get_contact_info((($row['topatient'] == "1") ? $row['patientid'] : ''), $row['md_list'], $row['md_referral_list']);

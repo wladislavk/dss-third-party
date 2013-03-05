@@ -99,7 +99,7 @@ if(isset($_POST['submit'])){
                                         <input type="text" name="monthly_date" value="<?=date('m/d/Y');?>" />
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#month_row').remove()">Remove</a>
+                                        <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="amount_monthly" value="695.00" />
@@ -117,7 +117,7 @@ if(isset($_POST['submit'])){
 					<input type="text" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
 				</td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove()">Remove</a>
+                                        <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();">Remove</a>
                                 </td>
 				<td valign="top">
          				    $<input type="text" class="amount" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
@@ -152,7 +152,7 @@ row += '<input type="text" name="extra_name_'+row_count+'" value="" />';
 row += '</td><td valign="top">';
 row += '<input type="text" name="extra_service_date_'+row_count+'" value="<?=date('m/d/Y');?>" />';
 row += '</td><td valign="top">';
-row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove()">Remove</a>';
+row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove(); calcTotal();">Remove</a>';
 row += '</td><td valign="top">';
 row += '$<input type="text" class="amount" name="extra_amount_'+row_count+'" value="195.00" />';
 row += '</td></tr>';

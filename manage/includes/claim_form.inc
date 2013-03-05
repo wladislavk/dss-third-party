@@ -1217,7 +1217,8 @@ input{text-transform:uppercase;}
 		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
         <?php if (!$is_sent) { 
                 if($is_back_office){ ?>
-          <input type="submit" name="ex_pagebtn" value="Submit Claim" />
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+ 	  <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
                 <?php } ?>
 
         <?php } ?>
@@ -2703,4 +2704,27 @@ var key = e.charCode || e.keyCode || 0;
                 (key >= 96 && key <= 105));
 });
 
+
+function file_claim(){
+/*
+                                  $.ajax({
+                                        url: "https://v1.eligibleapi.net/plan/all.json",
+                                        type: "get",
+                                        dataType: 'json',
+                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
+                                                payer_name: $('#payer_name').val(),
+                                                payer_id: $('#payer_id').val(),
+                                                provider_first_name: $('#provider_first_name').val(),
+                                                service_provider_last_name: $('#provider_last_name').val(),
+                                                service_provider_npi: $('#provider_npi').val(),
+                                                subscriber_id: $('#patient_member_id').val(),
+                                                subscriber_first_name: $('#patient_first_name').val(),
+                                                subscriber_last_name: $('#patient_last_name').val(),
+                                                subscriber_dob: $('#patient_dob').val(),
+                                                service_type_code: 30
+                                                },
+                                        complete: function(data){
+
+*/
+}
 </script>

@@ -165,7 +165,7 @@ while ($row = mysql_fetch_assoc($company_result)) {
 
   $template = str_replace($search, $replace, $template);
 
-  deliver_letter($r['letterid'], $template);
+  //deliver_letter($r['letterid'], $template);
   /*if($template != ''){
         // add a page
         $pdf->AddPage();

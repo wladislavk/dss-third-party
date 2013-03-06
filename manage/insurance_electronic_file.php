@@ -466,6 +466,7 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$dia
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_1 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_1_left_fill = $dia[0];
 $diagnosis_1_right_fill = $dia[1];
 
@@ -473,6 +474,7 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$dia
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_2 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_2_left_fill = $dia[0];
 $diagnosis_2_right_fill = $dia[1];
 
@@ -480,6 +482,7 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$dia
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_3 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_3_left_fill = $dia[0];
 $diagnosis_3_right_fill = $dia[1];
 
@@ -487,6 +490,7 @@ $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid=".$dia
 $ins_diag_my = mysql_query($ins_diag_sql);
 $ins_diag_myarray = mysql_fetch_array($ins_diag_my);                            
 $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
+$diagnosis_4 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_4_left_fill = $dia[0];
 $diagnosis_4_right_fill = $dia[1];
 
@@ -520,13 +524,13 @@ $data['billing_provider']= array(
 	"tin" => $tax_id_or_ssn,
 	"insurance_provider_id" => $medicare_ptan);
 $data['pay_to_provider'] = array(
-	"organization_name" => "",
+	"organization_name" => $practice,
         "address" => array(
-                "street_line_1" => "",
+                "street_line_1" => "123 test st",//$address,
                 "street_line_2" => "",
-                "city" => "",
-                "state" => "",
-                "zip" => "")
+                "city" => $city,
+                "state" => $state,
+                "zip" => $zip)
         );
 $data['subscriber'] = array(
 	"last_name" => $insured_lastname,
@@ -535,15 +539,19 @@ $data['subscriber'] = array(
 	"group_id" => $insured_policy_group_feca,
 	"group_name" => $insured_insurance_plan,
 	"dob" => $claim_ins_dob);
+  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
+  $ins_contact_qry_run = mysql_query($ins_contact_qry);
+  $ins_contact_res = mysql_fetch_array($ins_contact_qry_run);
+
 $data['payer'] = array(
-	"organization_name" => "",
-	"id" => "",
+	"organization_name" => "Aetna Long Term Care",
+	"id" => "225",
 	"address" => array(
-		"street_line_1" => "",
-		"street_line_2" => "",
-		"city" => "",
-		"state" => "",
-		"zip" => "")
+		"street_line_1" => $ins_contact_res['add1'],
+		"street_line_2" =>  $ins_contact_res['add2'],
+		"city" =>  $ins_contact_res['city'],
+		"state" =>  $ins_contact_res['state'],
+		"zip" =>  $ins_contact_res['zip'])
 	);
 $data['patient'] = array(
 	"relationship" => $relationship_id,
@@ -558,6 +566,60 @@ $data['patient'] = array(
                 "state" => $patient_state,
                 "zip" => $patient_zip)
         );
+
+$diagnosis_pointer = array();
+$diagnosis_pointer[1] = $diagnosis_1;
+$diagnosis_pointer[2] = $diagnosis_2;
+$diagnosis_pointer[3] = $diagnosis_3;
+$diagnosis_pointer[4] = $diagnosis_4;
+// Load pending medical trxns if new claim form. Otherwise, load associated trxns.
+$sql = "";
+  $sql = "SELECT "
+       . "  ledger.*, ";
+if($insurancetype == '1'){
+        $sql .= " user.medicare_npi ";
+}else{
+        $sql .= " user.npi ";
+}
+  $sql .= " as 'provider_id', ps.place_service as 'place' "
+       . "FROM "
+       . "  dental_ledger ledger "
+       . "  JOIN dental_users user ON user.userid = ledger.docid "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
+       . "WHERE "
+       . "  ledger.primary_claim_id = " . $insuranceid . " "
+       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.docid = " . $docid . " "
+       . "  AND trxn_code.docid = " . $docid . " "
+       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "ORDER BY "
+       . "  ledger.service_date ASC";
+
+$query = mysql_query($sql);
+$c=0;
+$claim_lines = array();
+while ($array = mysql_fetch_assoc($query)) {
+$c++;
+$diagnosis = '';
+if($array['diagnosispointer']!=''){
+  if(isset($diagnosis_pointer[$array['diagnosispointer']])){
+    $diagnosis = $diagnosis_pointer[$array['diagnosispointer']];
+  }
+}
+$a = array(
+	                "line_number" => "$c",
+                        "product_service_qualifier" => "HC",
+                        "product_service" => $array['transaction_code'],
+                        "charge_amount" => $array['amount'],
+                        "principal_diagnosis_1" => $diagnosis,
+			"service_start" => ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):'',
+			"service_end" =>  ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):''
+			);
+array_push($claim_lines, $a);
+}
+
+
 $data['claim'] = array(
 	"claim_number" => $_GET['insid'],
 	"total_charge_amount" => $total_charge,
@@ -566,7 +628,8 @@ $data['claim'] = array(
 	"provider_or_supplier_signature_indicator" => "Y",
 	"assignment_or_plan_participation" => $claim_assignment,
 	"benefits_assignment_certification_indicator" => "Y",
-	
+	"release_of_information" => "I",
+	"claim_lines" => $claim_lines
 	);
 /*
     "claim": {

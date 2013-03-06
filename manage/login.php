@@ -1,10 +1,9 @@
 <?
-session_start();
 require_once('admin/includes/config.php');
 include_once('admin/includes/password.php');
-$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-$page_my = mysql_query($page_sql);
-$page_myarray = mysql_fetch_array($page_my);
+//$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
+//$page_my = mysql_query($page_sql);
+//$page_myarray = mysql_fetch_array($page_my);
 
 if($_SESSION['loginid'] <> '')
 {
@@ -27,7 +26,6 @@ else
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 
@@ -37,7 +35,7 @@ else
 
 <?php
 
-if($_POST["loginsub"] == 1)
+if(isset($_POST["loginsub"]))
 {
 	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysql_real_escape_string($_POST['username'])."'";
 	$salt_q = mysql_query($salt_sql);
@@ -123,7 +121,9 @@ if($_POST["loginsub"] == 1)
 	       Please Enter Your Login Information 
         </td>
     </tr>
-	<? if($msg!="")
+	<? 
+	if(isset($msg)){
+	if($msg!="")
     {
     ?> 
         <tr bgcolor="#FFFFFF">
@@ -133,13 +133,15 @@ if($_POST["loginsub"] == 1)
                 </span>
             </td>
         </tr>
-    <? }?>
+    <? }
+	}
+	?>
     <tr bgcolor="#FFFFFF">
         <td class="t_data">
         	User name
         </td>
         <td class="t_data">
-        	<input type="text" name="username" value="<?= $_POST['username']; ?>">
+        	<input type="text" name="username" value="<?= (isset($_POST['username']))?$_POST['username']:''; ?>">
         </td>
     </tr>
     <tr bgcolor="#FFFFFF">

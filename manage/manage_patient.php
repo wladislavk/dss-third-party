@@ -4,7 +4,7 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 
-if($_REQUEST["delid"] != "")
+if(isset($_REQUEST["delid"]))
 {
 	$del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
@@ -21,7 +21,7 @@ if($_REQUEST["delid"] != "")
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(isset($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -50,15 +50,16 @@ if(isset($_GET['pid']))
 {
 	$sql .= " AND p.patientid = ".$_GET['pid'];
 }
-if($_GET['sh'] == 1 OR !isset($_GET['sh']))
+if(!isset($_GET['sh']))
+{
+        $sql .= " AND p.status = 1";
+}elseif($_GET['sh'] == 1 )
 {
 	$sql .= " AND p.status = 1";
-}
-if($_GET['sh'] == 2)
+}elseif($_GET['sh'] == 2)
 {
         $sql .= " AND (p.status = 1 OR p.status = 2)";
-}
-if($_GET['sh'] == 3)
+}elseif($_GET['sh'] == 3)
 {
         $sql .= " AND p.status = 2";
 }
@@ -85,12 +86,12 @@ $num_users=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 <div style="clear: both">
 <span class="admin_head">
-	Manage Patient <?= $patient_info ?>
+	Manage Patient <?= (isset($patient_info))?$patient_info:''; ?>
 	-
 	<select name="show" onchange="Javascript: window.location ='<?=$_SERVER['PHP_SELF'];?>?sh='+this.value;">
 		<option value="1">Active Patients</option>
-		<option value="2" <? if($_GET['sh'] == 2) echo " selected";?> >All Patients</option>
-                <option value="3" <? if($_GET['sh'] == 3) echo " selected";?> >In-active Patients</option>
+		<option value="2" <? if(isset($_GET['sh'])){ if($_GET['sh'] == 2) echo " selected"; } ?> >All Patients</option>
+                <option value="3" <? if(isset($_GET['sh'])){ if($_GET['sh'] == 3) echo " selected"; } ?> >In-active Patients</option>
 	</select>
 
 </span>
@@ -116,9 +117,13 @@ $num_users=mysql_num_rows($my);
 </div>-->
 
 <br />
+<?php
+  if(isset($_GET['msg'])){
+?>
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
+<?php } ?>
 <style>
 #contentMain tr:hover{
 background:#cccccc;

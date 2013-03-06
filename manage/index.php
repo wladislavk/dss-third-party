@@ -124,9 +124,11 @@ echo $memo_array['memo'] . "<br /><hr />";
  <?
 
 $sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['sh'])){
 if($_GET['sh'] != 2)
 {
 	$sqlddlist .= " and status = 1";
+}
 }
 $sqlddlist .= " order by lastname, firstname";
 $myddlist = mysql_query($sqlddlist);
@@ -146,9 +148,11 @@ location.href = document.DropDown.DDlinks.options[number].value;
 
 <?php
 $sqlddlist2 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['sh'])){
 if($_GET['sh'] != 2)
 {
 	$sqlddlist2 .= " and status = 1";
+}
 }
 $sqlddlist2 .= " order by lastname, firstname";
 $myddlist2 = mysql_query($sqlddlist2);
@@ -193,9 +197,11 @@ location.href = document.DropDown.DDlinks.options[number].value;
 <?php
 
 $sqlddlist3 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['sh'])){
 if($_GET['sh'] != 2)
 {
 	$sqlddlist3 .= " and status = 1";
+}
 }
 $sqlddlist3 .= " order by lastname, firstname";
 $myddlist3 = mysql_query($sqlddlist3);
@@ -224,9 +230,11 @@ while($ddlistpname3 = (mysql_fetch_array($myddlist3))){
  <?
 
 $sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['sh'])){
 if($_GET['sh'] != 2)
 {
 	$sqlddlist .= " and status = 1";
+}
 }
 $sqlddlist .= " order by lastname, firstname";
 $myddlist = mysql_query($sqlddlist);
@@ -246,9 +254,11 @@ location.href = document.DropDown.DDlinks.options[number].value;
 
 <?php
 $sqlddlist2 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['sh'])){
 if($_GET['sh'] != 2)
 {
 	$sqlddlist2 .= " and status = 1";
+}
 }
 $sqlddlist2 .= " order by lastname, firstname";
 $myddlist2 = mysql_query($sqlddlist2);

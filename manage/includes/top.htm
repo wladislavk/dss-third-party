@@ -1,5 +1,5 @@
 <?
-session_start();
+//session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
@@ -16,9 +16,11 @@ if($_SESSION['userid'] == '')
 	</script>
 	<?
 }
-$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-$page_my = mysql_query($page_sql);
-$page_myarray = mysql_fetch_array($page_my);
+
+
+//$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
+//$page_my = mysql_query($page_sql);
+//$page_myarray = mysql_fetch_array($page_my);
 
 if($_SESSION['loginid'] <> '')
 {
@@ -115,7 +117,6 @@ $num_rejected_preauth = mysql_num_rows($preauth_res);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <link href="css/task.css" rel="stylesheet" type="text/css" />

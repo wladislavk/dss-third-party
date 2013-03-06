@@ -2490,12 +2490,12 @@ function updatePPAlert(){
 				<?php
 					$sql = "SELECT generated_date FROM dental_letters WHERE templateid = '3' AND deleted = '0' AND patientid = '". $_GET['pid'] ."' ORDER BY generated_date ASC LIMIT 1;";
 					$result = mysql_query($sql);
-					$date_generated = mysql_result($result, 0);
 					if (mysql_num_rows($result) == 0) {
 				?>
          <input id="introletter" name="introletter" type="checkbox" value="1"> Send Intro Letter to DSS patient
 				<?php
 					} else {
+						$date_generated = mysql_result($result, 0);
 						print "DSS Intro Letter Sent to Patient $date_generated";
 					}
 				?>

@@ -3,13 +3,15 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
+$pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
 define('SORT_BY_DATE', 0);
 define('SORT_BY_STATUS', 1);
 define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
 
-$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
@@ -35,7 +37,7 @@ switch ($sort_by) {
 
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
-if($_REQUEST["delid"] != ""  && $_SESSION['admin_access']==1) {
+if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
@@ -49,7 +51,8 @@ if($_REQUEST["delid"] != ""  && $_SESSION['admin_access']==1) {
 	die();
 }
 
-if($_REQUEST['sendid']!=''){
+if(isset($_REQUEST['sendid'])){
+  if($_REQUEST['sendid']!=''){
   $sendid = $_REQUEST['sendid'];
   $send_sql = "SELECT i.*, f.description AS dispute_description FROM dental_insurance i
 		LEFT JOIN dental_insurance_file f ON f.claimid=i.insuranceid
@@ -82,8 +85,8 @@ if($_REQUEST['sendid']!=''){
 		note = 'Disputed insurance claim ".$sendid." re-filed with insurance company.'";
   mysql_query($note_sql);
 }
-
-if($_REQUEST['cancelid']!=''){
+}
+if(isset($_REQUEST['cancelid'])){
   $cancelid = $_REQUEST['cancelid'];
   $cancel_sql = "SELECT * FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
   $cancel_q = mysql_query($cancel_sql);
@@ -115,7 +118,7 @@ if($_REQUEST['cancelid']!=''){
 
 $rec_disp = 20;
 
-if($_REQUEST["page"] != "")
+if(isset($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
@@ -222,10 +225,13 @@ $my=mysql_query($sql) or die(mysql_error());
 &nbsp;
 
 <br />
+<?php
+if(isset($_GET['msg'])){
+?>
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
-
+<?php } ?>
 <div style="width:98%;margin:auto;">
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
     Status:
@@ -243,7 +249,7 @@ $my=mysql_query($sql) or die(mysql_error());
       <option value="">Any</option>
       <?php $franchisees = get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $_REQUEST['fid']) ? 'selected' : ''; ?>
+        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
       <?php } ?>
     </select>
@@ -282,7 +288,7 @@ $my=mysql_query($sql) or die(mysql_error());
 	</TR>
 	<? }?>
 	<?php
-    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid']
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
@@ -319,7 +325,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
 				<td valign="top">
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
@@ -344,11 +350,11 @@ $my=mysql_query($sql) or die(mysql_error());
 					$secondary_link = ($myarray['secondary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['secondary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=secondary&pid='.$myarray['patientid'];
 					?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
-				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
+				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
 						Edit
 					</a> 
 				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
-                                    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$_REQUEST['fid']?>&pid_filter=<?=$_REQUEST['pid']?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
+                                    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
                                                 Edit Secondary
                                         </a><br />
 					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>

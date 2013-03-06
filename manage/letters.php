@@ -191,19 +191,32 @@ foreach ($dental_letters as $key => $letter) {
 	}
 	$dental_letters[$key]['subject'] = $correspondance['name'];
 	// Get Recipients for Sent to Column
+if(isset($letter['patientid'])){
 $s = "SELECT referred_source FROM dental_patients where patientid=".mysql_real_escape_string($letter['patientid'])." LIMIT 1";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 $source = $r['referred_source'];
+}else{
+  $source = '';
+}
 	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source);
 	//print_r($contacts); print "<br />";
-	$total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
+	$total_contacts = 0;
+		$total_contacts += (isset($contacts['patient']))?count($contacts['patient']):0;
+                $total_contacts += (isset($contacts['mds']))?count($contacts['mds']):0;
+                $total_contacts += (isset($contacts['md_referrals']))?count($contacts['md_referrals']):0;
 	$dental_letters[$key]['total_contacts'] = $total_contacts;
 	if ($total_contacts > 1) {
 		$dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
-		$dental_letters[$key]['patient'] = $contacts['patient'];
-                $dental_letters[$key]['mds'] = $contacts['mds'];
-                $dental_letters[$key]['md_referrals'] = $contacts['md_referrals'];
+		if(isset($contacts['patient'])){
+		  $dental_letters[$key]['patient'] = $contacts['patient'];
+		}
+                if(isset($contacts['mds'])){
+                  $dental_letters[$key]['mds'] = $contacts['mds'];
+		}
+                if(isset($contacts['md_referrals'])){
+                  $dental_letters[$key]['md_referrals'] = $contacts['md_referrals'];
+		}
 	} elseif ($total_contacts == 0) {
 		$dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
 	} else {
@@ -215,26 +228,32 @@ $source = $r['referred_source'];
 		}
 		// MD: Salutation Lastname, Firstname - Contact Type
 		if(isset($contacts['mds'][0])){
-			$dental_letters[$key]['sentto'] .= ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))); 
+			$dental_letters[$key]['sentto'] .= ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . ((isset($contacts['mds']['contacttype'])) ? (" - " . $contacts['mds']['contacttype']) : (""))); 
 			if($status == 'pending'){ $dental_letters[$key]['sentto'] .= "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1); return false;\" class=\"delete_letter\" />Delete</a>"; }
 		}
 		// MD Referral: Salutation Lastname, Firstname - Contact Type
 		if(isset($contacts['md_referrals'][0])){
-			$dental_letters[$key]['sentto'] .= ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))); 
+			$dental_letters[$key]['sentto'] .= ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . ((isset($contacts['md_referrals']['contacttype'])) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))); 
 			if($status == 'pending'){ $dental_letters[$key]['sentto'] .= "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1); return false;\" class=\"delete_letter\" />Delete</a>"; }
 		}
 	}
 	// Determine Delivery Method
 	if ($letter['send_method'] == '') {
 		$method = array();
+		if(isset($contacts['patient'])){
 		foreach($contacts['patient'] as $contact) {
 			$method[] = $contact['preferredcontact'];
 		}
+		}
+                if(isset($contacts['mds'])){
 		foreach($contacts['mds'] as $contact) {
 			$method[] = $contact['preferredcontact'];
 		}
+		}
+                if(isset($contacts['md_referrals'])){
 		foreach($contacts['md_referrals'] as $contact) {
 			$method[] = $contact['preferredcontact'];
+		}
 		}
 		$result = array_unique($method);
 		if (count($result) == 1) {
@@ -353,7 +372,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     $sentto = $dental_letters[$i]['sentto'];
 		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
-    $sent = ($dental_letters[$i]['date_sent']!='')?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
+    $sent = (isset($dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
     $id = $dental_letters[$i]['id'];
     $total_contacts = $dental_letters[$i]['total_contacts'];
     if ($dental_letters[$i]['old']) {
@@ -371,6 +390,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
                                   ?><a href="#" onclick="$('#contacts_<?= $id; ?>').toggle(); return false;"><?= $sentto; ?></a>
                                   <div style="display:none;" id="contacts_<?= $id; ?>">
                                   <?php
+				  if(isset($dental_letters[$i]['patient'])){
                                   foreach($dental_letters[$i]['patient'] as $pat){
                                         ?><br /><?php
                                         echo $pat['salutation']." ".$pat['firstname']." ".$pat['lastname'];
@@ -378,6 +398,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
                                         ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
 					}
                                   }
+				  }
+				  if(isset($dental_letters[$i]['mds'])){
                                   foreach($dental_letters[$i]['mds'] as $md){
                                         ?><br /><?php
                                         echo $md['salutation']." ".$md['firstname']." ".$md['lastname'];
@@ -385,6 +407,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
                                         ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
 					}
                                   }
+				  }
+			          if(isset($dental_letters[$i]['md_referrals'])){
                                   foreach($dental_letters[$i]['md_referrals'] as $md_referral){
                                         ?><br /><?php
                                         echo $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname'];
@@ -392,6 +416,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
                                         ?><a href="#" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" class="delete_letter" />Delete</a><?php
 					}
                                   }
+				  }
                                   ?></div><?php
                                 }else{
                                   echo $sentto;

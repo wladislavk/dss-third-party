@@ -810,7 +810,11 @@ if ($_POST['insurancesub'] == 1) {
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';
+		if(isset($_POST['ex_pagebtn_elec'])){ 
+        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+		}else{
         print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+		}
         print '</script>';
 
 		die(); // already did a javascript redirect...just die

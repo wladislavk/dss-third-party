@@ -1,5 +1,8 @@
 <?php
 
+
+date_default_timezone_set('America/New_York');
+
 // Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
 $allowemail = false;
 // safeemail lists exceptions that will be allowed through.  Format: templateid[comma] [comment w/ title]
@@ -976,7 +979,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	$pdf->writeHTML($html, true, false, true, false, '');
         //Close and output PDF document
 	//WORK AROUND FOR MASS LETTER CREATION
-        $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
+        //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
 	//Close and output PDF document
 	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
 }

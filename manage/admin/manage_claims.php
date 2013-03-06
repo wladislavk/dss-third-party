@@ -402,6 +402,13 @@ $my=mysql_query($sql) or die(mysql_error());
 <br /><br />	
 <? include "includes/bottom.htm";?>
 <?php
+if(isset($_GET['sendins'])&&$_GET['sendins']==1){
+  ?>
+  <script type="text/javascript">
+    window.location = "../insurance_electronic_file.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
+  </script>
+  <?php
+}
 if(isset($_GET['showins'])&&$_GET['showins']==1){
   ?>
   <script type="text/javascript">

@@ -179,13 +179,15 @@ $sql = "SELECT "
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
-    $sql .= "WHERE ";
-    
+    $sql .= "WHERE "; 
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-	if($_REQUEST['status'] == DSS_CLAIM_PENDING){
+	if($_REQUEST['status'] === DSS_CLAIM_PENDING){
+		echo DSS_CLAIM_PENDING;
 	   	$sql .= " claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
 	}elseif($_REQUEST['status'] == DSS_CLAIM_SENT){
                 $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
+        }elseif($_REQUEST['status'] == 'unpaid45'){
+                $sql .= " claim.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
         	$sql .= "  claim.status = " . $_REQUEST['status'] . " ";
 	}
@@ -238,9 +240,11 @@ if(isset($_GET['msg'])){
     <select name="status">
       <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
+      <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
+      <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
     </select>
     &nbsp;&nbsp;&nbsp;
 
@@ -289,7 +293,7 @@ if(isset($_GET['msg'])){
 	<? }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
-             . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
+             . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">

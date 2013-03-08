@@ -1399,14 +1399,14 @@ $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlas
                 p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $insurance_my = mysql_query($insurance_sql);
 $total_insurance = mysql_num_rows($insurance_my);
-                                if(($n+$total_contactsi+$total_insurance)>0){ ?>
+                                if(($n+$total_contacts+$total_insurance)>0){ ?>
 <a class="warning" href="patient_changes.php?pid=<?=$_GET['pid'];?>">
 <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
 </a>
 
                                 <? } 
 
-        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+        $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
         $exist_q = mysql_query($exist_sql);
         $exist_row = mysql_fetch_assoc($exist_q);
 	if($exist_row['symptoms_status']==2 || $exist_row['treatments_status']==2 || $exist_row['history_status']==2 || $exist_row['sleep_status']==2){ ?>

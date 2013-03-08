@@ -75,7 +75,7 @@ if($_POST["contactsub"] == 1)
 		  }elseif($_GET['in_field']!='' && $_GET['id_field']!=''){	
 		     ?>
 			<script type="text/javascript">
-			   parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= $name; ?>', '<?= $_GET['id_field']; ?>', '<?= $rid; ?>');
+			   parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= addslashes($name); ?>', '<?= $_GET['id_field']; ?>', '<?= $rid; ?>');
 			</script>
 		     <?php	
 		  } ?>

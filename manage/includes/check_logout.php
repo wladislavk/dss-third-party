@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 require_once '../admin/includes/config.php';
 $id = $_SESSION['userid'];
 $logout_time = 60*60; //seconds

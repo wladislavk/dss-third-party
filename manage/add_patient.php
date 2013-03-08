@@ -734,7 +734,7 @@ mysql_query($s1);
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
-	if($msg != '')
+	if(isset($msg) && $msg != '')
 	{
 		$firstname = $_POST['firstname'];
 		$middlename = $_POST['middlename'];
@@ -933,60 +933,88 @@ mysql_query($s1);
 		$medical_insurance = st($themyarray["medical_insurance"]);
 		$mark_yes = st($themyarray["mark_yes"]);
 		$docsleep = st($themyarray["docsleep"]);
+		if($docsleep){
 		  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docsleep;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docsleep_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docsleep_name = "";
+		}
+	
 		$docpcp = st($themyarray["docpcp"]);
+		if($docpcp){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docpcp;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docpcp_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docpcp_name = "";
+		}
 
 		$docdentist = st($themyarray["docdentist"]);
+		if($docdentist){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docdentist;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docdentist_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docdentist_name = "";
+		}
 
 		$docent = st($themyarray["docent"]);
+		if($docent){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docent;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docent_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docent_name = "";
+		}
 
 		$docmdother = st($themyarray["docmdother"]);
+		if($docmdother){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
 				LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
 			WHERE contactid=".$docmdother;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docmdother_name = "";
+		}
 
                 $docmdother2 = st($themyarray["docmdother2"]);
+		if($docmdother2){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother2;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+		}else{
+		  $docmdother2_name = "";
+		}
 
                 $docmdother3 = st($themyarray["docmdother3"]);
+		if($docmdother3){
                   $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother3;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
                   $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
-
+		}else{
+		  $docmdother3_name = "";
+		}
 
 		$inactive = st($themyarray["inactive"]);
 		$partner_name = st($themyarray["partner_name"]);
@@ -1051,7 +1079,7 @@ mysql_query($s1);
 
 	?>
 	
-	<? if($msg != '') {?>
+	<? if(isset($msg) && $msg != '') {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
@@ -1236,7 +1264,7 @@ function remove_notification(id){
 }
 </script>
 <?php
-        if($_GET['search'] != ''){
+        if(isset($_GET['search']) && $_GET['search'] != ''){
 	  if(strpos($_GET['search'], ' ')){
             $firstname = ucfirst(substr($_GET['search'], 0, strpos($_GET['search'], ' ')));
             $lastname = ucfirst(substr($_GET['search'], strpos($_GET['search'],' ')+1));
@@ -1286,7 +1314,7 @@ $num_face = mysql_num_rows($itype_my);
 ?>
 <span style="float:right">
 <?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=4&return=patinfo&return_field=profile');return false;" >
+        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
 		<img src="images/add_patient_photo.png" />
         </a>
 <?php }else{ 
@@ -1531,7 +1559,7 @@ $num_face = mysql_num_rows($itype_my);
                                                                 }?>
                             </select>
                             <?php
-                                showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+                                //showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
                             ?>
                             <label for="feet">Height: Feet</label>
                         </span>
@@ -1547,7 +1575,7 @@ $num_face = mysql_num_rows($itype_my);
                                                                 }?>
                             </select>
                             <?php
-                                showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
+                                //showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
                             ?>
                             <label for="inches">Inches</label>
                         </span>
@@ -1563,7 +1591,7 @@ $num_face = mysql_num_rows($itype_my);
                                                                 }?>
                             </select>
                             <?php
-                                showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
+                                //showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
                             ?>
 
                             <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -1829,7 +1857,7 @@ $(document).ready(function(){
   $itype_my = mysql_query($itype_sql);
 $num_face = mysql_num_rows($itype_my);
 if($num_face == 0){ ?>
-				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=10&return=patinfo');return false;" class="addButton">
+				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
 <?php }else{
@@ -2017,7 +2045,7 @@ $image = mysql_fetch_assoc($itype_my);
 $num_face = mysql_num_rows($itype_my);
 if($num_face == 0){ ?>
 
-                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>&it=12&return=patinfo');return false;" class="addButton">
+                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
                 + Add Insurance Card Image
         </button>
 <?php }else{

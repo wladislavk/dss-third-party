@@ -5,7 +5,7 @@ include_once('admin/includes/password.php');
 //$page_my = mysql_query($page_sql);
 //$page_myarray = mysql_fetch_array($page_my);
 
-if($_SESSION['loginid'] <> '')
+if(isset($_SESSION['loginid']) &&$_SESSION['loginid'] <> '')
 {
 $cur_page_full =  $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
 $cur_ins_sql = "insert into dental_login_detail (loginid,userid,cur_page,adddate,ip_address) values('".$_SESSION['loginid']."','".$_SESSION['userid']."','".$cur_page_full."',now(),'".$_SERVER['REMOTE_ADDR']."')";

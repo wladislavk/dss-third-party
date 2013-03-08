@@ -250,7 +250,10 @@ foreach ($dental_letters as $key => $letter) {
   // Get Recipients for Sent to Column
   $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
   //print_r($contacts); print "<br />";
-  $total_contacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']);
+  $total_contacts = 0;
+    $total_contacts += (isset($contacts['patient']))?count($contacts['patient']):0;
+    $total_contacts += (isset($contacts['mds']))?count($contacts['mds']):0;
+    $total_contacts += (isset($contacts['md_referrals']))?count($contacts['md_referrals']):0;
   if ($total_contacts > 1) {
     $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
   } elseif ($total_contacts == 0) {
@@ -260,21 +263,27 @@ foreach ($dental_letters as $key => $letter) {
     $dental_letters[$key]['sentto'] = '';
     $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['firstname']) : ("");
     // MD: Salutation Lastname, Firstname - Contact Type
-    $dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
+    $dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . ((isset($contacts['mds']['contacttype'])) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
     // MD Referral: Salutation Lastname, Firstname - Contact Type
-    $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
+    $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . ((isset($contacts['md_referrals']['contacttype'])) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
   }
 	// Determine Delivery Method
 	if ($letter['send_method'] == '') {
 		$method = array();
+		if(isset($contacts['patient'])){
 		foreach($contacts['patient'] as $contact) {
 			$method[] = $contact['preferredcontact'];
 		}
+		}
+                if(isset($contacts['mds'])){
 		foreach($contacts['mds'] as $contact) {
 			$method[] = $contact['preferredcontact'];
 		}
+		}
+                if(isset($contacts['md_referrals'])){
 		foreach($contacts['md_referrals'] as $contact) {
 			$method[] = $contact['preferredcontact'];
+		}
 		}
 		$result = array_unique($method);
 		if (count($result) == 1) {
@@ -444,7 +453,7 @@ color: white;
     $id = $dental_letters[$i]['id'];
 		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
-		$delivered = date('m/d/Y', $dental_letters[$i]['delivery_date']);
+		$delivered = (isset($dental_letters[$i]['delivery_date']))?date('m/d/Y', $dental_letters[$i]['delivery_date']):'';
     if (isset($dental_letters[$i]['bg'])) {
       $bgcolor = ' class="'.$dental_letters[$i]['bg'].'"';
     } else {

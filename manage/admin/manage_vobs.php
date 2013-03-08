@@ -3,6 +3,9 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
+$pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
+
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
   
@@ -160,7 +163,7 @@ $sql = "SELECT "
 
 }
 // filter based on select lists above table
-if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
+if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
     $sql .= "WHERE ";
     
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
@@ -173,15 +176,15 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
 	}
     }
     
-    if (!empty($_REQUEST['fid'])) {
+    if (!empty($fid)) {
         if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
             $sql .= "  AND ";
         }
-        $sql .= "  users.userid = " . $_REQUEST['fid'] . " ";
+        $sql .= "  users.userid = " . $fid . " ";
     }
     
-    if (!empty($_REQUEST['pid'])) {
-        $sql .= "AND preauth.patient_id = " . $_REQUEST['pid'] . " ";
+    if (!empty($pid)) {
+        $sql .= "AND preauth.patient_id = " . $pid . " ";
     }
 }
 
@@ -228,19 +231,19 @@ $my=mysql_query($sql) or die(mysql_error());
       <option value="">Any</option>
       <?php $franchisees = get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $_REQUEST['fid']) ? 'selected' : ''; ?>
+        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
 
-    <?php if (!empty($_REQUEST['fid'])) { ?>
+    <?php if (!empty($fid)) { ?>
       Patients:
       <select name="pid">
         <option value="">Any</option>
-        <?php $patients = get_patients($_REQUEST['fid']); ?>
+        <?php $patients = get_patients($fid); ?>
         <?php while ($row = mysql_fetch_array($patients)) { ?>
-          <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
+          <?php $selected = ($row['patientid'] == $pid) ? 'selected' : ''; ?>
           <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
         <?php } ?>
       </select>
@@ -267,7 +270,7 @@ $my=mysql_query($sql) or die(mysql_error());
 	</TR>
 	<? }?>
 	<?php
-    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $_REQUEST['fid'] . "&pid=" . $_REQUEST['pid']
+    $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . $_REQUEST['status'] . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
@@ -307,7 +310,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr class="<?= (isset($tr_class))?$tr_class:'';?>">
 				<td valign="top">
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>

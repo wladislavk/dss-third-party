@@ -13,7 +13,7 @@ if(!isset($_GET['filter'])){
 $_GET['filter']=100;
 }
 
-if($_REQUEST["delid"] != "")
+if(isset($_REQUEST["delid"]))
 {
         $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
         mysql_query($del_sql);
@@ -45,7 +45,7 @@ $pend_my=mysql_query($pend_sql) or die(mysql_error());
 
 	
 $sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
-$sql .= " AND i.status !=  ".DSS_CLAIM_PENDING." AND i.status != ".DSS_CLAIM_SEC_PENDING;
+//$sql .= " AND i.status !=  ".DSS_CLAIM_PENDING." AND i.status != ".DSS_CLAIM_SEC_PENDING;
 if(isset($_GET['unpaid'])){
   $sql .= " AND i.status =  ".DSS_CLAIM_PENDING." AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";
 }
@@ -73,20 +73,16 @@ $my=mysql_query($sql) or die(mysql_error());
 
   
 <br />
+<?php
+if(isset($_GET['msg'])){
+?>
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
+<?php
+} 
+?>
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-        <? if($total_rec > $rec_disp) {?>
-        <TR bgColor="#ffffff">
-                <TD  align="right" colspan="15" class="bp">
-                        Pages:
-                        <?
-                                 paging($no_pages,$index_val,"");
-                        ?>
-                </TD>
-        </TR>
-        <? }?>
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head <?= ($_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
                         <a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=adddate&dir2=<?= ($_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>
@@ -210,16 +206,6 @@ if(v == '100'){
 
 <insurance name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" style="clear:both" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
-			?>
-		</TD>        
-	</TR>
-	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head <?= ($_GET['sort2'] == 'adddate')?'arrow_'.strtolower($_GET['dir2']):''; ?>" width="40%">
 			<a href="?filter=<?= $_GET['filter']; ?>&sort1=<?= $_GET['sort1']; ?>&dir1=<?=$_GET['dir1']; ?>&sort2=adddate&dir2=<?= ($_GET['sort2']=='adddate' && $_GET['dir2']=='ASC')?'DESC':'ASC'; ?>">Date</a>

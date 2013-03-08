@@ -1,8 +1,8 @@
 <?
-session_start();
+//session_start();
 include('includes/config.php');
 include_once('includes/password.php');
-if($_POST["loginsub"] == 1)
+if(isset($_POST["loginsub"]))
 {
         $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."' AND status=1";
         $salt_q = mysql_query($salt_sql);
@@ -63,7 +63,7 @@ if($_POST["loginsub"] == 1)
   <tr bgcolor="#FFFFFF">
     <td height="351" valign="middle" align="center">
     	
-        <? if($_GET['msg']!="")
+        <? if(isset($_GET['msg']))
 			{
 		 	?> 
                 <span class="red">

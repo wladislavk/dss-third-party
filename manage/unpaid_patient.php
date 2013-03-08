@@ -140,7 +140,7 @@ $pay_sql = "SELECT  "
 $pay_q = mysql_query($pay_sql);
 $pay_r = mysql_fetch_assoc($pay_q);
 $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
-			if($myarray['amount']>$paid_amount){
+			if(round($myarray['amount'],2)!=round($paid_amount,2)){
 			$pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
 			$pat_my = mysql_query($pat_sql);
 			$pat_myarray = mysql_fetch_array($pat_my);
@@ -185,7 +185,11 @@ $paid_amount = $myarray['paid_amount']+$pay_r['paid_amount'];
 	
 				</td>
 				<td valign="top" width="10%">&nbsp;
+					<?php if($myarray["amount"]>$paid_amount){ ?>
 					<?= number_format(($myarray["amount"]-$paid_amount),2); ?>
+					<?php }elseif($myarray["amount"]<$paid_amount){ ?>
+						<span style="color:#070;">(<?= number_format((abs($myarray["amount"]-$paid_amount)),2); ?>)</span>
+					<?php }?>
 				</td>
 			</tr>
 	<? 	} } }

@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 ?>
@@ -19,12 +19,12 @@ if($_POST["mult_transaction_codesub"] == 1)
 	{
 		if($val <> '')
 		{
-			$sel_check = "select * from dental_transaction_code_doc where transaction_code = '".s_for($val)."' WHERE doc ='".$_SESSION['docid']."';";
+			$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($val)."' WHERE docid ='".$_SESSION['docid']."';";
 			$query_check=mysql_query($sel_check);
 			
 			if(mysql_num_rows($query_check) == 0)
 			{
-				$ins_sql = "insert into dental_transaction_code_doc set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',doc ='".$_SESSION['docid']."';";
+				$ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($val)."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',docid ='".$_SESSION['docid']."';";
 				mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			}
 			
@@ -43,7 +43,7 @@ if($_POST["mult_transaction_codesub"] == 1)
 
 if($_POST["transaction_codesub"] == 1)
 {
-	$sel_check = "select * from dental_transaction_code_doc where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."' AND doc ='".$_SESSION['docid']."';";
+	$sel_check = "select * from dental_transaction_code where transaction_code = '".s_for($_POST["transaction_code"])."' and transaction_codeid <> '".s_for($_POST['ed'])."' AND docid ='".$_SESSION['docid']."';";
 	$query_check=mysql_query($sel_check);
 	
 	if(mysql_num_rows($query_check)>0)
@@ -69,7 +69,12 @@ if($_POST["transaction_codesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_transaction_code_doc set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."' where transaction_codeid='".$_POST["ed"]."' AND doc ='".$_SESSION['docid']."';";
+                        $ed_sql = "update dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
+                                modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
+                                modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
+                                days_units = '".s_for($_POST['days_units'])."',
+                                sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
+
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -84,7 +89,11 @@ if($_POST["transaction_codesub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_transaction_code_doc set transaction_code = '".s_for($_POST["transaction_code"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."',doc ='".$_SESSION['docid']."';";
+                        $ins_sql = "insert into dental_transaction_code set transaction_code = '".s_for($_POST["transaction_code"])."', place = '".s_for($_POST['place'])."', 
+                                modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
+                                modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
+                                days_units = '".s_for($_POST['days_units'])."',
+                                sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_SESSION['docid'];
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -111,26 +120,36 @@ if($_POST["transaction_codesub"] == 1)
 <body>
 
     <?
-    $thesql = "select * from dental_transaction_code_doc where transaction_codeid='".$_REQUEST["ed"]."' AND doc ='".$_SESSION['docid']."'";
+    $thesql = "select * from dental_transaction_code where transaction_codeid='".$_REQUEST["ed"]."' AND docid ='".$_SESSION['docid']."'";
 	$themy = mysql_query($thesql);
 	if($themy){
 	$themyarray = mysql_fetch_array($themy);
 	
 	if($msg != '')
 	{
-		$transaction_code = $_POST['transaction_code'];
-    $type = $_POST['type'];		
-		$sortby = $_POST['sortby'];
-		$status = $_POST['status'];
-		$description = $_POST['description'];
+                $transaction_code = $_POST['transaction_code'];
+                $type = $_POST['type'];
+                $place = $_POST['place'];
+                $sortby = $_POST['sortby'];
+                $amount = $_POST['amount'];
+                $status = $_POST['status'];
+                $description = $_POST['description'];
+                $modifier_code_1 = $_POST['modifier_code_1'];
+                $modifier_code_2 = $_POST['modifier_code_2'];
+                $days_units = $_POST['days_units'];
 	}
 	else
 	{
-		$transaction_code = st($themyarray['transaction_code']);
-		$type = st($themyarray['type']);
-		$sortby = st($themyarray['sortby']);
-		$status = st($themyarray['status']);
-		$description = st($themyarray['description']);
+                $transaction_code = st($themyarray['transaction_code']);
+                $type = st($themyarray['type']);
+                $place = st($themyarray['place']);
+                $sortby = st($themyarray['sortby']);
+		$amount = st($themyarray['amount']);
+                $status = st($themyarray['status']);
+                $description = st($themyarray['description']);
+                $modifier_code_1 = $themyarray['modifier_code_1'];
+                $modifier_code_2 = $themyarray['modifier_code_2'];
+                $days_units = $themyarray['days_units'];
 		$but_text = "Add ";
 	}
 	
@@ -189,6 +208,64 @@ if($_POST["transaction_codesub"] == 1)
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+               Place
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="place" class="tbox" />
+                  <option value=""></option>
+                  <?php
+                        $psql = "select * from dental_place_service order by sortby";
+                        $pmy = mysql_query($psql);
+                        while($prow = mysql_fetch_assoc($pmy)){
+                  ?>
+                  <option value="<?= $prow['place_serviceid']; ?>" <?php if($place == $prow['place_serviceid']){echo " selected='selected'";} ?>><?= $prow['place_service']." ".$prow['description']; ?></option>
+                  <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">            <td valign="top" class="frmhead" width="30%">
+               Default Modifier Code 1
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="modifier_code_1" class="tbox" />
+                  <option value=""></option>
+                  <?php
+                        $psql = "select * from dental_modifier_code order by sortby";
+                        $pmy = mysql_query($psql);
+                        while($prow = mysql_fetch_assoc($pmy)){
+                  ?>
+                  <option value="<?= $prow['modifier_code']; ?>" <?php if($modifier_code_1 == $prow['modifier_code']){echo " selected='selected'";} ?>><?= $prow['modifier_code']." ".$prow['description'];
+ ?></option>
+                  <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">            <td valign="top" class="frmhead" width="30%">
+               Default Modifier Code 2
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="modifier_code_2" class="tbox" />
+                  <option value=""></option>
+                  <?php
+                        $psql = "select * from dental_modifier_code order by sortby";
+                        $pmy = mysql_query($psql);
+                        while($prow = mysql_fetch_assoc($pmy)){
+                  ?>                  <option value="<?= $prow['modifier_code']; ?>" <?php if($modifier_code_2 == $prow['modifier_code']){echo " selected='selected'";} ?>><?= $prow['modifier_code']." ".$prow['description'];
+ ?></option>
+                  <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">            <td valign="top" class="frmhead" width="30%">
+               Default Days/Units
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="days_units" value="<?=$days_units;?>" class="tbox singlenumber" style="width:30px"/>
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Sort By
             </td>
@@ -196,6 +273,15 @@ if($_POST["transaction_codesub"] == 1)
                 <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+               Price
+            </td>
+            <td valign="top" class="frmdata">
+                $<input type="text" name="amount" value="<?=$amount;?>" class="tbox" style="width:100px"/>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

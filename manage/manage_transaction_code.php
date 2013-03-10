@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_transaction_code_doc where transaction_codeid='".$_REQUEST["delid"]."' WHERE doc='".$_SESSION['docid']."';";
+	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."' AND docid='".$_SESSION['docid']."';";
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_transaction_code_doc WHERE doc='".$_SESSION['docid']."' order by sortby";
+$sql = "select * from dental_transaction_code WHERE docid='".$_SESSION['docid']."' order by sortby";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -99,7 +99,7 @@ if($_POST['sortsub'] == 1)
 		<td valign="top" class="col_head" width="10%">
 			TX Code		
 		</td>
-		<td valign="top" class="col_head" width="40%">
+		<td valign="top" class="col_head" width="30%">
 			Description		
 		</td>
 		<td valign="top" class="col_head" width="30%">
@@ -108,7 +108,10 @@ if($_POST['sortsub'] == 1)
 		<td valign="top" class="col_head" width="10%">
 			Sort By 
 		</td>
-		<td valign="top" class="col_head" width="20%">
+                <td valign="top" class="col_head" width="10%">
+                        Amount
+                </td>
+		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
 	</tr>
@@ -165,7 +168,9 @@ if($_POST['sortsub'] == 1)
 				<td valign="top" align="center">
 					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
 				</td>	
-						
+                                <td valign="top" align="center">
+                                        <?= st($myarray['amount'])?>
+                                </td>						
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
 						Edit

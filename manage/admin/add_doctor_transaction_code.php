@@ -1,5 +1,5 @@
 <?php 
-session_start();
+//session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
 ?>
@@ -123,7 +123,7 @@ if($_POST["transaction_codesub"] == 1)
 	if($msg != '')
 	{
 		$transaction_code = $_POST['transaction_code'];
-    $type = $_POST['type'];		
+    		$type = $_POST['type'];		
 		$place = $_POST['place'];
 		$sortby = $_POST['sortby'];
                 $amount = $_POST['amount'];

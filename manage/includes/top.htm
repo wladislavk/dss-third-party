@@ -813,7 +813,9 @@ display:none;
 		?>
             <li><a class="menu_item" href="#">Admin</a></li>
                      <li><a class="submenu_item" href="manage_custom.php">Custom Text</a></li>
+                     <?php if($_SESSION['userid']==$_SESSION['docid']){ ?>
                      <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
+		     <?php } ?>
                      <li><a class="submenu_item" href="manage_staff.php">Staff</a></li>
 
 

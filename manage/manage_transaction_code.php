@@ -1,6 +1,11 @@
 <? 
 include "includes/top.htm";
 
+if($_SESSION['userid']!=$_SESSION['docid']){
+  ?>You are not authorized to access this page.<?php
+  die();
+}
+
 if($_REQUEST["delid"] != "")
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."' AND docid='".$_SESSION['docid']."';";

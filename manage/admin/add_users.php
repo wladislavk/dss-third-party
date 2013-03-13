@@ -77,7 +77,7 @@ if($_POST["usersub"] == 1)
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-
+			update_custom_release_form($_POST['ed']);
                         $course_sql = "update content_type_profile SET
                                         field_docname_value='".mysql_real_escape_string($_POST["name"])."'
                                         where field_docid_value='".$_POST["ed"]."'";

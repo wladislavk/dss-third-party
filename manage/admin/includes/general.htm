@@ -1,6 +1,5 @@
 <?php
 
-date_default_timezone_set('America/New_York');
 
 // Set the following two variables to allow/disable email.  It will be sent via paper mail if disabled or not set.
 $allowemail = false;
@@ -1190,5 +1189,231 @@ function time_ago_format($seconds_ago){
 function date_in_words_until($date){
   return time_ago_format(strtotime($date) - date('U'));
 }
+
+
+
+function update_custom_release_form($id){
+
+
+$s = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
+
+$html = '<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Adobe Garamond Pro";
+	panose-1:2 2 5 2 6 5 6 2 4 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:115%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:.5in .5in .5in .5in;
+	border:solid windowtext 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal">
+
+<!--<img width=86 height=70
+src="DSS%20Record%20Release%20Custom%20Form%20Demo%20-%20HTML_files/image001.jpg"
+align=left hspace=12>-->
+
+
+<span style="font-size:28.0pt;font-family:\"Adobe Garamond Pro\",\"serif\"">Dental
+Sleep Solutions&reg;</span></p>
+
+<p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal"><span style="position:absolute;
+z-index:251660288;left:0px;margin-left:5px;margin-top:57px;width:945px;
+height:16px">
+
+
+<!--<img width=945 height=16
+src="DSS%20Record%20Release%20Custom%20Form%20Demo%20-%20HTML_files/image002.png">--></span><span
+style="font-size:24.0pt;font-family:\"Arial\",\"sans-serif\"">PATIENT MEDICAL
+RECORD RELEASE FORM</span></p>
+
+<p class=MsoNormal style="margin-top:4.0pt;line-height:normal">Dental Sleep
+Solutions<sup>&reg;</sup> coordinates treatment with your healthcare providers to
+help ensure maximum benefit to you.† Please sign the record release form below
+so we can retrieve medical records related to sleep disordered breathing.</p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:16.0pt">To</span></b><span
+style="font-size:16.0pt">: </span><span style="font-size:12.0pt">__________________________________________________________________________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:16.0pt">From</span></b><span
+style="font-size:16.0pt">: '.$r['name'].'</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
+would like to request a copy of the following if applicable:</span></p>
+
+<p class=MsoNormal style="margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:45.0pt;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal"><span
+style="font-size:12.0pt;">&bull;<span style="font:7.0pt \"Times New Roman\"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style="font-size:12.0pt">All baseline PSG\'s, oximetry
+studies, and the patient\'s most recent CPAP titration study </span></p>
+
+<p class=MsoNormal style="margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:45.0pt;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal"><span
+style="font-size:12.0pt;">&bull;<span style="font:7.0pt \"Times New Roman\"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span style="font-size:12.0pt">Any pertinent notes about
+patient\'s past medical history </span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
+Name: _________________________________________________________________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
+DOB: ___________________________________________________________________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
+wish to obtain them in this way:</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&#9633;
+PICK UP FROM OFFICE</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span
+style="font-size:12.0pt">&#9633; PLEASE MAIL TO US AT THE ADDRESS
+LISTED BELOW</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&#9633;
+PLEASE FAX TO THE PHONE NUMBER LISTED BELOW</span></p>
+
+<p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:12.0pt">ADDRESS: '.$r['mailing_address'].'</span></p>
+
+<p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:12.0pt">'.$r['city'].' ' .$r['state'].' '.$r['zip'].'</span></p>
+
+<p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:12.0pt"> </span></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:14.0pt">FAX</span></b><span
+style="font-size:14.0pt">: <b> '.$r['fax'].'</b></span></p>
+
+<p class=MsoNormal style="line-height:normal"><i><span style="font-size:12.0pt">I
+request and authorize the above named doctor or health care provider, or individual
+named in this request to obtain my medical records. A copy of this
+authorization or my signature thereon may be used with the same effectiveness
+as an original.</span></i></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">&nbsp;</span></b></p>
+
+<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Patient
+Signature</span></b><span style="font-size:12.0pt">:
+______________________________________________ <b>Date</b>: _______________</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+
+<p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal"><span style="font-size:12.0pt">Additional Comments:</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">____________________________________________________________________________________
+____________________________________________________________________________________
+____________________________________________________________________________________
+</span></p>
+
+<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Thank
+you in advance.</span></p>
+
+</div>
+
+</body>
+
+</html>
+';
+	$title = "DSS Record Release";
+	$filename = "user_record_release_".$id.".pdf";
+
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Dental Sleep Solutions');
+        $pdf->SetTitle($title);
+        $pdf->SetSubject($title);
+        $pdf->SetKeywords('DSS Correspondance');
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+
+        // set font
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // add a page
+        $pdf->AddPage();
+
+        // output the HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+        //Close and output PDF document
+
+	$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/q_file/' . $filename, 'F');
+
+
+}
+
+
+
+
 
 ?>

@@ -1534,7 +1534,7 @@ foreach ($letter_contacts as $key => $contact) {
 				<div id="letter<?=$cur_letter_num?>">
 				<?php print $letter[$cur_letter_num]; ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num])?>" />
+				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_HTML401,"UTF-8")?>" />
 			</td>
 		</tr>
 	</table>

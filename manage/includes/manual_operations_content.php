@@ -4698,13 +4698,9 @@ text-transform:uppercase'><br clear=all style='page-break-before:always'>
 
 <p class=MsoNormal>&nbsp;</p>
 
-<p class=MsoNormal>Please click here to be redirected to the Dental Sleep
+<p class=MsoNormal>Please <a href="manual.php">click here</a> to be redirected to the Dental Sleep
 Procedures Manual.</p>
 
-<p class=MsoNormal>&nbsp;</p>
-
-<p class=MsoNormal><span style='background:yellow'>INSERT LINK TO PROCEDURES
-MANUAL HERE.</span></p>
 
 <p class=MsoNormal>&nbsp;</p>
 

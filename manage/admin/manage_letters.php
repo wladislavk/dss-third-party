@@ -145,7 +145,7 @@ $sortdir = $_REQUEST['sortdir'];
 
 // Letters count and Oldest letter
 //$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
-$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
@@ -231,6 +231,7 @@ dental_letters.md_referral_list,
 dental_letters.docid, 
 dental_letters.userid, 
 dental_letters.send_method, 
+dental_letters.mailed_date,
 dental_patients.firstname, 
 dental_patients.lastname, 
 dental_patients.middlename FROM dental_letters 
@@ -268,6 +269,7 @@ foreach ($dental_letters as $key => $letter) {
   // Get Franchisee Name
   //$franchisee_query = "SELECT dental_users.name FROM dental_users JOIN dental_patients ON dental_patients.docid=dental_users.userid WHERE dental_patients.patientid = '".$letter['patientid']."';";
   $dental_letters[$key]['id'] = $letter['letterid'];
+  $dental_letters[$key]['mailed'] = $letter['mailed_date'];
   $franchisee_query = "SELECT dental_users.name FROM dental_users WHERE userid='".$letter['docid']."'";
   $result = mysql_query($franchisee_query);
   $dental_letters[$key]['franchisee'] = mysql_result($result, 0);
@@ -479,6 +481,9 @@ color: white;
     <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'send_method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=send_method&sortdir=<?php echo ($_REQUEST['sort']=='send_method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
+    <?php if($status=="sent"){ ?>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></td>
+    <?php } ?>
   </tr>
 <?php
   $i = $page_limit * $page;
@@ -493,6 +498,7 @@ color: white;
     $subject = $dental_letters[$i]['subject'];
     $sentto = $dental_letters[$i]['sentto'];
     $id = $dental_letters[$i]['id'];
+    $mailed = $dental_letters[$i]['mailed'];
 		$method = $dental_letters[$i]['send_method'];
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
 		$delivered = (isset($dental_letters[$i]['delivery_date']))?date('m/d/Y', $dental_letters[$i]['delivery_date']):'';
@@ -502,12 +508,40 @@ color: white;
       $bgcolor = null;
     }
     
-    print "<tr><td>$franchisee</td><td>$username</td>".($status == "pending" ? "<td$bgcolor>$received</td>" : "").($status == "sent" ? "<td$bgcolor>$delivered</td>" : "")."<td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td></tr>";
+    print "<tr><td>$franchisee</td><td>$username</td>".($status == "pending" ? "<td$bgcolor>$received</td>" : "").($status == "sent" ? "<td$bgcolor>$delivered</td>" : "")."<td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>";
+    if($status=="sent"){ ?>
+      <td><input type="checkbox" class="mailed_chk" value="<?= $id; ?>" <?= ($mailed !='')?'checked="checked"':''; ?> /></td>
+    <?php } ?> 
+    
+    </tr>
+    <?php
     $i++;
   }
 ?>
 </table>
 
 </div>
+<script type="text/javascript">
+  $('.mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+                                   $.ajax({
+                                        url: "../includes/letter_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+</script>
 
 <?php include 'includes/bottom.htm'; ?>

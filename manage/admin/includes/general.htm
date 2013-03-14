@@ -509,7 +509,11 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
                 $letter_result = mysql_query($letter_query);
                 $parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
                 $parent_result = mysql_query($parent_query);
-    return mysql_error();
+		if($letter_result){
+		  return $letterid;
+		}else{
+		  return "ERROR";
+		}
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
                 $select_result = mysql_query($select_letter);
@@ -541,7 +545,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
                                         }
                                 }
                         }
-                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status);
+                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $template, $send_method, $status);
                 }
                 if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
                         if ($type == 'patient') {
@@ -701,7 +705,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
 		if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-			$letter_query = "UPDATE dental_letters SET delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+			$letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			$letter_result = mysql_query($letter_query);
 			if (!$letter_result) {
 				return mysql_error();
@@ -1012,6 +1016,14 @@ function get_contact_pending_letters($contactid){
   return mysql_num_rows($q);
 }
 
+function mail_letter($letterid, $mailed = true) {
+  if($mailed != 'false'){
+    $s = "UPDATE dental_letters set mailed_date = NOW() where letterid='".mysql_real_escape_string($letterid)."'";
+  }else{
+    $s = "UPDATE dental_letters set mailed_date = null where letterid='".mysql_real_escape_string($letterid)."'";
+  }
+  return mysql_query($s);
+}
 
 /* Set $parent to true if you want to delete the original letter including all contacts
  * if $parent is false or not set, one contact will be removed from the letter and a new letter will be created

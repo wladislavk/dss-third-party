@@ -1574,11 +1574,12 @@ foreach ($letter_contacts as $key => $contact) {
     }
  		$type = $contact['type'];
 		$recipientid = $contact['id'];
-		if ($_GET['backoffice'] == '1') {
+		if ($_GET['backoffice'] == '1' || $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE) {
 			$message = $letter[$cur_letter_num];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
-			$status = deliver_letter($letterid, $message);
+			$send = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+			$status = deliver_letter($send, $message);
 			$sql = "SELECT send_method, pdf_path FROM dental_letters WHERE letterid = '" . $letterid . "'";
 			$result = mysql_query($sql);
 			$my = mysql_fetch_array($result);

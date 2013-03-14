@@ -286,7 +286,7 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>
 	</TR>

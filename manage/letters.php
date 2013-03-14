@@ -136,7 +136,7 @@ if ($status == 'pending') {
       $dental_letters[] = $row;
     }
   }
-}elseif ($status == 'sent' && $_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) {
+}elseif ($status == 'sent') {
   $letters_query = "SELECT dental_letters.letterid, 
 dental_letters.templateid, 
 dental_letters.patientid, 
@@ -149,51 +149,9 @@ dental_letters.md_referral_list,
 dental_letters.send_method, 
 dental_patients.firstname, 
 dental_patients.lastname, 
-dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' OR dental_letters.delivered = '1') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
-  $letters_res = mysql_query($letters_query);
-  if (!$letters_res) {
-    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
-  } else {
-    while ($row = mysql_fetch_assoc($letters_res)) {
-      $dental_letters[] = $row;
-    }
-  }
-}elseif ($status == 'sent' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
-  $letters_query = "SELECT dental_letters.letterid, 
-dental_letters.templateid, 
-dental_letters.patientid, 
-UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
-UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
-dental_letters.pdf_path, 
-dental_letters.topatient, 
-dental_letters.md_list, 
-dental_letters.md_referral_list, 
-dental_letters.send_method, 
-dental_patients.firstname, 
-dental_patients.lastname, 
-dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
-  $letters_res = mysql_query($letters_query);
-  if (!$letters_res) {
-    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
-  } else {
-    while ($row = mysql_fetch_assoc($letters_res)) {
-      $dental_letters[] = $row;
-    }
-  }
-}elseif ($status == 'to_be_sent') {
-  $letters_query = "SELECT dental_letters.letterid, 
-dental_letters.templateid, 
-dental_letters.patientid, 
-UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
-UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
-dental_letters.pdf_path, 
-dental_letters.topatient, 
-dental_letters.md_list, 
-dental_letters.md_referral_list, 
-dental_letters.send_method, 
-dental_patients.firstname, 
-dental_patients.lastname, 
-dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' AND dental_letters.delivered = '0') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+dental_patients.middlename, 
+dental_letters.mailed_date
+FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' OR dental_letters.delivered = '1') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -360,8 +318,6 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 		echo "Pending";
         }elseif($status == "sent"){
 		echo "Sent";
-	}elseif($status == "to_be_sent"){
-		echo "To Be Sent";
 	} ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   <form name="filter_letters" action="/manage/letters.php" method="get">
 		<input type="hidden" name="status" value="<?=$status;?>" />
@@ -382,13 +338,6 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">
-<?php if ($status != "to_be_sent" && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
-  <div style="float:right;margin-right: 10px;">
-        <form method="post" action="/manage/letters.php?status=to_be_sent">
-        <input class="addButton" type="submit" value="Letters To Be Sent">
-        </form>
-  </div>
-<?php } ?>
 <?php if ($status != "sent"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/letters.php?status=sent">
@@ -416,6 +365,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></td>
 <?php if ($status == "sent"): ?>
     <td class="col_head <?= ($_REQUEST['sort'] == 'date_sent')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=date_sent&sortdir=<?php echo ($_REQUEST['sort']=='date_sent'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent On</a></td>
+    <td class="col_head <?= ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['mailed']):''; ?>"><a href="letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></td>
+
 <?php endif; ?>
   </tr>
 <?php
@@ -431,6 +382,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
     $generated = date('m/d/Y', $dental_letters[$i]['generated_date']);
     $sent = (isset($dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
     $id = $dental_letters[$i]['id'];
+    $mailed = $dental_letters[$i]['mailed_date'];
     $total_contacts = $dental_letters[$i]['total_contacts'];
     if ($dental_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
@@ -482,7 +434,12 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 	</td>
 	<td><?= $method; ?></td>
 	<td><?= $generated; ?></td>
-	<?= ($status == "sent" ? "<td>$sent</td>" : ""); ?>
+	<?php if($status == "sent"){ ?>
+		<td><?= $sent; ?></td>
+		<?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+		<td><input type="checkbox" class="mailed_chk" value="<?= $id; ?>" <?= ($mailed !='')?'checked="checked"':''; ?> /></td>
+		<?php } ?>
+     	<?php } ?>
       </tr>
     <?php
     $i++;
@@ -512,6 +469,28 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
                                   });
         }
   }
+
+
+  $('.mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+                                   $.ajax({
+                                        url: "includes/letter_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
 
 </script>
 

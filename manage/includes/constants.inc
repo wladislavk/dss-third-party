@@ -230,6 +230,11 @@ $dss_patient_contact_labels[DSS_PATIENT_CONTACT_DENTIST] = "Dentist";
 $dss_patient_contact_labels[DSS_PATIENT_CONTACT_ENT] = "ENT";
 $dss_patient_contact_labels[DSS_PATIENT_CONTACT_OTHER] = "Other MD";
 
+define('DSS_USER_TYPE_FRANCHISEE', 1);
+define('DSS_USER_TYPE_SOFTWARE', 2);
+$dss_user_type_labels = array();
+$dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE] = "Franchisee";
+$dss_user_type_labels[DSS_USER_TYPE_SOFTWARE] = "Software";
 
 define('DSS_ADMIN_ACCESS_SUPER', 1);
 define('DSS_ADMIN_ACCESS_ADMIN', 2);

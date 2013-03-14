@@ -136,9 +136,7 @@ if ($status == 'pending') {
       $dental_letters[] = $row;
     }
   }
-}
-
-if ($status == 'sent') {
+}elseif ($status == 'sent' && $_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) {
   $letters_query = "SELECT dental_letters.letterid, 
 dental_letters.templateid, 
 dental_letters.patientid, 
@@ -152,6 +150,50 @@ dental_letters.send_method,
 dental_patients.firstname, 
 dental_patients.lastname, 
 dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' OR dental_letters.delivered = '1') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_res = mysql_query($letters_query);
+  if (!$letters_res) {
+    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+  } else {
+    while ($row = mysql_fetch_assoc($letters_res)) {
+      $dental_letters[] = $row;
+    }
+  }
+}elseif ($status == 'sent' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+  $letters_query = "SELECT dental_letters.letterid, 
+dental_letters.templateid, 
+dental_letters.patientid, 
+UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+dental_letters.pdf_path, 
+dental_letters.topatient, 
+dental_letters.md_list, 
+dental_letters.md_referral_list, 
+dental_letters.send_method, 
+dental_patients.firstname, 
+dental_patients.lastname, 
+dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND dental_letters.delivered = '1' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+  $letters_res = mysql_query($letters_query);
+  if (!$letters_res) {
+    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
+  } else {
+    while ($row = mysql_fetch_assoc($letters_res)) {
+      $dental_letters[] = $row;
+    }
+  }
+}elseif ($status == 'to_be_sent') {
+  $letters_query = "SELECT dental_letters.letterid, 
+dental_letters.templateid, 
+dental_letters.patientid, 
+UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+dental_letters.pdf_path, 
+dental_letters.topatient, 
+dental_letters.md_list, 
+dental_letters.md_referral_list, 
+dental_letters.send_method, 
+dental_patients.firstname, 
+dental_patients.lastname, 
+dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' AND dental_letters.delivered = '0') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -312,7 +354,15 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 ?>
 
 <div class="letters-tryptych1">
-  <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
+  <h1 class="blue"><?php 
+
+	if($status == 'pending'){
+		echo "Pending";
+        }elseif($status == "sent"){
+		echo "Sent";
+	}elseif($status == "to_be_sent"){
+		echo "To Be Sent";
+	} ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   <form name="filter_letters" action="/manage/letters.php" method="get">
 		<input type="hidden" name="status" value="<?=$status;?>" />
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
@@ -332,14 +382,21 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">
-<?php if ($status == "pending"): ?>
+<?php if ($status != "to_be_sent" && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
+  <div style="float:right;margin-right: 10px;">
+        <form method="post" action="/manage/letters.php?status=to_be_sent">
+        <input class="addButton" type="submit" value="Letters To Be Sent">
+        </form>
+  </div>
+<?php } ?>
+<?php if ($status != "sent"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/letters.php?status=sent">
   	<input class="addButton" type="submit" value="Sent Letters">
   	</form>
   </div>
 <?php endif; ?>
-<?php if ($status == "sent"): ?>
+<?php if ($status != "pending"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/letters.php?status=pending">
   	<input class="addButton" type="submit" value="Pending Letters">

@@ -43,6 +43,7 @@ if($_POST["usersub"] == 1)
 			$old_r = mysql_fetch_assoc($old_q);
 			$old_username = $old_r['username'];
 
+
 			$ed_sql = "update dental_users set 
 				username = '".s_for($_POST["username"])."',
 				user_access=2,
@@ -74,6 +75,7 @@ if($_POST["usersub"] == 1)
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
 				use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
+				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -137,6 +139,7 @@ if($_POST["usersub"] == 1)
 			$salt = create_salt();
 			$password = gen_password($_POST['password'], $salt);
 
+
 			$ins_sql = "insert into dental_users set user_access=2,
 				username = '".s_for($_POST["username"])."',
 				npi = '".s_for($_POST["npi"])."',
@@ -170,6 +173,7 @@ if($_POST["usersub"] == 1)
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
 				status = '".s_for($_POST["status"])."',
+				user_type = '".s_for($_POST["user_type"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -310,6 +314,7 @@ if($_POST["usersub"] == 1)
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
 		$companyid = $_POST['companyid'];
+		$user_type = $_POST['user_type'];
 	}
 	else
 	{
@@ -347,6 +352,7 @@ if($_POST["usersub"] == 1)
                 $use_course = st($themyarray['use_course']);
                 $use_course_staff = st($themyarray['use_course_staff']);
 		$companyid = st($themyarray['companyid']);
+                $user_type = st($themyarray['user_type']);
 		$but_text = "Add ";
 	}
 	
@@ -681,6 +687,18 @@ if($_POST["usersub"] == 1)
 			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
  			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
 			  <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 User Type
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="user_type" class="tbox">
+                            <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
+                            <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
+
                 </select>
             </td>
         </tr>

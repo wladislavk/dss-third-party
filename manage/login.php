@@ -43,7 +43,7 @@ if(isset($_POST["loginsub"]))
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 	
-	$check_sql = "SELECT dental_users.userid, username, name, user_access, docid, uc.companyid FROM dental_users 
+	$check_sql = "SELECT dental_users.userid, username, name, user_access, docid, user_type, uc.companyid FROM dental_users 
 			LEFT JOIN dental_user_company uc ON dental_users.userid=uc.userid
 			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
 	$check_my = mysql_query($check_sql);
@@ -61,12 +61,14 @@ if(isset($_POST["loginsub"]))
 		session_register("user_access");
 		session_register("docid");
 		session_register("companyid");
+  		session_register("user_type");
 		
 		$_SESSION['userid']=$check_myarray['userid'];
 		$_SESSION['username']=$check_myarray['username'];
 		$_SESSION['name']=$check_myarray['name'];
 		$_SESSION['user_access']=$check_myarray['user_access'];
 		$_SESSION['companyid']=$check_myarray['companyid'];
+ 		$_SESSION['user_type']=$check_myarray['user_type'];
 		if($check_myarray['docid'] != 0)
 		{
 			$_SESSION['docid']=$check_myarray['docid'];

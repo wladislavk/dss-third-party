@@ -52,6 +52,20 @@ if ($generated_date == 0) {
 	$oldest_letter = floor((time() - array_pop($generated_date)) / $seconds_per_day);
 }
 
+$dental_letters_query = "SELECT letterid FROM dental_letters 
+				LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid 
+			WHERE (dental_letters.status = '1' OR dental_letters.delivered=1) AND
+                                mailed_date IS NULL AND 
+				dental_letters.deleted = '0' AND 
+				dental_letters.docid = '".$docid."' 
+				";
+$dental_letters_res = mysql_query($dental_letters_query);
+$unmailed_letters = mysql_num_rows($dental_letters_res);
+
+
+
+
+
 // Count Claims
 $claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
 $claim_res = mysql_query($claim_query);
@@ -818,6 +832,7 @@ display:none;
 		     <?php } ?>
                      <li><a class="submenu_item" href="manage_staff.php">Staff</a></li>
 		     <li><a class="submenu_item" href="manage_user_forms.php">Forms</a></li>
+		     <li><a class="submenu_item" href="manage_manuals.php">Manuals</a></li>
 
               <li><a class="menu_item" href="pending_patient.php">Pending Patients</a></li>
               <li><a class="menu_item" href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>

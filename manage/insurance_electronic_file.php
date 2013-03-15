@@ -19,7 +19,7 @@ $pat_gender = substr($pat_myarray['gender'],0,1);
 $pat_dob = ($pat_myarray['dob']!='')?date('Y-m-d', strtotime($pat_myarray['dob'])):'';
 switch($pat_myarray['p_m_relation']){
 	case 'Self':
-		$relationship_id = '18';
+		$relationship_id = 'G8';
 		break;
 	case 'Spouse':
                 $relationship_id = '01';
@@ -599,8 +599,12 @@ if($insurancetype == '1'){
 $query = mysql_query($sql);
 $c=0;
 $claim_lines = array();
+$pos = '';
 while ($array = mysql_fetch_assoc($query)) {
 $c++;
+if($pos==''){
+  $pos = preg_replace("/[^0-9]/","",$array['placeofservice']);
+}
 $diagnosis = '';
 if($array['diagnosispointer']!=''){
   if(isset($diagnosis_pointer[$array['diagnosispointer']])){
@@ -623,7 +627,7 @@ array_push($claim_lines, $a);
 $data['claim'] = array(
 	"claim_number" => $_GET['insid'],
 	"total_charge_amount" => $total_charge,
-	"place_of_service" => $place_of_service1,
+	"place_of_service" => $pos,
 	"claim_frequency" => "1",
 	"provider_or_supplier_signature_indicator" => "Y",
 	"assignment_or_plan_participation" => $claim_assignment,

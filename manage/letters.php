@@ -151,7 +151,20 @@ dental_patients.firstname,
 dental_patients.lastname, 
 dental_patients.middlename, 
 dental_letters.mailed_date
-FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.docid='".$docid."' AND (dental_letters.status = '1' OR dental_letters.delivered = '1') AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+WHERE 
+	dental_letters.docid='".$docid."' AND 
+	(dental_letters.status = '1' OR dental_letters.delivered = '1') AND 
+	dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."'"; 
+if(isset($_GET['mailed'])){
+  if($_GET['mailed']==0){
+    $letters_query .= " AND mailed_date IS NULL "; 
+  }elseif($_GET['mailed']==1){
+    $letters_query .= " AND mailed_date IS NOT NULL ";
+  }
+}
+	
+$letters_query .= " ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
   if (!$letters_res) {
     print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
@@ -354,7 +367,8 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 <?php endif; ?>
 
 </div>
-<div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
+<?php $mailed = $_GET['mailed']; ?>
+<div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&mailed=$mailed&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
@@ -439,6 +453,9 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 		<?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
 		<td><input type="checkbox" class="mailed_chk" value="<?= $id; ?>" <?= ($mailed !='')?'checked="checked"':''; ?> /></td>
 		<?php } ?>
+                <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
+                <td><?= ($mailed !='')?'X':''; ?></td>
+                <?php } ?>
      	<?php } ?>
       </tr>
     <?php

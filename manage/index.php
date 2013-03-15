@@ -86,6 +86,11 @@ echo $memo_array['memo'] . "<br /><hr />";
   <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
   <?php } ?>
 
+  <?php if($unmailed_letters > 0 && $use_letters && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
+  <a href="letters.php?status=sent&mailed=0" class="notification bad_count"><?= $unmailed_letters;?> Unmailed Letters</a>
+  <?php } ?>
+
+
   <?php if($num_preauth > 0){ ?>
   <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
   <?php } ?>

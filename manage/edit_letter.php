@@ -1534,7 +1534,7 @@ foreach ($letter_contacts as $key => $contact) {
 				<div id="letter<?=$cur_letter_num?>">
 				<?php print $letter[$cur_letter_num]; ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_HTML401,"UTF-8")?>" />
+				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")?>" />
 			</td>
 		</tr>
 	</table>
@@ -1578,7 +1578,7 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = $letter[$cur_letter_num];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
-			$send = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+			$send = send_letter($letterid, $parent, $type, $recipientid, $message);
 			$status = deliver_letter($send, $message);
 			$sql = "SELECT send_method, pdf_path FROM dental_letters WHERE letterid = '" . $letterid . "'";
 			$result = mysql_query($sql);
@@ -1620,13 +1620,11 @@ foreach ($letter_contacts as $key => $contact) {
                 $recipientid = $contact['id'];
             $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
-        if(!$parent || $num_contacts > 1){
                 ?>
                         <script type="text/javascript">
                                 window.location=window.location;
                         </script>
                 <?php
-        }
   }
 
 

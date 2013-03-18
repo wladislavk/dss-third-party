@@ -227,7 +227,7 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email FROM dental_users WHERE userid = '".$docid."';";
+$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
@@ -1524,7 +1524,11 @@ foreach ($letter_contacts as $key => $contact) {
 			Word Document
 		</button>-->
 		&nbsp;&nbsp;&nbsp;&nbsp;
+	<?php if(($method ? $method : $contact['preferredcontact'])=='fax' && $franchisee_info['use_digital_fax']!=1 && $_GET['backoffice'] != '1'){ ?>
+		<input type="submit" name="send_letter[<?=$cur_letter_num?>]" class="addButton" onclick="return confirm('Warning! Digital fax is not enabled in your account. Click OK to send the letter via standard printing. To enable digital faxing for your account please contact the DSS corporate office.');" value="Send Letter" />
+	<?php }else{ ?>
 		<input type="submit" name="send_letter[<?=$cur_letter_num?>]" class="addButton" value="Send Letter" />
+	<?php } ?>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
 

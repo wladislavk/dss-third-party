@@ -686,7 +686,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 		create_pdf($title, $filename, $html, null, '', $footerText, $cover);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
-	
+		$fax_send = false;	
 		// Send Fax	
 		if ($send_method == 'fax' && $use_digital_fax) {
 			$subject = "Dental Sleep Solutions";
@@ -705,7 +705,11 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			//$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid); 
 		} 
 		if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-			$letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+			if($fax_send){
+                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW() WHERE letterid='".s_for($letterid)."';";
+			}else{
+			  $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+			}
 			$letter_result = mysql_query($letter_query);
 			if (!$letter_result) {
 				return mysql_error();

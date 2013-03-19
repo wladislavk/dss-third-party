@@ -55,7 +55,7 @@ parent.disablePopup1();
 ?>
 
 <h2 style="margin-top:20px;">What device will you make for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
-<a href="device_guide.php?pid=<?= $_GET['pid']; ?>&id=<?= $_GET['id']; ?>">Help me decide</a>
+<!--<a href="device_guide.php?pid=<?= $_GET['pid']; ?>&id=<?= $_GET['id']; ?>">Help me decide</a>-->
 <?php
 $sqlex = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $myex = mysql_query($sqlex);

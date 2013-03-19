@@ -81,7 +81,7 @@
 						.addClass('json_patient')
 						.data('rowid', data[i].id)
 						.data('rowsource', data[i].id)
-						.attr("onclick", "update_referredby('"+in_field+"','"+name+"', '"+id_field+"', '"+data[i].id+"', '"+source+"', '"+data[i].source+"','"+hint+"')");
+						.attr("onclick", "update_referredby('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i].id+"', '"+source+"', '"+data[i].source+"','"+hint+"')");
 				    }
                                         template_list_ref(newLi, name)
                                               .appendTo('#'+hint+' ul')

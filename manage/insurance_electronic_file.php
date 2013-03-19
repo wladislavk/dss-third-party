@@ -19,7 +19,7 @@ $pat_gender = substr($pat_myarray['gender'],0,1);
 $pat_dob = ($pat_myarray['dob']!='')?date('Y-m-d', strtotime($pat_myarray['dob'])):'';
 switch($pat_myarray['p_m_relation']){
 	case 'Self':
-		$relationship_id = 'G8';
+		$relationship_id = '18';
 		break;
 	case 'Spouse':
                 $relationship_id = '01';
@@ -497,7 +497,8 @@ $diagnosis_4_right_fill = $dia[1];
 
 
 $data = array();                                                                    
-$data['originator_application_transaction_identifier'] = $_GET['insid'];
+$data['reference_id'] = $_GET['insid'];
+/*
 $data['submitter'] = array(
         "organization_name" => "Dental Sleep Solutions",
         "last_name" => "Yatros",
@@ -508,6 +509,7 @@ $data['submitter'] = array(
         "ext" => "",
         "fax" => "",
         "email" => "brandi@dentalsleepsolutions.com");
+*/
 $data['receiver'] = array(
 	"organization_name" => "AETNA",
 	"id" => "2");
@@ -516,7 +518,7 @@ $data['billing_provider']= array(
 	"organization_name" => $practice,
 	"npi" => $npi,
 	"address" => array(
-		"street_line_1" => "123 test st",//$address,
+		"street_line_1" => $address,
 		"street_line_2"=> "",
 		"city" => $city,
 		"state" => $state,
@@ -553,7 +555,8 @@ $data['payer'] = array(
 		"state" =>  $ins_contact_res['state'],
 		"zip" =>  $ins_contact_res['zip'])
 	);
-$data['patient'] = array(
+if($relationship_id!=18){
+$data['dependent'] = array(
 	"relationship" => $relationship_id,
 	"last_name" => $pat_lastname,
 	"first_name" => $pat_firstname,
@@ -566,7 +569,7 @@ $data['patient'] = array(
                 "state" => $patient_state,
                 "zip" => $patient_zip)
         );
-
+}
 $diagnosis_pointer = array();
 $diagnosis_pointer[1] = $diagnosis_1;
 $diagnosis_pointer[2] = $diagnosis_2;
@@ -633,7 +636,7 @@ $data['claim'] = array(
 	"assignment_or_plan_participation" => $claim_assignment,
 	"benefits_assignment_certification_indicator" => "Y",
 	"release_of_information" => "I",
-	"claim_lines" => $claim_lines
+	"service_lines" => $claim_lines
 	);
 /*
     "claim": {

@@ -426,7 +426,7 @@ $rs = $r['referred_source'];
                                 LEFT JOIN dental_ins_diagnosis d ON d.ins_diagnosisid = ss.diagnosis
                         WHERE 
                                 (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
-				(ss.sleeptesttype!='PSG Baseline' AND ss.sleeptesttype!='HST Baseline') AND
+				(ss.sleeptesttype!='PSG' AND ss.sleeptesttype!='HST' AND ss.sleeptesttype!='PSG Baseline' AND ss.sleeptesttype!='HST Baseline') AND
                                 ss.patiendid = '".$_GET['pid']."' ORDER BY ss.date DESC;";
                 $result = mysql_query($sleepstudies);
                 $numsleepstudy = mysql_num_rows($result);

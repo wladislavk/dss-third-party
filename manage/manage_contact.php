@@ -140,7 +140,7 @@ $(document).ready(function(){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"contacttype=".$_GET['contacttype']);
 			?>
 		</TD>        
 	</TR>

@@ -19,11 +19,8 @@ if(isset($_POST["loginsub"]))
 	{
 		$check_myarray = mysql_fetch_array($check_my);
 		
-		session_register("adminuserid");
 		$_SESSION['adminuserid']=$check_myarray['adminid'];
-                session_register("admin_access");
                 $_SESSION['admin_access']=$check_myarray['admin_access'];
-		session_register("companyid");
 		$_SESSION['companyid']=$check_myarray['companyid'];
 		?>
 		<script type="text/javascript">

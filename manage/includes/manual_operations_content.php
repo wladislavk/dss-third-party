@@ -4692,13 +4692,9 @@ text-transform:uppercase'><br clear=all style='page-break-before:always'>
 
 <p class=MsoNormal>&nbsp;</p>
 
-<p class=MsoNormal>Please click here to be redirected to the Dental Sleep
+<p class=MsoNormal>Please <a href="manual.php">click here</a> to be redirected to the Dental Sleep
 Procedures Manual.</p>
 
-<p class=MsoNormal>&nbsp;</p>
-
-<p class=MsoNormal><span style='background:yellow'>INSERT LINK TO PROCEDURES
-MANUAL HERE.</span></p>
 
 <p class=MsoNormal>&nbsp;</p>
 
@@ -4720,7 +4716,7 @@ sleep medicine practice:</p>
 <p class=MsoNormal style='text-align:justify'>&nbsp;</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify;text-indent:
--.25in'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+-.25in'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Instructional Videos/DVDs:</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'>      <i>Patient
@@ -4735,25 +4731,25 @@ Care &amp; Titration</i></p>
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'><i>&nbsp;</i></p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify;text-indent:
--.25in'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+-.25in'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>3 George or TAP Gauges</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'>&nbsp;</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify;text-indent:
--.25in'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+-.25in'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>3 ROM Triangles</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'>&nbsp;</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify;text-indent:
--.25in'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+-.25in'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>5 Measuring Tapes</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'>&nbsp;</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify;text-indent:
--.25in'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+-.25in'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>6 Orthotic Appliance Models:</p>
 
 <p class=MsoNormal style='margin-left:1.25in;text-align:justify'><i>      EMA</i></p>
@@ -4939,8 +4935,8 @@ Street North, Clearwater, FL 33760</p>
 
 <p class=MsoNormal><b>                                    TAP 3</b></p>
 
-<p class=MsoNormal><b><span style='background:yellow'>                                    Many
-More Appliances (list forthcoming)</span></b></p>
+<p class=MsoNormal><b>                                   Many
+More Appliances (list forthcoming)</b></p>
 
 <p class=MsoNormal><b>Manufacturer/Lab:    </b>Appliance Therapy Group</p>
 
@@ -5225,54 +5221,54 @@ evaluate the safety of your office:</p>
 <p class=MsoNormal style='text-align:justify'><b>&nbsp;</b></p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are emergency phone numbers posted and readily available?                 </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are all floors clean and in good repair?                                           </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are cover plates missing on any electrical equipment outlets or
 switches?         </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Any electrical breakers or main switches hard to reach or
 inaccessible?  </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are there any extension cords or frayed wiring being used?                     </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are aisle-ways in the back room congested or blocked?                            </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are storage shelves overloaded, unsecured, or unsteady?                        </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are multipurpose fire extinguishers located within easy
 reach?                           </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Have fire extinguishers been inspected in the last 12 months?                 </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are access covers missing from any heat generating equipment?             </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Do lights work in all storage areas?                                      </p>
 
 <p class=MsoNormal style='margin-left:.5in;text-align:justify;text-indent:-.25in;
-line-height:115%'><span style='font-family:Wingdings'>ü<span style='font:7.0pt "Times New Roman"'>&nbsp;
+line-height:115%'><span style='font-family:Wingdings'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
 </span></span>Are trash receptacles kept clean and regularly emptied?                           </p>
 
 <p class=MsoNormal style='text-align:justify'>&nbsp;</p>

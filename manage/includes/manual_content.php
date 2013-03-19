@@ -2714,203 +2714,203 @@ Top]</a></p>
 
 </div>
 
-<p class=MsoNormal style='text-align:justify'><b><span style='background:yellow'>OUTLINE
-FROM OPS MANUAL - DELETE OR UPDATE</span></b></p>
+<p class=MsoNormal style='text-align:justify'><b>OUTLINE
+FROM OPS MANUAL - DELETE OR UPDATE</b></p>
 
 <p class=MsoListParagraphCxSpFirst style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Patient Screening (patients of record)</span></p>
+style=''>Patient Screening (patients of record)</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Patient tablet Screener</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Patient tablet Screener</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>ESS-TSS</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>ESS-TSS</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Home Sleep Testing</span></p>
+style=''>Home Sleep Testing</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Sleep Recorder Release Form</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Sleep Recorder Release Form</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Patient Consultation </span></p>
+style=''>Patient Consultation </span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style='background:yellow'>Ideally Prior to Appointment</span></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''>Ideally Prior to Appointment</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>SW Pt. Info Questionnaire</span></b></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>SW Pt. Info Questionnaire</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:2.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Symbol;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span><i><span style='background:yellow'>Also obtain Copy of Insurance
+style='font-family:Symbol;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><i><span style=''>Also obtain Copy of Insurance
 Card(s)</span></i></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>SW Pt. Health Hx.
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>SW Pt. Health Hx.
 Questionnaire</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>Record Release Form</span></b></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>Record Release Form</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style='background:yellow'>At appointment</span></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''>At appointment</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>The DSS Experience</span></b></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>The DSS Experience</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>Billing and Insurance Policy</span></b></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>Billing and Insurance Policy</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>Financial Agreement</span></b></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>Financial Agreement</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.5in;text-indent:-.25in;line-height:115%'><span
-style='font-family:Wingdings;background:yellow'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
-</span></span><b><span style='background:yellow'>Non-Dentist of Record Release </span></b><i><span
-style='background:yellow'>(if not patient of record)</span></i></p>
+style='font-family:Wingdings;'>&bull;<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span><b><span style=''>Non-Dentist of Record Release </span></b><i><span
+style=''>(if not patient of record)</span></i></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Insurance Forms</span></p>
+style=''>Insurance Forms</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Fax Cover Sheet for LOMN &amp;
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Fax Cover Sheet for LOMN &amp;
 Rx.</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Combined Referral and Rx and
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Combined Referral and Rx and
 LOMN</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>LOMN</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>LOMN</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>LOMN &amp; Rx (PDF)</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>LOMN &amp; Rx (PDF)</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Begin Treatment (Impressions)</span></p>
+style=''>Begin Treatment (Impressions)</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Informed Consent</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Informed Consent</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>SW Pt. Exam Form</span></b><span
-style='background:yellow'> <i>(if software is inaccessible)</i></span></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>SW Pt. Exam Form</span></b><span
+style=''> <i>(if software is inaccessible)</i></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Affidavit for CPAP Intolerance</span></b><span
-style='background:yellow'> <i>(if applicable)</i></span></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Affidavit for CPAP Intolerance</span></b><span
+style=''> <i>(if applicable)</i></span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Device Delivery</span></p>
+style=''>Device Delivery</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Home Care Instructions</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Home Care Instructions</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Device Titration Form</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Device Titration Form</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Device Titration Form EMA</span></b></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Device Titration Form EMA</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Device Check Appointment</span></p>
+style=''>Device Check Appointment</span></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Subjective Sleep Tests in
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Subjective Sleep Tests in
 software</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'><b><span
-style='background:yellow'>&nbsp;</span></b></p>
+style=''>&nbsp;</span></b></p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-bottom:10.0pt;text-indent:
--.25in;line-height:115%'><span style='font-family:Symbol;background:yellow'>&bull;<span
+-.25in;line-height:115%'><span style='font-family:Symbol;'>&bull;<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
-style='background:yellow'>Annual Recall</span></p>
+style=''>Annual Recall</span></p>
 
 <p class=MsoListParagraphCxSpLast style='margin-top:0in;margin-right:0in;
 margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%'><span
-style='font-family:"Courier New";background:yellow'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><b><span style='background:yellow'>Medical Hx. Update</span></b><span
-style='background:yellow'> </span></p>
+style='font-family:"Courier New";'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><b><span style=''>Medical Hx. Update</span></b><span
+style=''> </span></p>
 
 <div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0in 0in 1.0pt 0in'>
 

@@ -518,7 +518,7 @@ $data['billing_provider']= array(
 	"organization_name" => $practice,
 	"npi" => $npi,
 	"address" => array(
-		"street_line_1" => $address,
+		"street_line_1" => str_replace(',','',$address),
 		"street_line_2"=> "",
 		"city" => $city,
 		"state" => $state,
@@ -528,7 +528,7 @@ $data['billing_provider']= array(
 $data['pay_to_provider'] = array(
 	"organization_name" => $practice,
         "address" => array(
-                "street_line_1" => "123 test st",//$address,
+                "street_line_1" => str_replace(',','',$address),
                 "street_line_2" => "",
                 "city" => $city,
                 "state" => $state,
@@ -602,12 +602,9 @@ if($insurancetype == '1'){
 $query = mysql_query($sql);
 $c=0;
 $claim_lines = array();
-$pos = '';
 while ($array = mysql_fetch_assoc($query)) {
 $c++;
-if($pos==''){
   $pos = preg_replace("/[^0-9]/","",$array['placeofservice']);
-}
 $diagnosis = '';
 if($array['diagnosispointer']!=''){
   if(isset($diagnosis_pointer[$array['diagnosispointer']])){
@@ -619,6 +616,11 @@ $a = array(
                         "product_service_qualifier" => "HC",
                         "product_service" => $array['transaction_code'],
                         "charge_amount" => $array['amount'],
+			"place_of_service" => preg_replace("/[^0-9]/","",$array['placeofservice']),
+			"modifier_1" => $array['modcode'],
+                        "modifier_2" => $array['modcode2'],
+                        "modifier_3" => $array['modcode3'],
+                        "modifier_4" => $array['modcode4'],
                         "principal_diagnosis_1" => $diagnosis,
 			"service_start" => ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):'',
 			"service_end" =>  ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):''
@@ -630,95 +632,13 @@ array_push($claim_lines, $a);
 $data['claim'] = array(
 	"claim_number" => $_GET['insid'],
 	"total_charge_amount" => $total_charge,
-	"place_of_service" => $pos,
 	"claim_frequency" => "1",
-	"provider_or_supplier_signature_indicator" => "Y",
-	"assignment_or_plan_participation" => $claim_assignment,
-	"benefits_assignment_certification_indicator" => "Y",
+	"patient_signature_on_file" => "Y",
+	"provider_plan_participation" => $claim_assignment,
+	"direct_payment_authorized" => "Y",
 	"release_of_information" => "I",
 	"service_lines" => $claim_lines
 	);
-/*
-    "claim": {
-        "claim_number": "26463774",
-        "total_charge_amount": "100",
-        "place_of_service": "11",
-        "claim_frequency": "1",
-        "provider_or_supplier_signature_indicator": "Y",
-        "assignement_or_plan_participation": "A",
-        "benefits_assignment_certification_indicator": "Y",
-        "release_of_information": "I",
-        "principal_diagnosis_1": "0340",
-        "additional_diagnosis_2": "V7389",
-        "additional_diagnosis_3": "",
-        "additional_diagnosis_4": "",
-        "additional_diagnosis_5": "",
-        "additional_diagnosis_6": "",
-        "additional_diagnosis_7": "",
-        "additional_diagnosis_8": "",
-        "additional_diagnosis_9": "",
-        "additional_diagnosis_10": "",
-        "additional_diagnosis_11": "",
-        "additional_diagnosis_12": "",
-        "claim_lines": [
-            {
-                "line_number": "1",
-                "product_service_qualifier": "HC",
-                "product_service": "99213",
-                "charge_amount": "40",
-                "principal_diagnosis_pointer_1": "1",
-                "additional_diagnosis_pointer_2": "",
-                "additional_diagnosis_pointer_3": "",
-                "additional_diagnosis_pointer_4": "",
-                "additional_diagnosis_pointer_5": "",
-                "additional_diagnosis_pointer_6": "",
-                "additional_diagnosis_pointer_7": "",
-                "additional_diagnosis_pointer_8": "",
-                "additional_diagnosis_pointer_9": "",
-                "additional_diagnosis_pointer_10": "",
-                "additional_diagnosis_pointer_11": "",
-                "additional_diagnosis_pointer_12": "",
-                "service_date": "2006-10-03"
-            },
-            {
-                "line_number": "2",
-                "product_service_qualifier": "HC",
-                "product_service": "87070",
-                "charge_amount": "15",
-                "principal_diagnosis_1": "0340",
-                "additional_diagnosis_2": "",
-                "additional_diagnosis_3": "",
-                "additional_diagnosis_4": "",
-                "additional_diagnosis_5": "",
-                "additional_diagnosis_6": "",
-                "additional_diagnosis_7": "",
-                "additional_diagnosis_8": "",
-                "additional_diagnosis_9": "",
-                "additional_diagnosis_10": "",
-                "additional_diagnosis_11": "",
-                "additional_diagnosis_12": "",
-                "service_date": "2006-10-03"
-            },
-            {
-                "line_number": "3",
-                "product_service_qualifier": "HC",
-                "product_service": "99214",
-                "charge_amount": "35",
-                "principal_diagnosis_pointer_1": "2",
-                "service_date": "2006-10-10"
-            },
-            {
-                "line_number": "4",
-                "product_service_qualifier": "HC",
-                "product_service": "86663",
-                "charge_amount": "10",
-                "principal_diagnosis_1": "V7389",
-                "service_date": "2006-10-10"
-            }
-        ]
-    }
-}
-*/
 $data_string = json_encode($data);                                                                                   
 echo $data_string."<br /><br />"; 
 $ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      

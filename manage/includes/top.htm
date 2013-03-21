@@ -862,7 +862,7 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
    WHERE (dt.status = '0' OR
         dt.status IS NULL) AND
         dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
-$task_q = mysql_query($task_sql." AND dt.due_date <= CURDATE();");
+$task_q = mysql_query($task_sql);
 $num_tasks = mysql_num_rows($task_q);
 ?>
  <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
@@ -1138,7 +1138,7 @@ $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         dt.status IS NULL) AND
         (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') AND
  	dt.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-$t_num_sql = $t_sql . " AND dt.due_date <= CURDATE();";
+$t_num_sql = $t_sql;
 $t_q = mysql_query($t_num_sql);
 $num_pat_tasks = mysql_num_rows($t_q);
 if($num_pat_tasks > 0){

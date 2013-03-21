@@ -290,7 +290,10 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php
-    $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
+    $templates = "SELECT t.id, t.name FROM dental_letter_templates t 
+			INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
+			WHERE ct.companyid='".$_SESSION['companyid']."'
+			ORDER BY id ASC;";
     $result = mysql_query($templates);
     while ($row = mysql_fetch_assoc($result)) {
       print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";

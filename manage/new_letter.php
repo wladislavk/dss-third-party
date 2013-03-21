@@ -422,6 +422,22 @@ function trigger_letter99($pid, $topatient, $md_referral_list, $md_list, $send_m
         }
 }
 
+function trigger_letter126($pid, $topatient, $md_referral_list, $md_list, $send_method) {
+        $letterid = '126';
+        $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method);
+        if (!is_numeric($letter)) {
+                print "Can't send letter 126: " . $letter;
+                die();
+        } else {
+                ?>
+                <script type="text/javascript">
+			parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';
+                </script>
+                <?php
+                die();
+        }
+}
+
 if (isset($_POST['submit'])) {
 	$templateid = $_POST['template'];
 	$patientid = $_POST['patient'];
@@ -516,6 +532,9 @@ if (isset($_POST['submit'])) {
 			break;
                 case 99:
                         trigger_letter99($patientid, $topatient, $md_referral_list, $md_list, $send_method);
+                        break;
+                case 126:
+                        trigger_letter126($patientid, $topatient, $md_referral_list, $md_list, $send_method);
                         break;
 
 		default:
@@ -705,7 +724,10 @@ if (isset($_POST['submit'])) {
 			<td>Select a letter template: <select id="template" name="template">
 				<option value=""></option>
 				<?php
-				$templates = "SELECT id, name FROM dental_letter_templates WHERE default_letter=1 ORDER BY id ASC;";
+				$templates = "SELECT t.id, t.name FROM dental_letter_templates  t 
+                        		INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
+                        		WHERE ct.companyid='".$_SESSION['companyid']."' AND
+						t.default_letter=1 ORDER BY id ASC;";
 				$result = mysql_query($templates);
 				while ($row = mysql_fetch_assoc($result)) {
 					print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";

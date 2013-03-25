@@ -43,8 +43,13 @@ if(isset($_POST["loginsub"]))
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 	
-	$check_sql = "SELECT dental_users.userid, username, name, user_access, docid, user_type, uc.companyid FROM dental_users 
-			LEFT JOIN dental_user_company uc ON dental_users.userid=uc.userid
+	$check_sql = "SELECT dental_users.userid, username, name, user_access, 
+				CASE docid
+					WHEN 0 THEN dental_users.userid
+					ELSE docid
+				END as docid,
+			user_type, uc.companyid FROM dental_users 
+			LEFT JOIN dental_user_company uc ON docid=uc.userid
 			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
 	$check_my = mysql_query($check_sql);
 	

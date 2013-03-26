@@ -594,21 +594,21 @@ function submit_form(){
 					</td>
 				</tr>
 				<tr>
-					<td valign="top" colspan="2" align="center" >	
-						<input tabindex="420" type="text" maxlength="1" name="s4" style="width:15px" value="<?=$s4;?>">
-						<br />
-						<b>S4</b>
-					</td>
+                                        <td valign="top" colspan="2" align="center" >
+                                                <input tabindex="422" type="text" maxlength="1" name="s6" style="width:15px" value="<?=$s6;?>">
+                                                <br />
+                                                <b>S6</b>
+                                        </td>
 					<td valign="top" colspan="2" align="center" >	
 						<input tabindex="421" type="text" maxlength="1" name="s5" style="width:15px" value="<?=$s5;?>">
 						<br />
 						<b>S5</b>
 					</td>
-					<td valign="top" colspan="2" align="center" >	
-						<input tabindex="422" type="text" maxlength="1" name="s6" style="width:15px" value="<?=$s6;?>">
-						<br />
-						<b>S6</b>
-					</td>
+                                        <td valign="top" colspan="2" align="center" >
+                                                <input tabindex="420" type="text" maxlength="1" name="s4" style="width:15px" value="<?=$s4;?>">
+                                                <br />
+                                                <b>S4</b>
+                                        </td>
 				</tr>
 			</table>
 			

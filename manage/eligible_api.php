@@ -179,7 +179,8 @@ $(document).ready(function(){
 							type: "post",
 							data: {response: data.responseText},
 							success: function(data2){
-								alert(data2);
+								//$('#api_output').append(data2);
+								//alert(data2);
 							}
 						});
                                                 pr = false;//r['primary_insurance'];
@@ -211,7 +212,10 @@ if(pr){
 }else{
 $('#api_output').append("<h3>Error</h3>");
 }
-$('#api_output').append("<br/><br /><br />"+data.responseText);
+data = JSON.stringify(data.responseText, null, "\t");
+data = data.replace(/\\n/g,"<br />");
+data = data.replace(/\\/g,"");
+$('#api_output').html(data);
 $('#api_output').show();
 					}
 				});

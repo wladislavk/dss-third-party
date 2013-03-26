@@ -36,7 +36,7 @@ if($_POST['ex_page4sub'] == 1)
 	$other_maxilla = $_POST['other_maxilla'];
 	$other_exam_teeth = $_POST['other_exam_teeth'];
 	$caries = $_POST['caries'];
-	$where_facets = $_POST['where_facets'];
+	$where_facets = $_POST['wear_facets'];
 	$missing = $_POST['missing'];
 	$cracked_fractured = $_POST['cracked_fractured'];
 	$old_worn_inadequate_restorations = $_POST['old_worn_inadequate_restorations'];
@@ -308,8 +308,8 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                         <span style="color:#000000;">
 			    <label class="exam_label">Wear Facets Tooth #</label> 
-                            <input type="text" name="where_facets" value="<?=$where_facets?>" class="field text addr tbox" readonly="readonly" />
-                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=where_facets&fval='+document.ex_page4frm.where_facets.value); return false;">Change</button>
+                            <input type="text" name="wear_facets" value="<?=$where_facets?>" class="field text addr tbox" readonly="readonly" />
+                            <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Change</button>
                         </span>
                     </div>
                     <br />

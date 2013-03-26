@@ -80,8 +80,20 @@ for($i=0; $i<=2; $i++){
         .$sect."_deductible_out_individual_comments='".mysql_real_escape_string($sect_data['deductible_out_network']['individual']['comments'])."',"
         .$sect."_deductible_out_family_base_period='".mysql_real_escape_string($sect_data['deductible_out_network']['family']['base_period'])."',"
         .$sect."_deductible_out_family_remaining='".mysql_real_escape_string($sect_data['deductible_out_network']['family']['remaining'])."',"
-        .$sect."_deductible_out_family_comments='".mysql_real_escape_string($sect_data['deductible_out_network']['family']['comments'])."'";
-
+        .$sect."_deductible_out_family_comments='".mysql_real_escape_string($sect_data['deductible_out_network']['family']['comments'])."',"
+	.$sect."_visits_in_individual_total='".mysql_real_escape_string($sect_data['visits_in_network']['individual']['total'])."',"
+        .$sect."_visits_in_individual_remaining='".mysql_real_escape_string($sect_data['visits_in_network']['individual']['remaining'])."',"
+        .$sect."_visits_in_individual_comments='".mysql_real_escape_string($sect_data['visits_in_network']['individual']['comments'])."',"
+        .$sect."_visits_in_family_total='".mysql_real_escape_string($sect_data['visits_in_network']['family']['total'])."',"
+        .$sect."_visits_in_family_remaining='".mysql_real_escape_string($sect_data['visits_in_network']['family']['remaining'])."',"
+        .$sect."_visits_in_family_comments='".mysql_real_escape_string($sect_data['visits_in_network']['family']['comments'])."',"
+        .$sect."_visits_out_individual_total='".mysql_real_escape_string($sect_data['visits_out_network']['individual']['total'])."',"
+        .$sect."_visits_out_individual_remaining='".mysql_real_escape_string($sect_data['visits_out_network']['individual']['remaining'])."',"
+        .$sect."_visits_out_individual_comments='".mysql_real_escape_string($sect_data['visits_out_network']['individual']['comments'])."',"
+        .$sect."_visits_out_family_total='".mysql_real_escape_string($sect_data['visits_out_network']['family']['total'])."',"
+        .$sect."_visits_out_family_remaining='".mysql_real_escape_string($sect_data['visits_out_network']['family']['remaining'])."',"
+        .$sect."_visits_out_family_comments='".mysql_real_escape_string($sect_data['visits_out_network']['family']['comments'])."',"
+        .$sect."_additional_insurance_comments='".mysql_real_escape_string($sect_data['additional_insurance']['comments'])."'";
 
 }
 

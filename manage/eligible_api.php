@@ -153,12 +153,12 @@ $(document).ready(function(){
                                         }
                                   });
 */
-
+					//API - 33b2e3a5-8642-1285-d573-07a22f8a15b4
                                   $.ajax({
-                                        url: "https://v1.eligibleapi.net/service/all.json",
+                                        url: "https://v1.eligibleapi.net/service/general.json",
                                         type: "get",
                                         dataType: 'json',
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
+                                        data: {api_key: 'TEST',
                                                 payer_name: $('#payer_name').val(),
                                                 payer_id: $('#payer_id').val(),
                                                 service_provider_first_name: $('#provider_first_name').val(),
@@ -174,7 +174,15 @@ $(document).ready(function(){
                                                 //$('#api_output').html(data.responseText);
                                                 $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
-                                                pr = r['primary_insurance'];
+						$.ajax({
+							url: "includes/eligibility_save.php",
+							type: "post",
+							data: {response: data.responseText},
+							success: function(data2){
+								alert(data2);
+							}
+						});
+                                                pr = false;//r['primary_insurance'];
 if(pr){
 						din_ind = r.deductible_in_network.individual
                                                 din_fam = r.deductible_in_network.family

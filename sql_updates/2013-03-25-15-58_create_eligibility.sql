@@ -40,140 +40,137 @@ CREATE TABLE `dental_eligibility` (
   `medical_care_coinsurance_in_individual_comments` text,
   `medical_care_coinsurance_in_family_percent` int(11),
   `medical_care_coinsurance_in_family_comments` text,
+  `medical_care_coinsurance_out_individual_percent` int(11),
+  `medical_care_coinsurance_out_individual_comments` text,
+  `medical_care_coinsurance_out_family_percent` int(11),
+  `medical_care_coinsurance_out_family_comments` text,
+  `medical_care_copayment_in_individual_amount` decimal(11,2),
+  `medical_care_copayment_in_individual_comments` text,
+  `medical_care_copayment_in_family_amount` decimal(11,2),
+  `medical_care_copayment_in_family_comments` text,
+  `medical_care_copayment_out_individual_amount` decimal(11,2),
+  `medical_care_copayment_out_individual_comments` text,
+  `medical_care_copayment_out_family_amount` decimal(11,2),
+  `medical_care_copayment_out_family_comments` text,
+  `medical_care_deductible_in_individual_base_period` decimal(11,2),
+  `medical_care_deductible_in_individual_remaining` decimal(11,2),
+  `medical_care_deductible_in_individual_comments` text,
+  `medical_care_deductible_in_family_base_period` decimal(11,2),
+  `medical_care_deductible_in_family_remaining` decimal(11,2),
+  `medical_care_deductible_in_family_comments` text,
+  `medical_care_deductible_out_individual_base_period` decimal(11,2),
+  `medical_care_deductible_out_individual_remaining` decimal(11,2),
+  `medical_care_deductible_out_individual_comments` text,
+  `medical_care_deductible_out_family_base_period` decimal(11,2),
+  `medical_care_deductible_out_family_remaining` decimal(11,2),
+  `medical_care_deductible_out_family_comments` text,
+  `medical_care_precertification_needed` varchar(100),
+  `medical_care_visits_in_individual_total` int(11),
+  `medical_care_visits_in_individual_remaining` int(11),
+  `medical_care_visits_in_individual_comments` text,
+  `medical_care_visits_in_family_total` int(11),
+  `medical_care_visits_in_family_remaining` int(11),
+  `medical_care_visits_in_family_comments` text,
+  `medical_care_visits_out_individual_total` int(11),
+  `medical_care_visits_out_individual_remaining` int(11),
+  `medical_care_visits_out_individual_comments` text,
+  `medical_care_visits_out_family_total` int(11),
+  `medical_care_visits_out_family_remaining` int(11),
+  `medical_care_visits_out_family_comments` text,
+  `medical_care_additional_insurance_comments` text,
+
+  `medical_equipment_coverage_status` int(2),
+  `medical_equipment_coinsurance_in_individual_percent` int(11),
+  `medical_equipment_coinsurance_in_individual_comments` text,
+  `medical_equipment_coinsurance_in_family_percent` int(11),
+  `medical_equipment_coinsurance_in_family_comments` text,
+  `medical_equipment_coinsurance_out_individual_percent` int(11),
+  `medical_equipment_coinsurance_out_individual_comments` text,
+  `medical_equipment_coinsurance_out_family_percent` int(11),
+  `medical_equipment_coinsurance_out_family_comments` text,
+  `medical_equipment_copayment_in_individual_amount` decimal(11,2),
+  `medical_equipment_copayment_in_individual_comments` text,
+  `medical_equipment_copayment_in_family_amount` decimal(11,2),
+  `medical_equipment_copayment_in_family_comments` text,
+  `medical_equipment_copayment_out_individual_amount` decimal(11,2),
+  `medical_equipment_copayment_out_individual_comments` text,
+  `medical_equipment_copayment_out_family_amount` decimal(11,2),
+  `medical_equipment_copayment_out_family_comments` text,
+  `medical_equipment_deductible_in_individual_base_period` decimal(11,2),
+  `medical_equipment_deductible_in_individual_remaining` decimal(11,2),
+  `medical_equipment_deductible_in_individual_comments` text,
+  `medical_equipment_deductible_in_family_base_period` decimal(11,2),
+  `medical_equipment_deductible_in_family_remaining` decimal(11,2),
+  `medical_equipment_deductible_in_family_comments` text,
+  `medical_equipment_deductible_out_individual_base_period` decimal(11,2),
+  `medical_equipment_deductible_out_individual_remaining` decimal(11,2),
+  `medical_equipment_deductible_out_individual_comments` text,
+  `medical_equipment_deductible_out_family_base_period` decimal(11,2),
+  `medical_equipment_deductible_out_family_remaining` decimal(11,2),
+  `medical_equipment_deductible_out_family_comments` text,
+  `medical_equipment_precertification_needed` varchar(100),
+  `medical_equipment_visits_in_individual_total` int(11),
+  `medical_equipment_visits_in_individual_remaining` int(11),
+  `medical_equipment_visits_in_individual_comments` text,
+  `medical_equipment_visits_in_family_total` int(11),
+  `medical_equipment_visits_in_family_remaining` int(11),
+  `medical_equipment_visits_in_family_comments` text,
+  `medical_equipment_visits_out_individual_total` int(11),
+  `medical_equipment_visits_out_individual_remaining` int(11),
+  `medical_equipment_visits_out_individual_comments` text,
+  `medical_equipment_visits_out_family_total` int(11),
+  `medical_equipment_visits_out_family_remaining` int(11),
+  `medical_equipment_visits_out_family_comments` text,
+  `medical_equipment_additional_insurance_comments` text,
+
+  `plan_coverage_coverage_status` int(2),
+  `plan_coverage_coinsurance_in_individual_percent` int(11),
+  `plan_coverage_coinsurance_in_individual_comments` text,
+  `plan_coverage_coinsurance_in_family_percent` int(11),
+  `plan_coverage_coinsurance_in_family_comments` text,
+  `plan_coverage_coinsurance_out_individual_percent` int(11),
+  `plan_coverage_coinsurance_out_individual_comments` text,
+  `plan_coverage_coinsurance_out_family_percent` int(11),
+  `plan_coverage_coinsurance_out_family_comments` text,
+  `plan_coverage_copayment_in_individual_amount` decimal(11,2),
+  `plan_coverage_copayment_in_individual_comments` text,
+  `plan_coverage_copayment_in_family_amount` decimal(11,2),
+  `plan_coverage_copayment_in_family_comments` text,
+  `plan_coverage_copayment_out_individual_amount` decimal(11,2),
+  `plan_coverage_copayment_out_individual_comments` text,
+  `plan_coverage_copayment_out_family_amount` decimal(11,2),
+  `plan_coverage_copayment_out_family_comments` text,
+  `plan_coverage_deductible_in_individual_base_period` decimal(11,2),
+  `plan_coverage_deductible_in_individual_remaining` decimal(11,2),
+  `plan_coverage_deductible_in_individual_comments` text,
+  `plan_coverage_deductible_in_family_base_period` decimal(11,2),
+  `plan_coverage_deductible_in_family_remaining` decimal(11,2),
+  `plan_coverage_deductible_in_family_comments` text,
+  `plan_coverage_deductible_out_individual_base_period` decimal(11,2),
+  `plan_coverage_deductible_out_individual_remaining` decimal(11,2),
+  `plan_coverage_deductible_out_individual_comments` text,
+  `plan_coverage_deductible_out_family_base_period` decimal(11,2),
+  `plan_coverage_deductible_out_family_remaining` decimal(11,2),
+  `plan_coverage_deductible_out_family_comments` text,
+  `plan_coverage_precertification_needed` varchar(100),
+  `plan_coverage_visits_in_individual_total` int(11),
+  `plan_coverage_visits_in_individual_remaining` int(11),
+  `plan_coverage_visits_in_individual_comments` text,
+  `plan_coverage_visits_in_family_total` int(11),
+  `plan_coverage_visits_in_family_remaining` int(11),
+  `plan_coverage_visits_in_family_comments` text,
+  `plan_coverage_visits_out_individual_total` int(11),
+  `plan_coverage_visits_out_individual_remaining` int(11),
+  `plan_coverage_visits_out_individual_comments` text,
+  `plan_coverage_visits_out_family_total` int(11),
+  `plan_coverage_visits_out_family_remaining` int(11),
+  `plan_coverage_visits_out_family_comments` text,
+  `plan_coverage_additional_insurance_comments` text,
+
+
   `adddate` datetime,
   `ip_address` varchar(5),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM CHARSET=latin1;
 
 
-
-"1": {
-    "description": "Medical Care",
-    "coverage_status": "1",
-    "coinsurance_in_network": {
-      "individual": {
-        "percent": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "percent": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "coinsurance_out_network": {
-      "individual": {
-        "percent": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "percent": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "copayment_in_network": {
-      "individual": {
-        "amount": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "amount": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "copayment_out_network": {
-      "individual": {
-        "amount": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "amount": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "deductible_in_network": {
-      "individual": {
-        "base_period": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "base_period": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "deductible_out_network": {
-      "individual": {
-        "base_period": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "base_period": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "precertification_needed": "",
-    "visits_in_network": {
-      "individual": {
-        "total": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "total": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "visits_out_network": {
-      "individual": {
-        "total": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      },
-      "family": {
-        "total": "",
-        "remaining": "",
-        "comments": [
-
-        ]
-      }
-    },
-    "additional_insurance": {
-      "comments": [
-
-      ]
-    }
-  },

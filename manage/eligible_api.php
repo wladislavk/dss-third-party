@@ -158,7 +158,7 @@ $(document).ready(function(){
                                         url: "https://v1.eligibleapi.net/service/general.json",
                                         type: "get",
                                         dataType: 'json',
-                                        data: {api_key: 'TEST',
+                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
                                                 payer_name: $('#payer_name').val(),
                                                 payer_id: $('#payer_id').val(),
                                                 service_provider_first_name: $('#provider_first_name').val(),

@@ -49,7 +49,11 @@ if(isset($_POST["loginsub"]))
 					ELSE docid
 				END as docid,
 			user_type, uc.companyid FROM dental_users 
-			LEFT JOIN dental_user_company uc ON docid=uc.userid
+			LEFT JOIN dental_user_company uc ON uc.userid=(
+				CASE docid
+                                        WHEN 0 THEN dental_users.userid
+                                        ELSE docid
+                                END)
 			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
 	$check_my = mysql_query($check_sql);
 	

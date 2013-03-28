@@ -6,6 +6,7 @@ include_once('includes/password.php');
 include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
+require_once 'includes/form_updates.php';
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";

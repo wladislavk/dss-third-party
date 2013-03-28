@@ -724,13 +724,16 @@ if (isset($_POST['submit'])) {
 			<td>Select a letter template: <select id="template" name="template">
 				<option value=""></option>
 				<?php
-				$templates = "SELECT t.id, t.name FROM dental_letter_templates  t 
+				$templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates  t 
                         		INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
                         		WHERE ct.companyid='".$_SESSION['companyid']."' AND
 						t.default_letter=1 ORDER BY id ASC;";
 				$result = mysql_query($templates);
 				while ($row = mysql_fetch_assoc($result)) {
-					print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+					//DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+      					if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
+					  print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+					}
 				}
 				?>
 				</select>

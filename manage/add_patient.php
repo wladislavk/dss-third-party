@@ -115,11 +115,15 @@ updateNumber2('s_m_ins_phone');
     } 
     if (count($recipients) > 0) {
       $recipients_list = implode(',', $recipients);
-      $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
       $letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
-      if (!is_numeric($letter1)) {
-        print $letter1;
-        die();
+      
+      //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
+      if($_SESSION['user_type']!= DSS_USER_TYPE_SOFTWARE){
+        $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
+        if (!is_numeric($letter1)) {
+          print $letter1;
+          die();
+        }
       }
       if (!is_numeric($letter2)) {
         print $letter2;

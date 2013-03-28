@@ -49,8 +49,12 @@ if($_POST["contactsub"] == 1)
 		$dct_q = mysql_query($dct_sql);
 		$dct_r = mysql_fetch_assoc($dct_q);
 	        if($dct_r['physician']==1){	
-    		  create_welcome_letter('1', $rid, $_SESSION['docid']);
-    		  create_welcome_letter('2', $rid, $_SESSION['docid']);
+		  //DO NOT CREATE LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+		  if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE){
+    		    create_welcome_letter('1', $rid, $_SESSION['docid']);
+    		  }	
+		  create_welcome_letter('2', $rid, $_SESSION['docid']);
+		  
 		  ?>
 		  <script type="text/javascript">
 		    alert('This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.');

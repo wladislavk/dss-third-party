@@ -158,7 +158,7 @@ $(document).ready(function(){
                                         url: "https://v1.eligibleapi.net/service/general.json",
                                         type: "get",
                                         dataType: 'json',
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
+                                        data: {api_key: 'TEST',
                                                 payer_name: $('#payer_name').val(),
                                                 payer_id: $('#payer_id').val(),
                                                 service_provider_first_name: $('#provider_first_name').val(),
@@ -210,12 +210,29 @@ if(pr){
                                                 $('#api_output').append('Base Period: '+don_fam.base_period);
                                                 $('#api_output').append('<br />Remaining: '+don_fam.remaining);
 }else{
-$('#api_output').append("<h3>Error</h3>");
+//$('#api_output').append("<h3>Error</h3>");
 }
-data = JSON.stringify(data.responseText, null, "\t");
+pr = r['primary_insurance'];
+s1 = r['1'];
+s12 = r['12'];
+s30 = r['30'];
+if(pr && s1 && s12 && s30){
+  pr = JSON.stringify(pr, null, 4);
+  pr = pr.replace(/\n/g,"<br />");
+  $('#api_output').append(pr);
+  s1 = JSON.stringify(s1, null, 4);
+  s1 = s1.replace(/\n/g,"<br />");
+  s12 = JSON.stringify(s12, null, 4);
+  s12 = s12.replace(/\n/g,"<br />");
+  s30 = JSON.stringify(s30, null, 4);
+  s30 = s30.replace(/\n/g,"<br />");
+  $('#api_output').append("<table width=\"95%\"><tr><td>"+s1+"</td><td>"+s12+"</td><td>"+s30+"</td></tr></table>");
+
+}
+data = JSON.stringify(data.responseText, null, '\t');
 data = data.replace(/\\n/g,"<br />");
 data = data.replace(/\\/g,"");
-$('#api_output').html(data);
+$('#api_output').append(data);
 $('#api_output').show();
 					}
 				});

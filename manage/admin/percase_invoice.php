@@ -64,7 +64,17 @@ if(isset($_POST['submit'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
+<?php
+  $doc_sql = "SELECT c.monthly_fee, u.name
+		FROM dental_users u
+		JOIN dental_user_company uc ON uc.userid = u.userid
+		JOIN companies c ON uc.companyid = c.id
+		WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+  $doc_q = mysql_query($doc_sql);
+  $doc = mysql_fetch_assoc($doc_q);
 
+
+?>
 <span class="admin_head">
 	Invoicing - <?= $doc['name']; ?>	
 </span>
@@ -102,7 +112,7 @@ if(isset($_POST['submit'])){
                                         <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>
                                 </td>
                                 <td valign="top">
-                                            $<input type="text" class="amount" name="amount_monthly" value="695.00" />
+                                            $<input type="text" class="amount" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>" />
                                 </td>
                         </tr>
 <?php

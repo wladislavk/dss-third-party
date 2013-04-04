@@ -450,7 +450,7 @@ if($cpap == '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
 	<input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
@@ -824,7 +824,7 @@ Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
     <input type="submit" name="q_pagebtn" value="Save"  />
     &nbsp;&nbsp;&nbsp;
 </div>

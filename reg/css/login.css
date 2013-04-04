@@ -5,7 +5,9 @@
 body{ background:#5aaae3; font-family:sans-serif; color:#fff;}
 #user_agree{ color: #000; }
 #login_container{ height:300px; width:960px; margin:100px auto 0 auto;}
-#login_container h1{ text-indent:-99999px;background: url(../images/login_logo.gif) no-repeat 0 0; height:278px; width:343px; display:block; float:left; }
+#login_container .logos{ float:left; width:343px; }
+#login_container #company_name { font-size: 40px; margin-bottom: 100px; }
+#login_container h1{ text-indent:-99999px;background: url(../images/login_logo_powered.png) no-repeat 0 0; height:278px; width:343px; display:block; }
 .login_content { float:left; padding:20px 20px 20px 70px; width:507px; display:block;}
 .login_content h2 { color:#fff; font-size:60px; margin:0; font-weight:100; }
 .login_content h3 { font-weight: 100; font-size:30px; margin:0px;}

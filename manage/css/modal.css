@@ -1,0 +1,8 @@
+.info_but{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #999;
+  cursor: pointer; 
+  }
+

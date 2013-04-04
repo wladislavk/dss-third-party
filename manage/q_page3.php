@@ -586,7 +586,7 @@ label {
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
 	<input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
@@ -1266,7 +1266,7 @@ label {
 </table>
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
     <input type="submit" name="q_pagebtn" value="Save" tabindex="12" />
     &nbsp;&nbsp;&nbsp;
 </div>

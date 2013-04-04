@@ -100,11 +100,11 @@ $sql = "select * from (select n.*, u.name signed_name, p.adddate as parent_addda
                                                         <span id="note_edit_<?= $myarray['notesid'];?>">
                                                         <? if(st($myarray["signed_id"]) == '') { ?>
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
-                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $unsigned_r['patientid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
+                                                                <a href="#" onclick="loadPopup('add_notes.php?goto=manage_unsigned_notes.php&pid=<?= $unsigned_r['patientid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
                                                                 <?php if($myarray["docid"]==$_SESSION['userid']){ ?>
                                                                 /
                                                                 <a href="dss_summ.php?return=unsigned&pid=<?= $unsigned_r['patientid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>
-                                                                <input type="checkbox" class="sign_chbx_<?= $unsigned_r['patientid']; ?>" name="sign[]" value="<?= $myarray['notesid']; ?>" />
+                                                                <input type="checkbox" class="sign_chbx sign_chbx_<?= $unsigned_r['patientid']; ?>" name="sign[]" value="<?= $myarray['notesid']; ?>" />
                                                                 <?php } ?>
                                                         <? }else{ ?>
                                                                 Signed By: <?= $myarray["signed_name"]; ?>
@@ -142,7 +142,7 @@ function sign_notes(pid){
   }
   sign_arr = new Array();
   i=0;
-  $('.sign_chbx_'+pid+':checked').each(function(){
+  $('.sign_chbx:checked').each(function(){
     sign_arr[i++] = $(this).val();
   });
                                   $.ajax({
@@ -153,7 +153,7 @@ function sign_notes(pid){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-                                                    $('.sign_chbx_'+pid+':checked').each(function(){
+                                                    $('.sign_chbx:checked').each(function(){
                                                         id = $(this).val();
                                                         $('#note_'+id).remove();
                                                     });

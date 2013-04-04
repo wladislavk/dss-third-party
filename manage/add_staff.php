@@ -15,6 +15,11 @@ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
 
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
+<script type="text/javascript" src="/manage/includes/modal.js"></script>
+<link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
+<link rel="stylesheet" href="css/modal.css" />
+
 <?php
 if($_POST["staffsub"] == 1)
 {
@@ -340,7 +345,10 @@ if($_POST["staffsub"] == 1)
             </td>
         </tr>
 <td valign="top" class="frmhead">
-                Producer
+                Dentist/Producer <div id="dp_info" class="info_but"></div>
+		<div id="dp_info_modal" class="info_modal" title="Dentist/Producer explanation">
+			Check this box if the user you are creating is a licensed dentist and requires the ability to bill MEDICAL procedures under their own name or NPI/TaxID number.
+		</div>
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" <?= ($producer==1)?'checked="checked"':''; ?> value="1" id="producer" name="producer" />
@@ -451,7 +459,11 @@ Fields left blank below will default to the standard billing settings for your o
         </tr>
         <tr>
 <td valign="top" class="frmhead">
-                Sign Progress Notes?
+                Sign Progress Notes? <div id="spn_info" class="info_but"></div>
+                <div id="spn_info_modal" class="info_modal" title="Sign Progress Notes explanation">
+			Check this box if this user is legally allowed to sign progress notes. In most cases, this means the user must be a licensed dentist, hygienist, or assistant. After checking this box, the user will be able to legally sign patient progress notes that will become permanently associated with patient charts.
+                </div>
+
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" <?= ($sign_notes==1)?'checked="checked"':''; ?> value="1" name="sign_notes" />
@@ -468,7 +480,10 @@ Fields left blank below will default to the standard billing settings for your o
 <?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
         <tr>
 <td valign="top" class="frmhead">
-                Manage Staff?
+                Manage Staff? <div id="ms_info" class="info_but"></div>
+                <div id="ms_info_modal" class="info_modal" title="Manage Staff explanation">
+			Check this box if you want this user to be able to add or edit the staff in your account. You should ONLY check this box for office managers or other staff qualified to add or delete software accounts.
+                </div>
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" <?= ($manage_staff==1)?'checked="checked"':''; ?> value="1" name="manage_staff" />
@@ -477,7 +492,11 @@ Fields left blank below will default to the standard billing settings for your o
 <?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Status
+                Status <div id="s_info" class="info_but"></div>
+                <div id="s_info_modal" class="info_modal" title="Status explanation">
+			Change the status of this user account here. ACTIVE staff will have full access to the software, INACTIVE staff are prohibited from accessing the software, but all their user activity will be stored for future review. If an employee has left your organization, or you want to prohibit an employee from accessing your software then choose INACTIVE.
+                </div>
+
             </td>
             <td valign="top" class="frmdata">
             	<select name="status" class="tbox">
@@ -495,10 +514,15 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Staff" class="button" />
 		<?php if($themyarray["userid"] != ''){ ?>
+<?php
+  $l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($themyarray['userid'])."'";
+  $l_q = mysql_query($l_sql);
+  $logins = mysql_num_rows($l_q);
+    if($logins == 0){ ?>
                     <a style="float:right;" href="manage_staff.php?delid=<?=$themyarray["userid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
                                                  Delete 
                                         </a>
-		<?php } ?>
+		<?php } } ?>
             </td>
         </tr>
     </table>

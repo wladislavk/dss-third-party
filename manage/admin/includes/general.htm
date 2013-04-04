@@ -623,14 +623,14 @@ function deliver_letter($letterid, $message) {
 		}
 
 		// Get Doctor's Name and Email
-		$sql = "SELECT name, email, phone, use_digital_fax, fax FROM dental_users WHERE userid = '".$docid."';";
+		$sql = "SELECT name, email, phone, use_digital_fax, fax, logo FROM dental_users WHERE userid = '".$docid."';";
 		$result = mysql_query($sql);
 		$doc_name = mysql_result($result, 0, 0);
 		$doc_email = mysql_result($result, 0, 1);
 		$doc_phone = mysql_result($result, 0, 2);
 		$use_digital_fax = mysql_result($result, 0, 3);
 		$doc_fax = mysql_result($result, 0, 4);
-
+		$logo = mysql_result($result, 0, 5);
 		// Send Email
 		if ($send_method == 'email') {
 			//$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
@@ -640,10 +640,15 @@ function deliver_letter($letterid, $message) {
 		$title = "Dental Sleep Solutions";
 		$filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
 		if($send_method == 'fax' && $use_digital_fax){
+if($user_type == DSS_USER_TYPE_SOFTWARE){
+  $cover_image = "/manage/q_file/".$logo;
+}else{
+  $cover_image = "/manage/images/logo.gif";
+}
 			$cover = "
 <table>
 <tr>
-<td><img src=\"/manage/images/logo.gif\" /></td>
+<td><img src=\"".$cover_image."\" /></td>
 <td><center>
 <b>CONFIDENTAL HEALTH INFORMATION<br />
 FAX COVER SHEET</b>
@@ -677,12 +682,16 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			$cover = '';
 		}
 		$html = $message;
-		$franchisee_query = "SELECT mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
+		$franchisee_query = "SELECT user_type, mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
 		$franchisee_result = mysql_query($franchisee_query);
 		while ($row = mysql_fetch_assoc($franchisee_result)) {
         		$fi = $row;
 		}
-		$footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
+		if($fi['user_type'] == DSS_USER_TYPE_FRANCHISEE){
+		  $footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
+		}else{
+		  $footerText = "";
+		}
 		create_pdf($title, $filename, $html, null, '', $footerText, $cover);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);

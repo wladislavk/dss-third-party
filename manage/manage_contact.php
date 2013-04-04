@@ -149,7 +149,7 @@ $(document).ready(function(){
 		<td valign="top" class="col_head" width="20%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="35%">
+		<td valign="top" class="col_head" width="25%">
 			Company
 		</td>
 		<td valign="top" class="col_head" width="25%">
@@ -158,7 +158,7 @@ $(document).ready(function(){
 		<td valign="top" class="col_head" width="10%">
 			Referrer
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
 	 </table>
@@ -192,7 +192,7 @@ $(document).ready(function(){
 				<td valign="top" width="20%">
 					<?=$name;?>
 				</td>
-				<td valign="top" width="35%">
+				<td valign="top" width="25%">
 					<?=st($myarray["company"]);?>
 				</td>
 				<td valign="top" width="25%">
@@ -218,7 +218,11 @@ $(document).ready(function(){
 				<td valign="top" width="10%">
 					<?= ($myarray['referrer']==1)?'X':''; ?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top" width="20%">
+				        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
+                                                Quick View
+                                        </a>
+					|
 					<a href="#" onclick="loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
 						Edit 
 					</a>

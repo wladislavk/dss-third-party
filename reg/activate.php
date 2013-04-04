@@ -1,7 +1,7 @@
 <?php include '../manage/admin/includes/config.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
-$s = "SELECT dp.email, dp.cell_phone FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
+$s = "SELECT dp.email, dp.cell_phone, du.mailing_practice FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
 	WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
 		dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
@@ -85,15 +85,16 @@ function send_text(from, but){
 }
 
 $(document).ready(function(){
-  send_text("load", false);
+  //send_text("load", false);
 });
 </script>
 
+
 <div id="login_container">
-  <h1>Dental Sleep Solutions</h1>
-
-
-
+  <div class="logos">
+    <div id="company_name"><?= $r['mailing_practice']; ?></div>
+    <h1>Dental Sleep Solutions</h1>
+  </div>
 
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>

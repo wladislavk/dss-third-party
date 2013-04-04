@@ -77,7 +77,12 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
+                        <?php if(isset($_REQUEST['goto'])){ ?>
+                                parent.window.location='<?= $_REQUEST['goto']; ?>';
+                        <?php }else{ ?>
+                                parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
+                        <?php } ?>
+
 		</script>
 		<?
 		die();
@@ -152,7 +157,11 @@ if($_POST["notesub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
+		 	<?php if(isset($_REQUEST['goto'])){ ?>
+				parent.window.location='<?= $_REQUEST['goto']; ?>';
+			<?php }else{ ?>
+				parent.window.location='dss_summ.php?msg=<?=$msg;?>&pid=<?=$_GET['pid'];?>&addtopat=1';
+			<?php } ?>
 		</script>
 		<?
 		die();
@@ -337,6 +346,7 @@ if($pat_myarray['patientid'] == '')
                 </span><br />
                 <input type="hidden" name="notesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["notesid"]?>" />
+<input type="hidden" value="<?= $_REQUEST['goto']; ?>" name="goto" />
 		<div id="submit_buttons">
                 <input type="submit" name="<?= ($_SESSION['docid'] == $_SESSION['userid'])?'unsign':'unsign_staff'; ?>" value=" <?=$but_unsigned_text?>" class="button" />
 		<?php 

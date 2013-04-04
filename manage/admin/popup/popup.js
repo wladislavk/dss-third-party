@@ -3,14 +3,20 @@
 //SETTING UP OUR POPUP
 //0 means disabled; 1 means enabled;
 var popupStatus = 0;
+var popupEdit = false;
 
 //loading popup with jQuery magic!
 function loadPopup(fa){
 	//centering with css
 	centerPopup();
-	
-	document.getElementById("aj_pop").src = fa; 
-	
+	popupEdit = false;	
+	$('#aj_pop').attr('src', fa).load( function(){
+        $("#aj_pop").contents().find("input, textarea").change( function(){
+		popupEdit = true;
+        });
+
+	});
+	//document.getElementById("aj_pop").src = fa; 
 	//loads popup only if it is disabled
 	if(popupStatus==0){
 		$("#backgroundPopup").css({
@@ -107,7 +113,11 @@ function createCookie(name,value,days) {
 function disablePopup(){
 	//disables popup only if it is enabled
 	if(popupStatus==1){
-	var answer = confirm("Are you sure you want to exit without saving?")
+	if(popupEdit){
+	  var answer = confirm("Are you sure you want to exit without saving?")
+	}else{
+	  var answer = true;
+	}
 	if (answer){
 				$("#backgroundPopup").fadeOut("slow");
 		$("#popupContact").fadeOut("slow");
@@ -173,11 +183,13 @@ function centerPopup(){
 	var popupHeight = $("#popupContact").height();
 	var popupWidth = $("#popupContact").width();
         var topPos = (windowHeight/2-popupHeight/2 + window.pageYOffset) + "px";
+	var leftPos = windowWidth/2-popupWidth/2;
+	if(leftPos<0){ leftPos=10; }
 	//centering
 	$("#popupContact").css({
 		"position": "absolute",
 		"top": topPos,
-		"left": windowWidth/2-popupWidth/2
+		"left": leftPos 
 	});
 	//only need force for IE6
 	$("#backgroundPopup").css({
@@ -194,11 +206,13 @@ function centerPopupRef(){
         var popupHeight = $("#popupRefer").height();
         var popupWidth = $("#popupRefer").width();
         var topPos = (windowHeight/2-popupHeight/2 + $(document).scrollTop()) + "px";
+        var leftPos = windowWidth/2-popupWidth/2;
+        if(leftPos<0){ leftPos=10; }
         //centering
         $("#popupRefer").css({
                 "position": "absolute",
                 "top": topPos, 
-                "left": windowWidth/2-popupWidth/2
+                "left": leftPos 
         });
         //only need force for IE6
 
@@ -216,11 +230,13 @@ function centerPopupClean(){
         var popupHeight = $("#popupClean").height();
         var popupWidth = $("#popupClean").width();
         var topPos = (windowHeight/2-popupHeight/2 + $(document).scrollTop()) + "px";
+        var leftPos = windowWidth/2-popupWidth/2;
+        if(leftPos<0){ leftPos=10; }
         //centering
         $("#popupClean").css({
                 "position": "absolute",
                 "top": topPos,
-                "left": windowWidth/2-popupWidth/2
+                "left": leftPos
         });
         //only need force for IE6
 
@@ -237,11 +253,13 @@ function centerPopup1(){
 	var windowHeight = document.documentElement.clientHeight;
 	var popupHeight = $("#popupContact").height();
 	var popupWidth = $("#popupContact").width();
+        var leftPos = windowWidth/2-popupWidth/2;
+        if(leftPos<0){ leftPos=10; }
 	//centering
 	$("#popupContact").css({
 		"position": "absolute",
 		"top": (windowHeight/2-popupHeight/2)+1100,
-		"left": windowWidth/2-popupWidth/2
+		"left": leftPos
 	});
 	//only need force for IE6
 	

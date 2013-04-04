@@ -347,7 +347,7 @@ if($complaintid <> '')
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
 	<input type="submit" id="save_but" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>
@@ -1009,7 +1009,7 @@ $('document').ready( function(){
 </script>
 
 <div align="right">
-	<input type="reset" value="Reset" />
+	<input type="reset" value="Clear" />
     <input type="submit" name="q_pagebtn" value="Save" />
     &nbsp;&nbsp;&nbsp;
 </div>

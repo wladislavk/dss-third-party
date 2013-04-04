@@ -416,7 +416,9 @@ $rs = $r['referred_source'];
 
       <strong>Diagnosis:</strong> <?= $baseline_sleepstudy['ins_diagnosis']." - ".$baseline_sleepstudy['description']; ?><br />
       <strong>AHI/RDI:</strong> <?= $baseline_sleepstudy['ahi']; ?>/<?= $baseline_sleepstudy['rdi']; ?>
+	&nbsp;&nbsp;&nbsp;&nbsp;
       <strong>Low O2:</strong> <?= $baseline_sleepstudy['o2nadir']; ?>
+        &nbsp;&nbsp;&nbsp;&nbsp;
       <strong>T < 90%:</strong> <?= $baseline_sleepstudy['t9002']; ?><br />
 
 <?php
@@ -447,7 +449,9 @@ $rs = $r['referred_source'];
 
       <strong>Diagnosis:</strong> <?= $sleepstudy['ins_diagnosis']." - ".$sleepstudy['description']; ?><br />
       <strong>AHI/RDI:</strong> <?= $sleepstudy['ahi']; ?>/<?= $sleepstudy['rdi']; ?>
+        &nbsp;&nbsp;&nbsp;&nbsp;
       <strong>Low O2:</strong> <?= $sleepstudy['o2nadir']; ?>
+        &nbsp;&nbsp;&nbsp;&nbsp;
       <strong>T < 90%:</strong> <?= $sleepstudy['t9002']; ?>
 
 

@@ -154,6 +154,11 @@ if($_POST["customsub"] == 1)
                 <input type="hidden" name="customsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["customid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Custom Text" class="button" />
+		<?php if($themyarray['customid']!=''){ ?>
+                    <a style="float:right;" href="manage_custom.php?delid=<?=$themyarray["customid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+                                                 Delete 
+                                        </a>
+		<?php } ?>
             </td>
         </tr>
     </table>

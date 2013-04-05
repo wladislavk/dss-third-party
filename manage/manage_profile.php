@@ -55,6 +55,21 @@ if(isset($_POST["practice_submit"]))
   mysql_query($in_sql);
 }
 
+if(isset($_POST["margins_submit"]))
+{
+
+  $in_sql = "UPDATE dental_users SET
+                letter_margin_header = '".mysql_real_escape_string($_POST['letter_margin_header'])."',
+                letter_margin_footer = '".mysql_real_escape_string($_POST['letter_margin_footer'])."',
+		letter_margin_top = '".mysql_real_escape_string($_POST['letter_margin_top'])."',
+                letter_margin_bottom = '".mysql_real_escape_string($_POST['letter_margin_bottom'])."',
+                letter_margin_left = '".mysql_real_escape_string($_POST['letter_margin_left'])."',
+                letter_margin_right = '".mysql_real_escape_string($_POST['letter_margin_right'])."'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+}
+
+
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -302,7 +317,40 @@ $num_custom=mysql_num_rows($my);
 </div>
 
 <div style="clear:both;"></div>
-
+<div class="half">
+  <h3>Letter Margins</h3>
+  <form action="#" method="post">
+  <div class="detail">
+    <label>Header:</label>
+    <input class="value" name="letter_margin_header" value="<?= $practice['letter_margin_header']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Footer:</label>
+    <input class="value" name="letter_margin_footer" value="<?= $practice['letter_margin_footer']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Top:</label>
+    <input class="value" name="letter_margin_top" value="<?= $practice['letter_margin_top']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Bottom:</label>
+    <input class="value" name="letter_margin_bottom" value="<?= $practice['letter_margin_bottom']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Left:</label>
+    <input class="value" name="letter_margin_left" value="<?= $practice['letter_margin_left']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Right:</label>
+    <input class="value" name="letter_margin_right" value="<?= $practice['letter_margin_right']; ?>" />
+  </div>
+  <div class="detail">
+    <label>&nbsp;</label>
+        <input type="submit" name="margins_submit" value="Update Margins" />
+  </div>
+  </form>
+</div>
+<div style="clear:both;"></div>
 
 <div id="popupContact" style="width:750px;height:460px">
     <a id="popupContactClose"><button>X</button></a>

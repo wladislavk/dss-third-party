@@ -623,7 +623,7 @@ function deliver_letter($letterid, $message) {
 		}
 
 		// Get Doctor's Name and Email
-		$sql = "SELECT name, email, phone, use_digital_fax, fax, logo FROM dental_users WHERE userid = '".$docid."';";
+		$sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
 		$result = mysql_query($sql);
 		$doc_name = mysql_result($result, 0, 0);
 		$doc_email = mysql_result($result, 0, 1);
@@ -631,6 +631,7 @@ function deliver_letter($letterid, $message) {
 		$use_digital_fax = mysql_result($result, 0, 3);
 		$doc_fax = mysql_result($result, 0, 4);
 		$logo = mysql_result($result, 0, 5);
+		$user_type = mysql_result($result, 0, 6);
 		// Send Email
 		if ($send_method == 'email') {
 			//$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
@@ -692,7 +693,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 		}else{
 		  $footerText = "";
 		}
-		create_pdf($title, $filename, $html, null, '', $footerText, $cover);
+		create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
 		$fax_send = false;	
@@ -921,7 +922,7 @@ class MYPDF extends TCPDF {
         }
 }
 
-function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '') {	
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null) {	
 	// create new PDF document
   if ($fax) {
 		global $pdf_header, $pdf_footer;
@@ -964,13 +965,42 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	// set default monospaced font
 	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
+	if($docid){
+		$m_sql = "SELECT * from dental_users where userid='".mysql_real_escape_string($docid)."'";
+		$m_q = mysql_query($m_sql);
+		$m_r = mysql_fetch_assoc($m_q);
+		if($m_r['user_type']==2){
+                $margin_top = $m_r['letter_margin_top'];
+                $margin_left = $m_r['letter_margin_left'];
+                $margin_right = $m_r['letter_margin_right'];
+                $margin_bottom = $m_r['letter_margin_bottom'];
+                $margin_header = $m_r['letter_margin_header']; 
+                $margin_footer = $m_r['letter_margin_footer'];
+		}else{
+                $margin_top = PDF_MARGIN_TOP;
+                $margin_left = PDF_MARGIN_LEFT;
+                $margin_right = PDF_MARGIN_RIGHT;
+                $margin_bottom = PDF_MARGIN_BOTTOM;
+                $margin_header = PDF_MARGIN_HEADER; 
+                $margin_footer = PDF_MARGIN_FOOTER;
+		}
+	}else{
+		$margin_top = PDF_MARGIN_TOP;
+		$margin_left = PDF_MARGIN_LEFT;
+		$margin_right = PDF_MARGIN_RIGHT;
+		$margin_bottom = PDF_MARGIN_BOTTOM;
+		$margin_header = PDF_MARGIN_HEADER;
+		$margin_footer = PDF_MARGIN_FOOTER;
+	}
+
+
 	//set margins
-	$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-	$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-	$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+	$pdf->SetMargins($margin_left, $margin_top, $margin_right);
+	$pdf->SetHeaderMargin($margin_header);
+	$pdf->SetFooterMargin($margin_footer);
 
 	//set auto page breaks
-	$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+	$pdf->SetAutoPageBreak(TRUE, $margin_bottom);
 
 	//set image scale factor
 	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);

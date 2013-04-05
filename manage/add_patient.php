@@ -1,6 +1,7 @@
 <?php
 if(!isset($_GET['noheaders'])){
 include "includes/top.htm";
+require_once('includes/constants.inc');
 }else{
 
 session_start();
@@ -162,10 +163,16 @@ function sendRegEmail($id, $e, $l, $old_email=''){
                 mysql_query($ins_sql);
 		$recover_hash = $r['recover_hash'];
 	}
-  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
-  $n = $ur['phone'];
+  $n = $ur['mailing_phone'];
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $logo = "/manage/q_file/".$ur['logo'];
+  }else{
+    $logo = "/reg/images/email/reg_logo.gif";
+  }
+
   $from = "SWsupport@dentalsleepsolutions.com";
 $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$headers  = "MIME-Version: 1.0\r\n";
@@ -178,7 +185,7 @@ $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$body	.= "A message from Dental Sleep Solutions
 
 Your New Account
-A new patient account has been created for you.
+A new patient account has been created for you by ".$ur['mailing_practice'].".
 Your Patient Portal login information is:
 Email: ".$e."
 
@@ -190,7 +197,7 @@ es is good too!
 Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
 
 Need Assistance?
-Contact us at ".$n." or at patient@dentalsleepsolutions.com
+Contact us at ".$n."
 
 
 "; 
@@ -205,9 +212,9 @@ $body .= DSS_EMAIL_FOOTER;
 <tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
-<p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
+<p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
 <p><b>Email:</b> ".$e."</p>
-</td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td colspan='2'>
 <center>
 <h2>Save Time - Complete Your Paperwork Online</h2>
@@ -216,13 +223,15 @@ $body .= DSS_EMAIL_FOOTER;
 <center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
 </td></tr>
 <tr><td>
+<p>".$ur['mailing_practice']."<br />
+".$ur['mailing_address']."<br />
+".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
+".$ur['mailing_phone']."</p>
 <h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
+<p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>".DSS_EMAIL_FOOTER."</body></html>";
+</center>This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</body></html>";
 	$body	.= "\n\n";
 	// End email
 	$body	.= "--$mime_boundary--\n";
@@ -238,7 +247,7 @@ $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' .
         $headers .= "Content-Transfer-Encoding: 7bit\n";
         $headers .= 'X-Mailer: PHP/' . phpversion();
 
-                $subject = "Dental Sleep Solutions Registration";
+                $subject = "Online Patient Registration";
 
                 mail($e, $subject, $body, $headers);
 }
@@ -249,18 +258,23 @@ $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' .
 // Sends reminder email to patient
 */
 function sendRemEmail($id, $e){
-  $usql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
+  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
-  $n = $ur['phone'];
+  $n = $ur['mailing_phone'];
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $logo = "/manage/q_file/".$ur['logo'];
+  }else{
+    $logo = "/reg/images/email/reg_logo.gif";
+  }
   $m = "<html><body><center>
 <table width='600'>
 <tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
-<p>A new patient account has been created for you.<br />Your Patient Portal login information is:</p>
+<p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
 <p><b>Email:</b> ".$e."</p>
-</td><td><img alt='Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td colspan='2'>
 <center>
 <h2>Save Time - Complete Your Paperwork Online</h2>
@@ -270,20 +284,24 @@ function sendRemEmail($id, $e){
 <center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php?email=".str_replace('+', '%2B', $e)."'>Click Here to Complete Your Forms Online</a></h3></center>
 </td></tr>
 <tr><td>
+<p>We Look forward to seeing you soon!</p>
+<p>".$ur['mailing_practice']."<br />
+".$ur['mailing_address']."<br />
+".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
+".$ur['mailing_phone']."</p>
 <h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
+<p><b>Contact us at ".$n."
+</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>".DSS_EMAIL_FOOTER."</body></html>
+</center>This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</body></html>
 ";
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
-                $subject = "Dental Sleep Solutions Registration";
+                $subject = "Online Patient Registration";
 
                 mail($e, $subject, $m, $headers);
 }

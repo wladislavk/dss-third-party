@@ -1,6 +1,12 @@
 $(document).ready(function(){
   $('.vob_request').click( function(){
     pid = $(this).attr('data-pid');
+    ut = $(this).attr('data-ut');
+    if(ut=='2'){
+      if(!confirm('A Verification of Benefits request will be submitted.  Upon completion of the VOB, you will be charged and invoiced.  Continue?')){
+	  return false;
+	}
+    }
                                     $.ajax({
                                         url: "includes/vob_request_preauth.php",
                                         type: "post",

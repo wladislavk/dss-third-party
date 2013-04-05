@@ -55,7 +55,7 @@ if(isset($_POST["practice_submit"]))
   mysql_query($in_sql);
 }
 
-if(isset($_POST["margins_submit"]))
+if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
   $in_sql = "UPDATE dental_users SET
@@ -65,6 +65,25 @@ if(isset($_POST["margins_submit"]))
                 letter_margin_bottom = '".mysql_real_escape_string($_POST['letter_margin_bottom'])."',
                 letter_margin_left = '".mysql_real_escape_string($_POST['letter_margin_left'])."',
                 letter_margin_right = '".mysql_real_escape_string($_POST['letter_margin_right'])."'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+  if(isset($_POST['margins_test'])){
+
+ 	//CREATE LETTER HERE
+
+  }
+}
+
+if(isset($_POST["margins_reset"]))
+{
+
+  $in_sql = "UPDATE dental_users SET
+                letter_margin_header = '48',
+                letter_margin_footer = '26',
+                letter_margin_top = '14',
+                letter_margin_bottom = '40',
+                letter_margin_left = '18',
+                letter_margin_right = '18'
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
 }
@@ -317,6 +336,8 @@ $num_custom=mysql_num_rows($my);
 </div>
 
 <div style="clear:both;"></div>
+
+<?php if($practice['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
 <div class="half">
   <h3>Letter Margins</h3>
   <form action="#" method="post">
@@ -347,10 +368,45 @@ $num_custom=mysql_num_rows($my);
   <div class="detail">
     <label>&nbsp;</label>
         <input type="submit" name="margins_submit" value="Update Margins" />
+	<input type="submit" name="margins_reset" value="Reset Margins" />
+	<input type="submit" name="margins_test" value="Print Test Letter" />
+	<p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
   </div>
   </form>
 </div>
+<?php }else{ ?>
+<div class="half">
+  <h3>Letter Margins</h3>
+  <div class="detail">
+    <label>Header:</label>
+	48
+  </div>
+  <div class="detail">
+    <label>Footer:</label>
+	26
+  </div>
+  <div class="detail">
+    <label>Top:</label>
+	14
+  </div>
+  <div class="detail">
+    <label>Bottom:</label>
+	40
+  </div>
+  <div class="detail">
+    <label>Left:</label>
+	18
+  </div>
+  <div class="detail">
+    <label>Right:</label>
+	18
+  </div>
+</div>
+
+<?php } ?>
 <div style="clear:both;"></div>
+
+
 
 <div id="popupContact" style="width:750px;height:460px">
     <a id="popupContactClose"><button>X</button></a>

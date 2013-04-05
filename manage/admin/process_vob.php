@@ -132,6 +132,17 @@ if (isset($_REQUEST['ed'])) {
         $sql .= ", status = " . DSS_PREAUTH_COMPLETE . " ";
         $sql .= ", date_completed = NOW() ";
 	$sql .= ", viewed = 0 ";
+
+	//IF USER TYPE = SOFTWARE BILL FOR VOB
+	$ut_sql = "SELECT u.user_type FROM dental_users u 
+		JOIN dental_insurance_preauth p
+			ON p.doc_id=u.userid
+		WHERE p.id='".mysql_real_escape_string($_POST['preauth_id'])."'";
+        $ut_q = mysql_query($ut_sql);
+        $ut_r = mysql_fetch_assoc($ut_q);
+	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+	  $sql .= ", invoice_amount = '45.00' ";
+	}
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } elseif($_POST['is_pre_auth_required']==1){ 
         $sql .= ", status = " . DSS_PREAUTH_PREAUTH_PENDING . " ";

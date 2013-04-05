@@ -9,6 +9,16 @@ $case_sql = "SELECT * FROM dental_ledger dl
 		dl.percase_status = '".DSS_PERCASE_PENDING."'
 ";
 $case_q = mysql_query($case_sql);
+
+$vob_sql = "SELECT * FROM dental_insurance_preauth p
+                JOIN dental_patients dp ON p.patient_id=dp.patientid
+        WHERE 
+                p.doc_id='".$_REQUEST['docid']."' AND
+                p.invoice_status = '".DSS_PERCASE_PENDING."'
+";
+$vob_q = mysql_query($vob_sql);
+
+
 if(isset($_POST['submit'])){
     if(isset($_POST['amount_monthly'])){
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
@@ -65,7 +75,7 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, u.name
+  $doc_sql = "SELECT c.monthly_fee, u.name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -135,6 +145,30 @@ if(isset($_POST['submit'])){
 			</tr>
 	<? 	}
 		?>
+
+<?php
+	if($doc['user_type']==DSS_USER_TYPE_SOFTWARE){
+                while($vob = mysql_fetch_array($vob_q))
+                {
+                ?>
+                        <tr id="vob_row_<?= $vob['id'] ?>">
+                                <td valign="top">
+					Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?> 
+                                </td>
+                                <td valign="top">
+                                        <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();">Remove</a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
+                                </td>
+                        </tr>
+        <?      }
+	}
+                ?>
+
 		<tr id="total_row">
 			<td valign="top" colspan="2">&nbsp;
 			Total: <span id="total" style="font-weight:bold;">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></span>	
@@ -193,6 +227,7 @@ $('.amount').keyup(function(){
 }
 
 setupAmount();
+calcTotal();
 </script>
 
 <br /><br />	

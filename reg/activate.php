@@ -90,7 +90,7 @@ $(document).ready(function(){
 </script>
 
 
-<div id="login_container">
+<div id="login_container" class="activate">
   <div class="logos">
     <div id="company_name"><?= $r['mailing_practice']; ?></div>
     <h1>Dental Sleep Solutions</h1>

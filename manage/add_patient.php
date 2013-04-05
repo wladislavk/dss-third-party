@@ -1447,6 +1447,8 @@ $num_face = mysql_num_rows($itype_my);
                                     }
                                   ?>
                                 </span>
+<br />
+<button class="button" onclick="loadPopup('patient_access_code.php?pid=<?= $_GET['pid']; ?>'); return false;">Patient can’t receive text message?</button>
             </div>            </div>
                     </li>
                 </ul>

@@ -164,9 +164,15 @@ $case_sql = "SELECT percase_name, percase_date, percase_amount, ledgerid FROM de
 SELECT percase_name, percase_date, percase_amount, id FROM dental_percase_invoice_extra dl 
         WHERE 
                 dl.percase_invoice='".$invoice['id']."'
+	UNION
+SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname),
+invoice_date, invoice_amount, id FROM dental_insurance_preauth
+	WHERE
+		invoice_id='".$invoice['id']."'
 ";
 $case_q = mysql_query($case_sql);
 $num_case = mysql_num_rows($case_q);
+
 
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case.'</td>

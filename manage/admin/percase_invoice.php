@@ -43,6 +43,19 @@ if(isset($_POST['submit'])){
     }
   }
 
+  while($vob = mysql_fetch_assoc($vob_q)){
+    $id = $vob['id'];
+    if(isset($_POST['vob_date_completed_'.$id])){
+      $up_sql = "UPDATE dental_insurance_preauth SET " .
+        " invoice_date = '".date('Y-m-d', strtotime($_POST['vob_date_completed_'.$id]))."', " .
+        " invoice_amount = '".mysql_real_escape_string($_POST['vob_amount_'.$id])."', " .
+        " invoice_status = '".DSS_PERCASE_INVOICED."', " .
+        " invoice_id = '".$invoiceid."' " .
+        " WHERE id = '".$id."'";
+      mysql_query($up_sql);
+    }
+  }
+
   $num_extra = $_POST['extra_total'];
   for($i=1;$i<=$num_extra;$i++){
     if(isset($_POST['extra_name_'.$i])){
@@ -162,7 +175,7 @@ if(isset($_POST['submit'])){
                                         <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();">Remove</a>
                                 </td>
                                 <td valign="top">
-                                            $<input type="text" class="amount" name="amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
+                                            $<input type="text" class="amount" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
                                 </td>
                         </tr>
         <?      }

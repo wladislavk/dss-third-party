@@ -174,6 +174,7 @@ $(document).ready(function(){
                                                 //$('#api_output').html(data.responseText);
                                                 $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
+						/*
 						$.ajax({
 							url: "includes/eligibility_save.php",
 							type: "post",
@@ -182,7 +183,7 @@ $(document).ready(function(){
 								//$('#api_output').append(data2);
 								//alert(data2);
 							}
-						});
+						}); */
                                                 pr = false;//r['primary_insurance'];
 if(pr){
 						din_ind = r.deductible_in_network.individual
@@ -216,19 +217,29 @@ pr = r['primary_insurance'];
 s1 = r['1'];
 s12 = r['12'];
 s30 = r['30'];
-if(pr && s1 && s12 && s30){
+if(pr){ 
   pr = JSON.stringify(pr, null, 4);
   pr = pr.replace(/\n/g,"<br />");
   $('#api_output').append(pr);
+}
+  api_output = "<table width=\"95%\"><tr>";
+if(s1){
   s1 = JSON.stringify(s1, null, 4);
   s1 = s1.replace(/\n/g,"<br />");
+  api_output += "<td>"+s1+"</td>";
+}
+if(s12){
   s12 = JSON.stringify(s12, null, 4);
   s12 = s12.replace(/\n/g,"<br />");
+  api_output += "<td>"+s12+"</td>";
+}
+if(s30){
   s30 = JSON.stringify(s30, null, 4);
   s30 = s30.replace(/\n/g,"<br />");
-  $('#api_output').append("<table width=\"95%\"><tr><td>"+s1+"</td><td>"+s12+"</td><td>"+s30+"</td></tr></table>");
-
+  api_output += "<td>"+s30+"</td>";
 }
+  $('#api_output').append(api_output+"</tr></table>");
+
 data = JSON.stringify(data.responseText, null, '\t');
 data = data.replace(/\\n/g,"<br />");
 data = data.replace(/\\/g,"");

@@ -1899,13 +1899,36 @@ $image = mysql_fetch_assoc($itype_my);
 						</div>
                     </li>
 				</ul>
-            </td>
-        </tr>
+                <ul>
+                        <li id="foli8" class="complex">
+
+                        <div>
+                            <span>
+                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
+                                     <option value="">Select Type</option>
+                                     <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
+                                     <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
+                                     <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
+                                     <option value="4" <?php if($p_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
+                                     <option value="5" <?php if($p_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
+                                     <option value="6" <?php if($p_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
+                                     <option value="7" <?php if($p_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>
+                                </select>
+                                <label for="home_phone">Insurance Type</label>
+                            </span>
+                            <span>
+                                                                            <input id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+
+                                                </div>
+                                                <div>
+
+                                                </div>
+                    </li>
+                                </ul>
+ 
         
         
-        
-        		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                   
@@ -1976,39 +1999,8 @@ $image = mysql_fetch_assoc($itype_my);
         
         
         
+       <tr><td colspan="2"></td></tr> 
         
-        
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                  
-                        <div>
-                            <span>
-                                <select id="p_m_ins_type" name="p_m_ins_type" class="field text addr tbox" onchange="update_insurance_type()" maxlength="255" style="width:200px;" />
-                                     <option value="">Select Type</option>
-                                     <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                     <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                     <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                     <option value="4" <?php if($p_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                     <option value="5" <?php if($p_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                     <option value="6" <?php if($p_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                     <option value="7" <?php if($p_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>                                
-                                </select>
-                                <label for="home_phone">Insurance Type</label>
-                            </span>
-                            <span>
-								            <input id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
-                            </span>
-                            
-						</div>
-						<div>
-                            
-						</div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
         
         
         
@@ -2088,13 +2080,36 @@ $image = mysql_fetch_assoc($itype_my);
 						</div>
                     </li>
 				</ul>
-            </td>
-        </tr>
-        
-        
-        
-        		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
+                <ul>
+                        <li id="foli8" class="complex">
+
+                        <div  class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            <span>
+                                <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
+                                     <option value="">Select Type</option>
+                                     <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
+                                     <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
+                                     <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
+                                     <option value="4" <?php if($s_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
+                                     <option value="5" <?php if($s_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
+                                     <option value="6" <?php if($s_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
+                                     <option value="7" <?php if($s_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>
+                                </select>
+                                <label for="s_m_ins_type">Insurance Type</label>
+                            </span>
+                            <span>
+                                                                            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+
+                                                </div>
+                                                <div>
+
+                                                </div>
+                    </li>
+                                </ul>
+
+
+
             	<ul>
             		<li id="foli8" class="complex">	
                         <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
@@ -2155,37 +2170,6 @@ $image = mysql_fetch_assoc($itype_my);
         
         
         
-        <tr class="s_m_ins_div" <?= ($has_s_m_ins!== "Yes")?'style="display:none;"':''; ?>> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                  
-                        <div>
-                            <span>
-                                <select id="s_m_ins_type" name="s_m_ins_type" onchange="checkMedicare()" class="field text addr tbox" maxlength="255" style="width:200px;" />
-                                     <option value="">Select Type</option>
-                                     <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                     <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                     <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                     <option value="4" <?php if($s_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                     <option value="5" <?php if($s_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                     <option value="6" <?php if($s_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                     <option value="7" <?php if($s_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>                                 
-                                </select>
-                                <label for="s_m_ins_type">Insurance Type</label>
-                            </span>
-                            <span>
-								            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
-                            </span>
-                            
-						</div>
-						<div>
-                            
-						</div>
-                    </li>
-				</ul>
-            </td>
-        </tr>        
         
         
         

@@ -32,7 +32,9 @@ include_once "admin/includes/general.htm";
     }
     $physician_types = implode(',', $physician_array);
 
-    $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
+    $thesql = "select c.*, ct.contacttype from dental_contact c 
+		LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
+		where c.contactid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
@@ -41,6 +43,7 @@ include_once "admin/includes/general.htm";
 		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
 		$company = st($themyarray['company']);
+		$contacttype = st($themyarray['contacttype']);
 		$add1 = st($themyarray['add1']);
 		$add2 = st($themyarray['add2']);
 		$city = st($themyarray['city']);
@@ -84,6 +87,9 @@ include_once "admin/includes/general.htm";
 </div>
 <div class="info">
 	<label>Company:</label> <span class="value"><?= $company; ?> </span>
+</div>
+<div class="info">
+        <label>Contact Type:</label> <span class="value"><?= $contacttype; ?> </span>
 </div>
 <div class="info">
 <label>Address:</label> <span class="value"><?= $add1; ?></span>

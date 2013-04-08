@@ -16,23 +16,23 @@ function update_logout_timer(){
   $('#logout_time_remaining').text(m+" minutes");
 }
 
-setInterval("update_logout_timer()", 30000);
+window.setInterval("update_logout_timer()", 30000);
 
-function reset_interval( new_time = null)
+function reset_interval( new_time )
 {
-clearInterval(lo_timer);
-clearInterval(w_timer);
+window.clearInterval(lo_timer);
+window.clearInterval(w_timer);
 startTimeMS = (new Date()).getTime();
-if(new_time){
-  lo_timer=setInterval("auto_logout()",new_time);
+if(new_time != 0){
+  lo_timer=window.setInterval("auto_logout()",new_time);
   if(new_time - (45*60*1000) < 1000){
-    w_timer=setInterval("warn_logout()",1000);
+    w_timer=window.setInterval("warn_logout()",1000);
   }else{
-    w_timer=setInterval("warn_logout()",(new_time-(45*60*1000)));
+    w_timer=window.setInterval("warn_logout()",(new_time-(45*60*1000)));
   }
 }else{
-  lo_timer=setInterval("auto_logout()",timer_length);
-  w_timer=setInterval("warn_logout()",w_timer_length);
+  lo_timer=window.setInterval("auto_logout()",timer_length);
+  w_timer=window.setInterval("warn_logout()",w_timer_length);
 }
 $('#warn_logout').hide();
 }
@@ -63,3 +63,6 @@ function auto_logout()
                                   });
 }
 
+$(document).ready(function(){
+  set_interval();
+});

@@ -3,7 +3,15 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
+	$l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($_REQUEST['delid'])."'";
+  	$l_q = mysql_query($l_sql);
+  	$logins = mysql_num_rows($l_q);
+
+	if($logins == 0){
+	  $del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
+	}else{
+          $del_sql = "update dental_users set status=2 where userid='".$_REQUEST["delid"]."'";
+	}
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";

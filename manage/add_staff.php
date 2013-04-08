@@ -518,16 +518,30 @@ Fields left blank below will default to the standard billing settings for your o
   $l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($themyarray['userid'])."'";
   $l_q = mysql_query($l_sql);
   $logins = mysql_num_rows($l_q);
-    if($logins == 0){ ?>
-                    <a style="float:right;" href="manage_staff.php?delid=<?=$themyarray["userid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE" target="_parent">
+?>
+                    <a style="float:right;" href="manage_staff.php?delid=<?=$themyarray["userid"];?>" onclick="javascript: return confirm_delete(<?= $logins; ?>);" class="dellink" title="DELETE" target="_parent">
                                                  Delete 
                                         </a>
-		<?php } } ?>
+		<?php } ?>
             </td>
         </tr>
     </table>
     </form>
+
 <script type="text/javascript">
+
+  function confirm_delete(logins){
+    d = confirm('Are you sure you want to delete?');
+    if(!d){
+      return false;
+    }
+    if(logins > 0){
+      alert('This user has previously accessed your software. In order to store a record of their activity this user will be marked as INACTIVE. INACTIVE users cannot access your software.');
+    }
+    return d;
+
+  }
+
   $('#producer').click(function(){
     if($(this).is(':checked')){
       $('.producer_field').show();

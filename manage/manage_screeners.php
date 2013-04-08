@@ -140,7 +140,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="13%">
                         <a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
@@ -153,7 +153,7 @@ $my=mysql_query($sql) or die(mysql_error());
 			Epworth
                 </td>
                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			Co-morbidity	
+			Results	
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
@@ -272,8 +272,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                                 }
 
 ?>
-					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').hide();$('#diagnosis_text_<?=$myarray['id']; ?>').show();" id="diagnosis_count_<?=$myarray['id']; ?>"><?= count($diagnosis); ?></a>
-					<a href="#" onclick="$('#diagnosis_count_<?=$myarray['id']; ?>').show();$('#diagnosis_text_<?=$myarray['id']; ?>').hide();" id="diagnosis_text_<?=$myarray['id']; ?>" style="display:none;"><?= implode($diagnosis, ', '); ?></a></span>
+					<a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;" id="diagnosis_count_<?=$myarray['id']; ?>">View</a>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	

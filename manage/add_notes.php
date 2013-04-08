@@ -346,7 +346,9 @@ if($pat_myarray['patientid'] == '')
                 </span><br />
                 <input type="hidden" name="notesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["notesid"]?>" />
+<? if(isset($_REQUEST['goto'])){ ?>
 <input type="hidden" value="<?= $_REQUEST['goto']; ?>" name="goto" />
+<? } ?>
 		<div id="submit_buttons">
                 <input type="submit" name="<?= ($_SESSION['docid'] == $_SESSION['userid'])?'unsign':'unsign_staff'; ?>" value=" <?=$but_unsigned_text?>" class="button" />
 		<?php 

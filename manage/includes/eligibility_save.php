@@ -52,6 +52,7 @@ $section_data[2] = $d['30'];
 for($i=0; $i<=2; $i++){
   $sect = $sections[$i];
   $sect_data = $section_data[$i];
+if($section_data){
   $s .= ", ".$sect."_coverage_status='".mysql_real_escape_string($sect_data['coverage_status'])."', "
   	.$sect."_coinsurance_in_individual_percent='".mysql_real_escape_string($sect_data['coinsurance_in_network']['individual']['percent'])."',"
         .$sect."_coinsurance_in_individual_comments='".mysql_real_escape_string($sect_data['coinsurance_in_network']['individual']['comments'])."',"
@@ -94,7 +95,7 @@ for($i=0; $i<=2; $i++){
         .$sect."_visits_out_family_remaining='".mysql_real_escape_string($sect_data['visits_out_network']['family']['remaining'])."',"
         .$sect."_visits_out_family_comments='".mysql_real_escape_string($sect_data['visits_out_network']['family']['comments'])."',"
         .$sect."_additional_insurance_comments='".mysql_real_escape_string($sect_data['additional_insurance']['comments'])."'";
-
+}
 }
 
 //$s = "UPDATE dental_task SET status = 1

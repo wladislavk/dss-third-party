@@ -284,10 +284,17 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 ?>
 
 <div style="padding-left: 15px;">
-	<h1 class="blue">Patient Letters</h1>
+	<h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
+<div style="float: right;margin:20px 40px 0 0;">
+  <form method="get" action="/manage/new_letter.php">
+        <input type="hidden" name="pid" value="<?=$patientid?>" />
+  <input class="addButton" type="submit" value="Create New Letter">
+        </form>
+</div>
+<div style="clear:both;"></div>
   <form name="filter_letters" action="/manage/patient_letters.php" method="get">
 	<input type="hidden" name="pid" value="<?=$patientid;?>" />
-  Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
+  Show letter type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php
     $templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates t 
@@ -305,16 +312,10 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     </select>
   </form>
 </div>
-<div style="float: right;margin-right:40px;">
-  <form method="get" action="/manage/new_letter.php">
-	<input type="hidden" name="pid" value="<?=$patientid?>" />
-  <input class="addButton" type="submit" value="Create New Letter">
-	</form>
+<div style="padding:  0 0 0 15px; clear: left;float: left;">
+<h2 class="blue" style="margin:15px 0 5px 0;">Pending Letters</h2>
 </div>
-<div style="padding-left: 15px; clear: left;float: left;">
-<h2 class="blue">Pending Letters</h2>
-</div>
-<div class="letters-pager">Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page2); ?></div>
+<div class="letters-pager" style="clear:right; margin-top:10px;">Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page2); ?></div>
 <div style="clear:both;"></div>
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
@@ -400,10 +401,11 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
   }
 
 </script>
+<br />
 <div style="padding-left: 15px; clear: left;float: left;">
-<h2 class="blue">Sent Letters</h2>
+<h2 class="blue" style="margin:15px 0 5px 0;">Sent Letters</h2>
 </div>
-<div class="letters-pager">Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page1); ?></div>
+<div class="letters-pager" style="clear:right; margin-top:10px;">Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page1); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">

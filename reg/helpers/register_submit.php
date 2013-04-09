@@ -51,7 +51,6 @@
 			$sql .= " p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."', ";
 		}
 		$sql .= "
-                p_m_ins_ass = '".mysql_real_escape_string($_POST['p_m_ins_ass'])."',
 		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
                 has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
                 s_m_relation = '".mysql_real_escape_string($_POST['s_m_relation'])."',
@@ -67,7 +66,6 @@
                         $sql .= " s_m_ins_type = '7', ";
                 }
                 $sql .= "
-                s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
                 employer = '".mysql_real_escape_string($_POST['employer'])."',
                 emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
                 emp_add2 = '".mysql_real_escape_string($_POST['emp_add2'])."',
@@ -115,12 +113,11 @@
                 p_m_partymname = '".mysql_real_escape_string($_POST['p_m_partymname'])."',
                 p_m_partylname = '".mysql_real_escape_string($_POST['p_m_partylname'])."',
                 ins_dob = '".mysql_real_escape_string($ins_dob)."',
-                p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_co'])."',
+                p_m_ins_co = '".mysql_real_escape_string($_POST['p_m_ins_company'])."',
                 p_m_ins_id = '".mysql_real_escape_string($_POST['p_m_ins_id'])."',
                 p_m_ins_grp = '".mysql_real_escape_string($_POST['p_m_ins_grp'])."',
                 p_m_ins_plan = '".mysql_real_escape_string($_POST['p_m_ins_plan'])."',
                 p_m_ins_type = '".mysql_real_escape_string($p_m_ins_type)."',
-                p_m_ins_ass = '".mysql_real_escape_string($_POST['p_m_ins_ass'])."',
 		has_p_m_ins = '".mysql_real_escape_string($_POST['has_p_m_ins'])."',
                 has_s_m_ins = '".mysql_real_escape_string($_POST['has_s_m_ins'])."',
                 s_m_relation = '".mysql_real_escape_string($_POST['s_m_relation'])."',
@@ -128,7 +125,7 @@
                 s_m_partymname = '".mysql_real_escape_string($_POST['s_m_partymname'])."',
                 s_m_partylname = '".mysql_real_escape_string($_POST['s_m_partylname'])."',
                 ins2_dob = '".mysql_real_escape_string($ins2_dob)."',
-                s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_co'])."',
+                s_m_ins_co = '".mysql_real_escape_string($_POST['s_m_ins_company'])."',
                 s_m_ins_id = '".mysql_real_escape_string($_POST['s_m_ins_id'])."',
                 s_m_ins_grp = '".mysql_real_escape_string($_POST['s_m_ins_grp'])."',
                 s_m_ins_plan = '".mysql_real_escape_string($_POST['s_m_ins_plan'])."',";
@@ -136,7 +133,6 @@
                 	$sql .= " s_m_ins_type = '7', ";
 		}
 		$sql .= "
-                s_m_ins_ass = '".mysql_real_escape_string($_POST['s_m_ins_ass'])."',
                 employer = '".mysql_real_escape_string($_POST['employer'])."',
                 emp_add1 = '".mysql_real_escape_string($_POST['emp_add1'])."',
                 emp_add2 = '".mysql_real_escape_string($_POST['emp_add2'])."',

@@ -37,7 +37,7 @@ include 'includes/completed.php';
 				<div id="content_wrapper">
 					<div id="main_content" class="cf">
 
-						<h2 class="sepH_c">Step-by-Step Patient Registration <?= $p['last_reg_sect']; ?></h2>
+						<h2 class="sepH_c">Step-by-Step Patient Registration </h2>
 	<form action="register.php" id="register_form" method="post">
 		<input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect']; ?>" />
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />

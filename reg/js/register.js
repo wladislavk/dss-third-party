@@ -239,7 +239,10 @@ lga_wizard = {
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {
 					var r = $.parseJSON(data);
-					//alert(data);
+					alert(data);
+					if(data!=''){
+					var r = $.parseJSON(data);
+					if(r){
 					if(r.p_m_patient_insuranceid){
 					  $('#p_m_patient_insuranceid').val(r.p_m_patient_insuranceid);
 					}else if(r.s_m_patient_insuranceid){
@@ -260,6 +263,8 @@ lga_wizard = {
                                         if(r.pc_5_patient_contactid){
                                           $('#pc_5_patient_contactid').val(r.pc_5_patient_contactid);
                                         }
+					}
+					}
                         	        //$('#form_summary').html(data);
                                 	//alert(data);
                         	});

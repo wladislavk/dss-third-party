@@ -25,6 +25,7 @@ if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 }
 
 
+
 if($id == "7"){
   $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
   $q = mysql_query($sql);
@@ -72,6 +73,12 @@ if($create){
         if ($id == "13") { // Termination
                 $letterid[] = trigger_letter24($pid, $insert_id);
         }
+
+        if ($id == "4") { // Impressions
+                $letterid[] = trigger_letter9($pid, $insert_id); //send TY MD referral when impressions completed
+                //$letterid[] = trigger_letter13($pid, $numsteps);
+        }
+
 
                                                         $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";
                                                         $consult_result = mysql_query($consult_query);

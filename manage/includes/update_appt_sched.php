@@ -25,7 +25,7 @@ clean_steps($pid);
                 $letterid[] = trigger_letter6($pid, $info_id);
         }
         if ($consulted == true && $id == "4") { // Impressions
-                $letterid[] = trigger_letter9($pid, $info_id);
+                //$letterid[] = trigger_letter9($pid, $info_id);
                 //$letterid[] = trigger_letter13($pid, $numsteps);
         }
 

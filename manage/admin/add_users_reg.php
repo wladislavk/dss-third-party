@@ -35,9 +35,13 @@ if($_POST["usersub"] == 1)
 				name = '".s_for($_POST["name"])."', 
 				email = '".s_for($_POST["email"])."', 
 				phone = '".s_for($_POST["phone"])."',
-				use_patient_portal = '0',
-				use_digital_fax = '0',
-				use_letters = '0',
+                                use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
+                                use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
+                                use_letters = '".s_for($_POST['use_letters'])."',
+                                use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
+                                use_course = '".s_for($_POST['use_course'])."',
+                                use_course_staff = '".s_for($_POST['use_course_staff'])."',
+                                user_type = '".s_for($_POST['user_type'])."',
 				status = '2',
 				recover_hash='".$recover_hash."',
 				recover_time=NOW(),
@@ -111,6 +115,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$email = $_POST['email'];
 		$phone = $_POST['phone'];
 		$companyid = $_POST['companyid'];
+                $use_patient_portal = $_POST['use_patient_portal'];
+                $use_digital_fax = $_POST['use_digital_fax'];
+                $use_letters = $_POST['use_letters'];
+                $use_eligible_api = $_POST['use_eligible_api'];
+                $use_course = $_POST['use_course'];
+                $use_course_staff = $_POST['use_course_staff'];
+                $companyid = $_POST['companyid'];
+                $user_type = $_POST['user_type'];
+
 	?>
 	
 	<br /><br />
@@ -174,6 +187,74 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </td>
         </tr>
 <?php } ?>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Patient Portal Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_patient_portal" value="1" <? if($use_patient_portal == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Digital Fax Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_digital_fax" value="1" <? if($use_digital_fax == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Letters Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Eligible API Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_eligible_api" value="1" <? if($use_eligible_api == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Course Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_course" value="1" <? if($use_course == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Staff Course Active?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 User Type
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="user_type" class="tbox">
+                            <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
+                            <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
+
+                </select>
+            </td>
+        </tr>
+
+
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

@@ -39,7 +39,7 @@ if(is_super($_SESSION['admin_access'])){
          from admin a
         LEFT join admin_company ac ON a.adminid=ac.adminid
         LEFT JOIN companies c ON ac.companyid=c.id";
-    $sql .= " WHERE c.id=".mysql_real_escape_string($_SESSION['companyid'])." ";
+    $sql .= " WHERE c.id=".mysql_real_escape_string($_SESSION['admincompanyid'])." ";
 }
 $sql .= " order by admin_access ASC, username ASC";
 $my = mysql_query($sql);

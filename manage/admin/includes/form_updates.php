@@ -78,20 +78,16 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></p>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE FINANCIAL
 AGREEMENT</span></b></p>
-
-<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+</td></tr></table>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
 charges a customary fee for Dental Sleep Therapy (DST) of $'.$r['amount'].'.  We are a non-participating
@@ -239,12 +235,10 @@ ul
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 
 <div class=WordSection1>
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY
@@ -253,6 +247,7 @@ style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>HOME CARE
 INSTRUCTIONS</span></b></p>
+</td></tr></table>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>As with
 anything that produces predictable results, it is important to follow the
@@ -459,19 +454,17 @@ div.WordSection1
 
 <body lang=EN-US link=blue vlink=purple>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 
 <div class=WordSection1>
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>NON DENTIST-OF-RECORD</span></b></p>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>RELEASE FORM</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal align=center style=\'text-align:center\'><b>
 '.$r['mailing_practice'].'
 </b></p>
@@ -612,17 +605,16 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
 
 
 <div class=WordSection1>
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP RECORDER
 RELEASE FORM</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I,
 ____________________________, have been advised by '.$r['name'].'<i><span style=\'color:red\'> </span></i>to take
@@ -768,16 +760,13 @@ ul
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 
-<p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
-text-align:center;line-height:normal"><span style="font-size:20.0pt;font-family:
-\"Arial\",\"sans-serif\"">PATIENT MEDICAL RECORD RELEASE FORM</span></p>
+<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>PATIENT MEDICAL RECORD RELEASE FORM</span></b></p>
+</td></tr></table>
 
 <p class=MsoNormal style="margin-top:4.0pt;line-height:normal"><span
 style="font-size:12.0pt">Dental Sleep Solutions<sup>&reg;</sup> coordinates
@@ -832,7 +821,7 @@ normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
  </tr>
 </table>
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;margin-top:0;line-height:
-normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+normal"></p>
 
 <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FAX</span></b><span
 style="font-size:12.0pt">: <b>'.$r['fax'].'</b></span></p>
@@ -947,17 +936,13 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>AFFIDAVIT FOR
 INTOLERANCE TO CPAP</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>I have
 attempted to use the nasal CPAP to manage my sleep related breathing disorder
 (apnea) and find it intolerable to use on a regular basis for the following
@@ -1131,17 +1116,14 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
 TITRATION FORM (EMA)</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
 font-family:"Arial","sans-serif"\'>Mandibular Advancement Device (MAD) Record</span></b></p>
@@ -1217,227 +1199,6 @@ Translation: ____________________ Starting Translation_________________</span></
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
 </table>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
@@ -1473,12 +1234,8 @@ style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'><img
 width=223 height=182 id="Picture 2"
 src="images/device_titration_files/image002.jpg" alt=ema2></span><span
 style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>                    
-© 2013 Dental Sleep Solutions</span></p>
-
-</div>
-
+© 2013 Dental Sleep Solutions</span></p></div>
 </body>
-
 </html>
 
 ';
@@ -1568,17 +1325,13 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
 TITRATION FORM</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
 font-family:"Arial","sans-serif"\'>Mandibular Advancement Device (MAD) Record</span></b></p>
@@ -2211,17 +1964,13 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP SCREENING
 QUESTIONNAIRE</span></b></p>
-
+</td></tr></table>
 
 <div style=\'border:solid black 1.0pt;padding:0in 4.0pt 1.0pt 4.0pt\'>
 
@@ -2467,19 +2216,17 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 
 <div class=WordSection1>
 
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></p>
 
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>As a courtesy
@@ -2648,20 +2395,16 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>INFORMED CONSENT</span></b></p>
 
 <p class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Informed
 Consent for Dental Sleep Therapy Use for the Treatment of Sleep Disordered
 Breathing</span></b></p>
-
+</td></tr></table>
 <p class=MsoBodyText2 align=left style=\'text-align:left\'><span
 style=\'font-family:"Arial","sans-serif"\'>You have been diagnosed by your
 physician as requiring treatment for sleep disordered breathing (snoring and/or
@@ -2825,16 +2568,12 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>LETTER
 OF MEDICAL NECESSITY (LOMN) AND Rx</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 <p class=MsoNormal style=\'text-align:justify;line-height:200%\'><span
@@ -2986,17 +2725,13 @@ div.WordSection1
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICAL HISTORY
 UPDATE FORM</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></b></p>
 
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
@@ -3152,16 +2887,13 @@ ul
 
 <body lang=EN-US>
 
-<div>
-<img src="'.$logo.'" />
-</div>
-
 <div class=WordSection1>
-
+<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<td>
 <p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:16.0pt;font-family:"Arial","sans-serif"\'>THE DENTAL SLEEP
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>THE DENTAL SLEEP
 SOLUTIONS<sup>®</sup> EXPERIENCE</span></b></p>
-
+</td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>Successful

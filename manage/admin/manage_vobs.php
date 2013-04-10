@@ -156,7 +156,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['companyid']."'"
+     . "  JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";

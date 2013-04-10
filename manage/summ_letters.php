@@ -292,8 +292,10 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
         </form>
 </div>
 <div style="clear:both;"></div>
-  <form name="filter_letters" action="/manage/patient_letters.php" method="get">
+  <form name="filter_letters" action="dss_summ.php" method="get" style="float:right;">
 	<input type="hidden" name="pid" value="<?=$patientid;?>" />
+	<input type="hidden" name="sect" value="letters" />
+	<input type="hidden" name="addtopat" value="1" />
   Show letter type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php

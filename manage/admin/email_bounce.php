@@ -52,7 +52,7 @@ if(isset($_REQUEST['email'])){
 		JOIN dental_user_company uc ON uc.userid = p.docid
 		LEFT JOIN dental_users u ON u.userid = p.docid
 		LEFT JOIN companies c ON c.id=uc.companyid
-		WHERE uc.companyid = '".mysql_real_escape_string($_SESSION['companyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
+		WHERE uc.companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND p.email like '%".$_REQUEST['email']."%' AND p.parent_patientid IS NULL ORDER BY p.email ASC";
 	}
 	$q = mysql_query($s);
 	if(mysql_num_rows($q)==0){

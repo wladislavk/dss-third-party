@@ -48,7 +48,7 @@ if(is_super($_SESSION['admin_access'])){
 }else{
   $sql = "SELECT du.* FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
-		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'";
+		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
 }
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);

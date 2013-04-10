@@ -230,8 +230,9 @@ $body .= DSS_EMAIL_FOOTER;
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</body></html>";
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
 	$body	.= "\n\n";
 	// End email
 	$body	.= "--$mime_boundary--\n";
@@ -293,8 +294,9 @@ function sendRemEmail($id, $e){
 <p><b>Contact us at ".$n."
 </b></p>
 </td></tr>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</body></html>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
@@ -533,10 +535,15 @@ mysql_query($s1);
 
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";
+                if(isset($_POST['sendPin'])){
+		  $sendPin = "&sendPin=1";
+		}else{
+		  $sendPin = "";
+		}
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?>';
+			parent.window.location='add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>&msg=<?=$msg;?><?= $sendPin; ?>';
 		</script>
 		<?
 		die();
@@ -736,10 +743,15 @@ mysql_query($s1);
 
 		}else{
 		$msg = "Patient ".$_POST["firstname"]." ".$_POST["lastname"]." added Successfully";
+                if(isset($_POST['sendPin'])){
+                  $sendPin = "&sendPin=1";
+                }else{
+                  $sendPin = "";
+                }
 		?>
 		<script type="text/javascript">
 			alert("<?=$msg;?>");
-			parent.window.location='add_patient.php?pid=<?= $pid; ?>&ed=<?=$pid; ?>&addtopat=1';
+			parent.window.location='add_patient.php?pid=<?= $pid; ?>&ed=<?=$pid; ?>&addtopat=1<?= $sendPin; ?>';
 		</script>
 		<?
 		die();
@@ -1115,6 +1127,9 @@ clickedBut = $(this).attr("name");
 }); 
 });
 function validate_add_patient(fa){
+if(clickedBut == "sendPin"){
+    return  pinabc(fa);
+}
 p = patientabc(fa);
 var valid = true;
                                   $.ajax({
@@ -1448,7 +1463,7 @@ $num_face = mysql_num_rows($itype_my);
                                   ?>
                                 </span>
 <br />
-<button class="button" onclick="loadPopup('patient_access_code.php?pid=<?= $_GET['pid']; ?>'); return false;">Patient can’t receive text message?</button>
+<input type="submit" name="sendPin" value="Patient can't recieve text message?" class="button" />
             </div>            </div>
                     </li>
                 </ul>
@@ -2640,6 +2655,13 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
 </script>
 <?php } ?>
 
+<?php if(isset($_GET['sendPin'])){ ?>
+<script type="text/javascript">
+  $(document).ready( function(){ 
+	loadPopup('patient_access_code.php?pid=<?= $_GET['pid']; ?>');
+  });
+</script>
+<?php } ?>
 
 </body>
 </html>

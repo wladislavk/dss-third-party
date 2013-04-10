@@ -14,7 +14,7 @@ if(isset($_POST['update_btn'])){
 if(is_super($_SESSION['admin_access'])){ 
 $sql = "select * from dental_letter_templates WHERE default_letter=1 ORDER BY id ASC";
 }elseif(is_admin($_SESSION['admin_access'])){
-$sql = "select * from dental_letter_templates WHERE companyid='".mysql_real_escape_string($_SESSION['companyid'])."' ORDER BY id ASC";
+$sql = "select * from dental_letter_templates WHERE companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ORDER BY id ASC";
 }else{
 ?>
 You do not have permission to edit default letters.
@@ -46,7 +46,7 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT body from dental_letter_templates where id='".mysql_real_escape_string($_REQUEST['lid'])."'";
 }else{
   $sql = "SELECT body from dental_letter_templates where id='".mysql_real_escape_string($_REQUEST['lid'])."'
-		AND companyid='".mysql_real_escape_string($_SESSION['companyid'])."'";
+		AND companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
 }
 $q = mysql_query($sql);
 $row = mysql_fetch_assoc($q);

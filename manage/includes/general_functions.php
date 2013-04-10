@@ -86,10 +86,16 @@ function uploadImage($image, $file_path, $profile = false){
 
 function sendUpdatedEmail($id, $new, $old, $by){
 if(trim($new) != trim($old)){
-  $sql = "SELECT u.phone from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
+  $sql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
-  $n = $r['phone'];
+  $n = $r['mailing_phone'];
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $logo = "/manage/q_file/".$ur['logo'];
+  }else{
+    $logo = "/reg/images/email/reg_logo.gif";
+  }
+
 if($by=='doc'){
   $m = "<html><body><center>
 <table width='600'>
@@ -99,17 +105,20 @@ if($by=='doc'){
 <p>An update has been made to your account.<br />Please use the updated email address below to login:</p>
 <h3>New Email: ".$new."</h3>
 <p><b>Old Email:</b> ".$old."</p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Logo' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td>
 <p>Click the link below to login with your new email address:<br />
 <a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php'>http://".$_SERVER['HTTP_HOST']."/reg/login.php</a></p>
+<p>".$r['mailing_practice']."<br />
+".$r['mailing_address']."<br />
+".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
+".$r['mailing_phone']."</p>
 <h3>Need assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
+<p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>".DSS_EMAIL_FOOTER."</body></html>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
 }else{
   $m = "<html><body><center>
@@ -120,17 +129,20 @@ patient@dentalsleepsolutions.com</b></p>
 <p>You have updated your account.<br />Please use the updated email address below to login:</p>
 <h3>New Email: ".$new."</h3>
 <p><b>Old Email:</b> ".$old."</p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Logo' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td>
 <p>Click the link below to login with your new email address:<br />
 <a href='http://".$_SERVER['HTTP_HOST']."/reg/login.php'>http://".$_SERVER['HTTP_HOST']."/reg/login.php</a></p>
+<p>".$r['mailing_practice']."<br />
+".$r['mailing_address']."<br />
+".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
+".$r['mailing_phone']."</p>
 <h3>Didn't request this change or need assistance?</h3>
-<p><b>Contact us at ".$n." or at<br>
-patient@dentalsleepsolutions.com</b></p>
+<p><b>Contact us at ".$n."</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
 </table>
-</center>".DSS_EMAIL_FOOTER."</body></html>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
 
 
@@ -141,7 +153,7 @@ $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                     'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
-                $subject = "Dental Sleep Solutions Email update";
+                $subject = "Online Patient Portal Email Update";
 
                 mail($new, $subject, $m, $headers);
                 mail($old, $subject, $m, $headers);

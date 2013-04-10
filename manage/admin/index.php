@@ -21,7 +21,7 @@ if(isset($_POST["loginsub"]))
 		
 		$_SESSION['adminuserid']=$check_myarray['adminid'];
                 $_SESSION['admin_access']=$check_myarray['admin_access'];
-		$_SESSION['companyid']=$check_myarray['companyid'];
+		$_SESSION['admincompanyid']=$check_myarray['companyid'];
 		?>
 		<script type="text/javascript">
 			window.location.replace('home.php');

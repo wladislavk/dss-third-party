@@ -66,7 +66,7 @@ if(isset($_GET['cid'])){
   $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
 		INNER JOIN dental_user_company uc ON uc.userid = u.userid
 		INNER JOIN companies c ON c.id=uc.companyid
-		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'
+		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
 		ORDER BY username";
 }
 $my = mysql_query($sql);

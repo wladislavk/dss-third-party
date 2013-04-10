@@ -198,7 +198,7 @@ if ($status == 'pending') {
 	JOIN dental_user_company uc ON uc.userid = dental_letters.docid
 	JOIN dental_users u ON u.userid = dental_letters.docid
 	LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-		WHERE uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."' AND
+		WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
 			dental_letters.status = '1' AND 
 			dental_letters.delivered = '0' AND 
 			dental_letters.deleted = '0' AND 

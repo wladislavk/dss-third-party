@@ -304,6 +304,31 @@ function sendEmail(fa){
   return true;
 }
 
+
+function pinabc(fa)
+{
+        if(trim(fa.firstname.value) == "" )
+        {
+                alert("First Name is Required");
+                fa.firstname.focus();
+                return false;
+        }
+        if(trim(fa.lastname.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.lastname.focus();
+                return false;
+        }
+        if(fa.email.value == "")
+        {
+                alert("Email is Required");
+                fa.email.focus();
+                return false;
+        }
+  return true;
+}
+
+
 function patientabc(fa)
 {
 	if(trim(fa.firstname.value) == "" )

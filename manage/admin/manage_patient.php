@@ -26,7 +26,7 @@ $doc_sql = "select * from dental_users where user_access=2 order by username";
 }else{
   $doc_sql = "SELECT u.* FROM dental_users u 
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid
-                WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['companyid'])."'
+                WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
                 ORDER BY username";
 }
 

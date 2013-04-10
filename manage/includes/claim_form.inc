@@ -829,6 +829,8 @@ if($is_pending){
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
+$p_m_dss_file = $pat_myarray['p_m_dss_file'];
+$s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
@@ -1217,15 +1219,36 @@ input{text-transform:uppercase;}
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
 			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
                <?php } ?>
-		<?php } ?>
-		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
-        <?php if (!$is_sent) { 
-                if($is_back_office){ ?>
+        <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
- 	  <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
-                <?php } ?>
+          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
 
         <?php } ?>
+
+		<?php } else if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+               <?php if($status == DSS_CLAIM_PENDING && $p_m_dss_file == '2'){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+
+        <?php } ?>
+
+               <?php }elseif($status == DSS_CLAIM_SEC_PENDING && $s_m_dss_file == '2'){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+
+        <?php } ?>
+
+               <?php } ?>
+
+                <?php } ?>
+		<!--<input type="button" class="print-button" onClick="window.print()" value="Print Claim Form"/>-->
+
 		&nbsp;&nbsp;&nbsp;
 	</div>
 	

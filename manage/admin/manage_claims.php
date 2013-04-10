@@ -130,6 +130,7 @@ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
+     . "  claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
@@ -154,6 +155,7 @@ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
+     . "  claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
@@ -182,7 +184,7 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     $sql .= "WHERE "; 
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
 	if($_REQUEST['status'] === DSS_CLAIM_PENDING){
-		echo DSS_CLAIM_PENDING;
+		//echo DSS_CLAIM_PENDING;
 	   	$sql .= " claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
 	}elseif($_REQUEST['status'] == DSS_CLAIM_SENT){
                 $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.") ";
@@ -205,7 +207,12 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     }
 }
 
-$sql .= "ORDER BY " . $sort_by_sql;
+$sql .= " AND 
+  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+    THEN p.p_m_dss_file
+    ELSE p.s_m_dss_file
+   END = '1'
+ORDER BY " . $sort_by_sql;
 //print $sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -314,11 +321,14 @@ if(isset($_GET['msg'])){
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
+		<td valign="top" class="col_head" width="15%">
+			Mailed
+		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="6" align="center">
+			<td valign="top" class="col_head" colspan="7" align="center">
 				No Records
 			</td>
 		</tr>
@@ -403,6 +413,7 @@ if(isset($_GET['msg'])){
            } ?>
 
 				</td>
+<td><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> /></td>
 			</tr>
 	<? 	}
 	}?>
@@ -427,3 +438,26 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   <?php
 }
 ?>
+
+<script type="text/javascript">
+  $('.mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+                                   $.ajax({
+                                        url: "../includes/claim_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+</script>

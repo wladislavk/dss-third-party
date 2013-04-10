@@ -99,7 +99,7 @@ if(trim($new) != trim($old)){
 if($by=='doc'){
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>An update has been made to your account.<br />Please use the updated email address below to login:</p>
@@ -116,14 +116,14 @@ if($by=='doc'){
 <h3>Need assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
 }else{
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your Updated Account</h2>
 <p>You have updated your account.<br />Please use the updated email address below to login:</p>
@@ -140,7 +140,7 @@ if($by=='doc'){
 <h3>Didn't request this change or need assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$r['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
@@ -148,9 +148,9 @@ if($by=='doc'){
 
 
 }
-$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
                 $subject = "Online Patient Portal Email Update";

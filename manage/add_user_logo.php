@@ -4,6 +4,7 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
 include_once 'includes/general_functions.php';
+require_once 'admin/includes/form_updates.php';
 if($_POST["compsub"] == 1)
 {
 
@@ -95,7 +96,7 @@ if($_POST["compsub"] == 1)
 			where userid='".$_SESSION["docid"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
-
+form_update_all($_SESSION['docid']);
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>

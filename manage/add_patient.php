@@ -173,7 +173,7 @@ function sendRegEmail($id, $e, $l, $old_email=''){
     $logo = "/reg/images/email/reg_logo.gif";
   }
 
-  $from = "SWsupport@dentalsleepsolutions.com";
+  $from = "patient@dentalsleepsolutions.com";
 $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\r\n";
@@ -182,7 +182,7 @@ $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$body	.= "--$mime_boundary\n";
 	$body	.= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
 	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
-	$body	.= "A message from Dental Sleep Solutions
+	$body	.= "A message from your healthcare provider 
 
 Your New Account
 A new patient account has been created for you by ".$ur['mailing_practice'].".
@@ -209,7 +209,7 @@ $body .= DSS_EMAIL_FOOTER;
 	$body	.= "Content-Transfer-Encoding: 7bit\n\n";
 	$body	.= "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
@@ -230,7 +230,7 @@ $body .= DSS_EMAIL_FOOTER;
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
 	$body	.= "\n\n";
@@ -270,7 +270,7 @@ function sendRemEmail($id, $e){
   }
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
@@ -294,13 +294,13 @@ function sendRemEmail($id, $e){
 <p><b>Contact us at ".$n."
 </b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
-$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
                 $subject = "Online Patient Registration";
@@ -1325,6 +1325,7 @@ function remove_notification(id){
               </td>
 
 		<td  align="right">
+                        <input type="submit" style="float:right; margin-left: 5px;" value=" <?=$but_text?> Patient" class="button" />
 			<?php 
 			if($doc_patient_portal && $use_patient_portal){
 			  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
@@ -1335,7 +1336,6 @@ function remove_notification(id){
 			<?php
 			  }	
 			} ?>
-                        <input type="submit" value=" <?=$but_text?> Patient" class="button" />
 		</td>
 	</tr>
         <tr>

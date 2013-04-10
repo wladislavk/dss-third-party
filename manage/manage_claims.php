@@ -219,6 +219,9 @@ if(v == '100'){
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
+		<td valign="top" class="col_head" width="10%">
+			Mailed
+		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
@@ -257,9 +260,17 @@ if(v == '100'){
 <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
                                                 View 
                                         </a>
-
-                    
+				|
+				<a href="print_claim.php?insid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
+                                                Print
+                                        </a>
 				</td>
+	                <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+                <td><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> /></td>
+                <?php } ?>
+                <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
+                <td><?= ($myarray['mailed_date'] !='')?'X':''; ?></td>
+                <?php } ?>
 			</tr>
 	<? 	}
 	}?>
@@ -277,3 +288,27 @@ if(v == '100'){
 
 <br /><br />	
 <? include "includes/bottom.htm";?>
+
+<script type="text/javascript">
+  $('.mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+                                   $.ajax({
+                                        url: "includes/claim_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+
+</script>

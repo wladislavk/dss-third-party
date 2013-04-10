@@ -25,23 +25,31 @@ if(isset($_POST['email_but'])){
                 mysql_query($ins_sql);
                 $recover_hash = $pat['recover_hash'];
         }
+
+  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p
+ on u.userid=p.docid where p.patientid='".mysql_real_escape_string($_POST['pid'])."'";
+  $uq = mysql_query($usql);
+  $ur = mysql_fetch_assoc($uq);
+  $n = $ur['mailing_phone'];
+
   $html = '
-<p>Welcome '.$pat['firstname'].' '.$pat['lastname'].'! Your medical records are just steps away.</p>
+<p>Welcome '.$pat['firstname'].' '.$pat['lastname'].'! Your medical record access is just a few steps away.</p>
 
 <p>You\'ll receive an email with instructions for accessing your records online. The email was sent to:</p>
 <p>'.$pat['email'].'</p>
 <br />
 <p>For your privacy, you\'ll need to enter the following temporary PIN when you login the first time:<p>
 <p>'.$pat['access_code'].'</p>
+
+<p>We look forward to seeing you at your next visit!</p>
+<p>'.$ur['mailing_practice'].'<br />
+'.$ur['mailing_address'].'<br />
+'.$ur['mailing_city'].' '.$ur['mailing_state'].' '.$ur['mailing_zip'].'<br />
+'.$ur['mailing_phone'].'</p>
 ';
 $filename = 'user_pin_'.$pat['patientid'].'.pdf';
   create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);
   $e = $pat['email'];
-  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p
- on u.userid=p.docid where p.patientid='".mysql_real_escape_string($_POST['pid'])."'";
-  $uq = mysql_query($usql);
-  $ur = mysql_fetch_assoc($uq);
-  $n = $ur['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];
   }else{
@@ -50,7 +58,7 @@ $filename = 'user_pin_'.$pat['patientid'].'.pdf';
 
 $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
 <p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
@@ -71,12 +79,12 @@ $m = "<html><body><center>
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='A message from Dental Sleep Solutions' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
-$headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
+                    'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();
 
                 $subject = "Online Patient Registration";

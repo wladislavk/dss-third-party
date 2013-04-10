@@ -85,7 +85,7 @@ function send_text(from, but){
 }
 
 $(document).ready(function(){
-  //send_text("load", false);
+  send_text("load", false);
 });
 </script>
 

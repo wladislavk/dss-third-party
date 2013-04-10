@@ -1,6 +1,6 @@
 <?php
-//header("Content-type: application/vnd.fdf");
-//header('Content-Disposition: attachment; filename="file.fdf"');
+header("Content-type: application/vnd.xfdf");
+header('Content-Disposition: attachment; filename="file.xfdf"');
 session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/config.php');
@@ -11,7 +11,7 @@ $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 }
 
-$fdf_file=time().'.fdf';
+$fdf_file=time().'.xfdf';
 
             // need to know what file the data will go into
             $pdf_doc= $path.'claim.pdf';
@@ -470,6 +470,17 @@ $dia = explode('.', $ins_diag_myarray['ins_diagnosis']);
 $diagnosis_4_left_fill = $dia[0];
 $diagnosis_4_right_fill = $dia[1];
 
+
+$xfdf = '<?xml version="1.0" encoding="UTF-8"?>
+<xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
+  <fields>
+	<field name="'.$field_path.'.carrier_name_fill[0]">
+	<value>'.strtoupper($inscoinfo['company']).'</value>
+	</field>
+  </fields>
+  <f href="'.$pdf_doc.'" />
+</xfdf>';
+
 $fdf = "
 %FDF-1.2
 1 0 obj
@@ -770,8 +781,8 @@ trailer
 >>
 %%EOF
 ";
-$d = date('YmdHms');
-$file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".fdf";
+$d = date('YmdHis');
+$file = "fdf_".$_GET['insid']."_".$_GET['pid']."_".$d.".xfdf";
 if($_REQUEST['type']=="secondary"){
   $fdf_field = "secondary_fdf";
 }else{
@@ -780,19 +791,19 @@ if($_REQUEST['type']=="secondary"){
 $sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data
-	    // if you wanted to put it in a database, email t
+            // if you wanted to put it in a database, email the
             // FDF data, push ti back to the user with a header() call, etc.
 
             // write the file out
             //echo  $fdf;
 	$handle = fopen("./q_file/".$file, 'x+');
-	fwrite($handle, $fdf);
+	fwrite($handle, $xfdf);
 	fclose($handle);
 
-$xfdf_file_path = './q_file/'.$file;
+$xfdf_file_path = 'q_file/'.$file;
 $pdf_template_path = $path . 'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
-$pdf_name = substr( $xfdf_file_path, 0, -4 ) . '.pdf';
+$pdf_name = substr( $xfdf_file_path, 0, -4 ) . 'pdf';
 $result_pdf = $pdf_name;
 $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
 
@@ -800,50 +811,7 @@ $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_p
 exec( $command, $output, $ret );
 
 
-require_once '3rdParty/tcpdf/tcpdf.php';
-require_once '3rdParty/fpdi/fpdi.php';
-
-
-class PDF extends FPDI {
-    /**
-     * "Remembers" the template id of the imported page
-     */
-    var $_tplIdx;
-    var $_template;
-    
-    /**
-     * include a background template for every page
-     */
-    function Header() {
-        if (is_null($this->_tplIdx)) {
-            $this->setSourceFile($this->_template);
-            $this->_tplIdx = $this->importPage(1);
-        }
-
-	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-	$d_q = mysql_query($d_sql);
-	$d_r = mysql_fetch_assoc($d_q);
-
-        $this->useTemplate($this->_tplIdx, $d_r['claim_margin_left'], $d_r['claim_margin_top']);
-        
-    }
-    
-    function Footer() {}
-}
-
-// initiate PDF
-$pdf = new PDF();
-$pdf->_template = $result_pdf;
-$pdf->SetMargins(0, 0, 0);
-$pdf->SetAutoPageBreak(true, 40);
-$pdf->setFontSubsetting(false);
-
-// add a page
-$pdf->AddPage();
-
-$pdf->Output('insurance_claim.pdf', 'D');
-
-//echo $fdf;
+echo $xfdf;
 
 function fill_cents($v){
   if($v<10){

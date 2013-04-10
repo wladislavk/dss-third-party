@@ -80,13 +80,13 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></p>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE FINANCIAL
-AGREEMENT</span></b></p>
+AGREEMENT</span></b></h2>
 </td></tr></table>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
@@ -132,10 +132,9 @@ were previously discussed.</span></p>
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'margin-top:0in;margin-right:-.9pt;
-margin-bottom:0in;margin-left:.5in;margin-bottom:.0001pt;text-align:right\'><span
-style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep
-Solutions</span><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>         </span></p>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 
 </div>
 
@@ -238,15 +237,15 @@ ul
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
+<td width="70%">
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY
-(DST)</span></b></p>
+(DST)</span></b></h2>
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>HOME CARE
-INSTRUCTIONS</span></b></p>
+INSTRUCTIONS</span></b></h2>
 </td></tr></table>
 
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>As with
@@ -306,9 +305,9 @@ style=\'background:yellow\'>'.$r['phone'].'</span>.</span></i></b></p>
 <p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
 8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 </div>
 
 </body>
@@ -457,13 +456,13 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
+<td width="70%">
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>NON DENTIST-OF-RECORD</span></b></p>
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>NON DENTIST-OF-RECORD</span></b></h2>
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>RELEASE FORM</span></b></p>
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>RELEASE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal align=center style=\'text-align:center\'><b>
 '.$r['mailing_practice'].'
@@ -511,9 +510,9 @@ Signature                                   �
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 </div>
 
 </body>
@@ -609,11 +608,11 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
+<td width="70%">
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP RECORDER
-RELEASE FORM</span></b></p>
+RELEASE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I,
@@ -672,8 +671,9 @@ font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 
 </div>
 
@@ -762,10 +762,10 @@ ul
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
+<td width="70%">
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>PATIENT MEDICAL RECORD RELEASE FORM</span></b></p>
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>PATIENT MEDICAL RECORD RELEASE FORM</span></b></h2>
 </td></tr></table>
 
 <p class=MsoNormal style="margin-top:4.0pt;line-height:normal"><span
@@ -938,10 +938,10 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>AFFIDAVIT FOR
-INTOLERANCE TO CPAP</span></b></p>
+INTOLERANCE TO CPAP</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>I have
 attempted to use the nasal CPAP to manage my sleep related breathing disorder
@@ -1008,8 +1008,9 @@ ____________________________________________ Date: ____________________</span></
 <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-10.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 
 </div>
 
@@ -1119,10 +1120,10 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
-TITRATION FORM (EMA)</span></b></p>
+TITRATION FORM (EMA)</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
@@ -1228,13 +1229,16 @@ Office use only</span></p>
 <p class=MsoNormal align=right style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
 "Arial","sans-serif"\'><img width=243 height=176 id="Picture 1"
-src="images/device_titration_files/image001.jpg" alt=ema1></span><span
+src="/manage/images/device_titration_files/image001.jpg" alt=ema1></span><span
 style=\'font-family:"Times New Roman","serif";color:black;background:black\'> </span><span
 style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'><img
 width=223 height=182 id="Picture 2"
-src="images/device_titration_files/image002.jpg" alt=ema2></span><span
-style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>                    
-© 2013 Dental Sleep Solutions</span></p></div>
+src="/manage/images/device_titration_files/image002.jpg" alt=ema2></span>
+
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
+
 </body>
 </html>
 
@@ -1327,10 +1331,10 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
-TITRATION FORM</span></b></p>
+TITRATION FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
@@ -1613,11 +1617,9 @@ style=\'font-size:10.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>EMA
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
 style=\'font-size:10.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'margin-bottom:0in;margin-bottom:.0001pt;
-text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
-"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
-</div>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p></div>
 
 </body>
 
@@ -1966,17 +1968,15 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP SCREENING
-QUESTIONNAIRE</span></b></p>
+QUESTIONNAIRE</span></b></h2>
 </td></tr></table>
 
-<div style=\'border:solid black 1.0pt;padding:0in 4.0pt 1.0pt 4.0pt\'>
-
-<p class=MsoTitle align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+<h2 class=MsoTitle align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
 text-align:center;border:none;padding:0in\'><span style=\'font-size:14.0pt;
-color:windowtext\'>EPWORTH SLEEPINESS SCALE</span></p>
+color:windowtext\'>EPWORTH SLEEPINESS SCALE</span></h2>
 
 <p class=MsoNormal style=\'text-align:justify;border:none;padding:0in\'><span
 style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>In contrast to just
@@ -1987,61 +1987,54 @@ situations? </span></p>
 style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Use the following
 scale to choose the most appropriate number for each situation:</span></p>
 
-<p class=MsoNormal style=\'text-align:justify;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+<p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
+11.0pt;font-family:"Arial","sans-serif"\'>  0 = Would
+never doze                 1 = Slight chance of dozing  </span></b></p>
 
 <p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
-11.0pt;font-family:"Arial","sans-serif"\'>                        0 = Would
-never doze                      1 = Slight chance of dozing  </span></b></p>
-
-<p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
-11.0pt;font-family:"Arial","sans-serif"\'>                        2 = Moderate
-chance of dozing      3 = High chance of dozing    </span>                                                                                                                                               </b><b><span
-style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>                                                            </span></b></p>
+11.0pt;font-family:"Arial","sans-serif"\'>  2 = Moderate
+chance of dozing   3 = High chance of dozing</span>                                                                                                                                               </b>
 
 <p class=MsoNormal style=\'border:none;padding:0in\'><b><u><span
-style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>SITUATION</span></u></b><b><span
-style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>                                                                                            
-</span></b></p>
+style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>SITUATION</span></u></b>
+</p>
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
-and reading                                                                                          _________</span></p>
+<p class=MsoNormal style=\'line-height:100%;border:none;padding:0in\'><span
+style=\'font-size:11.0pt;line-height:100%;font-family:"Arial","sans-serif"\'>Sitting
+and reading                                                                                          _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Watching
-television                                                                                         _________</span></p>
+<span
+style=\'font-size:11.0pt;line-height:100%;font-family:"Arial","sans-serif"\'>Watching
+television                                                                                         _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
-inactive in a public place (i.e. theater)                                                 _________</span></p>
+<span
+style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>Sitting
+inactive in a public place (i.e. theater)                                                 _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>As a
-car passenger for an hour without a break                                            _________</span></p>
+<span
+style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>As a
+car passenger for an hour without a break                                             _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Lying
-down to rest in the afternoon                                                                _________</span></p>
+<span
+style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>Lying
+down to rest in the afternoon                                                                _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
 and talking to someone                                                           
-            _________</span></p>
+            _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
-quietly after lunch without alcohol                                                       _________</span></p>
+quietly after lunch without alcohol                                                       _________</span><br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>In a
 car, while stopping for a few minutes in traffic                                        _________
-</span></p>
+</span><br />
+<br />
 
-<p class=MsoNormal style=\'line-height:150%;border:none;padding:0in\'><b><span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></b></p>
-
-<p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
+<span style=\'font-size:11.0pt;
 font-family:"Arial","sans-serif"\'>                                                <b>TOTAL
 SCORE</b>                                             _________</span></p>
 
@@ -2049,10 +2042,6 @@ SCORE</b>                                   �
 font-family:"Arial","sans-serif"\'>A score of 8 or greater indicates the possibility
 of sleep disordered breathing.</span></p>
 
-</div>
-
-
-<div style=\'border:solid black 1.0pt;padding:1.0pt 4.0pt 1.0pt 4.0pt\'>
 
 <h2 align=center style=\'text-align:center;border:none;padding:0in\'><span
 style=\'font-size:14.0pt;color:windowtext;font-weight:normal\'>THORNTON SNORING
@@ -2066,47 +2055,40 @@ to choose the most appropriate number for each situation. (Go to the 4th
 statement if you have no bed partner.)</span></p>
 
 <p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
-11.0pt;font-family:"Arial","sans-serif"\'>            0 = Never                                                        1
+11.0pt;font-family:"Arial","sans-serif"\'>0 = Never                                               1
 = Infrequently (1 night per week)       </span></b></p>
 
-<p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
-11.0pt;font-family:"Arial","sans-serif"\'>            2 = Frequently (2-3 nights
-per week)          3 = Most of the time (4 or more nights per week)</span></b><b><span
-style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'> </span></b></p>
-
-<p class=MsoNormal style=\'border:none;padding:0in\'><b><span style=\'font-size:
-10.0pt;font-family:"Arial","sans-serif"\'>                                                                                    </span></b><span
-style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>                                                 
-                                  <b> </b></span></p>
+<p class=MsoNormal style=\'border:none;padding:0in; width:100%\'><b><span style=\'font-size:
+11.0pt;font-family:"Arial","sans-serif"\'>2 = Frequently (2-3 nights
+per week)   3 = Most of the time (4 or more nights per week)</span></b>
+</p>
 
 <p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
 style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring affects my relationship with my partner                                      _________      </span></p>
+snoring affects my relationship with my partner                                      _________      </span><br />
 
-<p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring causes my partner to be irritable or tired                                     _________</span></p>
+snoring causes my partner to be irritable or tired                                     _________</span><br />
 
-<p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring requires us to sleep in separate rooms                                        _________</span></p>
+snoring requires us to sleep in separate rooms                                        _________</span><br />
 
-<p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring is loud                                                                                           _________</span></p>
+snoring is loud                                                                                           _________</span><br />
 
-<p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
+<span
 style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring affects people when I am sleeping</span></p>
+snoring affects people when I am sleeping</span><br />
 
-<p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
+<span style=\'font-size:11.0pt;
 font-family:"Arial","sans-serif"\'>      away from home (i.e. hotel, camping,
-etc.)                                             _________</span></p>
+etc.)                                             _________</span><br />
+<br />
 
-<p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
-font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
+<span style=\'font-size:11.0pt;
 font-family:"Arial","sans-serif"\'>                                                    
 <b> TOTAL SCORE</b>                                       _________</span></p>
 
@@ -2114,20 +2096,13 @@ font-family:"Arial","sans-serif"\'>                      �
 font-family:"Arial","sans-serif"\'>A score of 5 or greater indicates your
 snoring may be significantly affecting your quality of life. </span></p>
 
-</div>
-
-<p class=MsoNormal><b><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></b></p>
-
 <p class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>PATIENT
 NAME </span></b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>__________________________________________________
 <b>DATE:</b> _____________</span></p>
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
-</div>
-
-</body>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p></div></body>
 
 </html>
 
@@ -2220,12 +2195,12 @@ div.WordSection1
 <div class=WordSection1>
 
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></p>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
 
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT</span></b></p>
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
@@ -2275,11 +2250,9 @@ understand that you are individually responsible for payment of all fees.</span>
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'margin-top:0in;margin-right:-.9pt;
-margin-bottom:0in;margin-left:.5in;margin-bottom:.0001pt;text-align:right\'><span
-style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep
-Solutions</span></p>
-
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p>
 </div>
 
 </body>
@@ -2397,13 +2370,13 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>INFORMED CONSENT</span></b></p>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>INFORMED CONSENT</span></b></h2>
 
-<p class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Informed
+<h2 class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Informed
 Consent for Dental Sleep Therapy Use for the Treatment of Sleep Disordered
-Breathing</span></b></p>
+Breathing</span></b></h2>
 </td></tr></table>
 <p class=MsoBodyText2 align=left style=\'text-align:left\'><span
 style=\'font-family:"Arial","sans-serif"\'>You have been diagnosed by your
@@ -2476,10 +2449,9 @@ Name: ______________________________________________________</span></p>
 _______________________________________________________ Date: _____________    </span></p>
 
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
-</div>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p></div>
 </body>
 </html>';
 
@@ -2570,9 +2542,9 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>LETTER
-OF MEDICAL NECESSITY (LOMN) AND Rx</span></b></p>
+<td width="70%">
+<h2 class=MsoNormal><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>LETTER
+OF MEDICAL NECESSITY (LOMN) AND Rx</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
@@ -2727,10 +2699,10 @@ div.WordSection1
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICAL HISTORY
-UPDATE FORM</span></b></p>
+UPDATE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal><b><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></b></p>
 
@@ -2783,11 +2755,9 @@ font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 <p class=MsoNormal align=right style=\'margin-left:.5in;text-align:right\'><span
 style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'margin-left:.5in;text-align:right\'><span
-style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep
-Solutions</span></p>
-
-</div>
+<p style="width:100%; text-align:right;">
+<span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+Solutions</small></span></p></div>
 
 </body>
 
@@ -2889,10 +2859,10 @@ ul
 
 <div class=WordSection1>
 <table><tr><td width="30%"><img src="'.$logo.'" /></td>
-<td>
-<p class=MsoNormal align=center style=\'text-align:center\'><b><span
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>THE DENTAL SLEEP
-SOLUTIONS<sup>®</sup> EXPERIENCE</span></b></p>
+SOLUTIONS<sup>®</sup> EXPERIENCE</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
@@ -3225,9 +3195,6 @@ replacement.</span><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span></p>
-
 </div>
 
 </body>
@@ -3283,5 +3250,25 @@ function create_form_pdf($html, $filename, $title){
         //Close and output PDF document
 
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/q_file/' . $filename, 'F');
+
+}
+
+
+function form_update_all($docid){
+ 
+      update_custom_release_form($docid);
+      update_financial_agreement_medicare_form($docid);
+      update_home_care_instructions_form($docid);
+      update_non_dentist_of_record_release_form($docid);
+      update_sleep_recorder_release_form($docid);
+      update_affidavit_for_cpap_intolerance_form($docid);
+      update_device_titration_ema_form($docid);
+      update_device_titration_form($docid);
+      update_ess_tss_form($docid);
+      update_financial_agreement_form($docid);
+      update_informed_consent_form($docid);
+      update_lomn_rx_form($docid);
+      update_medical_hx_update_form($docid);
+      update_the_dss_experience_form($docid);
 
 }

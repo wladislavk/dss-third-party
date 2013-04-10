@@ -322,12 +322,14 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 
 //print_r($dental_letters);
 
+$mailed = (isset($_GET['mailed']))?$_GET['mailed']:'';
 ?>
 
 <div class="letters-tryptych1">
   <h1 class="blue"><?php 
-
-	if($status == 'pending'){
+	if($mailed=="0"){
+		echo "Unmailed";
+	}elseif($status == 'pending'){
 		echo "Pending";
         }elseif($status == "sent"){
 		echo "Sent";
@@ -351,7 +353,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   <h2>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old.</h1>
 </div>
 <div class="letters-tryptych3">
-<?php if ($status != "sent"): ?>
+<?php if ($status != "sent" || $mailed == "0"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/letters.php?status=sent">
   	<input class="addButton" type="submit" value="Sent Letters">
@@ -365,9 +367,15 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
   	</form>
   </div>
 <?php endif; ?>
+<?php if ($mailed != "0" && $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE): ?>
+  <div style="float:right;margin-right: 10px;">
+        <form method="post" action="/manage/letters.php?status=sent&mailed=0">
+        <input class="addButton" type="submit" value="Unmailed Letters">
+        </form>
+  </div>
+<?php endif; ?>
 
 </div>
-<?php $mailed = $_GET['mailed']; ?>
 <div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&mailed=$mailed&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">

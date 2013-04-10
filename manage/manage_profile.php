@@ -22,6 +22,7 @@ if(isset($_POST["profile_submit"]))
 	phone='".mysql_real_escape_string($_POST['phone'])."'
 	WHERE userid='".$_SESSION['userid']."'";
   mysql_query($in_sql);
+  form_update_all($_SESSION['docid']);
 }
 
 if(isset($_POST["practice_submit"]))
@@ -53,6 +54,7 @@ if(isset($_POST["practice_submit"]))
         mailing_phone='".mysql_real_escape_string($_POST['mailing_phone'])."'
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
+form_update_all($_SESSION['docid']);
 }
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))

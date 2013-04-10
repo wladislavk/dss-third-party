@@ -38,7 +38,7 @@ function claim_errors( $pid, $medicare = false ){
   $sql = "SELECT p_m_dss_file FROM dental_patients p WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
   $m = mysql_fetch_row($my);
-  if( $m[0]!=1 ){
+  if( $m[0]!=1 && $_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE ){
     array_push($errors, "Primary DSS filing insurance not selected - Patient Info");
   }
 

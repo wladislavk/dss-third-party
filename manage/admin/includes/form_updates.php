@@ -3,19 +3,8 @@
 
 function update_financial_agreement_medicare_form($id){
 
+$logo = get_logo($id);
 
-$s = "select amount from dental_transaction_code where docid=".mysql_real_escape_string($id)." and transaction_code='E0486'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
 
 $html = '
 <html>
@@ -79,7 +68,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
@@ -153,19 +142,7 @@ Solutions</small></span></p>
 function update_home_care_instructions_form($id){
 
 
-$s = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
 
 $html = '
@@ -236,7 +213,7 @@ ul
 
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
@@ -326,19 +303,7 @@ Solutions</small></span></p>
 function update_non_dentist_of_record_release_form($id){
 
 
-$s = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
 
 $html = '
@@ -455,7 +420,7 @@ div.WordSection1
 
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
@@ -530,20 +495,7 @@ Solutions</small></span></p>
 
 function update_sleep_recorder_release_form($id){
 
-
-$s = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
 
 $html = '
@@ -607,7 +559,7 @@ div.WordSection1
 
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
@@ -694,19 +646,7 @@ Solutions</small></span></p>
 function update_custom_release_form($id){
 
 
-$s = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
 
 $html = '
@@ -761,7 +701,7 @@ ul
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
@@ -769,7 +709,7 @@ style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>PATIENT MEDICAL RECO
 </td></tr></table>
 
 <p class=MsoNormal style="margin-top:4.0pt;line-height:normal"><span
-style="font-size:12.0pt">Dental Sleep Solutions<sup>&reg;</sup> coordinates
+style="font-size:12.0pt">This office coordinates
 treatment with your healthcare providers to help ensure maximum benefit to
 you.  Please sign the record release form below so we can retrieve medical
 records related to sleep disordered breathing.</span></p>
@@ -860,15 +800,7 @@ you in advance.</span></p></div></body></html>';
 
 function update_affidavit_for_cpap_intolerance_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
 
 $html = '
@@ -937,7 +869,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>AFFIDAVIT FOR
@@ -1030,16 +962,7 @@ Solutions</small></span></p>
 
 function update_device_titration_ema_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
-
+$logo = get_logo($id);
         
 $html = '
 <html>
@@ -1119,7 +1042,7 @@ div.WordSection1
 
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
@@ -1227,14 +1150,20 @@ style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>For
 Office use only</span></p>
 
 <p class=MsoNormal align=right style=\'margin-bottom:0in;margin-bottom:.0001pt;
-text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
-"Arial","sans-serif"\'><img width=243 height=176 id="Picture 1"
+text-align:right\'>
+<table><tr><td>
+<span style=\'font-size:8.0pt;line-height:115%;font-family:
+"Arial","sans-serif"\'>
+<img width=243 height=176 id="Picture 1"
 src="/manage/images/device_titration_files/image001.jpg" alt=ema1></span><span
-style=\'font-family:"Times New Roman","serif";color:black;background:black\'> </span><span
+style=\'font-family:"Times New Roman","serif";color:black;background:black\'> </span>
+</td><td>
+<span
 style=\'font-size:8.0pt;line-height:115%;font-family:"Arial","sans-serif"\'><img
 width=223 height=182 id="Picture 2"
 src="/manage/images/device_titration_files/image002.jpg" alt=ema2></span>
-
+</td></tr></table>
+</p>
 <p style="width:100%; text-align:right;">
 <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
 Solutions</small></span></p>
@@ -1256,15 +1185,7 @@ Solutions</small></span></p>
 function update_device_titration_form($id){
 
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
         
 $html = '
@@ -1330,7 +1251,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>DEVICE
@@ -1638,15 +1559,7 @@ Solutions</small></span></p></div>
 
 function update_ess_tss_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
         
 $html = '
@@ -1967,7 +1880,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP SCREENING
@@ -2119,15 +2032,7 @@ Solutions</small></span></p></div></body>
 
 function update_financial_agreement_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
+$logo = get_logo($id);
 
         
 $html = '
@@ -2194,7 +2099,7 @@ div.WordSection1
 
 <div class=WordSection1>
 
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
@@ -2272,16 +2177,7 @@ Solutions</small></span></p>
 
 function update_informed_consent_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
-
+$logo = get_logo($id);
         
 $html = '
 <html>
@@ -2369,7 +2265,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>INFORMED CONSENT</span></b></h2>
@@ -2466,14 +2362,6 @@ Solutions</small></span></p></div>
 
 function update_lomn_rx_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
 
 
         
@@ -2541,7 +2429,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>LETTER
 OF MEDICAL NECESSITY (LOMN) AND Rx</span></b></h2>
@@ -2628,16 +2516,7 @@ font-family:"Arial","sans-serif"\'>                      �
 
 function update_medical_hx_update_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
-
+$logo = get_logo($id);
         
 $html = '
 <html>
@@ -2698,7 +2577,7 @@ div.WordSection1
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICAL HISTORY
@@ -2776,16 +2655,7 @@ Solutions</small></span></p></div>
 
 function update_the_dss_experience_form($id){
 
-$l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
-$l_q = mysql_query($l_sql);
-$l_r = mysql_fetch_assoc($l_q);
-if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-  $logo = "/manage/q_file/".$l_r['logo'];
-}else{
-  $logo = "/manage/images/logo.gif";
-}
-
-
+$logo = get_logo($id);
         
 $html = '
 <html>
@@ -2858,7 +2728,7 @@ ul
 <body lang=EN-US>
 
 <div class=WordSection1>
-<table><tr><td width="30%"><img src="'.$logo.'" /></td>
+<table><tr><td width="30%">'.$logo.'</td>
 <td width="70%">
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>THE DENTAL SLEEP
@@ -3271,4 +3141,25 @@ function form_update_all($docid){
       update_medical_hx_update_form($docid);
       update_the_dss_experience_form($docid);
 
+}
+
+
+function get_logo($id){
+  $s = "select amount from dental_transaction_code where docid=".mysql_real_escape_string($id)." and transaction_code='E0486'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+  if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    if($l_r['logo']!=''){
+      $logo = '<img src="/manage/q_file/'.$l_r['logo'].'" />';
+    }else{
+      $logo = "";
+    }
+  }else{
+    $logo = '<img src="/manage/images/logo.gif" />';
+  } 
+  return $logo;
 }

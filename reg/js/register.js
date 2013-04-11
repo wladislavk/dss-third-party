@@ -25,7 +25,7 @@ lga_wizard = {
 		var api = root.fancyscrollable();
 		                // adjust height after items have been scrolled
                 api.onSeek(function(event, i) {
-			if(api.getIndex()==5){
+			if(api.getIndex()==5 || api.getIndex()==6){
 			  $("#register").animate({ height : 1400 }, 300);
 			}else{
                           var page = root.find(".page").eq(api.getIndex());
@@ -239,7 +239,7 @@ lga_wizard = {
 				//alert(post);
                 	        $.post('helpers/register_submit.php', post, function(data) {
 					var r = $.parseJSON(data);
-					alert(data);
+					//alert(data);
 					if(data!=''){
 					var r = $.parseJSON(data);
 					if(r){

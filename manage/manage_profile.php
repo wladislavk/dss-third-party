@@ -1,5 +1,6 @@
 <? 
 include "includes/top.htm";
+require_once "admin/includes/form_updates.php";
 
 if(isset($_POST["profile_submit"]))
 {

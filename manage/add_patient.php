@@ -173,7 +173,7 @@ function sendRegEmail($id, $e, $l, $old_email=''){
     $logo = "/reg/images/email/reg_logo.gif";
   }
 
-  $from = "patient@dentalsleepsolutions.com";
+  $from = "Dental Sleep Solutions <patient@dentalsleepsolutions.com>";
 $mime_boundary = 'Multipart_Boundary_x'.md5(time()).'x';
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\r\n";
@@ -298,7 +298,7 @@ function sendRemEmail($id, $e){
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
-$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();

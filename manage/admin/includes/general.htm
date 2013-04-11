@@ -271,11 +271,6 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
-	/* ?><script type="text/javascript">
-		alert('The letter "<?= $nrow['name']; ?>" will not be created because no recipient is set. To create the letter, delete the current flowsheet step and specify appropriate contacts in the Patient Info section.');
-	</script>
-	<?php
-	*/
     return 0;
   }
 
@@ -418,7 +413,8 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), send_method='".s_for($preferred)."', template='".s_for($template)."' WHERE letterid='".s_for($letterid)."';";
 		$letter_result = mysql_query($letter_query);
-    return mysql_error();
+    return $letterid;
+    //return mysql_error();
   } else {
     $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = mysql_query($select_letter);
@@ -470,7 +466,10 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 			}
 		}
   }
+
 }
+
+
 
 function send_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
   if (!isset($letterid)) {
@@ -565,6 +564,161 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
   }
 }
 
+function create_letter_pdf($letterid){
+
+                $sql = "SELECT patientid, topatient, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
+                $result = mysql_query($sql);
+                if (!$result) {
+                        return mysql_error();
+                }
+			$row = mysql_fetch_assoc($result);
+                        $to_name = $firstname . " " . $lastname;
+                        $send_method = $row['send_method'];
+                        $patientid = $row['patientid'];
+                        $docid = $row['docid'];
+                        $userid = $row['userid'];
+                        $templateid = $row['templateid'];
+			$message = $row['template'];
+
+                // Get Doctor's Name and Email
+                $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
+                $result = mysql_query($sql);
+                $doc_name = mysql_result($result, 0, 0);
+                $doc_email = mysql_result($result, 0, 1);
+                $doc_phone = mysql_result($result, 0, 2);
+                $use_digital_fax = mysql_result($result, 0, 3);
+                $doc_fax = mysql_result($result, 0, 4);
+                $logo = mysql_result($result, 0, 5);
+                $user_type = mysql_result($result, 0, 6);
+                // Create PDF
+                $title = "Dental Sleep Solutions";
+                $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
+                if($send_method == 'fax' && $use_digital_fax){
+if($user_type == DSS_USER_TYPE_SOFTWARE){
+  $cover_image = "/manage/q_file/".$logo;
+}else{
+  $cover_image = "/manage/images/logo.gif";
+}
+                        $cover = "
+<table>
+<tr>
+<td><img src=\"".$cover_image."\" /></td>
+<td><center>
+<b>CONFIDENTAL HEALTH INFORMATION<br />
+FAX COVER SHEET</b>
+</center>
+</td>
+</tr>
+</table>
+<br /><br /><br />
+<b>DATE:</b> ".date('m/d/Y')."<br />
+<br />
+<b>TO:</b><br />
+NAME: ".$to_name."<br />
+PHONE: ".$phone."<br />
+FAX: ".$fax."
+<br /><br />
+<b>FROM:</b><br />
+NAME: ".$doc_name."<br />
+PHONE: ".$doc_phone."<br />
+FAX: ".$doc_fax."<br /><br />
+
+TOTAL NUMBER OF PAGES:  %NUM_PAGES%
+<br /><br />
+<b>IF YOU RECEIVE THIS FAX IN ERROR, PLEASE CONTACT THE SENDER IMMEDIATELY AND THEN DESTROY THE FAXED MATERIALS.
+<br /><br />
+CONFIDENTIALITY NOTICE:</b><br />
+The documents accompanying this transmission contain legally privileged health information. This information is intended only for the use of the individual or entity named above. The authorized recipient of this information is prohibited from disclosing this information to any other party unless required to do so by law or regulation and is required to destroy the information after its stated need has been fulfilled.
+<br /><br />
+If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or action taken in reliance on the contents of these documents is strictly prohibited. If you have received this information in error, please notify the sender and the privacy officer immediately and arrange for the return or destruction of these documents.
+";
+                }else{
+                        $cover = '';
+                }
+                $html = html_entity_decode($message, ENT_COMPAT | ENT_QUOTES, "UTF-8");
+                $franchisee_query = "SELECT user_type, mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
+                $franchisee_result = mysql_query($franchisee_query);
+                while ($row = mysql_fetch_assoc($franchisee_result)) {
+                        $fi = $row;
+                }
+                if($fi['user_type'] == DSS_USER_TYPE_FRANCHISEE){
+                  $footerText = $fi['mailing_name'].' '.$fi['mailing_practice'].' '.$fi['mailing_address'].' '.$fi['mailing_city'].' '.$fi['mailing_state'].' '.$fi['mailing_zip'];
+                }else{
+                  $footerText = "";
+                }
+                create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid);
+                $letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
+                $letter_result = mysql_query($letter_query);
+}
+
+
+function deliver_created_letter($letterid){
+  $send_success = true;
+
+                $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
+                $result = mysql_query($sql);
+                if (!$result) {
+                        return mysql_error();
+                }
+                while ($row = mysql_fetch_assoc($result)) {
+                        $to_name = $firstname . " " . $lastname;
+                        $send_method = $row['send_method'];
+                        $patientid = $row['patientid'];
+                        $docid = $row['docid'];
+                        $userid = $row['userid'];
+                        $templateid = $row['templateid'];
+			$filename = $row['pdf_path'];
+                }
+
+                // Get Doctor's Name and Email
+                $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
+                $result = mysql_query($sql);
+                $doc_name = mysql_result($result, 0, 0);
+                $doc_email = mysql_result($result, 0, 1);
+                $doc_phone = mysql_result($result, 0, 2);
+                $use_digital_fax = mysql_result($result, 0, 3);
+                $doc_fax = mysql_result($result, 0, 4);
+                $logo = mysql_result($result, 0, 5);
+                $user_type = mysql_result($result, 0, 6);
+
+                $fax_send = false;
+                // Send Fax
+                if ($send_method == 'fax' && $use_digital_fax) {
+                        $subject = "Dental Sleep Solutions";
+                        include 'class.fax.php';
+                        $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
+                        $fileType = "pdf";
+                        $fts = new FTSSamples();
+                        $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+                        if($fax_send !== true){
+                          if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
+                                $send_success = false;
+                          }else{
+                                $send_success = false;
+                          }
+                        }
+                        //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
+                }
+                if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
+                        if($fax_send){
+                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW() WHERE letterid='".s_for($letterid)."';";
+                        }else{
+                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+                        }
+                        $letter_result = mysql_query($letter_query);
+                        if (!$letter_result) {
+                                return mysql_error();
+                        }
+                        if ($send_method == 'paper') {
+                                return "paper";
+                        }
+
+                }else{
+                        $letter_query = "UPDATE dental_letters SET status='2' WHERE letterid='".s_for($letterid)."';";
+                        $letter_result = mysql_query($letter_query);
+                        return "Letter could not be sent.";
+                }
+}
 
 // Actually Sends The Letter, returns send_method on success, false on failure.
 function deliver_letter($letterid, $message) {

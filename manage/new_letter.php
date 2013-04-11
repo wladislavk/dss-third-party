@@ -619,18 +619,20 @@ if (isset($_POST['submit'])) {
   function checkContacts(method) {
 		var errorMsg = '';
 		$('.json_contact').each(function() {
-			if ($(this).data(method) == null) {
+			if ($(this).data(method) == null || $(this).data(method)=='') {
 				var name = $(this).data('name');
         if (method == 'fax') {
 					 errorMsg += name + " doesn't have a " + method + " number.\n";
         } else if (method == 'email') {
 					 errorMsg += name + " doesn't have an " + method + " address.\n";
  				}
+				$(this).find('input').removeAttr('checked');
 				$(this).find('input').attr('disabled', 'disabled');
+			}else{
 			}
 		});
 		if (errorMsg != '') {
-			alert(errorMsg);
+			//alert(errorMsg);
 		}
   }
 	function sendValues(templateid, patientid) {

@@ -148,7 +148,7 @@ if($by=='doc'){
 
 
 }
-$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();

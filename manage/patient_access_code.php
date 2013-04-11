@@ -4,6 +4,7 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include_once('admin/includes/password.php');
 include('includes/general_functions.php');
+include 'includes/constants.inc';
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
@@ -82,7 +83,7 @@ $m = "<html><body><center>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
 </center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
-$headers = 'From: patient@dentalsleepsolutions.com' . "\r\n" .
+$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
                     'Content-type: text/html' ."\r\n" .
                     'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
                      'X-Mailer: PHP/' . phpversion();

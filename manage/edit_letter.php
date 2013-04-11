@@ -641,7 +641,7 @@ switch ($templateid) {
 */
 
 
-if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = html_entity_decode($altered_template);
+if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = html_entity_decode($altered_template, ENT_COMPAT | ENT_QUOTES, "UTF-8");
 
 ?>
 <form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$masterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
@@ -1046,7 +1046,7 @@ if ($_POST != array()) {
 			$replace[] = "<strong>" . $other_mds . "</strong>";
 		}
 //print_r($_POST['letter1']);
-		$new_template[$cur_template_num] = html_entity_decode($new_template[$cur_template_num]);
+		$new_template[$cur_template_num] = html_entity_decode($new_template[$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
     $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter'.$cur_template_num]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$cur_template_num] == null && $_POST['new_template'][$cur_template_num] != null) {
@@ -1568,7 +1568,9 @@ foreach ($letter_contacts as $key => $contact) {
 <br><br>
 
 <?php
-
+  if(!isset($letter_approve)){
+    $letter_approve = false;
+  }
 	// Catch Post Send Submit Button and Send letters Here
   if ($_POST['send_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
@@ -1582,6 +1584,17 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = $letter[$cur_letter_num];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
+			$approve_id = save_letter($letterid, $parent, $type, $recipientid, $message);
+			echo create_letter_pdf($approve_id);
+                        ?>
+                                <script type="text/javascript">
+                                        $(document).ready( function(){
+                                        loadPopup("letter_approve.php?id=<?=$approve_id; ?>");
+                                        });
+                                </script>
+                        <?php
+			$letter_approve = true;
+			/*
 			$send = send_letter($letterid, $parent, $type, $recipientid, $message);
 			$status = deliver_letter($send, $message);
 			$sql = "SELECT send_method, pdf_path FROM dental_letters WHERE letterid = '" . $letterid . "'";
@@ -1597,13 +1610,23 @@ foreach ($letter_contacts as $key => $contact) {
 				
 				<script type="text/javascript">
 					//document.printpreview.submit();
-					window.open('/manage/letterpdfs/<?php print $pdf_path; ?>', 'DSS Letter');
+					window.location = "letter_approve.php?id=<?=$send; ?>";
+					//window.open('/manage/letterpdfs/<?php print $pdf_path; ?>', 'DSS Letter');
 				</script>
 			<?php
 			}
+			?>
+                                <script type="text/javascript">
+					$(document).ready( function(){
+					loadPopup("letter_approve.php?id=<?=$send; ?>");
+					});
+                                </script>
+			<?php
+			$letter_sent = true;
+			*/
 		} else {
-	    $sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
-		}
+	    		$sentletterid = send_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+		
 	if(!$parent){
 		?>
                         <script type="text/javascript">
@@ -1611,6 +1634,7 @@ foreach ($letter_contacts as $key => $contact) {
                         </script>
 		<?php
 	}
+		}
   }
 
         // Catch Post Send Submit Button and Send letters Here
@@ -1680,7 +1704,7 @@ foreach ($letter_contacts as $key => $contact) {
 ?>
 
 <?php
-if ($parent) {
+if ($parent && !$letter_approve) {
 if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
                                 if($_REQUEST['goto']=='flowsheet'){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';

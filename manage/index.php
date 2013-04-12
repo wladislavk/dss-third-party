@@ -107,6 +107,10 @@ echo $memo_array['memo'] . "<br /><hr />";
   <a href="manage_claims.php" class="notification <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><?= $num_pending_nodss_claims;?> Pending Claims</a>
 <?php } ?>
 
+<?php if($num_unmailed_claims !=0 && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
+  <a href="manage_claims.php?unmailed=1" class="notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><?= $num_unmailed_claims;?> Unmailed Claims</a>
+<?php } ?>
+
 <!--
   <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
   <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>

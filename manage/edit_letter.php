@@ -70,7 +70,7 @@ $row = mysql_fetch_assoc($letter_result);
   $md_referral_list = $row['md_referral_list'];
   $mds = explode(",", $md_list);
   $md_referrals = explode(",", $md_referral_list);
-	$altered_template = $row['template'];
+	$altered_template = html_entity_decode($row['template'], ENT_COMPAT | ENT_IGNORE,"UTF-8");
 	$method = $row['send_method'];
   $status = $row['status'];
   $docid = $row['docid'];
@@ -555,7 +555,7 @@ $noncomp['description'] = $noncomp['description'];
   $letter_q = mysql_query($letter_sql);
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];
-
+  $orig_template = $letter_r['body'];
 
 /*
 switch ($templateid) {
@@ -641,7 +641,7 @@ switch ($templateid) {
 */
 
 
-if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = html_entity_decode($altered_template, ENT_COMPAT | ENT_QUOTES, "UTF-8");
+if (!empty($altered_template) && !isset($_POST['reset_letter'])) $template = $altered_template;
 
 ?>
 <form action="/manage/edit_letter.php?pid=<?=$patientid?>&lid=<?=$masterid?>&goto=<?=$_REQUEST['goto'];?><?php print ($_GET['backoffice'] == 1 ? "&backoffice=".$_GET['backoffice'] : ""); ?>" method="post" class="letter">
@@ -1046,14 +1046,14 @@ if ($_POST != array()) {
 			$replace[] = "<strong>" . $other_mds . "</strong>";
 		}
 //print_r($_POST['letter1']);
-		$new_template[$cur_template_num] = html_entity_decode($new_template[$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
+		//$new_template[$cur_template_num] = html_entity_decode($new_template[$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
     $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter'.$cur_template_num]);
     // Letter hasn't been edited, but a new template exists in hidden field
  		if ($new_template[$cur_template_num] == null && $_POST['new_template'][$cur_template_num] != null) {
-			$new_template[$cur_template_num] = $_POST['new_template'][$cur_template_num];
+			$new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
     }
     // Template hasn't changed
-    if ($new_template[$cur_template_num] == $template) {
+    if ($new_template[$cur_template_num] == $orig_template) {
 			$new_template[$cur_template_num] = null;	
     }
     $cur_template_num++;
@@ -1494,6 +1494,9 @@ foreach ($letter_contacts as $key => $contact) {
 	} else {
 	  $letter[$cur_letter_num] = str_replace($search, $replace, $template);
  	}
+
+	$new_template[$cur_letter_num] = str_replace($search, $replace, $new_template[$cur_letter_num]);
+
 	// Print Letter Body		
 
         if($status == DSS_LETTER_SEND_FAILED){
@@ -1536,9 +1539,9 @@ foreach ($letter_contacts as $key => $contact) {
 		<tr>
 			<td valign="top">
 				<div id="letter<?=$cur_letter_num?>">
-				<?php print $letter[$cur_letter_num]; ?>
+				<?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
 				</div>
-				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")?>" />
+				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
 			</td>
 		</tr>
 	</table>
@@ -1572,7 +1575,7 @@ foreach ($letter_contacts as $key => $contact) {
     $letter_approve = false;
   }
 	// Catch Post Send Submit Button and Send letters Here
-  if ($_POST['send_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
+if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
     if (count($letter_contacts) == 1) {
   		$parent = true;
     }else{
@@ -1584,12 +1587,12 @@ foreach ($letter_contacts as $key => $contact) {
 			$message = $letter[$cur_letter_num];
 			$search= array("<strong>","</strong>");
 			$message = str_replace($search, "", $message);	
-			$approve_id = save_letter($letterid, $parent, $type, $recipientid, $message);
-			echo create_letter_pdf($approve_id);
+			//$approve_id = save_letter($letterid, $parent, $type, $recipientid, $message);
+			echo create_letter_pdf($letterid);
                         ?>
                                 <script type="text/javascript">
                                         $(document).ready( function(){
-                                        loadPopup("letter_approve.php?id=<?=$approve_id; ?>");
+                                        loadPopup("letter_approve.php?id=<?=$letterid; ?>");
                                         });
                                 </script>
                         <?php
@@ -1638,7 +1641,7 @@ foreach ($letter_contacts as $key => $contact) {
   }
 
         // Catch Post Send Submit Button and Send letters Here
-  if ($_POST['save_letter'][$cur_letter_num] != null && $numletters == $_POST['numletters']) {
+  if (($_POST['send_letter'][$cur_letter_num] != null || $_POST['save_letter'][$cur_letter_num] != null) && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
                 $parent = true;
     }else{
@@ -1646,13 +1649,27 @@ foreach ($letter_contacts as $key => $contact) {
     }
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
-            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $new_template[$cur_letter_num]);
+		$message = $new_template[$cur_letter_num];
+
+            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
+	if($_POST['send_letter'][$cur_letter_num] != null){
+                        echo create_letter_pdf($saveletterid);
+                        ?>
+                                <script type="text/javascript">
+                                        $(document).ready( function(){
+                                        loadPopup("letter_approve.php?id=<?=$saveletterid; ?>");
+                                        });
+                                </script>
+                        <?php
+                        $letter_approve = true;
+	}else{
                 ?>
                         <script type="text/javascript">
                                 window.location=window.location;
                         </script>
                 <?php
+	}
   }
 
 

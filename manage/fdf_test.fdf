@@ -1,0 +1,164 @@
+
+%FDF-1.2
+1 0 obj
+<< /FDF 
+<< /Fields 
+[ 
+  << /T(form1[0].#subform[0].carrier_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].carrier_address1_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].carrier_address2_fill[0]) /V(XXX) >>
+  << /T(form1[0].#subform[0].carrier_citystatezip_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pica_right_side_fill[0]) /V(X) >>
+
+  << /T(form1[0].#subform[0].medicare_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].medicaid_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].tricare_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].champva_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].grouphealth_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].feca_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].otherins_chkbox[0]) /V() >>
+
+  << /T(form1[0].#subform[0].insured_id_number_fill[0]) /V(XXXXX) >>
+  << /T(form1[0].#subform[0].pt_name_fill[0]) /V(XXXXXX) >>
+  
+      << /T(form1[0].#subform[0].pt_birth_date_mm_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].pt_birth_date_dd_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].pt_birth_date_yy_fill[0]) /V(XX) >>
+    
+  << /T(form1[0].#subform[0].pt_sex_m_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_sex_f_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].insured_name_ln_fn_mi_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_address_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_relation_self_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_relation_spouse_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_relation_child_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_relation_other_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].insured_address_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_city_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_state_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].pt_status_single_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_status_married_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_status_other_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].insured_city_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].insured_state_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].pt_zipcode_fill[0]) /V(XXXXX) >>
+  << /T(form1[0].#subform[0].pt_phone_areacode_fill[0]) /V(XXX) >>
+  << /T(form1[0].#subform[0].pt_phone_number_fill[0]) /V(XXXXXXX) >>
+  << /T(form1[0].#subform[0].pt_status_employed_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_status_ftstudent_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_status_ptstudent_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].insured_zipcode_fill[0]) /V(XXXXX) >>
+  << /T(form1[0].#subform[0].insured_phone_areacode_fill[0]) /V(XXX) >>
+  << /T(form1[0].#subform[0].insured_phone_number_fill[0]) /V(XXXXXXX) >>
+  << /T(form1[0].#subform[0].other_insured_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].insured_policy_group_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].other_insured_policy_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_condition_employment_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_condition_employment_no_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_condition_auto_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_condition_auto_no_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_condition_place_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].pt_condition_otheracc_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_condition_otheracc_no_chkbox[0]) /V() >>
+  
+      << /T(form1[0].#subform[0].insured_dob_mm_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].insured_dob_dd_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].insured_dob_yy_fill[0]) /V(XX) >>
+    
+  << /T(form1[0].#subform[0].insured_sex_m_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].insured_sex_f_chkbox[0]) /V() >>
+  
+  << /T(form1[0].#subform[0].other_insured_sex_m_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].other_insured_sex_f_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].insured_employers_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].employers_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].insured_ins_plan_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].ins_plan_name_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].reserved_local_use_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].another_health_benefit_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].another_health_benefit_no_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].pt_signature_fill[0]) /V(SIGNATURE ON FILE) >>
+  << /T(form1[0].#subform[0].pt_signature_date_fill[0]) /V(XXXXXXXX) >>
+  << /T(form1[0].#subform[0].insured_signature_fill[0]) /V(SIGNATURE ON FILE) >>
+  
+  << /T(form1[0].#subform[0].name_referring_provider_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].seventeenA_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].seventeenb_NPI_fill[0]) /V(XXXXXX) >>
+  
+  << /T(form1[0].#subform[0].reserved_for_local_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].outside_lab_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].outside_lab_no_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].charges_fill[0]) /V(XXXX) >>
+  << /T(form1[0].#subform[0].diagnosis_one_left_fill[0]) /V(XXX) >>
+  << /T(form1[0].#subform[0].diagnosis_one_right_fill[0]) /V(X) >>
+  << /T(form1[0].#subform[0].diagnosis_two_left_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].diagnosis_two_right_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].diagnosis_three_left_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].diagnosis_three_right_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].diagnosis_four_left_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].diagnosis_four_right_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].medicaid_resubmission_code_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].orignial_ref_no_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].prior_auth_number_fill[0]) /V() >>
+
+      << /T(form1[0].#subform[0].ONE_dates_of_service_from_mm_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].ONE_dates_of_service_from_dd_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].ONE_dates_of_service_from_yy_fill[0]) /V(XX) >>
+     
+      << /T(form1[0].#subform[0].ONE_dates_of_service_to_mm_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].ONE_dates_of_service_to_dd_fill[0]) /V(XX) >>
+      << /T(form1[0].#subform[0].ONE_dates_of_service_to_yy_fill[0]) /V(XX) >>
+    
+  << /T(form1[0].#subform[0].ONE_place_of_service_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].ONE_EMG_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].ONE_CPT_fill[0]) /V(XXXXXX) >>
+  << /T(form1[0].#subform[0].ONE_modifier_one_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].ONE_modifier_two_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].ONE_modifier_three_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].ONE_modifier_four_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].ONE_diagnosis_pointer_fill[0]) /V(1) >>
+  << /T(form1[0].#subform[0].ONE_charges_dollars_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].ONE_charges_cents_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].ONE_days_or_units_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].ONE_EPSDT_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].ONE_rendering_provider_fill[0]) /V(XXXXX) >> 
+  << /T(form1[0].#subform[0].fed_tax_id_number_fill[0]) /V(XXXXXXXXX) >>
+  << /T(form1[0].#subform[0].fed_tax_id_SSN_chkbox[0]) /V() >>
+  << /T(form1[0].#subform[0].fed_tax_id_EIN_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].pt_account_number_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].accept_assignment_yes_chkbox[0]) /V(1) >>
+  << /T(form1[0].#subform[0].accept_assignment_no_chkbox[0]) /V() >>
+  
+  << /T(form1[0].#subform[0].total_charge_dollars_fill[0]) /V(XXXX) >>
+  << /T(form1[0].#subform[0].total_charge_cents_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].amount_paid_dollars_fill[0]) /V(XXXX) >>
+  << /T(form1[0].#subform[0].amount_paid_cents_fill[0]) /V(XX) >>
+  << /T(form1[0].#subform[0].balance_due_dollars_fill[0]) /V(XXXX) >>
+  << /T(form1[0].#subform[0].balance_due_cents_fill[0]) /V(XX) >>
+  
+  << /T(form1[0].#subform[0].service_facility_location_info_fill[0]) /V(XXXXXX
+XXXXXX
+XXXXXX) >>
+  << /T(form1[0].#subform[0].billing_provider_phone_areacode_fill[0]) /V(XXX) >>
+  << /T(form1[0].#subform[0].billing_provider_phone_number_fill[0]) /V(XXXXXXX) >>
+  << /T(form1[0].#subform[0].billing_provider_info_fill[0]) /V(XXXXXX
+XXXXXX
+XXXXXX) >>
+  << /T(form1[0].#subform[0].signature_of_physician-supplier_signed_fill[0]) /V(Signature on File) >>  
+  << /T(form1[0].#subform[0].signature_of_physician-supplier_date_fill[0]) /V(XX/XX/XX) >>
+  << /T(form1[0].#subform[0].service_facility_NPI_a_fill[0]) /V(XXXXX) >>
+  << /T(form1[0].#subform[0].service_facility_other_id_b_fill[0]) /V() >>
+  << /T(form1[0].#subform[0].billing_provider_NPI_a_fill[0]) /V(XXXXX) >>
+  << /T(form1[0].#subform[0].billing_provider_other_id_b_fill[0]) /V() >>
+
+]
+/F (http://abert.dss.xforty.com/manage/claim.pdf) 
+>>
+>>
+endobj
+trailer
+<<
+/Root 1 0 R
+
+>>
+%%EOF

@@ -11,22 +11,28 @@ $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 
 $file = './letterpdfs/'.$r['pdf_path'];
-$jpg = substr( $file, 0, -3 ) . 'jpg';
+$jpg = substr( $file, 0, -4 ) . '';
 //echo $file;
 ?><br /><?php
 //echo $jpg;
-exec('gs -dSAFER -dBATCH -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.' '. $file)
+exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlphaBits=4 -r300 -sOutputFile='.$jpg.'-%01d.jpg '. $file)
 ?>
 
 <a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a>
-<img src="<?= $jpg; ?>" style="border:solid 2px #333;" width="600" />
-
+<?php for($i=1; $i<5; $i++){ 
+if(file_exists($jpg."-". $i.".jpg")){
+?>
+<img src="<?= $jpg; ?>-<?= $i; ?>.jpg" style="border:solid 2px #333;" width="600" />
+<?php
+}
+}
+?>
 
 
 <script type="text/javascript">
   function reload_parent(){
-
-    parent.window.location = parent.window.location;
+    parent.disablePopup();
+    //parent.window.location = parent.window.location;
 
   }
 

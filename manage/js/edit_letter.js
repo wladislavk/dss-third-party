@@ -15,9 +15,10 @@ function edit_letter(divid) {
 			gecko_spellcheck : true,
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_toolbar_align : "left",
-			entities: "34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade"
+			entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade"
 		});
 		textarea.focus();
 		$('.edit_'+divid).show();
+		//$('#send_but_'+divid).hide();
 	}
 }

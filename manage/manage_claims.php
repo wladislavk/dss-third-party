@@ -151,8 +151,11 @@ if(isset($_GET['msg'])){
 
 <br /><br /><br />
 
-
+<?php if(isset($_GET['unmailed'])){ ?>
+<span class="admin_head">Unmailed Claims</span>
+<?php }else{ ?>
 <span class="admin_head">Submitted Claims</span>
+<?php } ?>
 <?php
 if(isset($_GET['unpaid'])){
 ?>

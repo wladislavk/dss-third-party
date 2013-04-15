@@ -2,6 +2,15 @@
 include "includes/top.htm";
 include_once "includes/constants.inc";
 
+if(isset($_GET['vobdel'])){
+
+  $d = "DELETE FROM dental_insurance_preauth WHERE id='".mysql_real_escape_string($_GET['vobdel'])."'
+		AND doc_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  mysql_query($d);
+echo $d;
+
+}
+
   include 'vob_checklist.php';
 ?>
 <div style="clear:both;"></div>

@@ -30,6 +30,9 @@ $my = mysql_query($sql) or die(mysql_error());
         </td>
       </tr>
 
+	<tr>
+	  <td><a href="manage_insurance.php?pid=<?= $_GET['pid']; ?>&addtopat=1&vobdel=<?= $preauth['id']; ?>" onclick="return confirm('This will cancel the VOB request. Are you sure?');">Cancel</a></td>
+	</tr>	
 
 
         <?php } elseif($preauth['status']==DSS_PREAUTH_PREAUTH_PENDING){ ?>

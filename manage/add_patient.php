@@ -156,10 +156,10 @@ function sendRegEmail($id, $e, $l, $old_email=''){
       $r = mysql_fetch_assoc($q);
 	if($r['recover_hash']=='' || $e!=$old_email){
                 $recover_hash = hash('sha256', $r['patientid'].$r['email'].rand());
-                $ins_sql = "UPDATE dental_patients set text_num=0, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
+                $ins_sql = "UPDATE dental_patients set text_num=0, access_type=1, text_date=NOW(), access_code='', registration_senton=NOW(), registration_status=1, recover_hash='".$recover_hash."', recover_time=NOW() WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
 	}else{
-		$ins_sql = "UPDATE dental_patients set registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
+		$ins_sql = "UPDATE dental_patients set access_type=1, registration_senton=NOW(), registration_status=1 WHERE patientid='".$r['patientid']."'";
                 mysql_query($ins_sql);
 		$recover_hash = $r['recover_hash'];
 	}

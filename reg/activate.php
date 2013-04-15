@@ -1,7 +1,7 @@
 <?php include '../manage/admin/includes/config.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
-$s = "SELECT dp.email, dp.cell_phone, du.mailing_practice FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
+$s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
 	WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
 		dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
@@ -84,9 +84,14 @@ function send_text(from, but){
   });
 }
 
+
+<?php
+  if($r['access_type']==1){
+?>
 $(document).ready(function(){
   send_text("load", false);
 });
+<?php } ?>
 </script>
 
 
@@ -99,10 +104,29 @@ $(document).ready(function(){
   <div class="login_content" id="first2_sect">
      <h3>Enter your access code</h3>
      <!--<p>We sent a text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.  Please enter the code we sent you.</p>-->
-     <p id="sent_text" class="error"><?= $error; ?></p>
+     <p id="sent_text" class="error">
+	<?php
+  	  if($r['access_type']==2){
+	?>
+
+	Please enter the unique PIN access code you<br />received in the box below.
+	<?php }else{ ?>
+	<?= $error; ?>
+	<?php } ?>
+	</p>
      <p id="first2_error" class="error"></p>
      <div class="field">
        <label>Email Address</label>
+<?php
+  if($r['access_type']==2){
+?>
+       <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn’t receive a PIN code?</a></span>
+       <div style="display:none;" id="text_instructions">
+          <p>
+		Didn't receive a PIN access code from <?= $r['mailing_practice']; ?>? Don't worry. Just call the office at <?= format_phone($r['mailing_phone']); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
+          </p>
+       </div>
+	<?php }else{ ?>
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a text message?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
@@ -110,10 +134,11 @@ $(document).ready(function(){
 	  </p>
           <button class="fr" onclick="send_text('button', this)">Text Access Code</button>
        </div>
+	<?php } ?>
        <input value="<?= $r['email']; ?>" type="text" readonly="readonly" id="email" />
      </div>
      <div class="field">
-       <label>Text Message Access Code</label>
+       <label>Text Message or PIN Access Code</label>
        <input type="text" id="code" name="code" />
      </div>
      <div class="field">
@@ -267,4 +292,14 @@ if(p1!=p2){
 }
 
 </script>
+<?php
+function format_phone($num, $a){
+        $num = ereg_replace("[^0-9]", "", $num);
+        preg_match('/([0-1]*)(.*)/',$num, $m);
+        $num = $m[2];
 
+	$ret_num = "(".substr($num, 0, 3).") ".substr($num, 3, 3)."-".substr($num, 6);
+return $ret_num;
+}
+
+?>

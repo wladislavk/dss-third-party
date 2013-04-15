@@ -1650,6 +1650,8 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
                 $type = $contact['type'];
                 $recipientid = $contact['id'];
 		$message = $new_template[$cur_letter_num];
+                        $search= array("<strong>","</strong>");
+                        $message = str_replace($search, "", $message);
 
             $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message);
  	    $num_contacts = num_letter_contacts($_GET['lid']);

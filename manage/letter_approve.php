@@ -37,6 +37,7 @@ if(file_exists($jpg."-". $i.".jpg")){
   }
 
 
+
   function send_letter(id){
 
                                   $.ajax({
@@ -47,7 +48,29 @@ if(file_exists($jpg."-". $i.".jpg")){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
                                                 }else{
-							parent.window.location = parent.window.location;
+<?php
+if(isset($_REQUEST['parent'])){
+if($_REQUEST['goto']!=''){
+                                if($_REQUEST['goto']=='flowsheet'){
+                                        $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='letter'){
+                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='new_letter'){
+                                        $page = 'new_letter.php?pid='.$_GET['pid'];
+                                }
+?>
+                                parent.window.location = '<?= $page ?>';
+                        <?php }else{
+?>
+                parent.window.location = '<?php print ($_GET['backoffice'] == "1") ? "/manage/admin/manage_letters.php?status=pending" : "/manage/letters.php?status=pending"; ?>';
+<?php
+}
+}else{
+?>
+                                parent.window.location = parent.window.location;
+<?php
+}
+ ?>
                                                 }
                                         },
                                         failure: function(data){

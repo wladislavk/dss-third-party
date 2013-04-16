@@ -1592,7 +1592,7 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
                         ?>
                                 <script type="text/javascript">
                                         $(document).ready( function(){
-                                        loadPopup("letter_approve.php?id=<?=$letterid; ?>");
+                                        loadPopup("letter_approve.php?id=<?=$letterid; ?>&pid=<?= $_GET['pid']; ?>&backoffice=<?= $_GET['backoffice']; ?><?= ($parent)?'&parent=1':''; ?>&goto=<?= $_GET['goto']; ?>");
                                         });
                                 </script>
                         <?php
@@ -1656,11 +1656,11 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
             $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
 	if($_POST['send_letter'][$cur_letter_num] != null){
-                        echo create_letter_pdf($saveletterid);
+                        create_letter_pdf($saveletterid);
                         ?>
                                 <script type="text/javascript">
                                         $(document).ready( function(){
-                                        loadPopup("letter_approve.php?id=<?=$saveletterid; ?>");
+loadPopup("letter_approve.php?id=<?=$saveletterid; ?>&pid=<?= $_GET['pid']; ?>&backoffice=<?= $_GET['backoffice']; ?><?= ($parent)?'&parent=1':''; ?>&goto=<?= $_GET['goto']; ?>");
                                         });
                                 </script>
                         <?php

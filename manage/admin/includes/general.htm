@@ -582,6 +582,23 @@ function create_letter_pdf($letterid){
                         $templateid = $row['templateid'];
 			$message = $row['template'];
 
+			if ($row['md_list']) {
+                                $id = $row['md_list'];
+                                $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+                                $myinfo = mysql_query($sql);
+                                $preferredcontact = mysql_result($myinfo, 0, 0);
+                        } elseif ($row['md_referral_list']) {
+                                $id = $row['md_referral_list'];
+                                $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+                                $myinfo = mysql_query($sql);
+                                $preferredcontact = mysql_result($myinfo, 0, 0);
+                        }
+
+
+		if($send_method == "" && $preferredcontact == "fax"){
+			$send_method="fax";
+		}
+
                 // Get Doctor's Name and Email
                 $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
                 $result = mysql_query($sql);
@@ -672,9 +689,10 @@ function deliver_created_letter($letterid){
                                 $firstname = mysql_result($myinfo, 0, 0);
                                 $lastname = mysql_result($myinfo, 0, 1);
                                 $to_email = mysql_result($myinfo, 0, 2);
+				$preferredcontact = "";
                         } elseif ($row['md_list']) {
                                 $id = $row['md_list'];
-                                $sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_contact WHERE contactid = '".$id."';";
+                                $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
                                 $myinfo = mysql_query($sql);
                                 $firstname = mysql_result($myinfo, 0, 0);
                                 $lastname = mysql_result($myinfo, 0, 1);
@@ -682,9 +700,10 @@ function deliver_created_letter($letterid){
                                 $fax = mysql_result($myinfo, 0, 3);
                                 $company = mysql_result($myinfo, 0, 4);
                                 $phone = mysql_result($myinfo, 0, 5);
+				$preferredcontact = mysql_result($myinfo, 0, 6);
                         } elseif ($row['md_referral_list']) {
                                 $id = $row['md_referral_list'];
-                                $sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_contact WHERE contactid = '".$id."';";
+                                $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
                                 $myinfo = mysql_query($sql);
                                 $firstname = mysql_result($myinfo, 0, 0);
                                 $lastname = mysql_result($myinfo, 0, 1);
@@ -692,6 +711,7 @@ function deliver_created_letter($letterid){
                                 $fax = mysql_result($myinfo, 0, 3);
                                 $company = mysql_result($myinfo, 0, 4);
                                 $phone = mysql_result($myinfo, 0, 5);
+				$preferredcontact = mysql_result($myinfo, 0, 6);
                         }
                         $to_name = $firstname . " " . $lastname;
                         $send_method = $row['send_method'];
@@ -701,6 +721,10 @@ function deliver_created_letter($letterid){
                         $templateid = $row['templateid'];
 			$filename = $row['pdf_path'];
                 }
+
+		if($send_method=="" && $preferredcontact!=""){
+			$send_method = $preferredcontact;
+		}
 
                 // Get Doctor's Name and Email
                 $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
@@ -771,9 +795,10 @@ function deliver_letter($letterid, $message) {
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
 				$to_email = mysql_result($myinfo, 0, 2);
+				$preferredcontact = "";
 			} elseif ($row['md_list']) {
 				$id = $row['md_list'];
-				$sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_contact WHERE contactid = '".$id."';";
+				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
@@ -781,9 +806,10 @@ function deliver_letter($letterid, $message) {
 				$fax = mysql_result($myinfo, 0, 3);
 				$company = mysql_result($myinfo, 0, 4);
 				$phone = mysql_result($myinfo, 0, 5);
+				$preferredcontact = mysql_result($myinfo, 0, 6);
 			} elseif ($row['md_referral_list']) {
 				$id = $row['md_referral_list'];
-				$sql = "SELECT firstname, lastname, email, fax, company, phone1 FROM dental_contact WHERE contactid = '".$id."';";
+				$sql = "SELECT firstname, lastname, email, fax, company, phone1, preferred_contact FROM dental_contact WHERE contactid = '".$id."';";
 				$myinfo = mysql_query($sql);
 				$firstname = mysql_result($myinfo, 0, 0);
 				$lastname = mysql_result($myinfo, 0, 1);
@@ -791,6 +817,7 @@ function deliver_letter($letterid, $message) {
 				$fax = mysql_result($myinfo, 0, 3);
 				$company = mysql_result($myinfo, 0, 4);
 				$phone = mysql_result($myinfo, 0, 5);
+                                $preferredcontact = mysql_result($myinfo, 0, 6);
 			}
 			$to_name = $firstname . " " . $lastname;
 			$send_method = $row['send_method'];
@@ -799,6 +826,11 @@ function deliver_letter($letterid, $message) {
 			$userid = $row['userid'];
 			$templateid = $row['templateid'];
 		}
+
+
+                if($send_method=="" && $preferredcontact!=""){
+                        $send_method = $preferredcontact;
+                }
 
 		if ($send_method == "email") {
 			if(empty($allowemail) && !in_array($templateid, $safeemails)) {

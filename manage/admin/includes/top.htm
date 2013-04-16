@@ -13,16 +13,17 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 <link href="/manage/admin/css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="/manage/admin/script/validation.js"></script>
 <script language="javascript" src="/manage/admin/calendar.js"></script>
-<script type="text/javascript" src="script/logout_timer.js"></script>
 <!-- You can load the jQuery library from the Google Content Network.
   Probably better than from your own server. -->
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
   <script type="text/javascript" src="/manage/3rdParty/free-css-drop-down-menu_v1.2/js/jquery/jquery.dropdown.js"></script>
-    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="../js/masks.js"></script>
-    <script type="text/javascript" src="../3rdParty/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+    <script type="text/javascript" src="/manage/js/masks.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="script/logout_timer.js"></script>
+
 <!-- THESE ARE NOT RELATIVE TO WORK WHEN INCLUDED FROM DIFFERENT DIRECTORIES -->
 <link href="/manage/admin/calendar.css" rel="stylesheet" type="text/css">
 <link href="/manage/3rdParty/free-css-drop-down-menu_v1.2/css/dropdown/dropdown.vertical.css" media="screen" rel="stylesheet" type="text/css" />
@@ -51,19 +52,64 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 <?php
 // Count letters
 // Select Letters into Array
-$pending_letters=0;
-//$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY dental_letters.letterid ASC;";
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY dental_letters.letterid ASC;";
-  $letters_res = mysql_query($letters_query);
-  if (!$letters_res) {
-    print "MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error selecting letters from the database.";
-  } else {
-    while ($row = mysql_fetch_assoc($letters_res)) {
-      $pending_letters++;
-    }
+  if(is_super($_SESSION['admin_access'])){
+  $letters_query = "SELECT dental_letters.letterid, 
+                        dental_letters.templateid, 
+                        dental_letters.patientid, 
+                        UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                        UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                        UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                        dental_letters.topatient, 
+                        dental_letters.md_list, 
+                        dental_letters.md_referral_list, 
+                        dental_letters.docid, 
+                        dental_letters.userid, 
+                        dental_letters.send_method, 
+                        dental_patients.firstname, 
+                        dental_patients.lastname, 
+                        dental_patients.middlename,
+                        dental_letters.status
+                         FROM dental_letters 
+                JOIN dental_users u ON u.userid = dental_letters.docid
+                LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                        WHERE ((dental_letters.status = '1' AND dental_letters.delivered=0) 
+                                        OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
+                                ) AND 
+                                dental_letters.deleted = '0' AND 
+                                u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
+                        ORDER BY dental_letters.letterid ASC;";
+  }else{
+  $letters_query = "SELECT dental_letters.letterid, 
+                        dental_letters.templateid, 
+                        dental_letters.patientid, 
+                        UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                        UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                        UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                        dental_letters.topatient, 
+                        dental_letters.md_list, 
+                        dental_letters.md_referral_list, 
+                        dental_letters.docid, 
+                        dental_letters.userid, 
+                        dental_letters.send_method, 
+                        dental_patients.firstname, 
+                        dental_patients.lastname, 
+                        dental_patients.middlename, 
+                        dental_letters.status
+                                FROM dental_letters 
+        JOIN dental_user_company uc ON uc.userid = dental_letters.docid
+        JOIN dental_users u ON u.userid = dental_letters.docid
+        LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
+                        ((dental_letters.status = '1' AND dental_letters.delivered=0) 
+                                        OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
+                                ) AND
+                        dental_letters.deleted = '0' AND 
+                        u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
+                ORDER BY dental_letters.letterid ASC;";
+
   }
-
-
+  $letters_res = mysql_query($letters_query);
+  $pending_letters = mysql_num_rows($letters_res);
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "

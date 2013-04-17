@@ -44,3 +44,9 @@ body{
 #results_div label{
   font-weight: bold;
   }
+
+.btn.disabled{
+  display:none;
+  background: #999;
+  }
+

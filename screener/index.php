@@ -79,7 +79,8 @@ if(!isset($_SESSION['screener_doc'])){
 <img src="images/sleeping_couple.png" style="float:right;"/>
 <br />
                                                                                                                 <div class="cf">
-<a href="#" onclick="return validate_name()" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+<a href="#" onclick="return validate_name();" id="sect1_next" class="fr next btn btn_large btn_d">Proceed &raquo;</a>
+<span id="sect1_next_dis" class="fr next btn btn_large btn_d disabled">Proceed &raquo;</a>
                                                                                                                 </div>
 </div>
 <div class="clear"></div>
@@ -153,7 +154,8 @@ if(!isset($_SESSION['screener_doc'])){
         </div>
 <div style="clear:both;"></div>
 </div>
-<a href="#" onclick="return validate_epworth();" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_epworth();" id="sect2_next" class="fr next btn btn_medium btn_d">Next</a>
+<span id="sect2_next_dis" class="fr next btn btn_medium btn_d disabled">Next</span>
 </div>
 <div class="sect" id="sect3">
 <h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
@@ -260,7 +262,8 @@ if(!isset($_SESSION['screener_doc'])){
         <label class="question">Do you have trouble staying asleep once you fall asleep?</label>
   </div>
 
-<a href="#" onclick="return validate_sect3();" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="return validate_sect3();" id="sect3_next" class="fr next btn btn_medium btn_d">Next</a>
+<span id="sect3_next_dis" class="fr next btn btn_medium btn_d disabled">Next</span>
 
 </div>
 
@@ -329,7 +332,8 @@ if(!isset($_SESSION['screener_doc'])){
 
 
 
-<a href="#" onclick="submit_screener()" class="fr next btn btn_medium btn_d">Next</a>
+<a href="#" onclick="submit_screener()" id="sect4_next" class="fr next btn btn_medium btn_d">Next</a>
+<span id="sect4_next_dis" class="fr next btn btn_medium btn_d disabled">Next</a>
 </div>
 
 <div class="sect" id="sectresults">

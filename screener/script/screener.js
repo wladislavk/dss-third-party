@@ -1,5 +1,7 @@
 
 function submit_screener(){
+  $('#sect4_next').hide();
+  $('#sect4_next_dis').show();
   $.ajax({
     url: "script/submit_screener.php",
     type: "post",
@@ -254,6 +256,8 @@ $(document).ready( function(){
 
 
 function validate_name(){
+  $('#sect1_next').hide();
+    $('#sect1_next_dis').show();
   var return_val = true;
   var error_text = '';
   if($('#first_name_div input').val() == ''){
@@ -287,11 +291,17 @@ function validate_name(){
   }else{
     $('#name_error_box').html(error_text).show();
   }
+  if(!return_val){
+    $('#sect1_next').show();
+    $('#sect1_next_dis').hide();
+  }
   return return_val;
 }
 function validate_epworth(){
 
-  var return_val = true;
+    $('#sect2_next').hide();
+    $('#sect2_next_dis').show();
+ var return_val = true;
   var error_text = '';
   if($('#epworth_reading_div select').val() == ''){
     $('#epworth_reading_div').addClass('error');
@@ -353,12 +363,16 @@ function validate_epworth(){
   if(return_val){
         next_sect(3);
   }else{
+    $('#sect2_next').show();
+    $('#sect2_next_dis').hide();
     $('#epworth_error_box').html(error_text).show();
   }
   return return_val;
 }
 
 function validate_sect3(){
+    $('#sect3_next').hide();
+    $('#sect3_next_dis').show();
   var return_val = true;
   var error_text = '';
   if($('#breathing_div input:checked').val() == null){
@@ -460,29 +474,12 @@ function validate_sect3(){
   if(return_val){
         next_sect(4);
   }else{
+    $('#sect3_next').show();
+    $('#sect3_next_dis').hide();
     $('#sect3_error_box').html(error_text).show();
   }
   return return_val;
 
-  if($("input[name=weight_gain]:checked").val() == null ||
-      $("input[name=breathing]:checked").val() == null ||
-      $("input[name=driving]:checked").val() == null ||
-      $("input[name=gasping]:checked").val() == null ||
-      $("input[name=sleepy]:checked").val() == null ||
-      $("input[name=snore]:checked").val() == null ||
-      $("input[name=weight_gain]:checked").val() == null ||
-      $("input[name=blood_pressure]:checked").val() == null ||
-      $("input[name=jerk]:checked").val() == null ||
-      $("input[name=burning]:checked").val() == null ||
-      $("input[name=headaches]:checked").val() == null ||
-      $("input[name=falling_asleep]:checked").val() == null ||
-      $("input[name=staying_asleep]:checked").val() == null
-){
-    alert('All questions much be answered.');
-    return false;
-  }
-
-  next_sect(4);
 }
 
 $(document).ready(function(){

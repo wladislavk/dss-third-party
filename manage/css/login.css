@@ -38,7 +38,7 @@ body{
   font-size: 12px; 
   }
 
-#login_container a{
+#login_container a, #login_container .screener{
   font-size:10px;
   color: #00457C;
   text-decoration: none;

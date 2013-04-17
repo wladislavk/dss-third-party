@@ -156,7 +156,7 @@ WHERE
 	dental_letters.docid='".$docid."' AND 
 	(dental_letters.status = '1' OR dental_letters.delivered = '1') AND 
 	dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."'"; 
-if(isset($_GET['mailed'])){
+if(isset($_GET['mailed']) && $_GET['mailed'] != '' ){
   if($_GET['mailed']==0){
     $letters_query .= " AND mailed_date IS NULL "; 
   }elseif($_GET['mailed']==1){
@@ -322,7 +322,7 @@ if ($_REQUEST['sort'] == "send_method" && $_REQUEST['sortdir'] == "DESC") {
 
 //print_r($dental_letters);
 
-$mailed = (isset($_GET['mailed']))?$_GET['mailed']:'';
+$mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
 ?>
 
 <div class="letters-tryptych1">

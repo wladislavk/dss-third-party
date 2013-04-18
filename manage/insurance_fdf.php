@@ -790,7 +790,7 @@ mysql_query($sql);
 	fclose($handle);
 
 $xfdf_file_path = './q_file/'.$file;
-$pdf_template_path = $path . 'claim.pdf';
+$pdf_template_path = 'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
 $pdf_name = substr( $xfdf_file_path, 0, -4 ) . '.pdf';
 $result_pdf = $pdf_name;

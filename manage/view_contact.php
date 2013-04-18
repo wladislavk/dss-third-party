@@ -101,7 +101,7 @@ include_once "admin/includes/general.htm";
         <label>&nbsp;</label> <span class="value"><?= $city." ".$state." ".$zip; ?></span>
 </div>
 <div class="info">
-        <label>Phone:</label> <span class="value"><?= $phone; ?></span>
+        <label>Phone:</label> <span class="value"><?= $phone1; ?></span>
 </div>
 <div class="info">
         <label>Phone 2:</label> <span class="value"><?= $phone2; ?></span>
@@ -112,6 +112,10 @@ include_once "admin/includes/general.htm";
 <div class="info">
         <label>Email:</label> <span class="value"><?= $email; ?></span>
 </div>
+<div class="info">
+        <label>Notes:</label> <span class="value"><?= $notes; ?></span>
+</div>
+
 </div>
 
 

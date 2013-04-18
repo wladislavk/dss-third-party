@@ -152,7 +152,12 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 //print "\$is_new_claim: $is_new_claim";exit;
 
 // process inserts/updates for claim form
-if ($_POST['insurancesub'] == 1) {
+if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
+    if($is_sent){
+            print '<script type="text/javascript">';
+        print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '</script>';
+    }
     if(!confirm_ledger_trxns()){
 	?>
 	<script type="text/javascript">
@@ -1211,6 +1216,9 @@ input{text-transform:uppercase;}
 	<div align="right">
         <?php if ($is_sent) { ?>
           Claim has been sent
+		<?php if($is_back_office){ ?>
+			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
+		<?php } ?>
 	    <?php } else if ($is_back_office) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
@@ -1221,7 +1229,7 @@ input{text-transform:uppercase;}
                <?php } ?>
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
 
         <?php } ?>
 
@@ -1231,7 +1239,7 @@ input{text-transform:uppercase;}
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
 
         <?php } ?>
 
@@ -1240,7 +1248,7 @@ input{text-transform:uppercase;}
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
 
         <?php } ?>
 

@@ -240,7 +240,11 @@ $image_sql = "INSERT INTO dental_insurance_file (
 
 }
 if(isset($new_status)){
-  $x = "UPDATE dental_insurance SET status='".$new_status."'  WHERE insuranceid='".$_POST['claimid']."';";
+  $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
+  if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
+    $x .= ", mailed_date = NULL ";
+  }
+  $x .= " WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x);
 }
 

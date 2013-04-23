@@ -40,7 +40,6 @@ if($_POST["ledgerub"] == 1)
 	$transaction_type = $_POST['transaction_type'];
 	$transaction_code = $_POST['transaction_code'];
     $status = (isset($_POST['status'])) ? DSS_TRXN_PENDING : DSS_TRXN_NA;
-
 	if(strpos($service_date,'-') === false)
 	{
 		$s_arr = explode('/',$service_date);
@@ -161,9 +160,12 @@ if(($claim_r['primary_claim_id']=='' || $claim_r['primary_claim_id']==0) && $sta
         $claim_id = create_claim($_GET['pid'], $claim_producer);
   }
 }else{
-  $claim_id = '';
+  $claim_id = $claim_r['primary_claim_id'];
 }
 
+if($status == DSS_TRXN_NA){
+  $claim_id = '';
+}
     $up_sql = "update dental_ledger set
     service_date = '".s_for($service_date)."',
 		entry_date = '".s_for($entry_date)."',

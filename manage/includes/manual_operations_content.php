@@ -5990,8 +5990,8 @@ name="_Toc351024478">Publicity</a></h3>
 
 <p class=MsoNormal style='text-align:justify'>Your DENTAL SLEEP SOLUTIONS&reg;
 franchise includes a series of letters that we send out on your behalf
-introducing your services to health care professionals in your area.  We will
-also send an introductory letter to all of your adult patients letting them
+introducing your services to health care professionals in your area. 
+We have an introductory letter available to send, and you are encouraged to send it to all of your adult patients letting them
 know you are part of the DENTAL SLEEP SOLUTIONS&reg; team and that you are now offering
 dental sleep therapy services.</p>
 

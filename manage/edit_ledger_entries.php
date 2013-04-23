@@ -4,6 +4,7 @@ require_once('admin/includes/config.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
 include("includes/preauth_functions.php");
+include("includes/constants.inc");
 $ids = $_GET['ids'];
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
 $flowresult = mysql_query($flowquery);
@@ -271,7 +272,7 @@ $onc = 'onclick="alert(\''.$e_text.'\'); return false;"';
 $onc = '';
 }
 ?>
-<input type="checkbox" <?= $onc; ?> <?= ($a['status'])?'checked="checked"':''; ?>id="form[<?= $a['ledgerid']; ?>][status]" name="form[<?= $a['ledgerid']; ?>][status]" value="1" style="margin: 0; float: right; width:24px;">
+<input type="checkbox" <?= $onc; ?> <?= ($a['status']== DSS_TRXN_PENDING)?'checked="checked"':''; ?>id="form[<?= $a['ledgerid']; ?>][status]" name="form[<?= $a['ledgerid']; ?>][status]" value="1" style="margin: 0; float: right; width:24px;">
 <font style="font-size:10px;">File</font>
 </div></div>
 <div style="clear: both; height: 10px;"></div>

@@ -55,6 +55,7 @@ require_once('includes/formatters.php');
 	.dhx_cal_event.event_sleep_test div{ background-color: #CFF5FF !important; }
 	.dhx_cal_event.event_impressions div {background-color: #DFFFCF !important; }
 	.dhx_cal_event.event_new_patient div{background-color: #FFCFCF !important; }
+        .dhx_cal_event.event_deliver_device div{background-color: #CFCFCF !important; }
 		
 </style>
 
@@ -87,6 +88,9 @@ require_once('includes/formatters.php');
 				case 'follow_up':
 					cat = 'Follow-up';
 					break;
+				case 'deliver_device':
+					cat = 'Deliver Device';
+					break;	
 				case 'sleep_test':
 					cat = 'Sleep Test';
 					break;
@@ -154,7 +158,8 @@ require_once('includes/formatters.php');
                	 	{ key: 'follow_up', label: 'Follow-up' },
                 	{ key: 'sleep_test', label: 'Sleep Test' },
                 	{ key: 'impressions', label: 'Impressions' },
-                        { key: 'new_patient', label: 'New Pt' }
+                        { key: 'new_patient', label: 'New Pt' },
+			{ key: 'deliver_device', label: 'Deliver Device' }
             	];
 		var producer = [
 			<?php

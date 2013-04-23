@@ -38,7 +38,7 @@ background:#999999;
 		<?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE){ ?>
 			<tr class="tr_active">
 				<td valign="top">
-					Operations Manual	
+					DSS Franchisee Operations Manual	
 				</td>
 				<td valign="top">
 					<a href="operations_manual.php" class="editlink" title="EDIT">
@@ -49,7 +49,7 @@ background:#999999;
 		<?php } ?>
                         <tr class="tr_active">
                                 <td valign="top">
-                                        Manual
+					Dental Sleep Solutions Procedures Manual
                                 </td>
                                 <td valign="top">
                                         <a href="manual.php" class="editlink" title="EDIT">

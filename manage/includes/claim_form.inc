@@ -155,7 +155,8 @@ $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_P
 if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
     if($is_sent){
             print '<script type="text/javascript">';
-        print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        //print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?insid='.$_GET['insid'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
     }
     if(!confirm_ledger_trxns()){

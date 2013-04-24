@@ -130,7 +130,7 @@ if($_POST['sortsub'] == 1)
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["cpt_code"]);?>
+					<?=st($myarray["cpt_code"]);?> - <?=st($myarray["description"]);?>
 				</td>
 				
 				<td valign="top" align="center">

@@ -695,7 +695,7 @@ $c++;
   $fdf .= "
   << /T(".$field_path.".".$p."_place_of_service_fill[0]) /V(".$array['placeofservice'].") >>
   << /T(".$field_path.".".$p."_EMG_fill[0]) /V(".$array['emg'].") >>
-  << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] . " - " .$array['description'].") >>
+  << /T(".$field_path.".".$p."_CPT_fill[0]) /V(".$array['transaction_code'] .") >>
   << /T(".$field_path.".".$p."_modifier_one_fill[0]) /V(".$array['modcode'].") >>
   << /T(".$field_path.".".$p."_modifier_two_fill[0]) /V(".$array['modcode2'].") >>
   << /T(".$field_path.".".$p."_modifier_three_fill[0]) /V(".$array['modcode3'].") >>
@@ -820,11 +820,24 @@ class PDF extends FPDI {
             $this->_tplIdx = $this->importPage(1);
         }
 
-	$d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-	$d_q = mysql_query($d_sql);
-	$d_r = mysql_fetch_assoc($d_q);
+	if(isset($_SESSION['docid'])){
+	  $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	  $d_q = mysql_query($d_sql);
+	  $d_r = mysql_fetch_assoc($d_q);
+	  $claim_margin_left = $d_r['claim_margin_left'];
+          $claim_margin_top = $d_r['claim_margin_top'];
+        }elseif(isset($_SESSION['adminuserid'])){
+          $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+          $d_q = mysql_query($d_sql);
+          $d_r = mysql_fetch_assoc($d_q);
+          $claim_margin_left = $d_r['claim_margin_left'];
+          $claim_margin_top = $d_r['claim_margin_top'];
+        }else{
+          $claim_margin_left = 0;
+          $claim_margin_left = 0;
+        }
 
-        $this->useTemplate($this->_tplIdx, $d_r['claim_margin_left'], $d_r['claim_margin_top']);
+        $this->useTemplate($this->_tplIdx, $claim_margin_left, $claim_margin_top);
         
     }
     

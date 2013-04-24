@@ -2272,12 +2272,13 @@ if($insurancetype == '1'){
 }else{
 	$sql .= " user.npi ";
 }
-  $sql .= "  as 'provider_id', ps.place_service as 'place' "
+  $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
        . "FROM "
        . "  dental_ledger ledger "
        . "  JOIN dental_users user ON user.userid = ledger.docid "
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
+       . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
        . "WHERE "
        . "  ledger.primary_claim_id = " . $insuranceid . " "
        . "  AND ledger.patientid = " . $_GET['pid'] . " "
@@ -2302,7 +2303,7 @@ if (!$query) {
       <tr>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo ($array['placeofservice']!='')?$array['placeofservice']:$array['place']; ?>"></td>
+        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo ($array['placeofservice']!='')?$array['placeofservice']." ".$array['place_description']:$array['place']; ?>"></td>
         <td width="41"><input  style="width:26px;"type="text" name="emg<?=$li;?>" value="<?php echo $array['emg']; ?>"></td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">

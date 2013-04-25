@@ -156,7 +156,7 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
     if($is_sent){
             print '<script type="text/javascript">';
         //print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
-        print '  window.location="' . $called_from . '?insid='.$_GET['insid'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?status=0&insid='.$_GET['insid'].'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
         print '</script>';
     }
     if(!confirm_ledger_trxns()){
@@ -817,9 +817,9 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
 		
 	    print '<script type="text/javascript">';
 		if(isset($_POST['ex_pagebtn_elec'])){ 
-        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
 		}else{
-        print '  window.location="' . $called_from . '?insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+        print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
 		}
         print '</script>';
 
@@ -1206,7 +1206,7 @@ input{text-transform:uppercase;}
   <a href="manage_insurance.php?pid=<?=$_REQUEST['pid']?>">
 	<b>&lt;&lt;Back to Manage Insurance Page</b></a>
 <?php } else if ($is_back_office) { ?>
-  <a href="manage_claims.php?pid=<?=$_REQUEST['pid_filter']?>">
+  <a href="manage_claims.php?status=0&pid=<?=$_REQUEST['pid_filter']?>">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
 
@@ -2303,7 +2303,19 @@ if (!$query) {
       <tr>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
         <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="91"><input style="width:76px;" type="text" name="placeofservice<?=$li;?>" value="<?php echo ($array['placeofservice']!='')?$array['placeofservice']." ".$array['place_description']:$array['place']; ?>"></td>
+        <td width="91">
+		<select style="width:76px" name="placeofservice<?=$li;?>">
+			<option value=''>Select One</option>
+			<?php 
+				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
+				$sql = "SELECT * FROM dental_place_service ps WHERE status=1";
+				$q = mysql_query($sql);
+				while($psr = mysql_fetch_assoc($q)){
+				?><option value="<?= $psr['place_service']; ?>" <?= ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?= $psr['place_service']." ".$psr['description']; ?></option>
+			<?php
+				}
+			?>
+	</td>
         <td width="41"><input  style="width:26px;"type="text" name="emg<?=$li;?>" value="<?php echo $array['emg']; ?>"></td>
         <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
         <td width="191">

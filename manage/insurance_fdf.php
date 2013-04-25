@@ -845,7 +845,7 @@ class PDF extends FPDI {
 }
 
 // initiate PDF
-$pdf = new PDF();
+$pdf = new PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->_template = $result_pdf;
 $pdf->SetMargins(0, 0, 0);
 $pdf->SetAutoPageBreak(true, 40);

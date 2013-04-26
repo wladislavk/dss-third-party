@@ -305,9 +305,13 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
     $columns .= ", info_id";
     $values .= ", '".mysql_real_escape_string($info_id)."'";
   }
-  if (isset($parentid)) {
+  if (isset($parentid) && $status != 1) {
     $columns .= ", parentid";
     $values .= ", '".mysql_real_escape_string($parentid)."'";
+  }
+  if($status==1){
+    $columns .= ", parentid";
+    $values .= ", ''";
   }
   if (isset($topatient)) {
     $columns .= ", topatient";
@@ -757,9 +761,9 @@ function deliver_created_letter($letterid){
                 }
                 if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
                         if($fax_send){
-                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW() WHERE letterid='".s_for($letterid)."';";
+                          $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
                         }else{
-                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
+                          $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
                         }
                         $letter_result = mysql_query($letter_query);
                         if (!$letter_result) {
@@ -934,7 +938,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 		} 
 		if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
 			if($fax_send){
-                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW() WHERE letterid='".s_for($letterid)."';";
+                          $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
 			}else{
 			  $letter_query = "UPDATE dental_letters SET status=1, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
 			}
@@ -1279,7 +1283,7 @@ function get_contact_pending_letters($contactid){
 
 function mail_letter($letterid, $mailed = true) {
   if($mailed != 'false'){
-    $s = "UPDATE dental_letters set mailed_date = NOW() where letterid='".mysql_real_escape_string($letterid)."'";
+    $s = "UPDATE dental_letters set mailed_date = NOW(), mailed_once=1 where letterid='".mysql_real_escape_string($letterid)."'";
   }else{
     $s = "UPDATE dental_letters set mailed_date = null where letterid='".mysql_real_escape_string($letterid)."'";
   }

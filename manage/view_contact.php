@@ -115,9 +115,8 @@ include_once "admin/includes/general.htm";
 <div class="info">
         <label>Notes:</label> <span class="value"><?= $notes; ?></span>
 </div>
-
+<a href="add_contact.php?ed=<?= $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">Edit</a>
 </div>
-
 
 </body>
 </html>

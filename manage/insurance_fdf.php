@@ -820,14 +820,14 @@ class PDF extends FPDI {
             $this->_tplIdx = $this->importPage(1);
         }
 
-	if(isset($_SESSION['docid'])){
-	  $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-	  $d_q = mysql_query($d_sql);
-	  $d_r = mysql_fetch_assoc($d_q);
-	  $claim_margin_left = $d_r['claim_margin_left'];
-          $claim_margin_top = $d_r['claim_margin_top'];
-        }elseif(isset($_SESSION['adminuserid'])){
+        if(isset($_SESSION['adminuserid'])){
           $d_sql = "SELECT claim_margin_top, claim_margin_left FROM admin where adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+          $d_q = mysql_query($d_sql);
+          $d_r = mysql_fetch_assoc($d_q);
+          $claim_margin_left = $d_r['claim_margin_left'];
+          $claim_margin_top = $d_r['claim_margin_top'];
+        }elseif(isset($_SESSION['userid'])){
+          $d_sql = "SELECT claim_margin_top, claim_margin_left FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
           $d_q = mysql_query($d_sql);
           $d_r = mysql_fetch_assoc($d_q);
           $claim_margin_left = $d_r['claim_margin_left'];

@@ -130,6 +130,9 @@ $my = mysql_query($sql) or die(mysql_error());
           <td>$<?= $preauth['expected_patient_payment'] ?></td>
         </tr>
 	<tr>
+	  <td style="font-size:10px;">Benefits are based on this insurance plan’s allowable amount, NOT your fee. The benefits quoted here are NOT a guarantee of payment, final benefits/reimbursement will be determined at the time a claim is processed.</td>
+	</tr>
+	<tr>
 	  <td>
 	    <a class="vob_request new" data-ut="<?= $_SESSION['user_type']; ?>" data-pid="<?= $_GET['pid']; ?>"></a>
 	  </td>

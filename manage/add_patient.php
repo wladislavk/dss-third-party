@@ -2242,7 +2242,11 @@ $image = mysql_fetch_assoc($itype_my);
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                        <input type="text" id="docpcp_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
+					<div id="docpcp_static_info" style="<?= ($docpcp!='')?'':'display:none'; ?>"><span id="docpcp_name_static" style="width:300px;"><?= $docpcp_name; ?></span>
+						<a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docpcp;?>');return false;" class="addButton">Quick View</a>
+						<a href="#" onclick="$('#docpcp_static_info').hide();$('#docpcp_name').show();return false;" class="addButton">Change Contact</a>
+					</div>
+                                        <input type="text" id="docpcp_name" style="width:300px;<?= ($docpcp!='')?'display:none;':'';?>" onclick="updateval(this)" autocomplete="off" name="docpcp_name" value="<?= ($docpcp!='')?$docpcp_name:'Type contact name'; ?>" />
 <br />        <div id="docpcp_hints" class="search_hints" style="display:none;">
                 <ul id="docpcp_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2270,7 +2274,12 @@ $(document).ready(function(){
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">ENT</label>
-                                        <input type="text" id="docent_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
+                                       <div id="docent_static_info" style="<?= ($docent!='')?'':'display:none'; ?>"><span id="docent_name_static" style="width:300px;"><?= $docent_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docent;?>');return false;" class="addButton">Quick View</a>
+                                                <a href="#" onclick="$('#docent_static_info').hide();$('#docent_name').show();return false;" class="addButton">Change Contact</a>
+                                        </div>
+
+                                        <input type="text" id="docent_name" style="width:300px;<?= ($docent!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docent_name" value="<?= ($docent!='')?$docent_name:'Type contact name'; ?>" />
 <br />        <div id="docent_hints" class="search_hints" style="display:none;">
                 <ul id="docent_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2297,9 +2306,13 @@ $(document).ready(function(){
             <ul>
 		        <li  id="foli8" class="complex">
 		        <label style="display: block; float: left; width: 110px;">Sleep MD</label>
+                                       <div id="docsleep_static_info" style="<?= ($docsleep!='')?'':'display:none'; ?>"><span id="docsleep_name_static" style="width:300px;"><?= $docsleep_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docsleep;?>');return false;" class="addButton">Quick View</a>
+                                                <a href="#" onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;" class="addButton">Change Contact</a>
+                                        </div>
 
 
-                                        <input type="text" id="docsleep_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
+                                        <input type="text" id="docsleep_name" style="width:300px;<?= ($docsleep!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docsleep_name" value="<?= ($docsleep!='')?$docsleep_name:'Type contact name'; ?>" />
 <br />        <div id="docsleep_hints" class="search_hints" style="display:none;">
                 <ul id="docsleep_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2330,7 +2343,11 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Dentist</label>
-                                        <input type="text" id="docdentist_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
+                                       <div id="docdentist_static_info" style="<?= ($docdentist!='')?'':'display:none'; ?>"><span id="docdentist_name_static" style="width:300px;"><?= $docdentist_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docdentist;?>');return false;" class="addButton">Quick View</a>
+                                                <a href="#" onclick="$('#docdentist_static_info').hide();$('#docdentist_name').show();return false;" class="addButton">Change Contact</a>                                        </div>
+
+                                        <input type="text" id="docdentist_name" style="width:300px;<?= ($docdentist!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docdentist_name" value="<?= ($docdentist!='')?$docdentist_name:'Type contact name'; ?>" />
 <br />        <div id="docdentist_hints" class="search_hints" style="display:none;">
                 <ul id="docdentist_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2372,9 +2389,13 @@ $(document).ready(function(){
 		       <ul>
 		        <li  id="foli8" class="complex">
 		         <label style="display: block; float: left; width: 110px;">Other MD</label>
-                                        <input type="text" id="docmdother_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
+                                       <div id="docmdother_static_info" style="<?= ($docmdother!='')?'':'display:none;'; ?>height:25px;"><span id="docmdother_name_static" style="width:300px;"><?= $docmdother_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother;?>');return false;" class="addButton">Quick View</a>
+                                                <a href="#" onclick="$('#docmdother_static_info').hide();$('#docmdother_name').show();return false;" class="addButton">Change Contact</a>                                        </div>
+
+                                        <input type="text" id="docmdother_name" style="width:300px;<?= ($docmdother!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother_name" value="<?= ($docmdother!='')?$docmdother_name:'Type contact name'; ?>" />
 			<?php if($docmdother2=='' || $docmdother3==''){ ?>
-			<a href="#" id="add_new_md" onclick="add_md(); return false;" class="addButton">+ Add Additional MD</a>
+			<a href="#" id="add_new_md" onclick="add_md(); return false;"  style="clear:both" class="addButton">+ Add Additional MD</a>
 			<?php } ?>
 <br />        <div id="docmdother_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother_list" class="search_list">
@@ -2423,7 +2444,12 @@ $(document).ready(function(){
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 2</label>
-                                        <input type="text" id="docmdother2_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
+                                       <div id="docmdother2_static_info" style="<?= ($docmdother2!='')?'':'display:none'; ?>"><span id="docmdother2_name_static" style="width:300px;"><?= $docmdother2_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother2;?>');return false;" class="addButton">Quick View</a>
+                                                <a href="#" onclick="$('#docmdother2_static_info').hide();$('#docmdother2_name').show();return false;" class="addButton">Change Contact</a>
+                                        </div>
+
+                                        <input type="text" id="docmdother2_name" style="width:300px;<?= ($docmdother2!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother2_name" value="<?= ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>" />
 <br />        <div id="docmdother2_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother2_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>
@@ -2452,7 +2478,11 @@ $(document).ready(function(){
                        <ul>
                         <li  id="foli8" class="complex">
                          <label style="display: block; float: left; width: 110px;">Other MD 3</label>
-                                        <input type="text" id="docmdother3_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
+                                      <div id="docmdother3_static_info" style="<?= ($docmdother3!='')?'':'display:none'; ?>"><span id="docmdother3_name_static" style="width:300px;"><?= $docmdother3_name; ?></span>
+                                                <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$docmdother3;?>');return false;" class="addButton">Quick View</a>                                     
+                                                <a href="#" onclick="$('#docmdother3_static_info').hide();$('#docmdother3_name').show();return false;" class="addButton">Change Contact</a>                          
+                                        </div>
+                                        <input type="text" id="docmdother3_name" style="width:300px;<?= ($docmdother3!='')?'display:none':''; ?>" onclick="updateval(this)" autocomplete="off" name="docmdother3_name" value="<?= ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>" />
 
 <br />        <div id="docmdother3_hints" class="search_hints" style="display:none;">
                 <ul id="docmdother3_list" class="search_list">

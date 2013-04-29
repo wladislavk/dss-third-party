@@ -55,7 +55,7 @@ require_once('includes/formatters.php');
 	.dhx_cal_event.event_sleep_test div{ background-color: #CFF5FF !important; }
 	.dhx_cal_event.event_impressions div {background-color: #DFFFCF !important; }
 	.dhx_cal_event.event_new_patient div{background-color: #FFCFCF !important; }
-        .dhx_cal_event.event_deliver_device div{background-color: #CFCFCF !important; }
+        .dhx_cal_event.event_deliver_device div{background-color: #FBA16C !important; }
 		
 </style>
 

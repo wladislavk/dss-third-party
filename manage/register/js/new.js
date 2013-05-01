@@ -105,6 +105,19 @@ lga_wizard = {
 							$(element).closest('div').removeClass("error");
 						},
                         rules: {
+			    code: {
+				required: true,
+				remote: {
+                                        url: "includes/check_code.php",
+                                        type: "post",
+                                        async: false,
+                                        data: {
+                                                code: function() {
+                                                        return $("#code").val();
+                                                }
+                                        }
+                                }
+                            },
                             name: "required",
                             email: {
                                 required: true,
@@ -123,7 +136,7 @@ lga_wizard = {
         				}
 				}
                             },
-                            phone: {
+                            cell_phone: {
                                 required: true
                             },
 			    practice: "required",
@@ -172,12 +185,16 @@ lga_wizard = {
     },
                         messages: {
                             name: "This field is required",
+                            code: {
+                                required: "This field is required",
+                                remote: "Error: Invalid code."
+                                },
 			    email: {
 				required: "This field is required",			
 				remote: "Error: The email address you have entered is either invalid or already in use. Please enter a different email address.",
 				email: "The field requires a valid email address"
 				},
-                            phone: "This field is required",
+                            cell_phone: "This field is required",
 			    practice: "This field is required",
 			    address: "This field is required",
                             city: "This field is required",
@@ -231,21 +248,12 @@ lga_wizard = {
 			
 	                        var post = $('#register_form').serializeObject();
 				//alert(post);
-                	        $.post('helpers/register_submit.php', post, function(data) {
-					//var r = $.parseJSON(data);
+                	        $.post('helpers/new_submit.php', post, function(data) {
+					var r = $.parseJSON(data);
+					$('#userid').val(r['userid']);
 					//alert(data);
                         	        //$('#form_summary').html(data);
                                 	//alert(data);
-			if(api.getIndex()==5){
-                                if($('#cc_id').val()==0){
-                                  //api.next();
-                                }else{
-				  disable_registration();
-                                  api.next();
-                                }
-
-                          //disable_registration();
-                        }
                         	});
 			$("#status li").removeClass("active").eq(i).addClass("active filed");
 			$("#status li.active").prev("li").addClass("filed");
@@ -259,7 +267,6 @@ lga_wizard = {
                                 e.preventDefault();
                         }
                 });
-
 
                 //disable enter key for wizard
                         //Bind this keypress function to all of the input tags

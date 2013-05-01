@@ -1,5 +1,6 @@
 #patient_search {
-	width: 190px;
+	width: 240px;
+	padding: 3px;
 }
 
 #search_hints, .search_hints {

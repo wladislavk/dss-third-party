@@ -5,6 +5,9 @@ function update_financial_agreement_medicare_form($id){
 
 $logo = get_logo($id);
 
+$s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
 
 $html = '
 <html>
@@ -144,6 +147,9 @@ function update_home_care_instructions_form($id){
 
 $logo = get_logo($id);
 
+$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
 
 $html = '
 <html>
@@ -271,7 +277,7 @@ floss and brush your teeth before inserting the device. </span></p>
 
 <p class=MsoNormal><b><i><span style=\'font-family:"Arial","sans-serif"\'>If you
 have any questions regarding your treatment please contact our office at <span
-style=\'background:yellow\'>'.$r['phone'].'</span>.</span></i></b></p>
+style=\'background:yellow\'>'.$r['mailing_phone'].'</span>.</span></i></b></p>
 
 <p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
 8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
@@ -305,6 +311,9 @@ function update_non_dentist_of_record_release_form($id){
 
 $logo = get_logo($id);
 
+$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
 
 $html = '
 <html>
@@ -436,12 +445,12 @@ style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>RELEASE FORM</span><
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I am seeking treatment with
 a sleep orthotic appliance only.  I understand that I am not a dental
-patient-of-record with <b>'.$r['name'].'</b>.
+patient-of-record with <b>'.$r['mailing_name'].'</b>.
 </span></p>
 
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>The importance of regular
-dental care has been explained to me and I understand that <b>'.$r['name'].'</b> will not be responsible
+dental care has been explained to me and I understand that <b>'.$r['mailing_name'].'</b> will not be responsible
 for providing my preventative or emergency dental needs. At this time, I choose
 to have my routine and necessary dental care completed in another office.  </span></p>
 
@@ -497,6 +506,9 @@ function update_sleep_recorder_release_form($id){
 
 $logo = get_logo($id);
 
+$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
 
 $html = '
 <html>
@@ -568,10 +580,10 @@ RELEASE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I,
-____________________________, have been advised by '.$r['name'].'<i><span style=\'color:red\'> </span></i>to take
+____________________________, have been advised by '.$r['mailing_name'].'<i><span style=\'color:red\'> </span></i>to take
 home a sleep recorder that will determine my treatment progress after using my
 dental device. I understand that I am assuming responsibility for the safe
-return of the sleep recorder, valued at $_________.  I agree to give '.$r['name'].'<i><span style=\'color:red\'> </span></i>a
+return of the sleep recorder, valued at $_________.  I agree to give '.$r['mailing_name'].'<i><span style=\'color:red\'> </span></i>a
 credit card number to be charged <b><i>only if the sleep recorder is not
 returned or is returned damaged due to neglect or physical abuse.  </i></b>I
 agree to return the sleep recorder on the date noted below.  I understand that
@@ -645,6 +657,9 @@ Solutions</small></span></p>
 
 function update_custom_release_form($id){
 
+$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
+$q = mysql_query($s);
+$r = mysql_fetch_assoc($q);
 
 $logo = get_logo($id);
 
@@ -718,7 +733,7 @@ records related to sleep disordered breathing.</span></p>
 style="font-size:12.0pt">: __________________________________________________________________</span></p>
 
 <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">From</span></b><span
-style="font-size:12.0pt">: '.$r['name'].'</span></p>
+style="font-size:12.0pt">: '.$r['mailing_name'].'</span></p>
 
 <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
 would like to request a copy of the following if applicable:</span></p>
@@ -756,8 +771,8 @@ normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
 <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
  style="border-collapse:collapse;border:none; margin-bottom:0; margin-top:0;">
  <tr style="">
-  <td width=515 valign=top style="width:339.25pt;padding:0in 5.4pt 0in 5.4pt;"><span style="font-size:12.0pt">'.$r['address'].'<br />
-'.$r['city'].' '.$r['state'].' '.$r['zip'].'</span></td>
+  <td width=515 valign=top style="width:339.25pt;padding:0in 5.4pt 0in 5.4pt;"><span style="font-size:12.0pt">'.$r['mailing_address'].'<br />
+'.$r['mailing_city'].' '.$r['mailing_state'].' '.$r['mailing_zip'].'</span></td>
  </tr>
 </table>
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;margin-top:0;line-height:
@@ -3145,9 +3160,6 @@ function form_update_all($docid){
 
 
 function get_logo($id){
-  $s = "select amount from dental_transaction_code where docid=".mysql_real_escape_string($id)." and transaction_code='E0486'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
 
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);

@@ -159,7 +159,11 @@ if(isset($_POST["loginsub"]))
         <td colspan="2" align="center" >
             <input type="hidden" name="loginsub" value="1">
             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
-            <a style="float:right; margin-top:4px;" href="forgot_password.php">Forgot Password</a>
+		<span style="float:right;">
+            <a href="register/new.php">Register</a>
+		|
+            <a href="forgot_password.php">Forgot Password</a>
+		</span>
         </td>
     </tr>
 </table>

@@ -360,7 +360,7 @@ if(mysql_num_rows($q) == 0){
                                                                                                 <div class="dp75">
                                                                                                         <div>
                                                                                                                 <div class="form_errors" style="display:none"></div>
-
+			<input type="hidden" id="cc_id" value="<?= ($p['cc_id']=='')?0:1; ?>" />
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>1.</strong> Card Number:</label><input type="text" size="20" autocomplete="off" class="inpt_a ccmask card-number"/>
                 </div>

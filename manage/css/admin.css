@@ -912,7 +912,7 @@ ul.submenus2 ul.flyout li.title2, ul.submenus2 ul.flyout img {
 
 /*  SUCKER TREE MENU */
 
-.suckertreemenu ul{
+.homesuckertreemenu ul, .suckertreemenu ul{
 margin: 0;
 padding: 0;
 list-style-type: none;
@@ -927,8 +927,15 @@ margin-left:10px;
 position:relative;
 }
 
+.homesuckertreemenu ul li{
+display:inline;
+margin-left:10px;
+position:relative;
+}
+
+
 /*Top level menu link items style*/
-.suckertreemenu ul li a{
+.homesuckertreemenu ul li a, .suckertreemenu ul li a{
 display: block;
 width: 166px; /*Width of top level menu link items*/
 padding: 8px 0 0 0;
@@ -944,7 +951,7 @@ cursor: pointer;
 }
 	
 /*1st sub level menu*/
-.suckertreemenu ul li ul{
+.homesuckertreemenu ul li ul, .suckertreemenu ul li ul{
 left: 0;
 position: absolute;
 top: 1em; /* no need to change, as true value set by script */
@@ -956,7 +963,7 @@ z-index:50;
 }
 
 /*Sub level menu list items (undo style from Top level List Items)*/
-.suckertreemenu ul li ul li{
+.homesuckertreemenu ul li ul li, .suckertreemenu ul li ul li{
 display: list-item;
 float: none;
 margin-left:0;
@@ -967,7 +974,7 @@ background:url(../images/btnTrans.png) repeat;
 }
 
 /*All subsequent sub menu levels offset after 1st level sub menu */
-.suckertreemenu ul li ul li ul{ 
+.homesuckertreemenu ul li ul li ul, .suckertreemenu ul li ul li ul{ 
 left: 159px; /* no need to change, as true value set by script */
 top: 0;
  margin-top:6px;
@@ -976,7 +983,7 @@ border-top:1px solid #095d81;
 }
 
 /* Sub level menu links style */
-.suckertreemenu ul li ul li a{
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a{
 display: block;
 width: 150px; /*width of sub menu levels*/
 color: #095d81;
@@ -986,14 +993,14 @@ background:none;
 height:20px;
 }
 
-.suckertreemenu ul li a:hover{
+.homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover{
 color: #095d81;
 text-align:center;
 font-weight:bold;
 font-size:15px;
 }
 
-.suckertreemenu ul li ul li a:hover{
+.homesuckertreemenu ul li ul li a:hover, .suckertreemenu ul li ul li a:hover{
 color: #FFF;
 text-align:left;
 font-weight:bold;
@@ -1002,21 +1009,21 @@ background:#00457c;
 overflow:hidden;
 }
 
-.suckertreemenu ul li ul li a{
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a{
 text-align:left;
 }
 
-.suckertreemenu ul li ul li a{
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a{
 font-size:13px;
 }
 
 /*Background image for top level menu list links */
-.suckertreemenu .mainfoldericon{
+.homesuckertreemenu .mainfoldericon, .suckertreemenu .mainfoldericon{
 background:url(../images/btn_mainlev.png) no-repeat top left;
 }
 
 /*Background image for subsequent level menu list links */
-.suckertreemenu .subfoldericon{
+.homesuckertreemenu .subfoldericon, .suckertreemenu .subfoldericon{
 background: url(../images/arrow-right.gif) no-repeat center right;
 }
 
@@ -1025,8 +1032,8 @@ padding-top: 1em;
 }
 	
 /* Holly Hack for IE \*/
-* html .suckertreemenu ul li { float: left; height: 1%; }
-* html .suckertreemenu ul li a { height: 1%; }
+* html .homesuckertreemenu ul li, * html .suckertreemenu ul li { float: left; height: 1%; }
+* html .homesuckertreemenu ul li a, * html .suckertreemenu ul li a { height: 1%; }
 /* End */
 .suckertreemenu2{
   float:right;

@@ -818,34 +818,52 @@ display:none;
   </tr>
   <tr>
 	<td valign='top' height="400">
-<?php
-$task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
-        JOIN dental_users du ON dt.responsibleid=du.userid
-        LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-   WHERE (dt.status = '0' OR
-        dt.status IS NULL) AND
-        dt.responsibleid='".mysql_real_escape_string($_SESSION['userid'])."'";
-$task_q = mysql_query($task_sql);
-$num_tasks = mysql_num_rows($task_q);
-?>
-<?php $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce; ?>
+	<!-- <div style="float:right;margin-right:20px;margin-top:8px;width:120px;">
+  
+  <div style="text-align:center; float:left;width:50px; color:#00457c; padding-right:20px;"><a style="color:#00457c;text-decoration:none;" href="index.php" target="_self"><img border="0" src="images/homeIcon.png"><br />Home</a></div>
+	
+	
+  <div style="text-align:center;float:right;width:50px;"><div><a style="color:#00457c;text-decoration:none;" href="logout.php" target="_self">Logout</div>
+  <hr />
+  <div style="margin-top:-2px;"><a style="color:#00457c;text-decoration:none;" href="search.php" target="_self">Search</a></div>
+  </div>
+
+  
+  
+  </div>-->
   <div class="suckertreemenu2">
-     <ul id="topmenu2">
-<li><a href="#">Messages (<?php echo $mess_count; ?>)</a>
-  <ul>
-      <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
-      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
-      <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
-      <li><a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?= $num_rejected_preauth; ?>)</a></li>
-      <li><a href="manage_email_bounces.php">Email Bounces (<?= $num_bounce; ?>)</a></li>
-      <li><a href="manage_tasks.php">Tasks (<?= $num_tasks; ?>)</a></li>
-  </ul>
+     <ul id="topmenu">
+       <li><a href="#">Manage Settings</a>
+         <ul style="z-index:5001;margin-top:-20px;">
+            <li><a class="menu_item" href="#">Directory</a></li>
+                     <li><a class="submenu_item" href="manage_contact.php">Contacts</a></li>
+                     <li><a class="submenu_item" href="manage_referredby.php">Referral List</a></li>
+                     <li><a class="submenu_item" href="manage_sleeplab.php">Sleep Labs</a></li>
+                     <li><a class="submenu_item" href="manage_fcontact.php">Corporate Contacts</a></li>
+            <li><a class="menu_item" href="#">DSS Files</a></li>
+                <?php 
+			$s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+			$sq = mysql_query($s);
+		        while($c = mysql_fetch_assoc($sq)){ ?>
+				<li><a class="submenu_item" href="view_documents.php?cat=<?= $c['categoryid'];?>"><?= $c['name']; ?></a></li>
 
+                       <?php }
+		?>
+            <li><a class="menu_item" href="#">Admin</a></li>
+                     <li><a class="submenu_item" href="manage_claim_setup.php">Claim Setup</a></li>
+		     <li><a class="submenu_item" href="manage_profile.php">Profile</a></li>
+                     <li><a class="submenu_item" href="manage_custom.php">Custom Text</a></li>
+                     <?php if($_SESSION['userid']==$_SESSION['docid']){ ?>
+                     <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
+		     <?php } ?>
+                     <li><a class="submenu_item" href="manage_staff.php">Staff</a></li>
+		     <li><a class="submenu_item" href="manage_user_forms.php">Forms</a></li>
+		     <li><a class="submenu_item" href="manage_manuals.php">Manuals</a></li>
 
-</li>
-
+              <li><a class="menu_item" href="pending_patient.php">Pending Patients</a></li>
+              <li><a class="menu_item" href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>
+	  </ul>
+	</li>
        <li><a href="logout.php">Sign Out</a></li>
       </ul>
   </div>
@@ -1087,8 +1105,6 @@ if($_SESSION['docid']==$_SESSION['userid']){
      
     <div style="margin-top:10px; margin-left:20px; float:left;">
 <a href="/manage" id="logo"></a>
-    </div>
-    <div style="float:left;">
     <!--<form name="form" action="search.php" method="get">-->
   <div id="patient_search_div">
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
@@ -1101,9 +1117,9 @@ if($_SESSION['docid']==$_SESSION['userid']){
 	</div>
    </div> 
 
-   <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
+   <button onclick="window.location='add_patient.php'" style="margin-top:27px;">+ Add Patient</button>
 
-   <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid']))?'?pid='.$_GET['pid']:''; ?>')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+   <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid']))?'?pid='.$_GET['pid']:''; ?>')" style="margin-top:27px;">+ Add Task</button>
 <!--</form>-->
     </div>
    <?php
@@ -1316,7 +1332,52 @@ while($od_r = mysql_fetch_assoc($od_q)){
 ?>
 
 <div class="suckertreemenu">
-<span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">Welcome <?= $_SESSION['username']; ?></span>
+<ul id="treemenu1" style="padding-top:3px;">
+<li><a href="manage_patient.php">PATIENT</a>
+  <ul>
+              <li><a href="manage_patient.php">Manage Patients</a></li>
+              <li><a href="#">Directory</a>
+                  <ul>
+                     <li><a href="manage_contact.php">Contacts</a></li>
+                     <li><a href="manage_referredby.php">Referral List</a></li>
+                     <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
+                     <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
+                   </ul>
+              </li>
+  </ul>
+</li>
+<li>
+<a href="#">REPORTS</a>
+
+  <ul>
+     <li><a href="ledger_reportfull.php">Ledger</a></li>
+     <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
+     <li><a href="performance.php">Performance</a></li>
+     <li><a href="manage_screeners.php">Pt. Screener</a></li>
+  </ul>
+</li>
+
+<?php
+  $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
+  $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
+?>
+<li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
+  <ul>
+      <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
+      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
+      <li><a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?= $num_rejected_preauth; ?>)</a></li>
+      <li><a href="manage_email_bounces.php">Email Bounces (<?= $num_bounce; ?>)</a></li>
+      <li><a href="manage_tasks.php">Tasks (<?= $num_tasks; ?>)</a></li>
+  </ul>
+
+
+  </ul>
+</li>
+
+</ul>
 </div>
   <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
     <div id="patient_nav">

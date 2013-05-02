@@ -18,7 +18,7 @@ if($_POST['userid']==''){
                 use_eligible_api = '0',
                 use_course = '0',
                 use_course_staff = '0',
-                user_type = '".DSS_USERTYPE_SOFTWARE."'
+                user_type = '".DSS_USER_TYPE_SOFTWARE."'
                 ";
         	$q = mysql_query($sql);
                 $userid = mysql_insert_id();

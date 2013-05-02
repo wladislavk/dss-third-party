@@ -139,6 +139,9 @@ lga_wizard = {
                             cell_phone: {
                                 required: true
                             },
+			    agreement: {
+				required: true
+			    },		
 			    practice: "required",
                             address: "required",
 			    city: "required",
@@ -195,6 +198,7 @@ lga_wizard = {
 				email: "The field requires a valid email address"
 				},
                             cell_phone: "This field is required",
+			    agreement: "You must accept the agreement to proceed",
 			    practice: "This field is required",
 			    address: "This field is required",
                             city: "This field is required",

@@ -1,3 +1,4 @@
+<?php if ($patient_info) { ?>
 <link rel="stylesheet" href="css/eligible_api.css" />
 <?php
   $s = "SELECT p.*, c.company, u.name as doc_name, u.npi from dental_patients p
@@ -253,4 +254,4 @@ $('#api_output').show();
 
 
   </script>
-
+<?php } ?>

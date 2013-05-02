@@ -1079,25 +1079,24 @@ of device: ______________________________________________________</span></p>
 style=\'font-size:12.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>Max
 Translation: ____________________ Starting Translation_________________</span></p>
 
-<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=715
- style=\'width:7.45in;border-collapse:collapse\'>
+<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="615"> 
  <tr>
-  <td width=145 valign=bottom style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=bottom style=\'border:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-  text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
+  text-align:center\'><b><span style=\'text-align:center;font-size:12.0pt;line-height:115%;
   font-family:"Arial","sans-serif"\'>DATE </span></b></p>
   </td>
-  <td width=168 colspan=2 valign=bottom style=\'width:1.75in;border:solid black 1.0pt;
+  <td width="168" colspan="2" valign=bottom style=\'border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
   font-family:"Arial","sans-serif"\'>BAND</span></b></p>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
-  font-family:"Arial","sans-serif"\'>Proposed      Actual</span></b></p>
+  font-family:"Arial","sans-serif"\'>Proposed                  Actual</span></b></p>
   </td>
-  <td width=402 valign=bottom style=\'width:301.5pt;border:solid black 1.0pt;
+  <td width="302" valign=bottom style=\'width:301.5pt;border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
@@ -1105,35 +1104,154 @@ Translation: ____________________ Starting Translation_________________</span></
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
-  <td width=84 valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+<tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+ </tr>
+ <tr style=\'height:.2in\'>
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
@@ -1291,22 +1409,24 @@ Translation: ____________________ Starting Translation_________________</span></
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
 style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=715
- style=\'width:7.45in;border-collapse:collapse\'>
+<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="615"> 
  <tr>
-  <td width=145 valign=bottom style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=bottom style=\'border:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-  text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
+  text-align:center\'><b><span style=\'text-align:center;font-size:12.0pt;line-height:115%;
   font-family:"Arial","sans-serif"\'>DATE </span></b></p>
   </td>
-  <td width=168 valign=bottom style=\'width:1.75in;border:solid black 1.0pt;
+  <td width="168" colspan="2" valign=bottom style=\'border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
-  font-family:"Arial","sans-serif"\'>TIMES TURNED</span></b></p>
+  font-family:"Arial","sans-serif"\'>BAND</span></b></p>
+  <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
+  font-family:"Arial","sans-serif"\'>Proposed                  Actual</span></b></p>
   </td>
-  <td width=402 valign=bottom style=\'width:301.5pt;border:solid black 1.0pt;
+  <td width="302" valign=bottom style=\'width:301.5pt;border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
@@ -1314,196 +1434,171 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
+  </td>
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
  </tr>
  <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
+  <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
+  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+  height:.2in\'>
   </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
- </tr>
- <tr style=\'height:.2in\'>
-  <td width=145 valign=top style=\'width:108.9pt;border:solid black 1.0pt;
-  border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=168 valign=top style=\'width:1.75in;border-top:none;border-left:
-  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-  padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
-  </td>
-  <td width=402 valign=top style=\'width:301.5pt;border-top:none;border-left:
+  <td width="302" valign=top style=\'width:301.5pt;border-top:none;border-left:
   none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
   padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
@@ -2377,7 +2472,7 @@ Solutions</small></span></p></div>
 
 function update_lomn_rx_form($id){
 
-
+$logo = get_logo($id);
 
         
 $html = '

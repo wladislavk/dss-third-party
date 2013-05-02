@@ -12,6 +12,16 @@
   float: left;
   padding: 0 1%;
   margin: 0;
+  border-left: 2px solid #095D81;
+  min-height: 400px; 
+  }
+
+.home_third h3{
+  font-family: "Times", serif;
+  color:#095D81;
+  font-size: 32px;
+  width: 100%;
+  text-align: center;
   }
 
 .home_menu{
@@ -31,8 +41,8 @@ NAV THIRD
 ##############################################################
 -->
 
-<div class="home_third">
-
+<div class="home_third first">
+<h3>Navigation</h3>
 <div class="homesuckertreemenu">
 <ul id="homemenu" style="padding-top:3px;">
 <li><a href="manage_patient.php">PATIENT</a>
@@ -138,7 +148,7 @@ ALERT THIRD
 
 
 <div class="home_third">
-  <br /> 
+<h3>Notifications</h3>
   <?php if($num_rejected_preauth>0){ ?>
   <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
   <?php } ?>
@@ -186,9 +196,9 @@ TASK THIRD
 
 <div class="home_third">
 
-
+<h3>Tasks</h3>
 <div class="task_menu index_task">
-<h3>My Tasks</h3>
+<h4>My Tasks</h4>
 
 <?php
 $od_q = mysql_query($od_sql);

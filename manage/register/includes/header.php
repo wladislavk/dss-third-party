@@ -44,6 +44,12 @@
             <div class="logo fl">
 		<h1>Dental Sleep Solutions</h1>
             </div>
+	<?php if($_SERVER['SCRIPT_NAME'] == '/manage/register/new.php') { ?>
+            <ul id="main_nav" class="fr">
+                                <li class="nav_item lgutipT" title="start over" id="restart_nav"><a href="../login.php" class="main_link" ><img class="img_holder" style="background-image: url(images/icons/refresh.png)" alt="" src="images/blank.gif"/><span>Cancel</span></a></li>
+
+            </ul>
+	  <?php } ?>
         </div>
     </div>
  

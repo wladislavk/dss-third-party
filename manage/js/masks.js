@@ -6,7 +6,7 @@ $(document).ready(function(){
         $('.phonemask').mask('(~99) 999-9999');
         $('.ssnmask').mask('999-99-9999');
 	$('.ccmask').mask('?9999999999999999999');
-        $('.cvcmask').mask('999');
+        $('.cvcmask').mask('999?9');
 	$('.mmmask').mask('#9');
 	$('.yyyymask').mask('2099');
         $('.zipmask').mask('99999');

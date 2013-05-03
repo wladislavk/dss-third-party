@@ -14,9 +14,11 @@ $u_r = mysql_fetch_assoc($u_q);
 		$pass = hash('sha256', session_id());
 		$user = $u_r['username']; 
 		$md5_pass = md5($pass);
-                setcookie("dss_login_key", $val, $expire, "/", "xforty.com", false);
-
-
+		if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
+                  setcookie("dss_login_key", $val, $expire, "/", "dentalsleepsolutions.com", false);
+		}else{
+                  setcookie("dss_login_key", $val, $expire, "/", "xforty.com", false);
+		}
  
 		$login_sql = "SELECT * FROM x40_dss_login WHERE user='".mysql_real_escape_string($user)."'";
                 $login_q = mysql_query($login_sql, $course_con);
@@ -32,5 +34,11 @@ $u_r = mysql_fetch_assoc($u_q);
 		mysql_query($user_sql, $course_con) or die($user_sql." | ".mysql_error());
 ?>
 <script type="text/javascript">
-  window.location='/course/autoauth';
+<?php
+                if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='stage.dss-rh.xforty.com'){
+?>  window.location='/course/autoauth'; <?php
+                }else{
+?>  window.location='http://course.dss.xforty.com/drupal/autoauth'; <?php
+                }
+?>
 </script>

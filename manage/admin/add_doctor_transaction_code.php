@@ -2,6 +2,7 @@
 //session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
+include '../includes/constants.inc';
 ?>
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
@@ -70,6 +71,7 @@ if($_POST["transaction_codesub"] == 1)
                                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
                                 modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
                                 days_units = '".s_for($_POST['days_units'])."',
+				amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
@@ -89,6 +91,7 @@ if($_POST["transaction_codesub"] == 1)
                                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
                                 modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
                                 days_units = '".s_for($_POST['days_units'])."',
+                                amount_adjust = '".s_for($_POST['amount_adjust'])."',
 				sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_GET['docid'];
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
@@ -132,6 +135,7 @@ if($_POST["transaction_codesub"] == 1)
                 $modifier_code_1 = $_POST['modifier_code_1'];
                 $modifier_code_2 = $_POST['modifier_code_2'];
                 $days_units = $_POST['days_units'];
+		$amount_adjust = $_POST['amount_adjust'];
 	}
 	else
 	{
@@ -145,6 +149,7 @@ if($_POST["transaction_codesub"] == 1)
                 $modifier_code_1 = $themyarray['modifier_code_1'];
                 $modifier_code_2 = $themyarray['modifier_code_2'];
                 $days_units = $themyarray['days_units'];
+		$amount_adjust = $themyarray['amount_adjust'];
 		$but_text = "Add ";
 	}
 	
@@ -282,6 +287,18 @@ if($_POST["transaction_codesub"] == 1)
             	<select name="status" class="tbox">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Amount Adjustment
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="amount_adjust" class="tbox">
+                        <option value="<?= DSS_AMOUNT_ADJUST_USER; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
+                        <option value="<?= DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
+                        <option value="<?= DSS_AMOUNT_ADJUST_POSITIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
                 </select>
             </td>
         </tr>

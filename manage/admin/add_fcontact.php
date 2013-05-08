@@ -2,7 +2,7 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
-
+include '../includes/general_functions.php';
 if($_POST["contactsub"] == 1)
 {
 	if($_POST["ed"] != "")

@@ -16,7 +16,7 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
-$rec_disp = 20;
+$rec_disp = 2;
 
 if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];
@@ -24,7 +24,22 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_fcontact where docid='".$_SESSION['docid']."' order by lastname";
+$sql = "select * from dental_fcontact ";
+
+switch($_GET['sort']){
+  case 'company':
+    $sql .= " ORDER BY company ".$_GET['sortdir'];
+    break;
+  case 'type':
+    $sql .= " ORDER BY dct.contacttype ".$_GET['sortdir'];
+    break;
+  default:
+    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
+    break;
+}
+
+
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -72,11 +87,11 @@ background:#999999;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Name
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
-		<td valign="top" class="col_head" width="70%">
-			Company
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="70%">
+                        <a href="manage_fcontact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -110,10 +125,10 @@ background:#999999;
 			$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="20%">
+                		<td valign="top" width="20%">
 					<?=$name;?>
 				</td>
-				<td valign="top" width="70%">
+                		<td valign="top" width="70%">
 					<?=st($myarray["company"]);?>
 				</td>
 				<td valign="top" width="20%">

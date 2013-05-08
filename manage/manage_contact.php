@@ -46,14 +46,24 @@ else
 $i_val = $index_val * $rec_disp;
 $contact_type_holder = $_GET['contacttype'];
 if(isset($contact_type_holder) && $contact_type_holder != ''){
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL AND status=1 order by lastname";
+$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' and contacttypeid='" . $contact_type_holder . "' AND merge_id IS NULL AND dc.status=1 ";
 }elseif(isset($_GET['status'])){
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND status=".mysql_real_escape_string($_GET['status'])." order by lastname";
+$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND dc.status=".mysql_real_escape_string($_GET['status'])." ";
 }else{
-$sql = "select * from dental_contact where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND status=1 order by lastname ";
+$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND dc.status=1 ";
 }
 
-
+switch($_GET['sort']){
+  case 'company':
+    $sql .= " ORDER BY company ".$_GET['sortdir'];
+    break;
+  case 'type':
+    $sql .= " ORDER BY dct.contacttype ".$_GET['sortdir'];
+    break;
+  default:
+    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
+    break;
+}
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -140,21 +150,21 @@ $(document).ready(function(){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"contacttype=".$_GET['contacttype']);
+				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
 			?>
 		</TD>        
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Name
-		</td>
-		<td valign="top" class="col_head" width="25%">
-			Company
-		</td>
-		<td valign="top" class="col_head" width="25%">
-			Contact Type
-		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_contact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+                        <a href="manage_contact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
+                        <a href="manage_contact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contact Type</a>
+                </td>
 		<td valign="top" class="col_head" width="10%">
 			Referrer
 		</td>

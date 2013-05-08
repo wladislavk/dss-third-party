@@ -133,7 +133,30 @@ if($_GET['mine']==1){
 }else{
   $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
 }
-$sql .= " ORDER BY due_date DESC";
+
+if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
+  switch($_REQUEST['sort']){
+    case 'due_date':
+        $sort = "due_date";
+        break;
+    case 'task':
+        $sort = "task";
+        break;
+    case 'responsible':
+        $sort = 'du.name';
+        break;
+  }
+}else{
+  $_REQUEST['sort']='name';
+  $_REQUEST['sortdir']='DESC';
+  $sort = "due_date";
+}
+if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
+  $dir = $_REQUEST['sortdir'];
+}else{
+  $dir = 'DESC';
+}
+  $sql .= "ORDER BY ".$sort." ".$dir;
 
 $rec_disp = 10;
 
@@ -157,7 +180,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <span style="float:right; margin-right:20px;">
                         Pages:
                         <?
-                                 paging($no_pages,$index_val,"");
+                                 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
                         ?>
 </span>
 <table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
@@ -169,7 +192,7 @@ $my=mysql_query($sql) or die(mysql_error());
                         <a href="manage_tasks.php?sort=due_date&sortdir=<?php echo ($_REQUEST['sort']=='due_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
                 </td>
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_tasks.php?sort=description&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+                        <a href="manage_tasks.php?sort=responsible&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
                 </td>
                 <td valign="top" class="col_head" width="15%">
                         Action

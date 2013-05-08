@@ -23,7 +23,7 @@ if($_REQUEST["page"] != "")
 else
 	$index_val = 0;
 
-if(isset($_REQUEST['sort'])){
+if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
   switch($_REQUEST['sort']){
     case 'adddate':
 	$sort = "s.adddate";
@@ -34,13 +34,16 @@ if(isset($_REQUEST['sort'])){
     case 'user':
 	$sort = 'u.name';
 	break;
+    case 'phone':
+	$sort = 's.phone';
+    	break;
   }
 }else{
   $_REQUEST['sort']='adddate';
   $_REQUEST['sortdir']='DESC';
   $sort = "s.adddate";
 }
-if(isset($_REQUEST['sortdir'])){
+if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
   $dir = $_REQUEST['sortdir'];
 }else{
   $dir = 'DESC';
@@ -54,13 +57,13 @@ $sql = "SELECT s.*, u.name,
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
 	WHERE s.docid='".$_SESSION['docid']."' ";
-if(isset($_GET['risk'])){
+if(isset($_GET['risk']) && $_GET['risk']!=''){
   $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['risk'])." ";
 }
-if(isset($_GET['contacted'])){
+if(isset($_GET['contacted']) && $_GET['contacted'] != ''){
   $sql .= " AND contacted = ".mysql_real_escape_string($_GET['contacted'])." ";
 }
-if(isset($_GET['contacted_risk'])){
+if(isset($_GET['contacted_risk']) && $_GET['contacted_risk'] != ''){
   $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['contacted_risk'])." ";
   $sql .= " AND contacted = 0 ";
 }
@@ -97,7 +100,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <?php }else{ ?>
 <a href="manage_screeners.php?risk=10" class="addButton">Show High/Severe</a>
 <?php } ?>
-<?php if(isset($_GET['contacted']) && $_GET['contacted']==0){ ?>
+<?php if(isset($_GET['contacted']) && $_GET['contacted']=='0'){ ?>
 <a href="manage_screeners.php" class="addButton">Show All</a>
 <?php }else{ ?>
 <a href="manage_screeners.php?contacted=0" class="addButton">Show Not Contacted</a>
@@ -128,7 +131,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"contacted=".$_GET['contacted']."&contacted_risk=".$_GET['contacted_risk']."&risk=".$_GET['risk']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
 		</TD>
 	</TR>
@@ -140,26 +143,26 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="25%">
 			<a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="13%">
-                        <a href="manage_screeners.php?sort=patient&sortdir=<?php echo ($_REQUEST['sort']=='patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="13%">
+                        <a href="manage_screeners.php?sort=phone&sortdir=<?php echo ($_REQUEST['sort']=='phone'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Phone</a>
                 </td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+               <td valign="top" class="col_head"  width="10%">
                         Risk 
                 </td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+		<td valign="top" class="col_head" width="10%">
                         CPAP
                 </td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'phone')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+               <td valign="top" class="col_head" width="10%">
 			Epworth
                 </td>
-               <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+               <td valign="top" class="col_head" width="10%">
 			Results	
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
                 </td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Contacted</a>
+                <td valign="top" class="col_head" width="10%">
+                        Contacted
                 </td>
 		<td valign="top" class="col_head">
 			Edit

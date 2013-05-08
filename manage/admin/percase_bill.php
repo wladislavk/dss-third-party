@@ -22,7 +22,7 @@ $r = mysql_fetch_assoc($q);
 if(isset($_POST['bill_submit'])){
   $customerID = $r['cc_id'];
   if($customerID!=''){
-    $amount = $_POST['amount']*100;
+    $amount = (str_replace(',','',$_POST['amount'])*100);
 
 $key_sql = "SELECT stripe_secret_key FROM companies c 
 		JOIN dental_user_company uc
@@ -90,7 +90,7 @@ try{
   $stripe_customer = $charge->customer;
   $stripe_card_fingerprint = $charge->card->fingerprint;
   $charge_sql = "INSERT INTO dental_charge SET
-			amount='".mysql_real_escape_string($_POST['amount'])."',
+			amount='".mysql_real_escape_string(str_replace(',','',$_POST['amount']))."',
                         userid='".mysql_real_escape_string($id)."',
                         adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
                         charge_date=NOW(),

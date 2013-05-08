@@ -86,7 +86,7 @@ if($_REQUEST["page"] != "")
 else
 	$index_val = 0;
 
-if(isset($_REQUEST['sort'])){
+if(isset($_REQUEST['sort']) && $_REQUEST['sort']!=''){
   switch($_REQUEST['sort']){
     case 'request_date':
 	$sort = "preauth.front_office_request_date";
@@ -103,7 +103,7 @@ if(isset($_REQUEST['sort'])){
   $_REQUEST['sortdir']='DESC';
   $sort = "preauth.status";
 }
-if(isset($_REQUEST['sortdir'])){
+if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
   $dir = $_REQUEST['sortdir'];
 }else{
   $dir = 'DESC';
@@ -160,7 +160,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
 		</TD>
 	</TR>

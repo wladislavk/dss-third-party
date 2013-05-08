@@ -22,9 +22,33 @@ if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];
 else
 	$index_val = 0;
+
+
+if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
+  switch($_REQUEST['sort']){
+    case 'lab':
+        $sort = "company";
+        break;
+    case 'name':
+        $sort = "lastname";
+        break;
+  }
+}else{
+  $_REQUEST['sort']='company';
+  $_REQUEST['sortdir']='DESC';
+  $sort = "company";
+}
+if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
+  $dir = $_REQUEST['sortdir'];
+}else{
+  $dir = 'DESC';
+}
+
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_sleeplab where docid='".$_SESSION['docid']."' order by company";
+$sql = "select * from dental_sleeplab where docid='".$_SESSION['docid']."' ";
+  $sql .= "ORDER BY ".$sort." ".$dir;
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -63,17 +87,17 @@ $num_sleeplab=mysql_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
 		</TD>        
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Lab Name
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'lab')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_sleeplab.php?sort=lab&sortdir=<?php echo ($_REQUEST['sort']=='lab'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Lab Name</a>
 		</td>
-		<td valign="top" class="col_head" width="70%">
-			Name
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="70%">
+                        <a href="manage_sleeplab.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action

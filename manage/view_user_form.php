@@ -3,6 +3,7 @@
   require_once 'admin/includes/config.php';
   require_once 'admin/includes/general.htm';
   require_once 'admin/includes/form_updates.php';
+  require_once 'includes/general_functions.php';
   require_once 'includes/constants.inc';
 if($_GET['did']==$_SESSION['docid']){
   $filename = "q_file/".$_GET['file']."_".$_GET['did'].".pdf";

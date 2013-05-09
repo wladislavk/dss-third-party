@@ -277,7 +277,7 @@ floss and brush your teeth before inserting the device. </span></p>
 
 <p class=MsoNormal><b><i><span style=\'font-family:"Arial","sans-serif"\'>If you
 have any questions regarding your treatment please contact our office at <span
-style=\'background:yellow\'>'.$r['mailing_phone'].'</span>.</span></i></b></p>
+style=\'background:yellow\'>'.format_phone($r['mailing_phone']).'</span>.</span></i></b></p>
 
 <p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
 8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>

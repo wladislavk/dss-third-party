@@ -226,7 +226,7 @@ $body .= DSS_EMAIL_FOOTER;
 <p>".$ur['mailing_practice']."<br />
 ".$ur['mailing_address']."<br />
 ".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
-".$ur['mailing_phone']."</p>
+".format_phone($ur['mailing_phone'])."</p>
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
@@ -289,7 +289,7 @@ function sendRemEmail($id, $e){
 <p>".$ur['mailing_practice']."<br />
 ".$ur['mailing_address']."<br />
 ".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
-".$ur['mailing_phone']."</p>
+".format_phone($ur['mailing_phone'])."</p>
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".$n."
 </b></p>

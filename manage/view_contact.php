@@ -101,13 +101,13 @@ include_once "admin/includes/general.htm";
         <label>&nbsp;</label> <span class="value"><?= $city." ".$state." ".$zip; ?></span>
 </div>
 <div class="info">
-        <label>Phone:</label> <span class="value"><?= $phone1; ?></span>
+        <label>Phone:</label> <span class="value"><?= format_phone($phone1); ?></span>
 </div>
 <div class="info">
-        <label>Phone 2:</label> <span class="value"><?= $phone2; ?></span>
+        <label>Phone 2:</label> <span class="value"><?= format_phone($phone2); ?></span>
 </div>
 <div class="info">
-        <label>Fax:</label> <span class="value"><?= $fax; ?></span>
+        <label>Fax:</label> <span class="value"><?= format_phone($fax); ?></span>
 </div>
 <div class="info">
         <label>Email:</label> <span class="value"><?= $email; ?></span>

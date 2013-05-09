@@ -199,18 +199,7 @@ if($dentaldevice_date!=''){ ?>
 <strong>C)</strong> <?= format_phone($r['cell_phone']); ?><br />
 <strong>W)</strong> <?= format_phone($r['work_phone']); ?><br />
 </div>
-<?php
-function format_phone($data){
-if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
-{
-    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
-    if($matches[4]!=''){
-      $result .= ' x'.$matches[4];
-    }
-    return $result;
-}
-}
-?>
+
 <h4>Complaints</h4>
 <div class="box">
 <strong>Reason for seeking tx:</strong>

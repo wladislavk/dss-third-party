@@ -259,7 +259,7 @@ $num_custom=mysql_num_rows($my);
   </div>
   <div class="detail">
     <label>Phone:</label>
-    <input class="value" name="phone" value="<?= $user['phone']; ?>" />
+    <input class="value extphonemask" name="phone" value="<?= $user['phone']; ?>" />
   </div>
   <div class="detail">
     <label>&nbsp;</label>
@@ -339,11 +339,11 @@ $num_custom=mysql_num_rows($my);
   </div>
   <div class="detail">
     <label>Phone:</label>
-    <input class="value" name="phone" value="<?= $practice['phone']; ?>" />
+    <input class="value extphonemask" name="phone" value="<?= $practice['phone']; ?>" />
   </div>
   <div class="detail">
     <label>Fax:</label>
-    <input class="value" name="fax" value="<?= $practice['fax']; ?>" />
+    <input class="value phonemask" name="fax" value="<?= $practice['fax']; ?>" />
   </div>
   <div class="detail">
     <label>Mailing Practice:</label>
@@ -371,7 +371,7 @@ $num_custom=mysql_num_rows($my);
   </div>
   <div class="detail">
     <label>Mailing Phone:</label>
-    <input class="value" name="mailing_phone" value="<?= $practice['mailing_phone']; ?>" />
+    <input class="value extphonemask" name="mailing_phone" value="<?= $practice['mailing_phone']; ?>" />
   </div>
   <div class="detail">
     <label>&nbsp;</label>

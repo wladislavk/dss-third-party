@@ -112,7 +112,7 @@ if($by=='doc'){
 <p>".$r['mailing_practice']."<br />
 ".$r['mailing_address']."<br />
 ".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
-".$r['mailing_phone']."</p>
+".format_phone($r['mailing_phone'])."</p>
 <h3>Need assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
@@ -136,7 +136,7 @@ if($by=='doc'){
 <p>".$r['mailing_practice']."<br />
 ".$r['mailing_address']."<br />
 ".$r['mailing_city']." ".$r['mailing_state']." ".$r['mailing_zip']."<br />
-".$r['mailing_phone']."</p>
+".format_phone($r['mailing_phone'])."</p>
 <h3>Didn't request this change or need assistance?</h3>
 <p><b>Contact us at ".$n."</b></p>
 </td></tr>
@@ -194,5 +194,15 @@ preg_match($pattern, $n, $matches);
 return $matches[2];
 }
 
+function format_phone($data){
+if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
+{
+    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+    if($matches[4]!=''){
+      $result .= ' x'.$matches[4];
+    }
+    return $result;
+}
+}
 
 ?>

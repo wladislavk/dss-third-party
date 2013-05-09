@@ -94,44 +94,44 @@
   <tr>
     <td>Primary Care</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docpcp_id; ?>'); return false;"><?= $docpcp_name; ?></a></td>
-    <td><?= $docpcp_phone; ?></td>
-    <td><?= $docpcp_fax; ?></td>
+    <td><?= format_phone($docpcp_phone); ?></td>
+    <td><?= format_phone($docpcp_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <tr>
     <td>Sleep Doctor</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docsleep_id; ?>'); return false;"><?= $docsleep_name; ?></a></td>
-    <td><?= $docsleep_phone; ?></td>
-    <td><?= $docsleep_fax; ?></td>
+    <td><?= format_phone($docsleep_phone); ?></td>
+    <td><?= format_phone($docsleep_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <tr>
     <td>Dentist</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docdentist_id; ?>'); return false;"><?= $docdentist_name; ?></a></td>
-    <td><?= $docdentist_phone; ?></td>
-    <td><?= $docdentist_fax; ?></td>
+    <td><?= format_phone($docdentist_phone); ?></td>
+    <td><?= format_phone($docdentist_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <tr>
     <td>ENT</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docent_id; ?>'); return false;"><?= $docent_name; ?></a></td>
-    <td><?= $docent_phone; ?></td>
-    <td><?= $docent_fax; ?></td>
+    <td><?= format_phone($docent_phone); ?></td>
+    <td><?= format_phone($docent_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <tr>
     <td>MD Other</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docmdother_id; ?>'); return false;"><?= $docmdother_name; ?></a></td>
-    <td><?= $docmdother_phone; ?></td>
-    <td><?= $docmdother_fax; ?></td>
+    <td><?= format_phone($docmdother_phone); ?></td>
+    <td><?= format_phone($docmdother_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <?php if($docmdother2!=''){ ?>
   <tr>
     <td>MD Other 2</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docmdother2_id; ?>'); return false;"><?= $docmdother2_name; ?></a></td>
-    <td><?= $docmdother2_phone; ?></td>
-    <td><?= $docmdother2_fax; ?></td>
+    <td><?= format_phone($docmdother2_phone); ?></td>
+    <td><?= format_phone($docmdother2_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <?php
@@ -140,8 +140,8 @@
   <tr>
     <td>MD Other 3</td>
     <td><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $docmdother3_id; ?>'); return false;"><?= $docmdother3_name; ?></a></td>
-    <td><?= $docmdother3_phone; ?></td>
-    <td><?= $docmdother3_fax; ?></td>
+    <td><?= format_phone($docmdother3_phone); ?></td>
+    <td><?= format_phone($docmdother3_fax); ?></td>
     <td><a href="new_letter.php?pid=<?= $_GET['pid']; ?>">Write Letter</a></td>
   </tr>
   <?php } ?>

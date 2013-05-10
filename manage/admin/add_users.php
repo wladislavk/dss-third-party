@@ -63,13 +63,6 @@ if($_POST["usersub"] == 1)
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for(num($_POST["phone"]))."', 
 				fax = '".s_for(num($_POST["fax"]))."',
-                                mailing_practice = '".s_for($_POST['mailing_practice'])."', 
-                                mailing_name = '".s_for($_POST["mailing_name"])."', 
-                                mailing_address = '".s_for($_POST["mailing_address"])."', 
-                                mailing_city = '".s_for($_POST["mailing_city"])."', 
-                                mailing_state = '".s_for($_POST["mailing_state"])."', 
-                                mailing_zip = '".s_for($_POST["mailing_zip"])."', 
-                                mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
@@ -80,6 +73,16 @@ if($_POST["usersub"] == 1)
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+			$loc_sql = "UPDATE dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                phone = '".s_for(num($_POST["mailing_phone"]))."'
+				where default_location=1 AND docid='".$_POST["ed"]."'";
+			mysql_query($loc_sql);
 			form_update_all($_POST['ed']);
                         $course_sql = "update content_type_profile SET
                                         field_docname_value='".mysql_real_escape_string($_POST["name"])."'
@@ -160,13 +163,6 @@ if($_POST["usersub"] == 1)
 				zip = '".s_for($_POST["zip"])."', 
 				phone = '".s_for(num($_POST["phone"]))."', 
 				fax = '".s_for(num($_POST["fax"]))."',
-                                mailing_practice = '".s_for($_POST['mailing_practice'])."',
-                                mailing_name = '".s_for($_POST["mailing_name"])."', 
-                                mailing_address = '".s_for($_POST["mailing_address"])."', 
-                                mailing_city = '".s_for($_POST["mailing_city"])."', 
-                                mailing_state = '".s_for($_POST["mailing_state"])."', 
-                                mailing_zip = '".s_for($_POST["mailing_zip"])."', 
-                                mailing_phone = '".s_for(num($_POST["mailing_phone"]))."',
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
@@ -179,6 +175,19 @@ if($_POST["usersub"] == 1)
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
+                        $loc_sql = "INSERT INTO dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                default_location=1,
+ 				docid='".$userid."',
+                                adddate=now(),
+                                ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                        mysql_query($loc_sql);
 
                         $course_sql = "INSERT INTO users set
                                         name = '".mysql_real_escape_string($_POST["username"])."',
@@ -273,8 +282,9 @@ if($_POST["usersub"] == 1)
 <body>
 
     <?
-    $thesql = "select u.*, c.companyid from dental_users u 
+    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone from dental_users u 
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
+		LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 		where u.userid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);

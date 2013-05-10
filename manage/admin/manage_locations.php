@@ -16,6 +16,13 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
+if(isset($_REQUEST['did'])){
+  $d_sql = "UPDATE dental_locations set default_location=0 where docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+  mysql_query($d_sql);
+  $d_sql = "UPDATE dental_locations set default_location=1 where id='".mysql_real_escape_string($_REQUEST['did'])."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+  mysql_query($d_sql);
+}
+
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -109,7 +116,14 @@ $num_contact=mysql_num_rows($my);
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_location.php?ed=<?=$myarray["id"];?>&docid=<?=$_GET['docid']?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
-                    
+					|
+					<?php if($myarray['default_location']==1){ ?>
+						Default Location
+					<?php }else{ ?>
+					   <a href="manage_locations.php?docid=<?= $_GET['docid']; ?>&did=<?= $myarray['id']; ?>"  class="editlink" title="MAKE DEFAULT">
+                                                Make Default 
+                                          </a>
+                    			<?php } ?>
 				</td>
 			</tr>
 	<? 	}

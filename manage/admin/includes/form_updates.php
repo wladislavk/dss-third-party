@@ -655,14 +655,23 @@ Solutions</small></span></p>
 }
 
 
-function update_custom_release_form($id){
+function update_custom_release_form($id, $locid = null){
 
-$s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
+$s = "SELECT fax from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 
 $logo = get_logo($id);
 
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
 
 $html = '
 <html>
@@ -733,7 +742,7 @@ records related to sleep disordered breathing.</span></p>
 style="font-size:12.0pt">: __________________________________________________________________</span></p>
 
 <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">From</span></b><span
-style="font-size:12.0pt">: '.$r['mailing_name'].'</span></p>
+style="font-size:12.0pt">: '.$loc_r['name'].'</span></p>
 
 <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
 would like to request a copy of the following if applicable:</span></p>
@@ -771,8 +780,8 @@ normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
 <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
  style="border-collapse:collapse;border:none; margin-bottom:0; margin-top:0;">
  <tr style="">
-  <td width=515 valign=top style="width:339.25pt;padding:0in 5.4pt 0in 5.4pt;"><span style="font-size:12.0pt">'.$r['mailing_address'].'<br />
-'.$r['mailing_city'].' '.$r['mailing_state'].' '.$r['mailing_zip'].'</span></td>
+  <td width=515 valign=top style="width:339.25pt;padding:0in 5.4pt 0in 5.4pt;"><span style="font-size:12.0pt">'.$loc_r['address'].'<br />
+'.$loc_r['city'].' '.$loc_r['state'].' '.$loc_r['zip'].'</span></td>
  </tr>
 </table>
 <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;margin-top:0;line-height:
@@ -805,8 +814,11 @@ you in advance.</span></p></div></body></html>';
 
 
         $title = "DSS Record Release";
-        $filename = "user_record_release_".$id.".pdf";
-
+        if($locid){
+          $filename = "user_record_release_".$locid.'_'.$id.".pdf";
+	}else{
+	  $filename = "user_record_release_".$id.".pdf";
+	}
 	create_form_pdf($html, $filename, $title);
 
 }

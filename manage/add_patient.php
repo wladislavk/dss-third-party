@@ -1531,7 +1531,7 @@ $num_face = mysql_num_rows($itype_my);
                         		<option value="">Select</option>
         			<?php
                 		while($loc_r = mysql_fetch_assoc($loc_q)){
-                        		?><option <?= ($location==$loc_r['id'])?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
+                        		?><option <?= ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
                 		}
         			?>
                 		</select>

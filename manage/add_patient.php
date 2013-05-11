@@ -197,7 +197,7 @@ es is good too!
 Click Here to Complete Your Forms Online (http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash.")
 
 Need Assistance?
-Contact us at ".$n."
+Contact us at ".format_phone($n)."
 
 
 "; 
@@ -228,7 +228,7 @@ $body .= DSS_EMAIL_FOOTER;
 ".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
 ".format_phone($ur['mailing_phone'])."</p>
 <h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n."</b></p>
+<p><b>Contact us at ".format_phone($n)."</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
@@ -291,7 +291,7 @@ function sendRemEmail($id, $e){
 ".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
 ".format_phone($ur['mailing_phone'])."</p>
 <h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n."
+<p><b>Contact us at ".format_phone($n)."
 </b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>

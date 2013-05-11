@@ -78,7 +78,7 @@ $m = "<html><body><center>
 ".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
 ".$ur['mailing_phone']."</p>
 <h3>Need Assistance?</h3>
-<p><b>Contact us at ".$n."</b></p>
+<p><b>Contact us at ".format_phone($n)."</b></p>
 </td></tr>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>

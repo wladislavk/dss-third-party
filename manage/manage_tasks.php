@@ -23,7 +23,47 @@ if($_GET['mine']==1){
 }else{
   $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
 }
-$sql .= " ORDER BY due_date ASC";
+
+if(isset($_REQUEST['sort1']) && $_REQUEST['sort1'] != ''){
+  switch($_REQUEST['sort1']){
+    case 'due_date':
+        $sort = "due_date";
+        break;
+    case 'task':
+        $sort = "task";
+        break;
+    case 'responsible':
+        $sort = 'du.name';
+        break;
+  }
+}else{
+  $_REQUEST['sort1']='name';
+  $_REQUEST['sortdir1']='DESC';
+  $sort = "due_date";
+}
+if(isset($_REQUEST['sortdir1']) && $_REQUEST['sortdir1']){
+  $dir = $_REQUEST['sortdir1'];
+}else{
+  $dir = 'DESC';
+}
+  $sql .= "ORDER BY ".$sort." ".$dir;
+
+$rec_disp = 10;
+
+if($_REQUEST["page1"] != "")
+        $index_val = $_REQUEST["page1"];
+else
+        $index_val = 0;
+
+$i_val = $index_val * $rec_disp;
+
+$my = mysql_query($sql);
+$total_rec = mysql_num_rows($my);
+$no_pages = $total_rec/$rec_disp;
+
+$sql .= " limit ".$i_val.",".$rec_disp;
+$my=mysql_query($sql) or die(mysql_error());
+
 $my = mysql_query($sql);
 ?>
 
@@ -48,20 +88,26 @@ if($_GET['mine']==1){ ?>
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
+<span style="float:right; margin-right:20px;">
+                        Pages:
+                        <?
+                                 paging1($no_pages,$index_val,"sort1=".$_GET['sort1']."&sortdir1=".$_GET['sortdir1']."&page2=".$_GET['page2']."&sort2=".$_GET['sort2']."&sortdir2=".$_GET['sortdir2']);
+                        ?>
+</span>
 
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
 		<td width="2%" class="col_head">
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
-			Task
-		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			Due Date	
-		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			Assigned To
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort1'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="45%">
+                        <a href="manage_tasks.php?sort2=<?= $_GET['sort2']; ?>&sortdir2=<?= $_GET['sortdir2']; ?>&page2=<?= $_GET['page2']; ?>&sort1=task&sortdir1=<?php echo ($_REQUEST['sort1']=='task'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort1'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort2=<?= $_GET['sort2']; ?>&sortdir2=<?= $_GET['sortdir2']; ?>&page2=<?= $_GET['page2']; ?>&sort1=due_date&sortdir1=<?php echo ($_REQUEST['sort1']=='due_date'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
+                </td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort1'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir1']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort2=<?= $_GET['sort2']; ?>&sortdir2=<?= $_GET['sortdir2']; ?>&page2=<?= $_GET['page2']; ?>&sort1=responsible&sortdir1=<?php echo ($_REQUEST['sort1']=='responsible'&&$_REQUEST['sortdir1']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -134,8 +180,8 @@ if($_GET['mine']==1){
   $sql .= " (du.docid='".mysql_real_escape_string($_SESSION['docid'])."' OR du.userid='".mysql_real_escape_string($_SESSION['docid'])."') ";
 }
 
-if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
-  switch($_REQUEST['sort']){
+if(isset($_REQUEST['sort2']) && $_REQUEST['sort2'] != ''){
+  switch($_REQUEST['sort2']){
     case 'due_date':
         $sort = "due_date";
         break;
@@ -147,12 +193,12 @@ if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
         break;
   }
 }else{
-  $_REQUEST['sort']='name';
-  $_REQUEST['sortdir']='DESC';
+  $_REQUEST['sort2']='name';
+  $_REQUEST['sortdir2']='DESC';
   $sort = "due_date";
 }
-if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
-  $dir = $_REQUEST['sortdir'];
+if(isset($_REQUEST['sortdir2']) && $_REQUEST['sortdir2']){
+  $dir = $_REQUEST['sortdir2'];
 }else{
   $dir = 'DESC';
 }
@@ -160,8 +206,8 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
 
 $rec_disp = 10;
 
-if($_REQUEST["page"] != "")
-        $index_val = $_REQUEST["page"];
+if($_REQUEST["page2"] != "")
+        $index_val = $_REQUEST["page2"];
 else
         $index_val = 0;
 
@@ -180,19 +226,19 @@ $my=mysql_query($sql) or die(mysql_error());
 <span style="float:right; margin-right:20px;">
                         Pages:
                         <?
-                                 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
+                                 paging2($no_pages,$index_val,"sort1=".$_GET['sort1']."&sortdir1=".$_GET['sortdir1']."&page1=".$_GET['page1']."&sort2=".$_GET['sort2']."&sortdir2=".$_GET['sortdir2']);
                         ?>
 </span>
 <table id="completed_tasks" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="45%">
-                        <a href="manage_tasks.php?sort=task&sortdir=<?php echo ($_REQUEST['sort']=='task'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Task</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort2'] == 'task')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="45%">
+                        <a href="manage_tasks.php?sort1=<?= $_GET['sort1']; ?>&sortdir1=<?= $_GET['sortdir1']; ?>&page1=<?= $_GET['page1']; ?>&sort2=task&sortdir2=<?php echo ($_REQUEST['sort2']=='task'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Task</a>
                 </td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_tasks.php?sort=due_date&sortdir=<?php echo ($_REQUEST['sort']=='due_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort2'] == 'due_date')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort1=<?= $_GET['sort1']; ?>&sortdir1=<?= $_GET['sortdir1']; ?>&page1=<?= $_GET['page1']; ?>&sort2=due_date&sortdir2=<?php echo ($_REQUEST['sort2']=='due_date'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Due Date</a>
                 </td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_tasks.php?sort=responsible&sortdir=<?php echo ($_REQUEST['sort']=='responsible'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort2'] == 'responsible')?'arrow_'.strtolower($_REQUEST['sortdir2']):''; ?>" width="20%">
+                        <a href="manage_tasks.php?sort1=<?= $_GET['sort1']; ?>&sortdir1=<?= $_GET['sortdir1']; ?>&page1=<?= $_GET['page1']; ?>&sort2=responsible&sortdir2=<?php echo ($_REQUEST['sort2']=='responsible'&&$_REQUEST['sortdir2']=='ASC')?'DESC':'ASC'; ?>">Assigned To</a>
                 </td>
                 <td valign="top" class="col_head" width="15%">
                         Action

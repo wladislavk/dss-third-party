@@ -613,6 +613,14 @@ function create_letter_pdf($letterid){
                 $doc_fax = mysql_result($result, 0, 4);
                 $logo = mysql_result($result, 0, 5);
                 $user_type = mysql_result($result, 0, 6);
+
+		$loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+		$loc_q = mysql_query($loc_sql);
+		$loc_r = mysql_fetch_assoc($loc_q);
+		$doc_name = $loc_r['name'];
+		$doc_phone = $loc_r['phone'];
+		$doc_fax = $loc_r['fax'];
+
                 // Create PDF
                 $title = "Dental Sleep Solutions";
                 $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
@@ -661,7 +669,9 @@ If you are not the intended recipient, you are hereby notified that any disclosu
                 //$html = html_entity_decode($message, ENT_COMPAT | ENT_QUOTES, "UTF-8");
 		//$html = $message;
 		$html = html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', $message), ENT_COMPAT | ENT_IGNORE,"UTF-8");
-                $franchisee_query = "SELECT user_type, mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
+                $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
+			                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+					WHERE u.userid = '".$docid."';";
                 $franchisee_result = mysql_query($franchisee_query);
                 while ($row = mysql_fetch_assoc($franchisee_result)) {
                         $fi = $row;
@@ -854,6 +864,15 @@ function deliver_letter($letterid, $message) {
 		$doc_fax = mysql_result($result, 0, 4);
 		$logo = mysql_result($result, 0, 5);
 		$user_type = mysql_result($result, 0, 6);
+
+                $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+                $loc_q = mysql_query($loc_sql);
+                $loc_r = mysql_fetch_assoc($loc_q);
+                $doc_name = $loc_r['name'];
+                $doc_phone = $loc_r['phone'];
+                $doc_fax = $loc_r['fax'];
+
+
 		// Send Email
 		if ($send_method == 'email') {
 			//$email_success = send_email($to_name, $to_email, $doc_name, $doc_email, "DSS No Subject", $message, '',$docid);
@@ -905,7 +924,9 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			$cover = '';
 		}
 		$html = $message;
-		$franchisee_query = "SELECT user_type, mailing_name, mailing_practice, mailing_address, mailing_city, mailing_state, mailing_zip, email FROM dental_users WHERE userid = '".$docid."';";
+                $franchisee_query = "SELECT u.user_type, l.name, mailing_name, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip, u.email FROM dental_users u
+                                        LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+                                        WHERE u.userid = '".$docid."';";
 		$franchisee_result = mysql_query($franchisee_query);
 		while ($row = mysql_fetch_assoc($franchisee_result)) {
         		$fi = $row;

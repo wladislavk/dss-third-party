@@ -14,7 +14,6 @@ $(document).ready(function(){
 });
 
   $(document).delegate('.dollar_input', 'keydown', function(event){
-
 	  //Prevent multiple '.' from being entered.
         if ((event.keyCode == 110 || event.keyCode == 190) && $(this).val().indexOf('.')>=0){
 		event.preventDefault();
@@ -26,7 +25,7 @@ $(document).ready(function(){
              // Allow: home, end, left, right
             (event.keyCode >= 35 && event.keyCode <= 39) ||
 
-            (event.keyCode == 109 || event.keyCode == 110 || event.keyCode == 188 || event.keyCode == 189 || event.keyCode == 190)) {
+            (event.keyCode == 173 || event.keyCode == 109 || event.keyCode == 110 || event.keyCode == 188 || event.keyCode == 189 || event.keyCode == 190)) {
                  // let it happen, don't do anything
                  return;
         }

@@ -2,6 +2,7 @@
 //session_start();
 require_once('admin/includes/config.php');
 include("includes/sescheck.php");
+include 'includes/constants.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -73,6 +74,7 @@ if($_POST["transaction_codesub"] == 1)
                                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
                                 modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
                                 days_units = '".s_for($_POST['days_units'])."',
+				amount_adjust = '".s_for($_POST['amount_adjust'])."',
                                 sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."' where transaction_codeid='".$_POST["ed"]."'";
 
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -93,6 +95,7 @@ if($_POST["transaction_codesub"] == 1)
                                 modifier_code_1 = '".s_for($_POST['modifier_code_1'])."',
                                 modifier_code_2 = '".s_for($_POST['modifier_code_2'])."',
                                 days_units = '".s_for($_POST['days_units'])."',
+				amount_adjust = '".s_for($_POST['amount_adjust'])."',
                                 sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', type = '".s_for($_POST["type"])."', amount = '".s_for($_POST['amount'])."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', docid=".$_SESSION['docid'];
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
@@ -137,6 +140,7 @@ if($_POST["transaction_codesub"] == 1)
                 $modifier_code_1 = $_POST['modifier_code_1'];
                 $modifier_code_2 = $_POST['modifier_code_2'];
                 $days_units = $_POST['days_units'];
+                $amount_adjust = $_POST['amount_adjust'];
 	}
 	else
 	{
@@ -150,6 +154,7 @@ if($_POST["transaction_codesub"] == 1)
                 $modifier_code_1 = $themyarray['modifier_code_1'];
                 $modifier_code_2 = $themyarray['modifier_code_2'];
                 $days_units = $themyarray['days_units'];
+                $amount_adjust = $themyarray['amount_adjust'];
 		$but_text = "Add ";
 	}
 	
@@ -295,6 +300,19 @@ if($_POST["transaction_codesub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
+                Amount Adjustment
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="amount_adjust" class="tbox">
+                        <option value="<?= DSS_AMOUNT_ADJUST_USER; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
+                        <option value="<?= DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
+                        <option value="<?= DSS_AMOUNT_ADJUST_POSITIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
+                </select>
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
                 Description
             </td>
             <td valign="top" class="frmdata">
@@ -309,6 +327,10 @@ if($_POST["transaction_codesub"] == 1)
                 <input type="hidden" name="transaction_codesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["transaction_codeid"]?>" />
                 <input type="submit" value=" <?=$but_text?> Transaction Code" class="button" />
+                    <a href="manage_transaction_code.php?delid=<?=$themyarray["transaction_codeid"];?>" target="_parent" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                Delete
+                                        </a>
+
             </td>
         </tr>
     </table>

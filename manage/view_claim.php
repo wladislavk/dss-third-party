@@ -209,9 +209,9 @@ return s;
 </script>
 <br />
 <div style="float:left; margin-left:20px;">
-        <a href="insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>" class="addButton">
+        <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
                 View 1500
-        </a>
+        </button>
 </div>
 <div align="right" style="clear: right;">
         <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
@@ -451,9 +451,11 @@ return s;
   
   <tr>
       <td colspan="8">
-        <center><a style="padding: 2px;" href='manage_ledger.php?pid=<?=$_GET['pid'];?>' class="addButton">
+	<center>
+		<button onclick="Javascript: window.location='manage_ledger.php?pid=<?= $_GET['pid'];?>';return false;" class="addButton">
+
                Return to Patient Ledger
-        </a></center>
+        </button></center>
 
       </td>
   </tr> 

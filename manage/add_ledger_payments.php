@@ -32,7 +32,7 @@ $num_sa = mysql_num_rows($saq);
 <head>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-
+  <script type="text/javascript" src="js/masks.js"></script>
 </head>
 <body>
 
@@ -283,7 +283,7 @@ while($row = mysql_fetch_assoc($lq)){
 <span style="width:180px;margin: 0 10px 0 0; float:left;"><?= $row['description']; ?></span>
 <span style="width:100px;margin: 0 10px 0 0; float:left;">$<?= $row['amount']; ?></span>
 <span style="margin: 0pt 10px 0pt 0pt; float: left; width:150px;"><input style="width:140px" type="text" name="payment_date_<?= $row['ledgerid']; ?>" value="<?= date('m/d/Y'); ?>" /></span>
-<span style="float:left;font-weight:bold;"><input class="payment_amount" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
+<span style="float:left;font-weight:bold;"><input class="payment_amount dollar_input" style="width:140px;" type="text" name="amount_<?= $row['ledgerid']; ?>" /></span>
 </div>
 
 <?php

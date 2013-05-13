@@ -21,7 +21,8 @@ if($_POST["contactsub"] == 1)
                                 city = '".mysql_real_escape_string($_POST["city"])."',
                                 state = '".mysql_real_escape_string($_POST["state"])."',
                                 zip = '".mysql_real_escape_string($_POST["zip"])."',
-                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."'
+                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
+				fax = '".mysql_real_escape_string(num($_POST["fax"]))."'
 				where id='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
@@ -45,6 +46,7 @@ if($_POST["contactsub"] == 1)
                                 state = '".mysql_real_escape_string($_POST["state"])."',
                                 zip = '".mysql_real_escape_string($_POST["zip"])."',
                                 phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
+                                fax = '".mysql_real_escape_string(num($_POST["fax"]))."',
 				 docid='".$_POST['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
@@ -87,6 +89,7 @@ if($_POST["contactsub"] == 1)
                 $state = $_POST['state'];
                 $zip = $_POST['zip'];
                 $phone = $_POST['phone'];
+		$fax = $_POST['fax'];
 	}
 	else
 	{
@@ -97,7 +100,7 @@ if($_POST["contactsub"] == 1)
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
                 $phone = st($themyarray['phone']);
-
+		$fax = st($themyarray['fax']);
 		$but_text = "Add ";
 	}
 	
@@ -226,6 +229,21 @@ if($_POST["contactsub"] == 1)
                 </ul>
             </td>
         </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="fax" id="fax" value="<?= $fax; ?>" class="phonemask field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="fax">Fax</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
         <tr>
             <td  align="center">
                 <span class="red">

@@ -80,7 +80,8 @@ if($_POST["usersub"] == 1)
                                 city = '".s_for($_POST["mailing_city"])."', 
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
-                                phone = '".s_for(num($_POST["mailing_phone"]))."'
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+				fax = '".s_for(num($_POST["mailing_fax"]))."'
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
 			form_update_all($_POST['ed']);
@@ -183,6 +184,7 @@ if($_POST["usersub"] == 1)
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                fax = '".s_for(num($_POST["mailing_fax"]))."',
                                 default_location=1,
  				docid='".$userid."',
                                 adddate=now(),
@@ -282,7 +284,7 @@ if($_POST["usersub"] == 1)
 <body>
 
     <?
-    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone from dental_users u 
+    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
 		LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 		where u.userid='".$_REQUEST["ed"]."'";
@@ -316,6 +318,7 @@ if($_POST["usersub"] == 1)
                 $mailing_state = $_POST['mailing_state'];
                 $mailing_zip = $_POST['mailing_zip'];
                 $mailing_phone = $_POST['mailing_phone'];
+		$mailing_fax = $_POST['mailing_fax'];
 
 		$status = $_POST['status'];
 		$use_patient_portal = $_POST['use_patient_portal'];
@@ -354,6 +357,7 @@ if($_POST["usersub"] == 1)
                 $mailing_state = st($themyarray['mailing_state']);
                 $mailing_zip = st($themyarray['mailing_zip']);
                 $mailing_phone = st($themyarray['mailing_phone']);
+		$mailing_fax = st($themyarray['mailing_fax']);
 
 		$status = st($themyarray['status']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
@@ -617,6 +621,15 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="tbox" />
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Mailing Fax 
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="tbox" />
+            </td>
+        </tr>
+
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

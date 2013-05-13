@@ -657,10 +657,6 @@ Solutions</small></span></p>
 
 function update_custom_release_form($id, $locid = null){
 
-$s = "SELECT fax from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
-$q = mysql_query($s);
-$r = mysql_fetch_assoc($q);
-
 $logo = get_logo($id);
 
 if($locid){
@@ -788,7 +784,7 @@ normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
 normal"></p>
 
 <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FAX</span></b><span
-style="font-size:12.0pt">: <b>'.$r['fax'].'</b></span></p>
+style="font-size:12.0pt">: <b>'.$loc_r['fax'].'</b></span></p>
 
 <p class=MsoNormal style="line-height:normal"><i><span style="font-size:12.0pt">I
 request and authorize the above named doctor or health care provider, or individual
@@ -3247,8 +3243,12 @@ function create_form_pdf($html, $filename, $title){
 
 
 function form_update_all($docid){
- 
-      update_custom_release_form($docid);
+
+	$sql = "SELECT id FROM dental_locations where docid='".mysql_real_escape_string($docid)."' AND default_location=1";
+	$q = mysql_query($sql);
+	$r = mysql_fetch_assoc($q); 
+      update_custom_release_form($docid, $r['id']);
+
       update_financial_agreement_medicare_form($docid);
       update_home_care_instructions_form($docid);
       update_non_dentist_of_record_release_form($docid);

@@ -238,6 +238,10 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
 
+$location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+$location_result = mysql_query($location_query);
+$location_info = mysql_fetch_assoc($location_result);
+
 
 // Get Company Name and Address
 $company_query = "SELECT c.* FROM companies c 
@@ -807,15 +811,15 @@ if ($_POST != array()) {
                 $search[] = "%company_addr%";
                 $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
 		$search[] = "%franchisee_fullname%";
-		$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
+		$replace[] = "<strong>" . $location_info['name'] . "</strong>";
 		$search[] = "%franchisee_lastname%";
-		$replace[] = "<strong>" . end(explode(" ", $franchisee_info['name'])) . "</strong>";
+		$replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
 		$search[] = "%franchisee_practice%";
-		$replace[] = "<strong>" . $franchisee_info['practice'] . "</strong>";
+		$replace[] = "<strong>" . $location_info['location'] . "</strong>";
 		$search[] = "%franchisee_phone%";
-		$replace[] = "<strong>" . $franchisee_info['phone'] . "</strong>";
+		$replace[] = "<strong>" . $location_info['phone'] . "</strong>";
 		$search[] = "%franchisee_addr%";
-		$replace[] = "<strong>" . nl2br($franchisee_info['address']) . "<br />" . $franchisee_info['city'] . ", " . $franchisee_info['state'] . " " . $franchisee_info['zip'] . "</strong>";
+		$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
 		$search[] = "%patient_fullname%";
 		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%patient_lastname%";
@@ -1244,15 +1248,15 @@ foreach ($letter_contacts as $key => $contact) {
                 $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
 
 	$search[] = "%franchisee_fullname%";
-	$replace[] = "<strong>" . $franchisee_info['name'] . "</strong>";
+	$replace[] = "<strong>" . $location_info['name'] . "</strong>";
 	$search[] = "%franchisee_lastname%";
-	$replace[] = "<strong>" . end(explode(" ", $franchisee_info['name'])) . "</strong>";
+	$replace[] = "<strong>" . end(explode(" ", $location_info['name'])) . "</strong>";
 	$search[] = "%franchisee_practice%";
-	$replace[] = "<strong>" . $franchisee_info['practice'] . "</strong>";
+	$replace[] = "<strong>" . $location_info['location'] . "</strong>";
 	$search[] = "%franchisee_phone%";
-	$replace[] = "<strong>" . $franchisee_info['phone'] . "</strong>";
+	$replace[] = "<strong>" . $location_info['phone'] . "</strong>";
 	$search[] = "%franchisee_addr%";
-	$replace[] = "<strong>" . nl2br($franchisee_info['address']) . "<br />" . $franchisee_info['city'] . ", " . $franchisee_info['state'] . " " . $franchisee_info['zip'] . "</strong>";
+	$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
 	$search[] = "%patient_fullname%";
 	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%patient_lastname%";

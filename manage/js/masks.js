@@ -18,6 +18,15 @@ $(document).ready(function(){
         if ((event.keyCode == 110 || event.keyCode == 190) && $(this).val().indexOf('.')>=0){
 		event.preventDefault();
 	}
+
+	
+
+	if(event.keyCode == 173 || event.keyCode == 109){
+	  if($(this).val().indexOf('-')>=0){
+		event.preventDefault();
+	  }
+	}
+
           // Allow: backspace, delete, tab, escape, and enter
         if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||
              // Allow: Ctrl+A

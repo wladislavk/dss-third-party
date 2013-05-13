@@ -438,11 +438,11 @@ function trigger_letter126($pid, $topatient, $md_referral_list, $md_list, $send_
         }
 }
 
-function trigger_letter130($pid, $topatient, $md_referral_list, $md_list, $send_method) {
-        $letterid = '130';
+function trigger_letter178($pid, $topatient, $md_referral_list, $md_list, $send_method) {
+        $letterid = '178';
         $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method);
         if (!is_numeric($letter)) {
-                print "Can't send letter 130: " . $letter;
+                print "Can't send letter 178: " . $letter;
                 die();
         } else {
                 ?>
@@ -553,8 +553,8 @@ if (isset($_POST['submit'])) {
                 case 126:
                         trigger_letter126($patientid, $topatient, $md_referral_list, $md_list, $send_method);
                         break;
-                case 130:
-                        trigger_letter130($patientid, $topatient, $md_referral_list, $md_list, $send_method);
+                case 178:
+                        trigger_letter178($patientid, $topatient, $md_referral_list, $md_list, $send_method);
                         break;
 
 

@@ -482,9 +482,20 @@ $title = "test";
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-	$filename = '/manage/letterpdfs/statement'.$_GET['pid'].'.pdf';
+	$filename = '/manage/letterpdfs/statement_'.$_GET['pid'].'_'.date('YmdHis').'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
+
+	$state_sql = "INSERT INTO dental_ledger_statement SET
+			producerid = '".mysql_real_escape_string($_SESSION['userid'])."',
+			filename = '".mysql_real_escape_string($filename)."',
+			service_date = CURDATE(),
+			entry_date = CURDATE(),
+			patientid = '".mysql_real_escape_string($_GET['pid'])."',
+			adddate = now(),
+			ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+	mysql_query($state_sql);
+
 ?>
 <script type="text/javascript">
   window.location = "<?= $filename; ?>";

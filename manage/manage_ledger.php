@@ -55,6 +55,18 @@ if($_REQUEST["delid"] != "")
 	<?
 	die();
 }
+if(isset($_REQUEST["delstatementid"]) && $_REQUEST["delstatementid"] != "")
+{
+  $sql = "DELETE FROM dental_ledger_statement WHERE id='".mysql_real_escape_string($_REQUEST['delstatementid'])."' AND patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+  mysql_query($sql);
+	  $msg = "Deleted Successfully";
+          ?>
+        <script type="text/javascript">
+                  window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&pid=<?=$_GET['pid'];?>";
+        </script>
+        <?
+        die();
+}
 if($_REQUEST["delclaimid"] != "")
 {
 	$sql = "SELECT * FROM dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
@@ -174,7 +186,8 @@ $sql = "select
 		dl.primary_claim_id,
 		'' as payer,
 		'' as payment_type,
-		di.status as claim_status
+		di.status as claim_status,
+		'' as filename
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -196,6 +209,7 @@ $sql = "select
                 dl.primary_claim_id,
 		dlp.payer,
 		dlp.payment_type,
+		'',
 		''
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
@@ -216,7 +230,8 @@ $sql = "select
                 dl.primary_claim_id,
 		tc.type,
 		'',
-		''	
+		'',
+                ''	
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -237,10 +252,30 @@ $sql = "select
 		'',
 		'',
 		'',
-		''	
+		'',
+                ''	
 	from dental_ledger_note n
 		JOIN dental_users p on n.producerid=p.userid
 			where n.patientid='".s_for($_GET['pid'])."'       
+  UNION
+        select 
+                'statement',
+                s.id,
+                s.service_date,
+                s.entry_date,
+		p.name,
+                'Ledger statement created (Click to view)',
+		'',               
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+		s.filename      
+        from dental_ledger_statement s
+                JOIN dental_users p on s.producerid=p.userid
+                        where s.patientid='".s_for($_GET['pid'])."'
   UNION
         select 
                 'note',
@@ -252,6 +287,7 @@ $sql = "select
                 '',
                 '',
                 n.private,
+                '',
                 '',
                 '',
                 '',
@@ -276,7 +312,8 @@ $sql = "select
 		i.insuranceid,
 		'',
 		'',
-		''
+		'',
+                ''
 	from dental_insurance i
 		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
 		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
@@ -380,9 +417,9 @@ return s;
                Claims Outstanding 
         </button>
 <?php } ?>	&nbsp;&nbsp;
-        <a href='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>' target="_blank" class="addButton">
+        <button onclick="Javascript: window.open('print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')" class="addButton">
                 Print Ledger
-        </a>
+        </button>
 &nbsp;&nbsp;
 	
 	<button onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?=$_GET['pid'];?>');" class="addButton">
@@ -393,7 +430,7 @@ return s;
                 Add Note 
         </button>
         &nbsp;&nbsp;
-        <button onclick="Javascript: window.location = 'ledger_statement.php?pid=<?=$_GET['pid'];?>'" class="addButton">
+        <button onclick="Javascript: window.open('ledger_statement.php?pid=<?=$_GET['pid'];?>')" class="addButton">
                Statement 
         </button>
         &nbsp;&nbsp;
@@ -480,10 +517,12 @@ return s;
 			$tr_class = "tr_active";
                         if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row status_'.$myarray['status']; }
 			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
+			if($myarray[0] == 'statement' && $myarray['filename']!=''){ $tr_class .= ' statement clickable_row'; }
 			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }
 		?>
 			<tr 
 			<?php if($myarray[0]=="claim"){ echo 'onclick="window.location=\'view_claim.php?claimid='.$myarray['ledgerid'].'&pid='.$_GET['pid'].'\'"'; } ?>
+			<?php if($myarray['filename']!=""){ echo 'onclick="window.location=\''.$myarray['filename'].'\'"'; } ?>
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
 				<td valign="top"
 				<?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
@@ -589,7 +628,7 @@ return s;
                                   <input type="checkbox" name="edit_mult[]" value="<?=$myarray["ledgerid"]; ?>" />
                                   <?php }elseif($myarray[0]=='note'){ ?>
  
-					<a href="Javascript:;" onclick="Javascript: loadPopup('edit_ledger_note.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;" onclick="javascript: loadPopup('edit_ledger_note.php?ed=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>');" class="editlink" title="EDIT">
                                                 Edit 
                                         </a>
                                   <?php }elseif($myarray[0]=='claim'){ ?>
@@ -608,7 +647,12 @@ return s;
                                                  Edit 
                                         </a>
 
-  				<?php } ?>
+  				<?php }elseif($myarray[0]=='statement'){ ?>
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delstatementid=<?=$myarray["ledgerid"];?>&pid=<?=$_GET['pid'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                                                 Delete 
+                                        </a>
+
+				<?php } ?>
 				</td>
 			</tr>
 	<? 	}

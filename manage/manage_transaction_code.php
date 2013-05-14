@@ -180,10 +180,6 @@ if($_POST['sortsub'] == 1)
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
 						Edit
 					</a>
-                    
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["transaction_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						Delete
-					</a>
 				</td>
 			</tr>
 	<? 	}

@@ -16,7 +16,7 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
-$rec_disp = 2;
+$rec_disp = 10;
 
 if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];

@@ -61,8 +61,28 @@ $sql = "select
 	where p.docid='".$_SESSION['docid']."'
                 AND p.referred_source=".DSS_REFERRED_PATIENT."
 		GROUP BY dp.patientid
-  ORDER BY lastname ASC, firstname ASC
 ";
+switch($_GET['sort']){
+  case 'type':
+    $sql .= " ORDER BY referral_type ".$_GET['sortdir'];
+    break;
+  case 'total':
+    $sql .= " ORDER BY num_ref ".$_GET['sortdir'];
+    break;
+  case 'thirty':
+    $sql .= " ORDER BY num_ref30 ".$_GET['sortdir'];
+    break;
+  case 'sixty':
+    $sql .= " ORDER BY num_ref60 ".$_GET['sortdir'];
+    break;
+  case 'ninty':
+    $sql .= " ORDER BY num_ref90 ".$_GET['sortdir'];
+    break;
+  default:
+    $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
+    break;
+}
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -110,29 +130,29 @@ background:#999999;
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
 		</TD>        
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Name
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+			<a href="manage_referredby.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
-		<td valign="top" class="col_head" width="30%">
-			Physician Type	
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+			<a href="manage_referredby.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Physician Type</a>	
 		</td>
-		<td valign="top" class="col_head" width="10%">
-			Total Referrals	
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'total')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_referredby.php?sort=total&sortdir=<?php echo ($_REQUEST['sort']=='total'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Total Referrals</a>
 		</td>
-                <td valign="top" class="col_head" width="10%">
-                        30 Days
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_referredby.php?sort=thirty&sortdir=<?php echo ($_REQUEST['sort']=='thirty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">30 Days</a>
                 </td>
-                <td valign="top" class="col_head" width="10%">
-                        60 Days 
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_referredby.php?sort=sixty&sortdir=<?php echo ($_REQUEST['sort']=='sixty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">60 Days</a> 
                 </td>
-                <td valign="top" class="col_head" width="10%">
-                        90 Days
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_referredby.php?sort=ninty&sortdir=<?php echo ($_REQUEST['sort']=='ninty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">90 Days</a>
                 </td>
                 <td valign="top" class="col_head" width="10%">
                         Notes

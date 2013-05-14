@@ -916,5 +916,6 @@ function format_phone($num, $a){
 
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
 

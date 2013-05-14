@@ -45,16 +45,22 @@ if(isset($_POST["practice_submit"]))
         state='".mysql_real_escape_string($_POST['state'])."',
         zip='".mysql_real_escape_string($_POST['zip'])."',
         phone='".mysql_real_escape_string($_POST['phone'])."',
-	fax='".mysql_real_escape_string($_POST['fax'])."',
-        mailing_practice='".mysql_real_escape_string($_POST['mailing_practice'])."',
-        mailing_name='".mysql_real_escape_string($_POST['mailing_name'])."',
-        mailing_address='".mysql_real_escape_string($_POST['mailing_address'])."',
-        mailing_city='".mysql_real_escape_string($_POST['mailing_city'])."',
-        mailing_state='".mysql_real_escape_string($_POST['mailing_state'])."',
-        mailing_zip='".mysql_real_escape_string($_POST['mailing_zip'])."',
-        mailing_phone='".mysql_real_escape_string($_POST['mailing_phone'])."'
+	fax='".mysql_real_escape_string($_POST['fax'])."'
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
+
+                        $loc_sql = "UPDATE dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                fax = '".s_for(num($_POST["mailing_fax"]))."'
+                                where default_location=1 AND docid='".$_SESSION["docid"]."'";
+                        mysql_query($loc_sql);
+
 form_update_all($_SESSION['docid']);
 }
 
@@ -173,6 +179,11 @@ $num_custom=mysql_num_rows($my);
   $user = mysql_fetch_assoc($u_q);
 
   $p_sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+    $p_sql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
+                LEFT JOIN dental_user_company c ON u.userid = c.userid
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+                where u.userid='".mysql_real_escape_string($_SESSION["docid"])."'";
+
   $p_q = mysql_query($p_sql);
   $practice = mysql_fetch_assoc($p_q);
 
@@ -373,6 +384,11 @@ $num_custom=mysql_num_rows($my);
     <label>Mailing Phone:</label>
     <input class="value extphonemask" name="mailing_phone" value="<?= $practice['mailing_phone']; ?>" />
   </div>
+  <div class="detail">
+    <label>Mailing Fax:</label>
+    <input class="value phonemask" name="mailing_fax" value="<?= $practice['mailing_fax']; ?>" />
+  </div>
+
   <div class="detail">
     <label>&nbsp;</label>
 	<input type="submit" name="practice_submit" value="Update Practice" />

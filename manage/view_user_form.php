@@ -6,11 +6,16 @@
   require_once 'includes/general_functions.php';
   require_once 'includes/constants.inc';
 if($_GET['did']==$_SESSION['docid']){
-  $filename = "q_file/".$_GET['file']."_".$_GET['did'].".pdf";
+  $loc = (isset($_GET['locid']))?$_GET['locid'].'_':'';
+  $filename = "q_file/".$_GET['file']."_".$loc.$_GET['did'].".pdf";
   if($_GET['file'] == "user_record_release"){ 
     $output = "record_release";
     if(!file_exists($filename)){
-      update_custom_release_form($_GET['did']);
+	if(isset($_GET['locid'])){
+          update_custom_release_form($_GET['did'], $_GET['locid']);
+	}else{
+          update_custom_release_form($_GET['did']);
+	}
     }
 
   }elseif($_GET['file'] == "financial_agreement_medicare"){
@@ -22,19 +27,31 @@ if($_GET['did']==$_SESSION['docid']){
   }elseif($_GET['file'] == "home_care_instructions"){
     $output = "home_care_instructions";
     if(!file_exists($filename)){
-      update_home_care_instructions_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_home_care_instructions_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_home_care_instructions_form($_GET['did']);
+      }
     }
 
   }elseif($_GET['file'] == "non_dentist_of_record_release"){
     $output = "non_dentist_of_record_release";
     if(!file_exists($filename)){
-      update_non_dentist_of_record_release_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_non_dentist_of_record_release_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_non_dentist_of_record_release_form($_GET['did']);
+      }
     }
 
   }elseif($_GET['file'] == "sleep_recorder_release"){
     $output = "sleep_recorder_release";
     if(!file_exists($filename)){
-      update_sleep_recorder_release_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_sleep_recorder_release_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_sleep_recorder_release_form($_GET['did']);
+      }
     }
   }elseif($_GET['file'] == "affidavit_for_cpap_intolerance"){
     $output = "affidavit_for_cpap_intolerance";

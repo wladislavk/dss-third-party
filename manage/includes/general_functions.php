@@ -86,7 +86,9 @@ function uploadImage($image, $file_path, $profile = false){
 
 function sendUpdatedEmail($id, $new, $old, $by){
 if(trim($new) != trim($old)){
-  $sql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
+  $sql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+	where p.patientid='".mysql_real_escape_string($id)."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
   $n = $r['mailing_phone'];

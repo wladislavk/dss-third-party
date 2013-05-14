@@ -2,12 +2,28 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
+include "../includes/general_functions.php";
+?>
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+
+<script type="text/javascript" src="../js/masks.js"></script> 
+<?php
 if($_POST["contactsub"] == 1)
 {
 
 	if($_POST["ed"] != "")
 	{
-		$ed_sql = "update dental_locations set location = '".s_for($_POST["location"])."' where id='".$_POST["ed"]."'";
+		$ed_sql = "update dental_locations set 
+				location = '".mysql_real_escape_string($_POST["location"])."', 
+				name = '".mysql_real_escape_string($_POST["name"])."',
+				address = '".mysql_real_escape_string($_POST["address"])."',
+                                city = '".mysql_real_escape_string($_POST["city"])."',
+                                state = '".mysql_real_escape_string($_POST["state"])."',
+                                zip = '".mysql_real_escape_string($_POST["zip"])."',
+                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
+				fax = '".mysql_real_escape_string(num($_POST["fax"]))."'
+				where id='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		//echo $ed_sql.mysql_error();
@@ -23,7 +39,15 @@ if($_POST["contactsub"] == 1)
 	else
 	{
 	
-		$ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."', docid='".$_POST['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		$ins_sql = "insert into dental_locations set location = '".s_for($_POST["location"])."',
+                                name = '".mysql_real_escape_string($_POST["name"])."',
+                                address = '".mysql_real_escape_string($_POST["address"])."',
+                                city = '".mysql_real_escape_string($_POST["city"])."',
+                                state = '".mysql_real_escape_string($_POST["state"])."',
+                                zip = '".mysql_real_escape_string($_POST["zip"])."',
+                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."',
+                                fax = '".mysql_real_escape_string(num($_POST["fax"]))."',
+				 docid='".$_POST['docid']."', adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		
 		$msg = "Added Successfully";
@@ -59,11 +83,24 @@ if($_POST["contactsub"] == 1)
 	if($msg != '')
 	{
 		$location = $_POST['location'];
+		$name = $_POST['name'];
+		$address = $_POST['address'];
+                $city = $_POST['city'];
+                $state = $_POST['state'];
+                $zip = $_POST['zip'];
+                $phone = $_POST['phone'];
+		$fax = $_POST['fax'];
 	}
 	else
 	{
 		$location = st($themyarray['location']);
-		
+		$name = st($themyarray['name']);
+		$address = st($themyarray['address']);
+                $city = st($themyarray['city']);
+                $state = st($themyarray['state']);
+                $zip = st($themyarray['zip']);
+                $phone = st($themyarray['phone']);
+		$fax = st($themyarray['fax']);
 		$but_text = "Add ";
 	}
 	
@@ -108,6 +145,105 @@ if($_POST["contactsub"] == 1)
                 </ul>
             </td>
         </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="name" id="name" value="<?= $name; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="name">Name</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="address" id="address" value="<?= $address; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="address">Address</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="city" id="city" value="<?= $city; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="city">City</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="state" id="state" value="<?= $state; ?>" class="field text addr tbox" maxlength="2" tabindex="1" style="width:300px;" >
+                                <label for="state">State</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="zip" id="zip" value="<?= $zip; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="zip">Zip</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="phone" id="phone" value="<?= $phone; ?>" class="extphonemask field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="phone">Phone</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                                <ul>
+                    <li id="foli8" class="complex">
+                        <div>
+                                <span>
+                                <input type="text" name="fax" id="fax" value="<?= $fax; ?>" class="phonemask field text addr tbox" tabindex="1" style="width:300px;" >
+                                <label for="fax">Fax</label>
+                            </span>
+                       </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
         <tr>
             <td  align="center">
                 <span class="red">

@@ -76,7 +76,7 @@ $my=mysql_query($sql) or die(mysql_error());
 							<span id="note_edit_<?= $myarray['notesid'];?>">
                                                         <? if(st($myarray["signed_id"]) == '') { ?>
                                                                 Status: <span style="font-size:14px;">Unsigned</span>
-                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>')">Edit</a>
+                                                                <a href="#" onclick="loadPopup('add_notes.php?pid=<?= $_GET['pid']; ?>&ed=<?= $myarray['notesid']; ?>');return false;">Edit</a>
 								<?php if($myarray["docid"]==$_SESSION['userid']){ ?>
 								/
 								<a href="dss_summ.php?pid=<?= $_GET['pid']; ?>&sid=<?= $myarray['notesid'];?>&addtopat=1" onclick="return confirm('This progress note will become a legally valid part of the patient\'s chart; no further changes can be made after saving. Proceed?');">Sign</a>

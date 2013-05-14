@@ -54,7 +54,7 @@ if($_REQUEST['goto']!=''){
                                 if($_REQUEST['goto']=='flowsheet'){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='letter'){
-                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                        $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
                                 }

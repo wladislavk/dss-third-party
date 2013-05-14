@@ -123,7 +123,7 @@ if($_REQUEST['goto']!=''){
                                 if($_REQUEST['goto']=='flowsheet'){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='letter'){
-                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                        $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
                                 }
@@ -1520,9 +1520,6 @@ foreach ($letter_contacts as $key => $contact) {
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<?php if($numletters > 1): ?>
-		<input type="submit" style="display:none;" name="duplicate_letter[<?=$key?>]" class="addButton edit_letter<?=$cur_letter_num?>" value="Duplicate" />
-		<?php endif; ?>
 		<!--&nbsp;&nbsp;&nbsp;&nbsp;
 		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?=$_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >
 			Print Letter 
@@ -1544,6 +1541,7 @@ foreach ($letter_contacts as $key => $contact) {
 		<tr>
 			<td valign="top">
 				<div id="letter<?=$cur_letter_num?>">
+						
 				<?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
 				</div>
 				<input type="hidden" name="new_template[<?=$cur_letter_num?>]" value="<?=preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
@@ -1696,7 +1694,7 @@ loadPopup("letter_approve.php?id=<?=$saveletterid; ?>&pid=<?= $_GET['pid']; ?>&b
 				if($_REQUEST['goto']=='flowsheet'){
 					$page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
 				}elseif($_REQUEST['goto']=='letter'){
-                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                        $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
                                 }
@@ -1733,7 +1731,7 @@ if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
                                 if($_REQUEST['goto']=='flowsheet'){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='letter'){
-                                        $page = 'patient_letters.php?pid='.$_GET['pid'].'&addtopat=1';
+                                        $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }
 
                         ?>

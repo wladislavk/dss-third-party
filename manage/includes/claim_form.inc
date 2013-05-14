@@ -9,17 +9,6 @@ $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true :
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
 
 
-function format_phone($num, $a){
-	$num = ereg_replace("[^0-9]", "", $num);
-	preg_match('/([0-1]*)(.*)/',$num, $m);
-	$num = $m[2];
-  if($a){
-	return substr($num, 0, 3);
-  }else{
-	return substr($num,3);
-  }
-  return $num;
-}
 
 //confirm ledger transactions and make sure they haven't changed.
 function confirm_ledger_trxns(){

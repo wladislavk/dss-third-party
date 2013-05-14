@@ -17,13 +17,6 @@
                 city = '".mysql_real_escape_string($_POST['city'])."',
                 state = '".mysql_real_escape_string($_POST['state'])."',
                 zip = '".mysql_real_escape_string($_POST['zip'])."',
-		mailing_practice = '".mysql_real_escape_string($_POST['mailing_practice'])."',
-                mailing_name = '".mysql_real_escape_string($_POST['mailing_name'])."',
-                mailing_phone = '".mysql_real_escape_string($_POST['mailing_phone'])."',
-                mailing_address = '".mysql_real_escape_string($_POST['mailing_address'])."',
-                mailing_city = '".mysql_real_escape_string($_POST['mailing_city'])."',
-                mailing_state = '".mysql_real_escape_string($_POST['mailing_state'])."',
-                mailing_zip = '".mysql_real_escape_string($_POST['mailing_zip'])."',
 		npi = '".mysql_real_escape_string($_POST['npi'])."',
                 medicare_npi = '".mysql_real_escape_string($_POST['medicare_npi'])."',
                 medicare_ptan = '".mysql_real_escape_string($_POST['medicare_ptan'])."',
@@ -40,8 +33,23 @@
 	}	
         $sql .= " WHERE userid='".mysql_real_escape_string($_POST['userid'])."'
                 ";
-echo $sql;
+//echo $sql;
         $q = mysql_query($sql);
+                        $loc_sql = "INSERT INTO dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                fax = '".s_for(num($_POST["fax"]))."',
+                                default_location=1,
+                                docid='".$_POST['userid']."',
+                                adddate=now(),
+                                ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                        mysql_query($loc_sql);
+
 		$userid = mysql_insert_id();
                         $course_sql = "INSERT INTO users set
                                         name = '".mysql_real_escape_string($_POST["username"])."',

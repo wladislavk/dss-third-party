@@ -163,7 +163,9 @@ function sendRegEmail($id, $e, $l, $old_email=''){
                 mysql_query($ins_sql);
 		$recover_hash = $r['recover_hash'];
 	}
-  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+  $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+	where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['mailing_phone'];
@@ -259,7 +261,9 @@ $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' .
 // Sends reminder email to patient
 */
 function sendRemEmail($id, $e){
-  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid where p.patientid='".mysql_real_escape_string($id)."'";
+  $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+	where p.patientid='".mysql_real_escape_string($id)."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['mailing_phone'];

@@ -142,7 +142,7 @@ Solutions</small></span></p>
 
 }
 
-function update_home_care_instructions_form($id){
+function update_home_care_instructions_form($id, $locid = null){
 
 
 $logo = get_logo($id);
@@ -150,6 +150,17 @@ $logo = get_logo($id);
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
+
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
 
 $html = '
 <html>
@@ -277,7 +288,7 @@ floss and brush your teeth before inserting the device. </span></p>
 
 <p class=MsoNormal><b><i><span style=\'font-family:"Arial","sans-serif"\'>If you
 have any questions regarding your treatment please contact our office at <span
-style=\'background:yellow\'>'.format_phone($r['mailing_phone']).'</span>.</span></i></b></p>
+style=\'background:yellow\'>'.format_phone($loc_r['phone']).'</span>.</span></i></b></p>
 
 <p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
 8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
@@ -300,13 +311,17 @@ Solutions</small></span></p>
 ';
 
         $title = "Home Care Instructions";
-        $filename = "home_care_instructions_".$id.".pdf";
+        if($locid){
+          $filename = "home_care_instructions_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "home_care_instructions_".$id.".pdf";
+        }
 
         create_form_pdf($html, $filename, $title);
 
 }
 
-function update_non_dentist_of_record_release_form($id){
+function update_non_dentist_of_record_release_form($id, $locid = null){
 
 
 $logo = get_logo($id);
@@ -314,6 +329,17 @@ $logo = get_logo($id);
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
+
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
 
 $html = '
 <html>
@@ -439,18 +465,18 @@ style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>NON DENTIST-OF-RECOR
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>RELEASE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal align=center style=\'text-align:center\'><b>
-'.$r['mailing_practice'].'
+'.$loc_r['location'].'
 </b></p>
 
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I am seeking treatment with
 a sleep orthotic appliance only.  I understand that I am not a dental
-patient-of-record with <b>'.$r['mailing_name'].'</b>.
+patient-of-record with <b>'.$loc_r['name'].'</b>.
 </span></p>
 
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>The importance of regular
-dental care has been explained to me and I understand that <b>'.$r['mailing_name'].'</b> will not be responsible
+dental care has been explained to me and I understand that <b>'.$loc_r['name'].'</b> will not be responsible
 for providing my preventative or emergency dental needs. At this time, I choose
 to have my routine and necessary dental care completed in another office.  </span></p>
 
@@ -496,19 +522,34 @@ Solutions</small></span></p>
 ';
 
         $title = "Non-dentist of Record Release";
-        $filename = "non_dentist_of_record_release_".$id.".pdf";
+        if($locid){
+          $filename = "non_dentist_of_record_release_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "non_dentist_of_record_release_".$id.".pdf";
+        }
 
         create_form_pdf($html, $filename, $title);
 
 }
 
-function update_sleep_recorder_release_form($id){
+function update_sleep_recorder_release_form($id, $locid = null){
 
 $logo = get_logo($id);
 
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
+
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
 
 $html = '
 <html>
@@ -580,10 +621,10 @@ RELEASE FORM</span></b></h2>
 </td></tr></table>
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>I,
-____________________________, have been advised by '.$r['mailing_name'].'<i><span style=\'color:red\'> </span></i>to take
+____________________________, have been advised by '.$loc_r['name'].'<i><span style=\'color:red\'> </span></i>to take
 home a sleep recorder that will determine my treatment progress after using my
 dental device. I understand that I am assuming responsibility for the safe
-return of the sleep recorder, valued at $_________.  I agree to give '.$r['mailing_name'].'<i><span style=\'color:red\'> </span></i>a
+return of the sleep recorder, valued at $_________.  I agree to give '.$loc_r['name'].'<i><span style=\'color:red\'> </span></i>a
 credit card number to be charged <b><i>only if the sleep recorder is not
 returned or is returned damaged due to neglect or physical abuse.  </i></b>I
 agree to return the sleep recorder on the date noted below.  I understand that
@@ -648,7 +689,11 @@ Solutions</small></span></p>
 ';
 
         $title = "Sleep Recorder Release";
-        $filename = "sleep_recorder_release_".$id.".pdf";
+        if($locid){
+          $filename = "sleep_recorder_release_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "sleep_recorder_release_".$id.".pdf";
+        }
 
         create_form_pdf($html, $filename, $title);
 
@@ -3250,9 +3295,9 @@ function form_update_all($docid){
       update_custom_release_form($docid, $r['id']);
 
       update_financial_agreement_medicare_form($docid);
-      update_home_care_instructions_form($docid);
-      update_non_dentist_of_record_release_form($docid);
-      update_sleep_recorder_release_form($docid);
+      update_home_care_instructions_form($docid, $r['id']);
+      update_non_dentist_of_record_release_form($docid, $r['id']);
+      update_sleep_recorder_release_form($docid, $r['id']);
       update_affidavit_for_cpap_intolerance_form($docid);
       update_device_titration_ema_form($docid);
       update_device_titration_form($docid);

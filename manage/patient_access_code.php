@@ -27,8 +27,10 @@ if(isset($_POST['email_but'])){
                 $recover_hash = $pat['recover_hash'];
         }
 
-  $usql = "SELECT u.mailing_phone, u.user_type, u.logo, u.mailing_practice, u.mailing_address, u.mailing_city, u.mailing_state, u.mailing_zip from dental_users u inner join dental_patients p
- on u.userid=p.docid where p.patientid='".mysql_real_escape_string($_POST['pid'])."'";
+  $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p
+ on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+	where p.patientid='".mysql_real_escape_string($_POST['pid'])."'";
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['mailing_phone'];

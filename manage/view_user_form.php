@@ -27,19 +27,31 @@ if($_GET['did']==$_SESSION['docid']){
   }elseif($_GET['file'] == "home_care_instructions"){
     $output = "home_care_instructions";
     if(!file_exists($filename)){
-      update_home_care_instructions_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_home_care_instructions_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_home_care_instructions_form($_GET['did']);
+      }
     }
 
   }elseif($_GET['file'] == "non_dentist_of_record_release"){
     $output = "non_dentist_of_record_release";
     if(!file_exists($filename)){
-      update_non_dentist_of_record_release_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_non_dentist_of_record_release_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_non_dentist_of_record_release_form($_GET['did']);
+      }
     }
 
   }elseif($_GET['file'] == "sleep_recorder_release"){
     $output = "sleep_recorder_release";
     if(!file_exists($filename)){
-      update_sleep_recorder_release_form($_GET['did']);
+      if(isset($_GET['locid'])){
+        update_sleep_recorder_release_form($_GET['did'], $_GET['locid']);
+      }else{
+        update_sleep_recorder_release_form($_GET['did']);
+      }
     }
   }elseif($_GET['file'] == "affidavit_for_cpap_intolerance"){
     $output = "affidavit_for_cpap_intolerance";

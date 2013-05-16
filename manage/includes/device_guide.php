@@ -51,8 +51,32 @@ parent.disablePopup1();
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
+<style type="text/css">
+  .slider{
+    float: left;
+    width: 80%;
+    margin-right: 5%;
+  }
+
+</style>
 </head>
 <body>
+
+<div style="margin-left: 30px;">
+<a href="#" onclick="$('#instructions').show('200');$(this).hide();return false;" id="ins_show">Instructions</a>
+<div id="instructions" style="display:none;">
+  <strong>Instructions</strong> <a href="#" onclick="$('#instructions').hide('200');$('#ins_show').show();">hide</a>
+  <ol>
+    <li>Evaluate pt for each category using sliding bar</li>
+    <li>Choose the three most important categories</li>
+    <li>Click on Device C Lect</li>
+    <li>Reset and change ars or Save to pt chart</li>
+  </ol>
+</div>
+
+</div>
+</div>
+
 <?php
   $s = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
   $q = mysql_query($s);
@@ -64,14 +88,15 @@ parent.disablePopup1();
 $s_sql = "select * FROM dental_device_guide_settings order by rank ASC";
 $s_q = mysql_query($s_sql);
 ?>
-<form action="device_guide_results.php" method="post" style="width:80%; margin:0 auto;">
+<form action="device_guide_results.php" method="post" id="device_form" style="width:28%; margin-left:2%; float:left;">
 <input type="hidden" name="id" value="<?= $_GET['id']; ?>" />
 <input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
     <?php while($s_r = mysql_fetch_assoc($s_q)){ ?>
       <div id="setting_<?= $s_r['id']; ?>" style="padding: 5px 0;">
         <strong style="padding: 5px 0;display:block;"><?= $s_r['name']; ?></strong>
 	<?php if($s_r['setting_type']==DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
-<div id="slider_<?= $s_r['id'];?>"></div>
+<div class="slider" id="slider_<?= $s_r['id'];?>"></div>
+<input type="checkbox" class="imp_chk" value="1" name="setting_imp_<?= $s_r['id'];?>" id="setting_imp_<?= $s_r['id'];?>" />
 <div id="label_<?= $s_r['id'];?>" style="padding: 5px 0;display: block;"></div>
 <input type="hidden" name="setting<?= $s_r['id'];?>" id="input_opt_<?= $s_r['id'];?>" />
 <?php
@@ -107,6 +132,61 @@ $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
     <?php } ?>
     <input type="submit" name="submit" value="Submit" />
 </form>
+
+
+<div style="float:left; width: 15%;">
+  <a href="#" style="border:1px solid #000; padding: 5px;" class="device_submit">Device C Lect</a>
+</div>
+
+
+<div style="float:left; width:50%;">
+
+<ul id="results">
+
+
+</ul>
+</div>
+
+<script type="text/javascript">
+
+$('.imp_chk').click( function(){
+  if($(this).is(':checked')){
+    if($('.imp_chk:checked').length > 3){
+      $(this).prop("checked", false);
+    }
+  }
+});
+
+$('.device_submit').click(function(){
+
+$.ajax({
+                                        url: "device_guide_results.php",
+                                        type: "post",
+                                        data: $('#device_form').serialize(),
+                                        success: function(data){
+						$('#results li').remove();
+                                                var r = $.parseJSON(data);
+						$.each( r,  function(i, v){
+							$('#results').append("<li>"+v['name']+" ("+ v.value +")</li>");
+						});
+
+
+
+                                                if(r.error){
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+
+});
+
+
+</script>
+
 </body>
 </html>
 

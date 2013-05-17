@@ -2,7 +2,8 @@
 session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
-
+require_once "../includes/constants.inc";
+/*
 if($_POST["mult_devicesub"] == 1)
 {
 	$op_arr = split("\n",trim($_POST['device']));
@@ -32,7 +33,7 @@ if($_POST["mult_devicesub"] == 1)
 	<?
 	die();
 }
-
+*/
 if($_POST["devicesub"] == 1)
 {
 	$sel_check = "select * from dental_device where device = '".s_for($_POST["device"])."' and deviceid <> '".s_for($_POST['ed'])."'";
@@ -63,6 +64,32 @@ if($_POST["devicesub"] == 1)
 		{
 			$ed_sql = "update dental_device set device = '".s_for($_POST["device"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where deviceid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+
+
+  $set_sql = "SELECT * FROM dental_device_guide_settings";
+  $set_q = mysql_query($set_sql);
+  while($set_r = mysql_fetch_assoc($set_q)){
+    $val = $_POST['setting_'.$set_r['id']];
+    $check_sql = "SELECT id FROM dental_device_guide_device_setting ds 
+        WHERE device_id='".mysql_real_escape_string($_POST['ed'])."' AND setting_id='".mysql_real_escape_string($set_r['id'])."'";
+    $check_q = mysql_query($check_sql);
+    $check_r = mysql_fetch_assoc($check_q);
+    if($check_r['id'] == ''){
+    $s = "INSERT INTO dental_device_guide_device_setting SET
+        device_id = '".mysql_real_escape_string($_POST['ed'])."',
+        setting_id = '".mysql_real_escape_string($set_r['id'])."',
+        value = '".mysql_real_escape_string($val)."',
+                                adddate=now(),
+                                ip_address='".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($s);
+    }else{
+      $s = "UPDATE dental_device_guide_device_setting SET
+        value = '".mysql_real_escape_string($val)."'
+        WHERE id='".mysql_real_escape_string($check_r['id'])."'";
+      mysql_query($s);
+    }
+  }
+
 			
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -78,6 +105,20 @@ if($_POST["devicesub"] == 1)
 		{
 			$ins_sql = "insert into dental_device set device = '".s_for($_POST["device"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
+                        $d_id = mysql_insert_id();
+
+  $set_sql = "SELECT * FROM dental_device_guide_settings";
+  $set_q = mysql_query($set_sql);
+  while($set_r = mysql_fetch_assoc($set_q)){
+    $val = $_POST['setting_'.$set_r['id']];
+    $s = "INSERT INTO dental_device_guide_device_setting SET
+        device_id = '".mysql_real_escape_string($d_id)."',
+        setting_id = '".mysql_real_escape_string($set_r['id'])."',
+        value = '".mysql_real_escape_string($val)."',
+                                adddate=now(),
+                                ip_address='".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($s);
+  }
 			
 			$msg = "Added Successfully";
 			?>
@@ -186,6 +227,32 @@ if($_POST["devicesub"] == 1)
             	<textarea class="tbox" name="description" style="width:100%;"><?=$description;?></textarea>
             </td>
         </tr>
+<?php
+  $set_sql = "SELECT s.*, ds.value FROM dental_device_guide_settings s
+                LEFT JOIN dental_device_guide_device_setting ds ON s.id = ds.setting_id AND ds.device_id='".mysql_real_escape_string($_GET['ed'])."'";
+  $set_q = mysql_query($set_sql);
+  while($set_r = mysql_fetch_assoc($set_q)){
+    ?>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                <?= $set_r['name']; ?>
+                                        <?php if($set_r["setting_type"] == DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
+                                                (<?= $set_r['range_start']; ?> - <?= $set_r['range_end']; ?>)
+                                        <?php } ?>
+            </td>
+            <td valign="top" class="frmdata">
+                <?php if($set_r["setting_type"] == DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
+                  <input id="setting_<?= $set_r['id']; ?>" type="text" name="setting_<?= $set_r['id']; ?>" value="<?=$set_r['value'];?>" class="tbox" />
+                <?php }else{ ?>
+                  <input type="checkbox" <?= ($set_r['value']==1)?'checked="checked"':''; ?> id="setting_<?= $set_r['id']; ?>" type="text" name="setting_<?= $set_r['id']; ?>" value="1" />
+                <?php } ?>
+            </td>
+        </tr>
+
+    <?
+  }
+
+?>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
@@ -204,7 +271,10 @@ if($_POST["devicesub"] == 1)
     </table>
     </form>
     
-    <? if($_GET['ed'] == '')
+    <? 
+
+/*
+if($_GET['ed'] == '')
 	{?>
     	<div class="red" align="center">
     		<b>--------------------------------- OR ---------------------------------</b>
@@ -236,6 +306,7 @@ if($_POST["devicesub"] == 1)
         </table>
         </form>
     
-    <? }?>
+    <? }
+*/ ?>
 </body>
 </html>

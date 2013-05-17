@@ -7,7 +7,7 @@ require_once('../includes/general_functions.php');
 
   $d_array = array();
 
-  $d_sql = "SELECT d.id, d.name FROM dental_device_guide_devices d";
+  $d_sql = "SELECT d.deviceid id, d.device name FROM dental_device d";
   $d_q = mysql_query($d_sql);
   while($d = mysql_fetch_assoc($d_q)){
     $tot = 0;

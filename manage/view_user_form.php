@@ -98,6 +98,33 @@ if($_GET['did']==$_SESSION['docid']){
     if(!file_exists($filename)){
       update_the_dss_experience_form($_GET['did']);
     }
+  }elseif($_GET['file'] == "patient_notices"){
+    $output = "patient_notices";
+    if(!file_exists($filename)){
+        if(isset($_GET['locid'])){
+          update_patient_notices_form($_GET['did'], $_GET['locid']);
+        }else{
+          update_patient_notices_form($_GET['did']);
+	}
+    }
+  }elseif($_GET['file'] == "new_patient"){
+    $output = "new_patient";
+    if(!file_exists($filename)){
+        if(isset($_GET['locid'])){
+          update_new_patient_form($_GET['did'], $_GET['locid']);
+	}else{
+          update_new_patient_form($_GET['did']);
+	}
+    }
+  }elseif($_GET['file'] == "patient_questionnaire"){
+    $output = "patient_questionnaire";
+    if(!file_exists($filename)){
+        if(isset($_GET['locid'])){
+          update_patient_questionnaire_form($_GET['did'], $_GET['locid']);
+	}else{
+          update_patient_questionnaire_form($_GET['did']);
+	}
+    }
   }
 
 

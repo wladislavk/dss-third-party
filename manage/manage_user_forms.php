@@ -233,6 +233,77 @@ background:#999999;
                                         </a>
                                 </td>
                         </tr>
+                        <tr class="tr_active">
+                                <td valign="top">
+                                        Patient Notices
+                                </td>
+                                <td valign="top">
+						<?php
+                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                                                $loc_q = mysql_query($loc_sql);
+                                                $num_loc = mysql_num_rows($loc_q);
+						if($num_loc > 1){
+                                                while($loc_r = mysql_fetch_assoc($loc_q)){
+                                                ?>
+                                        <a href="view_user_form.php?file=patient_notices&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View <?= $loc_r['location']; ?><br />
+                                        </a>
+                                                        <?php } ?>
+                                                <?php }else{ ?>
+                                        <a href="view_user_form.php?file=patient_notices&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View
+                                        </a>
+                                                <?php } ?>
+
+                                </td>
+                        </tr>
+                        <tr class="tr_active">
+                                <td valign="top">
+                                        New Patient Form 
+                                </td>
+                                <td valign="top">
+                                                <?php
+                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                                                $loc_q = mysql_query($loc_sql);
+                                                $num_loc = mysql_num_rows($loc_q);
+                                                if($num_loc > 1){
+                                                while($loc_r = mysql_fetch_assoc($loc_q)){
+                                                ?>
+                                        <a href="view_user_form.php?file=new_patient&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View <?= $loc_r['location']; ?><br />
+                                        </a>
+                                                        <?php } ?>
+                                                <?php }else{ ?>
+                                        <a href="view_user_form.php?file=new_patient&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View
+                                        </a>
+                                                <?php } ?>
+                                </td>
+                        </tr>
+                        <tr class="tr_active">
+                                <td valign="top">
+                                        Patient Questionnaire
+                                </td>
+                                <td valign="top">
+                                                <?php
+                                                $loc_sql = "SELECT id, location FROM dental_locations WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+                                                $loc_q = mysql_query($loc_sql);
+                                                $num_loc = mysql_num_rows($loc_q);
+                                                if($num_loc > 1){
+                                                while($loc_r = mysql_fetch_assoc($loc_q)){
+                                                ?>
+                                        <a href="view_user_form.php?file=patient_questionnaire&locid=<?= $loc_r['id']; ?>&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View <?= $loc_r['location']; ?><br />
+                                        </a>
+                                                        <?php } ?>
+                                                <?php }else{ ?>
+                                        <a href="view_user_form.php?file=patient_questionnaire&did=<?= $_SESSION['docid']; ?>" class="editlink" title="EDIT">
+                                                View
+                                        </a>
+                                                <?php } ?>
+                                </td>
+                        </tr>
+
 </table>
 </form>
 

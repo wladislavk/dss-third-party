@@ -3243,6 +3243,217 @@ replacement.</span><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif
 
 }
 
+function update_patient_notices_form($id, $locid = null){
+
+$logo = get_logo($id);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+
+$html = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Cambria;
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"Adobe Garamond Pro";
+	panose-1:2 2 5 2 6 5 6 2 4 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	line-height:98%;
+	text-autospace:ideograph-other;
+	font-size:10.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:.5in;
+	line-height:100%;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+span.HeaderChar
+	{mso-style-name:"Header Char";}
+span.FooterChar
+	{mso-style-name:"Footer Char";}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:115%;
+	text-autospace:ideograph-other;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:8.5in 11.0in;
+	margin:.4in .5in .4in .5in;
+	border:solid black 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+<table style="margin-bottom:0;"><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.' Patient Notices</span></b></h2>
+</td></tr></table>
+
+<p class=MsoNormal style=\'margin-bottom:0in;line-height:normal\'><span style=\'position:absolute;z-index:251735040;margin-left:-16px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Assignment of Benefits</span></p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>I
+request that payment of authorized insurance benefits, including Medicare if I
+am a Medicare Beneficiary, be made either to me or on my behalf to the
+organization listed below for any equipment or services provided to me by that
+organization.  I hereby assign and convey directly to the below-named health
+care provider ("Provider"), as my designated authorized representative, all
+medical benefits and/or insurance reimbursement, if any, otherwise payable to
+me for services, treatments, therapies, and/or medications rendered or provided
+by the Provider, regardless of its managed care network participation status. </p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>I understand
+that I am financially responsible to the Provider for any charges regardless of
+health care benefits. It is my responsibility to notify the Provider of any
+changes in my health care coverage. In some cases exact insurance benefits
+cannot be determined until the insurance company receives the claim. I am
+responsible for the entire bill or balance of the bill as determined by the
+Provider and/or my health care insurer if the submitted claims or any part of
+them are denied for payment. </p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>I hereby authorize
+the Provider to release all medical information necessary to process my claims.
+Further, I hereby authorize my plan administrator fiduciary, insurer, and/or
+attorney to release to the Provider any and all Plan documents, summary benefit
+description, insurance policy, and/or settlement information upon written
+request from the Provider or its attorneys in order to claim such medical
+benefits.</p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>In addition, I
+also assign and/or convey to the Provider any legal or administrative claim or
+choose an action arising under any group health plan, employee benefits plan,
+health insurance or tort feasor insurance concerning medical expenses incurred
+as a result of the medical services, treatments, therapies, and/or medications
+I receive from the Provider (including any right to pursue those legal or
+administrative claims or chose an action). This constitutes an express and
+knowing assignment of ERISA breach or fiduciary duty claims and other legal
+and/or administrative claims.</p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>I intend by this
+assignment and designation of authorized representative to convey to the
+Provider all of my rights to claim (or place a lien on) the medical benefits
+related to the services, treatments, therapies, and/or mediations provided by
+the Provider, including rights to any settlement, insurance or applicable legal
+or administrative remedies (including damages arising from ERISA breach of
+fiduciary duty claims). The assignee and/or designated representative
+(Provider) is given the right by me to (1) obtain information regarding the
+claim to the same extent as me; (2) submit evidence; (3) make statements about
+facts or law; (4) make any request including providing or receiving notice of
+appeal proceedings; (5) participate in any administrative and judicial actions
+and pursue claims or chose in action or right against any liable party,
+insurance company, employee benefit plan, health care benefit plan, or plan
+administrator. The Provider as my assignee and my designated authorized
+representative may bring suit against any such health care benefit plan,
+employee benefit plan, plan administrator or insurance company in my name with
+derivative standing at Provider\'s expense.</p>
+
+<p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>Unless revoked,
+this assignment is valid for all administrative and judicial reviews under
+PPACA (health care reform legislation), ERISA, Medicare and applicable federal
+and state laws. A photocopy of this assignment is to be considered valid, the
+same as if it was the original.</p>
+
+<p class=MsoNormal style=\'line-height:normal\'><b>PROVIDER</b>: 
+'.$loc_r['name'].', '.$loc_r['address'].', '.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'
+</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:normal\'><span style=\'position:absolute;z-index:251737088;margin-left:-16px;margin-top:5px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><b><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Patient Signature</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;line-height:normal\'>I HAVE READ AND
+FULLY UNDERSTAND THIS AGREEMENT.</p>
+
+<p class=MsoNormal style=\'line-height:normal\'><b><span style=\'font-size:12.0pt\'>Print
+Name</span></b><span style=\'font-size:12.0pt\'>:
+_______________________________________________________________________________</span></p>
+
+<p class=MsoNormal style=\'line-height:normal\'><b><span style=\'font-size:12.0pt\'>Patient
+/ Guardian Signature</span></b><span style=\'font-size:12.0pt\'>:
+_____________________________________________ <b>Date</b>: _______________</span></p></div>
+</body>
+
+</html>
+
+';
+
+        $title = "Patient Notices";
+        if($locid){
+          $filename = "patient_notices_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "patient_notices_".$id.".pdf";
+        }
+
+        create_form_pdf($html, $filename, $title);
+
+}
+
 
 function create_form_pdf($html, $filename, $title){
 
@@ -3268,12 +3479,12 @@ function create_form_pdf($html, $filename, $title){
 
         //set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
+	$pdf->setCellHeightRatio(1);
         //set some language-dependent strings
         //$pdf->setLanguageArray($l);
 
         // set font
-        $pdf->SetFont('dejavusans', '', 10);
+        $pdf->SetFont('dejavusans', '', 8);
 
         // add a page
         $pdf->AddPage();
@@ -3285,6 +3496,1034 @@ function create_form_pdf($html, $filename, $title){
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/q_file/' . $filename, 'F');
 
 }
+
+
+function update_new_patient_form($id, $locid=null){
+
+$logo = get_logo($id);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+
+$html = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"Adobe Garamond Pro";
+	panose-1:2 2 5 2 6 5 6 2 4 3;}
+@font-face
+	{font-family:Webdings;
+	panose-1:5 3 1 2 1 5 9 6 7 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0.0pt;
+	margin-left:0in;
+	line-height:100%;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:.5in;
+	line-height:115%;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+span.HeaderChar
+	{mso-style-name:"Header Char";}
+span.FooterChar
+	{mso-style-name:"Footer Char";}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:115%;
+	text-autospace:ideograph-other;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:8.5in 11.0in;
+	margin:.4in .5in .4in .5in;
+	border:solid black 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ - New Patient Form</span></b></h2>
+</td></tr></table>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251653120;left:0px;margin-left:-16px;margin-top:53px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Patient
+Information</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in; margin-left:0in;margin-bottom:.0001pt;line-height:100%\'><span style=\'line-height:100%\'>Mr./Ms./Mrs./Dr.  First Name: ________________________ Last Name:
+__________________________ MI: ___ </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0pt;line-height: 100%\'><span style=\'line-height:100%\'>Home Phone (_____) _____________ Cell
+Phone (_____) ______________ Work Phone (_____) _____________</span></p>
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:100%\'><span style=\'line-height:100%\'>The best time to contact me is: </span><span
+style=\'line-height:100%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+100%\'> Morning  </span><span style=\'line-height:100%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:100%\'> Mid-Day  </span><span style=\'line-height:120%;
+font-family:Webdings\'>&#9633;</span><span style=\'line-height:100%\'> Evening on </span><span
+style=\'line-height:100%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+120%\'> Home phone  </span><span style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:120%\'> Cell phone  </span><span style=\'line-height:120%;
+font-family:Webdings\'>&#9633;</span><span style=\'line-height:120%\'> Work phone </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Email
+Address_____________________________________ Would you like to receive our
+e-newsletter? </span><span style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:120%\'> Yes  </span><span style=\'line-height:120%;font-family:
+Webdings\'>&#9633;</span><span style=\'line-height:120%\'> No</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Address:
+_______________________________________City:___________________ State: _______
+Zip: ____________ </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Date of Birth (M/D/Y): ____ /____
+/_______   Gender:  </span><span style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:120%\'>M   </span><span style=\'line-height:120%;font-family:
+Webdings\'>&#9633;</span><span style=\'line-height:120%\'> F   Social Security Number
+(SSN): ___________________ </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'>Height: Feet_____ Inches_____   Weight (lbs): ______<span
+style=\'line-height:120%\'>       Marital Status:  </span><span style=\'line-height:
+120%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:120%\'> Married   </span><span
+style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+120%\'> Single   </span><span style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:120%\'> Life Partner  </span><span style=\'line-height:120%;
+font-family:Webdings\'>&#9633;</span><span style=\'line-height:120%\'> Minor     </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Spouse or Parent/Guardian (if minor) Name:
+________________________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Emergency Contact: ____________________________
+Relationship: _______________ Phone_____________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>REFERRED BY:
+______________________________________________________________________________________
+</span></p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251655168;left:0px;margin-left:-16px;margin-top:162px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Employer
+Information</span></b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Employer:
+________________________________________ Phone: (____) ______________Fax:
+(____)______________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Address:
+____________________________________City_________________________ State:
+______Zip: ___________</span></p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251657216;left:0px;margin-left:-16px;margin-top:189px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Health
+Insurance Information</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt;line-height:120%\'><span style=\'line-height:
+120%\'>Patient’s Relationship to Primary Insured:  </span><span
+style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+120%\'> Self </span><span style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:120%\'> Spouse            </span><span style=\'line-height:
+120%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:120%\'> Child                </span><span
+style=\'line-height:120%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+120%\'> Other</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Name of Insured (First, MI, Last):
+____________________________________ Insured DOB (M/D/Y): ____ /____ /______        </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Ins Co.:
+_________________________________________________________ Ins ID:
+_____________________________ </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Group #: _________________________________________
+Plan Name: _______________________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Business
+Address_____________________________________ City__________________ State:
+_____ Zip ___________ Phone: (______)________________Fax:
+(______)________________ Email: ____________________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><i><span
+style=\'line-height:115%\'>Please present your insurance card so we can photocopy
+it.</span></i></p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251659264;left:0px;margin-left:-16px;margin-top:254px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Secondary
+Health Insurance</span></b></p>
+
+<p class=MsoNormal align=center style=\'margin-top:2.0pt;margin-right:0in;
+margin-bottom:0in;margin-left:0in;margin-bottom:.0001pt;text-align:center;
+line-height:normal\'>DO YOU HAVE SECONDARY INSURANCE?  <span style=\'font-family:
+Webdings\'>&#9633;</span> YES   <span style=\'font-family:Webdings\'>&#9633;</span> NO   IF <b>YES</b>,
+PLEASE COMPLETE THIS SECTION</p>
+
+<p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt;line-height:110%\'><span style=\'line-height:
+110%\'>Patient’s Relationship to Insured:  </span><span style=\'line-height:110%;
+font-family:Webdings\'>&#9633;</span><span style=\'line-height:110%\'> Self  </span><span
+style=\'line-height:110%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:
+110%\'> Spouse            </span><span style=\'line-height:110%;font-family:Webdings\'>&#9633;</span><span
+style=\'line-height:110%\'> Child               </span><span style=\'line-height:
+110%;font-family:Webdings\'>&#9633;</span><span style=\'line-height:110%\'> Other</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+110%\'><span style=\'line-height:110%\'>Name of Insured (First, MI, Last):
+_________________________ Insured DOB___ /___ /_____         </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+110%\'><span style=\'line-height:110%\'>Ins Co.:
+_________________________________________________________ Ins ID:
+_____________________________ </span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+110%\'><span style=\'line-height:110%\'>Group #: _________________________________________
+Plan Name: _______________________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+110%\'><span style=\'line-height:110%\'>Business
+Address_____________________________________ City__________________ State:
+_____ Zip ___________ Phone :(_____)_______________ Fax:
+(______)________________ Email: _____________________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><i><span
+style=\'line-height:115%\'>Please present your secondary insurance card so we can
+photocopy it.</span></i></p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251661312;left:0px;margin-left:-16px;margin-top:317px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Medical
+Contacts</span></b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal\'><i><span style=\'font-size:10.0pt\'>Dental Sleep Solutions® coordinates
+treatment with your other medical providers to ensure maximum benefit to you. 
+Where applicable, please list your other medical providers.</span></i></p>
+
+<p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt\'><span style=\'line-height:115%\'>PRIMARY
+CARE DOCTOR: _______________________________________               Phone:
+__________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'line-height:115%\'>ENT:
+_______________________________________________________  Phone:
+__________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'line-height:100%\'>SLEEP DOCTOR: ______________________________________________
+ Phone: __________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'line-height:115%\'>DENTIST: 
+___________________________________________________ Phone:
+__________________________</span></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'line-height:115%\'>OTHER MD:
+_________________________________________________  Phone: __________________________</span></p>
+
+<p class=MsoNormal><span style=\'line-height:115%\'>OTHER MD:
+_________________________________________________  Phone:
+__________________________</span></p>
+
+<p class=MsoNormal style=\'margin-top:.25in;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt\'><span style=\'position:absolute;
+z-index:251716608;margin-left:-14px;margin-top:370px;width:941px;height:5px\'><img
+width=941 height=5
+src="/manage/images/new_patient_files/image002.png"></span><b><span
+style=\'font-size:10.5pt;line-height:115%\'>I certify this information is true,
+accurate, and complete to the best of my knowledge. INTIAL: __________
+Date:_________</span></b></p>
+
+</div>
+
+</body>
+
+</html>
+
+';
+
+        $title = "New Patient Form";
+        if($locid){
+          $filename = "new_patient_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "new_patient_".$id.".pdf";
+        }
+        create_form_pdf($html, $filename, $title);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function update_patient_questionnaire_form($id, $locid = null){
+
+$logo = get_logo($id);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+$html = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"Adobe Garamond Pro";
+	panose-1:2 2 5 2 6 5 6 2 4 3;}
+@font-face
+	{font-family:Webdings;
+	panose-1:5 3 1 2 1 5 9 6 7 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	line-height:115%;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-autospace:ideograph-other;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:.5in;
+	line-height:115%;
+	text-autospace:ideograph-other;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+span.HeaderChar
+	{mso-style-name:"Header Char";}
+span.FooterChar
+	{mso-style-name:"Footer Char";}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:115%;
+	text-autospace:ideograph-other;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:8.5in 11.0in;
+	border:solid black 1.0pt;
+}
+div.WordSection1
+	{page:WordSection1;}
+@page WordSection2
+	{size:8.5in 11.0in;
+	border:solid black 1.0pt;
+}
+div.WordSection2
+	{page:WordSection2;}
+@page WordSection3
+	{size:8.5in 11.0in;
+	margin:.4in .5in .4in .5in;
+	border:solid black 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection3
+	{page:WordSection3;}
+@page WordSection4
+	{size:8.5in 11.0in;
+	margin:.4in .5in .4in .5in;
+	border:solid black 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection4
+	{page:WordSection4;}
+@page WordSection5
+	{size:8.5in 11.0in;
+	margin:.4in .5in .4in .5in;
+	border:solid black 1.0pt;
+	padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection5
+	{page:WordSection5;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><img width=900 height=400
+src="/manage/images/patient_questionnaire_files/image002.png" align=left
+hspace=12><span style=\'position:absolute;z-index:251665408;left:0px;margin-left:
+-16px;margin-top:54px;width:941px;height:5px\'><img width=941 height=5
+src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Primary
+Symptoms</span></b></p>
+
+<p class=MsoNormal><b><span style=\'font-size:12.0pt;line-height:115%\'>Please
+list the main reason(s) you are seeking treatment for snoring or sleep apnea</span></b><span
+style=\'font-size:12.0pt;line-height:115%\'>: </span>__________________________________________________________________________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;\'><b>Do you
+have other complaints?</b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:100%\'>  </span>Frequent snoring </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:100%\'>  </span>Excessive Daytime Sleepiness
+(EDS)</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:100%\'>  </span>Difficulty falling asleep</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:100%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:100%\'>  </span>Waking up gasping / choking</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Morning headaches</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Neck or facial pain</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>I have been told I stop
+breathing when I sleep</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Other:
+_____________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Difficulty maintaining sleep</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Choking while sleeping</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Feeling unrefreshed in the morning</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Memory problems</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Impotence</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Nasal problems, difficulty
+breathing through nose</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'font-size:10.0pt;line-height:115%;font-family:Webdings\'>&#9633;</span><span
+style=\'font-size:10.0pt;line-height:115%\'>  </span>Irritability or mood swings</p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251688960;left:0px;margin-left:-16px;margin-top:242px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Subjective
+Signs and Symptoms</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:0in;margin-bottom:.0001pt;line-height:140%\'><b>Rate your
+overall energy level</b>                   (Low)     1      2      3     
+4      5      6      7      8      9      10 (Excellent)</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>Rate your sleep quality</b>                                (Low)     1     
+2      3      4      5      6      7      8      9      10 (Excellent)</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>Have you been told you snore?</b>                 YES / NO / SOMETIMES</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>Rate the sound of your snoring</b>                 (Quiet)   1     
+2      3      4      5      6      7      8      9      10 (Loud)</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>On average, how many times per night do you wake up?</b>              _____________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>On average, how many hours of sleep do you get per night?</b>        _____________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>How often do you awaken with headaches?</b>        NEVER / RARELY / SOMETIMES
+/ OFTEN / EVERYDAY</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>Do you have a bed partner?</b>        YES / NO / SOMETIMES                  <b>Do
+you sleep in the same room?</b>   YES / NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'><b>How many times per night does your bedtime partner notice you stop
+breathing?</b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+140%\'>SEVERAL TIMES PER NIGHT / ONCE PER NIGHT / SEVERAL TIMES PER WEEK /
+OCCASIONALLY / SELDOM / NEVER</p>
+
+<br pagebreak="true" />
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251676672;left:0px;margin-left:-16px;margin-top:362px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Previous
+Treatments</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:0in;margin-bottom:.0001pt;line-height:normal\'><b>Have you ever
+had a sleep study?</b>            YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal\'><b>If YES, where and when?</b>
+___________________________________________________<b>Date:</b>______________________</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:0in;margin-bottom:.0001pt;line-height:125%\'><b>Have you tried
+CPAP?</b>                                  YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>Are you currently using CPAP?</b>                  YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>If YES, how many nights per week do you wear it?</b>   ______________/
+7 Nights</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>When you wear your CPAP, how many hours per night do you wear it?</b>
+______________hours per night</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt\'><b>If you use or have used CPAP,
+what are your chief complaints about CPAP?</b></p>
+
+</div>
+
+<span style=\'font-size:11.0pt;line-height:115%;font-family:"Calibri","sans-serif"\'><br
+clear=all style=\'page-break-before:auto\'>
+</span>
+
+<div class=WordSection4>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Mask
+leaks</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>An
+inability to get the mask to fit properly</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Discomfort
+from the straps or headgear</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Decrease
+sleep quality or interrupted sleep from CPAP device</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Noise
+from the device disrupting sleep and/or bedtime partner’s sleep</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
+restricted movement during sleep</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
+seems to be ineffective</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Device
+causes teeth or jaw problems</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>A
+latex allergy</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Device
+causes claustrophobia or panic attacks </p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>An
+unconscious need to remove CPAP at night</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Caused
+GI / stomach / intestinal problems</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>CPAP
+device irritated my nasal passages</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Inability
+to wear due to nasal problems</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Causes
+dry nose or dry mouth</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>The
+device causes irritation due to air leaks</p>
+
+<p class=MsoListParagraph style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-indent:-.25in\'><span style=\'font-size:10.0pt;line-height:115%;font-family:
+Webdings\'>&#9633;<span style=\'font:7.0pt "Times New Roman"\'>&nbsp;&nbsp; </span></span>Other:
+______________________________________________________________________________</p>
+
+</div>
+
+<span style=\'font-size:11.0pt;line-height:115%;font-family:"Calibri","sans-serif"\'><br
+clear=all style=\'page-break-before:auto\'>
+</span>
+
+<div class=WordSection5>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal\'>&nbsp;</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>Are you currently wearing a dental device?</b>          YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>Have you previously tried a dental device?</b>           YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>If YES, was it Over the Counter (OTC)?</b>                   YES         NO         </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'><b>Was it fabricated by a dentist?   </b>                              YES         NO
+        <b>If YES, who fabricated it?</b> ________________________</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:0in;margin-bottom:.0001pt;line-height:normal\'><b>If applicable,
+please describe your previous dental device experience:</b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal\'>__________________________________________________________________________________________________</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt\'><b>Have you ever had surgery for
+snoring or sleep apnea?</b>    YES       NO</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt\'><b>Please list any nose, palatal,
+throat, tongue, or jaw surgeries you have had. </b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
+________________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
+________________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+125%\'>DATE: ____________ SURGEON: ______________________ SURGERY:
+________________________________________</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Please
+comment about any other therapy attempts (weight loss, gastric bypass, etc.)
+and how each impacted your snoring and apnea and sleep quality.</b>
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________</p>
+
+<br pagebreak="true" />
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251679744;left:0px;margin-left:-16px;margin-top:293px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Health
+History</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt\'><b>PRE-MEDICATION – Have you been told
+you should receive pre-medication before dental procedures?</b>          YES      NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>If YES,
+what medication(s) and why do you require it?</b>
+_____________________________________________________</p>
+
+<p class=MsoNormal style=\'margin-top:12.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:0in;margin-bottom:.0001pt\'><b>ALLERGENS -- </b>Please list
+everything you are allergic to (for example: aspirin, latex, penicillin, etc):</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>_____
+_____________________________________________________________________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>MEDICATIONS
+-- </b>Please list all medications you are currently taking:</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>_________________________________________________________________________________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>MEDICAL
+HISTORY – </b>Please list all medical diagnoses and surgeries from birth until
+now (for example: heart attack, high blood pressure, asthma, stroke, hip
+replacement, HIV, diabetes, etc):</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal\'>______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________</p>
+
+<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center;line-height:normal\'><span style=\'position:absolute;
+z-index:251695104;left:0px;margin-left:-16px;margin-top:369px;width:941px;
+height:5px\'><img width=941 height=5
+src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Dental
+History</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt\'><b>How would you describe your dental
+health?</b>      EXCELLENT     GOOD     FAIR     POOR</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'position:absolute;z-index:251701248;margin-left:455px;margin-top:358px;
+width:24px;height:19px\'><img width=24 height=19
+src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
+ever had teeth extracted?</b>                       YES         NO           <b>If
+YES, please describe</b>__________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
+wear removable partials?</b>                            YES         NO         </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
+wear full dentures?</b>                                        YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'position:absolute;z-index:251703296;margin-left:455px;margin-top:376px;
+width:24px;height:19px\'><img width=24 height=19
+src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
+ever worn braces (orthodontics)?</b>         YES         NO           <b>If
+YES, date completed:</b> _________________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'position:absolute;z-index:251705344;margin-left:455px;margin-top:1px;
+width:24px;height:19px\'><img width=24 height=19
+src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Does your
+TMJ (jaw joint) click or pop?</b>                 YES         NO           <b>Do
+you have pain in this joint?</b>                    YES     NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Have you
+had TMJ (jaw joint) surgery?</b>                  YES         NO         </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
+style=\'position:absolute;z-index:251707392;margin-left:455px;margin-top:15px;
+width:24px;height:19px\'><img width=24 height=19
+src="/manage/images/patient_questionnaire_files/image005.png"></span><b>Have you
+ever had gum problems?</b>                         YES         NO           <b>If
+YES, have you ever had gum surgery?   </b>YES     NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
+have dry mouth?</b>                                           YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Have you
+ever had an injury to your head, face, neck, or mouth?             </b>YES         NO         </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Are you
+planning to have dental work done in the near future?  </b>               YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Do you
+clench or grind your teeth?</b>                                                                      YES         NO         </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>If you
+answered YES to any question above, please briefly describe your answer here:</b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'>____________________________________________________________________________________________________________________________________________________________________________________________________</p>
+
+<p class=MsoNormal align=center style=\'margin-top:4.0pt;margin-right:0in;
+margin-bottom:0in;margin-left:0in;margin-bottom:.0001pt;text-align:center;
+line-height:normal\'><span style=\'position:absolute;z-index:251697152;
+left:0px;margin-left:-16px;margin-top:88px;width:941px;height:5px\'><img
+width=941 height=5 src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Family
+History</span></b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>Have genetic members of your family had:</b>          </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>Heart Disease?   </b>YES         NO         <b>High Blood Pressure?      </b>YES         NO         <b>Diabetes?            </b>YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>Have genetic members of your family been diagnosed or treated for a
+sleep disorder?</b>     YES         NO</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>How often do you consume alcohol within 2-3 hours of bedtime?</b>             <span
+style=\'font-family:Webdings\'>&#9633;</span> Daily    <span style=\'font-family:Webdings\'>&#9633;</span>
+Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>How often do you take sedatives within 2-3 hours of bedtime?</b>                  <span
+style=\'font-family:Webdings\'>&#9633;</span> Daily     <span style=\'font-family:Webdings\'>&#9633;</span>
+Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>How often do you consume caffeine within 2-3 hours of bedtime?</b>           <span
+style=\'font-family:Webdings\'>&#9633;</span> Daily     <span style=\'font-family:Webdings\'>&#9633;</span>
+Occasionally     <span style=\'font-family:Webdings\'>&#9633;</span> Rarely/Never               </p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>Do you smoke? </b>                              YES         NO         <b>If
+YES, how many packs per day?</b>   _________________</p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+130%\'><b>Do you use chewing tobacco?</b>    YES         NO         <b>If YES,
+how many times per day?</b> __________________</p>
+
+<p class=MsoNormal align=center style=\'margin-top:8.0pt;margin-right:0in;
+margin-bottom:0in;margin-left:0in;margin-bottom:.0001pt;text-align:center;
+line-height:normal\'><span style=\'position:absolute;z-index:251712512;
+left:0px;margin-left:-16px;margin-top:178px;width:941px;height:5px\'><img
+width=941 height=5 src="/manage/images/patient_questionnaire_files/image003.png"></span><b><span
+style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'> PATIENT
+SIGNATURE</span></b></p>
+
+<p class=MsoNormal style=\'margin-top:4.0pt;margin-right:0in;margin-bottom:0in;
+margin-left:0in;margin-bottom:.0001pt\'><b><span style=\'font-size:10.5pt;
+line-height:115%\'>I certify that the information I have completed on these
+forms is true, accurate, and complete to the best of my knowledge. </span></b></p>
+
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><b>Patient
+or Guardian Signature</b>: __________________________________________________
+Date: _________________</p>
+
+</div>
+
+</body>
+
+</html>
+
+';
+
+        $title = "Patient Questionnaire";
+        if($locid){
+          $filename = "patient_questionnaire_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "patient_questionnaire_".$id.".pdf";
+        }
+
+        create_form_pdf($html, $filename, $title);
+
+}
+
+
+
+
+
 
 
 function form_update_all($docid){
@@ -3307,7 +4546,9 @@ function form_update_all($docid){
       update_lomn_rx_form($docid);
       update_medical_hx_update_form($docid);
       update_the_dss_experience_form($docid);
-
+      update_patient_notices_form($docid, $r['id']);
+      update_new_patient_form($docid, $r['id']);
+      update_patient_questionnaire_form($docid, $r['id']);
 }
 
 

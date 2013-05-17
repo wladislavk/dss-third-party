@@ -130,7 +130,6 @@ $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
 	<?php } ?>
       </div>
     <?php } ?>
-    <input type="submit" name="submit" value="Submit" />
 </form>
 
 

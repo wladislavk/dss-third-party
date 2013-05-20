@@ -456,7 +456,13 @@ $ed_sql .="
 	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
 	
 		if(isset($_POST['location'])){
-			$loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+			$ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
+			$ds_q = mysql_query($ds_sql);
+			if(mysql_num_rows($ds_q) > 0){
+			  $loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+			}else{
+                          $loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
+			}
 			mysql_query($loc_query);
 		}
 
@@ -699,7 +705,7 @@ mysql_query($s1);
 		$pid = mysql_insert_id();
 		
 		if(isset($_POST['location'])){
-                	$loc_query = "UPDATE dental_summary SET location='".mysql_real_escape_string($_POST['location'])."' WHERE patientid='".$_GET['pid']."';";
+                	$loc_query = "INSERT INTO dental_summary SET location='".mysql_real_escape_string($_POST['location'])."', patientid='".$_GET['pid']."';";
                 	mysql_query($loc_query);
 		}
 

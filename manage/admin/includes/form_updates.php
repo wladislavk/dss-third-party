@@ -3731,7 +3731,10 @@ Plan Name: _______________________________________</span></p>
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
 120%\'><span style=\'line-height:120%\'>Business
 Address_____________________________________ City__________________ State:
-_____ Zip ___________ Phone: (______)________________Fax:
+_____ Zip ___________ 
+</span></p>
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Phone: (______)________________Fax:
 (______)________________ Email: ____________________________________</span></p>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><i><span
@@ -3777,7 +3780,10 @@ Plan Name: _______________________________________</span></p>
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
 110%\'><span style=\'line-height:110%\'>Business
 Address_____________________________________ City__________________ State:
-_____ Zip ___________ Phone :(_____)_______________ Fax:
+_____ Zip ___________ 
+</span></p>
+<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:
+120%\'><span style=\'line-height:120%\'>Phone :(_____)_______________ Fax:
 (______)________________ Email: _____________________________________</span></p>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><i><span
@@ -3799,16 +3805,16 @@ Where applicable, please list your other medical providers.</span></i></p>
 
 <p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in;
 margin-left:0in;margin-bottom:.0001pt\'><span style=\'line-height:115%\'>PRIMARY
-CARE DOCTOR: _______________________________________               Phone:
+CARE DOCTOR: ____________________________________ Phone:
 __________________________</span></p>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
 style=\'line-height:115%\'>ENT:
-_______________________________________________________  Phone:
+________________________________________________________  Phone:
 __________________________</span></p>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
-style=\'line-height:100%\'>SLEEP DOCTOR: ______________________________________________
+style=\'line-height:100%\'>SLEEP DOCTOR: _____________________________________________
  Phone: __________________________</span></p>
 
 <p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt\'><span
@@ -3854,16 +3860,216 @@ Date:_________</span></b></p>
 
 
 
-
-
-
-
-
-
-
-
-
 function update_patient_questionnaire_form($id, $locid = null){
+
+$logo = get_logo($id);
+  $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
+  $l_q = mysql_query($l_sql);
+  $l_r = mysql_fetch_assoc($l_q);
+if($locid){
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}else{
+  $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND default_location=1";
+  $loc_q = mysql_query($loc_sql);
+  $loc_r = mysql_fetch_assoc($loc_q);
+}
+
+if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
+}
+
+$html = '
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+        {font-family:Wingdings;
+        panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+        {font-family:Wingdings;
+        panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+        {font-family:Calibri;
+        panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+        {font-family:Tahoma;
+        panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+        {font-family:"Adobe Garamond Pro";
+        panose-1:2 2 5 2 6 5 6 2 4 3;}
+@font-face
+        {font-family:Webdings;
+        panose-1:5 3 1 2 1 5 9 6 7 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:0in;
+        line-height:115%;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+        {margin:0in;
+        margin-bottom:.0001pt;
+        text-autospace:ideograph-other;
+        font-size:8.0pt;
+        font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:10.0pt;
+        margin-left:.5in;
+        line-height:115%;
+        text-autospace:ideograph-other;
+        font-size:11.0pt;
+        font-family:"Calibri","sans-serif";}
+span.HeaderChar
+        {mso-style-name:"Header Char";}
+span.FooterChar
+        {mso-style-name:"Footer Char";}
+span.BalloonTextChar
+        {mso-style-name:"Balloon Text Char";
+        font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+        {font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+        {margin-bottom:10.0pt;
+        line-height:115%;
+        text-autospace:ideograph-other;}
+ /* Page Definitions */
+ @page WordSection1
+        {size:8.5in 11.0in;
+        border:solid black 1.0pt;
+}
+div.WordSection1
+        {page:WordSection1;}
+@page WordSection2
+        {size:8.5in 11.0in;
+        border:solid black 1.0pt;
+}
+div.WordSection2
+        {page:WordSection2;}
+@page WordSection3
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection3
+        {page:WordSection3;}
+@page WordSection4
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection4
+        {page:WordSection4;}
+@page WordSection5
+        {size:8.5in 11.0in;
+        margin:.4in .5in .4in .5in;
+        border:solid black 1.0pt;
+        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
+div.WordSection5
+        {page:WordSection5;}
+ /* List Definitions */
+ ol
+        {margin-bottom:0in;}
+ul
+        {margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg1.gif" align=left
+hspace=12>
+</div>
+
+
+<br pagebreak="true" />
+<br />
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg2.gif" align=left
+hspace=12>
+
+
+
+
+<br pagebreak="true" />
+<br />
+
+<table><tr><td width="30%">'.$logo.'</td>
+<td width="70%">
+<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
+ Patient Questionnaire</span></b></h2>
+</td></tr></table>
+
+
+<img width=780 height=950
+src="/manage/images/patient_questionnaire_files/questionnaire_pg3.gif" align=left
+hspace=12>
+
+
+</body>
+</html>
+';
+
+        $title = "Patient Questionnaire";
+        if($locid){
+          $filename = "patient_questionnaire_".$locid.'_'.$id.".pdf";
+        }else{
+          $filename = "patient_questionnaire_".$id.".pdf";
+        }
+
+        create_form_pdf($html, $filename, $title);
+
+
+}
+
+function update_patient_questionnaire_form_old($id, $locid = null){
 
 $logo = get_logo($id);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);

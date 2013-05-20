@@ -138,7 +138,7 @@ if($_POST["contactsub"] == 1)
                         <div>
                         	<span>
                             	<input type="text" name="location" id="location" value="<?= $location; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="location">Location</label>
+                                <label for="location">Practice Location</label>
                             </span>
                        </div>   
                     </li>
@@ -152,7 +152,7 @@ if($_POST["contactsub"] == 1)
                         <div>
                                 <span>
                                 <input type="text" name="name" id="name" value="<?= $name; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="name">Name</label>
+                                <label for="name">Doctor Name</label>
                             </span>
                        </div>
                     </li>

@@ -31,9 +31,21 @@ if(isset($_POST['email_but'])){
  on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 	where p.patientid='".mysql_real_escape_string($_POST['pid'])."'";
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($pat['patientid'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($pat['docid'])."'";
+}else{
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($pat['docid'])."'";
+}
+$location_result = mysql_query($location_query);
+$location_info = mysql_fetch_assoc($location_result);
+
+
   $uq = mysql_query($usql);
   $ur = mysql_fetch_assoc($uq);
-  $n = $ur['mailing_phone'];
+  $n = $location_info['phone'];
 
   $html = '
 <p>Welcome '.$pat['firstname'].' '.$pat['lastname'].'! Your medical record access is just a few steps away.</p>
@@ -45,10 +57,10 @@ if(isset($_POST['email_but'])){
 <p>'.$pat['access_code'].'</p>
 
 <p>We look forward to seeing you at your next visit!</p>
-<p>'.$ur['mailing_practice'].'<br />
-'.$ur['mailing_address'].'<br />
-'.$ur['mailing_city'].' '.$ur['mailing_state'].' '.$ur['mailing_zip'].'<br />
-'.$ur['mailing_phone'].'</p>
+<p>'.$location_info['location'].'<br />
+'.$location_info['address'].'<br />
+'.$location_info['city'].' '.$location_info['state'].' '.$location_info['zip'].'<br />
+'.$location_info['phone'].'</p>
 ';
 $filename = 'user_pin_'.$pat['patientid'].'.pdf';
   create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);
@@ -64,7 +76,7 @@ $m = "<html><body><center>
 <tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account</h2>
-<p>A new patient account has been created for you by ".$ur['mailing_practice'].".<br />Your Patient Portal login information is:</p>
+<p>A new patient account has been created for you by ".$location_info['location'].".<br />Your Patient Portal login information is:</p>
 <p><b>Email:</b> ".$e."</p>
 </td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td colspan='2'>
@@ -75,10 +87,10 @@ $m = "<html><body><center>
 <center><h3><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$pat['patientid']."&hash=".$recover_hash."'>Click Here to Complete Your Forms Online</a></h3></center>
 </td></tr>
 <tr><td>
-<p>".$ur['mailing_practice']."<br />
-".$ur['mailing_address']."<br />
-".$ur['mailing_city']." ".$ur['mailing_state']." ".$ur['mailing_zip']."<br />
-".$ur['mailing_phone']."</p>
+<p>".$location_info['location']."<br />
+".$location_info['address']."<br />
+".$location_info['city']." ".$location_info['state']." ".$location_info['zip']."<br />
+".$location_info['phone']."</p>
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".format_phone($n)."</b></p>
 </td></tr>

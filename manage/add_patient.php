@@ -166,7 +166,20 @@ function sendRegEmail($id, $e, $l, $old_email=''){
   $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 	where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
-  $uq = mysql_query($usql);
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
+from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid
+	WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+}else{
+  $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+}
+  $uq = mysql_query($location_query);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
@@ -261,10 +274,23 @@ $headers = 'From: "Dental Sleep Solutions" <Patient@dentalsleepsolutions.com>' .
 // Sends reminder email to patient
 */
 function sendRemEmail($id, $e){
-  $usql = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+    $s = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($id)."'";
+    $q = mysql_query($s);
+      $r = mysql_fetch_assoc($q);
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
+from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid
+        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+}else{
+  $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-	where p.patientid='".mysql_real_escape_string($id)."'";
-  $uq = mysql_query($usql);
+        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+}
+  $uq = mysql_query($location_query);
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['mailing_phone'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){

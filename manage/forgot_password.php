@@ -1,7 +1,7 @@
 <?
 require_once('admin/includes/config.php');
 include_once('admin/includes/password.php');
-
+include_once('includes/constants.inc');
 
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -33,13 +33,15 @@ if($_POST["emailsub"] == 1)
 		mysql_query($ins_sql);
 	
 		$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
+'Content-type: text/html' ."\r\n" .
 		    'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
    		     'X-Mailer: PHP/' . phpversion();
 	
 		$subject = "Dental Sleep Solutions Password Reset";
 		$message = "Please use this link to reset your password.
-
+<br /><br />
 http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
+$message .= "<br /><br />";
 $message .= DSS_EMAIL_FOOTER;
 		//$ins_id = mysql_insert_id();
 		$msg = mail($check_myarray['email'], $subject, $message, $headers);

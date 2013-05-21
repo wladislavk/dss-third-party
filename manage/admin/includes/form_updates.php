@@ -569,6 +569,7 @@ $html = '
 	margin-bottom:.0001pt;
 	text-autospace:ideograph-other;
 	font-size:12.0pt;
+	line-height:150%;
 	font-family:"Times New Roman","serif";}
 p.MsoHeader, li.MsoHeader, div.MsoHeader
 	{margin:0in;
@@ -619,8 +620,7 @@ div.WordSection1
 style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>SLEEP RECORDER
 RELEASE FORM</span></b></h2>
 </td></tr></table>
-<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
-line-height:150%;font-family:"Arial","sans-serif"\'>I,
+<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>I,
 ____________________________, have been advised by '.$loc_r['name'].'<i><span style=\'color:red\'> </span></i>to take
 home a sleep recorder that will determine my treatment progress after using my
 dental device. I understand that I am assuming responsibility for the safe
@@ -829,7 +829,7 @@ normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
 normal"></p>
 
 <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FAX</span></b><span
-style="font-size:12.0pt">: <b>'.$loc_r['fax'].'</b></span></p>
+style="font-size:12.0pt">: <b>'.format_phone($loc_r['fax']).'</b></span></p>
 
 <p class=MsoNormal style="line-height:normal"><i><span style="font-size:12.0pt">I
 request and authorize the above named doctor or health care provider, or individual
@@ -2075,44 +2075,45 @@ chance of dozing   3 = High chance of dozing</span>             �
 style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>SITUATION</span></u></b>
 </p>
 
-<p class=MsoNormal style=\'line-height:100%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:100%;font-family:"Arial","sans-serif"\'>Sitting
-and reading                                                                                          _________</span><br />
+<table>
+  <tr>
+    <td width="500px">Sitting and reading</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>Watching television</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>Sitting inactive in a public place (i.e. theater)</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>As a car passenger for an hour without a break</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>Lying down to rest in the afternoon</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>Sitting and talking to someone</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>Sitting quietly after lunch without alcohol</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>In a car, while stopping for a few minutes in traffic</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td style="text-align:right;">&nbsp;<br /><b>TOTAL SCORE</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td>&nbsp;<br />_________</td>
+  </tr>
+</table>
 
-<span
-style=\'font-size:11.0pt;line-height:100%;font-family:"Arial","sans-serif"\'>Watching
-television                                                                                         _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>Sitting
-inactive in a public place (i.e. theater)                                                 _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>As a
-car passenger for an hour without a break                                             _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:120%;font-family:"Arial","sans-serif"\'>Lying
-down to rest in the afternoon                                                                _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
-and talking to someone                                                           
-            _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>Sitting
-quietly after lunch without alcohol                                                       _________</span><br />
-
-<span
-style=\'font-size:11.0pt;line-height:150%;font-family:"Arial","sans-serif"\'>In a
-car, while stopping for a few minutes in traffic                                        _________
-</span><br />
-<br />
-
-<span style=\'font-size:11.0pt;
-font-family:"Arial","sans-serif"\'>                                                <b>TOTAL
-SCORE</b>                                             _________</span></p>
 
 <p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
 font-family:"Arial","sans-serif"\'>A score of 8 or greater indicates the possibility
@@ -2139,34 +2140,33 @@ statement if you have no bed partner.)</span></p>
 per week)   3 = Most of the time (4 or more nights per week)</span></b>
 </p>
 
-<p class=MsoNormal style=\'line-height:115%;border:none;padding:0in\'><span
-style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring affects my relationship with my partner                                      _________      </span><br />
 
-<span
-style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring causes my partner to be irritable or tired                                     _________</span><br />
+<table>
+  <tr>
+    <td width="500px">My snoring affects my relationship with my partner</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>My snoring requires us to sleep in separate rooms</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>My snoring is loud</td>
+    <td>_________</td>
+  </tr>
+  <tr>
+    <td>My snoring affects people when I am sleeping<br />
+          away from home (i.e. hotel, camping, etc.)</td>
+    <td>&nbsp;<br />_________</td>
+  </tr>
+  <tr>
+    <td style="text-align:right;">&nbsp;<br /><b>TOTAL SCORE</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td>&nbsp;<br />_________</td>
+  </tr>
+</table>
 
-<span
-style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring requires us to sleep in separate rooms                                        _________</span><br />
 
-<span
-style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring is loud                                                                                           _________</span><br />
 
-<span
-style=\'font-size:11.0pt;line-height:115%;font-family:"Arial","sans-serif"\'>My
-snoring affects people when I am sleeping</span><br />
-
-<span style=\'font-size:11.0pt;
-font-family:"Arial","sans-serif"\'>      away from home (i.e. hotel, camping,
-etc.)                                             _________</span><br />
-<br />
-
-<span style=\'font-size:11.0pt;
-font-family:"Arial","sans-serif"\'>                                                    
-<b> TOTAL SCORE</b>                                       _________</span></p>
 
 <p class=MsoNormal style=\'border:none;padding:0in\'><span style=\'font-size:11.0pt;
 font-family:"Arial","sans-serif"\'>A score of 5 or greater indicates your
@@ -3455,7 +3455,7 @@ _____________________________________________ <b>Date</b>: _______________</span
 }
 
 
-function create_form_pdf($html, $filename, $title){
+function create_form_pdf($html, $filename, $title, $fontsize = 10, $cellheight=1.25){
 
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -3479,12 +3479,12 @@ function create_form_pdf($html, $filename, $title){
 
         //set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-	$pdf->setCellHeightRatio(1);
+	$pdf->setCellHeightRatio($cellheight);
         //set some language-dependent strings
         //$pdf->setLanguageArray($l);
 
         // set font
-        $pdf->SetFont('dejavusans', '', 8);
+        $pdf->SetFont('dejavusans', '', $fontsize);
 
         // add a page
         $pdf->AddPage();
@@ -3849,7 +3849,7 @@ Date:______</span></b></p>
         }else{
           $filename = "new_patient_".$id.".pdf";
         }
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, 8, 1);
 
 }
 

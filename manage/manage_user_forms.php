@@ -223,6 +223,7 @@ background:#999999;
                                         </a>
                                 </td>
                         </tr>
+		<?php if($_SESSION['user_type']==DSS_USER_TYPE_FRANCHISEE){ ?>
                         <tr class="tr_active">
                                 <td valign="top">
                                         The DSS Experience
@@ -233,6 +234,7 @@ background:#999999;
                                         </a>
                                 </td>
                         </tr>
+			<?php } ?>
                         <tr class="tr_active">
                                 <td valign="top">
                                         Patient Notices

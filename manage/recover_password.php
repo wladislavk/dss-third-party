@@ -155,4 +155,3 @@ include_once('admin/includes/password.php');
 </FORM>
 
 
-<? include 'includes/bottom.htm';?>

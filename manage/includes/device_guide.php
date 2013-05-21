@@ -48,6 +48,7 @@ parent.disablePopup1();
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+<link rel="stylesheet" href="../css/admin.css" type="text/css" />
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
@@ -60,7 +61,7 @@ parent.disablePopup1();
 
 </style>
 </head>
-<body>
+<body style="background:none;">
 
 <div style="margin-left: 30px;">
 <a href="#" onclick="$('#instructions').show('200');$(this).hide();return false;" id="ins_show">Instructions</a>
@@ -68,9 +69,9 @@ parent.disablePopup1();
   <strong>Instructions</strong> <a href="#" onclick="$('#instructions').hide('200');$('#ins_show').show();">hide</a>
   <ol>
     <li>Evaluate pt for each category using sliding bar</li>
-    <li>Choose the three most important categories</li>
-    <li>Click on Device C Lect</li>
-    <li>Reset and change ars or Save to pt chart</li>
+    <li>Choose the three most important categories (if needed)</li>
+    <li>Click on Sort Devices</li>
+    <li>Click the device to add to Pt chart, or click "Reset" to start over.</li>
   </ol>
 </div>
 
@@ -83,21 +84,21 @@ parent.disablePopup1();
   $r = mysql_fetch_assoc($q);
 ?>
 
-<h2 style="margin-top:20px;">Device Selection Tool for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
+<h2 style="margin-top:20px;">Device C-Lect for <?= $r['firstname']." ".$r['lastname']; ?>?</h2>
 <?php
 $s_sql = "select * FROM dental_device_guide_settings order by rank ASC";
 $s_q = mysql_query($s_sql);
 ?>
-<form action="device_guide_results.php" method="post" id="device_form" style="width:28%; margin-left:2%; float:left;">
+<form action="device_guide_results.php" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
 <input type="hidden" name="id" value="<?= $_GET['id']; ?>" />
 <input type="hidden" name="pid" value="<?= $_GET['pid']; ?>" />
     <?php while($s_r = mysql_fetch_assoc($s_q)){ ?>
-      <div id="setting_<?= $s_r['id']; ?>" style="padding: 5px 0;">
+      <div class="setting" id="setting_<?= $s_r['id']; ?>" style="padding: 5px 0;">
         <strong style="padding: 5px 0;display:block;"><?= $s_r['name']; ?></strong>
 	<?php if($s_r['setting_type']==DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
 <div class="slider" id="slider_<?= $s_r['id'];?>"></div>
 <input type="checkbox" class="imp_chk" value="1" name="setting_imp_<?= $s_r['id'];?>" id="setting_imp_<?= $s_r['id'];?>" />
-<div id="label_<?= $s_r['id'];?>" style="padding: 5px 0;display: block;"></div>
+<div class="label" id="label_<?= $s_r['id'];?>" style="padding: 5px 0;display: block;"></div>
 <input type="hidden" name="setting<?= $s_r['id'];?>" id="input_opt_<?= $s_r['id'];?>" />
 <?php
 $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysql_real_escape_string($s_r['id'])."' ORDER BY option_id ASC";
@@ -119,10 +120,12 @@ $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
       slide: function( event, ui ) {
           $( "#input_opt_<?= $s_r['id'];?>" ).val( ui.value );
           $("#label_<?= $s_r['id'];?>").html(labelArr[ui.value]);
+	  $('#results li').remove();
       }
   });
   $( "#input_opt_<?= $s_r['id'];?>" ).val($( "#slider_<?= $s_r['id'];?>" ).slider( "value" ) );
   $("#label_<?= $s_r['id'];?>").html(labelArr[$( "#slider_<?= $s_r['id'];?>" ).slider( "value" )]);
+  $("#label_<?= $s_r['id'];?>").attr('data-init', labelArr[$( "#slider_<?= $s_r['id'];?>" ).slider( "value" )]);
  });
 </script>
 	<?php }else{ ?>
@@ -133,20 +136,30 @@ $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
 </form>
 
 
-<div style="float:left; width: 15%;">
-  <a href="#" style="border:1px solid #000; padding: 5px;" class="device_submit">Device C Lect</a>
+<div style="float:left; width: 13%; margin-left:2%;">
+  <a href="#" style="border:1px solid #000; padding: 5px;" class="device_submit addButton">Sort Devices</a>
 </div>
 
 
 <div style="float:left; width:50%;">
 
-<ul id="results">
+<ul id="results" style="border:solid 2px #a7cefa;">
 
 
 </ul>
+<a href="#" class="addButton" onclick="reset_form();return false;">Reset</a>
 </div>
 
 <script type="text/javascript">
+
+function reset_form(){
+$(".setting").each(function(){
+	$(this).find(".slider").slider("value", $(this).find(".slider").slider("option", "min") );
+	$(this).find(".label").html( $(this).find('.label').attr('data-init'));
+        $(this).find(".imp_chk").prop("checked", false);
+  });
+}
+
 
 $('.imp_chk').click( function(){
   if($(this).is(':checked')){
@@ -166,7 +179,7 @@ $.ajax({
 						$('#results li').remove();
                                                 var r = $.parseJSON(data);
 						$.each( r,  function(i, v){
-							$('#results').append("<li>"+v['name']+" ("+ v.value +")</li>");
+							$('#results').append("<li><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
 						});
 
 
@@ -183,6 +196,27 @@ $.ajax({
 
 });
 
+function update_device(device, name){
+ if(confirm("Do you want to select "+name+" for <?= $r['firstname']." ".$r['lastname']; ?>?")){
+ $.ajax({
+                                        url: "flow_device_update.php",
+                                        type: "post",
+                                        data: {id: <?= $_GET['id']; ?>, device: device, pid: <?= $_GET['pid']; ?>},
+                                        success: function(data){
+                                                //alert(data);
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+						  parent.updateDentalDevice(<?= $_GET['id']; ?>, device)
+						  parent.disablePopupClean();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+ }
+}
 
 </script>
 

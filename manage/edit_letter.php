@@ -238,7 +238,14 @@ while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
 
-$location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($docid)."'";
+}else{
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+}
 $location_result = mysql_query($location_query);
 $location_info = mysql_fetch_assoc($location_result);
 

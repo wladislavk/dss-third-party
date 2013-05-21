@@ -293,7 +293,7 @@ $num_custom=mysql_num_rows($my);
                                                 Edit
                                         </a>
 
-  <form action="#" method="post">
+  <form action="#" method="post" onsubmit="return mailinglocationabc(this)">
   <input type="hidden" name="userid" value="<?= $practice['userid']; ?>" />
   <div class="detail">
     <label>Username:</label>

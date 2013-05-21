@@ -121,7 +121,7 @@ if($_POST["contactsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return locationabc(this)" >
     <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
         <tr>
             <td colspan="2" class="cat_head">

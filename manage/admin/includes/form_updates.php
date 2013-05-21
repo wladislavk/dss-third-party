@@ -3831,20 +3831,16 @@ _________________________________________________  Phone:
 __________________________</span></p>
 
 <p class=MsoNormal style=\'margin-top:.25in;margin-right:0in;margin-bottom:0in;
-margin-left:0in;margin-bottom:.0001pt\'><span style=\'position:absolute;
-z-index:251716608;margin-left:-14px;margin-top:370px;width:941px;height:5px\'><img
+margin-left:0in;margin-bottom:.000pt\'><span style=\'position:absolute;
+z-index:251716608;margin-left:-14px;margin-top:0px;width:941px;height:5px\'><img
 width=941 height=5
 src="/manage/images/new_patient_files/image002.png"></span><b><span
-style=\'font-size:10.5pt;line-height:115%\'>I certify this information is true,
-accurate, and complete to the best of my knowledge. INTIAL: __________
-Date:_________</span></b></p>
-
+style=\'font-size:10.5pt;line-height:100%\'>I certify this information is true,
+accurate, and complete to the best of my knowledge. INTIAL: _______
+Date:______</span></b></p>
 </div>
-
 </body>
-
 </html>
-
 ';
 
         $title = "New Patient Form";
@@ -4736,13 +4732,16 @@ function form_update_all($docid){
 
 	$sql = "SELECT id FROM dental_locations where docid='".mysql_real_escape_string($docid)."' AND default_location=1";
 	$q = mysql_query($sql);
-	$r = mysql_fetch_assoc($q); 
-      update_custom_release_form($docid, $r['id']);
-
+	while($r = mysql_fetch_assoc($q)){
+      		update_custom_release_form($docid, $r['id']);
+      		update_patient_notices_form($docid, $r['id']);
+      		update_new_patient_form($docid, $r['id']);
+      		update_patient_questionnaire_form($docid, $r['id']);
+      		update_home_care_instructions_form($docid, $r['id']);
+      		update_non_dentist_of_record_release_form($docid, $r['id']);
+      		update_sleep_recorder_release_form($docid, $r['id']);
+	}
       update_financial_agreement_medicare_form($docid);
-      update_home_care_instructions_form($docid, $r['id']);
-      update_non_dentist_of_record_release_form($docid, $r['id']);
-      update_sleep_recorder_release_form($docid, $r['id']);
       update_affidavit_for_cpap_intolerance_form($docid);
       update_device_titration_ema_form($docid);
       update_device_titration_form($docid);
@@ -4752,9 +4751,6 @@ function form_update_all($docid){
       update_lomn_rx_form($docid);
       update_medical_hx_update_form($docid);
       update_the_dss_experience_form($docid);
-      update_patient_notices_form($docid, $r['id']);
-      update_new_patient_form($docid, $r['id']);
-      update_patient_questionnaire_form($docid, $r['id']);
 }
 
 

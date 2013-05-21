@@ -165,6 +165,95 @@ function profileabc(fa)
 	return true;
 }
 
+function locationabc(fa){
+  if(trim(fa.location.value) == ""){
+	alert("Practice location is Required")
+	fa.location.focus();
+	return false;
+  }
+  if(trim(fa.name.value) == ""){
+        alert("Doctor name is Required")
+        fa.name.focus();
+        return false;
+  }
+  if(trim(fa.address.value) == ""){
+        alert("Address is Required")
+        fa.address.focus();
+        return false;
+  }
+  if(trim(fa.city.value) == ""){
+        alert("City is Required")
+        fa.city.focus();
+        return false;
+  }
+  if(trim(fa.state.value) == ""){
+        alert("State is Required")
+        fa.state.focus();
+        return false;
+  }
+  if(trim(fa.zip.value) == ""){
+        alert("Zip is Required")
+        fa.zip.focus();
+        return false;
+  }
+  if(trim(fa.phone.value) == ""){
+        alert("Phone is Required")
+        fa.phone.focus();
+        return false;
+  }
+  if(trim(fa.fax.value) == ""){
+        alert("Fax is Required")
+        fa.fax.focus();
+        return false;
+  }
+
+}
+
+function mailinglocationabc(fa){
+  if(trim(fa.mailing_practice.value) == ""){
+        alert("Mailing Practice is Required")
+        fa.mailing_practice.focus();
+        return false;
+  }
+  if(trim(fa.mailing_name.value) == ""){
+        alert("Mailing Name is Required")
+        fa.mailing_name.focus();
+        return false;
+  }
+  if(trim(fa.mailing_address.value) == ""){
+        alert("Mailing Address is Required")
+        fa.mailing_address.focus();
+        return false;
+  }
+  if(trim(fa.mailing_city.value) == ""){
+        alert("Mail City is Required")
+        fa.mailing_city.focus();
+        return false;
+  }
+  if(trim(fa.mailing_state.value) == ""){
+        alert("Mailing State is Required")
+        fa.mailing_state.focus();
+        return false;
+  }
+  if(trim(fa.mailing_zip.value) == ""){
+        alert("Mailing Zip is Required")
+        fa.mailing_zip.focus();
+        return false;
+  }
+  if(trim(fa.mailing_phone.value) == ""){
+        alert("Mailing Phone is Required")
+        fa.mailing_phone.focus();
+        return false;
+  }
+  if(trim(fa.mailing_fax.value) == ""){
+        alert("Mailing Fax is Required")
+        fa.mailing_fax.focus();
+        return false;
+  }
+
+}
+
+
 function staffabc(fa)
 {
 	if(trim(fa.username.value) == "" )

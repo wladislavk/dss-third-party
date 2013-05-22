@@ -3358,7 +3358,7 @@ div.WordSection1
 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.' Patient Notices</span></b></h2>
 </td></tr></table>
 
-<p class=MsoNormal style=\'margin-bottom:0in;line-height:normal\'><span style=\'position:absolute;z-index:251735040;margin-left:-16px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Assignment of Benefits</span></p>
+<span style=\'position:absolute;z-index:251735040;margin-left:-16px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Assignment of Benefits</span>
 
 <p class=MsoNormal style=\'text-indent:.5in;line-height:normal\'>I
 request that payment of authorized insurance benefits, including Medicare if I
@@ -3423,25 +3423,19 @@ same as if it was the original.</p>
 
 <p class=MsoNormal style=\'line-height:normal\'><b>PROVIDER</b>: 
 '.$loc_r['name'].', '.$loc_r['address'].', '.$loc_r['city'].', '.$loc_r['state'].' '.$loc_r['zip'].'
-</p>
-
-<p class=MsoNormal style=\'margin-bottom:0in;margin-bottom:.0001pt;line-height:normal\'><span style=\'position:absolute;z-index:251737088;margin-left:-16px;margin-top:5px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><b><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Patient Signature</span></b></p>
-
-<p class=MsoNormal style=\'margin-top:12.0pt;line-height:normal\'>I HAVE READ AND
+<br />
+<span style=\'position:absolute;z-index:251737088;margin-left:-16px;margin-top:5px;width:941px;height:5px\'><img width=941 height=5 src="/manage/images/patient_notice_files/image001.png"></span><b><span style=\'font-size:16.0pt;font-family:"Cambria","serif"\'>Patient Signature</span></b>
+<br />
+I HAVE READ AND
 FULLY UNDERSTAND THIS AGREEMENT.</p>
 
 <p class=MsoNormal style=\'line-height:normal\'><b><span style=\'font-size:12.0pt\'>Print
 Name</span></b><span style=\'font-size:12.0pt\'>:
 _______________________________________________________________________________</span></p>
 
-<p class=MsoNormal style=\'line-height:normal\'><b><span style=\'font-size:12.0pt\'>Patient
+<b><span style=\'font-size:12.0pt\'>Patient
 / Guardian Signature</span></b><span style=\'font-size:12.0pt\'>:
-_____________________________________________ <b>Date</b>: _______________</span></p></div>
-</body>
-
-</html>
-
-';
+_____________________________________________ <b>Date</b>: _______________</span></div></body></html>';
 
         $title = "Patient Notices";
         if($locid){
@@ -3615,13 +3609,12 @@ style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
  - New Patient Form</span></b></h2>
 </td></tr></table>
 
-<p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-text-align:center;line-height:normal\'><span style=\'position:absolute;
+<span style=\'position:absolute;
 z-index:251653120;left:0px;margin-left:-16px;margin-top:53px;width:941px;
 height:5px\'><img width=941 height=5
 src="/manage/images/new_patient_files/image002.png"></span><b><span
 style=\'font-size:16.0pt;font-family:"Adobe Garamond Pro","serif"\'>Patient
-Information</span></b></p>
+Information</span></b>
 
 <p class=MsoNormal style=\'margin-top:6.0pt;margin-right:0in;margin-bottom:0in; margin-left:0in;margin-bottom:.0001pt;line-height:100%\'><span style=\'line-height:100%\'>Mr./Ms./Mrs./Dr.  First Name: ________________________ Last Name:
 __________________________ MI: ___ </span></p>
@@ -3830,14 +3823,14 @@ _________________________________________________  Phone: ______________________
 _________________________________________________  Phone:
 __________________________</span></p>
 
-<p class=MsoNormal style=\'margin-top:.25in;margin-right:0in;margin-bottom:0in;
-margin-left:0in;margin-bottom:.000pt\'><span style=\'position:absolute;
+
+<span style=\'position:absolute;
 z-index:251716608;margin-left:-14px;margin-top:0px;width:941px;height:5px\'><img
 width=941 height=5
 src="/manage/images/new_patient_files/image002.png"></span><b><span
 style=\'font-size:10.5pt;line-height:100%\'>I certify this information is true,
 accurate, and complete to the best of my knowledge. INTIAL: _______
-Date:______</span></b></p>
+Date:______</span></b>
 </div>
 </body>
 </html>

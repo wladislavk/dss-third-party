@@ -14,10 +14,10 @@ require_once('../includes/general_functions.php');
     $s_sql = "SELECT ds.value, ds.setting_id FROM dental_device_guide_device_setting ds WHERE ds.device_id='".$d['id']."'";   
     $s_q = mysql_query($s_sql);
     while($s = mysql_fetch_assoc($s_q)){
-      $s_val = $_POST['setting'.$s['setting_id']]. " ".$s['setting_id'];
+      $s_val = $_POST['setting'.$s['setting_id']];
       $val = $s_val*$s['value'];
       if(isset($_POST['setting_imp_'.$s['setting_id']])){
-        $val *= 1.5;
+        $val *= 1.75;
       }
       $tot += $val;
     }

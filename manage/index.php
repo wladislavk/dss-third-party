@@ -1,83 +1,154 @@
 <?php include 'includes/top.htm';?>
 
-<!--<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />-->
-<!--<script src="admin/popup/popup2.js" type="text/javascript"></script>-->
-
-<br />
-<div>
  <table>
  <tr>
- <td valign="top" style="border-right:1px solid #00457c;width:290px;">
+ <td valign="top" style="border-right:1px solid #00457c;width:980px;">
+<!--<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />-->
+<!--<script src="admin/popup/popup2.js" type="text/javascript"></script>-->
+<style type="text/css">
 
-<div style="padding-left:10px; padding-right:10px; margin-right:5px;" id="formLeftC"> 
-                
+.home_third{
+  width: 30%;
+  float: left;
+  padding: 0 1%;
+  margin: 0;
+  border-left: 2px solid #095D81;
+  min-height: 400px; 
+  }
+
+.home_third h3{
+  font-family: "Times", serif;
+  color:#095D81;
+  font-size: 32px;
+  width: 100%;
+  text-align: center;
+  }
+
+.home_menu{
+  padding-left: 15px;
+  }
+.home_menu a{
+  padding: 3px 0;
+  display: block;
+  font-size: 16px;
+  }
+</style>
 
 
+<!--
+##############################################################
+NAV THIRD
+##############################################################
+-->
 
+<div class="home_third first">
+<h3>Navigation</h3>
+<div class="homesuckertreemenu">
+<ul id="homemenu" style="padding-top:3px;">
+<li><a href="manage_patient.php">PATIENT</a>
+  <ul>
+              <li><a href="manage_patient.php">Manage Patients</a></li>
+              <li><a href="#">Directory</a>
+                  <ul>
+                     <li><a href="manage_contact.php">Contacts</a></li>
+                     <li><a href="manage_referredby.php">Referral List</a></li>
+                     <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
+                     <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
+                   </ul>
+              </li>
+  </ul>
+</li>
+<li>
+<a href="#">REPORTS</a>
+
+  <ul>
+     <li><a href="ledger_reportfull.php">Ledger</a></li>
+     <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
+     <li><a href="performance.php">Performance</a></li>
+     <li><a href="manage_screeners.php">Pt. Screener</a></li>
+  </ul>
+</li>
 
 <?php
-
-
-
-
-$adminmemo_check_sql = "SELECT * FROM memo_admin";
-$adminmemo_check_qry = mysql_query($adminmemo_check_sql);
-while($adminmemo_array = mysql_fetch_array($adminmemo_check_qry)){
-if($adminmemo_array['memo'] != NULL || $adminmemo_array['memo'] != ''){
-
-$todays_date = date("Y-m-d"); 
-$exp_date = $adminmemo_array['off_date'];
-$today = strtotime($todays_date);
-$expiration_date = strtotime($exp_date);
-if ($expiration_date > $today) {
-	?>
-	  
-    <div style="color:#ff0000; background:url(images/mod_headers.png) no-repeat top left; width:100%; height:28px;padding-top:1px;"><span class="admin_head" style="color:#ff0000;"><em> Global Memo: </em></span></div>
-	<br />
-	<table width="260" border="0" align="center" cellpadding="1" cellspacing="1" class="sample">
-  <tr>
-    <td valign="top">
-    
-<?php
-
-echo "". $adminmemo_array['memo'] . "<br />";
- 
+  $mess_count = $pending_letters + $num_preauth + $num_pc + $num_pi + $num_c;
+  $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce;
 ?>
+<li><a href="#">MESSAGES (<?php echo $mess_count; ?>)</a>
+  <ul>
+      <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
+      <li><a <?php {echo "href='manage_vobs.php'";} ?>>VOBs (<?= $num_preauth; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_contacts.php'";} ?>>Patient Contacts (<?= $num_pc; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_insurance.php'";} ?>>Patient Insurance (<?= $num_pi; ?>)</a></li>
+      <li><a <?php {echo "href='manage_patient_changes.php'";} ?>>Patient Changes (<?= $num_c; ?>)</a></li>
+      <li><a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0">Alerts (<?= $num_rejected_preauth; ?>)</a></li>
+      <li><a href="manage_email_bounces.php">Email Bounces (<?= $num_bounce; ?>)</a></li>
+      <li><a href="manage_tasks.php">Tasks (<?= $num_tasks; ?>)</a></li>
+  </ul>
 
-    </td>
-    
-  </tr>
-  </table>
-  <br />
- <?php 
- } else {}
- }
- } ?>
 
-  <div style="color:#00457c; background:url(images/mod_headers.png) no-repeat top left; width:100%; height:28px;padding-top:1px;"><span class="admin_head" style="color:#00457c;"><em> Todays Memo: </em></span></div>
-	<br />
-	<table width="260" border="0" align="center" cellpadding="1" cellspacing="1" class="sample">
-  <tr>
-    <td valign="top">
-    
-<?php 
+  </ul>
+</li>
 
-$memouserid = $_SESSION['userid'];
-$memo_check_sql = "SELECT * FROM memo WHERE user_id={$memouserid}";
-$memo_check_qry = mysql_query($memo_check_sql);
-while($memo_array = mysql_fetch_array($memo_check_qry)){
-if($memo_array != NULL || $memo_array != ''){
-echo $memo_array['memo'] . "<br /><hr />";
-}
-}
-?>
+</ul>
+</div>
 
-<a href="Javascript: ;" target="_blank" class="viewtable" title="EDIT" onclick="Javascript: loadPopup('memo.php'); getElementById('popupMemo').style.top = '200px'; return false;">Edit Memo</a>
-    </td>
-    
-  </tr>
-  </table>
-  <br /> 
+
+  <div style="clear: both;float:none;" class="suckertreemenu2">
+     <ul id="homesettings">
+       <li><a href="#">Manage Settings</a>
+         <ul style="z-index:5001;margin-top:-20px;">
+            <li><a class="menu_item" href="#">Directory</a></li>
+                     <li><a class="submenu_item" href="manage_contact.php">Contacts</a></li>
+                     <li><a class="submenu_item" href="manage_referredby.php">Referral List</a></li>
+                     <li><a class="submenu_item" href="manage_sleeplab.php">Sleep Labs</a></li>
+                     <li><a class="submenu_item" href="manage_fcontact.php">Corporate Contacts</a></li>
+            <li><a class="menu_item" href="#">DSS Files</a></li>
+                <?php 
+                        $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+                        $sq = mysql_query($s);
+                        while($c = mysql_fetch_assoc($sq)){ ?>
+                                <li><a class="submenu_item" href="view_documents.php?cat=<?= $c['categoryid'];?>"><?= $c['name']; ?></a></li>
+
+                       <?php }
+                ?>
+            <li><a class="menu_item" href="#">Admin</a></li>
+                     <li><a class="submenu_item" href="manage_claim_setup.php">Claim Setup</a></li>
+                     <li><a class="submenu_item" href="manage_profile.php">Profile</a></li>
+                     <li><a class="submenu_item" href="manage_custom.php">Custom Text</a></li>
+                     <?php if($_SESSION['userid']==$_SESSION['docid']){ ?>
+                     <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
+                     <?php } ?>
+                     <li><a class="submenu_item" href="manage_staff.php">Staff</a></li>
+                     <li><a class="submenu_item" href="manage_user_forms.php">Forms</a></li>
+                     <li><a class="submenu_item" href="manage_manuals.php">Manuals</a></li>
+
+              <li><a class="menu_item" href="pending_patient.php">Pending Patients</a></li>
+              <li><a class="menu_item" href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>
+          </ul>
+        </li>
+      </ul>
+  </div>
+
+<ul style="clear:both; list-style:none;" class="home_menu">
+  <li><a href="manage_patient.php">Manage Patients</a></li>
+  <li><a href="calendar.php">Scheduler</a></li>
+  <li><a href="course.php" target="_blank">Education</a></li>
+  <li><a href="#">SW Tutorials</a></li>
+  <li><a href="index_old.php">Old Home</a></li>
+</ul>
+
+</div>
+
+
+<!--
+##############################################################
+ALERT THIRD
+##############################################################
+-->
+
+
+<div class="home_third">
+<h3>Notifications</h3>
   <?php if($num_rejected_preauth>0){ ?>
   <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
   <?php } ?>
@@ -111,188 +182,23 @@ echo $memo_array['memo'] . "<br /><hr />";
   <a href="manage_claims.php?unmailed=1" class="notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><?= $num_unmailed_claims;?> Unmailed Claims</a>
 <?php } ?>
 
+
+</div>
+
+
 <!--
-  <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
-  <tr><td valign="top"><h2>Letters (<?php echo $pending_letters; ?>)</h2></td></tr>
-  <tr>
-    <td style="border:1px solid;"><p><strong>You have <span class="blue"><?php echo $pending_letters; ?></span> letters to review.</strong></p>
-      <p><strong>The oldest letter is <span class="red"><?php echo $oldest_letter; ?> day(s) old</span>.</strong></p> 
-    </td></tr>
-  </table>
-
-  <br />
-
-  <table width="260" border="0px" align="center" cellpadding="1" cellspacing="1">
-  <tr><td valign="top"><h2>VOBs (<?php echo $num_pending_preauth; ?>/<?php echo $num_preauth; ?>)</h2></td></tr>
-  <tr>
-    <td style="border:1px solid;"><p><strong>You have <span class="blue"><?php echo $num_pending_preauth; ?></span> pending verification of benefits.</strong></p>
-              <p><strong>You have <span class="blue"><?php echo $num_preauth; ?></span> new completed verification of benefits.</strong></p>
-    </td></tr>
-  </table>
-
-
-
-  <br /><br />
-
- <?
-
-$sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-if(isset($_GET['sh'])){
-if($_GET['sh'] != 2)
-{
-	$sqlddlist .= " and status = 1";
-}
-}
-$sqlddlist .= " order by lastname, firstname";
-$myddlist = mysql_query($sqlddlist);
-
-?>
-<SCRIPT LANGUAGE="javascript">
-
-function LinkUp() 
-{
-var number = document.DropDown.DDlinks.selectedIndex;
-location.href = document.DropDown.DDlinks.options[number].value;
-}
-</SCRIPT>
-<font style="font-size:16px; font-weight:bold;">View Patient Elements:</font><br />
-<FORM NAME="DropDown" ACTION="http://www.cgiforme.com/jumporama/cgi/jumporama.cgi" METHOD="post" >
-<SELECT id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
-
-<?php
-$sqlddlist2 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-if(isset($_GET['sh'])){
-if($_GET['sh'] != 2)
-{
-	$sqlddlist2 .= " and status = 1";
-}
-}
-$sqlddlist2 .= " order by lastname, firstname";
-$myddlist2 = mysql_query($sqlddlist2);
-while($ddlistpname2 = (mysql_fetch_array($myddlist2))){
-?>
-<option value="manage_patient.php?pid=<?php echo $ddlistpname2['patientid']; ?>">
-<?php echo $ddlistpname2['lastname'].", ".$ddlistpname2['firstname']." ".$ddlistpname2['middlename']; ?>
-</option>
-<?php  
-}
-
-?>                
-</SELECT>
-<br />
-
-</FORM>
-
-
-
-
-
-
-<div style="margin-top:25px;  width:100%;">&nbsp;</div> 
-<hr />
-<div style="margin-top:0px; width:100%;">&nbsp;</div> 
-
-
-
-
-<SCRIPT LANGUAGE="javascript">
-
-function LinkUp() 
-{
-var number = document.DropDown.DDlinks.selectedIndex;
-location.href = document.DropDown.DDlinks.options[number].value;
-}
-</SCRIPT>
-<font style="font-size:16px; font-weight:bold;">View Patient Flowsheet:</font><br />
-<FORM NAME="DropDown">
-<SELECT id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
-
-<?php
-
-$sqlddlist3 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-if(isset($_GET['sh'])){
-if($_GET['sh'] != 2)
-{
-	$sqlddlist3 .= " and status = 1";
-}
-}
-$sqlddlist3 .= " order by lastname, firstname";
-$myddlist3 = mysql_query($sqlddlist3);
-while($ddlistpname3 = (mysql_fetch_array($myddlist3))){
-?>
-<option value="manage_flowsheet3.php?pid=<?php echo $ddlistpname3['patientid']; ?>">
-<?php echo $ddlistpname3['lastname'].", ".$ddlistpname3['firstname']." ".$ddlistpname3['middlename']; ?>
-</option>
-<?php  
-}
-
-?>                
-</SELECT>
-<br />
-
-</FORM>  
-  
-
-
-
-
-<div style="margin-top:25px;  width:100%;">&nbsp;</div> 
-<hr />
-<div style="margin-top:0px; width:100%;">&nbsp;</div>  
-
- <?
-
-$sqlddlist = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-if(isset($_GET['sh'])){
-if($_GET['sh'] != 2)
-{
-	$sqlddlist .= " and status = 1";
-}
-}
-$sqlddlist .= " order by lastname, firstname";
-$myddlist = mysql_query($sqlddlist);
-
-?>
-<SCRIPT LANGUAGE="javascript">
-
-function LinkUp() 
-{
-var number = document.DropDown.DDlinks.selectedIndex;
-location.href = document.DropDown.DDlinks.options[number].value;
-}
-</SCRIPT>
-<font style="font-size:16px; font-weight:bold;">View Patient Summary Sheet:</font><br />
-<FORM NAME="DropDown" ACTION="http://www.cgiforme.com/jumporama/cgi/jumporama.cgi" METHOD="post" >
-<SELECT id="mySelect" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}" style="width:260px;">
-
-<?php
-$sqlddlist2 = "select * from dental_patients where docid='".$_SESSION['docid']."' ";
-if(isset($_GET['sh'])){
-if($_GET['sh'] != 2)
-{
-	$sqlddlist2 .= " and status = 1";
-}
-}
-$sqlddlist2 .= " order by lastname, firstname";
-$myddlist2 = mysql_query($sqlddlist2);
-while($ddlistpname2 = (mysql_fetch_array($myddlist2))){
-?>
-<option value="dss_summ.php?pid=<?php echo $ddlistpname2['patientid']; ?>">
-<?php echo $ddlistpname2['lastname'].", ".$ddlistpname2['firstname']." ".$ddlistpname2['middlename']; ?>
-</option>
-<?php  
-}
-
-?>                
-</SELECT>
-<br />
-
-</FORM>
-
+##############################################################
+TASK THIRD
+##############################################################
 -->
 
+
+
+<div class="home_third">
+
+<h3>Tasks</h3>
 <div class="task_menu index_task">
-<h3>My Tasks</h3>
+<h4>My Tasks</h4>
 
 <?php
 $od_q = mysql_query($od_sql);
@@ -461,166 +367,12 @@ while($od_r = mysql_fetch_assoc($lat_q)){
 
 
 
-<div style="margin-top:25px;  width:100%;">&nbsp;</div> 
-<hr />
-<div style="margin-top:0px; width:100%;">&nbsp;</div>  
-
-
-
-
-
-  
-  
-              
 </div>
-</td>
-
-<td valign="top">
-<div style="width:660px; float:right; margin-left:5px;">
- <table width="660" border="0" align="center" cellpadding="0" cellspacing="0">
-	<tr>
-		<td valign="top" class="em_title">
-			<? if($_SESSION['username'] <> '') {?>
-				Welcome <?=$_SESSION['username'];?>
-			<? }
-			else
-			{
-			?>
-				Welcome to <?=$sitename;?>
-			<? }?>
-		</td>
-	</tr>
-</table>
 
 
-<br />
-<br />
 
-<? 
-if($_SESSION['userid'] != '')
-{
-	$welcome_sql = "select * from dental_doc_welcome where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-	$welcome_my = mysql_query($welcome_sql) or die($welcome_sql." | ".mysql_error());
-	
-	while($welcome_myarray = mysql_fetch_array($welcome_my)) 
-	{
-		if(st($welcome_myarray['video_file']) != '')
-		{?>
-			<center>
-			<a href="Javascript: ;" class="click" title="Welcome Video" onclick="Javascript: loadPopup('welcome_detail.php?v_f=<?=st($welcome_myarray['video_file'])?>'); getElementById('popupContact').style.top = '200px'; return false;">
-				Click Here for Welcome Video </a>
-			</center>
-			
-			<!--<center>
-			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="414" height="340">
-				<param name="movie" value="video_lounge_with_fullscreen.swf" />
-				<param name="quality" value="high" />
-				<param name="menu" value="false" />
-				<param name="allowScriptAccess" value="sameDomain" />
-				<param name="FlashVars" value="flv_name=<?=st($welcome_myarray['video_file'])?>" />
-				<embed src="video_lounge_with_fullscreen.swf" width="414" height="340" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" menu="false" flashvars="flv_name=<?=st($welcome_myarray['video_file'])?>" allowScriptAccess="sameDomain"></embed>
-			</object>
-			</center> -->
-		<? 
-		}
-		?>
-		<?=html_entity_decode(st($welcome_myarray['description']));?>
-		<br />
-		<?
-	}
   
-
-
-  ?>
-	<center><img src="images/cpanelImgMap_06.jpg" width="474" height="466" border="0" usemap="#Map" />
-<map name="Map" id="Map">
-  <area shape="rect" alt="PATIENTS" title="Manage Patients" coords="13,4,234,230" href="manage_patient.php" />
-  <area shape="rect" alt="LEDGER/REPORTS" title="Ledger Reports" coords="233,4,462,231" href="ledger.php" />
-  <area shape="rect" alt="DIRECTORY/CONTACTS" title="Contacts" coords="13,230,233,459" href="directory.php" />
-  <area shape="rect" alt="TOOLS" title="Configuration" coords="232,230,462,458" href="tools.php" />
-</map></center>
-  
-  <br />
-  <? if($_SESSION['username'] <> '') {?>
-				<font style="font-size:15px; font-weight:bold; color:#00457c;"><center>Welcome <?=$_SESSION['username'];?> -</font><font style="font-size:17px; font-weight:bold; color:#000000;"> Select A Category</center></font>
-			<? }
-			else
-			{
-			?>
-				<font style="font-size:15px; font-weight:bold; color:#00457c;"><center>Welcome to <?=$sitename;?></center></font>
-			<? }?><br />
-	
-	
-
-
-	<!--<br />
-	
-	<span class="admin_head"><em>
-		Insurance Information:	</em></span>
-	<br />
-	<table width="660" border="0" align="center" cellpadding="1" cellspacing="1" class="sample">
-  <tr>
-    <td valign="top">
-	<table width="659" cellpadding="0" cellspacing="0" border="0" align="center" class="em_box">
-	<tr >
-			  <td valign="top" class="em_boxhead">Title</td>
-			  <td valign="top"  align="center"  class="em_boxhead">Related Document</td>
-			  <td valign="top"  align="center" class="em_boxhead" >View Detail</td>
-	  </tr>
-		<?
-		$insurance_sql = "select * from dental_doc_insurance where status=1 and (docid = '' or docid like '%~".$_SESSION['docid']."~%') order by sortby";
-		$insurance_my = mysql_query($insurance_sql) or die($insurance_sql." | ".mysql_error());
-		
-		if(mysql_num_rows($insurance_my) == 0)
-		{
-		?>
-			<tr>
-				<td valign="top" colspan="3" align="center">
-					<b>No Records</b>
-				</td>
-			</tr>
-		<?
-		}
-		else
-		{
-			while($insurance_myarray = mysql_fetch_array($insurance_my)) 
-			{
-				?>
-				<tr>
-					<td valign="top" width="50%"  class="titlesub">
-						<?=st($insurance_myarray['title'])?>
-					</td>
-					<td width="30%" align="center" valign="top">
-						<? if(st($insurance_myarray['doc_file']) <> '') {?>
-						<a href="doc_file/<?=st($insurance_myarray['doc_file'])?>" target="_blank" class="viewtable" title="EDIT">
-							View / Download</a>
-						<? }?>					</td>
-					<td width="20%" align="center" valign="top">
-						<a href="Javascript: ;" target="_blank" class="viewtable" title="EDIT" onclick="Javascript: loadPopup('insurance_detail.php?id=<?=st($insurance_myarray['doc_insuranceid'])?>'); getElementById('popupContact').style.top = '500px'; return false;">
-							View Detail</a>					</td>
-				</tr>
-				<?
-			}
-		}
-		?>
-	</table></td>
-  </tr>
-</table>
- -->
-	
-	
-<?
-}?>
-</div>
-</div>
 </td></tr>
 </table>
-<!--
-<div id="popupMemo" style="width:750px; z-index:9999; display:none; height:400px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div> 
-
--->
 <br /><br />
 <? include 'includes/bottom.htm';?> 

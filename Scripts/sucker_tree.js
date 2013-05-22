@@ -2,8 +2,8 @@
 //SuckerTree Horizontal Menu (Sept 14th, 06)
 //By Dynamic Drive: http://www.dynamicdrive.com/style/
 
-//var menuids=["homemenu","homesettings", "topmenu2", "treemenu1", "topmenu"] //Enter id(s) of SuckerTree UL menus, separated by commas
-var menuids=["treemenu1", "topmenu"];
+var menuids=["homemenu","homesettings", "topmenu2", "treemenu1", "topmenu"] //Enter id(s) of SuckerTree UL menus, separated by commas
+//var menuids=["treemenu1", "topmenu"];
 
 function buildsubmenus_horizontal(){
 for (var i=0; i<menuids.length; i++){

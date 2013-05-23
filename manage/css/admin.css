@@ -1228,10 +1228,9 @@ float:left;
   background:#ccf;
 }
 .notification{
-  width: 217px;
-  height: 53px;
-  text-align:center;
-  line-height: 53px;
+  width: 274px;
+  height: 59px;
+  line-height: 43px;
   display: block;
   margin: 5px 0 0 20px;
   font-size: 18px;
@@ -1239,19 +1238,39 @@ float:left;
   }
 .notification:hover{
   text-decoration: none;
-  color: #095D81;
 }
 
+.notification .count{
+  color:#fff; 
+  padding-left:30px;
+  width: 50px;
+  display: block;
+  float: left;
+  text-align:center;
+} 
+.notification .label{
+  width: 190px;
+  text-align:center;
+  display: block;
+  float: left;
+  color: #000;
+  padding-top:5px;
+  }
 .notification.good_count{
-  background: url(../images/count_blue.png) no-repeat 0 0;
+  background: url(../images/button_green.png) no-repeat 0 0;
   }
 .notification.bad_count{
-  background: url(../images/count_red.png) no-repeat 0 0;
+  background: url(../images/button_red.png) no-repeat 0 0;
   }
 .notification.great_count{
-  background: url(../images/count_green.png) no-repeat 0 0;
+  background: url(../images/button_green.png) no-repeat 0 0;
   }
-
+.notification.good_count:hover, .notification.great_count:hover{
+  background: url(../images/button_green_mouseover.png) no-repeat 0 0;
+  }
+.notification.bad_count:hover{
+  background: url(../images/button_red_mouseover.png) no-repeat 0 0;
+  }
 
 
 .eob_text td{

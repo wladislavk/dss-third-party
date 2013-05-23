@@ -149,36 +149,36 @@ ALERT THIRD
 <div class="home_third">
 <h3>Notifications</h3>
   <?php if($num_rejected_preauth>0){ ?>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><?= $num_rejected_preauth; ?> Alerts</a>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><span class="count"><?= $num_rejected_preauth; ?></span><span class="label">Alerts</span></a>
   <?php } ?>
 
   <?php if($pending_letters > 0 && $use_letters){ ?>
-  <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><?= $pending_letters;?> Letters</a>
+  <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $pending_letters;?></span><span class="label">Letters</span></a>
   <?php } ?>
 
   <?php if($unmailed_letters > 0 && $use_letters && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
-  <a href="letters.php?status=sent&mailed=0" class="notification bad_count"><?= $unmailed_letters;?> Unmailed Letters</a>
+  <a href="letters.php?status=sent&mailed=0" class="notification bad_count"><span class="count"><?= $unmailed_letters;?></span><span class="label">Unmailed Letters</span></a>
   <?php } ?>
 
 
   <?php if($num_preauth > 0){ ?>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><?= $num_preauth;?> Verifications</a>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><span class="count"><?= $num_preauth;?></span><span class="label">Verifications</span></a>
   <?php } ?>
 
 <?php if($num_bounce !=0 ){?>
-  <a href="manage_email_bounces.php" class="notification <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><?= $num_bounce;?> Email Bounces</a>
+  <a href="manage_email_bounces.php" class="notification <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_bounce;?></span><span class="label">Email Bounces</span></a>
 <?php } ?>
 
 <?php if($num_unsigned !=0 ){?>
-  <a href="manage_unsigned_notes.php" class="notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><?= $num_unsigned;?> Unsigned Notes</a>
+  <a href="manage_unsigned_notes.php" class="notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>
 <?php } ?>
 
 <?php if($num_pending_nodss_claims !=0 && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
-  <a href="manage_claims.php" class="notification <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><?= $num_pending_nodss_claims;?> Pending Claims</a>
+  <a href="manage_claims.php" class="notification <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_nodss_claims;?></span><span class="label">Pending Claims</span></a>
 <?php } ?>
 
 <?php if($num_unmailed_claims !=0 && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
-  <a href="manage_claims.php?unmailed=1" class="notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><?= $num_unmailed_claims;?> Unmailed Claims</a>
+  <a href="manage_claims.php?unmailed=1" class="notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unmailed_claims;?></span><span class="label">Unmailed Claims</span></a>
 <?php } ?>
 
 

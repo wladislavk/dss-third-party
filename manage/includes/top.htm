@@ -1063,7 +1063,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
   $course_q = mysql_query($course_sql);
   $course_r = mysql_fetch_assoc($course_q);
   if($course_r['use_course']==1){
-    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="course.php" target="_blank">Course</a><?php
+    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="education.php" >Course</a><?php
   }
 }else{
   $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s

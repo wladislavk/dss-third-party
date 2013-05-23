@@ -1,5 +1,4 @@
 <?php include 'includes/top.htm';?>
-
  <table>
  <tr>
  <td valign="top" style="border-right:1px solid #00457c;width:980px;">
@@ -375,4 +374,5 @@ while($od_r = mysql_fetch_assoc($lat_q)){
 </td></tr>
 </table>
 <br /><br />
+<script type="text/javascript" src="../Scripts/sucker_tree_home.js"></script>
 <? include 'includes/bottom.htm';?> 

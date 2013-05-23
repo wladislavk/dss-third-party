@@ -1081,10 +1081,10 @@ if($is_pending){
 	$signature_physician = "Signature on File";
 	$patient_signed_date = date('m/d/Y', strtotime($pat_myarray['adddate']));
         $physician_signed_date = date('m/d/Y');	
-	$patient_phone_code = format_phone($pat_myarray['home_phone'], true);
-	$patient_phone = format_phone($pat_myarray['home_phone'], false);
-	$insured_phone_code = format_phone($pat_myarray['home_phone'], true);
-	$insured_phone = format_phone($pat_myarray['home_phone'], false);
+	$patient_phone_code = split_phone($pat_myarray['home_phone'], true);
+	$patient_phone = split_phone($pat_myarray['home_phone'], false);
+	$insured_phone_code = split_phone($pat_myarray['home_phone'], true);
+	$insured_phone = split_phone($pat_myarray['home_phone'], false);
 	$patient_status = $pat_myarray['marital_status'];	
 	$insured_id_number = $pat_myarray['p_m_ins_id'];
 	$insured_address = $pat_myarray['add1'];
@@ -2606,10 +2606,10 @@ if ($is_pending) {
 						Billing Provider Info & Ph#
 						<?php 
 							if($billing_provider_phone_code=='')
-								$billing_provider_phone_code = format_phone($phone, true);
+								$billing_provider_phone_code = split_phone($phone, true);
 
                                                         if($billing_provider_phone=='')
-                                                                $billing_provider_phone = format_phone($phone, false);
+                                                                $billing_provider_phone = split_phone($phone, false);
 
 						?>
 						<span class="style1">(

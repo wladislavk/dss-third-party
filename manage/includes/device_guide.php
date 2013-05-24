@@ -179,7 +179,11 @@ $.ajax({
 						$('#results li').remove();
                                                 var r = $.parseJSON(data);
 						$.each( r,  function(i, v){
-							$('#results').append("<li><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
+							if(v.image_path!=''){
+							  $('#results').append("<li class='box_go'><div class='ico'><img src='"+v.image_path+"' /></div><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
+							}else{
+                                                          $('#results').append("<li><a href='#' onclick=\"update_device("+v.id+", '"+v.name+"');return false();\">"+v['name']+" ("+ v.value +")</a></li>");
+							}
 						});
 
 

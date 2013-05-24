@@ -42,8 +42,85 @@ NAV THIRD
 
 <div class="home_third first">
 <h3>Navigation</h3>
+
 <div class="homesuckertreemenu">
-<ul id="homemenu" style="padding-top:3px;">
+  <ul id="homemenu">
+    <li><a href="#">Directory</a>
+                  <ul>
+                     <li><a href="manage_contact.php">Contacts</a></li>
+                     <li><a href="manage_referredby.php">Referral List</a></li>
+                     <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
+                     <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
+                   </ul>
+              </li>
+<li>
+<a href="#">REPORTS</a>
+
+  <ul>
+     <li><a href="ledger_reportfull.php">Ledger</a></li>
+     <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
+     <li><a href="performance.php">Performance</a></li>
+     <li><a href="manage_screeners.php">Pt. Screener</a></li>
+     <li><a href='manage_vobs.php'>VOB History</a></li>
+  </ul>
+</li>
+            <li><a class="menu_item" href="#">Admin</a>
+		<ul>
+                     <li><a href="manage_claim_setup.php">Claim Setup</a></li>
+                     <li><a href="manage_profile.php">Profile</a></li>
+                     <li><a href="manage_custom.php">Custom Text</a></li>
+                     <?php if($_SESSION['userid']==$_SESSION['docid']){ ?>
+                     <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
+                     <?php } ?>
+                     <li><a href="manage_staff.php">Staff</a></li>
+                     <li><a href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>
+ 		     <li><a href="#">DSS Files</a><ul>
+                <?php
+                        $s = "SELECT * FROM dental_document_category WHERE status=1 ORDER BY name ASC";
+                        $sq = mysql_query($s);
+                        while($c = mysql_fetch_assoc($sq)){ ?>
+                                <li><a class="submenu_item" href="view_documents.php?cat=<?= $c['categoryid'];?>"><?= $c['name']; ?></a></li>
+
+                       <?php }
+                ?>
+		</ul></li>
+
+          	</ul>
+	     </li>
+	<li><a href="manage_user_forms.php">Forms</a></li>
+
+
+    <li><a href="#">Education</a><ul>
+
+        <li><a href="manual.php">Dental Sleep Solutions Procedures Manual</a></li>
+
+        <li><a href="#">Dental Sleep Medicine Manual</a></li>
+
+	<?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE){ ?>
+        	<li><a href="operations_manual.php">DSS Franchise Operations Manual</a></li>
+	<?php } ?>
+
+        <li><a href="#">Quick Facts Reference</a></li>
+
+        <li><a href="videos.php">Watch Videos</a></li> 
+
+        <li><a href="course.php">Get C.E.</a></li>
+	</ul>
+    </li>
+  <li><a href="#">SW Tutorials</a></li>
+  <li><a href="calendar.php">Scheduler</a></li>
+  <li><a href="manage_patient.php">Manage Pts</a></li>
+
+  </ul>
+
+</div>
+</div>
+<?php
+
+/*
+
+<div class="homesuckertreemenu">
+<ul id="omemenu" style="padding-top:3px;">
 <li><a href="manage_patient.php">PATIENT</a>
   <ul>
               <li><a href="manage_patient.php">Manage Patients</a></li>
@@ -138,7 +215,8 @@ NAV THIRD
 
 </div>
 
-
+*/
+?>
 <!--
 ##############################################################
 ALERT THIRD
@@ -148,40 +226,57 @@ ALERT THIRD
 
 <div class="home_third">
 <h3>Notifications</h3>
-  <?php if($num_rejected_preauth>0){ ?>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class="notification bad_count"><span class="count"><?= $num_rejected_preauth; ?></span><span class="label">Alerts</span></a>
+<?php $num_portal = $num_pc + $num_pi + $num_c; ?>
+ <a href="#" class=" count_<?= $num_portal; ?> notification bad_count"><span class="count"><?= $num_portal; ?></span><span class="label">Web Portal</span></a>
+
+  <?php if($use_letters){ ?>
+  <a href="letters.php?status=pending" class=" count_<?= $pending_letters; ?> notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $pending_letters;?></span><span class="label">Letters</span></a>
   <?php } ?>
 
-  <?php if($pending_letters > 0 && $use_letters){ ?>
-  <a href="letters.php?status=pending" class="notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $pending_letters;?></span><span class="label">Letters</span></a>
+  <?php if($use_letters && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>  <a href="letters.php?status=sent&mailed=0" class=" count_<?= $unmailed_letters; ?> notification bad_count"><span class="count"><?= $unmailed_letters;?></span><span class="label">Unmailed Letters</span></a>
   <?php } ?>
 
-  <?php if($unmailed_letters > 0 && $use_letters && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
-  <a href="letters.php?status=sent&mailed=0" class="notification bad_count"><span class="count"><?= $unmailed_letters;?></span><span class="label">Unmailed Letters</span></a>
-  <?php } ?>
+  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class=" count_<?= $num_preauth; ?> notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><span class="count"><?= $num_preauth;?></span><span class="label">VOBs</span></a>
 
-
-  <?php if($num_preauth > 0){ ?>
-  <a href="manage_vobs.php?status=<?= DSS_PREAUTH_COMPLETE; ?>&viewed=0" class="notification <?= ($num_preauth==0)?"good_count":"great_count"; ?>"><span class="count"><?= $num_preauth;?></span><span class="label">Verifications</span></a>
-  <?php } ?>
-
-<?php if($num_bounce !=0 ){?>
-  <a href="manage_email_bounces.php" class="notification <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_bounce;?></span><span class="label">Email Bounces</span></a>
+<?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
+  <a href="manage_claims.php" class="notification  count_<?= $num_pending_nodss_claims; ?> <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_nodss_claims;?></span><span class="label">Pending Claims</span></a>
 <?php } ?>
 
-<?php if($num_unsigned !=0 ){?>
-  <a href="manage_unsigned_notes.php" class="notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>
-<?php } ?>
-
-<?php if($num_pending_nodss_claims !=0 && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
-  <a href="manage_claims.php" class="notification <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_nodss_claims;?></span><span class="label">Pending Claims</span></a>
-<?php } ?>
-
-<?php if($num_unmailed_claims !=0 && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
-  <a href="manage_claims.php?unmailed=1" class="notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unmailed_claims;?></span><span class="label">Unmailed Claims</span></a>
+<?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE){?>
+  <a href="manage_claims.php" class=" count_<?= $num_pending_claims; ?> notification <?= ($num_pending_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_claims;?></span><span class="label">Pending Claims</span></a>
 <?php } ?>
 
 
+
+<?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
+  <a href="manage_claims.php?unmailed=1" class=" count_<?= $num_unmailed_claims; ?> notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unmailed_claims;?></span><span class="label">Unmailed Claims</span></a>
+<?php } ?>
+
+  <a href="manage_unsigned_notes.php" class=" count_<?= $num_; ?> notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>
+
+
+<a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class=" count_<?= $num_rejected_preauth; ?> notification bad_count"><span class="count"><?= $num_rejected_preauth; ?></span><span class="label">Alerts</span></a>
+
+
+<?php
+
+
+$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND                 ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
+                (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
+                )";
+
+$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
+  $sql .= "ORDER BY p.lastname ASC";
+$my = mysql_query($sql);
+$num_pending_duplicates = mysql_num_rows($my);
+?>
+  <a href="pending_patient.php" class="notification  count_<?= $num_pending_duplicates; ?> <?= ($num_pending_duplicates==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_duplicates;?></span><span class="label">Pending Duplicates</span></a>
+
+  <a href="manage_email_bounces.php" class="notification count_<?= $num_bounce; ?> <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_bounce;?></span><span class="label">Email Bounces</span></a>
+
+
+<a href="#" onclick="$('.notification.count_0').css('display', 'block');$(this).hide();$('#not_show_active').show();return false;" id="not_show_all">Show All</a>
+<a href="#" onclick="$('.notification.count_0').hide();$(this).hide();$('#not_show_all').show();return false;" style="display:none;" id="not_show_active">Show Active</a>
 </div>
 
 

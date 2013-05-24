@@ -4,7 +4,7 @@
 
 
 
-function uploadImage($image, $file_path, $profile = false){
+function uploadImage($image, $file_path, $type = 'general'){
   $uploadedfile = $image['tmp_name'];
   $fname = $image["name"];
   $lastdot = strrpos($fname,".");
@@ -12,7 +12,10 @@ function uploadImage($image, $file_path, $profile = false){
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   list($width,$height)=getimagesize($uploadedfile);
-  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
+  if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || $filesize > DSS_IMAGE_MAX_SIZE 
+		|| ($type == 'profile' && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT))
+                || ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT)) 
+		 ){
 
     if(strtolower($extension)=="jpg" || strtolower($extension)=="jpeg" )
     {
@@ -26,9 +29,20 @@ function uploadImage($image, $file_path, $profile = false){
     {
       $src = imagecreatefromgif($uploadedfile);
     }
-    if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) || ($profile && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT)) ){
-	$resize_width = ($profile)?DSS_IMAGE_PROFILE_WIDTH:DSS_IMAGE_RESIZE_WIDTH;
-	$resize_height = ($profile)?DSS_IMAGE_PROFILE_HEIGHT:DSS_IMAGE_RESIZE_HEIGHT;
+    if(($width>DSS_IMAGE_MAX_WIDTH || $height>DSS_IMAGE_MAX_HEIGHT) 
+		|| ($type == 'profile' && ($width >DSS_IMAGE_PROFILE_WIDTH || $height>DSS_IMAGE_PROFILE_HEIGHT))
+		|| ($type == 'device' && ($width >DSS_IMAGE_DEVICE_WIDTH || $height>DSS_IMAGE_DEVICE_HEIGHT))
+		 ){
+	if($type=='profile'){
+	$resize_width = DSS_IMAGE_PROFILE_WIDTH;
+	$resize_height = DSS_IMAGE_PROFILE_HEIGHT;
+	}elseif($type=='device'){
+        $resize_width = DSS_IMAGE_DEVICE_WIDTH;
+        $resize_height = DSS_IMAGE_DEVICE_HEIGHT;
+        }else{
+        $resize_width = DSS_IMAGE_RESIZE_WIDTH;
+        $resize_height = DSS_IMAGE_RESIZE_HEIGHT;
+        }
         $prop_width = $width/$resize_width;
         $prop_height = $height/$resize_height;
         if($prop_width>$prop_height){

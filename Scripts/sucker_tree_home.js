@@ -10,7 +10,7 @@ for (var i=0; i<menuids.length; i++){
   var ultags=document.getElementById(menuids[i]).getElementsByTagName("ul")
     for (var t=0; t<ultags.length; t++){
                 if (ultags[t].parentNode.parentNode.id==menuids[i]){ //if this is a first level submenu
-                        ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
+//                        ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
                         ultags[t].parentNode.getElementsByTagName("a")[0].className="mainfoldericon"
                 }
                 else{ //else if this is a sub level menu (ul)

@@ -196,7 +196,6 @@ function hidesmoke(id){
 </script>
 <script language="javascript" type="text/javascript" src="script/hideshow.js"></script>
 
-<script type="text/javascript" src="../../Scripts/sucker_tree.js"></script>
   <SCRIPT LANGUAGE="javascript">
 
 function LinkUp() 
@@ -831,6 +830,7 @@ $num_tasks = mysql_num_rows($task_q);
 <?php $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce; ?>
   <div class="suckertreemenu2">
      <ul id="topmenu2">
+<?php /*
 <li><a href="#">Messages (<?php echo $mess_count; ?>)</a>
   <ul>
       <li><a <?php {echo "href='letters.php?status=pending'";} ?>>Pending Letters (<?php echo $pending_letters; ?>)</a></li>
@@ -845,7 +845,8 @@ $num_tasks = mysql_num_rows($task_q);
 
 
 </li>
-
+<?php */ ?>
+	<li><a href="index.php"> Notifications(<?php echo $mess_count; ?>)</a></li>
        <li><a href="logout.php">Sign Out</a></li>
       </ul>
   </div>
@@ -1058,6 +1059,7 @@ if(mysql_num_rows($od_q)==0 && mysql_num_rows($tod_q) == 0 && mysql_num_rows($to
 </div> 
 
 <?php
+/*
 if($_SESSION['docid']==$_SESSION['userid']){
   $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
   $course_q = mysql_query($course_sql);
@@ -1079,7 +1081,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
 
 
 <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
-
+*/ ?>
  <script type="text/javascript" src="js/task.js"></script> 
  <script type="text/javascript" src="script/autocomplete.js"></script>
  

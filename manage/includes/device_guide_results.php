@@ -7,7 +7,7 @@ require_once('../includes/general_functions.php');
 
   $d_array = array();
 
-  $d_sql = "SELECT d.deviceid id, d.device name FROM dental_device d";
+  $d_sql = "SELECT d.deviceid id, d.device name, d.image_path FROM dental_device d";
   $d_q = mysql_query($d_sql);
   while($d = mysql_fetch_assoc($d_q)){
     $tot = 0;
@@ -25,6 +25,7 @@ require_once('../includes/general_functions.php');
     $a['name'] = $d['name'];
     $a['id'] = $d['id'];
     $a['value'] = $tot;
+    $a['image_path'] = ($d['image_path'])?"../q_file/".$d['image_path']:'';
     array_push($d_array, $a);
   }
 usort($d_array, "cmp");

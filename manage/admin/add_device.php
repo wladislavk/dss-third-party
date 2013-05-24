@@ -3,6 +3,7 @@ session_start();
 require_once('includes/config.php');
 include("includes/sescheck.php");
 require_once "../includes/constants.inc";
+require_once "../includes/general_functions.php";
 /*
 if($_POST["mult_devicesub"] == 1)
 {
@@ -62,7 +63,41 @@ if($_POST["devicesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_device set device = '".s_for($_POST["device"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where deviceid='".$_POST["ed"]."'";
+
+
+
+             $filesize = $_FILES["image"]["size"];
+             if($filesize <= DSS_IMAGE_MAX_SIZE){
+                if($_FILES["image"]["name"] <> '')
+                {
+                        $fname = $_FILES["image"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = 'dental_device_'.$_POST['ed'];
+                        $banner1 .= ".".$extension;
+                        $uploaded = uploadImage($_FILES['image'], "../q_file/".$banner1, 'device');
+                }
+                else
+                {
+			$uploaded = false;
+                }
+             }else{
+                ?>
+                <script type="text/javascript">
+                  alert('Max image size exceeded. Uploaded files can be no larger than 10 megabytes.');
+                </script>
+                <?php
+                $uploaded = false;
+             }
+
+if(!$uploaded){
+  $banner1 = '';
+}
+
+
+
+			$ed_sql = "update dental_device set device = '".s_for($_POST["device"])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."', image_path='".mysql_real_escape_string($banner1)."' where deviceid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
 
@@ -89,6 +124,7 @@ if($_POST["devicesub"] == 1)
       mysql_query($s);
     }
   }
+
 
 			
 			//echo $ed_sql.mysql_error();
@@ -154,6 +190,7 @@ if($_POST["devicesub"] == 1)
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
+		$image_path = '';
 	}
 	else
 	{
@@ -161,6 +198,7 @@ if($_POST["devicesub"] == 1)
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
+		$image_path = st($themyarray['image_path']);
 		$but_text = "Add ";
 	}
 	
@@ -181,7 +219,7 @@ if($_POST["devicesub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)">
+    <form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)" enctype="multipart/form-data">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -253,6 +291,19 @@ if($_POST["devicesub"] == 1)
   }
 
 ?>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+		Image
+            </td>
+            <td valign="top" class="frmdata">
+                  <input id="image" type="file" name="image" class="tbox" />
+ 		  <?php if($image_path != ''){ ?>
+    		    <img src="../q_file/<?= $image_path; ?>" />
+		  <?php } ?>
+            </td>
+        </tr>
+
+
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

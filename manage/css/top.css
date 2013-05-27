@@ -4,6 +4,8 @@
   background: url(../images/logo.png) no-repeat 0 0;
   display: block;
   float: left;
+  padding-left: 100px;
+  color: #fff;
   }
 
 .suckertreemenu{
@@ -26,7 +28,7 @@
 
 #patient_search_div{
   float: left;
-  margin: 25px 5px 0 30px;
+  margin: 25px 5px 0 0px;
   }
 
 #patient_name_div{

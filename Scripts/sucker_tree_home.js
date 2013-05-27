@@ -2,7 +2,8 @@
 //SuckerTree Horizontal Menu (Sept 14th, 06)
 //By Dynamic Drive: http://www.dynamicdrive.com/style/
 
-var menuids=["homemenu","homesettings", "topmenu2", "treemenu1", "topmenu"] //Enter id(s) of SuckerTree UL menus, separated by commas
+var menuids=["homemenu", "notmenu"]
+//var menuids=["homemenu","homesettings", "topmenu2", "treemenu1", "topmenu"] //Enter id(s) of SuckerTree UL menus, separated by commas
 //var menuids=["treemenu1", "topmenu"];
 
 function buildsubmenus_horizontal(){
@@ -11,7 +12,7 @@ for (var i=0; i<menuids.length; i++){
     for (var t=0; t<ultags.length; t++){
                 if (ultags[t].parentNode.parentNode.id==menuids[i]){ //if this is a first level submenu
 //                        ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
-                        ultags[t].parentNode.getElementsByTagName("a")[0].className="mainfoldericon"
+                        ultags[t].parentNode.getElementsByTagName("a")[0].className= ultags[t].parentNode.getElementsByTagName("a")[0].className + " mainfoldericon"
                 }
                 else{ //else if this is a sub level menu (ul)
                   ultags[t].style.left=ultags[t-1].getElementsByTagName("a")[0].offsetWidth+"px" //position menu to the right of menu item that activated it

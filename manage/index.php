@@ -21,6 +21,7 @@
   font-size: 32px;
   width: 100%;
   text-align: center;
+  margin-top: 0px;
   }
 
 .home_menu{
@@ -31,6 +32,16 @@
   display: block;
   font-size: 16px;
   }
+.arrow_right {
+	width: 0; 
+	height: 0; 
+	float: right;
+        margin-top: 11px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	
+	border-left: 10px solid #666;
+}
 </style>
 
 
@@ -54,7 +65,7 @@ NAV THIRD
                    </ul>
               </li>
 <li>
-<a href="#">REPORTS</a>
+<a href="#">Reports</a>
 
   <ul>
      <li><a href="ledger_reportfull.php">Ledger</a></li>
@@ -87,6 +98,7 @@ NAV THIRD
 
           	</ul>
 	     </li>
+	<li><a href="/screener/auto_login.php">Pt. Screener App</a></li>
 	<li><a href="manage_user_forms.php">Forms</a></li>
 
 
@@ -227,8 +239,19 @@ ALERT THIRD
 <div class="home_third">
 <h3>Notifications</h3>
 <?php $num_portal = $num_pc + $num_pi + $num_c; ?>
- <a href="#" class=" count_<?= $num_portal; ?> notification bad_count"><span class="count"><?= $num_portal; ?></span><span class="label">Web Portal</span></a>
+<div class="notsuckertreemenu">
+  <ul id="notmenu">
+	<li>
+ <a href="#" class=" count_<?= $num_portal; ?> notification bad_count"><span class="count"><?= $num_portal; ?></span><span class="label">Web Portal <div class="arrow_right"></div></span></a>
+	  <ul>
 
+		<li><a href="manage_patient_contacts.php" class=" count_<?= $num_pc; ?> notification bad_count"><span class="count"><?= $num_pc; ?></span><span class="label">Pt Contacts</span></a></li>
+		<li><a href="manage_patient_insurance.php" class=" count_<?= $num_pi; ?> notification bad_count"><span class="count"><?= $num_pi; ?></span><span class="label">Pt Insurance</span></a></li>
+		<li><a href="manage_patient_changes.php" class=" count_<?= $num_c; ?> notification bad_count"><span class="count"><?= $num_c; ?></span><span class="label">Pt Changes</span></a></li>
+	  </ul>
+	</li>
+  </ul>
+</div>
   <?php if($use_letters){ ?>
   <a href="letters.php?status=pending" class=" count_<?= $pending_letters; ?> notification <?= ($pending_letters==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $pending_letters;?></span><span class="label">Letters</span></a>
   <?php } ?>
@@ -258,18 +281,6 @@ ALERT THIRD
 <a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class=" count_<?= $num_rejected_preauth; ?> notification bad_count"><span class="count"><?= $num_rejected_preauth; ?></span><span class="label">Alerts</span></a>
 
 
-<?php
-
-
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND                 ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-                (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-                )";
-
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";
-  $sql .= "ORDER BY p.lastname ASC";
-$my = mysql_query($sql);
-$num_pending_duplicates = mysql_num_rows($my);
-?>
   <a href="pending_patient.php" class="notification  count_<?= $num_pending_duplicates; ?> <?= ($num_pending_duplicates==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_duplicates;?></span><span class="label">Pending Duplicates</span></a>
 
   <a href="manage_email_bounces.php" class="notification count_<?= $num_bounce; ?> <?= ($num_bounce==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_bounce;?></span><span class="label">Email Bounces</span></a>

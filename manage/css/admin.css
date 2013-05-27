@@ -912,11 +912,15 @@ ul.submenus2 ul.flyout li.title2, ul.submenus2 ul.flyout img {
 
 /*  SUCKER TREE MENU */
 
-.homesuckertreemenu ul, .suckertreemenu ul{
+.homesuckertreemenu ul, .suckertreemenu ul, .notsuckertreemenu ul{
 margin: 0;
 padding: 0;
 list-style-type: none;
 margin-left:10px;
+}
+
+.notsuckertreemenu ul{
+  margin: 0;
 }
 
 /*Top level list items*/
@@ -932,6 +936,10 @@ display:inline;
 margin-left:10px;
 position:relative;
 }
+
+.notsuckertreemenu ul li{
+  position: relative;
+  }
 
 
 /*Top level menu link items style*/
@@ -961,6 +969,18 @@ margin-left:0;
 margin-top:-9px;
 z-index:50;
 }
+
+.notsuckertreemenu ul li ul{
+left: 275px;
+position: absolute;
+top: 3px; /* no need to change, as true value set by script */
+display: block;
+visibility: hidden;
+margin-left:0;
+margin-top:-9px;
+z-index:50;
+}
+
 
 /*Sub level menu list items (undo style from Top level List Items)*/
 .homesuckertreemenu ul li ul li, .suckertreemenu ul li ul li{

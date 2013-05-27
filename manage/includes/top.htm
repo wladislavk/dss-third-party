@@ -128,6 +128,15 @@ $c_res = mysql_query($c_query);
 $num_c = mysql_num_rows($c_res);
 
 
+$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
+                 ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
+                (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
+                )";
+
+$d_sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0 ";  $sql .= "ORDER BY p.lastname ASC";
+$d_my = mysql_query($d_sql);
+$num_pending_duplicates = mysql_num_rows($d_my);
+
 $bounce_query = "SELECT * FROM dental_patients p WHERE p.email_bounce=1 AND p.docid = '".$docid."'";
 $bounce_res = mysql_query($bounce_query);
 $num_bounce = mysql_num_rows($bounce_res);
@@ -827,7 +836,14 @@ $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
 $task_q = mysql_query($task_sql);
 $num_tasks = mysql_num_rows($task_q);
 ?>
-<?php $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce; ?>
+<?php $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce + $num_unsigned + $num_pending_duplicates; ?>
+<?php
+  if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+	$mess_count += $num_unmailed_claims + $num_pending_nodss_claims;
+  }else{
+	$mess_count += $num_pending_claims;
+  }
+  ?>
   <div class="suckertreemenu2">
      <ul id="topmenu2">
 <?php /*
@@ -1088,7 +1104,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
   <div style="height:89px; width:980px; background:url(images/dss_01.png) #0b5c82 no-repeat top left;">
      
     <div style="margin-top:10px; margin-left:20px; float:left;">
-<a href="/manage" id="logo"></a>
+<a href="/manage" id="logo">Dashboard</a>
     </div>
     <div style="float:left;">
     <!--<form name="form" action="search.php" method="get">-->

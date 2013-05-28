@@ -952,8 +952,12 @@ color: #095d81;
 text-align:center;
 font-weight:bold;
 font-size:15px;
-background:url(../images/btn.png) no-repeat top left;
+background:url(../images/navigation_button.png) no-repeat top left;
 cursor: pointer;
+}
+
+.homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover{
+  background: url(../images/navigation_button_hover.png) no-repeat top left;
 }
 	
 /*1st sub level menu*/
@@ -1037,7 +1041,7 @@ font-size:13px;
 
 /*Background image for top level menu list links */
 .homesuckertreemenu .mainfoldericon, .suckertreemenu .mainfoldericon{
-background:url(../images/btn_mainlev_right.png) no-repeat top left;
+background:url(../images/navigation_button.png) no-repeat top left;
 }
 
 /*Background image for subsequent level menu list links */

@@ -427,6 +427,7 @@ $ed_sql .="
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+		p_m_eligible_id = '".s_for($_POST['p_m_eligible_id'])."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -668,6 +669,7 @@ mysql_query($s1);
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
+                p_m_eligible_id = '".s_for($_POST['p_m_eligible_id'])."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -855,6 +857,7 @@ mysql_query($s1);
 		$p_m_employer = $_POST["p_m_employer"];
 		$p_m_ins_co = $_POST["p_m_ins_co"];
 		$p_m_ins_id = $_POST["p_m_ins_id"];
+                $p_m_eligible_id = $_POST['p_m_eligible_id'];
 		$has_s_m_ins = $_POST["s_m_ins"];
 		$s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
@@ -964,6 +967,7 @@ mysql_query($s1);
 		$p_m_employer = st($themyarray["p_m_employer"]);
 		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
 		$p_m_ins_id = st($themyarray["p_m_ins_id"]);
+		$p_m_eligible_id = st($themyarray["p_m_eligible_id"]);
 		$has_s_m_ins = st($themyarray["has_s_m_ins"]);
 		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
@@ -1898,7 +1902,24 @@ $(document).ready(function(){
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>	      
 	      </td>
 	  </tr>
-		
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+?>
+	                <tr>
+                <td valign="top" colspan="2" class="frmhead">
+		Insurance Co.
+ 		<input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="60054")?'checked="checked"':''; ?> value="60054" /> Aetna 
+                <input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="87726")?'checked="checked"':''; ?> value="87726" /> United
+                <input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="HUMANA")?'checked="checked"':''; ?> value="HUMANA" /> HUMANA
+                <input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="BCBSF")?'checked="checked"':''; ?> value="BCBSF" /> BCBSFL
+                <input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="62308")?'checked="checked"':''; ?> value="62308" /> CIGNA
+		<input type="radio" name="p_m_eligible_id" <?= ($p_m_eligible_id=="")?'checked="checked"':''; ?> value="" />Other
+		</td></tr>	
+<?php } ?>
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>

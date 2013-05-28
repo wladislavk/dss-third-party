@@ -66,6 +66,27 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+$eligible_id = st($pat_myarray['p_m_eligible_id']);
+switch($eligible_id){
+  case '60054':
+	$eligible_ins = "Aetna";
+        break;
+  case '87726':
+	$eligible_ins = "United"; 
+	break;
+  case 'HUMANA': 
+	$eligible_ins = "HUMANA";
+	break;
+  case 'BCBSF':
+	$eligible_ins = "BCBSFL";
+	break;
+  case '62308':
+	$eligible_ins = "CIGNA";
+	break;
+  default:
+	$eligible_ins = "";
+	break;
+}
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
@@ -497,6 +518,7 @@ $diagnosis_4_right_fill = $dia[1];
 
 
 $data = array();                                                                    
+$data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 $data['reference_id'] = $_GET['insid'];
 /*
 $data['submitter'] = array(
@@ -511,8 +533,8 @@ $data['submitter'] = array(
         "email" => "brandi@dentalsleepsolutions.com");
 */
 $data['receiver'] = array(
-	"organization_name" => "AETNA",
-	"id" => "2");
+	"organization_name" => $eligible_ins,
+	"id" => $eligible_id);
 $data['billing_provider']= array(
 	"provider_taxonomy_code" => "332B00000X",
 	"organization_name" => $practice,
@@ -540,14 +562,21 @@ $data['subscriber'] = array(
 	"member_id" => $insured_id_number,
 	"group_id" => $insured_policy_group_feca,
 	"group_name" => $insured_insurance_plan,
+        "gender" => $pat_gender,
+        "address" => array(
+                "street_line_1" => $patient_address,
+                "street_line_2" => "",
+                "city" => $patient_city,
+                "state" => $patient_state,
+                "zip" => $patient_zip),
 	"dob" => $claim_ins_dob);
   $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
   $ins_contact_qry_run = mysql_query($ins_contact_qry);
   $ins_contact_res = mysql_fetch_array($ins_contact_qry_run);
 
 $data['payer'] = array(
-	"organization_name" => "Aetna Long Term Care",
-	"id" => "225",
+	"organization_name" => $eligible_ins,
+	"id" => $eligible_id,
 	"address" => array(
 		"street_line_1" => $ins_contact_res['add1'],
 		"street_line_2" =>  $ins_contact_res['add2'],
@@ -640,8 +669,10 @@ $data['claim'] = array(
 	"service_lines" => $claim_lines
 	);
 $data_string = json_encode($data);                                                                                   
-echo $data_string."<br /><br />"; 
-$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
+error_log($data_string);
+//echo $data_string."<br /><br />"; 
+//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
+$ch = curl_init('https://gds.eligibleapi.com/v1.1/claim/submit.json');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
@@ -652,8 +683,13 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
  
 $result = curl_exec($ch);
 
-echo($result);
+$up_sql = "UPDATE dental_insurance SET eligible_response='".mysql_real_escape_string($result)."'";
+mysql_query($up_sql);
 
+
+//echo($result);
+
+/*
 die();
 $prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
 
@@ -806,7 +842,7 @@ mysql_query($sql);
 	fclose($handle);
 
 echo $fdf;
-
+*/
 function fill_cents($v){
   if($v<10){
 	return '0'.$v;

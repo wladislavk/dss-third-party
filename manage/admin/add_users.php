@@ -69,6 +69,7 @@ if($_POST["usersub"] == 1)
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
 				use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
+                                homepage = '".s_for($_POST['homepage'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
@@ -170,6 +171,7 @@ if($_POST["usersub"] == 1)
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
+                                homepage = '".s_for($_POST['homepage'])."',
 				status = '".s_for($_POST["status"])."',
 				user_type = '".s_for($_POST["user_type"])."',
 				adddate=now(),
@@ -327,6 +329,7 @@ if($_POST["usersub"] == 1)
 		$use_eligible_api = $_POST['use_eligible_api'];
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
+		$homepage = $_POST['homepage'];
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
 	}
@@ -366,6 +369,7 @@ if($_POST["usersub"] == 1)
 		$use_eligible_api = st($themyarray['use_eligible_api']);
                 $use_course = st($themyarray['use_course']);
                 $use_course_staff = st($themyarray['use_course_staff']);
+		$homepage = st($themyarray['homepage']);
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
 		$but_text = "Add ";
@@ -684,6 +688,14 @@ if($_POST["usersub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                         <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Use new homepage?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="homepage" value="1" <? if($homepage == 1) echo " checked='checked'";?> />
             </td>
         </tr>
 

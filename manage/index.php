@@ -1,4 +1,17 @@
 <?php include 'includes/top.htm';?>
+<?php
+  $sql = "SELECT homepage from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+  if($r['homepage']!='1'){
+    ?>
+    <script type="text/javascript">
+	window.location = 'index2.php';
+    </script>
+    <?php
+  }
+?>
+
  <table>
  <tr>
  <td valign="top" style="border-right:1px solid #00457c;width:980px;">

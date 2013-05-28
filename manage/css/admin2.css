@@ -912,15 +912,11 @@ ul.submenus2 ul.flyout li.title2, ul.submenus2 ul.flyout img {
 
 /*  SUCKER TREE MENU */
 
-.homesuckertreemenu ul, .suckertreemenu ul, .notsuckertreemenu ul{
+.homesuckertreemenu ul, .suckertreemenu ul{
 margin: 0;
 padding: 0;
 list-style-type: none;
 margin-left:10px;
-}
-
-.notsuckertreemenu ul{
-  margin: 0;
 }
 
 /*Top level list items*/
@@ -932,12 +928,10 @@ position:relative;
 }
 
 .homesuckertreemenu ul li{
+display:inline;
+margin-left:10px;
 position:relative;
 }
-
-.notsuckertreemenu ul li{
-  position: relative;
-  }
 
 
 /*Top level menu link items style*/
@@ -958,7 +952,7 @@ cursor: pointer;
 	
 /*1st sub level menu*/
 .homesuckertreemenu ul li ul, .suckertreemenu ul li ul{
-left: 170px;
+left: 0;
 position: absolute;
 top: 1em; /* no need to change, as true value set by script */
 display: block;
@@ -967,18 +961,6 @@ margin-left:0;
 margin-top:-9px;
 z-index:50;
 }
-
-.notsuckertreemenu ul li ul{
-left: 275px;
-position: absolute;
-top: 3px; /* no need to change, as true value set by script */
-display: block;
-visibility: hidden;
-margin-left:0;
-margin-top:-9px;
-z-index:50;
-}
-
 
 /*Sub level menu list items (undo style from Top level List Items)*/
 .homesuckertreemenu ul li ul li, .suckertreemenu ul li ul li{
@@ -1008,7 +990,7 @@ color: #095d81;
 text-decoration: none;
 padding:8px 5px 0 5px;
 background:none;
-height:auto;
+height:20px;
 }
 
 .homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover{
@@ -1037,7 +1019,7 @@ font-size:13px;
 
 /*Background image for top level menu list links */
 .homesuckertreemenu .mainfoldericon, .suckertreemenu .mainfoldericon{
-background:url(../images/btn_mainlev_right.png) no-repeat top left;
+background:url(../images/btn_mainlev.png) no-repeat top left;
 }
 
 /*Background image for subsequent level menu list links */
@@ -1246,9 +1228,10 @@ float:left;
   background:#ccf;
 }
 .notification{
-  width: 274px;
-  height: 59px;
-  line-height: 43px;
+  width: 217px;
+  height: 53px;
+  text-align:center;
+  line-height: 53px;
   display: block;
   margin: 5px 0 0 20px;
   font-size: 18px;
@@ -1256,43 +1239,19 @@ float:left;
   }
 .notification:hover{
   text-decoration: none;
+  color: #095D81;
 }
 
-a.notification.count_0{
-  display:none; 
-}
-
-.notification .count{
-  color:#fff; 
-  padding-left:30px;
-  width: 50px;
-  display: block;
-  float: left;
-  text-align:center;
-} 
-.notification .label{
-  width: 190px;
-  text-align:center;
-  display: block;
-  float: left;
-  color: #000;
-  padding-top:5px;
-  }
 .notification.good_count{
-  background: url(../images/button_green.png) no-repeat 0 0;
+  background: url(../images/count_blue.png) no-repeat 0 0;
   }
 .notification.bad_count{
-  background: url(../images/button_red.png) no-repeat 0 0;
+  background: url(../images/count_red.png) no-repeat 0 0;
   }
 .notification.great_count{
-  background: url(../images/button_green.png) no-repeat 0 0;
+  background: url(../images/count_green.png) no-repeat 0 0;
   }
-.notification.good_count:hover, .notification.great_count:hover{
-  background: url(../images/button_green_mouseover.png) no-repeat 0 0;
-  }
-.notification.bad_count:hover{
-  background: url(../images/button_red_mouseover.png) no-repeat 0 0;
-  }
+
 
 
 .eob_text td{
@@ -1343,21 +1302,4 @@ text-decoration:none;
 .button:active, .addButton:active {
 border-top-color: #1f303b;
 background: #1f303b;
-}
-
-
-
-.box_go {
-    position: relative;
-}
-
-.box_go .ico {
-   position: absolute;
-   left: 80px;
-   display: none;
-   z-index:100;
-}
-
-.box_go:hover .ico {
-    display: block;
 }

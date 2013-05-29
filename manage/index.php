@@ -49,7 +49,8 @@
 	width: 0; 
 	height: 0; 
 	float: right;
-        margin-top: 11px;
+        margin-top: 15px;
+        margin-right: 10px;
 	border-top: 10px solid transparent;
 	border-bottom: 10px solid transparent;
 	
@@ -256,7 +257,7 @@ ALERT THIRD
 <div class="notsuckertreemenu">
   <ul id="notmenu">
 	<li>
- <a href="#" class=" count_<?= $num_portal; ?> notification bad_count"><span class="count"><?= $num_portal; ?></span><span class="label">Web Portal <div class="arrow_right"></div></span></a>
+ <a href="#" class=" count_<?= $num_portal; ?> notification bad_count"><?= $num_portal; ?> Web Portal <div class="arrow_right"></div></a>
 	  <ul>
 
 		<li><a href="manage_patient_contacts.php" class=" count_<?= $num_pc; ?> notification bad_count"><span class="count"><?= $num_pc; ?></span><span class="label">Pt Contacts</span></a></li>

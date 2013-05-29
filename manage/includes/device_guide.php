@@ -158,6 +158,7 @@ $(".setting").each(function(){
 	$(this).find(".label").html( $(this).find('.label').attr('data-init'));
         $(this).find(".imp_chk").prop("checked", false);
   });
+          $('#results li').remove();
 }
 
 
@@ -201,6 +202,9 @@ $.ajax({
 });
 
 function update_device(device, name){
+<?php
+  if(isset($_GET['id'])&&isset($_GET['pid'])){
+?>
  if(confirm("Do you want to select "+name+" for <?= $r['firstname']." ".$r['lastname']; ?>?")){
  $.ajax({
                                         url: "flow_device_update.php",
@@ -220,6 +224,7 @@ function update_device(device, name){
                                         }
                                   });
  }
+ <?php } ?>
 }
 
 </script>

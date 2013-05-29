@@ -135,7 +135,8 @@ NAV THIRD
   <li><a href="#">SW Tutorials</a></li>
   <li><a href="calendar.php">Scheduler</a></li>
   <li><a href="manage_patient.php">Manage Pts</a></li>
-
+  <li><a href="quick_facts.php">Quick Facts</a></li>
+  <li><a href="#" onclick="loadPopup('includes/device_guide.php'); return false;">Device Selector</a></li>
   </ul>
 
 </div>

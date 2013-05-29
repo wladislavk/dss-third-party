@@ -536,8 +536,8 @@ $data['receiver'] = array(
 	"organization_name" => $eligible_ins,
 	"id" => $eligible_id);
 $data['billing_provider']= array(
-	"provider_taxonomy_code" => "332B00000X",
-	"organization_name" => $practice,
+	"taxonomy_code" => "332B00000X",
+	"practice_name" => $practice,
 	"npi" => $npi,
 	"address" => array(
 		"street_line_1" => str_replace(',','',$address),
@@ -570,12 +570,12 @@ $data['subscriber'] = array(
                 "state" => $patient_state,
                 "zip" => $patient_zip),
 	"dob" => $claim_ins_dob);
-  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$_SESSION['docid']."'";
+  $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
   $ins_contact_qry_run = mysql_query($ins_contact_qry);
   $ins_contact_res = mysql_fetch_array($ins_contact_qry_run);
 
 $data['payer'] = array(
-	"organization_name" => $eligible_ins,
+	"name" => $eligible_ins,
 	"id" => $eligible_id,
 	"address" => array(
 		"street_line_1" => $ins_contact_res['add1'],
@@ -642,7 +642,7 @@ if($array['diagnosispointer']!=''){
 }
 $a = array(
 	                "line_number" => "$c",
-                        "product_service_qualifier" => "HC",
+                        "qualifier" => "HC",
                         "product_service" => $array['transaction_code'],
                         "charge_amount" => $array['amount'],
 			"place_of_service" => preg_replace("/[^0-9]/","",$array['placeofservice']),
@@ -650,7 +650,7 @@ $a = array(
                         "modifier_2" => $array['modcode2'],
                         "modifier_3" => $array['modcode3'],
                         "modifier_4" => $array['modcode4'],
-                        "principal_diagnosis_1" => $diagnosis,
+                        "diagnosis_1" => $diagnosis,
 			"service_start" => ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):'',
 			"service_end" =>  ($array['service_date'] != '')?date('Y-m-d', strtotime($array['service_date'])):''
 			);

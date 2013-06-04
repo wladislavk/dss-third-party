@@ -772,7 +772,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </td>
         </tr>
 <?php if(is_super($_SESSION['admin_access'])){ ?>
-        <tr class="expanded" bgcolor="#FFFFFF">
+        <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                  Admin Company
             </td>

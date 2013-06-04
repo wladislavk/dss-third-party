@@ -458,7 +458,9 @@ I certify that the above invoice accurately reflects the dental sleep medicine c
 __________________________________________________(signature) '.$invoice['name'].'
 </div>
 </div>
-<!-- END main table -->
+';
+}
+$html .= '<!-- END main table -->
 </body>
 </html>';
 

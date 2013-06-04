@@ -35,6 +35,22 @@
                 ";
 //echo $sql;
         $q = mysql_query($sql);
+		$loc_s = "SELECT * FROM dental_locations WHERE default_location=1 AND docid = '".$_POST['userid']."'";
+		$loc_q = mysql_query($loc_s);
+		if(mysql_num_rows($loc_q)>0){
+			$loc_r = mysql_fetch_assoc($loc_q);
+                        $loc_sql = "UPDATE dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                fax = '".s_for(num($_POST["fax"]))."'
+				WHERE 
+                                id = '".mysql_real_escape_string($loc_r['id'])."'"; 
+		}else{
                         $loc_sql = "INSERT INTO dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
                                 name = '".s_for($_POST["mailing_name"])."', 
@@ -48,6 +64,7 @@
                                 docid='".$_POST['userid']."',
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		}
                         mysql_query($loc_sql);
 
 		$userid = mysql_insert_id();

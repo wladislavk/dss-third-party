@@ -9,10 +9,10 @@ require_once 'includes/access.php';
 require_once 'includes/form_updates.php';
 if($_POST["usersub"] == 1)
 {
+
+	if(isset($_POST['save_but']) || $_POST['username']!=''){
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysql_query($sel_check);
-        $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
-        $query_check2=mysql_query($sel_check2);
 
 	if(mysql_num_rows($query_check)>0)
 	{
@@ -24,7 +24,10 @@ if($_POST["usersub"] == 1)
 		</script>
 		<?
 	} 
-	elseif(mysql_num_rows($query_check2)>0)
+	}
+        $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
+        $query_check2=mysql_query($sel_check2);
+	if(mysql_num_rows($query_check2)>0)
         {
                 $msg="Email already exist. So please give another Email.";
                 ?>
@@ -145,6 +148,7 @@ if($_POST["usersub"] == 1)
 			$salt = create_salt();
 			$password = gen_password($_POST['password'], $salt);
 
+                        $recover_hash = hash('sha256', $r['patientid'].$_POST['email'].rand());
 
 			$ins_sql = "insert into dental_users set user_access=2,
 				username = '".s_for($_POST["username"])."',
@@ -172,9 +176,16 @@ if($_POST["usersub"] == 1)
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
-				status = '".s_for($_POST["status"])."',
 				user_type = '".s_for($_POST["user_type"])."',
-				adddate=now(),
+				";
+		                if(isset($_POST['reg_but'])){
+					$ins_sql .= " recover_hash='".$recover_hash."',
+                                			recover_time=NOW(), 
+							status=2,";
+				}else{
+					$ins_sql .= "status = '".s_for($_POST["status"])."',";
+				}
+				$ins_sql .= " adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
                         $userid = mysql_insert_id();			
@@ -193,6 +204,7 @@ if($_POST["usersub"] == 1)
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
                         mysql_query($loc_sql);
 
+		if(isset($_POST['save_but'])){
                         $course_sql = "INSERT INTO users set
                                         name = '".mysql_real_escape_string($_POST["username"])."',
                                         mail = '".mysql_real_escape_string($_POST["email"])."',
@@ -244,7 +256,7 @@ if($_POST["usersub"] == 1)
                                                         '".mysql_real_escape_string($_POST['name'])."',
                                                         '".mysql_real_escape_string($userid)."')";
 			mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
-
+		}
 
 
 
@@ -262,6 +274,44 @@ if($_POST["usersub"] == 1)
   			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
 			}		
 
+		if(isset($_POST['reg_but'])){
+  $m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td width='400'>
+<h2>Create your Software Account</h2>
+<p>Welcome to the Dental Sleep Solutions&reg; Team! Please click the link below to activate your software account:
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."</a></p>
+</td><td width='200'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td>
+<h3>Need assistance?
+Contact us at 877-95-SNORE or at<br>
+Support@dentalsleepsolutions.com</b></h3></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+</table>
+</center></body></html>
+";
+$m .= DSS_EMAIL_FOOTER;
+$headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
+                    'Content-type: text/html' ."\r\n" .
+                    'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "Dental Sleep Solutions Account Activation";
+                $mail = mail($_POST['email'], $subject, $m, $headers);
+                if($mail){
+                  $e_sql = "UPDATE dental_users SET registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
+                  mysql_query($e_sql);
+                }
+                        $msg = "Added Successfully";
+                        ?>
+                        <script type="text/javascript">
+                                //alert("<?=$msg;?>");
+                                parent.window.location='manage_users.php?msg=<?=$msg;?>';
+                        </script>
+                        <?
+                        die();
+		}else{
 			$msg = "Added Successfully";
 			?>
 			<script type="text/javascript">
@@ -270,6 +320,7 @@ if($_POST["usersub"] == 1)
 			</script>
 			<?
 			die();
+		}
 		}
 	}
 }
@@ -374,6 +425,16 @@ if($_POST["usersub"] == 1)
                 $user_type = st($themyarray['user_type']);
 		$but_text = "Add ";
 	}
+
+        if(!isset($_GET['ed'])){
+                $use_patient_portal = 1;
+                $use_letters = 1;
+                $use_course = 1;
+                $use_course_staff = 1;
+                $homepage = 1;
+ 		$companyid = 4;
+		$user_type = 2;
+	}
 	
 	if($themyarray["userid"] != '')
 	{
@@ -392,7 +453,7 @@ if($_POST["usersub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -402,7 +463,7 @@ if($_POST["usersub"] == 1)
                <? }?>
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Username
 		<span class="red">*</span>
@@ -411,7 +472,7 @@ if($_POST["usersub"] == 1)
                 <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 NPI Number
                 <span class="red">*</span>
@@ -420,7 +481,7 @@ if($_POST["usersub"] == 1)
                 <input id="npi" type="text" name="npi" value="<?=$npi?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Medicare Provider (NPI/DME) Number
                 <span class="red">*</span>
@@ -429,7 +490,7 @@ if($_POST["usersub"] == 1)
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded"  bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Medicare PTAN Number
             </td>
@@ -437,7 +498,7 @@ if($_POST["usersub"] == 1)
                 <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Tax ID or SSN
                 <span class="red">*</span>
@@ -446,7 +507,7 @@ if($_POST["usersub"] == 1)
                 <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 EIN or SSN<br />
 		(EIN or SSN is required)
@@ -459,7 +520,7 @@ if($_POST["usersub"] == 1)
                 SSN
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Practice
                 <span class="red">*</span>
@@ -469,7 +530,7 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 	<?php if(!isset($_REQUEST['ed'])){ ?>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Password
                 <span class="red">*</span>
@@ -478,7 +539,7 @@ if($_POST["usersub"] == 1)
                 <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Re-type Password
                 <span class="red">*</span>
@@ -506,7 +567,7 @@ if($_POST["usersub"] == 1)
                 <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Address
                 <span class="red">*</span>
@@ -516,7 +577,7 @@ if($_POST["usersub"] == 1)
                 <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 City
                 <span class="red">*</span>
@@ -525,7 +586,7 @@ if($_POST["usersub"] == 1)
                 <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 State
                 <span class="red">*</span>
@@ -534,7 +595,7 @@ if($_POST["usersub"] == 1)
                 <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Zip
                 <span class="red">*</span>
@@ -552,7 +613,7 @@ if($_POST["usersub"] == 1)
                 <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Fax
             </td>
@@ -561,7 +622,7 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Mailing Practice
                 <span class="red">*</span>
@@ -570,7 +631,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Name
                 <span class="red">*</span>
@@ -579,7 +640,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Address
                 <span class="red">*</span>
@@ -589,7 +650,7 @@ if($_POST["usersub"] == 1)
                 <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing City
                 <span class="red">*</span>
@@ -598,7 +659,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing State
                 <span class="red">*</span>
@@ -607,7 +668,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Zip
                 <span class="red">*</span>
@@ -616,7 +677,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Phone
                 <span class="red">*</span>
@@ -625,7 +686,7 @@ if($_POST["usersub"] == 1)
                 <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Fax 
             </td>
@@ -690,7 +751,7 @@ if($_POST["usersub"] == 1)
                         <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?> />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Use new homepage?
             </td>
@@ -699,7 +760,7 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status
             </td>
@@ -711,7 +772,7 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 <?php if(is_super($_SESSION['admin_access'])){ ?>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                  Admin Company
             </td>
@@ -746,15 +807,25 @@ if($_POST["usersub"] == 1)
                 </span><br />
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
-                <input type="submit" value=" <?=$but_text?> User" class="button" />
+                <input type="submit" name="save_but" onclick="return userabc(this.form);" value=" <?=$but_text?> User" class="button" />
                 <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete
                                         </a>
+		    <a style="float:left;" href="reset_password.php?id=<?=$themyarray["userid"];?>">Reset Password</a>
+		<?php }else{ ?>
+ 		  <input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
+		  <a style="float:right;" href="#" onclick="$('.expanded').toggle(); return false;">Expand all fields</a>
 		<?php } ?>
             </td>
         </tr>
     </table>
     </form>
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<?php if(!isset($_GET['ed'])){ ?>
+  <script type="text/javascript">
+    $('.expanded').hide();
+  </script>
+<?php } ?>
 </body>
 </html>

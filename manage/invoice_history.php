@@ -1,6 +1,13 @@
 <? 
 include "includes/top.htm";
 
+if($_SESSION['docid'] != $_SESSION['userid']){
+  ?>
+  <h3 style="margin-left:20px;">You are not permitted to view this page.</h3>
+  <?php
+  die();
+}
+
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.docid=".mysql_real_escape_string($_SESSION['docid'])." ORDER BY adddate DESC";
 $my = mysql_query($sql);
@@ -123,9 +130,6 @@ $doc = mysql_fetch_assoc($doc_q);
 			Total
 		</td>
 		<td valign="top" class="col_head" width="25%">
-			E0486		
-		</td>
-		<td valign="top" class="col_head" width="25%">
 			Action	
 		</td>
 	</tr>
@@ -160,10 +164,6 @@ $case_q = mysql_query($case_sql);
 				</td>
 				<td valign="top">
 					$<?= number_format($extra['extra_total']+$case['ledger_total']+$myarray['monthly_fee_amount'],2); ?>
-				</td>
-				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
-					<?php
-         				    echo st($case["num_trxn"]); ?>
 				</td>
 				<td valign="top">
 					<a href="./q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">

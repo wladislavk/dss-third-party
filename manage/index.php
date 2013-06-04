@@ -109,6 +109,9 @@ NAV THIRD
                        <?php }
                 ?>
 		</ul></li>
+                <?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
+                     <li><a href="invoice_history.php">Invoices</a></li>
+                <?php } ?>
 
           	</ul>
 	     </li>

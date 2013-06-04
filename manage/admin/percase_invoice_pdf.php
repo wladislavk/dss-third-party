@@ -2,8 +2,9 @@
 require_once('../3rdParty/tcpdf/config/lang/eng.php');
 require_once('../3rdParty/tcpdf/tcpdf.php');
 require_once('includes/config.php');
+require_once('../includes/constants.inc');
 
-$invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone FROM dental_percase_invoice pi
+$invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi
 	JOIN dental_users u ON u.userid=pi.docid
 	WHERE id='".mysql_real_escape_string($_GET['invoice_id'])."'";
 $invoice_q = mysql_query($invoice_sql);
@@ -37,9 +38,13 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 						<table width="630" border="0" cellspacing="0" cellpadding="0" >
 							<tr>
 							<!-- table column with logo -->
-							<td height="133" align="center" valign="middle" style="padding: 0px;">
-							<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo.jpg" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>
-							</td>
+							<td height="133" align="center" valign="middle" style="padding: 0px;">';
+							if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
+								$html .= '<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo_ds3.png" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>';
+							}else{
+								$html .= '<a href="" title="" target="_blank"><img src="images/invoice/invoice_logo.jpg" alt="logo header" border="no" style="margin: 0px; padding: 0px; "/></a>';
+							}
+							$html .= '</td>
 							</tr>
 						</table>
 					</td>
@@ -62,9 +67,13 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #54A9D0; padding-bottom: 10px;">
 									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
-									Invoice Date: '.date('m/d/Y').'<br />
-									Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day")).'
-									</td>
+									Invoice Date: '.date('m/d/Y').'<br />';
+									if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
+                                                                          $html .= 'Payment Charged: '.date('m/d/Y');
+									}else{
+									  $html .= 'Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day"));
+									}
+									$html .= '</td>
 									</tr>							
 								</table>
 							</td>
@@ -286,8 +295,17 @@ $html .= '
 							<tr>
 							<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 32px; color: #888888; padding-bottom: 20px;">
 							<span style="font-weight: bold; color: #444444;">NOTICE:</span>
-							The amount above will be automatically debited from your account on file on '.date('m/d/Y', strtotime(date() . " +7 day")).'. DO NOT send a check or payment. If you dispute the amount above please contact us immediately. Please RETURN the Verification page following this invoice to confirm completed cases and total bill.
-							</td>
+							The amount above will be automatically debited from your account on file on ';
+							if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
+							  $html .= date('m/d/Y');
+							}else{
+							  $html .= date('m/d/Y', strtotime(date() . " +7 day"));
+							}
+							$html .='. DO NOT send a check or payment. If you dispute the amount above please contact us immediately.';
+							if($invoice['user_type']!=DSS_USER_TYPE_SOFTWARE){
+							  $html .= 'Please RETURN the Verification page following this invoice to confirm completed cases and total bill.';
+							}
+							$html .= '</td>
 							</tr>
 						</table>	
 					</td>
@@ -309,8 +327,9 @@ $html .= '
 		<!-- END main centred table -->
 	</div></td>
 	</tr>
-</table>
-<br pagebreak="true"/>
+</table>';
+if($invoice['user_type']!=DSS_USER_TYPE_SOFTWARE){
+$html .= '<br pagebreak="true"/>
  <span style="font-size:45px">
 INVOICE '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).' - VERIFICATION 
 </span>

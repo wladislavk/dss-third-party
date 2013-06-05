@@ -1,6 +1,6 @@
 <? 
 include "includes/top.htm";
-
+require_once '../3rdParty/stripe/lib/Stripe.php';
 $sql = "SELECT pi.* FROM dental_percase_invoice pi
 	WHERE pi.docid=".mysql_real_escape_string($_GET['docid'])." ORDER BY adddate DESC";
 $my = mysql_query($sql);
@@ -53,6 +53,9 @@ $doc = mysql_fetch_assoc($doc_q);
                 <td valign="top" class="col_head" width="30%">
                         Charge
                 </td>
+		<td valign="top" class="col_head" width="20%">
+			Card
+		</td>
         </tr>
         <? if(mysql_num_rows($charge_q) == 0)
         { ?>
@@ -92,6 +95,30 @@ $doc = mysql_fetch_assoc($doc_q);
                                         </a>
 
                                 </td>
+				<td valign="top">
+	                                <?php
+$key_sql = "SELECT stripe_secret_key FROM companies c 
+                JOIN dental_user_company uc
+                        ON c.id = uc.companyid
+                 WHERE uc.userid='".mysql_real_escape_string($_GET['docid'])."'";
+$key_q = mysql_query($key_sql);
+$key_r= mysql_fetch_assoc($key_q);
+
+Stripe::setApiKey($key_r['stripe_secret_key']);
+
+try{
+  $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+} catch (Exception $e) {
+  // Something else happened, completely unrelated to Stripe
+  $body = $e->getJsonBody();
+  $err  = $body['error'];       
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  //die();
+
+}
+echo $charge->card->last4;
+?>
+				</td>
 
                         </tr>
         <?      }

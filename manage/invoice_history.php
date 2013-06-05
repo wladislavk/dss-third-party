@@ -1,6 +1,6 @@
 <? 
 include "includes/top.htm";
-
+require_once '3rdParty/stripe/lib/Stripe.php';
 if($_SESSION['docid'] != $_SESSION['userid']){
   ?>
   <h3 style="margin-left:20px;">You are not permitted to view this page.</h3>
@@ -54,10 +54,7 @@ $doc = mysql_fetch_assoc($doc_q);
                         Amount
                 </td>
                 <td valign="top" class="col_head" width="30%">
-                        Customer 
-                </td>
-                <td valign="top" class="col_head" width="30%">
-                        Charge
+                        Card #
                 </td>
         </tr>
         <? if(mysql_num_rows($charge_q) == 0)
@@ -82,21 +79,30 @@ $doc = mysql_fetch_assoc($doc_q);
                                         $<?php
                                             echo st($charge_r["amount"]); ?>
                                 </td>
-                                <td valign="top" style="font-weight:bold;">
-                                        <a href="https://manage.stripe.com/customers/<?php
-                                           echo st($charge_r["stripe_customer"]); ?>" target="_blank">
-						<?php
-                                           echo st($charge_r["stripe_customer"]); ?>
-					</a>
-                                </td>
 
                                 <td valign="top" style="font-weight:bold;">
-                                        <a href="https://manage.stripe.com/payments/<?php
-                                           echo st($charge_r["stripe_charge"]); ?>" target="_blank">
-                                                <?php
-                                           echo st($charge_r["stripe_charge"]); ?>
-                                        </a>
+				<?php
+$key_sql = "SELECT stripe_secret_key FROM companies c 
+                JOIN dental_user_company uc
+                        ON c.id = uc.companyid
+                 WHERE uc.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$key_q = mysql_query($key_sql);
+$key_r= mysql_fetch_assoc($key_q);
 
+Stripe::setApiKey($key_r['stripe_secret_key']);
+
+try{
+  $charge = Stripe_Charge::retrieve($charge_r["stripe_charge"]);
+} catch (Exception $e) {
+  // Something else happened, completely unrelated to Stripe
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
+  //die();
+
+}   
+echo $charge->card->last4;
+?>
                                 </td>
 
                         </tr>

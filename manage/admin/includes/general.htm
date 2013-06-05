@@ -706,6 +706,8 @@ function deliver_created_letter($letterid){
                                 $lastname = mysql_result($myinfo, 0, 1);
                                 $to_email = mysql_result($myinfo, 0, 2);
 				$preferredcontact = "";
+				$pid = $id;
+				$contactid = '';
                         } elseif ($row['md_list']) {
                                 $id = $row['md_list'];
                                 $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
@@ -717,6 +719,8 @@ function deliver_created_letter($letterid){
                                 $company = mysql_result($myinfo, 0, 4);
                                 $phone = mysql_result($myinfo, 0, 5);
 				$preferredcontact = mysql_result($myinfo, 0, 6);
+				$pid = '';
+				$contactid = $id;
                         } elseif ($row['md_referral_list']) {
                                 $id = $row['md_referral_list'];
                                 $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
@@ -728,6 +732,8 @@ function deliver_created_letter($letterid){
                                 $company = mysql_result($myinfo, 0, 4);
                                 $phone = mysql_result($myinfo, 0, 5);
 				$preferredcontact = mysql_result($myinfo, 0, 6);
+                                $pid = '';
+                                $contactid = $id;
                         }
                         $to_name = $firstname . " " . $lastname;
                         $send_method = $row['send_method'];
@@ -774,6 +780,9 @@ function deliver_created_letter($letterid){
                 if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
                         if($fax_send){
                           $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
+			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($pid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0',adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+			  error_log($fax_query);
+			  mysql_query($fax_query);
                         }else{
                           $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
                         }
@@ -1500,5 +1509,10 @@ function date_in_words_until($date){
 }
 
 
+function count_pages($pdfname) {
+  $pdftext = file_get_contents($pdfname);
+  $num = preg_match_all("/\/Page\W/", $pdftext, $dummy);
+  return $num;
+}
 
 ?>

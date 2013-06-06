@@ -52,8 +52,6 @@ if($_POST['ex_page5sub'] == 1)
 	$normal = $_POST['normal'];
 	$other_range_motion = $_POST['other_range_motion'];
 	$additional_paragraph_rm = $_POST['additional_paragraph_rm'];
-	$screening_aware = $_POST['screening_aware'];
-	$screening_normal = $_POST['screening_normal'];
 	$deviation_r_l = $_POST['deviation_r_l'];
 	$deflection_r_l = $_POST['deflection_r_l'];
 	
@@ -198,8 +196,6 @@ $num = mysql_num_rows($q);
 		normal = '".s_for($normal)."',
 		other_range_motion = '".s_for($other_range_motion)."',
 		additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
-		screening_aware = '".s_for($screening_aware)."',
-		screening_normal = '".s_for($screening_normal)."',
 		deviation_r_l = '".s_for($deviation_r_l)."',
 		deflection_r_l = '".s_for($deflection_r_l)."',
 		userid = '".s_for($_SESSION['userid'])."',
@@ -248,8 +244,6 @@ $num = mysql_num_rows($q);
 		normal = '".s_for($normal)."',
 		other_range_motion = '".s_for($other_range_motion)."',
 		additional_paragraph_rm = '".s_for($additional_paragraph_rm)."',
-		screening_aware = '".s_for($screening_aware)."',
-		screening_normal = '".s_for($screening_normal)."',
 		deviation_r_l = '".s_for($deviation_r_l)."',
 		deflection_r_l = '".s_for($deflection_r_l)."'
 		where ex_page5id = '".s_for($_POST['ed'])."'";
@@ -324,8 +318,6 @@ $range_normal = st($myarray['range_normal']);
 $normal = st($myarray['normal']);
 $other_range_motion = st($myarray['other_range_motion']);
 $additional_paragraph_rm = st($myarray['additional_paragraph_rm']);
-$screening_aware = st($myarray['screening_aware']);
-$screening_normal = st($myarray['screening_normal']);
 $deviation_r_l = st($myarray['deviation_r_l']);
 $deflection_r_l = st($myarray['deflection_r_l']);
 
@@ -863,29 +855,6 @@ if($jointid <> '')
 	</tr>        
     
     
-    <tr>
-        <td valign="top" class="frmhead">
-        	<ul>
-                <li id="foli8" class="complex">	
-                    <label class="desc" id="title0" for="Field0">
-                        Craniomandibular Screening
-                    </label>
-                    
-                    <div>
-                    	<span>
-                        	<input type="checkbox" name="screening_aware" value="1" <? if($screening_aware == 1) echo " checked"; ?>/>
-                            Patient is aware of a temporomandibular disorder
-                            
-                        	<br /><br>
-                        	<input type="checkbox" name="screening_normal" value="1" <? if($screening_normal == 1) echo " checked"; ?>/>
-                            Within normal limits
-                        </span>
-                   	</div>
-                    <br />
-				</li>
-			</ul>
-		</td>
-	</tr>
     
 </table>
 

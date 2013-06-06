@@ -66,27 +66,14 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
-$eligible_id = st($pat_myarray['p_m_eligible_id']);
-switch($eligible_id){
-  case '60054':
-	$eligible_ins = "Aetna";
-        break;
-  case '87726':
-	$eligible_ins = "United"; 
-	break;
-  case 'HUMANA': 
-	$eligible_ins = "HUMANA";
-	break;
-  case 'BCBSF':
-	$eligible_ins = "BCBSFL";
-	break;
-  case '62308':
-	$eligible_ins = "CIGNA";
-	break;
-  default:
-	$eligible_ins = "";
-	break;
-}
+$ins_payer_id = st($pat_myarray['p_m_eligible_id']);
+$payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysql_real_escape_string($ins_payer_id)."'";
+error_log($payer_sql);
+$payer_q = mysql_query($payer_sql);
+$payer = mysql_fetch_assoc($payer_q);
+$eligible_id = $payer['payer_id'];
+$eligible_ins = $payer['name'];
+
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
@@ -547,7 +534,7 @@ $data['billing_provider']= array(
 		"zip" => $zip),
 	"tin" => $tax_id_or_ssn,
 	"insurance_provider_id" => $medicare_ptan);
-$data['pay_to_provider'] = array(
+/* $data['pay_to_provider'] = array(
 	"organization_name" => $practice,
         "address" => array(
                 "street_line_1" => str_replace(',','',$address),
@@ -556,6 +543,7 @@ $data['pay_to_provider'] = array(
                 "state" => $state,
                 "zip" => $zip)
         );
+*/
 $data['subscriber'] = array(
 	"last_name" => $insured_lastname,
 	"first_name" => $insured_firstname,
@@ -683,7 +671,12 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
  
 $result = curl_exec($ch);
 
-$up_sql = "UPDATE dental_insurance SET eligible_response='".mysql_real_escape_string($result)."'";
+$up_sql = "INSERT INTO dental_claim_electronic SET 
+	claimid='".mysql_real_escape_string($_GET['insid'])."',
+	response='".mysql_real_escape_string($result)."',
+	adddate=now(),
+	ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+	";
 mysql_query($up_sql);
 
 

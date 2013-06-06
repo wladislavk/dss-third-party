@@ -110,13 +110,13 @@ function update_referredby(in_field, name, id_field, id, source, t, hint){
 
 
                 $('.autocomplete_search').click(function() {
-                        if ($(this).val() == 'Type referral name' || $(this).val() == 'Type contact name') {
+                        if ($(this).val() == 'Type referral name' || $(this).val() == 'Type contact name' || $(this).val() == 'Type insurance payer name') {
                                 $(this).val('');
                         }
                 });
 
 function updateval(t){
-  if(t.value == 'Type referral name' || t.value == 'Type contact name'){
+  if(t.value == 'Type referral name' || t.value == 'Type contact name' || t.value == 'Type insurance payer name'){
 	t.value = '';
   }
 } 

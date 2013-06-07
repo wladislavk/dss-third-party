@@ -382,7 +382,7 @@ include 'includes/completed.php';
 				$p_m_q = mysql_query($p_m_sql);
 				$p_m_r = mysql_fetch_assoc($p_m_q);
                                 if(mysql_num_rows($p_m_q)=='0'){
-                                        $p_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+                                        $p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
                                         $p_m_q = mysql_query($p_m_sql);
                                         $p_m_r = mysql_fetch_assoc($p_m_q);
                                 }
@@ -528,7 +528,7 @@ include 'includes/completed.php';
                                 $s_m_q = mysql_query($s_m_sql);
                                 $s_m_r = mysql_fetch_assoc($s_m_q);
 				if(mysql_num_rows($s_m_q)=='0'){
-					$s_m_sql = "SELECT c.* FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+					$s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 					$s_m_q = mysql_query($s_m_sql);
 					$s_m_r = mysql_fetch_assoc($s_m_q);
 				}

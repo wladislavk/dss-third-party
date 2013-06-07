@@ -102,14 +102,20 @@ else
 if(isset($_REQUEST['sort'])){
   switch($_REQUEST['sort']){
     case 'address':
-	$sort = "pc.address1";
+	$sort = "pi.address1";
 	break;
     case 'company':
 	$sort = "pi.company";
 	break;
     case 'phone':
-	$sort = 'pc.phone';
+	$sort = 'pi.phone';
 	break;
+    case 'addedby';
+	$sort = "p.lastname";
+        break;
+    default:
+	$sort = "pi.company";
+ 	break;
   }
 }else{
   $_REQUEST['sort']='company';

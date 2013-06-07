@@ -213,9 +213,30 @@
 		if($updatevals != ''){
 			echo "{".$updatevals."}";
 		}
+
+
+
+$p_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.p_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+                                        $p_m_q = mysql_query($p_m_sql);
+                                        $p_m_r = mysql_fetch_assoc($p_m_q);
+
+
+
 				if(trim($_POST['p_m_ins_company'])!=''){
 				    if($_POST['p_m_patient_insuranceid'] == ''){
-					$insql = "INSERT INTO dental_patient_insurance SET " .
+					if(
+						$p_m_r['company'] != $_POST['p_m_ins_company'] ||
+                                                $p_m_r['address1'] != $_POST['p_m_ins_address1'] ||
+                                                $p_m_r['address2'] != $_POST['p_m_ins_address2'] ||
+                                                $p_m_r['city'] != $_POST['p_m_ins_city'] ||
+                                                $p_m_r['state'] != $_POST['p_m_ins_state'] ||
+                                                $p_m_r['zip'] != $_POST['p_m_ins_zip'] ||
+                                                num($p_m_r['fax']) != num($_POST['p_m_ins_fax']) ||
+                                                $p_m_r['email'] != $_POST['p_m_ins_email'] ||
+                                                num($p_m_r['phone']) != num($_POST['p_m_ins_phone']) 
+
+					){
+					  $insql = "INSERT INTO dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
                                                 "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
                                                 "company = '" . mysql_real_escape_string($_POST['p_m_ins_company']) . "', " .
@@ -227,9 +248,10 @@
                                                 "fax = '" . mysql_real_escape_string($_POST['p_m_ins_fax']) . "', " .
                                                 "email = '" . mysql_real_escape_string($_POST['p_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string(num($_POST['p_m_ins_phone'])) . "';";
-					mysql_query($insql);
-					$id = mysql_insert_id();
-					echo '{"p_m_patient_insuranceid": "'.$id.'"}';
+					  mysql_query($insql);
+					  $id = mysql_insert_id();
+					  echo '{"p_m_patient_insuranceid": "'.$id.'"}';
+					}
 				    }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '1', " .
@@ -248,9 +270,27 @@
 				    }
 				}
 
+
+                                        $s_m_sql = "SELECT c.company, c.add1 as address1, c.add2 as address2, c.city, c.state, c.zip, c.phone1 as phone, c.fax, c.email FROM dental_contact c inner join dental_patients p on p.s_m_ins_co=c.contactid WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
+                                        $s_m_q = mysql_query($s_m_sql);
+                                        $s_m_r = mysql_fetch_assoc($s_m_q);
+
                                 if(trim($_POST['s_m_ins_company'])!=''){
                                     if($_POST['s_m_patient_insuranceid'] == ''){
-                                        $insql = "INSERT INTO dental_patient_insurance SET " .
+                                        if(
+                                                $s_m_r['company'] != $_POST['s_m_ins_company'] ||
+                                                $s_m_r['address1'] != $_POST['s_m_ins_address1'] ||
+                                                $s_m_r['address2'] != $_POST['s_m_ins_address2'] ||
+                                                $s_m_r['city'] != $_POST['s_m_ins_city'] ||
+                                                $s_m_r['state'] != $_POST['s_m_ins_state'] ||
+                                                $s_m_r['zip'] != $_POST['s_m_ins_zip'] ||
+                                                num($s_m_r['fax']) != num($_POST['s_m_ins_fax']) ||
+                                                $s_m_r['email'] != $_POST['s_m_ins_email'] ||
+                                                num($s_m_r['phone']) != num($_POST['s_m_ins_phone']) 
+
+                                        ){
+
+                                          $insql = "INSERT INTO dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .
                                                 "patientid = '" . mysql_real_escape_string($_SESSION['pid']) . "', " .
                                                 "company = '" . mysql_real_escape_string($_POST['s_m_ins_company']) . "', " .
@@ -262,9 +302,10 @@
                                                 "fax = '" . mysql_real_escape_string($_POST['s_m_ins_fax']) . "', " .
                                                 "email = '" . mysql_real_escape_string($_POST['s_m_ins_email']) . "', " .
                                                 "phone = '" . mysql_real_escape_string(num($_POST['s_m_ins_phone'])) . "';";
-                                        mysql_query($insql);
-                                        $id = mysql_insert_id();
-					echo '{"s_m_patient_insuranceid": "'.$id.'"}';
+                                          mysql_query($insql);
+                                          $id = mysql_insert_id();
+					  echo '{"s_m_patient_insuranceid": "'.$id.'"}';
+					}
                                     }else{
                                         $insql = "UPDATE dental_patient_insurance SET " .
                                                 "insurancetype = '2', " .

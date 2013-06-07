@@ -3,12 +3,11 @@
 $s = "SELECT last_reg_sect FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR patientid='".mysql_real_escape_string($_SESSION['pid'])."' ORDER BY last_reg_sect DESC";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
-if($r['last_reg_sect']==5){
+if($r['last_reg_sect']>=5){
 	$qp=1;
 }else{
 	$qp=0;
 }
-
 $s = "SELECT * FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_SESSION['pid'])."' OR parent_patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
 $q = mysql_query($s);
 $q1 = (mysql_num_rows($q)>0)?1:0;

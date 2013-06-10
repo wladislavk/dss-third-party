@@ -163,21 +163,26 @@ $html .= '<tr>
 
 }
 
-$case_sql = "SELECT percase_name, percase_date, percase_amount, ledgerid FROM dental_ledger dl 
+$case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
                 dl.transaction_code='E0486' AND
                 dl.docid='".$invoice['docid']."' AND
 		dl.percase_invoice='".$invoice['id']."'
 	UNION
-SELECT percase_name, percase_date, percase_amount, id FROM dental_percase_invoice_extra dl 
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl 
         WHERE 
                 dl.percase_invoice='".$invoice['id']."'
 	UNION
 SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname),
-invoice_date, invoice_amount, id FROM dental_insurance_preauth
+invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
 	WHERE
 		invoice_id='".$invoice['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_fax_invoice
+        WHERE
+                invoice_id='".$invoice['id']."'
 ";
 $case_q = mysql_query($case_sql);
 $num_case = mysql_num_rows($case_q);
@@ -199,7 +204,9 @@ $total_charge += $case['percase_amount'];
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 2px dotted #DDDDDD;"></td>
 									<td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">'.$case['percase_name'].'</td>
-                                                                        <td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">'.date('m/d/Y', strtotime($case['percase_date'])).'</td>
+                                                                        <td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">'.date('m/d/Y', strtotime($case['start_date'])).
+(($case['end_date']!='' && $case['end_date']!='0000-00-00')?' to '.date('m/d/Y', strtotime($case['start_date'])):'') .
+'</td>
 									<td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">#'.str_pad($case['ledgerid'],5,'0',STR_PAD_LEFT).'</td>
 									<td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">'.$case['percase_amount'].'</td>
 									</tr><tr><td colspan="5" style="color:#333333;" valign="top">'.str_pad('-',430,'-').'</td></tr>'; 

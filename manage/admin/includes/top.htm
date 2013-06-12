@@ -392,6 +392,18 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				<li><a href="/manage/admin/manage_claim_settings.php">Claim Settings</a></li>
 			</ul>
 		</li>
+<?php
+  $t_sql = "SELECT * FROM dental_support_tickets
+		WHERE status=0;";
+  $t_q = mysql_query($t_sql);
+  $num_open_tickets = mysql_num_rows($t_q);
+?>
+                <li class="dir">TICKETS (<?= $num_open_tickets; ?>)
+			<ul>
+				<li><a href="/manage/admin/manage_support_tickets.php">Tickets</a></li>
+                                <li><a href="/manage/admin/manage_support_categories.php">Categories</a></li>
+			</ul>
+		</li>
         </ul>
 
 	</td>

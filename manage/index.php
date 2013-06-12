@@ -140,6 +140,7 @@ NAV THIRD
   <li><a href="calendar.php">Scheduler</a></li>
   <li><a href="manage_patient.php">Manage Pts</a></li>
   <li><a href="#" onclick="loadPopup('includes/device_guide.php'); return false;">Device Selector</a></li>
+  <li><a href="support.php">Support</a></li>
   </ul>
 
 </div>

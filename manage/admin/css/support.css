@@ -1,0 +1,16 @@
+.response_type_0, .response_type_1{
+  width:60%;
+  clear:both;
+  margin: 10px 0;
+  padding: 5px;
+  }
+
+.response_type_0{
+  float:right;
+  border:solid 1px #33c;
+  }
+
+.response_type_1{
+  float:left;
+  border:solid 1px #3c3;
+  }

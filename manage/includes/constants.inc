@@ -278,3 +278,8 @@ $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE] = "Always Negative";
 $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE] = "Always Positive";
 
 define('DSS_EMAIL_FOOTER', '<i>Dental Sleep Solutions will never ask you for passwords or payment information via email.</i> The contents of this message, together with any attachments, are intended only for the use of the individual or entity to which they are addressed and may contain information that is legally privileged, confidential and exempt from disclosure. If you are not the intended recipient, you are hereby notified that any dissemination, distribution or copying of this message, or any attachment, is strictly prohibited. If you have received this message in error, please notify the original sender or contact Dental Sleep Solutions immediately by telephone (941-757-4642) or by responding to this email and delete this message, along with any attachments, from your computer.');
+
+
+define('DSS_TICKET_STATUS_OPEN', 0);
+define('DSS_TICKET_STATUS_REOPENED', 1);
+define('DSS_TICKET_STATUS_CLOSED', 2);

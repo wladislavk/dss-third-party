@@ -11,6 +11,7 @@ CREATE TABLE `dental_support_tickets` (
   PRIMARY KEY (`id`)
 );
 ALTER TABLE dental_support_tickets ADD COLUMN attachment varchar(255);
+ALTER TABLE dental_support_tickets ADD COLUMN viewed tinyint(1) default 0;
 
 CREATE TABLE `dental_support_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,3 +41,5 @@ CREATE TABLE `dental_support_responses` (
   `ip_address` varchar(50),
   PRIMARY KEY (`id`)
 );       
+ALTER TABLE dental_support_responses ADD COLUMN viewed tinyint(1) default 0;
+ALTER TABLE dental_support_responses ADD COLUMN attachment varchar(255);

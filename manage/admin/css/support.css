@@ -7,10 +7,27 @@
 
 .response_type_0{
   float:right;
-  border:solid 1px #33c;
+  border:solid 2px #aaf;
+  background: #ccf; 
   }
 
 .response_type_1{
   float:left;
-  border:solid 1px #3c3;
+  border:solid 2px #afa;
+  background: #cfc;
+  }
+
+.unviewed{
+  background:#ccf;
+  }
+
+#respond{  
+  clear:both;
+  margin-top:20px;
+  }
+
+.info{
+  font-size:11px;
+  float:right;
+  margin-top:20px;
   }

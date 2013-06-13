@@ -123,3 +123,13 @@ text-align:center;
   background: #fff;
   color:#000;
 }
+
+#header_support{
+  width:98px;
+  height:27px;
+  background:url(../images/support_button_blue.png) no-repeat 0 7px;
+  }
+
+#header_support a{
+  color: #fff;
+  }

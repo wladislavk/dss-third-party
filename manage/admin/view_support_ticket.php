@@ -1,9 +1,15 @@
 <? 
 include "includes/top.htm";
 include_once ' ../includes/constants.inc';
+
+$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id = ".mysql_real_escape_string($_REQUEST['ed']);
+mysql_query($v_sql);
+$v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 1 AND ticket_id = ".mysql_real_escape_string($_REQUEST['ed']);
+mysql_query($v_sql);
+
 if(isset($_POST['respond'])){
 
-  if($_POST['body']!=''){
+  if($_POST['body']!='' || $_FILES['attachment']){
     $s = "INSERT INTO dental_support_responses SET
 	ticket_id = '".mysql_real_escape_string($_GET['ed'])."',
 	responder_id='".mysql_real_escape_string($_SESSION['adminuserid'])."',
@@ -13,6 +19,7 @@ if(isset($_POST['respond'])){
 	ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
 		";
     mysql_query($s);
+    $r_id = mysql_insert_id();
   }
 
   if($_POST['close']==2){
@@ -28,6 +35,19 @@ if(isset($_POST['respond'])){
                 WHERE id = '".mysql_real_escape_string($_GET['ed'])."'";
     mysql_query($s);
   } 
+
+                if($_FILES['attachment']){
+                  $extension = end(explode(".", $_FILES["attachment"]["name"]));
+                  $attachment = "support_response_attachment_".$r_id."_".$_GET['ed'].".".$extension;
+                  move_uploaded_file($_FILES["attachment"]["tmp_name"], "../q_file/" . $attachment);
+
+                  $a_sql = "UPDATE dental_support_responses SET
+                                attachment = '".mysql_real_escape_string($attachment)."'
+                                where id=".mysql_real_escape_string($r_id);
+                  mysql_query($a_sql);
+                }
+
+
 } 
 
 
@@ -41,6 +61,7 @@ $t = mysql_fetch_assoc($my);
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/support.css" type="text/css" />
+<div id="support_ticket">
 <span class="admin_head">
 	<?= $t['title']; ?>
 </span>
@@ -48,8 +69,8 @@ $t = mysql_fetch_assoc($my);
 <br />
 
 <?= $t['body']; ?>
-
-
+</div>
+<div id="support_responses">
 <?php
   $r_sql = "SELECT r.* FROM dental_support_responses r
 		WHERE ticket_id = '".mysql_real_escape_string($_REQUEST['ed'])."'";
@@ -59,24 +80,48 @@ $t = mysql_fetch_assoc($my);
     <div class="response_type_<?= $r['response_type']; ?>">
     <?php
     echo $r['body'];
+      if($r['attachment']){
+        ?> | <a href="../q_file/<?= $r['attachment']; ?>">View Attachment</a><?php
+      }
     if($r['response_type']==0){
       ?> | <a href="#" onclick="loadPopup('edit_support_response.php?ed=<?= $_GET['ed']; ?>&id=<?= $r['id']; ?>'); return false;">Edit</a><?php
-    }
-    ?></div><?php
+    } ?>
+    <div class="info">
+      <?php
+	if($r['response_type']=='0'){
+	  $u_sql = "SELECT username name FROM admin WHERE adminid='".mysql_real_escape_string($r['responder_id'])."'";
+	  $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          ?>Support - <?= $u_r['name']; 
+        }elseif($r['response_type']=='1'){
+	  $u_sql = "SELECT name FROM dental_users WHERE userid='".mysql_real_escape_string($r['responder_id'])."'";
+          $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          echo $u_r['name'];
+	}
+        
+      ?>
+      <?= date('m/d/Y h:i:s a', strtotime($r['adddate'])); ?>
+    </div>  
+    </div><?php
   }
 
 ?>
+<div style="clear:both;"></div>
+</div>
+<div id="respond">
 <h4 style="clear:both;">Respond</h4>
-<form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post">
+<form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post" enctype="multipart/form-data">
   <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
+<input type="file" name="attachment" id="attachment" class="field text addr tbox" />
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
-    <input type="checkbox" value="2" name="close" /> Close<br />
+    <input type="checkbox" value="2" name="close" /> Mark Closed<br />
   <?php }else{ ?>
-    TICKET IS CLOSED <input type="checkbox" value="1" name="reopen" /> Reopen<br />
+    <input type="checkbox" value="1" name="reopen" /> Reopen<br />
   <?php } ?>
   <input type="submit" name="respond" value="Submit Response" /> 
 </form>
-
+</div>
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

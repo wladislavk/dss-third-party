@@ -283,3 +283,8 @@ define('DSS_EMAIL_FOOTER', '<i>Dental Sleep Solutions will never ask you for pas
 define('DSS_TICKET_STATUS_OPEN', 0);
 define('DSS_TICKET_STATUS_REOPENED', 1);
 define('DSS_TICKET_STATUS_CLOSED', 2);
+
+$dss_ticket_status_labels = array();
+$dss_ticket_status_labels[DSS_TICKET_STATUS_OPEN] = "Open";
+$dss_ticket_status_labels[DSS_TICKET_STATUS_REOPENED] = "Re-opened";
+$dss_ticket_status_labels[DSS_TICKET_STATUS_CLOSED] = "Closed";

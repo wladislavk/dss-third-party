@@ -94,7 +94,12 @@ NAV THIRD
                      <li><a href="manage_claim_setup.php">Claim Setup</a></li>
                      <li><a href="manage_profile.php">Profile</a></li>
                      <li><a href="manage_custom.php">Custom Text</a></li>
-                     <?php if($_SESSION['userid']==$_SESSION['docid']){ ?>
+<?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+?>
+                     <?php if($_SESSION['userid']==$_SESSION['docid'] || $r['manage_staff'] == 1){ ?>
                      <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
                      <?php } ?>
                      <li><a href="manage_staff.php">Staff</a></li>
@@ -140,7 +145,6 @@ NAV THIRD
   <li><a href="calendar.php">Scheduler</a></li>
   <li><a href="manage_patient.php">Manage Pts</a></li>
   <li><a href="#" onclick="loadPopup('includes/device_guide.php'); return false;">Device Selector</a></li>
-  <li><a href="support.php">Support</a></li>
   </ul>
 
 </div>

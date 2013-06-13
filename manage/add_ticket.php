@@ -40,7 +40,7 @@ if($_POST["ticketsub"] == 1)
 
 		if($_FILES['attachment']){
                   $extension = end(explode(".", $_FILES["attachment"]["name"]));
-		  $attachment = "support_attachment_".$t_id.".".$extension;
+		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid'].".$extension;
                   move_uploaded_file($_FILES["attachment"]["tmp_name"], "q_file/" . $attachment);
 
 		  $a_sql = "UPDATE dental_support_tickets SET
@@ -76,6 +76,7 @@ if($_POST["ticketsub"] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
+			alert('Thank you for your submission! We will respond promptly to you inquiry.');
 			parent.window.location='support.php?msg=<?=$msg;?>';
 		</script>
 		<?

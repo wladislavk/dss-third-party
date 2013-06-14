@@ -550,6 +550,11 @@ if($locid){
   $loc_r = mysql_fetch_assoc($loc_q);
 }
 
+if($r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "Dental Sleep Solutions";
+}
 
 $html = '
 <html>
@@ -628,7 +633,7 @@ return of the sleep recorder, valued at $_________.  I agree to give '.$loc_r['
 credit card number to be charged <b><i>only if the sleep recorder is not
 returned or is returned damaged due to neglect or physical abuse.  </i></b>I
 agree to return the sleep recorder on the date noted below.  I understand that
-Dental Sleep Solutions’ normal business hours may change, and I will call the
+the normal business hours of '.$practice.' may change, and I will call the
 office prior to returning the unit to arrange a delivery time. </span></p>
 
 

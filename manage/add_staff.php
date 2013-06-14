@@ -461,7 +461,7 @@ Fields left blank below will default to the standard billing settings for your o
 <td valign="top" class="frmhead">
                 Sign Progress Notes? <div id="spn_info" class="info_but"></div>
                 <div id="spn_info_modal" class="info_modal" title="Sign Progress Notes explanation">
-			Check this box if this user is legally allowed to sign progress notes. In most cases, this means the user must be a licensed dentist, hygienist, or assistant. After checking this box, the user will be able to legally sign patient progress notes that will become permanently associated with patient charts.
+		Check this box if this user is legally allowed to sign progress notes. In most cases, this means the user must be a licensed dentist. After checking this box, the user will be able to legally sign patient progress notes that will become permanently associated with patient charts.	
                 </div>
 
             </td>
@@ -480,9 +480,9 @@ Fields left blank below will default to the standard billing settings for your o
 <?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
         <tr>
 <td valign="top" class="frmhead">
-                Manage Staff? <div id="ms_info" class="info_but"></div>
+                Manage Staff/Codes? <div id="ms_info" class="info_but"></div>
                 <div id="ms_info_modal" class="info_modal" title="Manage Staff explanation">
-			Check this box if you want this user to be able to add or edit the staff in your account. You should ONLY check this box for office managers or other staff qualified to add or delete software accounts.
+			Check this box if you want this user to be able to add or edit the staff in your account. User will also be able to add/edit insurance transaction codes and associated fees. You should ONLY check this box for office managers or other staff qualified to alter insurance codes and add or delete software accounts.
                 </div>
             </td>
             <td valign="top" class="frmdata">

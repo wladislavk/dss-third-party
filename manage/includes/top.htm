@@ -164,6 +164,13 @@ $num_unsigned = mysql_num_rows($unsigned_res);
 $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$docid."' AND status=".DSS_PREAUTH_REJECTED." AND (viewed IS NULL OR viewed != 1);";
 $preauth_res = mysql_query($preauth_query);
 $num_rejected_preauth = mysql_num_rows($preauth_res);
+
+$support_query = "SELECT * FROM dental_support_tickets t
+			JOIN dental_support_responses r ON r.ticket_id = t.id
+		 WHERE t.docid='".$_SESSION['docid']."' AND r.viewed=0 AND r.response_type=0";
+$support_res = mysql_query($support_query);
+$num_support = mysql_num_rows($support_res);
+
 ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -873,6 +880,7 @@ $num_tasks = mysql_num_rows($task_q);
 </li>
 <?php */ ?>
 	<li><a href="index.php"> Notifications(<?php echo $mess_count; ?>)</a></li>
+	<li id="header_support" <?= ($num_support>0)?'class="pending"':""; ?>><a href="support.php">Support <?= ($num_support>0)?"(".$num_support.")":""; ?></a></li>
        <li><a href="logout.php">Sign Out</a></li>
       </ul>
   </div>

@@ -394,7 +394,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 		</li>
 <?php
   $t_sql = "SELECT * FROM dental_support_tickets
-		WHERE status=0;";
+		WHERE status=0 OR status=1;";
   $t_q = mysql_query($t_sql);
   $num_open_tickets = mysql_num_rows($t_q);
 ?>

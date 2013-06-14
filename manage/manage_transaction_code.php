@@ -1,7 +1,10 @@
 <? 
 include "includes/top.htm";
 
-if($_SESSION['userid']!=$_SESSION['docid']){
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
   ?>You are not authorized to access this page.<?php
   die();
 }

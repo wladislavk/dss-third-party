@@ -1,26 +1,25 @@
 <? 
 include "includes/top.htm";
-
-if($_REQUEST["delid"] != "" && is_admin($_SESSION['admin_access']))
-{
-	$del_sql = "UPDATE dental_support_categories SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST["delid"])."'";
-	mysql_query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
-	</script>
-	<?
-	die();
+include_once "../includes/constants.inc";
+if(isset($_GET['rid'])){
+  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' LIMIT 1";
+  mysql_query($u_sql);
 }
-
-$sql = "select * FROM dental_support_tickets ";
+$sql = "select t.*,
+	u.name as user,
+	c.name as company,
+	cat.title as category,
+	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
+	(SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response
+	 FROM dental_support_tickets t
+		LEFT JOIN dental_users u ON u.userid=t.userid
+		LEFT JOIN dental_users c ON c.userid=t.docid
+		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
+   	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
 if(isset($_REQUEST['catid'])){
-  $sql .= " WHERE category_id = ".mysql_real_escape_string($_REQUEST['catid']);
+  $sql .= " AND t.category_id = ".mysql_real_escape_string($_REQUEST['catid']);
 }
-$sql .= " order by status ASC, adddate DESC";
+$sql .= " order by t.adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 
@@ -29,7 +28,7 @@ $total_rec = mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
-
+<link rel="stylesheet" href="css/support.css" type="text/css" />
 <span class="admin_head">
 	Manage Support Tickets
 </span>
@@ -44,54 +43,184 @@ $total_rec = mysql_num_rows($my);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="60%">
+		<td valign="top" class="col_head" width="25%">
 			Title
 		</td>
-		<td valign="top" class="col_head">
- 			Body
-		</td>
-		<td valign="top" class="col_head" width="10%">
-			Action
+                <td valign="top" class="col_head" width="10%">
+                        User
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Company
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Category
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Date
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Status
+                </td>
+		<td valign="top" class="col_head" width="15%">
+		Action
 		</td>
 	</tr>
-	<? if(mysql_num_rows($my) == 0)
-	{ ?>
-		<tr class="tr_bg">
-			<td valign="top" class="col_head" colspan="3" align="center">
-				No Records
-			</td>
+<? if(mysql_num_rows($my) == 0)
+{ ?>
+	<tr class="tr_bg">
+		<td valign="top" class="col_head" colspan="4" align="center">
+		No Records
+		</td>
 		</tr>
-	<? 
-	}
-	else
+		<? 
+}
+else
+{
+	while($myarray = mysql_fetch_array($my))
 	{
-		while($myarray = mysql_fetch_array($my))
-		{
-
+		$latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
 		?>
-			<tr>
-				<td valign="top">
-					<?=st($myarray["title"]);?>
-				</td>
-				<td valign="top">
-					<?= st(substr($myarray["body"], 0 , 50)); ?>
-				</td>		
-				<td valign="top">
-					<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
-						View
-					</a>
-                   		<?php if($myarray['attachment']!=''){ ?>
-					| <a href="../q_file/<?= $myarray['attachment']; ?>">Attachment</a>
-				<?php } ?> 
-				</td>
-			</tr>
-	<? 	}
-	}?>
+			<tr class="<?= ($myarray["viewed"]=='0' || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+			<td valign="top">
+			<?=st($myarray["title"]);?>
+			</td>
+			<td valign="top">
+			<?= st($myarray["user"]); ?>
+			</td>		
+			<td valign="top">
+			<?= $myarray["company"];?>
+			</td>
+			<td valign="top">
+		 		<?= $myarray['category']; ?>	
+			</td>
+			<td valign="top">
+				<?= date('m/d/Y h:i:s a', strtotime($latest)); ?>
+			</td>
+			<td valign="top">
+				<?= $dss_ticket_status_labels[$myarray['status']]; ?>	
+			</td>
+			<td valign="top">
+			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
+			View
+			</a>
+			<?php if($myarray['attachment']!=''){ ?>
+				| <a href="../q_file/<?= $myarray['attachment']; ?>">Attachment</a>
+					<?php } ?> 
+					<?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
+						| <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
+							<?php } ?>
+							</td>
+							</tr>
+							<? 	}
+}?>
+</table>
+
+<?php
+$sql = "select t.*,
+        u.name as user,
+        c.name as company,
+        cat.title as category,
+        (SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
+        (SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response
+         FROM dental_support_tickets t
+                LEFT JOIN dental_users u ON u.userid=t.userid
+                LEFT JOIN dental_users c ON c.userid=t.docid
+                LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
+WHERE t.status IN (".DSS_TICKET_STATUS_CLOSED.") ";
+if(isset($_REQUEST['catid'])){
+	$sql .= " AND category_id = ".mysql_real_escape_string($_REQUEST['catid']);
+}
+$sql .= " order by adddate DESC";
+$my = mysql_query($sql);
+$total_rec = mysql_num_rows($my);
+
+?>
+<span class="admin_head">
+Resolved
+</span>
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr class="tr_bg_h">
+                <td valign="top" class="col_head" width="25%">
+                        Title
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        User
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Company
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Category
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Date
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Status
+                </td>
+                <td valign="top" class="col_head" width="15%">
+                Action
+                </td>
+        </tr>
+
+<? if(mysql_num_rows($my) == 0)
+{ ?>
+	<tr class="tr_bg">
+		<td valign="top" class="col_head" colspan="4" align="center">
+		No Records
+		</td>
+		</tr>
+		<?
+}
+else
+{
+        while($myarray = mysql_fetch_array($my))
+        {
+                $latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
+                ?>
+                        <tr class="<?= ($myarray["viewed"]=='0' || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+                        <td valign="top">
+                        <?=st($myarray["title"]);?>
+                        </td>
+                        <td valign="top">
+                        <?= st($myarray["user"]); ?>
+                        </td>
+                        <td valign="top">
+                        <?= $myarray["company"];?>
+                        </td>
+                        <td valign="top">
+                                <?= $myarray['category']; ?>
+                        </td>
+                        <td valign="top">
+                                <?= date('m/d/Y h:i:s a', strtotime($latest)); ?>
+                        </td>
+                        <td valign="top">
+                                <?= $dss_ticket_status_labels[$myarray['status']]; ?> 
+                        </td>
+                        <td valign="top">
+                        <a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
+                        View
+                        </a>
+                        <?php if($myarray['attachment']!=''){ ?>
+                                | <a href="../q_file/<?= $myarray['attachment']; ?>">Attachment</a>
+                                        <?php } ?>
+                                        <?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
+                                                | <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
+                                                        <?php } ?>
+                                                        </td>
+                                                        </tr>
+                                                        <?      }
+
+}?>
 </table>
 
 
+
+
+
+
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+<a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

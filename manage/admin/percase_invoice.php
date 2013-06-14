@@ -64,10 +64,11 @@ if(isset($_POST['submit'])){
   }
 
 
-  $fax_start_date = ($_POST['fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):''; 
-  $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+  if(isset($_POST['fax_desc'])){
+    $fax_start_date = ($_POST['fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):''; 
+    $fax_end_date = ($_POST['fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
 
-  $in_sql = "INSERT INTO dental_fax_invoice SET
+    $in_sql = "INSERT INTO dental_fax_invoice SET
                 invoice_id = '".mysql_real_escape_string($invoiceid)."',
 		description = '".mysql_real_escape_string($_POST['fax_desc'])."',
                 start_date = '".mysql_real_escape_string($fax_start_date)."',
@@ -75,14 +76,15 @@ if(isset($_POST['submit'])){
                 amount = '".mysql_real_escape_string($_POST['fax_amount'])."',
 		adddate = now(),
 		ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-  mysql_query($in_sql);
-  $fax_invoice_id = mysql_insert_id();
+    mysql_query($in_sql);
+    $fax_invoice_id = mysql_insert_id();
 
-  $up_sql = "UPDATE dental_faxes SET
+    $up_sql = "UPDATE dental_faxes SET
 		status = '1',
 		fax_invoice_id = '".$fax_invoice_id."' 
 		WHERE status='0' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
-  mysql_query($up_sql);
+    mysql_query($up_sql);
+  }
 
   $num_extra = $_POST['extra_total'];
   for($i=1;$i<=$num_extra;$i++){
@@ -210,6 +212,7 @@ if(isset($_POST['submit'])){
 	}
 
 
+			if($fax['total_faxes'] > 0){
                 ?>
                         <tr id="fax_row">
                                 <td valign="top">
@@ -227,6 +230,7 @@ to
                                             $<input type="text" class="amount" name="fax_amount" value="<?= $fax['total_faxes']*.35; ?>" />
                                 </td>
                         </tr>
+		<?php } ?>
 
 		<tr id="total_row">
 			<td valign="top" colspan="2">&nbsp;

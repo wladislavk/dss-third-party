@@ -550,6 +550,11 @@ if($locid){
   $loc_r = mysql_fetch_assoc($loc_q);
 }
 
+if($r['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  $practice = $loc_r['location'];
+}else{
+  $practice = "Dental Sleep Solutions";
+}
 
 $html = '
 <html>
@@ -628,7 +633,7 @@ return of the sleep recorder, valued at $_________.  I agree to give '.$loc_r['
 credit card number to be charged <b><i>only if the sleep recorder is not
 returned or is returned damaged due to neglect or physical abuse.  </i></b>I
 agree to return the sleep recorder on the date noted below.  I understand that
-Dental Sleep Solutions’ normal business hours may change, and I will call the
+the normal business hours of '.$practice.' may change, and I will call the
 office prior to returning the unit to arrange a delivery time. </span></p>
 
 
@@ -1470,14 +1475,11 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   text-align:center\'><b><span style=\'text-align:center;font-size:12.0pt;line-height:115%;
   font-family:"Arial","sans-serif"\'>DATE </span></b></p>
   </td>
-  <td width="168" colspan="2" valign=bottom style=\'border:solid black 1.0pt;
+  <td width="168" valign=bottom style=\'border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
   <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
   text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
-  font-family:"Arial","sans-serif"\'>BAND</span></b></p>
-  <p class=MsoNormal align=center style=\'margin-bottom:0in;margin-bottom:.0001pt;
-  text-align:center\'><b><span style=\'font-size:12.0pt;line-height:115%;
-  font-family:"Arial","sans-serif"\'>Proposed                  Actual</span></b></p>
+  font-family:"Arial","sans-serif"\'>TIMES TURNED</span></b></p>
   </td>
   <td width="302" valign=bottom style=\'width:301.5pt;border:solid black 1.0pt;
   border-left:none;padding:0in 5.4pt 0in 5.4pt\'>
@@ -1490,11 +1492,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1507,11 +1505,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1524,11 +1518,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1541,11 +1531,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1558,11 +1544,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1575,11 +1557,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1592,11 +1570,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1609,11 +1583,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1626,11 +1596,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>
@@ -1643,11 +1609,7 @@ style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
   <td width="145" valign=top style=\'width:108.9pt;border:solid black 1.0pt;
   border-top:none;padding:0in 5.4pt 0in 5.4pt;height:.2in\'>
   </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
-  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-  height:.2in\'>
-  </td>
-  <td width="84" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
+  <td width="168" valign=top style=\'width:63.0pt;border-top:none;border-left:none;
   border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt;
   height:.2in\'>
   </td>

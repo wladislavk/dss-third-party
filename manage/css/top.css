@@ -123,3 +123,24 @@ text-align:center;
   background: #fff;
   color:#000;
 }
+
+#header_support{
+  width:98px;
+  height:28px;
+  background:url(../images/support_button_blue.png) no-repeat 0 8px;
+  }
+
+#header_support:hover{
+  background:url(../images/support_button_blue_hover.png) no-repeat 0 8px;
+  }
+
+#header_support.pending{
+  background:url(../images/support_button_red.png) no-repeat 0 8px;
+  }
+#header_support.pending:hover{
+  background:url(../images/support_button_red_hover.png) no-repeat 0 8px;
+  }
+
+#header_support a{
+  color: #fff;
+  }

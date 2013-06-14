@@ -502,11 +502,17 @@ $diagnosis_4 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_4_left_fill = $dia[0];
 $diagnosis_4_right_fill = $dia[1];
 
-
+$up_sql = "INSERT INTO dental_claim_electronic SET 
+        claimid='".mysql_real_escape_string($_GET['insid'])."',
+        adddate=now(),
+        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ";
+mysql_query($up_sql);
+$ref_id = mysql_insert_id();
 
 $data = array();                                                                    
 $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
-$data['reference_id'] = $_GET['insid'];
+$data['reference_id'] = $ref_id;
 /*
 $data['submitter'] = array(
         "organization_name" => "Dental Sleep Solutions",
@@ -657,7 +663,7 @@ $data['claim'] = array(
 	"service_lines" => $claim_lines
 	);
 $data_string = json_encode($data);                                                                                   
-error_log($data_string);
+//error_log($data_string);
 //echo $data_string."<br /><br />"; 
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
@@ -671,11 +677,9 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
  
 $result = curl_exec($ch);
 
-$up_sql = "INSERT INTO dental_claim_electronic SET 
-	claimid='".mysql_real_escape_string($_GET['insid'])."',
-	response='".mysql_real_escape_string($result)."',
-	adddate=now(),
-	ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+$up_sql = "UPDATE dental_claim_electronic SET 
+	response='".mysql_real_escape_string($result)."'
+	WHERE id='".$ref_id."'";
 	";
 mysql_query($up_sql);
 

@@ -1779,7 +1779,6 @@ input{text-transform:uppercase;}
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						Date:
-						<?php if($patient_signed_date != ''){ $patient_signed_date = date('m-d-y', strtotime($patient_signed_date)); } ?>
 						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3 datealtmask" />
 					</td>
 					<td align="left" valign="top">
@@ -2541,7 +2540,6 @@ if ($is_pending) {
 									Signed
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									Date: 
-									<?php if($physician_signed_date!=''){ $physician_signed_date = date('m-d-y', strtotime($physician_signed_date)); } ?>
 									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtmask" size="10" />
 								</td>
 								<td valign="top" width="50%">

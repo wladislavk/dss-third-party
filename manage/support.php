@@ -25,7 +25,7 @@ $t_q = mysql_query($t_sql);
                 Add New Ticket
         </button>
 
-<span class="admin_head">Pending Tickets</span>
+<span class="admin_head">Open Tickets</span>
 <table width="98%" cellpadding="5" cellspacing="1" align="center">
   <tr class="tr_bg_h">
     <td class="col_head">Title</td>
@@ -65,7 +65,7 @@ $t_q = mysql_query($t_sql);
 
 ?>
 <br />
-<span class="admin_head">Resolved Tickets</span>
+<span class="admin_head">Closed Tickets</span>
 <table width="98%" cellpadding="5" cellspacing="1" align="center">
   <tr class="tr_bg_h">
     <td class="col_head">Title</td>

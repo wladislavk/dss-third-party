@@ -880,7 +880,7 @@ $num_tasks = mysql_num_rows($task_q);
 </li>
 <?php */ ?>
 	<li><a href="index.php"> Notifications(<?php echo $mess_count; ?>)</a></li>
-	<li id="header_support"><a href="support.php">Support <?= ($num_support>0)?"(".$num_support.")":""; ?></a></li>
+	<li id="header_support" <?= ($num_support>0)?'class="pending"':""; ?>><a href="support.php">Support <?= ($num_support>0)?"(".$num_support.")":""; ?></a></li>
        <li><a href="logout.php">Sign Out</a></li>
       </ul>
   </div>

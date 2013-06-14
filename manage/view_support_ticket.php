@@ -1,9 +1,13 @@
 <? 
 include "includes/top.htm";
+?>
+
+<a href="support.php" style="float:right; margin-right:20px;" class="button">Return to support</a>
+<?php
 $v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = ".mysql_real_escape_string($_REQUEST['ed']);
 mysql_query($v_sql);
 if(isset($_POST['respond'])){
-  if($_POST['body']!='' || $_FILES['attachment']){
+  if($_POST['body']!='' || $_FILES['attachment']['tmp_name']!=''){
     $s = "INSERT INTO dental_support_responses SET
 	ticket_id = '".mysql_real_escape_string($_GET['ed'])."',
 	responder_id='".mysql_real_escape_string($_SESSION['userid'])."',
@@ -30,7 +34,7 @@ if(isset($_POST['respond'])){
     mysql_query($s);
   }
 
-                if($_FILES['attachment']){
+                if($_FILES['attachment']['tmp_name']!=''){
                   $extension = end(explode(".", $_FILES["attachment"]["name"]));
                   $attachment = "support_response_attachment_".$r_id."_".$_GET['ed'].".".$extension;
                   move_uploaded_file($_FILES["attachment"]["tmp_name"], "q_file/" . $attachment);
@@ -78,7 +82,7 @@ $t = mysql_fetch_assoc($my);
     echo $r['body'];
 	?>
     <?php
-      if($r['attachment']){
+      if($r['attachment']!=''){
         ?> | <a href="./q_file/<?= $r['attachment']; ?>">View Attachment</a><?php
       }
     ?>
@@ -112,9 +116,9 @@ $t = mysql_fetch_assoc($my);
   <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
 <input type="file" name="attachment" id="attachment" class="field text addr tbox" />
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
-    <input type="checkbox" value="2" name="close" /> Mark Closed<br />
+    <input type="checkbox" value="2" name="close" /> Close Ticket<br />
   <?php }else{ ?>
-    <input type="checkbox" value="1" name="reopen" /> Reopen<br />
+    <input type="checkbox" value="1" name="reopen" /> Reopen Ticket<br />
   <?php } ?>
   <input type="submit" name="respond" value="Submit Response" /> 
 </form>

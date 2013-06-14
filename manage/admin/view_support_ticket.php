@@ -9,7 +9,7 @@ mysql_query($v_sql);
 
 if(isset($_POST['respond'])){
 
-  if($_POST['body']!='' || $_FILES['attachment']){
+  if($_POST['body']!='' || $_FILES['attachment']['tmp_name']!=''){
     $s = "INSERT INTO dental_support_responses SET
 	ticket_id = '".mysql_real_escape_string($_GET['ed'])."',
 	responder_id='".mysql_real_escape_string($_SESSION['adminuserid'])."',
@@ -36,7 +36,7 @@ if(isset($_POST['respond'])){
     mysql_query($s);
   } 
 
-                if($_FILES['attachment']){
+                if($_FILES['attachment']['tmp_name']!=''){
                   $extension = end(explode(".", $_FILES["attachment"]["name"]));
                   $attachment = "support_response_attachment_".$r_id."_".$_GET['ed'].".".$extension;
                   move_uploaded_file($_FILES["attachment"]["tmp_name"], "../q_file/" . $attachment);

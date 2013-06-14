@@ -49,13 +49,12 @@ $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
+//$sql .= " limit ".$i_val.",".$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -71,40 +70,33 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"");
-			?>
-		</TD>        
-	</TR>
-	<? }?>
+<table class="sort_table" id="fax_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<thead>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="14%">
+		<th valign="top" class="col_head" width="14%">
 			Username		
-		</td>
-                <td valign="top" class="col_head" width="20%">
+		</th>
+                <th valign="top" class="col_head" width="20%">
                         Company
-                </td>
-		<td valign="top" class="col_head" width="15%">
+                </th>
+		<th valign="top" class="col_head" width="15%">
 			Name		
-		</td>
-                <td valign="top" class="col_head" width="15%">
+		</th>
+                <th valign="top" class="col_head" width="15%">
                         Faxes (Last 30 days)
-                </td>
-		<td valign="top" class="col_head" width="10%">
+                </th>
+		<th valign="top" class="col_head" width="10%">
 			Unbilled Faxes		
-		</td>
-		<td valign="top" class="col_head" width="10%">
+		</th>
+		<th valign="top" class="col_head" width="10%">
 			Pages (Last 30 days)
-		</td>
-		<td valign="top" class="col_head" width="16%">
+		</th>
+		<th valign="top" class="col_head" width="16%">
 			Unbilled Pages
-		</td>
+		</th>
 	</tr>
+</thead>
+<tbody>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -163,6 +155,7 @@ $fax30_q = mysql_query($fax30_sql);
 	<? 	}
 
 	}?>
+</tbody>
 </table>
 </form>
 
@@ -173,4 +166,12 @@ $fax30_q = mysql_query($fax30_sql);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
+<script type="text/javascript">
+$(document).ready(function() 
+    { 
+        $('#fax_table').tablesorter(); 
+    } 
+); 
+</script>
+
 <? include "includes/bottom.htm";?>

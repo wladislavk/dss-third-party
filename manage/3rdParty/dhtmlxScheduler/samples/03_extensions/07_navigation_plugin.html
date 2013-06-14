@@ -21,8 +21,12 @@
 <script type="text/javascript" charset="utf-8">
 	function init() {
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
-		scheduler.init('scheduler_here',new Date(2009,5,30),"month");
-		scheduler.load("../common/events.xml");
+		scheduler.init('scheduler_here',new Date(2009,6,15),"week");
+		scheduler.parse([
+			{ start_date: "2009-07-15 09:00", end_date: "2009-07-15 12:00", text:"Copy operation: Select this event and press Ctrl+C then move your cursor anywhere and press Ctrl+V" },
+			{ start_date: "2009-07-16 10:00", end_date: "2009-07-16 16:00", text:"Cut operation: Select event and press Ctrl+X then move your cursor and press Ctrl+V" },
+			{ start_date: "2009-07-17 10:00", end_date: "2009-07-17 14:00", text:"Try navigating periods by pressing Left and Right arrow keys" }
+		],"json");
 	}
 </script>
 

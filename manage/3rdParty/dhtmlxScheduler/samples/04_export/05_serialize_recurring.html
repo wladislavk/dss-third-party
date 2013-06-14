@@ -46,7 +46,7 @@
                ["event_length",empty],
                ["event_pid",empty]];
       }
-      scheduler.load("php/data_r.xml");
+      scheduler.load("data/data_r.xml");
    }
    
    function show(){
@@ -60,7 +60,7 @@
 </script>
 
 <body onload="init();">
-	<form action="./php/xml_writer_r.php" id="xml_form" method="post" target="hidden_frame" accept-charset="utf-8">
+	<form action="./data/xml_writer_r.php" id="xml_form" method="post" target="hidden_frame" accept-charset="utf-8">
 		<input type="hidden" name="data" value="" id="data">
 	</form>
 	<iframe src='about:blank' frameborder="0" style="width:0px; height:0px;" id="hidden_frame" name="hidden_frame"></iframe>

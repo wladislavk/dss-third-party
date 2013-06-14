@@ -32,7 +32,9 @@
 		scheduler.config.details_on_dblclick = true;
 		scheduler.config.dblclick_create = false;
 
-		scheduler.load("../common/events.xml");
+		scheduler.load("./data/events.xml",function(){
+			scheduler.showLightbox("1261150511");
+		});
 		
 	}
 </script>

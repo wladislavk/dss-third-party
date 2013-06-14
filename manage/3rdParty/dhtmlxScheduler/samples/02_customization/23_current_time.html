@@ -5,6 +5,7 @@
 	<title></title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../codebase/ext/dhtmlxscheduler_limit.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler_glossy.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 	
@@ -23,8 +24,7 @@
 		scheduler.config.mark_now = true;
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.init('scheduler_here',new Date(),"week");
-		scheduler.load("../common/events2010.xml");
-		
+		scheduler.load("./data/events.xml");
 	}
 </script>
 

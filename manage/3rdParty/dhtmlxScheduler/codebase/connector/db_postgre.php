@@ -1,4 +1,8 @@
 <?php
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 require_once("db_common.php");
 /*! Implementation of DataWrapper for PostgreSQL
 **/
@@ -13,6 +17,9 @@ class PostgreDBDataWrapper extends DBDataWrapper{
 	}
 	
 	protected function select_query($select,$from,$where,$sort,$start,$count){
+		if (!$from)
+			return $select;
+			
 		$sql="SELECT ".$select." FROM ".$from;
 		if ($where) $sql.=" WHERE ".$where;
 		if ($sort) $sql.=" ORDER BY ".$sort;
@@ -25,7 +32,7 @@ class PostgreDBDataWrapper extends DBDataWrapper{
 		return pg_fetch_assoc($res);
 	}
 	
-	protected function get_new_id(){
+	public function get_new_id(){
 		$res  = pg_query( $this->connection, "SELECT LASTVAL() AS seq");
 		$data = pg_fetch_assoc($res);
 				pg_free_result($res);

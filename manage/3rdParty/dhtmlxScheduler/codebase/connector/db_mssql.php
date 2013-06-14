@@ -1,4 +1,8 @@
 <?php
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 require_once("db_common.php");
 /*! MSSQL implementation of DataWrapper
 **/
@@ -24,7 +28,7 @@ class MsSQLDBDataWrapper extends DBDataWrapper{
 		return mssql_fetch_assoc($res);
 	}
 	
-	protected function get_new_id(){
+	public function get_new_id(){
 		/*
 		MSSQL doesn't support identity or auto-increment fields
 		Insert SQL returns new ID value, which stored in last_id field
@@ -39,6 +43,9 @@ class MsSQLDBDataWrapper extends DBDataWrapper{
 	}		
 	
 	protected function select_query($select,$from,$where,$sort,$start,$count){
+		if (!$from)
+			return $select;
+			
 		$sql="SELECT " ;
 		if ($count)
 			$sql.=" TOP ".($count+$start);

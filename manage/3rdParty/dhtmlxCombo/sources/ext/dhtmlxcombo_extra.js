@@ -1,4 +1,4 @@
-//v.3.5 build 120731
+//v.3.6 build 130416
 
 /*
 Copyright DHTMLX LTD. http://www.dhtmlx.com
@@ -21,18 +21,19 @@ dhtmlXCombo_imageOption.prototype.render = function(){
     if (!this.content) {
         this.content=document.createElement("DIV");
         this.content._self = this;
-        this.content.style.cssText='width:100%; overflow:hidden; '+this.css;
+        this.content.style.cssText='width:100%; overflow:hidden;white-space:nowrap; '+this.css;
         var html = '';
         if (this.img_src != '')
-        	html += '<img style="float:left;" src="'+this.img_src+'" />';
-        html += '<div style="float:left">'+this.text+'</div>';
+        	html += '<img src="'+this.img_src+'" style="display:inline-block;vertical-align:middle;"/>';
+        html += '<div style="display:inline;vertical-align:middle;">'+this.text+'</div>';
         this.content.innerHTML=html;
+		this._ctext=(typeof this.content.textContent!="undefined")?this.content.textContent:this.content.innerText;
 //        this.content.firstChild.onclick = function(e) {(e||event).cancelBubble=true;}
     }
     return this.content;
 }
 dhtmlXCombo_imageOption.prototype.data = function(){
-    return [this.value,this.text,this.img_src];
+    return [this.value,this._ctext ? this._ctext : this.text,this.img_src];
 }
 
 
@@ -104,13 +105,14 @@ dhtmlXCombo_checkboxOption.prototype.render = function(){
     if (!this.content) {
         this.content=document.createElement("DIV");
         this.content._self = this;
-        this.content.style.cssText='width:100%; overflow:hidden; '+this.css;
+        this.content.style.cssText='width:100%; overflow:hidden;white-space:nowrap; '+this.css;
         var html = '';
 		if(this.checked)  //set checkbox state
-        	html += '<input style="float:left;" type="checkbox" checked   />';
-		else html += '<input style="float:left;" type="checkbox" />';
-        html += '<div style="float:left">'+this.text+'</div>';
+        	html += '<input type="checkbox" checked  style="display:inline-block;vertical-align:middle;" />';
+		else html += '<input type="checkbox" style="display:inline-block;vertical-align:middle;"/>';
+        html += '<div style="display:inline;vertical-align:middle;">'+this.text+'</div>';
         this.content.innerHTML=html;
+		this._ctext=(typeof this.content.textContent!="undefined")?this.content.textContent:this.content.innerText;
         this.content.firstChild.onclick = function(e) {
 			this.parentNode.parentNode.combo.DOMelem_input.focus(); 
 			(e||event).cancelBubble=true; 	if(!this.parentNode.parentNode.combo.callEvent("onCheck",[this.parentNode._self.value,this.checked])){this.checked=!this.checked; return false;} 
@@ -119,7 +121,7 @@ dhtmlXCombo_checkboxOption.prototype.render = function(){
     return this.content;
 }
 dhtmlXCombo_checkboxOption.prototype.data = function(){
-    return [this.value,this.text,this.render().firstChild.checked];
+    return [this.value,this._ctext ? this._ctext : this.text,this.render().firstChild.checked];
 }
 
 

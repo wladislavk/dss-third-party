@@ -1,4 +1,4 @@
-//v.3.5 build 120731
+//v.3.6 build 130416
 
 /*
 Copyright DHTMLX LTD. http://www.dhtmlx.com
@@ -134,7 +134,7 @@ dtmlXMLLoaderObject.prototype.getXMLTopNode=function(tagName, oldObj){
 		return z;
 	}
 
-	if (!this._retry){
+	if (!this._retry&&_isIE){
 		this._retry=true;
 		var oldObj = this.xmlDoc;
 		this.loadXMLString(this.xmlDoc.responseText.replace(/^[\s]+/,""), true);
@@ -207,7 +207,7 @@ dtmlXMLLoaderObject.prototype.loadXML=function(filePath, postMode, postVars, rpc
 	}
 
 	else if (postMode)
-		this.xmlDoc.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		this.xmlDoc.setRequestHeader('Content-type', (this.contenttype || 'application/x-www-form-urlencoded'));
 		
 	this.xmlDoc.setRequestHeader("X-Requested-With","XMLHttpRequest");
 	this.xmlDoc.send(null||postVars);
@@ -941,8 +941,10 @@ dhtmlxEventable=function(obj){
 		}
 		obj.detachAllEvents = function(){
 			for (var name in this){
-				if (name.indexOf("ev_")==0) 
-					delete this[name];
+				if (name.indexOf("ev_")==0){
+					this.detachEvent(name);
+					this[name] = null;
+				}
 			}
 		}
 		obj = null;

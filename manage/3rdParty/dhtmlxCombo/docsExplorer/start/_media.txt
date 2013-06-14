@@ -23,8 +23,10 @@ ___datastore.gif
 icons___scheduler.gif
 icons___spreadsheet.gif
 ___visualdesigner.gif
+___pop_up.gif
 ___message.gif
 ___ajax.gif
+___dhtmlx_event_icon.gif
 icons___file.gif
 icons___chm.gif
 others___complier-interface2.png

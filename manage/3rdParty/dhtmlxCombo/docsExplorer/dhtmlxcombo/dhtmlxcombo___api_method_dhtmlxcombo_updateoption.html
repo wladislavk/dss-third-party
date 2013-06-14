@@ -68,20 +68,31 @@
 </p>
 
 <p>
-update option in combobox
+updates a specific option in the combo box
 
 </p>
 <ul>
-<li class="level1"><div class="li"> oldvalue - (string) index of option in question</div>
+<li class="level1"><div class="li"> <strong>oldvalue</strong> - (<em>string</em>) the current option value</div>
 </li>
-<li class="level1"><div class="li"> avalue - (variable)</div>
+<li class="level1"><div class="li"> <strong>avalue</strong> - (<em>string</em>) a new option value</div>
+</li>
+<li class="level1"><div class="li"> <strong>atext</strong> - (<em>string</em>) a new option text</div>
+</li>
+<li class="level1"><div class="li"> <strong>accs</strong> - (<em>string</em>) a new style for the option</div>
 </li>
 </ul>
-
+<pre class="code javascript"><span class="kw2">var</span> z<span class="sy0">=</span><span class="kw2">new</span> dhtmlXCombo<span class="br0">&#40;</span><span class="st0">&quot;combo_zone3&quot;</span><span class="sy0">,</span><span class="st0">&quot;alfa3&quot;</span><span class="sy0">,</span><span class="nu0">200</span><span class="br0">&#41;</span>;
+z.<span class="me1">addOption</span><span class="br0">&#40;</span><span class="br0">&#91;</span>
+           <span class="br0">&#123;</span>value<span class="sy0">:</span> <span class="st0">&quot;a&quot;</span><span class="sy0">,</span> text<span class="sy0">:</span> <span class="st0">&quot;option A&quot;</span><span class="sy0">,</span> img_src<span class="sy0">:</span> <span class="st0">&quot;../images/red.gif&quot;</span><span class="sy0">,</span> css<span class="sy0">:</span><span class="st0">&quot;color:red;&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span> 
+           <span class="br0">&#123;</span>value<span class="sy0">:</span> <span class="st0">&quot;b&quot;</span><span class="sy0">,</span> text<span class="sy0">:</span> <span class="st0">&quot;option B&quot;</span><span class="sy0">,</span> img_src<span class="sy0">:</span> <span class="st0">&quot;../images/green.gif&quot;</span><span class="br0">&#125;</span><span class="sy0">,</span> 
+           <span class="br0">&#123;</span>value<span class="sy0">:</span> <span class="st0">&quot;c&quot;</span><span class="sy0">,</span> text<span class="sy0">:</span> <span class="st0">&quot;option C&quot;</span><span class="sy0">,</span> img_src<span class="sy0">:</span> <span class="st0">&quot;../images/blue.gif&quot;</span><span class="br0">&#125;</span>
+<span class="br0">&#93;</span><span class="br0">&#41;</span>;
+...
+<span class="me1">z</span>.<span class="me1">updateOption</span><span class="br0">&#40;</span><span class="st0">&quot;b&quot;</span><span class="sy0">,</span><span class="st0">&quot;b&quot;</span><span class="sy0">,</span><span class="st0">&quot;New option B&quot;</span><span class="sy0">,</span><span class="st0">&quot;color:green;&quot;</span><span class="br0">&#41;</span>;</pre>
 
 
 </div>
-<div class="secedit"><form class="button btn_secedit" method="post" action="/dhtmlx/docs/doku.php"><div class="no"><input type="hidden" name="do" value="edit" /><input type="hidden" name="lines" value="80-" /><input type="hidden" name="rev" value="1335526029" /><input type="hidden" name="id" value="dhtmlxcombo:api_method_dhtmlxcombo_updateoption" /><input type="submit" value="Edit" class="button" title="updateOption(oldvalue, avalue, atext, acss)" /></div></form></div>
+<div class="secedit"><form class="button btn_secedit" method="post" action="/dhtmlx/docs/doku.php"><div class="no"><input type="hidden" name="do" value="edit" /><input type="hidden" name="lines" value="80-" /><input type="hidden" name="rev" value="1363983345" /><input type="hidden" name="id" value="dhtmlxcombo:api_method_dhtmlxcombo_updateoption" /><input type="submit" value="Edit" class="button" title="updateOption(oldvalue, avalue, atext, acss)" /></div></form></div>
     <!-- wikipage stop -->
   </div>
 
@@ -94,7 +105,7 @@ update option in combobox
       <div class="user">
               </div>
      <!-- <div class="doc">
-        dhtmlxcombo/api_method_dhtmlxcombo_updateoption.txt &middot; Last modified: 2012/04/27 15:27 (external edit)      </div>
+        dhtmlxcombo/api_method_dhtmlxcombo_updateoption.txt &middot; Last modified: 2013/03/23 00:15 by 192.168.1.111      </div>
     </div>-->
 
    
@@ -126,7 +137,7 @@ update option in combobox
 
 </div>
 
-<div class="no"><img src="/dhtmlx/docs/lib/exe/indexer.php?id=dhtmlxcombo%3Aapi_method_dhtmlxcombo_updateoption&amp;1343403525" width="1" height="1" alt=""  /></div>
+<div class="no"><img src="/dhtmlx/docs/lib/exe/indexer.php?id=dhtmlxcombo%3Aapi_method_dhtmlxcombo_updateoption&amp;1365768816" width="1" height="1" alt=""  /></div>
      <div class="footer">
         <div class="footer-logo"></div>
         <div class="copyright">Copyright © 1998-2011 DHTMLX LTD.<br />All rights reserved.</div>

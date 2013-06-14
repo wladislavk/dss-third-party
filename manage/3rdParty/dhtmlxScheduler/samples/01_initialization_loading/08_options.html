@@ -33,7 +33,9 @@
 			]},
 			{name:"time", height:72, type:"time", map_to:"auto"}	
 		];
-		scheduler.load("../common/types.xml");
+		scheduler.load("data/types.xml", function(){
+			scheduler.showLightbox(2);
+		});
 	}
 </script>
 

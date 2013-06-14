@@ -41,9 +41,9 @@
 			scheduler.config.map_inital_zoom = 8;
 			
 			scheduler.init('scheduler_here',new Date(2010,8,1),"map");
-			scheduler.load("php/events_map_view.php");
+			scheduler.load("data/events_map_view.php");
 
-			dp = new dataProcessor("php/events_map_view.php");
+			dp = new dataProcessor("data/events_map_view.php");
 			dp.init(scheduler);
 					
 		}	

@@ -7,14 +7,24 @@ require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 ?>
 	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
+	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_recurring.js" type="text/javascript" charset="utf-8"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_editors.js" type="text/javascript" charset="utf-8"></script>
-        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_units.js' type="text/javascript" charset="utf-8"></script>
+<?php
+/*
+*/?>
+
+
+
+<?php /*        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script> */ ?>
+
         <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js' type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
  	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css">
 <div style="clear: both">
 <span class="admin_head">
@@ -23,7 +33,7 @@ require_once('includes/formatters.php');
 
 <br />
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><? if(!empty($_GET['msg'])) {echo $_GET['msg'];} ?></b>
 </div>
 
 <style type="text/css" media="screen">
@@ -50,12 +60,23 @@ require_once('includes/formatters.php');
 		top: 20px;
 		width: 20px;
 	}
-	.dhx_cal_event.event_general div{ background-color: #FFF9CF !important; }
+	/*.dhx_cal_event.event_general div{ background-color: #FFF9CF !important; }
 	.dhx_cal_event.event_follow_up div{ background-color: #D6CFFF !important; } 
 	.dhx_cal_event.event_sleep_test div{ background-color: #CFF5FF !important; }
 	.dhx_cal_event.event_impressions div {background-color: #DFFFCF !important; }
 	.dhx_cal_event.event_new_patient div{background-color: #FFCFCF !important; }
         .dhx_cal_event.event_deliver_device div{background-color: #FBA16C !important; }
+	*/
+<?php
+	$appt_t_sql = "select * from dental_appt_types";
+	$appt_t_qu = mysql_query($appt_t_sql);
+	while($appt_t_r = mysql_fetch_array($appt_t_qu))
+	{
+		$str = str_replace(' ', '_', strtolower($appt_t_r['name']));
+		?>.dhx_cal_event.event_<?php print $str; ?> div{ background-color: #<?php print $appt_t_r['color']; ?> !important; }
+	<?}
+	
+?>
 		
 </style>
 
@@ -69,10 +90,13 @@ require_once('includes/formatters.php');
 		scheduler.config.details_on_create = true;
 		scheduler.config.details_on_dblclick=true;
 		scheduler.config.scroll_hour = 8;
+		scheduler.locale.labels.chairs_tab = "Chairs"
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";
+		scheduler.locale.labels.section_custom="Resource";
 		scheduler.locale.labels.section_category = "Appointment Type";
                 scheduler.locale.labels.section_producer = "Producer";
+                scheduler.locale.labels.section_resource = "Resource";
 		scheduler.locale.labels.section_patient = "Patient";
 		scheduler.locale.labels.workweek_tab = "W-Week"
                 scheduler.templates.event_class=function(start, end, event){
@@ -119,6 +143,21 @@ require_once('includes/formatters.php');
 					prod = 'None';
 					break;
 			}
+			switch(event.resource){
+				<?php
+				$p_sql = "SELECT * FROM dental_resources order by rank, name asc";
+                        	$p_query = mysql_query($p_sql);
+                        	while($p = mysql_fetch_array($p_query)){
+                                	?>case '<?= $p['id']; ?>':
+						resource = '<?= addslashes($p['name']); ?>';
+						break;
+					<?php
+                        	}
+				?>
+				default:
+					prod = 'None';
+					break;
+			}
 			switch(event.patient){
                                 <?php
                                 $p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid'];
@@ -134,7 +173,7 @@ require_once('includes/formatters.php');
                                         pat = 'None';
                                         break;
                         }
-			return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Patient:</b> "+pat+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
+			return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Resource:</b> " + resource + "<br/><b>Patient:</b> "+pat+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
 		}
 		scheduler.templates.hour_scale = function(date){
             		var hour = date.getHours();
@@ -154,12 +193,13 @@ require_once('includes/formatters.php');
             		return html;		
 		};
             	var category = [
-                	{ key: '', label: 'General' },
-               	 	{ key: 'follow_up', label: 'Follow-up' },
-                	{ key: 'sleep_test', label: 'Sleep Test' },
-                	{ key: 'impressions', label: 'Impressions' },
-                        { key: 'new_patient', label: 'New Pt' },
-			{ key: 'deliver_device', label: 'Deliver Device' }
+			<?php
+			$p_sql = "SELECT * FROM dental_appt_types order by name asc";
+			$p_query = mysql_query($p_sql);
+			while($p = mysql_fetch_array($p_query)){
+				?>{ key: '<?= $p['classname']; ?>', label: '<?= $p['name']; ?>'},<?php
+			}
+			?>
             	];
 		var producer = [
 			<?php
@@ -167,6 +207,17 @@ require_once('includes/formatters.php');
 			$p_query = mysql_query($p_sql);
 			while($p = mysql_fetch_array($p_query)){
 				?>{ key: '<?= $p['userid']; ?>', label: '<?= $p['name']; ?>'},<?php
+			}
+
+			?>
+			{ key: '', label: 'None' }
+		];
+		var resource = [
+			<?php
+			$p_sql = "SELECT * FROM dental_resources order by rank, name asc";
+			$p_query = mysql_query($p_sql);
+			while($p = mysql_fetch_array($p_query)){
+				?>{ key: '<?= $p['id']; ?>', label: '<?= $p['name']; ?>'},<?php
 			}
 
 			?>
@@ -184,6 +235,21 @@ require_once('includes/formatters.php');
 			{ key: '', label: 'None' }
 
                 ];
+		var prod_list = [
+			<?php
+				$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
+				$p_query = mysql_query($p_sql);
+				while($p = mysql_fetch_array($p_query)){
+					?>{ key: <?= $p['userid']; ?>, label: '<?= $p['name']; ?>'},<?php
+				}
+			?>
+		];
+		scheduler.createUnitsView({
+			name: "timeline",
+			property: "producer",
+			list: prod_list
+		});
+/*
 		scheduler.createTimelineView({
 			name:	"timeline",
 			x_unit:	"minute",
@@ -196,6 +262,35 @@ require_once('includes/formatters.php');
 			y_property:	"producer",
 			render:"bar"
 		});
+*/
+		var chairs_list = [
+			<?php
+				$chair_sql = "select * from dental_resources order by rank, name asc";
+				$chair_qu = mysql_query($chair_sql);
+				while($chair_r = mysql_fetch_array($chair_qu))
+				{
+					?>{ key:<? print $chair_r['id']; ?>, label:<? print '"' . $chair_r['name'] . '"'; ?>},
+				<?}
+			?>
+		];
+		scheduler.createUnitsView({
+			name: "chairs",
+			property: "resource",
+			list: chairs_list
+		});
+/*		scheduler.createTimelineView({
+			name:	"chairs",
+			x_unit:	"minute",
+			x_date:	"%H:%i",
+			x_step:	30,
+			x_size: 24,
+			x_start: 16,
+			x_length: 48,
+			y_unit:	resource,
+			y_property:	"resource",
+			render:"bar"
+		});
+*/
 		scheduler.attachEvent("onTemplatesReady",function(){
 			//work week
 			scheduler.date.workweek_start = scheduler.date.week_start;
@@ -207,28 +302,36 @@ require_once('includes/formatters.php');
 		});
 		scheduler.config.lightbox.sections=[	
 			{name:"description", height:130, map_to:"text", type:"textarea" , focus:true},
+			{name:"recurring", height:130, map_to:"rec_type", type:"recurring", button: "recurring"},
 			{name:"category", height:20, type:"select", options: category, map_to:"category" },
                         {name:"producer", height:20, type:"select", options: producer, map_to:"producer" },
+                        {name:"resource", height:20, type:"select", options: resource, map_to:"resource" },
 			{name:"patient", map_to:"patient", height:20, type:"combo", options: patient, filtering: true,image_path: "/manage/3rdParty/dhtmlxCombo/codebase/imgs/" },
 			{name:"time", height:72, type:"time", map_to:"auto"}
 		]
                 scheduler.init('scheduler_here',null,"workweek");
 		<?php
-		$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']."'";
+		$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";
 		$q = mysql_query($sql);
 		while($r = mysql_fetch_assoc($q)){
 			?>scheduler.addEvent({
 				start_date: "<?= date('d-m-Y H:i', strtotime($r['start_date'])); ?>",
 				end_date: "<?= date('d-m-Y H:i', strtotime($r['end_date'])); ?>",
 				text: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
+				rec_type: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
+				rec_pattern: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
+				event_length: "<?= $r['event_length']; ?>",
+				event_pid: "<?= $r['event_pid']; ?>",
 				category: "<?= $r['category']; ?>",
 				producer: "<?= $r['producer_id']; ?>",
+				resource: "<?= $r['res_id']; ?>",
 				patient: "<?= $r['patientid']; ?>",
 				id: "<?= $r['event_id']; ?>",
 				table_id: "<?= $r['id']; ?>"
 			});<?php
 		}
 		?>
+                scheduler.init('scheduler_here',null,"workweek");
 		//scheduler.load("../common/events2010.xml");
 		scheduler.attachEvent("onEventAdded", function(event_id,event_object){
 		    var sd = event_object.start_date;
@@ -239,11 +342,18 @@ require_once('includes/formatters.php');
                     var cat = event_object.category;
 		    var pi = event_object.producer;
 		    var pid = event_object.patient;
+
+			var ri = event_object.resource;
+
+			var rec_type = event_object.rec_type;
+			var elength = event_object.event_length;
+			var epid = event_object.event_pid;
+
 		    var e_id = event_id;
                                   $.ajax({
                                         url: "includes/calendar_add_event.php",
                                         type: "post",
-                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid},
+                                        data: {foo: 'foobar', id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
@@ -251,7 +361,7 @@ require_once('includes/formatters.php');
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
+                                                //alert('fail 314');
                                         }
                                   });
 
@@ -266,12 +376,19 @@ require_once('includes/formatters.php');
 		    var cat = event_object.category;
 		    var pi = event_object.producer;
 		    var pid = event_object.patient;
-		    var t_id = event_object.table_id
+
+			var ri = event_object.resource;
+
+			var rec_type = event_object.rec_type;
+			var elength = event_object.event_length;
+			var epid = event_object.event_pid;
+
+		    var t_id = event_object.table_id;
                     var e_id = event_id;
                                   $.ajax({
                                         url: "includes/calendar_update_event.php",
                                         type: "post",
-                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid},
+                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
@@ -279,7 +396,7 @@ require_once('includes/formatters.php');
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
+                                                //alert('fail 345');
                                         }
                                   });
 
@@ -298,7 +415,7 @@ require_once('includes/formatters.php');
                                                 }
                                         },
                                         failure: function(data){
-                                                //alert('fail');
+                                                //alert('fail 364');
                                         }
                                   });
 
@@ -336,6 +453,7 @@ $(document).ready(function(){
 			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
 			<div class="dhx_cal_tab" name="workweek_tab" style="right:270px;"></div>
                         <div class="dhx_cal_tab" name="timeline_tab" style="right:335px;"></div>
+                        <div class="dhx_cal_tab" name="chairs_tab" style="right:400px;"></div>
 			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
 		</div>
 		<div class="dhx_cal_header">

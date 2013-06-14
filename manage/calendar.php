@@ -90,7 +90,7 @@ require_once('includes/formatters.php');
 		scheduler.config.details_on_create = true;
 		scheduler.config.details_on_dblclick=true;
 		scheduler.config.scroll_hour = 8;
-		scheduler.locale.labels.chairs_tab = "Chairs"
+		scheduler.locale.labels.chairs_tab = "Resources"
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";
 		scheduler.locale.labels.section_custom="Resource";
@@ -453,7 +453,7 @@ $(document).ready(function(){
 			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
 			<div class="dhx_cal_tab" name="workweek_tab" style="right:270px;"></div>
                         <div class="dhx_cal_tab" name="timeline_tab" style="right:335px;"></div>
-                        <div class="dhx_cal_tab" name="chairs_tab" style="right:400px;"></div>
+                        <div class="dhx_cal_tab" name="chairs_tab" style="right:415px;"></div>
 			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
 		</div>
 		<div class="dhx_cal_header">

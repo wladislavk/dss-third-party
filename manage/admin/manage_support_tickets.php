@@ -10,7 +10,8 @@ $sql = "select t.*,
 	c.name as company,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
-	(SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response
+	(SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response,
+        (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
 	 FROM dental_support_tickets t
 		LEFT JOIN dental_users u ON u.userid=t.userid
 		LEFT JOIN dental_users c ON c.userid=t.docid
@@ -103,8 +104,8 @@ else
 			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
 			View
 			</a>
-			<?php if($myarray['attachment']!=''){ ?>
-				| <a href="../q_file/<?= $myarray['attachment']; ?>">Attachment</a>
+			<?php if($myarray['attachment']!='' || $myarray['response_attachment'] !=''){ ?>
+					<span class="attachment"></span>
 					<?php } ?> 
 					<?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
 						| <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
@@ -121,7 +122,8 @@ $sql = "select t.*,
         c.name as company,
         cat.title as category,
         (SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
-        (SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response
+        (SELECT r2.adddate FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.adddate DESC LIMIT 1) AS last_response,
+        (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
          FROM dental_support_tickets t
                 LEFT JOIN dental_users u ON u.userid=t.userid
                 LEFT JOIN dental_users c ON c.userid=t.docid
@@ -201,8 +203,8 @@ else
                         <a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
                         View
                         </a>
-                        <?php if($myarray['attachment']!=''){ ?>
-                                | <a href="../q_file/<?= $myarray['attachment']; ?>">Attachment</a>
+                        <?php if($myarray['attachment']!='' || $myarray['response_attachment']!=''){ ?>
+                                <span class="attachment"></span>
                                         <?php } ?>
                                         <?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
                                                 | <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>

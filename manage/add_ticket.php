@@ -38,7 +38,7 @@ if($_POST["ticketsub"] == 1)
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$t_id = mysql_insert_id();
 
-		if($_FILES['attachment']){
+		if($_FILES['attachment']['tmp_name']!=''){
                   $extension = end(explode(".", $_FILES["attachment"]["name"]));
 		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid'].".".$extension;
                   move_uploaded_file($_FILES["attachment"]["tmp_name"], "q_file/" . $attachment);

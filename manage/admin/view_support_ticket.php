@@ -47,7 +47,11 @@ if(isset($_POST['respond'])){
                   mysql_query($a_sql);
                 }
 
-
+	?>
+	<script type="text/javascript">
+		window.location = window.location;
+	</script>
+	<?php
 } 
 
 
@@ -67,8 +71,12 @@ $t = mysql_fetch_assoc($my);
 </span>
 <br />
 <br />
-
-<?= $t['body']; ?>
+    <div class="response_type_1">
+	<?= $t['body']; ?>
+      <?php if($t['attachment']){
+        ?> | <a href="../q_file/<?= $t['attachment']; ?>">View Attachment</a><?php
+      } ?>
+    </div>
 </div>
 <div id="support_responses">
 <?php

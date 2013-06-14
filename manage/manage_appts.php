@@ -128,7 +128,7 @@ background:#999999;
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>
-				<td valign="top">
+				<td style="background-color: #<?php print $myarray['color']; ?>" valign="top">
 					<?=st($myarray["color"]);?>
 				</td>
 <?php /*

@@ -103,8 +103,12 @@ $r = mysql_fetch_assoc($q);
                      <li><a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a></li>
                      <?php } ?>
                      <li><a href="manage_staff.php">Staff</a></li>
-                     <li><a href="manage_chairs.php">Resources</a></li>
-                     <li><a href="manage_appts.php">Appointment Types</a></li>
+			<li><a href="#">Scheduler</a>
+			<ul>
+				<li><a href="manage_chairs.php">Resources</a></li>
+				<li><a href="manage_appts.php">Appointment Types</a></li>
+			</ul>
+			</li>
                      <li><a href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>
  		     <li><a href="#">DSS Files</a><ul>
                 <?php

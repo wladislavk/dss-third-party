@@ -16,7 +16,7 @@
 		overflow:hidden;
 	}	
 	.dhx_scale_holder_now.weekday, .dhx_scale_holder.weekday{
-		background-image:url(../common/week_bg.png);
+		background-image:url(./imgs/week_bg.png);
 	}
 </style>
 
@@ -28,9 +28,9 @@
 			if (date.getDay()==0 || date.getDay()==6)
 				return "weekday";	
 			return "";
-		}
+		};
 		scheduler.init('scheduler_here',new Date(2010,0,10),"week");
-		scheduler.load("../common/events.xml");
+		scheduler.load("./data/events.xml");
 		
 	}
 </script>

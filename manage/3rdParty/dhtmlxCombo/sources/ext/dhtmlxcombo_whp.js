@@ -1,4 +1,4 @@
-//v.3.5 build 120731
+//v.3.6 build 130416
 
 /*
 Copyright DHTMLX LTD. http://www.dhtmlx.com
@@ -81,6 +81,8 @@ dhtmlXCombo.prototype.setOptionHeight = function(height){
 		if(this.DOMlistF)
 		this.DOMlistF.style.height = this.DOMlist.style.height;
 		this._positList();
+		if(_isIE)
+			this._IEFix(true);
 	}
 	
 }

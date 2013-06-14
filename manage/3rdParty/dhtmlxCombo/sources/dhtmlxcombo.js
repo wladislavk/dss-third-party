@@ -1,4 +1,4 @@
-//v.3.5 build 120731
+//v.3.6 build 130416
 
 /*
 Copyright DHTMLX LTD. http://www.dhtmlx.com
@@ -32,7 +32,7 @@ function dhtmlXComboFromSelect(parent,size){
    
    
    size=size||parent.getAttribute("width")||(window.getComputedStyle?window.getComputedStyle(parent,null)["width"]:(parent.currentStyle?parent.currentStyle["width"]:0));
-   if ((!size)||(size=="auto"))
+   if ((!size)||(size=="auto")||size.indexOf("em")!=-1)
    		size=parent.offsetWidth||100;
 
    var z=document.createElement("SPAN");
@@ -60,8 +60,10 @@ function dhtmlXComboFromSelect(parent,size){
    
    
 	parent.parentNode.removeChild(parent);
-	if (sel>=0)
+	if (sel>=0){
+		w._skipFocus = true;
 		w.selectOption(sel,null,true);
+	}
 	if (parent.onchange) 
 		w.attachEvent("onChange",parent.onchange);
    		
@@ -377,8 +379,10 @@ function dhtmlXCombo(parent,name,width,optionType,tabIndex){
    dhtmlXCombo.prototype.setComboValue = function(text){
       this.setComboText(text);
 	  for(var i=0; i<this.optionsArr.length; i++)
-         if (this.optionsArr[i].data()[0]==text)
-         return this.selectOption(i,null,true);      
+         if (this.optionsArr[i].data()[0]==text){
+	         this._skipFocus = true;
+	         return this.selectOption(i,null,true);
+         }
       this.DOMelem_hidden_input.value=text;
    }
 
@@ -788,7 +792,7 @@ function dhtmlXCombo(parent,name,width,optionType,tabIndex){
          
          var add = false;
          
-         obj.render(false);
+         //obj.render(false);
          if ((!top[0])||(!top[0].getAttribute("add"))){
             obj.clearAll();
             obj._lastLength=options.length;
@@ -831,8 +835,11 @@ function dhtmlXCombo(parent,name,width,optionType,tabIndex){
             }
 
          var selected=xml.doXPath("//option[@selected]");
-         if (selected.length)
-         	obj.selectOption(obj.getIndexByValue(selected[0].getAttribute("value")),false,true);
+         if (selected.length){
+	         obj._skipFocus = true;
+	         obj.selectOption(obj.getIndexByValue(selected[0].getAttribute("value")),false,true);
+         }
+
          obj.callEvent("onXLE",[]);
 
       }
@@ -910,11 +917,10 @@ function dhtmlXCombo(parent,name,width,optionType,tabIndex){
 
 	 	 if (conf){
 	 	 	this.setComboText(data[1]);
-	 	 	this._confirmSelection(data[0],false);
-		 
-         	if ((this._autoxml)&&((ind+1)==this._lastLength))
-            	this._fetchOptions(ind+1,this._lasttext||"");
-		}
+      this._confirmSelection(data[0],false);
+      }		 
+         if ((this._autoxml)&&((ind+1)==this._lastLength))
+            this._fetchOptions(ind+1,this._lasttext||"");
 
          if (filter){
             var text=this.getComboText();
@@ -1039,9 +1045,10 @@ function dhtmlXCombo(parent,name,width,optionType,tabIndex){
       var filter=new RegExp(filterExp,"i");
       this.filterAny=false;
       for(var i=0; i<this.optionsArr.length; i++){
-      	 var z=filter.test(this.optionsArr[i].content?this.optionsArr[i].data()[1]:this.optionsArr[i].text);
-      	 this.filterAny|=z;
-         this.optionsArr[i].hide(!z);
+      	  var z=filter.test(this.optionsArr[i].content?this.optionsArr[i].data()[1]:this.optionsArr[i].text);
+	      this.filterAny|=z;
+	     var _safariFix = (typeof z); //safari OS X fix
+	     this.optionsArr[i].hide(!z);
       }
       if (!this.filterAny) {
 		  this.closeAll();
@@ -1163,7 +1170,7 @@ function dhtmlXRange(InputId, Start, End)
 *     @topic: 4
 */
       dhtmlXCombo_defaultOption.prototype.hide = function(mode){
-         this.render().style.display=mode?"none":"";
+	      this.render().style.display=mode?"none":"";
       }
 /**
 *     @desc: return hide state of option

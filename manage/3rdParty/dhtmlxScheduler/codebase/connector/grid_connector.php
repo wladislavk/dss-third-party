@@ -1,4 +1,8 @@
 <?php
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 require_once("base_connector.php");
 require_once("grid_config.php");
 
@@ -10,14 +14,12 @@ require_once("grid_config.php");
 class GridDataItem extends DataItem{
 	protected $row_attrs;//!< hash of row attributes
 	protected $cell_attrs;//!< hash of cell attributes
-	protected $userdata;
 	
 	function __construct($data,$name,$index=0){
 		parent::__construct($data,$name,$index);
 		
 		$this->row_attrs=array();
 		$this->cell_attrs=array();
-		$this->userdata=array();
 	}
 	/*! set color of row
 		
@@ -65,21 +67,10 @@ class GridDataItem extends DataItem{
 			value of attribute
 	*/
 	function set_cell_attribute($name,$attr,$value){
-		if (!$this->cell_attrs[$name]) $this->cell_attrs[$name]=array();
+		if (!array_key_exists($name, $this->cell_attrs)) $this->cell_attrs[$name]=array();
 		$this->cell_attrs[$name][$attr]=$value;
 	}
 	
-	/*! set userdata section for the item
-		
-		@param name
-			name of userdata
-		@param value
-			value of userdata
-	*/
-	function set_userdata($name, $value){
-		$this->userdata[$name]=$value;
-	}
-		
 	/*! set custom row attribute
 		
 		@param attr
@@ -108,10 +99,12 @@ class GridDataItem extends DataItem{
 				foreach ($cattrs as $k => $v)
 					$str.=" ".$k."='".$this->xmlentities($v)."'";
 			}
-			$str.="><![CDATA[".$this->data[$name]."]]></cell>";
+			$value = isset($this->data[$name]) ? $this->data[$name] : '';
+			$str.="><![CDATA[".$value."]]></cell>";
 		}
-		foreach ($this->userdata as $key => $value)
-			$str.="<userdata name='".$key."'><![CDATA[".$value."]]></userdata>";
+		if ($this->userdata !== false)
+			foreach ($this->userdata as $key => $value)
+				$str.="<userdata name='".$key."'><![CDATA[".$value."]]></userdata>";
 			
 		return $str;
 	}
@@ -126,9 +119,7 @@ class GridDataItem extends DataItem{
 /*! Connector for the dhtmlxgrid
 **/
 class GridConnector extends Connector{
-	protected $extra_output="";//!< extra info which need to be sent to client side
-	private $options=array();//!< hash of OptionsConnector 
-	
+
 	/*! constructor
 		
 		Here initilization of all Masters occurs, execution timer initialized
@@ -141,10 +132,11 @@ class GridConnector extends Connector{
 		@param data_type
 			name of class which will be used for dataprocessor calls handling, optional, DataProcessor class will be used by default. 
 	*/		
-	public function __construct($res,$type=false,$item_type=false,$data_type=false){
+	public function __construct($res,$type=false,$item_type=false,$data_type=false,$render_type=false){
 		if (!$item_type) $item_type="GridDataItem";
 		if (!$data_type) $data_type="GridDataProcessor";
-		parent::__construct($res,$type,$item_type,$data_type);
+		if (!$render_type) $render_type="RenderStrategy";
+		parent::__construct($res,$type,$item_type,$data_type,$render_type);
 	}
 
 
@@ -170,7 +162,7 @@ class GridConnector extends Connector{
 		@return 
 			escaped string
 	*/	
-	private function xmlentities($string) { 
+	protected function xmlentities($string) { 
    		return str_replace( array( '&', '"', "'", '<', '>', '’' ), array( '&amp;' , '&quot;', '&apos;' , '&lt;' , '&gt;', '&apos;' ), $string);
 	}
 		
@@ -195,7 +187,7 @@ class GridConnector extends Connector{
 		@param list 
 			comma separated list of column names, for which options need to be generated
 	*/
-	protected function fill_collections($list){
+	protected function fill_collections($list=""){
 		$names=explode(",",$list);
 		for ($i=0; $i < sizeof($names); $i++) { 
 			$name = $this->resolve_parameter($names[$i]);
@@ -220,14 +212,18 @@ class GridConnector extends Connector{
 	/*! renders self as  xml, starting part
 	*/
 	protected function xml_start(){
+		$attributes = "";
+		foreach($this->attributes as $k=>$v)
+			$attributes .= " ".$k."='".$v."'";
+
 		if ($this->dload){
 			if ($pos=$this->request->get_start())
-				return "<rows pos='".$pos."'>";
+				return "<rows pos='".$pos."'".$attributes.">";
 			else
-				return "<rows total_count='".$this->sql->get_size($this->request)."'>";
+				return "<rows total_count='".$this->sql->get_size($this->request)."'".$attributes.">";
 		}
 		else
-			return "<rows>";
+			return "<rows".$attributes.">";
 	}
 	
 	
@@ -242,6 +238,7 @@ class GridConnector extends Connector{
 			$config = new GridConfiguration($config);
 			
 		$this->event->attach("beforeOutput", Array($config, "attachHeaderToXML"));
+                $this->event->attach("onInit", Array($config, "defineOptions"));
 	}
 }
 
@@ -259,10 +256,10 @@ class GridDataProcessor extends DataProcessor{
 	function name_data($data){
 		if ($data == "gr_id") return $this->config->id["name"];
 		$parts=explode("c",$data);
-		if ($parts[0]=="" && intval($parts[1])==$parts[1])
-			return $this->config->text[intval($parts[1])]["name"];
+		if ($parts[0]=="" && ((string)intval($parts[1]))==$parts[1])
+			if (sizeof($this->config->text)>intval($parts[1]))
+				return $this->config->text[intval($parts[1])]["name"];
 		return $data;
 	}
 }
-
 ?>

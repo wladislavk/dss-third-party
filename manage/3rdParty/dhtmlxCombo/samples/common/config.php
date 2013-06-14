@@ -7,8 +7,8 @@
 	To install application, just make sure that your MySQL running and load index.php 
 	after entering suitable (for you) information below
 */
-    $mysql_host = "db2.dhtmlx.com";
-    $mysql_user = "dhtmuzer_ro";
-    $mysql_pasw = "gp45_gm";
-    $mysql_db   = "dhtmlxsamples";
+	$mysql_host = "192.168.1.251";
+	$mysql_user = "sampleDB";
+	$mysql_pasw = "sampleDB";
+	$mysql_db   = "sampleDB";
 ?>

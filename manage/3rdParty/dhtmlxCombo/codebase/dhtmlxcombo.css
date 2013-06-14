@@ -77,7 +77,6 @@
 
 .dhx_combo_list_rtl{
 	direction: rtl;
-	unicode-bidi : bidi-override;
    position:absolute;
    z-index:230;
    overflow-y:auto;
@@ -91,7 +90,7 @@
 }
 .dhx_combo_list_rtl div{
 	direction: rtl;
-	unicode-bidi : bidi-override;
+
 	padding:2px 2px 2px 2px;
 }
 .dhx_combo_list_rtl div div{
@@ -112,11 +111,12 @@
 
 .dhx_combo_box.dhx_terrace .dhx_combo_img{
 	height:30px;
+    top: -2px;
 }
 .dhx_combo_box.dhx_terrace{
-	height:30px;
-	line-height:28px;
-	_height:32px;
+    height: 25px;
+    line-height: 23px;
+	_height:27px;
 	padding:0px;
 }
 .dhx_combo_box.dhx_terrace .dhx_combo_img_rtl{
@@ -131,7 +131,7 @@
 }
 .dhx_combo_list.dhx_terrace_list div{
 	cursor:default;
-	padding:8px 8px;
+	padding:6px 4px;
 }
 .dhx_combo_list.dhx_terrace_list{
 	background-color: white;
@@ -146,11 +146,11 @@
 	font-size: 13px;
 }
 .dhx_combo_box.dhx_terrace .dhx_combo_input {
-    height:30px;
-    line-height:30px;
+    height: 26px;
+    line-height: 24px;
 	font-family:Arial;
 	font-size: 13px;
-	padding:0px 0px 0px 8px;
+	padding:0px 0px 0px 2px;
 	
 }
 

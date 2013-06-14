@@ -1,4 +1,8 @@
 <?php
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 require_once("tools.php");
 
 /*! manager of data request
@@ -153,8 +157,12 @@ class DataRequestConfig{
 		if (!$field && !$order)
 			$this->sort_by=array();
 		else{
-			$order=strtolower($order)=="asc"?"ASC":"DESC";
-			$this->sort_by[]=array("name"=>$field,"direction" => $order);
+			if ($order===false)
+				$this->sort_by[] = $field;
+			else {
+				$order=strtolower($order)=="asc"?"ASC":"DESC";
+				$this->sort_by[]=array("name"=>$field,"direction" => $order);
+			}
 		}
 	}
 	/*! sets filtering rule
@@ -166,8 +174,11 @@ class DataRequestConfig{
 		@param operation
 			operation for filtering, optional , LIKE by default
 	*/
-	public function set_filter($field,$value,$operation=false){
-		array_push($this->filters,array("name"=>$field,"value"=>$value,"operation"=>$operation));
+	public function set_filter($field,$value=false,$operation=false){
+		if ($value === false)
+			array_push($this->filters,$field);
+		else
+			array_push($this->filters,array("name"=>$field,"value"=>$value,"operation"=>$operation));
 	}
 	
 	/*! sets list of used fields
@@ -211,23 +222,42 @@ class DataRequestConfig{
 		@param sql
 			incoming sql string
 	*/
-	public function parse_sql($sql){
-		$sql= preg_replace("/[ \n\t]+limit[\n ,0-9]/i","",$sql);
+	public function parse_sql($sql, $as_is = false){
+		if ($as_is){
+			$this->fieldset = $sql;
+			return;
+		}
+
+		$sql= preg_replace("/[ \n\t]+limit[\n\t ,0-9]*$/i","",$sql);
 		
 		$data = preg_split("/[ \n\t]+\\_from\\_/i",$sql,2);
 		if (count($data)!=2)
 			$data = preg_split("/[ \n\t]+from/i",$sql,2);
 		$this->fieldset = preg_replace("/^[\s]*select/i","",$data[0],1);
-		
+
+		//Ignore next type of calls
+		//direct call to stored procedure without FROM
+		if ((count($data) == 1) ||
+			//UNION select
+			preg_match("#[ \n\r\t]union[ \n\t\r]#i", $sql)){
+				$this->fieldset = $sql;
+				return;
+		}
+
 	  	$table_data = preg_split("/[ \n\t]+where/i",$data[1],2);
-	  	if (sizeof($table_data)>1){ //where construction exists
+	  	/*
+		  		if sql code contains group_by we will place all sql query in the FROM 
+		  		it will not allow to use any filtering against the query
+		  		still it is better than just generate incorrect sql commands for any group by query
+	  	*/
+	  	if (sizeof($table_data)>1 && !preg_match("#.*group by.*#i",$table_data[1])){ //where construction exists
 	  		$this->set_source($table_data[0]);
   			$where_data = preg_split("/[ \n\t]+order[ ]+by/i",$table_data[1],2);
   			$this->filters[]=$where_data[0];
   			if (sizeof($where_data)==1) return; //end of line detected
   			$data=$where_data[1];
-  		} else {
-  			$table_data = preg_split("/[ \n\t]+order[ ]+by/i",$table_data[0],2);	
+  		} else { 
+  			$table_data = preg_split("/[ \n\t]+order[ ]+by/i",$data[1],2);	
   			$this->set_source($table_data[0]);
   			if (sizeof($table_data)==1) return; //end of line detected
   			$data=$table_data[1];
@@ -237,7 +267,10 @@ class DataRequestConfig{
 			$s_data = preg_split("/\\,/",trim($data));
 			for ($i=0; $i < count($s_data); $i++) { 
 				$data=preg_split("/[ ]+/",trim($s_data[$i]),2);
-				$this->set_sort($data[0],$data[1]);
+				if (sizeof($data)>1)
+					$this->set_sort($data[0],$data[1]);
+				else
+					$this->set_sort($data[0]);
 			}
 			
 		}
@@ -275,7 +308,7 @@ class DataConfig{
 	*/
 	public function minimize($name){
 		for ($i=0; $i < sizeof($this->text); $i++){
-			if ($this->text[$i]["name"]==$name){
+			if ($this->text[$i]["db_name"]==$name || $this->text[$i]["name"]==$name){
 				$this->text[$i]["name"]="value";
 				$this->data=array($this->text[$i]);
 				$this->text=array($this->text[$i]);
@@ -432,6 +465,22 @@ class DataConfig{
 		//we not deleting field from $data collection, so it will not be included in data operation, but its data still available
 	}
 	
+	/*! remove field from dataset config ($text and $data collections)
+
+		removed field will be excluded from all auto-generated queries
+		@param name 
+			name of field, or aliase of field
+	*/
+	public function remove_field_full($name){
+		$ind = $this->is_field($name);
+		if ($ind==-1) throw new Exception('There was no such data field registered as: '.$name);
+		array_splice($this->text,$ind,1);
+		
+		$ind = $this->is_field($name, $this->data);
+		if ($ind==-1) throw new Exception('There was no such data field registered as: '.$name);
+		array_splice($this->data,$ind,1);
+	}
+	
 	/*! check if field is a part of dataset
 
 		@param name 
@@ -441,7 +490,7 @@ class DataConfig{
 		@return 
 			returns true if field already a part of dataset, otherwise returns true
 	*/
-	private function is_field($name,$collection = false){
+	public function is_field($name,$collection = false){
 		if (!$collection)
 			$collection=$this->text;
 			
@@ -618,6 +667,12 @@ abstract class DBDataWrapper extends DataWrapper{
 			
 		return $this->query($this->select_query($select,$source->get_source(),$where,$sort,$source->get_start(),$source->get_count()));
 	}	
+	public function queryOne($sql){
+		$res = $this->query($sql);
+		if ($res)
+			return $this->get_next($res);
+		return false;
+	}	
 	public function get_size($source){
 		$count = new DataRequestConfig($source);
 		
@@ -633,16 +688,20 @@ abstract class DBDataWrapper extends DataWrapper{
 	public function get_variants($name,$source){
 		$count = new DataRequestConfig($source);
 		$count->set_fieldset("DISTINCT ".$this->escape_name($name)." as value");
+		$sort = new SortInterface($source);
 		$count->set_sort(null);
+		for ($i = 0; $i < count($sort->rules); $i++) {
+			if ($sort->rules[$i]['name'] == $name)
+				$count->set_sort($sort->rules[$i]['name'], $sort->rules[$i]['direction']);
+		}
 		$count->set_limit(0,0);
-		
 		return $this->select($count);
 	}
 	
 	public function sequence($sec){
 		$this->sequence=$sec;
 	}
-		
+	
 	
 	/*! create an sql string for filtering rules
 		
@@ -657,7 +716,7 @@ abstract class DBDataWrapper extends DataWrapper{
 		$sql=array();
 		for ($i=0; $i < sizeof($rules); $i++)
 			if (is_string($rules[$i]))
-				array_push($sql,$rules[$i]);
+				array_push($sql,"(".$rules[$i].")");
 			else
 				if ($rules[$i]["value"]!=""){
 					if (!$rules[$i]["operation"])
@@ -680,7 +739,9 @@ abstract class DBDataWrapper extends DataWrapper{
 		if (!sizeof($by)) return "";
 		$out = array();
 		for ($i=0; $i < sizeof($by); $i++)
-			if ($by[$i]["name"])
+			if (is_string($by[$i]))
+				$out[] = $by[$i];
+			else if ($by[$i]["name"])
 				$out[]=$this->escape_name($by[$i]["name"])." ".$by[$i]["direction"];
 		return implode(",",$out);
 	}	
@@ -703,6 +764,9 @@ abstract class DBDataWrapper extends DataWrapper{
 			sql string for select operation
 	*/
 	protected function select_query($select,$from,$where,$sort,$start,$count){
+		if (!$from)
+			return $select;
+			
 		$sql="SELECT ".$select." FROM ".$from;
 		if ($where) $sql.=" WHERE ".$where;
 		if ($sort) $sql.=" ORDER BY ".$sort;
@@ -736,7 +800,7 @@ abstract class DBDataWrapper extends DataWrapper{
 		$sql.=implode(",",$temp)." WHERE ".$this->escape_name($this->config->id["db_name"])."='".$this->escape($data->get_id())."'";
 		
 		//if we have limited set - set constraints
-		$where=$this->build_where($request->get_filters(),$request->get_relation());
+		$where=$this->build_where($request->get_filters());
 		if ($where) $sql.=" AND (".$where.")";
 		
 		return $sql;
@@ -756,7 +820,7 @@ abstract class DBDataWrapper extends DataWrapper{
 		$sql.=" WHERE ".$this->escape_name($this->config->id["db_name"])."='".$this->escape($data->get_id())."'";
 		
 		//if we have limited set - set constraints
-		$where=$this->build_where($request->get_filters(),$request->get_relation());
+		$where=$this->build_where($request->get_filters());
 		if ($where) $sql.=" AND (".$where.")";
 		
 		return $sql;
@@ -838,7 +902,7 @@ abstract class DBDataWrapper extends DataWrapper{
 		@return 
 			sql result set
 	*/
-	abstract protected function query($sql);
+	abstract public function query($sql);
 	/*! returns next record from result set
 		
 		@param res 
@@ -851,7 +915,7 @@ abstract class DBDataWrapper extends DataWrapper{
 		@return 
 			new id value, for newly inserted row
 	*/
-	abstract protected function get_new_id();
+	abstract public function get_new_id();
 	/*! escape data to prevent sql injections
 		@param data 
 			unescaped data
@@ -891,6 +955,32 @@ abstract class DBDataWrapper extends DataWrapper{
 	}
 	
 }
+
+class ArrayDBDataWrapper extends DBDataWrapper{
+	public function get_next($res){
+		if ($res->index < sizeof($res->data))
+		return $res->data[$res->index++];
+	}
+	public function select($sql){
+		return new ArrayQueryWrapper($this->connection);
+	}
+	public function query($sql){
+		throw new Exception("Not implemented");
+	}
+	public function escape($value){
+		throw new Exception("Not implemented");
+	}
+	public function get_new_id(){
+		throw new Exception("Not implemented");
+	}
+}
+
+class ArrayQueryWrapper{
+	public function __construct($data){
+		$this->data = $data;
+		$this->index = 0;
+	}
+}
 /*! Implementation of DataWrapper for MySQL
 **/
 class MySQLDBDataWrapper extends DBDataWrapper{
@@ -910,12 +1000,12 @@ class MySQLDBDataWrapper extends DBDataWrapper{
 		return mysql_fetch_assoc($res);
 	}
 	
-	protected function get_new_id(){
+	public function get_new_id(){
 		return mysql_insert_id($this->connection);
 	}
 	
 	public function escape($data){
-		return mysql_real_escape_string($data);
+		return mysql_real_escape_string($data, $this->connection);
 	}
 
 	public function tables_list() {
@@ -951,7 +1041,7 @@ class MySQLDBDataWrapper extends DBDataWrapper{
 			escaped data
 	*/
 	public function escape_name($data){
-		if ((strpos($data,"`")!==false || intval($data)==$data) || (strpos($data,".")!==false))
+		if ((strpos($data,"`")!==false || is_int($data)) || (strpos($data,".")!==false))
 			return $data;
 		return '`'.$data.'`';
 	}	

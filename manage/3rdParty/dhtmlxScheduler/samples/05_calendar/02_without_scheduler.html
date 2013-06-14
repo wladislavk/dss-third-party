@@ -22,7 +22,7 @@
 	function init() {
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.init('scheduler_here',new Date(2010,2,1),"day");
-		scheduler.load("../common/events.xml",function(){
+		scheduler.load("./data/events.xml",function(){
 			scheduler.renderCalendar({
 				container:"mini_here",
 				date:scheduler._date,

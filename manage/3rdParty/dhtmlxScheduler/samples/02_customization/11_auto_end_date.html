@@ -29,7 +29,9 @@
 		scheduler.config.auto_end_date = true;
 		
 		scheduler.init('scheduler_here',new Date(2010,05,11),"week");
-		scheduler.load("../common/events.xml");
+		scheduler.load("./data/events.xml", function(){
+			scheduler.showLightbox("1261150564");
+		});
 	}
 </script>
 

@@ -1,11 +1,19 @@
 <?php
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 /*! Base DataProcessor handling
 **/
+
+require_once("xss_filter.php");
+
 class DataProcessor{
 	protected $connector;//!< Connector instance
 	protected $config;//!< DataConfig instance
 	protected $request;//!< DataRequestConfig instance
-	
+	static public $action_param ="!nativeeditor_status";
+
 	/*! constructor
 		
 		@param connector 
@@ -38,7 +46,7 @@ class DataProcessor{
 		@return 
 			hash of data
 	*/
-	function get_post_values($ids){
+	protected function get_post_values($ids){
 		$data=array(); 
 		for ($i=0; $i < sizeof($ids); $i++)
 			$data[$ids[$i]]=array();
@@ -48,10 +56,21 @@ class DataProcessor{
 			if (sizeof($details)==1) continue;
 			
 			$name=$this->name_data($details[1]);
-			$data[$details[0]][$name]=$value;
+			$data[$details[0]][$name]=ConnectorSecurity::filter($value);
 		}
 			
 		return $data;
+	}
+	protected function get_ids(){
+		if (!isset($_POST["ids"]))
+			throw new Exception("Incorrect incoming data, ID of incoming records not recognized");
+		return explode(",",$_POST["ids"]);
+	}
+	
+	protected function get_operation($rid){
+		if (!isset($_POST[$rid."_".DataProcessor::$action_param]))
+			throw new Exception("Status of record [{$rid}] not found in incoming request");
+		return $_POST[$rid."_".DataProcessor::$action_param];
 	}
 	/*! process incoming request ( save|update|delete )
 	*/
@@ -60,10 +79,7 @@ class DataProcessor{
 		
 		$results=array();
 
-		if (!isset($_POST["ids"]))
-			throw new Exception("Incorrect incoming data, ID of incoming records not recognized");
-			
-		$ids=explode(",",$_POST["ids"]);
+		$ids=$this->get_ids();
 		$rows_data=$this->get_post_values($ids);
 		$failed=false;
 		
@@ -74,10 +90,7 @@ class DataProcessor{
 			for ($i=0; $i < sizeof($ids); $i++) { 
 				$rid = $ids[$i];
 				LogMaster::log("Row data [{$rid}]",$rows_data[$rid]);
-				
-				if (!isset($_POST[$rid."_!nativeeditor_status"]))
-					throw new Exception("Status of record [{$rid}] not found in incoming request");
-				$status = $_POST[$rid."_!nativeeditor_status"];
+				$status = $this->get_operation($rid);
 				
 				$action=new DataAction($status,$rid,$rows_data[$rid]);
 				$results[]=$action;
@@ -85,6 +98,7 @@ class DataProcessor{
 			}
 			
 		} catch(Exception $e){
+			LogMaster::log($e);
 			$failed=true;
 		}
 		
@@ -156,8 +170,11 @@ class DataProcessor{
 			}
 		
 		} catch (Exception $e){
+			LogMaster::log($e);
 			$action->set_status("error");
-		}
+			if ($action)
+				$this->connector->event->trigger("onDBError", $action, $e);
+		}  
 		
 		if ($this->connector->sql->is_record_transaction()){
 			if ($action->get_status()=="error" || $action->get_status()=="invalid")
@@ -184,14 +201,21 @@ class DataProcessor{
 		else {
 			//check if custom sql defined
 			$sql = $this->connector->sql->get_sql($mode,$action);
-			if ($sql)
+			if ($sql){
 				$this->connector->sql->query($sql);
+			}
 			else{
 				$action->sync_config($this->config);
-				$method=array($this->connector->sql,$mode);
-				if (!is_callable($method))
-					throw new Exception("Unknown dataprocessing action: ".$mode);
-				call_user_func($method,$action,$this->request);
+				if ($this->connector->model && method_exists($this->connector->model, $mode)){
+					call_user_func(array($this->connector->model, $mode), $action);
+					LogMaster::log("Model object process action: ".$mode);
+				}
+				if (!$action->is_ready()){
+					$method=array($this->connector->sql,$mode);
+					if (!is_callable($method))
+						throw new Exception("Unknown dataprocessing action: ".$mode);
+					call_user_func($method,$action,$this->request);
+				}
 			}
 		}
 		$this->connector->event->trigger("after".$mode,$action);
@@ -361,6 +385,22 @@ class DataAction{
 	function set_status($status){
 		$this->status=$status;
 	}
+   /*! set id
+    @param  id
+        id value
+	*/
+	function set_id($id) {
+	    $this->id = $id;
+	    LogMaster::log("Change id: ".$id);
+	}
+   /*! set id
+    @param  id
+        id value
+	*/
+	function set_new_id($id) {
+	    $this->nid = $id;
+	    LogMaster::log("Change new id: ".$id);
+	}		
 	/*! get id of current record
 		
 		@return 

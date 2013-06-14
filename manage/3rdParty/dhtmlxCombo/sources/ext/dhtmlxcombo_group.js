@@ -1,4 +1,4 @@
-//v.3.5 build 120731
+//v.3.6 build 130416
 
 /*
 Copyright DHTMLX LTD. http://www.dhtmlx.com

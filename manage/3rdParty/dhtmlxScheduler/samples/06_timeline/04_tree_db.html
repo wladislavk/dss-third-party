@@ -85,9 +85,9 @@
 		]
 		
 		scheduler.init('scheduler_here',new Date(2009,5,30),"timeline");
-		scheduler.load("php/events_tree_db.php");
+		scheduler.load("data/events_tree_db.php");
 		
-		var dp = new dataProcessor("php/events_tree_db.php");
+		var dp = new dataProcessor("data/events_tree_db.php");
 		dp.init(scheduler);
 	}
 	

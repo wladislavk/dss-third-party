@@ -1,5 +1,8 @@
 <?php
-
+/*
+	@author dhtmlx.com
+	@license GPL, see license.txt
+*/
 require_once("db_common.php");
 
 class MySQLiDBDataWrapper extends MySQLDBDataWrapper{
@@ -15,7 +18,7 @@ class MySQLiDBDataWrapper extends MySQLDBDataWrapper{
 		return $res->fetch_assoc();
 	}
 
-	protected function get_new_id(){
+	public function get_new_id(){
 		return $this->connection->insert_id;
 	}
 

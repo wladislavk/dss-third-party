@@ -47,12 +47,14 @@
 			result += users.join(",");
 			
 			return result;
-		}
+		};
 
 		
 		scheduler.init('scheduler_here',new Date(2009,10,2),"week");
-		scheduler.load("php/events_multiselect_static.php");
-		var dp = new dataProcessor("php/events_multiselect_static.php");
+		scheduler.load("data/events_multiselect_static.php", function(){
+			scheduler.showLightbox(108);
+		});
+		var dp = new dataProcessor("data/events_multiselect_static.php");
 		dp.init(scheduler);
 
 		scheduler.locale.labels.section_userselect = "Users";
@@ -62,8 +64,8 @@
 
 		scheduler.config.lightbox.sections=[	
 			{ name:"description", height:50, map_to:"text", type:"textarea", focus:true },
-			{ name:"userselect", height:22, map_to:"user_id", type:"multiselect", options: scheduler.serverList("user_id"), script_url: 'php/events_multiselect_options.php', vertical:"false"  },
-			{ name:"fruitselect", height:100, map_to:"fruit_id", type:"multiselect", options: scheduler.serverList("fruit_id"), script_url: 'php/events_multiselect_options.php', vertical:"true" },
+			{ name:"userselect", height:22, map_to:"user_id", type:"multiselect", options: scheduler.serverList("user_id"), vertical:"false"  },
+			{ name:"fruitselect", height:100, map_to:"fruit_id", type:"multiselect", options: scheduler.serverList("fruit_id"), vertical:"true" },
 			{ name:"location", height:43, type:"textarea", map_to:"details" },
 			{ name:"time", height:72, type:"time", map_to:"auto"}	
 		]

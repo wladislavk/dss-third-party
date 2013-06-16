@@ -124,13 +124,17 @@ $t = mysql_fetch_assoc($my);
 <h4>Respond</h4>
 <form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post"  enctype="multipart/form-data">
   <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
-<input type="file" name="attachment" id="attachment" class="field text addr tbox" />
+  <input type="submit" name="respond" value="Submit Response" style="float:left;"/>
+<div style="float:left; width:300px;">
+<input type="file" name="attachment" id="attachment"  style="float:right" class="field text addr tbox" />
+  <div style="float:right;">
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
     <input type="checkbox" value="2" name="close" /> Close Ticket<br />
   <?php }else{ ?>
     <input type="checkbox" value="1" name="reopen" /> Reopen Ticket<br />
   <?php } ?>
-  <input type="submit" name="respond" value="Submit Response" /> 
+  </div>
+</div>
 </form>
 </div>
 </div>

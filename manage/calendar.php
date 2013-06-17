@@ -68,7 +68,7 @@ require_once('includes/formatters.php');
         .dhx_cal_event.event_deliver_device div{background-color: #FBA16C !important; }
 	*/
 <?php
-	$appt_t_sql = "select * from dental_appt_types";
+	$appt_t_sql = "select * from dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 	$appt_t_qu = mysql_query($appt_t_sql);
 	while($appt_t_r = mysql_fetch_array($appt_t_qu))
 	{
@@ -145,7 +145,7 @@ require_once('includes/formatters.php');
 			}
 			switch(event.resource){
 				<?php
-				$p_sql = "SELECT * FROM dental_resources order by rank, name asc";
+				$p_sql = "SELECT * FROM dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
                         	$p_query = mysql_query($p_sql);
                         	while($p = mysql_fetch_array($p_query)){
                                 	?>case '<?= $p['id']; ?>':
@@ -194,7 +194,7 @@ require_once('includes/formatters.php');
 		};
             	var category = [
 			<?php
-			$p_sql = "SELECT * FROM dental_appt_types order by name asc";
+			$p_sql = "SELECT * FROM dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' order by name asc";
 			$p_query = mysql_query($p_sql);
 			while($p = mysql_fetch_array($p_query)){
 				?>{ key: '<?= $p['classname']; ?>', label: '<?= $p['name']; ?>'},<?php
@@ -214,7 +214,7 @@ require_once('includes/formatters.php');
 		];
 		var resource = [
 			<?php
-			$p_sql = "SELECT * FROM dental_resources order by rank, name asc";
+			$p_sql = "SELECT * FROM dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
 			$p_query = mysql_query($p_sql);
 			while($p = mysql_fetch_array($p_query)){
 				?>{ key: '<?= $p['id']; ?>', label: '<?= $p['name']; ?>'},<?php

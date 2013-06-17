@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_appt_types where id='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";
@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_appt_types order by name";
+$sql = "select * from dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' order by name";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

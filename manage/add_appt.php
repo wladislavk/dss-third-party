@@ -25,7 +25,7 @@ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
 if($_POST["staffsub"] == 1)
 {
 	$classname = strtolower(str_replace(' ', '_', $_POST['name']));
-	$sel_check = "select * from dental_appt_types where (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> " . $_POST['ed'];
+	$sel_check = "select * from dental_appt_types where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND (name = '".s_for($_POST["name"]) . "' or classname='" . $classname . "') and id <> '" . $_POST['ed']."'";
 	$query_check=mysql_query($sel_check);
 	
 	if(mysql_num_rows($query_check)>0)
@@ -42,7 +42,7 @@ if($_POST["staffsub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-                        $old_sql = "SELECT name FROM dental_appt_types WHERE id='".mysql_real_escape_string($_POST["ed"])."'";
+                        $old_sql = "SELECT name FROM dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
                         $old_q = mysql_query($old_sql);
                         $old_r = mysql_fetch_assoc($old_q);
                         $old_username = $old_r['name'];
@@ -64,7 +64,7 @@ if($_POST["staffsub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_appt_types (name, color, classname) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "')";
+			$ins_sql = "insert into dental_appt_types (name, color, classname, docid) values ('".s_for($_POST["name"])."', '" . $_POST['color'] . "', '" . $classname . "', '".mysql_real_escape_string($_SESSION['docid'])."')";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 	
                         $userid = mysql_insert_id();

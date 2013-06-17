@@ -23,7 +23,7 @@ if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
 <?php
 if($_POST["staffsub"] == 1)
 {
-	$sel_check = "select * from dental_resources where name = '".s_for($_POST["name"]) . "' and id <> " . $_POST['ed'];
+	$sel_check = "select * from dental_resources where docid='".$_SESSION['docid']."' AND name = '".s_for($_POST["name"]) . "' and id <> " . $_POST['ed'];
 	$query_check=mysql_query($sel_check);
 	
 	if(mysql_num_rows($query_check)>0)
@@ -50,7 +50,7 @@ if($_POST["staffsub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-                        $old_sql = "SELECT name FROM dental_resources WHERE id='".mysql_real_escape_string($_POST["ed"])."'";
+                        $old_sql = "SELECT name FROM dental_resources WHERE docid='".$_SESSION['docid']."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
                         $old_q = mysql_query($old_sql);
                         $old_r = mysql_fetch_assoc($old_q);
                         $old_username = $old_r['name'];
@@ -71,7 +71,7 @@ if($_POST["staffsub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_resources (name, rank) values ('".s_for($_POST["name"])."', " . $_POST['rank'] . ")";
+			$ins_sql = "insert into dental_resources (name, rank, docid) values ('".s_for($_POST["name"])."', " . $_POST['rank'] . ", " . $_SESSION['docid'] .")";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 	
                         $userid = mysql_insert_id();
@@ -100,7 +100,7 @@ if($_POST["staffsub"] == 1)
 <body>
 
     <?
-    $thesql = "select * from dental_resources where id='".$_REQUEST["ed"]."'";
+    $thesql = "select * from dental_resources where docid=".mysql_real_escape_string($_SESSION['docid'])." AND id='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	

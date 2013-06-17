@@ -165,6 +165,25 @@ function profileabc(fa)
 	return true;
 }
 
+function ticketabc(fa){
+  if(trim(fa.category_id.value) == ""){
+        alert("Category is Required")
+        fa.category_id.focus();
+        return false;
+  }
+  if(trim(fa.title.value) == ""){
+        alert("Title is Required")
+        fa.title.focus();
+        return false;
+  }
+  if(trim(fa.body.value) == ""){
+        alert("Message is Required")
+        fa.body.focus();
+        return false;
+  }
+
+}
+
 function locationabc(fa){
   if(trim(fa.location.value) == ""){
 	alert("Practice location is Required")

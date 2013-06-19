@@ -166,11 +166,11 @@ $itype_my = mysql_query($itype_sql);
 				</td>
 				<td valign="top">
 					<?php if (end(explode('.', st($myarray["image_file"]))) != "pdf") { ?>
-					<a href="javascript:void(0)" onclick="window.open('imageholder.php?image=<?=st($myarray["image_file"]);?>',
+					<a href="javascript:void(0)" onclick="window.open('imageholder.php?image=<?=addslashes($myarray["image_file"]);?>',
 'welcome','width=800,height=400,scrollbars=yes');">
 						Preview</a>
 					<?php } else { ?>
-						<a href="javascript:void(0)" onclick="window.open('/manage/q_file/<?=st($myarray["image_file"]);?>',
+						<a href="javascript:void(0)" onclick="window.open('/manage/q_file/<?=addslashes($myarray["image_file"]);?>',
 'welcome','width=800,height=400,scrollbars=yes');">
 						Preview</a>
 					<?php } ?>	

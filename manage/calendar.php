@@ -265,7 +265,7 @@ require_once('includes/formatters.php');
 */
 		var chairs_list = [
 			<?php
-				$chair_sql = "select * from dental_resources order by rank, name asc";
+				$chair_sql = "select * from dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
 				$chair_qu = mysql_query($chair_sql);
 				while($chair_r = mysql_fetch_array($chair_qu))
 				{

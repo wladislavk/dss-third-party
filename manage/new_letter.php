@@ -455,6 +455,29 @@ function trigger_letter178($pid, $topatient, $md_referral_list, $md_list, $send_
 }
 
 
+function trigger_letter($letterid, $pid, $topatient, $md_referral_list, $md_list, $send_method) {
+	if($letterid[0]=='C'){
+	  $template_type = 1;
+	  $letterid = substr($letterid, 1);
+	}else{
+	  $template_type = 0;
+	}
+        $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method, null, null, true, $template_type);
+        if (!is_numeric($letter)) {
+                print "Can't send letter ".$letterid.": " . $letter;
+                die();
+        } else {
+                ?>
+                <script type="text/javascript">
+                        parent.window.location='/manage/edit_letter.php?pid=<?=$pid?>&lid=<?=$letter?>&goto=new_letter';                
+                </script>
+                <?php
+                die();
+        }
+}
+
+
+
 if (isset($_POST['submit'])) {
 	$templateid = $_POST['template'];
 	$patientid = $_POST['patient'];
@@ -471,7 +494,10 @@ if (isset($_POST['submit'])) {
 	$md_referral_list = rtrim($md_referral_list, ",");
 	$md_list = rtrim($md_list, ",");
 	
-	switch ($templateid) {
+
+	trigger_letter($templateid, $patientid, $topatient, $md_referral_list, $md_list, $send_method);
+
+	/*switch ($templateid) {
 		case 1:
 			trigger_letter1($patientid, $topatient, $md_referral_list, $md_list, $send_method);
 			break;
@@ -560,7 +586,7 @@ if (isset($_POST['submit'])) {
 
 		default:
 			break;
-	}
+	}*/
 }
 
 ?>
@@ -747,15 +773,31 @@ if (isset($_POST['submit'])) {
 			<td>Select a letter template: <select id="template" name="template">
 				<option value=""></option>
 				<?php
-				$templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates  t 
+				$templates = "SELECT 
+						'default' as template_type,
+						t.id, 
+						t.name, 
+						ct.triggerid 
+					FROM dental_letter_templates  t 
                         		INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
                         		WHERE ct.companyid='".$_SESSION['companyid']."' AND
-						t.default_letter=1 ORDER BY id ASC;";
+						t.default_letter=1 
+				UNION
+					SELECT 
+						'custom',
+						c.id,
+						c.name,
+						''
+					FROM dental_letter_templates_custom c
+						WHERE c.docid = '".mysql_real_escape_string($_SESSION['docid'])."'
+
+				ORDER BY template_type DESC, id ASC
+						;";
 				$result = mysql_query($templates);
 				while ($row = mysql_fetch_assoc($result)) {
 					//DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
       					if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
-					  print "<option value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+					  print "<option value=\"" . (($row['template_type']=='custom')?'C':'').$row['id'] . "\">" . (($row['template_type']=='custom')?'C':'').$row['id'] . " - " . $row['name'] . "</option>";
 					}
 				}
 				?>

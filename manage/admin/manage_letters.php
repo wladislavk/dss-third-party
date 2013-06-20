@@ -174,7 +174,8 @@ if ($status == 'pending') {
 			dental_patients.firstname, 
 			dental_patients.lastname, 
 			dental_patients.middlename,
-			dental_letters.status
+			dental_letters.status,
+			dental_letters.template_type
 			 FROM dental_letters 
 		JOIN dental_users u ON u.userid = dental_letters.docid
 		LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
@@ -202,7 +203,8 @@ if ($status == 'pending') {
 			dental_patients.firstname, 
 			dental_patients.lastname, 
 			dental_patients.middlename, 
-			dental_letters.status
+			dental_letters.status,
+			dental_letters.template_type
 				FROM dental_letters 
 	JOIN dental_user_company uc ON uc.userid = dental_letters.docid
 	JOIN dental_users u ON u.userid = dental_letters.docid
@@ -246,7 +248,8 @@ dental_letters.mailed_date,
 dental_patients.firstname, 
 dental_patients.lastname, 
 dental_patients.middlename,
-dental_letters.status
+dental_letters.status,
+dental_letters.template_type
  FROM dental_letters 
 JOIN dental_users u ON dental_letters.docid = u.userid
 LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
@@ -294,7 +297,11 @@ foreach ($dental_letters as $key => $letter) {
 	$username_result = mysql_query($username_query);
 	$dental_letters[$key]['username'] = mysql_result($username_result, 0);
   // Get Correspondance Column
-  $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
+  if($letter['template_type']=='0'){
+    $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
+  }else{
+    $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
+  }
   $template_res = mysql_query($template_sql);
   $correspondance = array();
   $correspondance = mysql_fetch_assoc($template_res);

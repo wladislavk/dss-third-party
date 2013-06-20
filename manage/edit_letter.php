@@ -63,7 +63,7 @@ $letterid = $master_r['letterid'];
 //$letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date FROM dental_letters l
+$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
 	 where l.letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
@@ -81,6 +81,7 @@ $row = mysql_fetch_assoc($letter_result);
   $docid = $row['docid'];
   $username = $row['username'];
   $edit_date = $row['edit_date'];
+  $template_type = $row['template_type'];
 
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
@@ -106,7 +107,11 @@ foreach ($contacts['md_referrals'] as $contact) {
 }
 
 // Get Letter Subject
-$template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
+if($template_type=='0'){
+  $template_query = "SELECT name FROM dental_letter_templates WHERE id = ".$templateid.";";
+}else{
+  $template_query = "SELECT name FROM dental_letter_templates_custom WHERE id = ".$templateid.";";
+}
 $template_result = mysql_query($template_query);
 $title = mysql_result($template_result, 0);
 ?>
@@ -567,8 +572,11 @@ $noncomp['description'] = $noncomp['description'];
 
 
 // Load $template
-
-  $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysql_real_escape_string($companyid)."' AND triggerid='".mysql_real_escape_string($templateid)."'";
+  if($template_type == '0'){
+    $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysql_real_escape_string($companyid)."' AND triggerid='".mysql_real_escape_string($templateid)."'";
+  }else{
+    $letter_sql = "SELECT body FROM dental_letter_templates_custom WHERE id='".mysql_real_escape_string($templateid)."'";
+  }
   $letter_q = mysql_query($letter_sql);
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];

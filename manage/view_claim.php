@@ -214,6 +214,12 @@ return s;
         </button>
 </div>
 <div align="right" style="clear: right;">
+
+        <button onclick="Javascript: window.location='claim_history.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton">
+               View History 
+        </button>
+        &nbsp;&nbsp;
+
         <button onclick="Javascript: loadPopup('add_ledger_payments.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>');" class="addButton">
                Make Payment 
         </button>

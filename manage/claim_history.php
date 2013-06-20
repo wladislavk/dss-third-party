@@ -1,0 +1,52 @@
+<? 
+include "includes/top.htm";
+?>
+<link rel="stylesheet" href="css/ledger.css" />
+<?php
+$sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['cid'])."'";
+$my = mysql_query($sql);
+$total_rec = mysql_num_rows($my);
+
+$my=mysql_query($sql) or die(mysql_error());
+$num_users=mysql_num_rows($my);
+
+$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($_GET['cid']);
+$cq = mysql_query($csql);
+$claim = mysql_fetch_assoc($cq);
+?>
+
+<span class="admin_head">
+	Claim History
+</span>
+
+<br />
+
+<?php
+  while($r = mysql_fetch_assoc($my)){
+	?><div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
+		<h3>Claim Electronically filed on
+    		<?= $r['adddate']; ?></h3>
+		<p>Response: <?= $r['response'];?></p>
+     		<h4>Webhook responses</h4> 
+		<?php
+			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."'";
+			$w_q = mysql_query($w_sql);
+			while($w_r = mysql_fetch_assoc($w_q)){
+			  ?><strong><?= $w_r['event_type']; ?></strong>
+				<p><?= $w_r['response']; ?></p>
+			<?php
+			}
+			?>
+	</div><?php
+  }
+?>
+
+
+<div id="popupContact" style="width:750px;">
+    <a id="popupContactClose"><button>X</button></a>
+    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopup"></div>
+
+<br /><br />	
+<? include "includes/bottom.htm";?>

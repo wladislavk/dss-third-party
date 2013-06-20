@@ -93,7 +93,12 @@ NAV THIRD
 		<ul>
                      <li><a href="manage_claim_setup.php">Claim Setup</a></li>
                      <li><a href="manage_profile.php">Profile</a></li>
-                     <li><a href="manage_custom.php">Custom Text</a></li>
+		     <li><a href="#">Text</a>
+		     <ul>
+                     	<li><a href="manage_custom.php">Custom Text</a></li>
+			<li><a href="manage_custom_letters.php">Custom Letters</a></li>
+		     </ul>
+		     </li>
 <?php
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 $q = mysql_query($sql);

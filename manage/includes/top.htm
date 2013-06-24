@@ -1124,7 +1124,8 @@ if($_SESSION['docid']==$_SESSION['userid']){
     <div style="margin-top:10px; margin-left:20px; float:left;">
 <a href="/manage" id="logo">Dashboard</a>
     </div>
-    <div style="float:left;">
+    <div style="float:left; width:600px;">
+<form>
     <!--<form name="form" action="search.php" method="get">-->
   <div id="patient_search_div">
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
@@ -1136,7 +1137,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
 		</ul>
 	</div>
    </div> 
-
+</form>
    <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
 
    <button onclick="loadPopup('add_task.php<?= (isset($_GET['pid']))?'?pid='.$_GET['pid']:''; ?>')" style="padding: 3px; margin-top:27px;">+ Add Task</button>

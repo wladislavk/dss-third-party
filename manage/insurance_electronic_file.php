@@ -502,8 +502,15 @@ $diagnosis_4 = $ins_diag_myarray['ins_diagnosis'];
 $diagnosis_4_left_fill = $dia[0];
 $diagnosis_4_right_fill = $dia[1];
 
+//FOR TESTING PURPOSES
+if(isset($_GET['memid']) && $_GET['memid']!=''){
+  $insured_id_number = $_GET['memid'];
+}
 
 $data = array();                                                                    
+if(isset($_GET['test']) && $_GET['test']==1){
+  $data['test'] = 'true';
+}
 $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 /*
 $data['submitter'] = array(
@@ -655,7 +662,7 @@ $data['claim'] = array(
 	"service_lines" => $claim_lines
 	);
 $data_string = json_encode($data);                                                                                   
-//error_log($data_string);
+error_log($data_string);
 //echo $data_string."<br /><br />"; 
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');

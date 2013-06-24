@@ -88,11 +88,11 @@ Name: <input type="text" id="name" name="name" />
   <li>%ptref_zip%</li>
   <li>%company%</li>
   <li>%company_addr%</li>
-  <li>%franchisee_fullname%</li>
-  <li>%franchisee_lastname%</li>
-  <li>%franchisee_practice%</li>
-  <li>%franchisee_phone%</li>
-  <li>%franchisee_addr%</li>
+  <li>%doctor_fullname%</li>
+  <li>%doctor_lastname%</li>
+  <li>%doctor_practice%</li>
+  <li>%doctor_phone%</li>
+  <li>%doctor_addr%</li>
   <li>%patient_fullname%</li>
   <li>%patient_lastname%</li>
   <li>%ccpatient_fullname%</li>

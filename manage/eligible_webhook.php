@@ -4,7 +4,7 @@ $request_body = file_get_contents('php://input');
 $json = json_decode($request_body);
 
 $event = $json->{"event"};
-$ref_id = $json->{"details"}->{"reference_id"};
+$ref_id = $json->{"reference_id"};
 
 $sql = "INSERT INTO dental_eligible_response SET
 	response = '".mysql_real_escape_string($request_body)."',

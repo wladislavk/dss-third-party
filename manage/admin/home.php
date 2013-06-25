@@ -72,6 +72,7 @@ $myCalendar->setDateFormat('Y-d-m');
 $myCalendar->writeScript();
 ?>&nbsp;&nbsp;&nbsp;<input type="submit" name="submit" value="Update Memo" />
       </form>
-
+<br /><br />
+<a href="send_claim.php">Send Claims</a>
 
 <? include 'includes/bottom.htm';?>

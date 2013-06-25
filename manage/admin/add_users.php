@@ -42,7 +42,7 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 
-			$old_sql = "SELECT username FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
+			$old_sql = "SELECT username, recover_hash FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
                         $old_q = mysql_query($old_sql);
 			$old_r = mysql_fetch_assoc($old_q);
 			$old_username = $old_r['username'];
@@ -131,6 +131,41 @@ if($_POST["usersub"] == 1)
 			  mysql_query("DELETE FROM dental_user_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
 			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
 			}
+
+
+                if(isset($_POST['reg_but'])){
+		$userid = $_POST['ed'];
+		$recover_hash = $old_r['recover_hash'];
+  $m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td width='400'>
+<h2>Create your Software Account</h2>
+<p>Welcome to the Dental Sleep Solutions&reg; Team! Please click the link below to activate your software account:
+<p><a href='http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$userid."&hash=".$recover_hash."</a></p>
+</td><td width='200'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td>
+<h3>Need assistance?
+Contact us at 877-95-SNORE or at<br>
+Support@dentalsleepsolutions.com</b></h3></td></tr>
+<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+</table>
+</center></body></html>
+";
+$m .= DSS_EMAIL_FOOTER;
+$headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
+                    'Content-type: text/html' ."\r\n" .
+                    'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "Dental Sleep Solutions Account Activation";
+                $mail = mail($_POST['email'], $subject, $m, $headers);
+                if($mail){
+                  $e_sql = "UPDATE dental_users SET recover_time = now(), registration_email_date=now() WHERE userid='".mysql_real_escape_string($userid)."'";
+                  mysql_query($e_sql);
+                }
+
+		}
 
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -819,6 +854,11 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                                 Delete
                                         </a>
 		    <a style="float:left;" href="reset_password.php?id=<?=$themyarray["userid"];?>">Reset Password</a>
+			<?php
+				if($themyarray['status']==2){ ?>
+					<input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
+				<?php }
+			?>
 		<?php }else{ ?>
  		  <input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
 		  <a style="float:right;" href="#" onclick="$('.expanded').toggle(); return false;">Expand all fields</a>

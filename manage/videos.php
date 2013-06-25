@@ -45,7 +45,7 @@ Learn about "the other things" that you should look for, evaluate, and document,
 <h2>Device Delivery</h2>
 Though each dental device requires certain things, most devices share many commonalities.  Learn proper protocols and procedures to produce consistent results; know what to say BEFORE the patient goes home with your device to help dramatically increase your treatment success.
 <em>Time: 20 minutes</em><br />
-<iframe src="http://player.vimeo.com/video/65686916" height="281" width="500" allowfullscreen="" frameborder="0"></iframe>
+<iframe src="https://player.vimeo.com/video/65686916" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
 &nbsp;
 

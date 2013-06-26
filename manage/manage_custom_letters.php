@@ -21,7 +21,7 @@ $num_contact=mysql_num_rows($my);
 &nbsp;
 
 <div align="right">
-	<button onclick="Javascript: window.location = 'add_custom_letter_template.php'" class="addButton">
+	<button onclick="Javascript: loadPopup('select_custom_letter_template.php')" class="addButton">
 		Add New Template
 	</button>
 	&nbsp;&nbsp;

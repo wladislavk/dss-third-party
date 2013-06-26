@@ -139,7 +139,7 @@ $r = mysql_fetch_assoc($q);
 
         <li><a href="manual.php">Dental Sleep Solutions Procedures Manual</a></li>
 
-        <li><a href="#">Dental Sleep Medicine Manual</a></li>
+        <li><a href="medicine_manual.php">Dental Sleep Medicine Manual</a></li>
 
 	<?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE){ ?>
         	<li><a href="operations_manual.php">DSS Franchise Operations Manual</a></li>

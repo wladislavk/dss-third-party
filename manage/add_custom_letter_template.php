@@ -33,6 +33,23 @@ if(isset($_POST['update_btn'])){
 $sql = "select * from dental_letter_templates_custom WHERE id='".mysql_real_escape_string($_GET['ed'])."' ";
 $my = mysql_query($sql);
 $r = mysql_fetch_assoc($my);
+
+
+if(isset($_GET['cid'])){
+  if($_GET['cid'][0]!='C'){
+    $c_sql = "SELECT body FROM dental_letter_templates WHERE id = ".mysql_real_escape_string($_GET['cid']).";";
+  }else{
+    $c_sql = "SELECT body FROM dental_letter_templates_custom WHERE id = ".mysql_real_escape_string(substr($_GET['cid'],1)).";";
+  }
+  $c_q = mysql_query($c_sql);
+  $c_r = mysql_fetch_assoc($c_q);
+  $body = $c_r['body'];
+
+}else{
+  $body = $r['body'];
+}
+
+
 ?>
 <script language="javascript" type="text/javascript" src="3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 
@@ -47,7 +64,7 @@ $r = mysql_fetch_assoc($my);
 <div style="margin-left:20px;width:710px;float:left;">
 Name: <input type="text" id="name" name="name" />
 <br /><br />
-<textarea id="body" name="body" style="width:700px; height:400px;"><?= $r['body']; ?></textarea>
+<textarea id="body" name="body" style="width:700px; height:400px;"><?= $body; ?></textarea>
 <input type="submit" name="update_btn" value="Save" />
 </div>
 </form>

@@ -975,7 +975,7 @@ mysql_query($s1);
                   $d = mysql_fetch_assoc($dq);
                   $p_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
                 }else{
-                  $docsleep_name = "";
+                  $p_m_ins_payer_name = "";
                 }
 
 		$has_s_m_ins = st($themyarray["has_s_m_ins"]);

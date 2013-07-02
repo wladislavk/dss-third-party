@@ -3,16 +3,13 @@ include "includes/top.htm";
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php
-$sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['cid'])."' ORDER BY adddate DESC";
+$sql = "SELECT * FROM dental_claim_electronic WHERE id='".mysql_real_escape_string($_GET['id'])."' ORDER BY adddate DESC";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($_GET['cid']);
-$cq = mysql_query($csql);
-$claim = mysql_fetch_assoc($cq);
 ?>
 
 <span class="admin_head">
@@ -45,12 +42,6 @@ $claim = mysql_fetch_assoc($cq);
   }
 ?>
 
-
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
 
 <br /><br />	
 <? include "includes/bottom.htm";?>

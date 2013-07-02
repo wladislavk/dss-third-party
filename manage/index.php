@@ -96,7 +96,6 @@ NAV THIRD
 		     <li><a href="#">Text</a>
 		     <ul>
                      	<li><a href="manage_custom.php">Custom Text</a></li>
-			<li><a href="manage_custom_letters.php">Custom Letters</a></li>
 		     </ul>
 		     </li>
 <?php
@@ -152,7 +151,7 @@ $r = mysql_fetch_assoc($q);
         <li><a href="course.php">Get C.E.</a></li>
 	</ul>
     </li>
-  <li><a href="#">SW Tutorials</a></li>
+  <li><a href="sw_tutorials.php">SW Tutorials</a></li>
   <li><a href="calendar.php">Scheduler</a></li>
   <li><a href="manage_patient.php">Manage Pts</a></li>
   <li><a href="#" onclick="loadPopup('includes/device_guide.php'); return false;">Device Selector</a></li>

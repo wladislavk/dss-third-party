@@ -1,3 +1,6 @@
+  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+  <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+
 <?php
 $status_sql = "SELECT status FROM dental_insurance 
 		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
@@ -588,7 +591,11 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
                 if($p_m_ins_ass == 'No'){
                    $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
-                   $u_status = DSS_CLAIM_SENT;
+		   if(isset($_POST['ex_pagebtn_elec'])){
+		     $u_status = false;	
+		   }else{
+                     $u_status = DSS_CLAIM_SENT;
+		   }
                 }
              }elseif($status == DSS_CLAIM_SEC_SENT){
 		$fdf_type="secondary";
@@ -801,6 +808,13 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
 		// update the ledger trxns passed in with the form
 		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
 		update_ledger_trxns($_POST['ed'], $trxn_status);
+
+
+		if(isset($_POST['p_m_ins_payer_id'])){
+		  $pat_sql = "UPDATE dental_patients SET p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."' WHERE patientid='".mysql_real_escape_string($pat_myarray['patientid'])."'";
+		  mysql_query($pat_sql);
+		}
+
 
 		$msg = "Edited Successfully";
 		
@@ -1219,7 +1233,7 @@ input{text-transform:uppercase;}
                <?php } ?>
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
+          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
 
         <?php } ?>
 
@@ -1249,7 +1263,38 @@ input{text-transform:uppercase;}
 
 		&nbsp;&nbsp;&nbsp;
 	</div>
-	
+<?php
+if ($is_back_office){
+                $p_m_ins_payer_id = st($pat_myarray["p_m_eligible_id"]);
+                if($p_m_ins_payer_id){
+                  $dsql = "SELECT name, payer_id FROM dental_ins_payer
+                        WHERE id=".mysql_real_escape_string($p_m_ins_payer_id);
+                  $dq = mysql_query($dsql);
+                  $d = mysql_fetch_assoc($dq);
+                  $p_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
+                }else{
+                  $p_m_ins_payer_name = "";
+                }	
+?>
+
+ Insurance Co.
+                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_ins_payer_name!='')?$p_m_ins_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+<br />
+        <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+                <ul id="ins_payer_list" class="search_list">
+                        <li class="template" style="display:none"></li>
+                </ul>
+        </div>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_ins_payer_id', '', '../list_ins_payers.php');
+});
+</script>
+<input type="hidden" name="p_m_ins_payer_id" id="p_m_ins_payer_id" value="<?=$p_m_ins_payer_id;?>" />
+
+
+
+<?php } ?>
 <table width="1185" border="0" align="center" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align="left" valign="top" width="50%">
@@ -2744,6 +2789,12 @@ var key = e.charCode || e.keyCode || 0;
 
 
 function file_claim(){
+  if($('#p_m_ins_payer_id').val()==""){
+    alert('Insurance payer must be selected to electronically file claim.');
+    return false;
+  }
+  c = confirm('You are about to electronically submit this claim, are you sure?');
+  return c;
 /*
                                   $.ajax({
                                         url: "https://v1.eligibleapi.net/plan/all.json",

@@ -22,6 +22,7 @@ require_once('includes/formatters.php');
 <?php /*        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script> */ ?>
 
         <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js' type="text/javascript" charset="utf-8"></script>
+<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_limit.js"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
         <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -80,7 +81,6 @@ require_once('includes/formatters.php');
 ?>
 		
 </style>
-
 <script type="text/javascript" charset="utf-8">
 	function initCal() {
 		scheduler.config.multi_day = true;

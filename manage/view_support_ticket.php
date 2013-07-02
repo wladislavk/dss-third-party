@@ -53,7 +53,8 @@ if(isset($_POST['respond'])){
 } 
 
 
-$sql = "select t.* FROM dental_support_tickets t 
+$sql = "select t.*
+	FROM dental_support_tickets t 
 	 WHERE t.id = ".mysql_real_escape_string($_REQUEST['ed']);
 $my = mysql_query($sql);
 $t = mysql_fetch_assoc($my);

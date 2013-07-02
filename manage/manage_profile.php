@@ -64,6 +64,20 @@ if(isset($_POST["practice_submit"]))
 form_update_all($_SESSION['docid']);
 }
 
+if(isset($_POST["enable_letter_header"])){
+  $in_sql = "UPDATE dental_users SET
+                use_letter_header = '1'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+}
+
+if(isset($_POST["disable_letter_header"])){
+  $in_sql = "UPDATE dental_users SET
+                use_letter_header = '0'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+}
+
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
@@ -434,7 +448,6 @@ $num_custom=mysql_num_rows($my);
 	<p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
   </div>
   </form>
-</div>
 <?php }else{ ?>
 <div class="half">
   <h3>Letter Margins</h3>
@@ -462,9 +475,18 @@ $num_custom=mysql_num_rows($my);
     <label>Right:</label>
 	18
   </div>
-</div>
 
 <?php } ?>
+
+  <form action="#" method="post">
+<?php
+  if($user['use_letter_header']=='1'){ ?>
+    Letter return address is currently enabled. <input type="submit" name="disable_letter_header" value="Click here" class="addButton" /> to disable return address.
+  <?php }else{ ?>
+    Letter return address is currently disabled. <input type="submit" name="enable_letter_header" value="Click here" class="addButton" /> to enable return address.
+  <?php } ?>
+</form>
+</div>
 <div style="clear:both;"></div>
 
 

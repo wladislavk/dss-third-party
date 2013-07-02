@@ -55,7 +55,14 @@ if(isset($_POST['respond'])){
 } 
 
 
-$sql = "select t.* FROM dental_support_tickets t 
+$sql = "select t.*,
+        u.name as user,
+        c.name as company,
+        cat.title as category 
+	FROM dental_support_tickets t 
+                LEFT JOIN dental_users u ON u.userid=t.userid
+                LEFT JOIN dental_users c ON c.userid=t.docid
+                LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 	 WHERE t.id = ".mysql_real_escape_string($_REQUEST['ed']);
 $my = mysql_query($sql);
 $t = mysql_fetch_assoc($my);
@@ -67,7 +74,7 @@ $t = mysql_fetch_assoc($my);
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 <div id="support_ticket">
 <span class="admin_head">
-	<?= $t['title']; ?>
+	<?= $t['title']; ?>  - User: <?= $t['user']; ?> - Company: <?= $t['company']; ?> - Category: <?= $t['category']; ?>
 </span>
 <br />
 <br />

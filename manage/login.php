@@ -69,14 +69,18 @@ if(isset($_POST["loginsub"]))
 		$_SESSION['name']=$check_myarray['name'];
 		$_SESSION['user_access']=$check_myarray['user_access'];
 		$_SESSION['companyid']=$check_myarray['companyid'];
- 		$_SESSION['user_type']=$check_myarray['user_type'];
 		if($check_myarray['docid'] != 0)
 		{
 			$_SESSION['docid']=$check_myarray['docid'];
+			$ut_sql = "SELECT user_type FROM dental_users WHERE userid='".mysql_real_escape_string($check_myarray['docid'])."'";
+ 			$ut_q = mysql_query($ut_sql);
+			$ut_r = mysql_fetch_assoc($ut_q);
+			$_SESSION['user_type']=$ut_r['user_type'];
 		}
 		else
 		{
 			$_SESSION['docid']=$check_myarray['userid'];
+                	$_SESSION['user_type']=$check_myarray['user_type'];
 		}
 		$_SERVER['QUERY_STRING'];
 		$ins_sql = "insert into dental_login (docid,userid,login_date,ip_address) values('".$_SESSION['docid']."','".$_SESSION['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";

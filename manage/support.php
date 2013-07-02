@@ -25,7 +25,7 @@ $t_q = mysql_query($t_sql);
         <button style="margin-right:10px; float:right;" onclick="loadPopup('add_ticket.php')" class="addButton">
                 Add New Ticket
         </button>
-
+<br />
 <span class="admin_head">Open Tickets</span>
 <table width="98%" cellpadding="5" cellspacing="1" align="center">
   <tr class="tr_bg_h">

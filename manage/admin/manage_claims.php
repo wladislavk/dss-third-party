@@ -3,6 +3,12 @@ include "includes/top.htm";
 require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
+if(isset($_GET['upstatus'])){
+  $sql = "UPDATE dental_insurance SET status='".mysql_real_escape_string($_GET['upstatus'])."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+  mysql_query($sql);
+}
+
+
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
 define('SORT_BY_DATE', 0);
@@ -426,14 +432,10 @@ if(isset($_GET['msg'])){
 <? include "includes/bottom.htm";?>
 <?php
 if(isset($_GET['sendins'])&&$_GET['sendins']==1){
-  ?>
-  <script type="text/javascript">
-    window.location = "../insurance_electronic_file.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
-  </script>
-  <?php
+  include '../insurance_electronic_file.php';
 }
 if(isset($_GET['showins'])&&$_GET['showins']==1){
-
+  /*
   $api_sql = "SELECT u.use_eligible_api, p.p_m_eligible_id FROM dental_users u
 		JOIN dental_insurance i ON i.docid = u.userid
  		JOIN dental_patients p ON p.patientid=i.patientid
@@ -442,7 +444,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1 && $api_r['p_m_eligible_id']!=''){
     include '../insurance_electronic_file.php';
-  }
+  } */
   ?>
   <script type="text/javascript">
     window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";

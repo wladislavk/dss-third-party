@@ -73,6 +73,7 @@ if($_POST["usersub"] == 1)
 				use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
+				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."' 
 			where userid='".$_POST["ed"]."'";
@@ -211,6 +212,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
+				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
 				";
 		                if(isset($_POST['reg_but'])){
@@ -421,6 +423,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_eligible_api = $_POST['use_eligible_api'];
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
+		$use_letter_header = $_POST['user_letter_header'];
 		$homepage = $_POST['homepage'];
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
@@ -461,6 +464,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_eligible_api = st($themyarray['use_eligible_api']);
                 $use_course = st($themyarray['use_course']);
                 $use_course_staff = st($themyarray['use_course_staff']);
+		$use_letter_header = st($themyarray['use_letter_header']);
 		$homepage = st($themyarray['homepage']);
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
@@ -473,6 +477,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $use_course = 1;
                 $use_course_staff = 1;
                 $homepage = 1;
+		$use_letter_header = 1;
  		$companyid = 4;
 		$user_type = 2;
 	}
@@ -800,7 +805,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <input type="checkbox" name="homepage" value="1" <? if($homepage == 1) echo " checked='checked'";?> />
             </td>
         </tr>
-
+	<tr class="expanded" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Use Letter Header?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_letter_header" value="1" <? if($use_letter_header == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

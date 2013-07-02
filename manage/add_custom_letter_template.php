@@ -44,6 +44,8 @@ if(isset($_GET['cid'])){
   $c_q = mysql_query($c_sql);
   $c_r = mysql_fetch_assoc($c_q);
   $body = $c_r['body'];
+  //To replace franchisee to doctor so software users don't get confused.
+  $body = str_replace('%franchisee_', '%doctor_', $body);
 
 }else{
   $body = $r['body'];
@@ -62,7 +64,7 @@ if(isset($_GET['cid'])){
 <form action="?ed=<?= $_GET['ed'];?>" method="post">
 <br /><br />
 <div style="margin-left:20px;width:710px;float:left;">
-Name: <input type="text" id="name" name="name" />
+Name: <input type="text" id="name" name="name" value="<?= $r['name']; ?>" />
 <br /><br />
 <textarea id="body" name="body" style="width:700px; height:400px;"><?= $body; ?></textarea>
 <input type="submit" name="update_btn" value="Save" />
@@ -188,11 +190,25 @@ Name: <input type="text" id="name" name="name" />
 
 
 <script type="text/javascript">
-
+/***
+* generate font size select list
+***/
+function fontSizeList()
+{
+    var str = '';
+    var step = 1;
+    var n = 0;
+    for (n=8; n<=36; n+=step)
+    {
+        str += String(n) + 'px,';
+        step = parseInt((n / 12) + 1);
+    }
+    return str.substring(0,str.length-1); // strip last comma
+}
                 tinyMCE.init({
                         mode : "textareas",
                         theme : "advanced",
-                        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, separator,help",
+                        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, fontsizeselect, separator,help",
                         theme_advanced_buttons2 : "",
                         theme_advanced_buttons3 : "",
                         gecko_spellcheck : true,

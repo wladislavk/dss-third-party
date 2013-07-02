@@ -237,11 +237,14 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax FROM dental_users WHERE userid = '".$docid."';";
+$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
+$use_letter_header = $franchisee_info['use_letter_header'];
+
+
 
 $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $loc_q = mysql_query($loc_sql);
@@ -581,7 +584,77 @@ $noncomp['description'] = $noncomp['description'];
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];
   $orig_template = $letter_r['body'];
-
+  if($use_letter_header == "1"){
+    $template = '<p>
+%franchisee_fullname%<br />
+%franchisee_practice%<br />
+%franchisee_addr%
+</p>
+<p>&nbsp;</p>
+<p>%todays_date%</p>
+<p>&nbsp;</p>
+<table border="0">
+<tr>
+<td width="70"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+<p>&nbsp;</p>' . $template;
+  $orig_template = '<p>
+%franchisee_fullname%<br />
+%franchisee_practice%<br />
+%franchisee_addr%
+</p>
+<p>&nbsp;</p>
+<p>%todays_date%</p>
+<p>&nbsp;</p>
+<table border="0">
+<tr>
+<td width="70"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+<p>&nbsp;</p>' .$orig_template;
+  }else{
+    $template = '<p>%todays_date%</p>
+<p>&nbsp;</p>
+<table border="0">
+<tr>
+<td width="70"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+<p>&nbsp;</p>' . $template;
+  $orig_template = '<p>%todays_date%</p>
+<p>&nbsp;</p>
+<table border="0">
+<tr>
+<td width="70"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+<p>&nbsp;</p>' .$orig_template;
+  }
 /*
 switch ($templateid) {
 	case 1:

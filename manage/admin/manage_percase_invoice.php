@@ -31,20 +31,97 @@ $i_val = $index_val * $rec_disp;
 WHERE du.docid=0
  group by du.name, du.username, du.userid";
 echo $sql;
+
+                $case_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['userid']."' AND
+                dl.percase_status = '".DSS_PERCASE_PENDING."'
+";
+$case_q = mysql_query($case_sql);
+                $case = mysql_fetch_assoc($case_q);
+                $case30_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['userid']."' AND
+                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY) 
+";
+$case30_q = mysql_query($case30_sql);
+                $case30 = mysql_fetch_assoc($case30_q);
+
+
 */
 if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT du.*, c.name AS company_name 
+  $sql = "SELECT du.*, c.name AS company_name,
+		(SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
+		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                	JOIN dental_patients dp ON dl.patientid=dp.patientid
+        		WHERE 
+                		dl.transaction_code='E0486' AND
+                		dl.docid=du.userid AND
+                		dl.percase_status = '".DSS_PERCASE_PENDING."') AS num_case, 
+		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                	JOIN dental_patients dp ON dl.patientid=dp.patientid
+        		WHERE 
+                		dl.transaction_code='E0486' AND
+                		dl.docid=du.userid AND
+                		dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY)) as num_case30
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
                 WHERE du.docid=0";
 }else{
-  $sql = "SELECT du.*, c.name AS company_name 
+  $sql = "SELECT du.*, c.name AS company_name,
+                (SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
+                (SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                        JOIN dental_patients dp ON dl.patientid=dp.patientid
+                        WHERE 
+                                dl.transaction_code='E0486' AND
+                                dl.docid=du.userid AND
+                                dl.percase_status = '".DSS_PERCASE_PENDING."') AS num_case, 
+                (SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
+                        JOIN dental_patients dp ON dl.patientid=dp.patientid
+                        WHERE 
+                                dl.transaction_code='E0486' AND
+                                dl.docid=du.userid AND
+                                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY)) as num_case30 
 		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
 		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
 }
+
+$sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
+
+$sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
+$sort_by_sql = '';
+switch ($sort_by) {
+  case "company":
+    $sort_by_sql = "company_name $sort_dir";
+    break;
+  case "name":
+    $sort_by_sql = "du.name $sort_dir";
+    break;
+  case "case30":
+    $sort_by_sql = "num_case30 $sort_dir";
+    break;
+  case "case":
+    $sort_by_sql = "num_case $sort_dir";
+    break;
+  case "invoice":
+    $sort_by_sql = "num_invoices $sort_dir";
+    break;
+  default:
+    // default is SORT_BY_STATUS
+    $sort_by_sql = "du.username $sort_dir";
+    break;
+}
+
+$sql .= " ORDER BY ".$sort_by_sql;
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -83,21 +160,24 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="14%">
-			Username		
+                <td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="14%">
+			<a href="manage_percase_invoice.php?sort=username&sort_dir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Username</a>		
 		</td>
-                <td valign="top" class="col_head" width="20%">
-                        Company
+                <td class="col_head <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
+                        <a href="manage_percase_invoice.php?sort=company&sort_dir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
                 </td>
-		<td valign="top" class="col_head" width="15%">
-			Name		
+                <td class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
+                        <a href="manage_percase_invoice.php?sort=name&sort_dir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Name</a>		
 		</td>
-                <td valign="top" class="col_head" width="15%">
-                        E0486 (Last 30 days)
+                <td class="col_head <?= ($_REQUEST['sort'] == 'case30')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
+                        <a href="manage_percase_invoice.php?sort=case30&sort_dir=<?php echo ($_REQUEST['sort']=='case30'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">E0486 (Last 30 days)</a>
                 </td>
-		<td valign="top" class="col_head" width="10%">
-			Unbilled E0486		
+                <td class="col_head <?= ($_REQUEST['sort'] == 'case')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
+                        <a href="manage_percase_invoice.php?sort=case&sort_dir=<?php echo ($_REQUEST['sort']=='case'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Unbilled E0486</a>		
 		</td>
+                <td class="col_head <?= ($_REQUEST['sort'] == 'invoice')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
+                        <a href="manage_percase_invoice.php?sort=invoice&sort_dir=<?php echo ($_REQUEST['sort']=='invoice'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>"># Invoices</a>
+                </td>
 		<td valign="top" class="col_head" width="10%">
 			History
 		</td>
@@ -118,24 +198,6 @@ $num_users=mysql_num_rows($my);
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
-		$case_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                JOIN dental_patients dp ON dl.patientid=dp.patientid
-        WHERE 
-                dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['userid']."' AND
-                dl.percase_status = '".DSS_PERCASE_PENDING."'
-";
-$case_q = mysql_query($case_sql);
-		$case = mysql_fetch_assoc($case_q);
-                $case30_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
-                JOIN dental_patients dp ON dl.patientid=dp.patientid
-        WHERE 
-                dl.transaction_code='E0486' AND
-                dl.docid='".$myarray['userid']."' AND
-                dl.service_date > DATE_SUB(now(), INTERVAL 30 DAY) 
-";
-$case30_q = mysql_query($case30_sql);
-                $case30 = mysql_fetch_assoc($case30_q);
 		?>
 			<tr>
 				<td valign="top">
@@ -148,12 +210,15 @@ $case30_q = mysql_query($case30_sql);
                                         <?=st($myarray["name"]);?>
                                 </td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
-					<?=st($case30["num_trxn"]);?>
+					<?=st($myarray['num_case30']);?>
 				</td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?php
-         				    echo st($case["num_trxn"]); ?>
+         				    echo st($myarray["num_case"]); ?>
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["num_invoices"]);?>
+                                </td>
 				<td valign="top" align="center">
 					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["userid"];?>">History</a>
 				</td>	

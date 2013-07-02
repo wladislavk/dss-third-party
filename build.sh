@@ -15,6 +15,7 @@ ln -fs /srv/dss/shared/q_file ./$release_dir/manage/q_file
 ln -fs /srv/dss/shared/letterpdfs ./$release_dir/manage/letterpdfs
 ln -fs /srv/dss/shared/config/config.php ./$release_dir/manage/admin/includes/config.php
 ln -fs /srv/dss/shared/config/site_config.php ./$release_dir/admin/includes/config.php
+chmod 777 ./$release_dir/manage/3rdParty/tcpdf/cache
 rm ./$release_dir/build.sh
 tar -czf $release_tag.tar.gz ./$release_dir
 rm -r ./$release_dir

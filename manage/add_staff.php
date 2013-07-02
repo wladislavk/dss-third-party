@@ -328,7 +328,7 @@ if($_POST["staffsub"] == 1)
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Name
+                Full Name (e.g. John Smith)
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="name" value="<?=$name;?>" class="tbox" /> 

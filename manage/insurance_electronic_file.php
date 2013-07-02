@@ -662,7 +662,7 @@ $data['claim'] = array(
 	"service_lines" => $claim_lines
 	);
 $data_string = json_encode($data);                                                                                   
-error_log($data_string);
+//error_log($data_string);
 //echo $data_string."<br /><br />"; 
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');
@@ -688,7 +688,14 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ";
 mysql_query($up_sql);
 
-
+?>
+<script type="text/javascript">
+  c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
+  if(c){
+   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>&upstatus=<?= DSS_CLAIM_SENT; ?>"; 
+  }
+</script>
+<?php
 //echo($result);
 
 /*

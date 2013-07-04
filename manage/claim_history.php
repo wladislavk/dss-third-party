@@ -33,11 +33,12 @@ $claim = mysql_fetch_assoc($cq);
 			$w_q = mysql_query($w_sql);
 			while($w_r = mysql_fetch_assoc($w_q)){
 			  ?><strong><?= $w_r['event_type']; ?></strong>
+<?php $p = json_decode($w_r['response']); ?>
+                                <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
+                                Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
+                                </p>
+
 				<p><?= $w_r['response']; ?></p>
-				<?php $p = json_decode($w_r['response']); ?>
-				<p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
-				Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
-				</p>
 			<?php
 			}
 			?>

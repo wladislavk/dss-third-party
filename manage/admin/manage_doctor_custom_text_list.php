@@ -31,7 +31,7 @@ $num_users=mysql_num_rows($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Doctor Custom Text 
+	Manage Doctor Custom Progress Note Text 
 </span>
 <br />
 <br />

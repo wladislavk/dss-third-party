@@ -154,7 +154,7 @@ $num_users=mysql_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>        
 	</TR>

@@ -159,7 +159,7 @@ if(isset($_GET['msg'])){
 <?php
 if(isset($_GET['unpaid'])){
 ?>
-<span style="margin-left:10px">(Showing Unpaid Claims Greater than 45 Days Old)</span>
+<span style="margin-left:10px">(Showing Unpaid Claims Greater than 30 Days Old)</span>
 <? } ?>
 
 <label style="margin-left:20px;">Filter by status</label> 
@@ -172,7 +172,7 @@ if(isset($_GET['unpaid'])){
 </select>
 <div style="float: right; margin-right: 20px;">
 <?php if(!isset($_GET['unpaid'])){ ?>
-<a href="manage_claims.php?unpaid=45" class="addButton">Show Unpaid Claims 45 day+</a>
+<a href="manage_claims.php?unpaid=30" class="addButton">Show Unpaid Claims 30 day+</a>
 <?php }
 if(!isset($_GET['unmailed'])){ ?>
 <a href="manage_claims.php?unmailed=1" class="addButton">Show Unmailed Claims</a>

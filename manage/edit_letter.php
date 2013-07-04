@@ -1626,7 +1626,12 @@ foreach ($letter_contacts as $key => $contact) {
 ?>
 	<div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		<div align="left" style="width: 40%; padding: 3px; float: left">
-			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?>
+			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" class="addButton"> Change </a>
+<div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
+  <input type="submit" name="fax_letter[<?=$cur_letter_num?>]" class="addButton" value="Fax" />
+  <input type="submit" name="paper_letter[<?=$cur_letter_num?>]" class="addButton" value="Paper" />
+  <input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />
+</div>
 		</div>
 		<div align="right" style="width:40%; padding: 3px; float: right">
 		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>');return false;" >
@@ -1757,7 +1762,11 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
   }
 
         // Catch Post Send Submit Button and Send letters Here
-  if (($_POST['send_letter'][$cur_letter_num] != null || $_POST['save_letter'][$cur_letter_num] != null) && $numletters == $_POST['numletters']) {
+  if (($_POST['send_letter'][$cur_letter_num] != null || $_POST['save_letter'][$cur_letter_num] != null
+	|| $_POST['fax_letter'][$cur_letter_num] != null
+        || $_POST['paper_letter'][$cur_letter_num] != null
+        || $_POST['email_letter'][$cur_letter_num] != null
+	) && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
                 $parent = true;
     }else{
@@ -1768,8 +1777,16 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
 		$message = $new_template[$cur_letter_num];
                         $search= array("<strong>","</strong>");
                         $message = str_replace($search, "", $message);
-
-            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message);
+if($_POST['fax_letter'][$cur_letter_num] != null){
+  $send_method = 'fax';
+}elseif($_POST['paper_letter'][$cur_letter_num] != null){
+  $send_method = 'paper';
+}elseif($_POST['email_letter'][$cur_letter_num] != null){
+  $send_method = 'email';
+}else{
+  $send_method = '';
+}
+            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
 	if($_POST['send_letter'][$cur_letter_num] != null){
                         create_letter_pdf($saveletterid);

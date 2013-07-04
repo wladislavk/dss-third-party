@@ -39,7 +39,7 @@ $num_users=mysql_num_rows($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Custom Text
+	Manage Custom Progress Note Text
 </span>
 <br />
 <br />

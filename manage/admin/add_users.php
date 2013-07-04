@@ -474,7 +474,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         if(!isset($_GET['ed'])){
                 $use_patient_portal = 1;
                 $use_letters = 1;
-                $use_course = 1;
+                $use_course = 0;
                 $use_course_staff = 1;
                 $homepage = 1;
 		$use_letter_header = 1;

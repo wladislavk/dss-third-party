@@ -194,6 +194,8 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
 	   	$sql .= " (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
 	}elseif($_REQUEST['status'] == '1'){
                 $sql .= " (claim.mailed_date IS NOT NULL AND claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
+        }elseif($_REQUEST['status'] == 'unpaid21'){
+                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
         }elseif($_REQUEST['status'] == 'unpaid45'){
                 $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
         }else{
@@ -253,10 +255,12 @@ if(isset($_GET['msg'])){
     <select name="status">
       <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
+      <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
       <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
+      <option value="unpaid21" <?= $unpaid45_selected; ?>>Unpaid 21+ Days</option>
       <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
     </select>
     &nbsp;&nbsp;&nbsp;

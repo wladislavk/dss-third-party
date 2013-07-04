@@ -406,7 +406,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
 
 
 
-function save_letter($letterid, $parent = null, $type, $recipientid, $template = null) {
+function save_letter($letterid, $parent = null, $type, $recipientid, $template = null, $update_send = null) {
   if (!isset($letterid)) {
 		return false;
   }
@@ -422,7 +422,11 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 	}
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
-		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' WHERE letterid='".s_for($letterid)."';";
+		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
+		if($update_send){
+			$letter_query .= ", send_method='".mysql_real_escape_string($update_send)."' ";
+		}
+		$letter_query .= " WHERE letterid='".s_for($letterid)."';";
 		$letter_result = mysql_query($letter_query);
     return $letterid;
     //return mysql_error();
@@ -447,7 +451,9 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 				unset($md_referrals[$key]);
 				$new_md_referrals = implode(",", $mds);
 			}
-			if ($row['send_method'] == "") {
+			if($update_send){
+				$send_method = $update_send;
+			}elseif ($row['send_method'] == "") {
 				$send_method = $preferred;
 			} else {
 				$send_method = $row['send_method'];

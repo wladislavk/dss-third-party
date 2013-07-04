@@ -207,7 +207,7 @@ if($pat_myarray['patientid'] == '')
                         <?
                                 $i++;
                         }?>
-                        document.getElementById("notes").value = desc_arr[fa].replace(/\%n\%/g,'\r\n');
+                        document.getElementById("notes").value = desc_arr[fa].replace(/\%n\%/g,'\r\n').replace(/&amp;/g,'&');;
                 }
                 else
                 {

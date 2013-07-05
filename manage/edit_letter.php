@@ -1628,9 +1628,13 @@ foreach ($letter_contacts as $key => $contact) {
 		<div align="left" style="width: 40%; padding: 3px; float: left">
 			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" class="addButton"> Change </a>
 <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
+<?php if($contact['fax']!=''){ ?>
   <input type="submit" name="fax_letter[<?=$cur_letter_num?>]" class="addButton" value="Fax" />
+<?php } ?>
+<?php if($contact['add1']!='' && $contact['city']!='' && $contact['state']!='' && $contact['zip']!=''){ ?>
   <input type="submit" name="paper_letter[<?=$cur_letter_num?>]" class="addButton" value="Paper" />
-  <input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />
+<?php } ?>
+  <!--<input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />-->
 </div>
 		</div>
 		<div align="right" style="width:40%; padding: 3px; float: right">

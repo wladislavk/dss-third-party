@@ -31,7 +31,7 @@ while($r = mysql_fetch_assoc($q)){
 
 }
 
-$s = "SELECT u.userid FROM dental_users u WHERE u.userid NOT IN (SELECT distinct docid FROM dental_custom WHERE docid IS NOT NULL) and u.docid=0";
+$s = "SELECT u.userid FROM dental_users u WHERE u.userid NOT IN (SELECT docid FROM dental_custom WHERE docid IS NOT NULL group by docid having count(customid) > 4) and u.docid=0";
 $q = mysql_query($s);
 while($r = mysql_fetch_assoc($q)){
         $userid = $r['userid'];

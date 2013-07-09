@@ -1344,7 +1344,9 @@ border-top-color: #1f303b;
 background: #1f303b;
 }
 
-
+.button.grayButton, .addButton.grayButton{
+  background:#666;
+}
 
 .box_go {
     position: relative;

@@ -573,3 +573,7 @@ th.headerSortDown {
     background-position: right 10px;
 } 
 
+
+tr.status_2{
+  background: #ccc;
+  }

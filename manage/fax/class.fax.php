@@ -12,7 +12,7 @@ class FTSSamples
 	public function __construct ()
 	{
 		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-		$this->securityContext = "sFaxTest000037";			//<--- IMPORTANT: Enter a valid securityContext
+		$this->securityContext = "sFaxProd000043";			//<--- IMPORTANT: Enter a valid securityContext
 	}
 
 	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
@@ -161,10 +161,10 @@ class FTSAESHelper
 	{
 		$this->pTokenContext = $pSecurityContext;						
 		$this->pTokenAppId = "Dental Sleep Solutions";					//<--- IMPORTANT: Enter a valid App Id 
-		$this->pTokenAppKey = "y2u2uvegehyjunuzy9e4yhe3arageza8";		//<--- IMPORTANT: Enter a valid Encryption key
+		$this->pTokenAppKey = "je8y3yvyha5egy5esubase8agubyjape";		//<--- IMPORTANT: Enter a valid Encryption key
 		$this->pTokenClient = "";							//<--- IMPORTANT: Enter a valid Client IP
-		$this->pEncryptionKey = "y2u2uvegehyjunuzy9e4yhe3arageza8";	//<--- IMPORTANT: Enter a valid Encryption key
-		$this->pEncryptionInitVector = "sf4xt3ts3c%r#fax";				//<--- IMPORTANT: Enter a valid Init vectory
+		$this->pEncryptionKey = "je8y3yvyha5egy5esubase8agubyjape";	//<--- IMPORTANT: Enter a valid Encryption key
+		$this->pEncryptionInitVector = "sf4xpr3s2c%r#fax";				//<--- IMPORTANT: Enter a valid Init vectory
 	}
 	
 	public function GenerateSecurityTokenUrl()

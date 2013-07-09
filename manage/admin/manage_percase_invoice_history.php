@@ -151,6 +151,9 @@ echo $charge->card->last4;
 		<td valign="top" class="col_head" width="20%">
 			E0486		
 		</td>
+                <td valign="top" class="col_head" width="20%">
+                        Amount
+                </td>
 		<td valign="top" class="col_head" width="10%">
 			Action	
 		</td>
@@ -168,6 +171,26 @@ echo $charge->card->last4;
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
+$total_charge = $myarray['monthly_fee_amount'];
+$case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['docid']."' AND                dl.percase_invoice='".$myarray['id']."'
+        UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl         WHERE 
+                dl.percase_invoice='".$myarray['id']."'
+        UNION
+SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
+        WHERE
+                invoice_id='".$myarray['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
+                invoice_id='".$myarray['id']."'";
+$case_q = mysql_query($case_sql);
+while($case_r = mysql_fetch_assoc($case_q)){
+$total_charge += $case_r['percase_amount'];
+}
 		$case_sql = "SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
         WHERE 
                 dl.percase_invoice='".$myarray['id']."'
@@ -183,6 +206,10 @@ $case_q = mysql_query($case_sql);
 					<?php
          				    echo st($case["num_trxn"]); ?>
 				</td>
+                                <td valign="top">
+                                        $<?php
+                                            echo number_format($total_charge, 2); ?>
+                                </td>
 				<td valign="top">
 					<a href="../q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">
 						View

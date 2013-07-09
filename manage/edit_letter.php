@@ -912,9 +912,9 @@ if ($_POST != array()) {
                 $search[] = "%doctor_practice%";
                 $replace[] = "<strong>" . $location_info['location'] . "</strong>";
 		$search[] = "%franchisee_phone%";
-		$replace[] = "<strong>" . $location_info['phone'] . "</strong>";
+		$replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
                 $search[] = "%doctor_phone%";
-                $replace[] = "<strong>" . $location_info['phone'] . "</strong>";
+                $replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
 		$search[] = "%franchisee_addr%";
 		$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
                 $search[] = "%doctor_addr%";
@@ -1359,9 +1359,9 @@ foreach ($letter_contacts as $key => $contact) {
         $search[] = "%doctor_practice%";
         $replace[] = "<strong>" . $location_info['location'] . "</strong>";
 	$search[] = "%franchisee_phone%";
-	$replace[] = "<strong>" . $location_info['phone'] . "</strong>";
+	$replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
         $search[] = "%doctor_phone%";
-        $replace[] = "<strong>" . $location_info['phone'] . "</strong>";
+        $replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
 	$search[] = "%franchisee_addr%";
 	$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
         $search[] = "%doctor_addr%";
@@ -1626,14 +1626,17 @@ foreach ($letter_contacts as $key => $contact) {
 ?>
 	<div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		<div align="left" style="width: 40%; padding: 3px; float: left">
-			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" class="addButton"> Change </a>
+			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
 <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
 <?php if($contact['fax']!=''){ ?>
   <input type="submit" name="fax_letter[<?=$cur_letter_num?>]" class="addButton" value="Fax" />
+<?php }else{ ?>
+  <input type="button" name="fax_letter[<?=$cur_letter_num?>]" onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" class="addButton grayButton" value="Fax" />
 <?php } ?>
-<?php if($contact['add1']!='' && $contact['city']!='' && $contact['state']!='' && $contact['zip']!=''){ ?>
+
   <input type="submit" name="paper_letter[<?=$cur_letter_num?>]" class="addButton" value="Paper" />
-<?php } ?>
+
+  <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline'); return false;" class="addButton" value="Cancel" />
   <!--<input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />-->
 </div>
 		</div>

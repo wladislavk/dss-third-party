@@ -7,7 +7,6 @@ if(isset($_GET['vobdel'])){
   $d = "DELETE FROM dental_insurance_preauth WHERE id='".mysql_real_escape_string($_GET['vobdel'])."'
 		AND doc_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($d);
-echo $d;
 
 }
 

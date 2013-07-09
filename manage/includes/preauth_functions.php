@@ -155,6 +155,32 @@ return $e_text;
 
 function create_vob( $pid ){
 
+  $sql = "SELECT tc.* FROM 
+		dental_patients p 
+		JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486'
+		WHERE p.patientid = '".mysql_real_escape_string($pid)."'";
+  $q = mysql_query($sql);
+  $e0486 = (mysql_num_rows($q)>0);
+
+  $sql = "SELECT u.* FROM 
+                dental_patients p 
+                JOIN dental_users u ON p.docid = u.userid 
+                WHERE p.patientid = '".mysql_real_escape_string($pid)."' AND
+			u.npi != '' AND u.npi IS NOT NULL AND
+			u.tax_id_or_ssn != '' AND u.tax_id_or_ssn IS NOT NULL AND
+			(u.ssn = 1 OR u.ein = 1) 
+			";
+  $q = mysql_query($sql);
+  $user_info = (mysql_num_rows($q)>0);
+
+  if(!$e0486 && !$user_info){
+    return "e0486_user";
+  }elseif(!$e0486){
+    return "e0486";
+  }elseif(!$user_info){
+    return "user";
+  }
+
   $sql = "SELECT "
        . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
        . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "

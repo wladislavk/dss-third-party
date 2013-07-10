@@ -177,6 +177,13 @@ ul
 
 style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+</span></span>AASM Practice Parameters: 2006 Practice Parameters stating that Oral Appliance can be used as first line of treatment for mild-moderate OSA: <a href="http://www.aasmnet.org/Resources/PracticeParameters/PP_Update_OralApplicance.pdf">http://www.aasmnet.org/Resources/PracticeParameters/PP_Update_OralApplicance.pdf</a></p>
+
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in'><span
+
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 </span></span>AHI:                       Apnea Hypopnea Index:  Apneas +
 
 Hypopneas indexed per hour</p>

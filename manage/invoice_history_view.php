@@ -25,6 +25,15 @@ $case_sql = "SELECT
         FROM dental_percase_invoice_extra e
         WHERE 
                 e.percase_invoice = '".$_REQUEST['invoice_id']."'
+    UNION ALL
+        SELECT
+        f.description,
+	f.adddate,
+        f.amount
+        FROM dental_fax_invoice f
+        WHERE 
+                f.invoice_id = '".$_REQUEST['invoice_id']."'
+
 ";
 $case_q = mysql_query($case_sql);
 
@@ -104,6 +113,12 @@ $case_q = mysql_query($case_sql);
         FROM dental_percase_invoice_extra e
         WHERE 
                 e.percase_invoice = '".$_REQUEST['invoice_id']."'
+    UNION ALL
+        SELECT
+        f.amount
+        FROM dental_fax_invoice f
+        WHERE 
+                f.invoice_id = '".$_REQUEST['invoice_id']."'
 		) t1
 	";
   $total_q = mysql_query($total_sql);

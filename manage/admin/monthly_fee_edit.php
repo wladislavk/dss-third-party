@@ -8,7 +8,8 @@ include_once '../includes/general_functions.php';
 if($_POST["compsub"] == 1)
 {
 			$ed_sql = "update companies set 
-				monthly_fee = '".mysql_real_escape_string($_POST["monthly_fee"])."'
+				monthly_fee = '".mysql_real_escape_string($_POST["monthly_fee"])."',
+				fax_fee = '".mysql_real_escape_string($_POST["fax_fee"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -44,11 +45,13 @@ if($_POST["compsub"] == 1)
 	{
 		$name = $themyarray['name'];
 		$monthly_fee = $_POST['monthly_fee'];
+		$fax_fee = $_POST['fax_fee'];
 	}
 	else
 	{
 		$name = st($themyarray['name']);
 		$monthly_fee = st($themyarray['monthly_fee']);
+		$fax_fee = st($themyarray['fax_fee']);
 	}
 	
 		$but_text = "Edit ";
@@ -65,7 +68,7 @@ if($_POST["compsub"] == 1)
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
-               <?=$but_text?> Monthly Fee 
+               <?=$but_text?> Fees 
                <? if($name <> "") {?>
                		&quot;<?=$name;?>&quot;
                <? }?>
@@ -80,6 +83,15 @@ if($_POST["compsub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Fax Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="fax_fee" type="text" name="fax_fee" value="<?=$fax_fee;?>" class="tbox" />
+                <span class="red">*</span>
+            </td>
+        </tr>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
@@ -87,7 +99,7 @@ if($_POST["compsub"] == 1)
                 </span><br />
                 <input type="hidden" name="compsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Monthly Fee" class="button" />
+                <input type="submit" value=" <?=$but_text?> Fees" class="button" />
             </td>
         </tr>
     </table>

@@ -1,7 +1,10 @@
 <? 
 include "includes/top.htm";
 require_once '3rdParty/stripe/lib/Stripe.php';
-if($_SESSION['docid'] != $_SESSION['userid']){
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+if($_SESSION['docid']!=$_SESSION['userid'] && $r['manage_staff'] != 1){
   ?>
   <h3 style="margin-left:20px;">You are not permitted to view this page.</h3>
   <?php
@@ -163,13 +166,18 @@ $case_q = mysql_query($case_sql);
 ";
 		$extra_q = mysql_query($extra_sql);
 		$extra = mysql_fetch_assoc($extra_q);
+                $fax_sql = "SELECT amount FROM dental_fax_invoice 
+                                WHERE invoice_id='".$myarray['id']."'
+";
+                $fax_q = mysql_query($fax_sql);
+                $fax = mysql_fetch_assoc($fax_q);
 		?>
 			<tr>
 				<td valign="top">
 					<?=st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
 				</td>
 				<td valign="top">
-					$<?= number_format($extra['extra_total']+$case['ledger_total']+$myarray['monthly_fee_amount'],2); ?>
+					$<?= number_format($extra['extra_total']+$case['ledger_total']+$myarray['monthly_fee_amount']+$fax['amount'],2); ?>
 				</td>
 				<td valign="top">
 					<a href="./q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">

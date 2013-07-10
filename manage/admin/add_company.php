@@ -19,6 +19,10 @@ if($_POST["compsub"] == 1)
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
 				stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
                                 stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
+				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
+				sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
+				sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
+				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -52,6 +56,10 @@ if($_POST["compsub"] == 1)
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
                                 stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
                                 stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
+				sfax_security_context = '".mysql_real_escape_string($_POST['sfax_security_context'])."',
+                                sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
+                                sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
+                                sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -99,6 +107,10 @@ if($_POST["compsub"] == 1)
 		$eligible_api_key = $_POST['eligible_api_key'];
                 $stripe_secret_key = $_POST['stripe_secret_key'];
                 $stripe_publishable_key = $_POST['stripe_publishable_key'];
+		$sfax_securty_context = $_POST['sfax_security_context'];
+                $sfax_app_id = $_POST['sfax_app_id'];
+                $sfax_app_key = $_POST['sfax_app_key'];
+                $sfax_init_vector = $_POST['sfax_init_vector'];
 		$status = $_POST['status'];
 	}
 	else
@@ -112,6 +124,10 @@ if($_POST["compsub"] == 1)
 		$eligible_api_key = st($themyarray['eligible_api_key']);
                 $stripe_secret_key = st($themyarray['stripe_secret_key']);
                 $stripe_publishable_key = st($themyarray['stripe_publishable_key']);
+		$sfax_security_context = st($themyarray['sfax_security_context']);
+                $sfax_app_id = st($themyarray['sfax_app_id']);
+                $sfax_app_key = st($themyarray['sfax_app_key']);
+                $sfax_init_vector = st($themyarray['sfax_init_vector']);
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
@@ -219,6 +235,38 @@ if($_POST["compsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input id="stripe_publishable_key" type="text" name="stripe_publishable_key" value="<?=$stripe_publishable_key;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                SFAX Security Context
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="sfax_security_context" type="text" name="sfax_security_context" value="<?=$sfax_security_context;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                SFAX App ID
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="sfax_app_id" type="text" name="sfax_app_id" value="<?=$sfax_app_id;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                SFAX App Key
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="sfax_app_key" type="text" name="sfax_app_key" value="<?=$sfax_app_key;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                SFAX Init Vector
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="sfax_init_vector" type="text" name="sfax_init_vector" value="<?=$sfax_init_vector;?>" class="tbox" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

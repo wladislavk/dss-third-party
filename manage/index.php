@@ -87,6 +87,14 @@ NAV THIRD
      <li><a href="performance.php">Performance</a></li>
      <li><a href="manage_screeners.php">Pt. Screener</a></li>
      <li><a href='manage_vobs.php'>VOB History</a></li>
+	<?php
+	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+	$q = mysql_query($sql);
+	$r = mysql_fetch_assoc($q);
+	if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff'] == 1){
+	?>
+          <li><a href="invoice_history.php">Invoices</a></li>
+     	<?php } ?>
   </ul>
 </li>
             <li><a class="menu_item" href="#">Admin</a>
@@ -124,9 +132,6 @@ $r = mysql_fetch_assoc($q);
                        <?php }
                 ?>
 		</ul></li>
-                <?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
-                     <li><a href="invoice_history.php">Invoices</a></li>
-                <?php } ?>
 
           	</ul>
 	     </li>

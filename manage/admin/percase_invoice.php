@@ -118,7 +118,7 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, u.name, u.user_type
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, u.name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -216,7 +216,7 @@ if(isset($_POST['submit'])){
                 ?>
                         <tr id="fax_row">
                                 <td valign="top">
-                                        <input type="text" name="fax_desc" value="Faxes – <?= $fax['total_faxes']." at $0.35 each "; ?>" style="width:100%;" />
+                                        <input type="text" name="fax_desc" value="Faxes – <?= $fax['total_faxes']." at $".$doc['fax_fee']." each "; ?>" style="width:100%;" />
                                 </td>
                                 <td valign="top">
                                         <input type="text" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
@@ -227,7 +227,7 @@ to
                                         <a href="#" onclick="$('#fax_row').remove(); calcTotal();">Remove</a>
                                 </td>
                                 <td valign="top">
-                                            $<input type="text" class="amount" name="fax_amount" value="<?= $fax['total_faxes']*.35; ?>" />
+                                            $<input type="text" class="amount" name="fax_amount" value="<?= $fax['total_faxes']*$doc['fax_fee']; ?>" />
                                 </td>
                         </tr>
 		<?php } ?>

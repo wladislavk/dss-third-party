@@ -12,7 +12,10 @@ class FTSSamples
 	public function __construct ()
 	{
 		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-		$this->securityContext = "sFaxProd000043";			//<--- IMPORTANT: Enter a valid securityContext
+		$key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
+		$key_q = mysql_query($key_sql);
+		$keys = mysql_fetch_assoc($key_q);
+		$this->securityContext = $keys['sfax_security_context'];			//<--- IMPORTANT: Enter a valid securityContext
 	}
 
 	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
@@ -159,12 +162,16 @@ class FTSAESHelper
 	
 	public function __construct($pSecurityContext)
 	{
+                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($_SESSION['companyid'])."'";
+                $key_q = mysql_query($key_sql);
+                $keys = mysql_fetch_assoc($key_q);
+
 		$this->pTokenContext = $pSecurityContext;						
-		$this->pTokenAppId = "Dental Sleep Solutions";					//<--- IMPORTANT: Enter a valid App Id 
-		$this->pTokenAppKey = "je8y3yvyha5egy5esubase8agubyjape";		//<--- IMPORTANT: Enter a valid Encryption key
+		$this->pTokenAppId = $keys['app_id'];					//<--- IMPORTANT: Enter a valid App Id 
+		$this->pTokenAppKey = $keys['app_key'];		//<--- IMPORTANT: Enter a valid Encryption key
 		$this->pTokenClient = "";							//<--- IMPORTANT: Enter a valid Client IP
-		$this->pEncryptionKey = "je8y3yvyha5egy5esubase8agubyjape";	//<--- IMPORTANT: Enter a valid Encryption key
-		$this->pEncryptionInitVector = "sf4xpr3s2c%r#fax";				//<--- IMPORTANT: Enter a valid Init vectory
+		$this->pEncryptionKey = $keys['app_key'];	//<--- IMPORTANT: Enter a valid Encryption key
+		$this->pEncryptionInitVector = $keys['init_vector'];				//<--- IMPORTANT: Enter a valid Init vectory
 	}
 	
 	public function GenerateSecurityTokenUrl()

@@ -142,6 +142,18 @@ if($_REQUEST['goto']!=''){
 <br /><br>
 
 <?php
+  $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysql_real_escape_string($letterid)."' AND viewed=0;";
+  $f_q = mysql_query($f_sql);
+  while($f_r = mysql_fetch_assoc($f_q)){
+    ?>
+	<div class="warning" id="fax_alert_<?=$f_r['id']; ?>">This letter was attempted to be faxed to <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= $f_r['to_name']; ?></a> at <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= format_phone($f_r['to_number']); ?></a> but failed. Please check fax number and retry. <a href="#" onclick="remove_alert(<?=$f_r['id'];?>);return false;">Remove</a></div>
+	<br /><br />
+    <?php
+
+ 
+  }
+
+
 //print_r ($_POST);
 
 // Get Contact Info for Recipients
@@ -285,12 +297,12 @@ $q3_sql = "SELECT other_history, other_medications, medicationscheck from dental
 $q3_my = mysql_query($q3_sql);
 $q3_myarray = mysql_fetch_array($q3_my);
 
-  $history_disp = $q3_myarray['other_history'];
+  $history_disp = ($q3_myarray['other_history'])?$q3_myarray['other_history']:"none provided";
 
 if($q3_myarray['medicationscheck']){
   $medications_disp = $q3_myarray['other_medications'];
 }else{
-  $medications_disp = '';
+  $medications_disp = 'none provided';
 }
 
 /*
@@ -365,6 +377,7 @@ $first_o2nadir = st($q1_myarray['o2nadir']);
 $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
 $first_center_name = st($q1_myarray['place']);
 
+
 $q2_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice, sl.company, 
 CASE s.sleeptesttype
    WHEN 'PSG Baseline' THEN '1'
@@ -396,15 +409,21 @@ $completed_rdi = st($q2_myarray['rdi']);
 $completed_o2sat90 = st($q2_myarray['t9002']);
 $completed_o2nadir = st($q2_myarray['o2nadir']);
 $completed_type_study = st($q2_myarray['sleeptesttype']) . " sleep test";
-$completed_sleeplab_name = st($q2_myarray['company']);
+if($q2_myarray=='0'){
+  $completed_sleeplab_name = 'home';
+}else{
+  $completed_sleeplab_name = st($q2_myarray['company']);
+}
 
-
+if($first_center_name=='0'){
+  $first_sleeplab_name = 'home';
+}else{
 $sleeplab_sql = "select company from dental_sleeplab where status=1 and sleeplabid='".$first_center_name."';";
 $sleeplab_my = mysql_query($sleeplab_sql);
 $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 
 $first_sleeplab_name = st($sleeplab_myarray['company']);
-
+}
 
 // Newest Sleep Study Results
 $q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device FROM dental_summ_sleeplab dss LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
@@ -441,6 +460,11 @@ while ($row = mysql_fetch_assoc($subj1_result)) {
 	$subj1 = $row;
 }
 
+  $s = "SELECT ess as ep_eadd, snoring_sound as ep_sadd, energy_level as ep_eladd, sleep_qual as sleep_qualadd FROM dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+  $subj1 = $r;
+
 // Newest Subjective Results
 $subj2_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid DESC LIMIT 1;";
 $subj2_result = mysql_query($subj2_query);
@@ -463,7 +487,7 @@ while ($row = mysql_fetch_assoc($reason_result)) {
 $delay['description'] = $delay['description'];
 
 // Select BMI
-$bmi_query = "SELECT bmi FROM dental_q_page1 WHERE patientid = '".$patientid."';";
+$bmi_query = "SELECT bmi FROM dental_patients WHERE patientid = '".$patientid."';";
 $bmi_result = mysql_query($bmi_query);
 $bmi = mysql_result($bmi_result, 0);
 
@@ -924,7 +948,7 @@ if ($_POST != array()) {
 		$search[] = "%patient_lastname%";
 		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%ccpatient_fullname%";
-		$replace[] = ($key == 0) ? "" : "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%patient_dob%";
 		$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
 		$search[] = "%patient_firstname%";
@@ -1037,7 +1061,7 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
         	$search[] = "%patprogress%";
         	if($contact['type']=='patient'){
-                	$replace[] = "<p>At Dental Sleep Solutions we work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians.  We appreciate your cooperation and patronage.  Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
+                	$replace[] = "<p>We work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians. We appreciate your cooperation and patronage. Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
         	}else{
                 	$replace[] = '';
         	}
@@ -1371,7 +1395,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%patient_lastname%";
 	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%ccpatient_fullname%";
-	$replace[] = ($key == 0) ? "" : "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%patient_dob%";
 	$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
 	$search[] = "%patient_firstname%";
@@ -1485,7 +1509,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
 	$search[] = "%patprogress%";
 	if($contact['type']=='patient'){
-		$replace[] = "<p>At Dental Sleep Solutions we work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians.  We appreciate your cooperation and patronage.  Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
+		$replace[] = "<p>We work hard to keep your doctors up-to-date on your progress in order to help you receive better, more thorough, and more accurate care from all your physicians. We appreciate your cooperation and patronage. Below is a copy of correspondence mailed to the treating physicians we have on file for you; this copy is being sent to you for your records:</p>";
 	}else{
 		$replace[] = '';
 	}
@@ -1928,4 +1952,29 @@ if($_GET['backoffice'] == '1') {
 	include 'includes/bottom.htm';
 
 } 
+
 ?>
+
+<script type="text/javascript">
+  function remove_alert(id){
+                                  $.ajax({
+                                        url: "includes/fax_remove_alert.php",
+                                        type: "post",
+                                        data: {id: id},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+							$('#fax_alert_'+id).remove();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+  }
+
+</script>
+
+
+

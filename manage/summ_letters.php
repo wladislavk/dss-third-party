@@ -287,7 +287,19 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 //print_r($dental_letters);
 
 ?>
+<?php
+  $f_sql = "SELECT * FROM dental_faxes WHERE sfax_completed=1 AND sfax_status=2 AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND viewed=0;";
+  $f_q = mysql_query($f_sql);
+  $f_num = mysql_num_rows($f_q);
+  if($f_num > 0){
+    ?>
+        <br /><br />
+        <a href="manage_vobs.php#fax" class="warning" id="fax_alert"><?= $f_num; ?> letter<?=($f_num>1)?'s':'';?> was attempted to be faxed but failed. Please check fax number and retry. </a>
+    <?php
 
+
+  }
+?>
 <div style="padding-left: 15px;">
 	<h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
 <div style="float: right;margin:20px 40px 0 0;">

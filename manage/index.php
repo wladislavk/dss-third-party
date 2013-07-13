@@ -95,6 +95,7 @@ NAV THIRD
 	?>
           <li><a href="invoice_history.php">Invoices</a></li>
      	<?php } ?>
+	<li><a href="manage_faxes.php">Fax History</a></li>
   </ul>
 </li>
             <li><a class="menu_item" href="#">Admin</a>
@@ -314,8 +315,8 @@ ALERT THIRD
 
   <a href="manage_unsigned_notes.php" class=" count_<?= $num_; ?> notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>
 
-
-<a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class=" count_<?= $num_rejected_preauth; ?> notification bad_count"><span class="count"><?= $num_rejected_preauth; ?></span><span class="label">Alerts</span></a>
+<?php $num_alerts = $num_fax_alerts + $num_rejected_preauth; ?>
+<a href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED; ?>&viewed=0" class=" count_<?= $num_alerts; ?> notification bad_count"><span class="count"><?= $num_alerts; ?></span><span class="label">Alerts</span></a>
 
 
   <a href="pending_patient.php" class="notification  count_<?= $num_pending_duplicates; ?> <?= ($num_pending_duplicates==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_duplicates;?></span><span class="label">Pending Duplicates</span></a>

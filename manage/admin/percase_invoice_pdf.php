@@ -163,6 +163,16 @@ $html .= '<tr>
 
 }
 
+$case_sql_e0486 = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
+                JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$invoice['docid']."' AND
+                dl.percase_invoice='".$invoice['id']."'";
+$case_q_e0486 = mysql_query($case_sql_e0486);
+$num_case_e0486 = mysql_num_rows($case_q_e0486);
+
+
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
@@ -187,7 +197,7 @@ start_date, end_date, amount, id FROM dental_fax_invoice
 $case_q = mysql_query($case_sql);
 $num_case = mysql_num_rows($case_q);
 
-if($num_case > 0){
+if($num_case_e0486 > 0){
 $html .= '<tr>
                                                                         <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case.'</td>
                                                                         <td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">PER-CASE FEES</td>

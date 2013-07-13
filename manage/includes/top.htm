@@ -165,6 +165,11 @@ $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$doci
 $preauth_res = mysql_query($preauth_query);
 $num_rejected_preauth = mysql_num_rows($preauth_res);
 
+$fax_query = "SELECT * FROM dental_faxes where docid='".$docid."' AND viewed = 0 AND sfax_status=2";
+$fax_res = mysql_query($fax_query);
+$num_fax_alerts = mysql_num_rows($fax_res);
+
+
 $support_query = "SELECT * FROM dental_support_tickets t
 			JOIN dental_support_responses r ON r.ticket_id = t.id
 		 WHERE t.docid='".$_SESSION['docid']."' AND r.viewed=0 AND r.response_type=0";

@@ -1,5 +1,4 @@
 <?php
-
 require_once('padCrypt.php');
 require_once('AES_Encryption.php');
 
@@ -8,11 +7,16 @@ class FTSSamples
 	protected $serviceEndpointUrl;
 	protected $securityContext;
 	protected $securityToken;
+        protected $companyId;
 	
-	public function __construct ()
+	public function __construct ($cid)
 	{
+		$this->companyId = $cid;
 		$this->serviceEndpointUrl = "https://fws.axacore.com/xws/";
-		$this->securityContext = "sFaxTest000037";			//<--- IMPORTANT: Enter a valid securityContext
+                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($cid)."'";
+                $key_q = mysql_query($key_sql);
+                $keys = mysql_fetch_assoc($key_q);
+                $this->securityContext = $keys['sfax_security_context'];                        //<--- IMPORTANT: Enter a valid securityContext
 	}
 
 	public function OutboundFaxCreate($faxNumber, $fileName, $filePath, $fileType)
@@ -28,7 +32,7 @@ class FTSSamples
 		//$fileType = "tif";								//<--- IMPORTANT: Enter a valid file type
 		
 		// Set Security Token
-		$FTSAES = new FTSAESHelper($this->securityContext);
+		$FTSAES = new FTSAESHelper($this->securityContext, $this->companyId);
 		$this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
 
 		// Construct the base service URL endpoint
@@ -87,7 +91,9 @@ class FTSSamples
 				//get transmissionid which is needed for OutboundFaxStatus, OutboundFaxDownload
 				$responseTransmissionId = (string)$xResponseData->Delivery->attributes()->TransmissionId;
 			}
-			return true;			
+			$return["status"] = true;
+			$return["transmission_id"] = $responseTransmissionId;
+			return $return;			
 		}
 		else
 		{
@@ -107,6 +113,87 @@ class FTSSamples
                         return $headers;
 		}		
 	}
+
+
+        public function OutboundFaxStatus($transmissionId)
+        {
+                // Service Connection and Security Settings 
+                $methodSignature = "FTS.OutboundFaxStatus";
+                $xwsSuccess = false;
+
+                // key parameters 
+                //$transmissionId = "2120103201859933026"; //<--- IMPORTANT: Enter a valid transmissionId 
+
+                // Set Security Token
+                $FTSAES = new FTSAESHelper($this->securityContext, $this->companyId);
+                $this->securityToken = $FTSAES->GenerateSecurityTokenUrl();
+
+                // Construct the base service URL endpoint
+                $url = $this->serviceEndpointUrl;
+                $url .= "?XM=" . urlencode($methodSignature);
+                $url .= "&XSC=" . urlencode($this->securityContext);
+                $url .= "&XST=". urlencode($this->securityToken);
+
+                // Add the method specific parameters 
+                $url .= "&TransmissionId=" . urlencode($transmissionId);
+
+                //initialize cURL and set cURL options 
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_HEADER, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, "");
+                //specific cURL options for HTTPS sites 
+                //see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/ 
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+
+                $responseBody = curl_exec($ch);
+                $responseInfo = curl_getinfo($ch);
+                $error = curl_error($ch);
+                curl_close ($ch);
+
+                //get headers and response data 
+
+                $helper = new FTSHelper();
+                $headers = $helper->GetHeaders($responseBody, $responseInfo);
+                $xwsSuccess = ($headers["XwsSuccess"] == "1");
+                if($xwsSuccess)
+                {
+                        $deliverId = $headers["XwsReturnData"];
+                        //additional header information 
+                        $faxAttempt = $headers["XwsFaxAttempt"];
+                        $faxComplete = $headers["XwsFaxComplete"];
+                        $faxSuccess = $headers["XwsFaxSuccess"];
+                        //get additional information from XML payload 
+                        //response data xml payload
+                        $xResponseData = $helper->GetResponseData($responseBody, $responseInfo);
+                        if ($xResponseData != null)
+                        {
+
+                        }
+                }
+                else
+                {
+
+			error_log("fax error");
+                        //something went wrong so investigate result and error information 
+                        //get result information from response headers 
+                        $xwsResultCode = (int)$headers["XwsResultCode"];
+                        $xwsResultInfo = $headers["XwsResultInfo"];
+                        //echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo;
+                        //get error information from response headers 
+                        $xwsErrorCode = (int)$headers["XwsErrorCode"];
+                        $xwsErrorInfo = $headers["XwsErrorInfo"];
+                        //echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
+                }
+
+		return $headers;
+        }
+
+
+
 }
 
 class FTSHelper
@@ -159,14 +246,18 @@ class FTSAESHelper
 	protected $pEncryptionKey; 
 	protected $pEncryptionInitVector;
 	
-	public function __construct($pSecurityContext)
+	public function __construct($pSecurityContext, $pCompanyId)
 	{
-		$this->pTokenContext = $pSecurityContext;						
-		$this->pTokenAppId = "Dental Sleep Solutions";					//<--- IMPORTANT: Enter a valid App Id 
-		$this->pTokenAppKey = "y2u2uvegehyjunuzy9e4yhe3arageza8";		//<--- IMPORTANT: Enter a valid Encryption key
-		$this->pTokenClient = "";							//<--- IMPORTANT: Enter a valid Client IP
-		$this->pEncryptionKey = "y2u2uvegehyjunuzy9e4yhe3arageza8";	//<--- IMPORTANT: Enter a valid Encryption key
-		$this->pEncryptionInitVector = "sf4xt3ts3c%r#fax";				//<--- IMPORTANT: Enter a valid Init vectory
+                $key_sql = "SELECT * FROM companies WHERE id='".mysql_real_escape_string($pCompanyId)."'";
+                $key_q = mysql_query($key_sql);
+                $keys = mysql_fetch_assoc($key_q);
+
+                $this->pTokenContext = $pSecurityContext;
+                $this->pTokenAppId = $keys['sfax_app_id'];                                   //<--- IMPORTANT: Enter a valid App Id 
+                $this->pTokenAppKey = $keys['sfax_app_key'];         //<--- IMPORTANT: Enter a valid Encryption key
+                $this->pTokenClient = "";                                                       //<--- IMPORTANT: Enter a valid Client IP
+                $this->pEncryptionKey = $keys['sfax_app_key'];       //<--- IMPORTANT: Enter a valid Encryption key
+                $this->pEncryptionInitVector = $keys['sfax_init_vector'];                            //<--- IMPORTANT: Enter a valid Init vectory
 	}
 	
 	public function GenerateSecurityTokenUrl()

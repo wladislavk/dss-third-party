@@ -658,13 +658,13 @@ FAX COVER SHEET</b>
 <br />
 <b>TO:</b><br />
 NAME: ".$to_name."<br />
-PHONE: ".$phone."<br />
-FAX: ".$fax."
+PHONE: ".format_phone($phone)."<br />
+FAX: ".format_phone($fax)."
 <br /><br />
 <b>FROM:</b><br />
 NAME: ".$doc_name."<br />
-PHONE: ".$doc_phone."<br />
-FAX: ".$doc_fax."<br /><br />
+PHONE: ".format_phone($doc_phone)."<br />
+FAX: ".format_phone($doc_fax)."<br /><br />
 
 TOTAL NUMBER OF PAGES:  %NUM_PAGES%
 <br /><br />
@@ -759,7 +759,7 @@ function deliver_created_letter($letterid){
 		}
 
                 // Get Doctor's Name and Email
-                $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
+                $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
                 $result = mysql_query($sql);
                 $doc_name = mysql_result($result, 0, 0);
                 $doc_email = mysql_result($result, 0, 1);
@@ -768,6 +768,7 @@ function deliver_created_letter($letterid){
                 $doc_fax = mysql_result($result, 0, 4);
                 $logo = mysql_result($result, 0, 5);
                 $user_type = mysql_result($result, 0, 6);
+		$doc_company = mysql_result($result, 0, 7);
 
                 $fax_send = false;
                 // Send Fax
@@ -776,9 +777,9 @@ function deliver_created_letter($letterid){
                         include 'class.fax.php';
                         $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
                         $fileType = "pdf";
-                        $fts = new FTSSamples();
+                        $fts = new FTSSamples($doc_company);
                         $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
-                        if($fax_send !== true){
+                        if($fax_send["status"] !== true){
                           if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
                                 $send_success = false;
                           }else{
@@ -788,9 +789,9 @@ function deliver_created_letter($letterid){
                         //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
                 }
                 if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-                        if($fax_send){
+                        if($fax_send['status']){
                           $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($pid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0',adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($patientid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 			  error_log($fax_query);
 			  mysql_query($fax_query);
                         }else{
@@ -876,7 +877,7 @@ function deliver_letter($letterid, $message) {
 		}
 
 		// Get Doctor's Name and Email
-		$sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type FROM dental_users WHERE userid = '".$docid."';";
+                $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
 		$result = mysql_query($sql);
 		$doc_name = mysql_result($result, 0, 0);
 		$doc_email = mysql_result($result, 0, 1);
@@ -885,6 +886,7 @@ function deliver_letter($letterid, $message) {
 		$doc_fax = mysql_result($result, 0, 4);
 		$logo = mysql_result($result, 0, 5);
 		$user_type = mysql_result($result, 0, 6);
+		$doc_company = mysql_result($result, 0, 7);
 
                 $loc_sql = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
                 $loc_q = mysql_query($loc_sql);
@@ -967,7 +969,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 			include 'class.fax.php';
                 	$filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
                 	$fileType = "pdf";
-			$fts = new FTSSamples();
+			$fts = new FTSSamples($doc_company);
 			$fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
 			if($fax_send !== true){
 			  if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){

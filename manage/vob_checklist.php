@@ -116,12 +116,13 @@ if ($patient_info) {
   $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
   $pat_q = mysql_query($pat_sql);
   $pat_r = mysql_fetch_assoc($pat_q);
-  if($pat_r['p_m_dss_file']!=1){
+  if($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $ins_error = false;
+  }elseif($pat_r['p_m_dss_file']!=1){
     $ins_error = true;
   }else{
     $ins_error = false;
   }
-
 $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 

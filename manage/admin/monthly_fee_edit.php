@@ -9,7 +9,8 @@ if($_POST["compsub"] == 1)
 {
 			$ed_sql = "update companies set 
 				monthly_fee = '".mysql_real_escape_string($_POST["monthly_fee"])."',
-				fax_fee = '".mysql_real_escape_string($_POST["fax_fee"])."'
+				fax_fee = '".mysql_real_escape_string($_POST["fax_fee"])."',
+				free_fax = '".mysql_real_escape_string($_POST["free_fax"])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -46,12 +47,14 @@ if($_POST["compsub"] == 1)
 		$name = $themyarray['name'];
 		$monthly_fee = $_POST['monthly_fee'];
 		$fax_fee = $_POST['fax_fee'];
+		$free_fax = $_POST['free_fax'];
 	}
 	else
 	{
 		$name = st($themyarray['name']);
 		$monthly_fee = st($themyarray['monthly_fee']);
 		$fax_fee = st($themyarray['fax_fee']);
+		$free_fax = st($themyarray['free_fax']);
 	}
 	
 		$but_text = "Edit ";
@@ -90,6 +93,14 @@ if($_POST["compsub"] == 1)
             <td valign="top" class="frmdata">
                 <input id="fax_fee" type="text" name="fax_fee" value="<?=$fax_fee;?>" class="tbox" />
                 <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Free Fax
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="free_fax" type="text" name="free_fax" value="<?=$free_fax;?>" class="tbox" />
             </td>
         </tr>
         <tr>

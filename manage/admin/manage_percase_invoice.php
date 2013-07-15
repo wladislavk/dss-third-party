@@ -263,12 +263,15 @@ $num_users=mysql_num_rows($my);
                 <td valign="top" class="col_head" width="15%">
                         Fax Fee
                 </td>
+                <td valign="top" class="col_head" width="15%">
+                        Free Fax
+                </td>
                 <td valign="top" class="col_head" width="16%">
                         Edit
                 </td>
         </tr>
 <?php
-  $mf_sql = "SELECT id, name, monthly_fee, fax_fee FROM companies ORDER BY name ASC";
+  $mf_sql = "SELECT id, name, monthly_fee, fax_fee, free_fax FROM companies ORDER BY name ASC";
   $mf_q = mysql_query($mf_sql);
   while($mf_r = mysql_fetch_assoc($mf_q)){
   ?>
@@ -276,6 +279,7 @@ $num_users=mysql_num_rows($my);
     <td><?= $mf_r['name']; ?></td>
     <td><?= $mf_r['monthly_fee']; ?></td>
     <td><?= $mf_r['fax_fee']; ?></td>
+    <td><?= $mf_r['free_fax']; ?></td>
     <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="button" style="padding:3px 5px;">Edit</a></td>
   </tr>
 

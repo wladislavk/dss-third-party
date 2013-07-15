@@ -19,13 +19,13 @@ exec('gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=jpeg -dTextAlphaBits=4 -dGraphicsAlp
 ?>
 
 <div style="float:left;"><a href="#" onclick="send_letter('<?=$_GET['id']; ?>')">Looks Good! SEND!</a> | <a href="#" onclick="reload_parent();">Cancel/Revise</a></div>
-<?php if($r['send_method']=='fax'){ ?>
 <?php
-  $fsql = "SELECT fax from dental_contact WHERE contactid='".mysql_real_escape_string($r['md_list'])."' OR 
+  $fsql = "SELECT fax, preferredcontact from dental_contact WHERE contactid='".mysql_real_escape_string($r['md_list'])."' OR 
 contactid='".mysql_real_escape_string($r['md_referral_list'])."'";
   $fq = mysql_query($fsql);
   $f = mysql_fetch_assoc($fq); 
 ?>
+<?php if($r['send_method']=='fax' || ($r['send_method']=='' && $f['preferredcontact']=='fax')){ ?>
 <div style="float:right;margin-right:20px;">Digital Fax - <?= format_phone($f['fax']); ?></div>
 <?php } ?>
 <?php for($i=1; $i<5; $i++){ 

@@ -76,7 +76,7 @@ class FTSSamples
 		//get headers and response data
 		$helper = new FTSHelper();
 		$headers = $helper->GetHeaders($responseBody, $responseInfo);
-		
+	error_log("test");	
 		$xwsSuccess = ($headers["XwsSuccess"] == "1");
 		if($xwsSuccess)
 		{
@@ -89,6 +89,7 @@ class FTSSamples
 			{
 				//get transmissionid which is needed for OutboundFaxStatus, OutboundFaxDownload
 				$responseTransmissionId = (string)$xResponseData->Delivery->attributes()->TransmissionId;
+				error_log($responseTransmissionId);
 			}			
 		}
 		else
@@ -108,6 +109,80 @@ class FTSSamples
 			echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo;
 		}		
 	}
+
+
+	public function OutboundFaxSatus($transmissionId) 
+	{ 
+        	// Service Connection and Security Settings 
+		$methodSignature = "FTS.OutboundFaxStatus"; 
+        	$xwsSuccess = false; 
+
+	        // key parameters 
+   		//$transmissionId = "2120103201859933026"; //<--- IMPORTANT: Enter a valid transmissionId 
+
+
+
+   		// Construct the base service URL endpoint
+		$url = $this->serviceEndpointUrl;  
+   		$url .= "?XM=" . urlencode($methodSignature); 
+   		$url .= "&XSC=" . urlencode($this->securityContext); 
+   		// Add the method specific parameters 
+   		$url .= "&TransmissionId=" . urlencode($transmissionId); 
+
+   		//initialize cURL and set cURL options 
+   		$ch = curl_init($url);  
+  		curl_setopt($ch, CURLOPT_URL, $url);  
+  		curl_setopt($ch, CURLOPT_HEADER, true);  
+  		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);   
+  		curl_setopt($ch, CURLOPT_POST, true); 
+  		curl_setopt($ch, CURLOPT_POSTFIELDS, ""); 
+   		//specific cURL options for HTTPS sites 
+   		//see http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/ 
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+
+   		$responseBody = curl_exec($ch); 
+   		$responseInfo = curl_getinfo($ch); 
+   		$error = curl_error($ch); 
+  		curl_close ($ch); 
+
+   		//get headers and response data 
+
+   		$helper = new FTSHelper(); 
+   		$headers = $helper->GetHeaders($responseBody, $responseInfo); 
+   		$xwsSuccess = ($headers["XwsSuccess"] == "1"); 
+   		if($xwsSuccess) 
+   		{ 
+    			$deliverId = $headers["XwsReturnData"]; 
+    			//additional header information 
+    			$faxAttempt = $headers["XwsFaxAttempt"]; 
+    			$faxComplete = $headers["XwsFaxComplete"]; 
+    			$faxSuccess = $headers["XwsFaxSuccess"]; 
+    			//get additional information from XML payload 
+    			//response data xml payload 
+			$xResponseData = $helper->GetResponseData($responseBody, $responseInfo); 
+   			if ($xResponseData != null) 
+    			{ 
+
+    			}    
+   		} 
+  		else 
+   		{ 
+    			//something went wrong so investigate result and error information 
+			//get result information from response headers 
+			$xwsResultCode = (int)$headers["XwsResultCode"]; 
+    			$xwsResultInfo = $headers["XwsResultInfo"]; 
+   			echo "ResultCode=" . $xwsResultCode . "ResultInfo=" . $xwsResultInfo; 
+    			//get error information from response headers 
+    			$xwsErrorCode = (int)$headers["XwsErrorCode"]; 
+    			$xwsErrorInfo = $headers["XwsErrorInfo"]; 
+   			echo "ErrorCode=" . $xwsErrorCode . "ErrorInfo=" . $xwsErrorInfo; 
+   		}
+	}
+
+
+
+
 }
 
 class FTSHelper

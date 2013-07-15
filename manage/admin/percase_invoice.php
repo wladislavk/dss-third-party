@@ -63,6 +63,27 @@ if(isset($_POST['submit'])){
     }
   }
 
+  if(isset($_POST['free_fax_desc'])){
+    $fax_start_date = ($_POST['free_fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):'';
+    $fax_end_date = ($_POST['free_fax_end_date'])?date('Y-m-d', strtotime($_POST['fax_end_date'])):'';
+
+    $in_sql = "INSERT INTO dental_fax_invoice SET
+                invoice_id = '".mysql_real_escape_string($invoiceid)."',
+                description = '".mysql_real_escape_string($_POST['free_fax_desc'])."',
+                start_date = '".mysql_real_escape_string($free_fax_start_date)."',
+                end_date = '".mysql_real_escape_string($free_fax_end_date)."',
+                amount = '".mysql_real_escape_string($_POST['free_fax_amount'])."',
+                adddate = now(),
+                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($in_sql);
+    $fax_invoice_id = mysql_insert_id();
+
+    $up_sql = "UPDATE dental_faxes SET
+                status = '1',
+                fax_invoice_id = '".$fax_invoice_id."' 
+                WHERE status='0' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+    mysql_query($up_sql);
+  }
 
   if(isset($_POST['fax_desc'])){
     $fax_start_date = ($_POST['fax_start_date'])?date('Y-m-d', strtotime($_POST['fax_start_date'])):''; 
@@ -118,7 +139,7 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, u.name, u.user_type
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, u.name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -213,10 +234,36 @@ if(isset($_POST['submit'])){
 
 
 			if($fax['total_faxes'] > 0){
+			$bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
+			if($doc['free_fax'] > $fax['total_faxes']){
+			  $free_fax = $fax['total_faxes'];
+			}else{
+			  $free_fax = $doc['free_fax'];
+			} ?>
+                        <tr id="free_fax_row">
+                                <td valign="top">
+                                        <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+                                        <input type="text" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
+to
+                                        <input type="text" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();">Remove</a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="free_fax_amount" value="0.00" />
+                                </td>
+                        </tr>
+
+
+		<?php
+			if($bill_faxes > 0){
                 ?>
                         <tr id="fax_row">
                                 <td valign="top">
-                                        <input type="text" name="fax_desc" value="Faxes – <?= $fax['total_faxes']." at $".$doc['fax_fee']." each "; ?>" style="width:100%;" />
+                                        <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" style="width:100%;" />
                                 </td>
                                 <td valign="top">
                                         <input type="text" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
@@ -227,9 +274,10 @@ to
                                         <a href="#" onclick="$('#fax_row').remove(); calcTotal();">Remove</a>
                                 </td>
                                 <td valign="top">
-                                            $<input type="text" class="amount" name="fax_amount" value="<?= $fax['total_faxes']*$doc['fax_fee']; ?>" />
+                                            $<input type="text" class="amount" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>" />
                                 </td>
                         </tr>
+			<?php } ?>
 		<?php } ?>
 
 		<tr id="total_row">

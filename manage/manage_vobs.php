@@ -242,10 +242,13 @@ $sql = "SELECT f.*,
         l.template_type,
         l.templateid,
         l.pdf_path,
-        l.status as letter_status
+        l.status as letter_status,
+	ec.description AS error_description,
+	ec.resolution AS error_resolution
          FROM dental_faxes f 
         LEFT JOIN dental_patients p ON p.patientid = f.patientid
         LEFT JOIN dental_letters l ON l.letterid = f.letterid
+	LEFT JOIN dental_fax_error_codes ec ON ec.error_code = f.sfax_error_code
         WHERE f.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
 	sfax_completed=1 AND sfax_status=2 AND
 	viewed = 0";
@@ -321,7 +324,7 @@ $title = mysql_result($template_result, 0);
                                 </td>
 
                                 <td valign="top">
-					There was an error sending the fax. Please check the fax number and resend. (<?= st($myarray["sfax_error_code"]); ?>)
+					<?= st($myarray["error_description"]); ?> - <?= st($myarray["error_resolution"]); ?>
                                 </td>
                                 <td valign="top">
                                         <a href="manage_vobs.php?frid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">

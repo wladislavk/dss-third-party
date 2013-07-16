@@ -702,7 +702,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 function deliver_created_letter($letterid){
   $send_success = true;
 
-                $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid FROM dental_letters where letterid = '".$letterid."';";
+                $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
                 $result = mysql_query($sql);
                 if (!$result) {
                         return mysql_error();
@@ -752,6 +752,7 @@ function deliver_created_letter($letterid){
                         $userid = $row['userid'];
                         $templateid = $row['templateid'];
 			$filename = $row['pdf_path'];
+			$template = $row['template'];
                 }
 
 		if($send_method=="" && $preferredcontact!=""){
@@ -791,7 +792,7 @@ function deliver_created_letter($letterid){
                 if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
                         if($fax_send['status']){
                           $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($patientid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+			  $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysql_real_escape_string($patientid)."',userid = '".mysql_real_escape_string($userid)."',docid = '".mysql_real_escape_string($docid)."',sent_date = NOW(),pages = '".mysql_real_escape_string(count_pages('../letterpdfs/'.$filename))."',contactid = '".mysql_real_escape_string($contactid)."',filename = '".mysql_real_escape_string($filename)."',to_number = '".mysql_real_escape_string($fax)."',to_name = '".mysql_real_escape_string($to_name)."',letterid = '".mysql_real_escape_string($letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysql_real_escape_string($template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
 			  error_log($fax_query);
 			  mysql_query($fax_query);
                         }else{

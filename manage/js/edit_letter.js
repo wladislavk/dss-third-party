@@ -9,7 +9,7 @@ function edit_letter(divid) {
 		tinyMCE.init({
 			mode : "textareas",
 			theme : "advanced",
-			theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, separator,help",
+			theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, fontsizeselect, separator,help",
 			theme_advanced_buttons2 : "",
 			theme_advanced_buttons3 : "",
 			gecko_spellcheck : true,

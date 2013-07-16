@@ -292,7 +292,7 @@ $pat_r = mysql_fetch_assoc($pat_q);
 	</tr>
   <tr>	
 		<td valign="top" class="even">
-		<select name="sleeptesttype">
+		<select name="sleeptesttype" onchange="update_home(this.form)">
       <option value="HST Baseline">HST Baseline</option>
       <option value="PSG Baseline">PSG Baseline</option>
       <option value="HST Titration">HST Titration</option>
@@ -313,6 +313,11 @@ if(f.sleeptesttype.value == "HST"){
 }
 }
 
+function update_home(f){
+  if(f.sleeptesttype.value == "HST Baseline" || f.sleeptesttype.value == "HST Titration"){
+    f.place.value = 0;
+  }
+}
 </script>
 		</td>
 </tr>
@@ -375,6 +380,9 @@ function addstudylab(v){
 		?>
                 </td>
         </tr>
+<script type="text/javascript">
+update_home(document.getElementById('new_sleep_study_form'));
+</script>
 	<tr>
                 <td valign="top" class="even">
                   <input style="width:100px;" type="text" name="diagnosising_npi" />
@@ -498,7 +506,7 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>	
 		<td valign="top" class="even">
-                <select name="sleeptesttype">
+                <select name="sleeptesttype" onchange="update_home(this.form)">
                    <option <?= ($s_lab['sleeptesttype']=="HST Baseline")?'selected="selected"':''; ?> value="HST Baseline">HST Baseline</option>
                    <option <?= ($s_lab['sleeptesttype']=="PSG Baseline")?'selected="selected"':''; ?> value="PSG Baseline">PSG Baseline</option>
                    <option <?= ($s_lab['sleeptesttype']=="HST Titration")?'selected="selected"':''; ?> value="HST Titration">HST Titration</option>

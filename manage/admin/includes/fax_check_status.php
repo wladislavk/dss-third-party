@@ -1,6 +1,5 @@
 <?php
 
-error_log("CRONTAB");
 require 'config.php';
 require 'class.fax.php';
 

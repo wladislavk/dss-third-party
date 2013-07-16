@@ -38,6 +38,9 @@ if(mysql_num_rows($my)){
                 <td valign="top" class="col_head" width="15%">
 			Correspondance 
 		</td>
+		<td valign="top" class="col_head" width="15%">
+                        Status
+                </td>
         </tr>
         <? if(mysql_num_rows($my) == 0)
         { ?>
@@ -78,6 +81,15 @@ $title = mysql_result($template_result, 0);
 		                          <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>"><?= $title; ?></a>
 					<?php } ?>
                                 </td>
+				<td valign="top">
+					<?php if($myarray['sfax_completed']=='0'){ ?>
+						Pending
+					<?php }elseif($myarray['sfax_status']=='1'){ ?>
+						Succeeded
+					<?php }elseif($myarray['sfax_status']=='2'){ ?>
+						Failed
+					<?php } ?>
+				</td>
                         </tr>
         <?      }
         }?>

@@ -425,12 +425,16 @@ $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 $first_sleeplab_name = st($sleeplab_myarray['company']);
 }
 
-// Newest Sleep Study Results
-$q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device FROM dental_summ_sleeplab dss LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
+
+
+$q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device, d.ins_diagnosis, d.description FROM dental_summ_sleeplab dss 
+	LEFT JOIN dental_ins_diagnosis d
+	  ON dss.diagnosis = d.ins_diagnosisid
+	LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY id DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $second_study_date = st($q2_myarray['date']);
-$second_diagnosis = st($q2_myarray['diagnosis']);
+$second_diagnosis = st($q2_myarray['ins_diagnosis']." ".$q2_myarray['description']); //st($q2_myarray['diagnosis']);
 $second_ahi = st($q2_myarray['ahi']);
 $second_ahisupine = st($q2_myarray['ahisupine']);
 $second_rdi = st($q2_myarray['rdi']);

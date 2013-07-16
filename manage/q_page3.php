@@ -650,11 +650,29 @@ label {
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'allergenscheck', $pat_row['allergenscheck'], $allergenscheck, true, $showEdits, 'radio');
                             ?>
-
+			<a href="#" id="show_other_allergens" onclick="$('#other_allergens_list').show();$(this).hide();$('#hide_other_allergens').show();return false;" class="addButton">View List</a>
+                        <a href="#" id="hide_other_allergens" onclick="$('#other_allergens_list').hide();$(this).hide();$('#show_other_allergens').show();return false;" class="addButton" style="display:none;">Hide List</a>
 		    </span>
+		<span id="other_allergens_list" style="margin-top:10px; display:none;">
+<?
+                                                        $allergens_sql = "select * from dental_allergens where status=1 order by sortby";
+                                                        $allergens_my = mysql_query($allergens_sql);
+                                                                $i=0;
+                                                                while($allergens_myarray = mysql_fetch_array($allergens_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;height:20px;">
+						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_allergens').append(', <?=st($allergens_myarray['allergens']);?>');return false;">
+                                            <?=st($allergens_myarray['allergens']);?>
+						</a>
+                                        </span>                                    <?
+                                                                        $i++;
+                                                                 } ?>
+
+		</span>
                             <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
                                 Please list everything you are allergic to:<br />
-                               <textarea name="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
+                               <textarea name="other_allergens" id="other_allergens" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_allergens;?></textarea>
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'other_allergens', $pat_row['other_allergens'], $other_allergens, true, $showEdits);
                             ?>
@@ -685,12 +703,29 @@ label {
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'medicationscheck', $pat_row['medicationscheck'], $medicationscheck, true, $showEdits, 'radio');
                             ?>
-
+                        <a href="#" id="show_other_medications" onclick="$('#other_medications_list').show();$(this).hide();$('#hide_other_medications').show();return false;" class="addButton">View List</a>
+                        <a href="#" id="hide_other_medications" onclick="$('#other_medications_list').hide();$(this).hide();$('#show_other_medications').show();return false;" class="addButton" style="display:none;">Hide List</a>
                             </span>
-
+				<span style="margin-top:10px;display:none;" id="other_medications_list">
+                                <?
+                                                        $medications_sql = "select * from dental_medications where status=1 order by sortby";
+                                                        $medications_my = mysql_query($medications_sql);
+                                                                $i=0;
+                                                                while($medications_myarray = mysql_fetch_array($medications_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;height:20px;">
+						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_medications').append(', <?=st($medications_myarray['medications']);?>');return false;">
+                                            <?=st($medications_myarray['medications']);?>
+						</a>
+                                        </span>
+                                    <?
+                                                                        $i++;
+                                                                 }?>
+				</span>
                         <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
                             	Please list all medication you are currently taking: <br />
-                            <textarea name="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
+                            <textarea name="other_medications" id="other_medications" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_medications;?></textarea>
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'other_medications', $pat_row['other_medications'], $other_medications, true, $showEdits);
                             ?>
@@ -712,6 +747,25 @@ label {
                     <label class="desc" id="title0" for="Field0" style="width:90%;">
                         Medical History
                     </label>
+                        <a href="#" id="show_other_history" onclick="$('#other_history_list').show();$(this).hide();$('#hide_other_history').show();return false;" class="addButton">View List</a>
+                        <a href="#" id="hide_other_history" onclick="$('#other_history_list').hide();$(this).hide();$('#show_other_history').show();return false;" class="addButton" style="display:none;">Hide List</a>
+			<span id="other_history_list" style="display:none;">
+                                <?
+                                                        $history_sql = "select * from dental_history where status=1 order by history";
+                                                        $history_my = mysql_query($history_sql);
+                                                                $i=0;
+                                                                while($history_myarray = mysql_fetch_array($history_my))
+                                                                {
+                                                                        ?>
+                                        <span style="width:32%; float:left; display:block;height:20px;">
+                                                <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append(', <?=st($history_myarray['history']);?>'); return false;">
+                                            <?=st($history_myarray['history']);?>
+						</a>
+                                        </span>
+                                    <?
+                                                                        $i++;
+                                                                 }?>
+</span>
                     <div>
                         <span>
 			    <span>
@@ -725,7 +779,7 @@ label {
                             </span>
 
                              <span id="h_det" >
-                                <textarea name="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
+                                <textarea name="other_history" id="other_history" class="text addr tbox" style="width:650px; height:100px;" tabindex="10"><?=$other_history;?></textarea>
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'other_history', $pat_row['other_history'], $other_history, true, $showEdits);
                             ?>

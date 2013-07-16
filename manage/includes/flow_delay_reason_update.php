@@ -1,5 +1,5 @@
 <?php
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $id = $_REQUEST['id'];
 $r = $_REQUEST['reason'];
 $pid = $_REQUEST['pid'];

@@ -1,5 +1,5 @@
 <?php
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $id = $_REQUEST['id'];
 $d = $_REQUEST['device'];
 $pid = $_REQUEST['pid'];

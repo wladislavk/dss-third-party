@@ -1,4 +1,4 @@
-<? include "admin/includes/config.php";
+<? include "admin/includes/main_include.php";
 
 $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and status='".$_GET['st']."' order by lastname, firstname";
 $my=mysql_query($sql) or die(mysql_error());

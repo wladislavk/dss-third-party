@@ -1,5 +1,5 @@
 <?php
-include "admin/includes/config.php";
+include "admin/includes/main_include.php";
 ?>
 <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>

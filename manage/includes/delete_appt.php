@@ -1,5 +1,5 @@
 <?php
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $id = $_REQUEST['id'];
 $pid = $_REQUEST['pid'];
 		$s = "DELETE from dental_flow_pg2_info WHERE id=".mysql_real_escape_string($id)." AND patientid=".mysql_real_escape_string($pid);

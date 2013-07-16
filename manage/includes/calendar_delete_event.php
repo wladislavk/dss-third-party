@@ -11,7 +11,7 @@ if(strpos($foo, '#') !== FALSE)
 }
 else
 {
-	require_once '../admin/includes/config.php';
+	require_once '../admin/includes/main_include.php';
 	require_once 'checkemail.php';
 	$s = "delete from dental_calendar
 		WHERE event_id='".$e_id."'";

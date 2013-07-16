@@ -1,5 +1,5 @@
 <?php
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$_GET['pid']."';";
 $pat_q = mysql_query($pat_sql);
 $pat_r = mysql_fetch_assoc($pat_q);

@@ -1,6 +1,6 @@
 <?php
 
-include('admin/includes/config.php');
+include('admin/includes/main_include.php');
 
 $letterid = '12';
 $patientid = $_GET['pid'];

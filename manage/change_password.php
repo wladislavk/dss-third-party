@@ -1,4 +1,4 @@
-<?php include 'admin/includes/config.php';
+<?php include 'admin/includes/main_include.php';
 
 if($_SESSION['userid'] == '')
 {

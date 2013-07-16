@@ -6,7 +6,7 @@
 //
 //
 
-require_once './admin/includes/config.php';
+require_once './admin/includes/main_include.php';
 
 $l_sql = "select letterid, stepid, patientid from dental_letters";
 $l_q = mysql_query($l_sql);

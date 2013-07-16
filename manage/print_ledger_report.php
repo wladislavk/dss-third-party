@@ -4,7 +4,7 @@
 //include "includes/top.htm";
 
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 require_once('includes/constants.inc');
 if(isset($_GET['pid'])){

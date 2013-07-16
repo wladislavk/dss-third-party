@@ -3,7 +3,7 @@ header("Content-type: application/vnd.xfdf");
 header('Content-Disposition: attachment; filename="file.xfdf"');
 session_start();
 require_once('includes/constants.inc');
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 $field_path = "form1[0].#subform[0]";
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';

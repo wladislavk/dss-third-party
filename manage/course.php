@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'admin/includes/config.php';
+include 'admin/includes/main_include.php';
 include("includes/sescheck.php");
 
 $u_sql = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";

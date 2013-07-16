@@ -3,7 +3,7 @@ session_start();
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include("includes/calendarinc.php");
 include_once('admin/includes/password.php');

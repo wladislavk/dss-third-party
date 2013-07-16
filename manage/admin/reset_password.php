@@ -1,5 +1,5 @@
 <?php
-  include 'includes/config.php';
+  include 'includes/main_include.php';
   include '../includes/constants.inc';
         $check_sql = "SELECT userid, username, email FROM dental_users WHERE userid='".mysql_real_escape_string($_GET['id'])."'";
         $check_my = mysql_query($check_sql);

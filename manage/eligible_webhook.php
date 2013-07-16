@@ -1,5 +1,5 @@
 <?php
-require_once 'admin/includes/config.php';
+require_once 'admin/includes/main_include.php';
 $request_body = file_get_contents('php://input');
 $json = json_decode($request_body);
 

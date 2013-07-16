@@ -1,6 +1,6 @@
 <? 
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";

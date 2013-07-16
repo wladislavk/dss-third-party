@@ -4,7 +4,7 @@ session_start();
 if(isset($_GET['addtopat'])){
 $addtopat = $_GET['addtopat'];
 }
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
 <script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>

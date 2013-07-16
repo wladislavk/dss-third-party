@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 require_once 'letter_triggers.php';
 $id = $_REQUEST['id'];
 $c = $_REQUEST['c'];

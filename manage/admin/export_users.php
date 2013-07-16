@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/config.php';
+require_once 'includes/main_include.php';
 require_once 'includes/sescheck.php';
 $s = "select u.name, 
 	u.email, 

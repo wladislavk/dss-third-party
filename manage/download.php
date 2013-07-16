@@ -1,5 +1,5 @@
 <?php	
-include_once('admin/includes/config.php');
+include_once('admin/includes/main_include.php');
 session_start();
 mysql_connect($config_db_host,$config_db_user,$config_db_pass) or die('connection failure');	
 mysql_select_db($config_db_name);

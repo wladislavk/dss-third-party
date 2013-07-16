@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include "includes/general_functions.php";
 include_once "admin/includes/general.htm";

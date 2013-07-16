@@ -1,6 +1,6 @@
 <?php
 
-include('admin/includes/config.php');
+include('admin/includes/main_include.php');
 
 if ($_REQUEST['key'] != $cron_key) die();
 

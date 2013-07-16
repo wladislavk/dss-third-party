@@ -1,5 +1,5 @@
 <?
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 //$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
 //$page_my = mysql_query($page_sql);

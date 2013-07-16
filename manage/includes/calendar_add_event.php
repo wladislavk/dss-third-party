@@ -16,7 +16,7 @@ $e_length = empty($_POST['elength']) ? "''" : $_POST['elength'];
 $e_pid = empty($_POST['epid']) ? "''" : $_POST['epid'];
 
 
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 require_once 'checkemail.php';
 $s = "INSERT INTO dental_calendar
 	(start_date, end_date, event_id, description, category, producer_id, docid, patientid, rec_type, event_length, event_pid, res_id)

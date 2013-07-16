@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require_once('includes/config.php');
+require_once('includes/main_include.php');
 include("includes/sescheck.php");
 include_once('includes/password.php');
 if($_POST["adminsub"] == 1)

@@ -1,5 +1,5 @@
 <? 
-include "admin/includes/config.php";
+include "admin/includes/main_include.php";
 
 if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1 && $_POST['weeklysub'] != 1 && $_POST['rangesub'] != 1 && $_GET['pid'] == '')
 {?>

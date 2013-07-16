@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'admin/includes/config.php';
+require 'admin/includes/main_include.php';
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=dss_md_export.csv");
 header("Pragma: no-cache");

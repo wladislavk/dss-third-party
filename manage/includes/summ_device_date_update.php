@@ -1,5 +1,5 @@
 <?php
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $d = $_REQUEST['device_date'];
 $pid = $_REQUEST['pid'];
 $d = date('Y-m-d', strtotime($d));

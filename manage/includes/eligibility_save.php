@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $pid = $_REQUEST['pid'];
 $d = json_decode($_REQUEST['response'], true);
 //print_r($d);

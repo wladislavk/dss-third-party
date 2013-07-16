@@ -1,6 +1,6 @@
 <?
 session_start();
-include('includes/config.php');
+include('includes/main_include.php');
 include_once('includes/password.php');
 include_once '../includes/constants.inc';
 if($_POST["emailsub"] == 1)

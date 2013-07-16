@@ -1,5 +1,5 @@
 <?php
-require_once '../../admin/includes/config.php';
+require_once '../../admin/includes/main_include.php';
 require_once '../../3rdParty/stripe/lib/Stripe.php';
 require_once '../../includes/constants.inc';
 $id = $_REQUEST['id'];

@@ -1,4 +1,4 @@
-<?php include '../../admin/includes/config.php'; ?>
+<?php include '../../admin/includes/main_include.php'; ?>
 <?php include '../../includes/constants.inc'; ?>
 <?php require_once '../../includes/general_functions.php'; ?>
 <?php require_once '../../includes/notifications.php'; ?>

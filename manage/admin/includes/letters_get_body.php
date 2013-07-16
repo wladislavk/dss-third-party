@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'main_include.php';
 $id = $_REQUEST['id'];
 $s = "SELECT body FROM dental_letter_templates
         WHERE id='".mysql_real_escape_string($id)."'";

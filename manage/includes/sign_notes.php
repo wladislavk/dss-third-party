@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 $ids = $_REQUEST['ids'];
 $s = "UPDATE dental_notes SET signed_id = '".mysql_real_escape_string($_SESSION['userid'])."',
 	signed_on = now()

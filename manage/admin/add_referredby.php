@@ -4,7 +4,7 @@ session_start();
 if(isset($_GET['addtopat'])){
 $addtopat = $_GET['addtopat'];
 }
-require_once('includes/config.php');
+require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
 if($_POST["referredbysub"] == 1)

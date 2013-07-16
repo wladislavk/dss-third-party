@@ -1,6 +1,6 @@
 <?php
 	session_start();
-        require_once('includes/config.php');
+        require_once('includes/main_include.php');
 	require_once('includes/sescheck.php');
         //$check_sql = "SELECT userid, username, name, user_access, docid FROM dental_users where username='".$_POST['username']."'";
         $check_sql = "SELECT dental_users.userid, username, name, user_access, docid, user_type, uc.companyid FROM dental_users 

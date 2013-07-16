@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once './config.php';
+require_once './main_include.php';
 $id = $_SESSION['adminuserid'];
 $logout_time = 3*60*60; // 3 hours in seconds
 $s = "SELECT last_accessed_date FROM admin

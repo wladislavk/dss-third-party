@@ -1,5 +1,5 @@
 <?php
-include 'admin/includes/config.php';
+include 'admin/includes/main_include.php';
 if(false){
 $sql = "SELECT * FROM dental_users WHERE username!=''";
 $q = mysql_query($sql);

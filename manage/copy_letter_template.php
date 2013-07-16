@@ -1,5 +1,5 @@
 <?php
-require 'admin/includes/config.php';
+require 'admin/includes/main_include.php';
 
 $tid = $_GET['tid'];
 

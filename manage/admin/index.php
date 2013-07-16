@@ -1,6 +1,6 @@
 <?
 //session_start();
-include('includes/config.php');
+include('includes/main_include.php');
 include_once('includes/password.php');
 if(isset($_POST["loginsub"]))
 {

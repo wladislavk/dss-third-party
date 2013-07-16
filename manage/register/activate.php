@@ -1,4 +1,4 @@
-<?php include '../admin/includes/config.php'; ?>
+<?php include '../admin/includes/main_include.php'; ?>
 <?php require_once("../../reg/twilio/twilio.config.php");
 
 $status_sql = "SELECT status FROM dental_users where userid='".mysql_real_escape_string($_GET['id'])."'";

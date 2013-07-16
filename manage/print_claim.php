@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('includes/constants.inc');
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 
 
 $s = "SELECT primary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysql_real_escape_string($_GET['insid'])."'";

@@ -1,5 +1,5 @@
 <?
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include_once('admin/includes/password.php');
 include_once('includes/constants.inc');
 

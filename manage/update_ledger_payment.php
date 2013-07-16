@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 $sql = "SELECT * FROM dental_ledger_payment WHERE id='".$_POST['id']."' ;";
 $p_sql = mysql_query($sql);

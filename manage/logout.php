@@ -1,5 +1,5 @@
 <?php
-include "admin/includes/config.php";
+include "admin/includes/main_include.php";
 
 $login_up_sql = "update dental_login set logout_date = now() where loginid='".$_SESSION['loginid']."'";
 mysql_query($login_up_sql);

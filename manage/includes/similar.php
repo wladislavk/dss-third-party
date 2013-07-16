@@ -1,5 +1,5 @@
 <?php
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 
 function similar_doctors($id){
 $s = "SELECT * from dental_patient_contacts WHERE id='".$id."'";

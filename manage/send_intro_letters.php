@@ -1,6 +1,6 @@
 <?php
 //Prod letter ids 4242 through 4733 (492)
-require($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/config.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/main_include.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/manage/includes/constants.inc');

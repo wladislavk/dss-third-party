@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../includes/constants.inc');
-require_once('includes/config.php');
+require_once('includes/main_include.php');
 
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';

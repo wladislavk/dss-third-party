@@ -1,6 +1,6 @@
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <? 
-include "admin/includes/config.php";
+include "admin/includes/main_include.php";
 
 if($_POST['missingsub'] == 1)
 {

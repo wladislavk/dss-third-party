@@ -1,7 +1,7 @@
 <?php
 require_once('../3rdParty/tcpdf/config/lang/eng.php');
 require_once('../3rdParty/tcpdf/tcpdf.php');
-require_once('includes/config.php');
+require_once('includes/main_include.php');
 require_once('../includes/constants.inc');
 
 $invoice_sql = "SELECT pi.*, u.name, u.address, u.city, u.state, u.zip, u.phone, u.user_type FROM dental_percase_invoice pi

@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 $docid = $_SESSION['docid'];
 $patientid = $_GET['pid'];

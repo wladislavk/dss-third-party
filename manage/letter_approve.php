@@ -1,5 +1,5 @@
 <?php
-require_once 'admin/includes/config.php';
+require_once 'admin/includes/main_include.php';
 require_once 'includes/general_functions.php';
 ?>
 

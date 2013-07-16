@@ -1,5 +1,5 @@
 <?php
-require_once '../admin/includes/config.php';
+require_once '../admin/includes/main_include.php';
 require_once '../includes/constants.inc';
 require_once '../includes/preauth_functions.php';
 $pid = $_REQUEST['pid'];

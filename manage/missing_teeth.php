@@ -1,5 +1,5 @@
 <? 
-include "admin/includes/config.php";
+include "admin/includes/main_include.php";
 
 $mt_arr = explode(',',$_GET['mt']);
 

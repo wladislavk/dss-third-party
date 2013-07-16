@@ -85,9 +85,9 @@ $title = mysql_result($template_result, 0);
 					<?php if($myarray['sfax_completed']=='0'){ ?>
 						Pending
 					<?php }elseif($myarray['sfax_status']=='1'){ ?>
-						Succeeded
+						Success
 					<?php }elseif($myarray['sfax_status']=='2'){ ?>
-						Failed
+						Fail
 					<?php } ?>
 				</td>
                         </tr>

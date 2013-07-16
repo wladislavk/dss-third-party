@@ -9,7 +9,7 @@
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
  <?php
-include('admin/includes/config.php');
+include('admin/includes/main_include.php');
 $memouserid = $_SESSION['userid'];
  
  

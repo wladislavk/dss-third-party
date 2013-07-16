@@ -1,6 +1,6 @@
 <?php
   session_start();
-  require_once 'admin/includes/config.php';
+  require_once 'admin/includes/main_include.php';
   require_once 'admin/includes/general.htm';
   require_once 'admin/includes/form_updates.php';
   require_once 'includes/general_functions.php';

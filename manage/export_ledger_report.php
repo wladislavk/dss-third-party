@@ -20,7 +20,7 @@ header("Content-Disposition: attachment; filename=".$file.".csv");
 header("Pragma: no-cache");
 header("Expires: 0");
 session_start();
-require_once('admin/includes/config.php');
+require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 
 

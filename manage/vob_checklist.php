@@ -96,6 +96,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }else{
     $rx = ($flow['rxrec']!='');
     $lomn = ($flow['lomnrec']!='');
+    $rxlomn = ($flow['rxlomnrec']!='');
 }
 ?>
 <script type="text/javascript" src="js/vob.js"></script>
@@ -237,6 +238,26 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
 
+
+<a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=13&itro=1');" class="vob_item
+<?php
+  if(!$rxlomn){
+    ?>error<?php
+  }else{
+    ?>success<?php
+  } ?>
+">
+<div class="vob_icon vob_rx"></div>
+<span>Rx. LOMN. Combined</span>
+</a>
+
+<form id="rxlomn_form" action="manage_insurance.php?pid=<?= $_GET['pid']; ?>&addtopat=1&rxlomn=1" enctype="multipart/form-data" method="post" style="display:none;">
+<input name="rxlomn_file" type="file" id="rxlomn_file" />
+</form>
+
+
+
+
 <a id="rx_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=6&itro=1');" class="vob_item
 <?php
   if(!$rx){
@@ -281,7 +302,7 @@ if($ins_error || $study_error || !$rx || !$lomn){
 <?php } ?>
 
 <?php
-if($rx || $lomn){
+if($rx || $lomn || $rxlomn){
  include 'flowsheet_medical.php';
 } ?>
 </div>

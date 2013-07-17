@@ -7,8 +7,10 @@ $flow = mysql_fetch_array($flowresult);
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
+    $rxlomnrec = $flow['rxlomnrec'];
     $rximgid = $flow['rx_imgid'];
     $lomnimgid = $flow['lomn_imgid'];
+    $rxlomnimgid = $flow['rxlomn_imgid'];
 if ($rximgid != "") {
         $sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$rximgid."';";
         $result = mysql_query($sql);
@@ -19,6 +21,12 @@ if ($lomnimgid != "") {
         $sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$lomnimgid."';";
         $result = mysql_query($sql);
         $lomnimgname = mysql_result($result, 0);
+}
+
+if ($rxlomnimgid != "") {
+        $sql = "select image_file from dental_q_image where patientid='".$_GET['pid']."' AND imageid = '".$rxlomnimgid."';";
+        $result = mysql_query($sql);
+        $rxlomnimgname = mysql_result($result, 0);
 }
 
 
@@ -90,6 +98,36 @@ L.O.M.N.
 </td>
 
 </tr>
+
+
+<tr>
+
+<td>
+Rx./L.O.M.N.
+</td>
+<td>
+<input id="rxlomnrec" name="rxlomnrec" type="text" class="field text addr tbox calendar" value="<?php echo $rxlomnrec; ?>" tabindex="10" style="width:100px;" maxlength="255" onChange="validateDate('rxlomnrec');" onClick="<?php print ($rxlomnimgid == "" ? "alert('You must upload an image before Rx/LOMN can be marked as received');" : ""); ?>" /><span id="req_0" class="req">*</span>
+</td>
+<td>
+                                                <?php
+                                                if ($rxlomnimgid != "") {
+                                         if (end(explode('.', $rxlomnimgname)) != "pdf") {
+                                                print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
+                                         } else {
+                                                print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
+                                         }
+                                                        print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=13&flow=');\" value=\"Edit\" title=\"Edit\" />";
+                                                        print "<input id=\"rxlomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
+                                                        /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
+                                                } else {
+                                                        //print "<input id=\"lomnimg\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
+                                                }
+                                                ?>
+
+</td>
+
+</tr>
+
 
 
 </table>

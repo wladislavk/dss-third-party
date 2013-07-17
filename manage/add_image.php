@@ -274,6 +274,16 @@ if($uploaded){
                           }
                         }
 
+                        if($_POST['imagetypeid']==13){
+                          $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
+                          $rxlomn_q = mysql_query($rxlomn_sql);
+                          $rxlomn_r = mysql_fetch_assoc($rxlomn_q);
+                          if($rxlomn_r['rxlomn_imgid']=='' || $_POST['rxlomn_update']==1){
+                            $rxlomn_sql = "UPDATE dental_flow_pg1 SET rxlomn_imgid='".$imageid."', rxlomnrec='".date('m/d/Y')."' WHERE pid = '".$_GET['pid']."';";
+                            mysql_query($rxlomn_sql);
+
+                          }
+                        }
 
 			$msg = "Uploaded Successfully";
 			if ($_REQUEST['flow'] == "1") {

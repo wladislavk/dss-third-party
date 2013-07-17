@@ -109,8 +109,8 @@ if(mysql_num_rows($my)){
                                         <a href="dss_summ.php?sect=letters&pid=<?= $myarray['patientid']; ?>"><?= $myarray['patient_name']; ?></a>
                                 </td>
                                 <td valign="top">
-					<?php if($myarray['pdf_path'] && $myarray['letter_status']!=DSS_LETTER_PENDING){ ?>
-                                          <a href="letterpdfs/<?= $myarray['pdf_path']; ?>"><?= $myarray['letter_name']; ?></a>
+					<?php if($myarray['filename'] && ($myarray['letter_status']!=DSS_LETTER_PENDING || $myarray['viewed']==1) ){ ?>
+                                          <a href="letterpdfs/<?= $myarray['filename']; ?>"><?= $myarray['letter_name']; ?></a>
 					<?php }else{ ?>
 		                          <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>"><?= $myarray['letter_name']; ?></a>
 					<?php } ?>
@@ -123,7 +123,7 @@ if(mysql_num_rows($my)){
 					<?php }elseif($myarray['sfax_status']=='2' && $myarray['sfax_status'] == '2' && $myarray['viewed']=='0'){ ?>
 						<a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>">Fail (click to view)</a>
 					<?php }elseif($myarray['sfax_status']=='2'){ ?>
-                                                Fail
+                                                <a href="#" onclick="loadPopup('fax_errors.php?id=<?=$myarray['id'];?>');return false;">Fail</a>
                                         <?php } ?>
 				</td>
                         </tr>

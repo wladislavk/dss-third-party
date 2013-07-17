@@ -13,7 +13,7 @@ $fax_status = $fts->OutboundFaxStatus($r['sfax_transmission_id']);
 $comp = $fax_status['XwsFaxComplete'];
 $response = json_encode($fax_status);
   if($comp){
-    $success = ($fax_status['XwsFaxSuccess'])?1:2;
+    $success = ($fax_status['XwsFaxSuccess'])?'1':'2';
     $error_code = $fax_status['XwsFaxErrorCode'];
     $up_sql = "UPDATE dental_faxes SET sfax_completed='".mysql_real_escape_string($comp)."',
 				sfax_response='".mysql_real_escape_string($response)."',
@@ -21,7 +21,7 @@ $response = json_encode($fax_status);
 				sfax_error_code = '".mysql_real_escape_string($error_code)."'
 		WHERE id = '".mysql_real_escape_string($r['id'])."'";
     mysql_query($up_sql);
-    if($success == 2){
+    if($success == '2'){
       $let_sql = "UPDATE dental_letters SET status='0'";
       mysql_query($let_sql);
     }

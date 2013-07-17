@@ -330,7 +330,7 @@ $title = mysql_result($template_result, 0);
                                         <?php if($myarray['pdf_path'] && $myarray['letter_status']!=DSS_LETTER_PENDING){ ?>
                                           <a href="letterpdfs/<?= $myarray['pdf_path']; ?>">View Letter</a>
                                         <?php }else{ ?>
-                                          <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>">View Letter</a>
+                                          <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>">Resend Letter</a>
                                         <?php } ?>
                                 </td>
                         </tr>

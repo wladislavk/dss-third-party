@@ -120,9 +120,9 @@ $page2 = $_REQUEST['page2'];
 $docid = $_SESSION['docid'];
 
 $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.mailed_date, dental_letters.mailed_once, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid, dental_letters.template_type, 
-	f.sfax_status, f.viewed AS fax_viewed
+	(SELECT f.sfax_status FROM dental_faxes f WHERE f.letterid = dental_letters.letterid ORDER BY f.sent_date DESC LIMIT 1) as sfax_status,
+	(SELECT f2.viewed FROM dental_faxes f2 WHERE f2.letterid = dental_letters.letterid ORDER BY f2.sent_date DESC LIMIT 1) AS fax_viewed
 	FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid LEFT JOIN dental_users ON dental_letters.userid=dental_users.userid 
-	LEFT JOIN dental_faxes f ON f.letterid=dental_letters.letterid
 	WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' 
                 AND (dental_letters.parentid IS NULL 
                         OR dental_letters.parentid=0)

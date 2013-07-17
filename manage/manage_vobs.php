@@ -258,7 +258,7 @@ if(mysql_num_rows($my)){
 ?>
 <a name="fax"></a>
 <br /><br />
-<span class="admin_head">Manage Faxes</span>
+<span class="admin_head">Manage Faxes - Fax Errors</span>
 <br />
 <br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
@@ -305,7 +305,7 @@ $template_result = mysql_query($template_query);
 $title = mysql_result($template_result, 0);
         
         ?>
-                        <tr class="<?=$tr_class;?> <?= ($myarray['viewed']||$myarray['status']==DSS_PREAUTH_PENDING)?'':'unviewed'; ?>">
+                        <tr>
                                 <td valign="top">
                                         <?=st($myarray["adddate"]);?>&nbsp;
                                 </td>
@@ -327,9 +327,11 @@ $title = mysql_result($template_result, 0);
 					<?= st($myarray["error_description"]); ?> - <?= st($myarray["error_resolution"]); ?>
                                 </td>
                                 <td valign="top">
-                                        <a href="manage_vobs.php?frid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
-                                                Remove
-                                        </a>
+                                        <?php if($myarray['pdf_path'] && $myarray['letter_status']!=DSS_LETTER_PENDING){ ?>
+                                          <a href="letterpdfs/<?= $myarray['pdf_path']; ?>">View Letter</a>
+                                        <?php }else{ ?>
+                                          <a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>">View Letter</a>
+                                        <?php } ?>
                                 </td>
                         </tr>
         <?      }

@@ -1362,3 +1362,7 @@ background: #1f303b;
 .box_go:hover .ico {
     display: block;
 }
+
+.current_alert{
+  background: #ff3;
+}

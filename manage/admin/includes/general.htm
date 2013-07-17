@@ -425,6 +425,9 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
 		if($update_send){
 			$letter_query .= ", send_method='".mysql_real_escape_string($update_send)."' ";
+			if($update_send == 'paper' || $update_send == 'email'){
+				mysql_query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'");
+			}
 		}
 		$letter_query .= " WHERE letterid='".s_for($letterid)."';";
 		$letter_result = mysql_query($letter_query);
@@ -770,6 +773,9 @@ function deliver_created_letter($letterid){
                 $logo = mysql_result($result, 0, 5);
                 $user_type = mysql_result($result, 0, 6);
 		$doc_company = mysql_result($result, 0, 7);
+
+
+                mysql_query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".$letterid."'");
 
                 $fax_send = false;
                 // Send Fax
@@ -1363,6 +1369,8 @@ $rval = '';
   } elseif ( $total_contacts == 1) {
 		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
+		$fax_query = "UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'";
+		$fax_result = mysql_query($fax_query);
  		$parent_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".$letterid."';";
 		$parent_result = mysql_query($parent_query);
 		return $letter_result;

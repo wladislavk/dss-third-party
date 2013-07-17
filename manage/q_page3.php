@@ -645,15 +645,16 @@ label {
                         <span>
                             <span>
                                 Do you have any known allergens (for example: aspirin, latex, penicillin, etc)?
-                                <input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='block'" value="1" /> Yes
-			<input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none'" value="0" /> No
+                                <input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='block';$('#hide_other_allergens').hide();$('#show_other_allergens').show();" value="1" /> Yes
+			<input id="allergenscheck" class="allergenscheck_radio" name="allergenscheck" tabindex="5" type="radio"  <?php if($allergenscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('a_det').style.display='none';$('#hide_other_allergens').hide();$('#show_other_allergens').hide();$('#other_allergens_list').hide();" value="0" /> No
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'allergenscheck', $pat_row['allergenscheck'], $allergenscheck, true, $showEdits, 'radio');
                             ?>
-			<a href="#" id="show_other_allergens" onclick="$('#other_allergens_list').show();$(this).hide();$('#hide_other_allergens').show();return false;" class="addButton">View List</a>
+			<a href="#" id="show_other_allergens" onclick="$('#other_allergens_list').show();$(this).hide();$('#hide_other_allergens').show();return false;" class="addButton"<?php if($allergenscheck == 0 ){ echo 'style="display:none;"';} ?> >View List</a>
                         <a href="#" id="hide_other_allergens" onclick="$('#other_allergens_list').hide();$(this).hide();$('#show_other_allergens').show();return false;" class="addButton" style="display:none;">Hide List</a>
 		    </span>
 		<span id="other_allergens_list" style="margin-top:10px; display:none;">
+<span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
 <?
                                                         $allergens_sql = "select * from dental_allergens where status=1 order by sortby";
                                                         $allergens_my = mysql_query($allergens_sql);
@@ -662,7 +663,7 @@ label {
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
-						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_allergens').append(', <?=st($allergens_myarray['allergens']);?>');return false;">
+						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_allergens').append('<?=st($allergens_myarray['allergens']);?>, ');return false;">
                                             <?=st($allergens_myarray['allergens']);?>
 						</a>
                                         </span>                                    <?
@@ -698,15 +699,16 @@ label {
 			<span>
                             <span>
                                 Are you currently taking any medications?
-                                <input id="medicationscheck" class="medicationscheck_radio" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='block'" value="1" /> Yes
-                                <input id="medicationscheck" class="medicationscheck_radio" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='none'" value="0" /> No
+                                <input id="medicationscheck" class="medicationscheck_radio" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='block';$('#hide_other_medications').hide();$('#show_other_medications').show();" value="1" /> Yes
+                                <input id="medicationscheck" class="medicationscheck_radio" name="medicationscheck" tabindex="5" type="radio"  <?php if($medicationscheck == 0){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('m_det').style.display='none';$('#hide_other_medications').hide();$('#show_other_medications').hide();$('#other_medications_list').hide();" value="0" /> No
                             <?php
                                 showPatientValue('dental_q_page3', $_GET['pid'], 'medicationscheck', $pat_row['medicationscheck'], $medicationscheck, true, $showEdits, 'radio');
                             ?>
-                        <a href="#" id="show_other_medications" onclick="$('#other_medications_list').show();$(this).hide();$('#hide_other_medications').show();return false;" class="addButton">View List</a>
+                        <a href="#" id="show_other_medications" onclick="$('#other_medications_list').show();$(this).hide();$('#hide_other_medications').show();return false;" class="addButton" <?php if($medicationscheck == 0 ){ echo 'style="display:none;"';} ?>>View List</a>
                         <a href="#" id="hide_other_medications" onclick="$('#other_medications_list').hide();$(this).hide();$('#show_other_medications').show();return false;" class="addButton" style="display:none;">Hide List</a>
                             </span>
 				<span style="margin-top:10px;display:none;" id="other_medications_list">
+<span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
                                 <?
                                                         $medications_sql = "select * from dental_medications where status=1 order by sortby";
                                                         $medications_my = mysql_query($medications_sql);
@@ -715,7 +717,7 @@ label {
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
-						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_medications').append(', <?=st($medications_myarray['medications']);?>');return false;">
+						<a class="addButton" onclick="$(this).addClass('grayButton');$('#other_medications').append('<?=st($medications_myarray['medications']);?>, ');return false;">
                                             <?=st($medications_myarray['medications']);?>
 						</a>
                                         </span>
@@ -750,6 +752,7 @@ label {
                         <a href="#" id="show_other_history" onclick="$('#other_history_list').show();$(this).hide();$('#hide_other_history').show();return false;" class="addButton">View List</a>
                         <a href="#" id="hide_other_history" onclick="$('#other_history_list').hide();$(this).hide();$('#show_other_history').show();return false;" class="addButton" style="display:none;">Hide List</a>
 			<span id="other_history_list" style="display:none;">
+				<span style="display:block; width:100%; height:20px;">Click any item to add it to the text box below.</span>
                                 <?
                                                         $history_sql = "select * from dental_history where status=1 order by history";
                                                         $history_my = mysql_query($history_sql);
@@ -758,7 +761,7 @@ label {
                                                                 {
                                                                         ?>
                                         <span style="width:32%; float:left; display:block;height:20px;">
-                                                <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append(', <?=st($history_myarray['history']);?>'); return false;">
+                                                <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append('<?=st($history_myarray['history']);?>, '); return false;">
                                             <?=st($history_myarray['history']);?>
 						</a>
                                         </span>

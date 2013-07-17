@@ -119,7 +119,11 @@ $page2 = $_REQUEST['page2'];
 // Get doctor id
 $docid = $_SESSION['docid'];
 
-$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.mailed_date, dental_letters.mailed_once, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid, dental_letters.template_type FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid LEFT JOIN dental_users ON dental_letters.userid=dental_users.userid WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' 
+$letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date, dental_letters.send_method, dental_letters.pdf_path, dental_letters.status, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.mailed_date, dental_letters.mailed_once, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_users.name as userid, dental_letters.template_type, 
+	f.sfax_status, f.viewed AS fax_viewed
+	FROM dental_letters JOIN dental_patients on dental_letters.patientid=dental_patients.patientid LEFT JOIN dental_users ON dental_letters.userid=dental_users.userid 
+	LEFT JOIN dental_faxes f ON f.letterid=dental_letters.letterid
+	WHERE dental_letters.patientid = '" . $patientid . "' AND dental_patients.docid='".$docid."' AND dental_letters.deleted = '0' 
                 AND (dental_letters.parentid IS NULL 
                         OR dental_letters.parentid=0)
                 AND dental_letters.templateid LIKE '".$filter."' GROUP BY dental_letters.letterid, dental_letters.parentid ORDER BY dental_letters.letterid ASC;";
@@ -294,7 +298,7 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
   if($f_num > 0){
     ?>
         <br /><br />
-        <a href="manage_vobs.php#fax" class="warning" id="fax_alert"><?= $f_num; ?> letter<?=($f_num>1)?'s':'';?> was attempted to be faxed but failed. Please check fax number and retry. </a>
+        <a href="manage_vobs.php?status=3&viewed=0#fax" class="warning" id="fax_alert"><?= $f_num; ?> letter<?=($f_num>1)?'s':'';?> failed to send via digital fax. Click here to check errors and retry.</a>
     <?php
 
 
@@ -356,7 +360,9 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
     $sentto = $pending_letters[$i]['sentto'];
     $total_contacts = $pending_letters[$i]['total_contacts'];
     $generated = date('m/d/Y', $pending_letters[$i]['generated_date']);
-    if ($pending_letters[$i]['old']) {
+    if($pending_letters[$i]['sfax_status']=='2' AND $pending_letters[$i]['fax_viewed']=='0'){
+      $alert = " bgcolor=\"#FFFF33\"";
+    }elseif ($pending_letters[$i]['old']) {
       $alert = " bgcolor=\"#FF9696\"";
     } else {
       $alert = null;

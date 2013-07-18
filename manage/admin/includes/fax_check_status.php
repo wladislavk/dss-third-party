@@ -1,7 +1,7 @@
 <?php
 
-require 'config.php';
-require 'class.fax.php';
+require(dirname(__FILE__).'/class.fax.php');
+require(dirname(__FILE__).'/config.php');
 
 $sql = "SELECT f.*, c.companyid FROM dental_faxes f
 		JOIN dental_user_company c ON c.userid = f.docid
@@ -22,7 +22,7 @@ $response = json_encode($fax_status);
 		WHERE id = '".mysql_real_escape_string($r['id'])."'";
     mysql_query($up_sql);
     if($success == '2'){
-      $let_sql = "UPDATE dental_letters SET status='0'";
+      $let_sql = "UPDATE dental_letters SET status='0' WHERE letterid='".mysql_real_escape_string($r['letterid'])."'";
       mysql_query($let_sql);
     }
   }

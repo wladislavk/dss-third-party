@@ -1656,13 +1656,20 @@ foreach ($letter_contacts as $key => $contact) {
 		<div align="left" style="width: 40%; padding: 3px; float: left">
 			Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
 <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
-<?php if($contact['fax']!=''){ ?>
+<?php $send_meth = $method ? $method : $contact['preferredcontact']; ?>
+<?php if($send_meth == 'fax'){ ?>
+  <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Fax" />
+<?php }elseif($contact['fax']!=''){ ?>
   <input type="submit" name="fax_letter[<?=$cur_letter_num?>]" class="addButton" value="Fax" />
 <?php }else{ ?>
   <input type="button" name="fax_letter[<?=$cur_letter_num?>]" onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" class="addButton grayButton" value="Fax" />
 <?php } ?>
 
+<?php if($send_meth == 'paper'){ ?>
+  <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Paper"  />
+<?php }else{ ?>
   <input type="submit" name="paper_letter[<?=$cur_letter_num?>]" class="addButton" value="Paper" />
+<?php } ?>
 
   <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline'); return false;" class="addButton" value="Cancel" />
   <!--<input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />-->

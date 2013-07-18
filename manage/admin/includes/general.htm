@@ -641,14 +641,18 @@ function create_letter_pdf($letterid){
                 $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';
                 if($send_method == 'fax' && $use_digital_fax){
 if($user_type == DSS_USER_TYPE_SOFTWARE){
-  $cover_image = "/manage/q_file/".$logo;
+  if($logo != ''){
+    $cover_image = "<img src=\"/manage/q_file/".$logo."\" />";
+  }else{
+    $cover_image = "";
+  }
 }else{
-  $cover_image = "/manage/images/logo.gif";
+  $cover_image = "<img src=\"/manage/images/logo.gif\" />";
 }
                         $cover = "
 <table>
 <tr>
-<td><img src=\"".$cover_image."\" /></td>
+<td>".$cover_image."</td>
 <td><center>
 <b>CONFIDENTAL HEALTH INFORMATION<br />
 FAX COVER SHEET</b>

@@ -180,7 +180,7 @@ if($_POST['sortsub'] == 1)
                                         <?= st($myarray['amount'])?>
                                 </td>						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
+					<a href="#"  onclick="loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');return false;" class="editlink" title="EDIT">
 						Edit
 					</a>
 				</td>

@@ -133,7 +133,7 @@ $r = mysql_fetch_assoc($q);
                        <?php }
                 ?>
 		</ul></li>
-
+			<li><a href="manage_locations.php">Manage Locations</a></li>
           	</ul>
 	     </li>
 	<li><a href="/screener/auto_login.php">Pt. Screener App</a></li>

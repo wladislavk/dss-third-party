@@ -117,6 +117,7 @@ if(mysql_num_rows($flowresult) <= 0){
     $rxrec = $flow['rxrec'];
     $lomnreq = $flow['lomnreq'];
     $lomnrec = $flow['lomnrec'];
+    $rxlomnrec = $flow['rxlomnrec'];
     $contact_location = $flow['contact_location'];
     $questsendmeth = $flow['questsendmeth'];
     $questsender = $flow['questsender'];
@@ -131,7 +132,7 @@ if(mysql_num_rows($flowresult) <= 0){
 }
 
 
-    if($rxrec == '' || $lomnrec == '' ){
+    if(!(($rxrec != '' && $lomnrec != '') || $rxlomnrec != '')){
        array_push($errors, "Insurance - Rx and LOMN not completed");
      }
 

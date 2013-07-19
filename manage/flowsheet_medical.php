@@ -44,6 +44,9 @@ if ($rxlomnimgid != "") {
 <h3>Image</h3>
 </td>
 </tr>
+
+
+<?php if($rximgid != "" || $lomnimgid != ""){ ?>
 <tr>
 <td>
 Rx.
@@ -99,7 +102,7 @@ L.O.M.N.
 
 </tr>
 
-
+<?php }else{ ?>
 <tr>
 
 <td>
@@ -128,7 +131,7 @@ Rx./L.O.M.N.
 
 </tr>
 
-
+<?php } ?>
 
 </table>
 </div>

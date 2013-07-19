@@ -47,7 +47,8 @@ else
 // Count letters
 $docid = $_SESSION['docid'];
 // $dental_letters_query = "SELECT COUNT(*) FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_patients.docid = '".$docid."';";
-$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' ORDER BY generated_date ASC;";
+$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters LEFT JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '0' AND dental_letters.delivered = '0'  AND dental_letters.deleted = '0' AND dental_letters.docid = '".$docid."' AND (dental_letters.parentid IS NULL OR dental_letters.parentid = 0) ORDER BY generated_date ASC;";
+
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);

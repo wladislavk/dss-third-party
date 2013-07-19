@@ -4,6 +4,7 @@ require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
+include_once "includes/constants.inc";
 //include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,10 +51,11 @@ if($_POST["contactsub"] == 1)
 		$dct_r = mysql_fetch_assoc($dct_q);
 	        if($dct_r['physician']==1){	
 		  //DO NOT CREATE LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+			error_log($_SESSION['user_type'] ." ". DSS_USER_TYPE_SOFTWARE);
 		  if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE){
     		    create_welcome_letter('1', $rid, $_SESSION['docid']);
     		  }	
-		  create_welcome_letter('2', $rid, $_SESSION['docid']);
+		    create_welcome_letter('2', $rid, $_SESSION['docid']);
 		  
 		  ?>
 		  <script type="text/javascript">

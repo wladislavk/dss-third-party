@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php include '../manage/admin/includes/config.php'; ?>
+<?php include '../manage/admin/includes/main_include.php'; ?>
 <?php include '../manage/admin/includes/password.php';
 ?>
     <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>

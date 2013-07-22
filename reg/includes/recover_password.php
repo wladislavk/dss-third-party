@@ -1,5 +1,5 @@
 <?php
-require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/admin/includes/main_include.php';
 
     $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."'";
     $q = mysql_query($s);

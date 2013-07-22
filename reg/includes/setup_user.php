@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/admin/includes/password.php';
 
     $s = "SELECT * FROM dental_patients WHERE 

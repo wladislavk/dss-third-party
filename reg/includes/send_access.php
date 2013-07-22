@@ -1,6 +1,6 @@
 <?php
 require_once("../twilio/twilio.config.php");
-require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/admin/includes/main_include.php';
 
     // instantiate a new Twilio Rest Client
     $client = new Services_Twilio($AccountSid, $AuthToken);

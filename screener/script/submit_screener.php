@@ -1,5 +1,5 @@
 <?php
-require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/admin/includes/main_include.php';
 $docid = $_REQUEST['docid'];
 $userid = $_REQUEST['userid'];
 $first_name = $_REQUEST['first_name'];

@@ -1,6 +1,6 @@
 <?php
 require_once("../twilio/twilio.config.php");
-require_once '../../manage/admin/includes/config.php';
+require_once '../../manage/admin/includes/main_include.php';
 
   $id = $_REQUEST['id'];
   $hash = $_REQUEST['hash'];

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../manage/admin/includes/config.php');
+require_once('../manage/admin/includes/main_include.php');
 if(!isset($_SESSION['screener_doc'])){
   ?>
 	<script type="text/javascript">

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../manage/admin/includes/config.php');
+require_once('../manage/admin/includes/main_include.php');
 require_once("../manage/admin/includes/general.htm");
 require_once('../manage/includes/constants.inc');
 require_once('../manage/includes/formatters.php');

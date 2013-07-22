@@ -1,4 +1,4 @@
-<?php include '../manage/admin/includes/config.php'; ?>
+<?php include '../manage/admin/includes/main_include.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
 $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 

@@ -36,7 +36,7 @@ $s = "SELECT * from dental_contact WHERE contactid='".$id."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 
-$s2 = "SELECT * FROM dental_contact WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND " .
+$s2 = "SELECT * FROM dental_contact WHERE status IN (1,2) AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND " .
                 "((firstname = '".$r['firstname']."' AND " .
                 "lastname = '".$r['lastname']."') " .
         " OR " .

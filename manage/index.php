@@ -134,8 +134,7 @@ $r = mysql_fetch_assoc($q);
                 ?>
 		</ul></li>
 			<li><a href="manage_locations.php">Manage Locations</a></li>
-			<li><a href="pending_patients.php">Pending Patients (Upload)</a></li>
-			<li><a href="pending_contacts.php">Pending Contacts (Upload)</a></li>
+			<li><a href="data_import.php" onclick="return confirm('Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.');">Data Import</a></li>
           	</ul>
 	     </li>
 	<li><a href="/screener/auto_login.php">Pt. Screener App</a></li>

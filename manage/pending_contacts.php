@@ -125,7 +125,7 @@ return false;
 			Phone
                 </td>
                 <td valign="top" class="col_head" width="45%">
-			Similar Patients 
+			Similar Contacts 
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -159,7 +159,7 @@ return false;
                                         <?= st($myarray["zip"]); ?>
 				</td>
                                 <td valign="top">
-					<?= st($myarray["phone"]); ?>
+					<?= format_phone($myarray["phone1"]); ?>
                                 </td>
 				<td valign="top">
 					<a href="#" onclick="$('.sim_<?= $myarray['contactid']; ?>').toggle();return false;"><?= count($sim); ?></a>
@@ -171,7 +171,9 @@ return false;
                                         <a href="pending_contacts.php?deleteid=<?= $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?= $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
                                                 Delete 
                                         </a>
-
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?= $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
+			                        View
+                                        </a>
 				</td>
 			</tr>
 			<?php 
@@ -185,7 +187,7 @@ return false;
                                         <?= st($s["address"]); ?>
                                 </td>
                                 <td valign="top">
-                                        <?= st($s["phone"]); ?>
+                                        <?= format_phone($s["phone1"]); ?>
                                 </td>
 				<td>
 				</td>
@@ -207,7 +209,7 @@ $my=mysql_query($sql) or die(mysql_error());
 
 ?>
 <span class="admin_head">
-        Manage Pending Patients No Duplicates
+        Manage Pending Contacts No Duplicates
 </span>
 <br />
 <br />
@@ -218,7 +220,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="25%">
-                        Patient Name
+                        Name
                 </td>
                 <td valign="top" class="col_head" width="45%">
                         Address
@@ -258,7 +260,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= st($myarray["zip"]); ?>
                                 </td>
                                 <td valign="top">
-                                        <?= st($myarray["phone"]); ?>
+                                        <?= format_phone($myarray["phone1"]); ?>
                                 </td>
                                 <td valign="top">
                                         <a href="pending_contacts.php?createid=<?= $myarray["contactid"]; ?>" class="editlink" title="EDIT">
@@ -267,6 +269,10 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <a href="pending_contacts.php?deleteid=<?= $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?= $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
                                                 Delete 
                                         </a>
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?= $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
+                                                View
+                                        </a>
+
 
                                 </td>
                         </tr>

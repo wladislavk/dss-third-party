@@ -36,7 +36,7 @@ $s = "SELECT * from dental_contact WHERE contactid='".$id."'";
 $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 
-$s2 = "SELECT * FROM dental_contact WHERE " .
+$s2 = "SELECT * FROM dental_contact WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND " .
                 "((firstname = '".$r['firstname']."' AND " .
                 "lastname = '".$r['lastname']."') " .
         " OR " .
@@ -53,7 +53,7 @@ while($r2 =  mysql_fetch_assoc($q2)){
 $docs[$c]['id'] = $r2['contactid'];
 $docs[$c]['name'] = $r2['firstname']. " " .$r2['lastname'];
 $docs[$c]['address'] = $r2['add1']. " " . $r2['add2']. " " . $r2['city']. " " . $r2['state']. " " . $r2['zip'];
-$docs[$c]['phone'] = $r2['phone1'];
+$docs[$c]['phone1'] = $r2['phone1'];
 $c++;
 }
 

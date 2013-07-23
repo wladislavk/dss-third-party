@@ -13,7 +13,7 @@ if($_POST['userid']==''){
                 phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."',
 		user_access=".DSS_USER_ACCESS_DOCTOR.",
 		use_patient_portal = '1',
-                use_digital_fax = '0',
+                use_digital_fax = '1',
                 use_letters = '1',
                 use_eligible_api = '0',
                 use_course = '0',

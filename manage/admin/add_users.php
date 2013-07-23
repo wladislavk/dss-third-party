@@ -480,6 +480,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_letter_header = 1;
  		$companyid = 4;
 		$user_type = 2;
+		$use_digital_fax = 1;
 	}
 	
 	if($themyarray["userid"] != '')

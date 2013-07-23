@@ -603,14 +603,20 @@ function create_letter_pdf($letterid){
 
 			if ($row['md_list']) {
                                 $id = $row['md_list'];
-                                $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+                                $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
                                 $myinfo = mysql_query($sql);
                                 $preferredcontact = mysql_result($myinfo, 0, 0);
+                                $to_name = mysql_result($myinfo, 0, 1) . " " . mysql_result($myinfo, 0, 2);
+                                $phone = mysql_result($myinfo, 0, 3);
+                                $fax = mysql_result($myinfo, 0, 4);
                         } elseif ($row['md_referral_list']) {
                                 $id = $row['md_referral_list'];
-                                $sql = "SELECT preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
+                                $sql = "SELECT preferredcontact, firstname, lastname, phone1, fax FROM dental_contact WHERE contactid = '".$id."';";
                                 $myinfo = mysql_query($sql);
                                 $preferredcontact = mysql_result($myinfo, 0, 0);
+                                $to_name = mysql_result($myinfo, 0, 1) . " " . mysql_result($myinfo, 0, 2);
+                                $phone = mysql_result($myinfo, 0, 3);
+                                $fax = mysql_result($myinfo, 0, 4);
                         }
 
 
@@ -636,6 +642,19 @@ function create_letter_pdf($letterid){
 		$doc_phone = $loc_r['phone'];
 		$doc_fax = $loc_r['fax'];
 
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($patientid)."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($docid)."'";
+}else{
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($docid)."'";
+}
+		$loc_rq = mysql_query($location_query);
+                $loc_r2 = mysql_fetch_assoc($loc_rq);
+                $doc_name = $loc_r2['name'];
+                $doc_phone = $loc_r2['phone'];
+                $doc_fax = $loc_r2['fax'];
                 // Create PDF
                 $title = "Dental Sleep Solutions";
                 $filename = 'f' . $docid . '_p' . $patientid . '_t' . $templateid . '_u' . $userid . '_' . date('Y-m-d_H-i-s') . '.pdf';

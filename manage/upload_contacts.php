@@ -147,21 +147,21 @@ if($_FILES['csv']['error'] == 0){
                                 }
 				break;
 			case 'contacttypeid':
-				switch($data[$id]){
-					case 'Insurance':
+				switch(strtolower($data[$id])){
+					case 'insurance':
 						$c = "Insurance";
 						break;
-                                        case 'ENT':
+                                        case 'ent':
                                                 $c = "ENT Physician";
                                                 break;
-                                        case 'Dental Physician':
-					case 'Orthodontist':
+                                        case 'dental physician':
+					case 'orthodontist':
                                                 $c = "Dentist";
                                                 break;
-                                        case 'Primary Care Physician':
+                                        case 'primary care physician':
                                                 $c = "Primary Care Physician";
                                                 break;
-                                        case 'Sleep disorder specialist':
+                                        case 'sleep disorder specialist':
                                                 $c = "Sleep Physician";
                                                 break;
 					default:
@@ -205,6 +205,8 @@ if($_FILES['csv']['error'] == 0){
 		</script>
 		<?php
         }
+    }else{
+      ?><h3>Unrecognized file type. Please upload a CSV file only.</h3><?php
     }
 }
 

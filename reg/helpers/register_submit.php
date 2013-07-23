@@ -187,7 +187,9 @@
                                                 "city = '" . mysql_real_escape_string($_POST['pc_'.$t.'_city']) . "', " .
                                                 "state = '" . mysql_real_escape_string($_POST['pc_'.$t.'_state']) . "', " .
                                                 "zip = '" . mysql_real_escape_string($_POST['pc_'.$t.'_zip']) . "', " .
-                                                "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "';";
+                                                "phone = '" . mysql_real_escape_string(num($_POST['pc_'.$t.'_phone'])) . "', " .
+						"adddate = now(), " .
+						"ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."';";
                                         mysql_query($insql);
                                         $id = mysql_insert_id();
 					if($updatevals!=''){ $updatevals .= ','; }

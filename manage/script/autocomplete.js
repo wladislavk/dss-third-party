@@ -72,7 +72,7 @@
                                                 .addClass('json_patient')
                                                 .data('rowid', data[i].id)
                                                 .data('rowsource', data[i].id)
-                                                .attr("onclick", "loadPopup('add_contact.php?ed="+data[i].id+"')"
+                                                .attr("onclick", "loadPopup('view_contact.php?ed="+data[i].id+"')"
 );
 				    }else{
                                         var newLi = $('#'+hint+' ul .template')

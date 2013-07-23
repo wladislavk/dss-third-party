@@ -40,11 +40,10 @@ $s2 = "SELECT * FROM dental_contact WHERE docid='".mysql_real_escape_string($_SE
                 "((firstname = '".$r['firstname']."' AND " .
                 "lastname = '".$r['lastname']."') " .
         " OR " .
-                "(add1 = '".$r['address1']."' AND add1!='' AND " .
+                "(add1 = '".$r['add1']."' AND add1!='' AND " .
                 "city = '".$r['city']."' AND city!='' AND " .
                 "state = '".$r['state']."' AND state!='' AND " .
                 "zip = '".$r['zip']."' AND zip!='')) ";
-
 
 $q2 = mysql_query($s2);
 $docs = array();

@@ -88,7 +88,7 @@ $my=mysql_query($sql) or die(mysql_error());
 ?>
 <script type="text/javascript">
 function redirect(){
-if(prompt('Enter the password to use this function:')=='1234'){
+if(prompt('Enter the password to use this function:')=='dss789'){
   window.location = 'uploadcsv.php';
 }else{
   alert('Incorrect password');

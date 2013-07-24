@@ -34,7 +34,7 @@ mysql_query($dsql);
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
 $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
-$sql4 = "SELECT f.contactid FROM dental_contact c WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
+$sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."!=0";
 	}elseif($_REQUEST['createtype']=='no'){
 $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
 $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND ".$simsql."=0";
@@ -192,6 +192,9 @@ return false;
 				<td>
 				</td>
 				<td valign="top">
+                                        <a href="#" onclick="loadPopup('view_contact.php?ed=<?= $s["id"]; ?>');return false;" class="editlink" title="EDIT">
+                                                View
+                                        </a>
 				</td>
 				</tr>
 				<?php

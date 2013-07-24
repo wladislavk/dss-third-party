@@ -274,7 +274,7 @@ if($uploaded){
                           }
                         }
 
-                        if($_POST['imagetypeid']==13){
+                        if($_POST['imagetypeid']==14){
                           $rxlomn_sql = "SELECT rxlomn_imgid FROM dental_flow_pg1 WHERE pid = '".$_GET['pid']."'";
                           $rxlomn_q = mysql_query($rxlomn_sql);
                           $rxlomn_r = mysql_fetch_assoc($rxlomn_q);

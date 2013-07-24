@@ -130,7 +130,7 @@ if($_FILES['csv']['error'] == 0){
                                   $notes .= $data[$id]." ";
                                 break;
 			case 'status':
-				if(trim($data[$id]) == 'TRUE'){
+				if(strtolower(trim($data[$id])) == 'true'){
                                         $s .= $field . " = '3', ";
 				}else{
                                         $s .= $field . " = '4', ";

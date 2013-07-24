@@ -240,7 +240,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 
 <?php if(!$rx & !$lomn){ ?>
 <div id="combined_div">
-<a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=13&itro=1');" class="vob_item
+<a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=14&itro=1');" class="vob_item
 <?php
   if(!$rxlomn){
     ?>error<?php
@@ -249,7 +249,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
   } ?>
 ">
 <div class="vob_icon vob_rx"></div>
-<span>Rx. LOMN. Combined</span>
+<span>LOMN / Rx. Combined</span>
 </a>
 <a href="#" onclick="$('#rx_lomn_div').show();$('#combined_div').hide();return false;">Click here if LOMN and Rx are not same document</a>
 <form id="rxlomn_form" action="manage_insurance.php?pid=<?= $_GET['pid']; ?>&addtopat=1&rxlomn=1" enctype="multipart/form-data" method="post" style="display:none;">

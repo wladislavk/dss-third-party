@@ -150,7 +150,7 @@ $(document).ready(function(){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
 			?>
 		</TD>        
 	</TR>

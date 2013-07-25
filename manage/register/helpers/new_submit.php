@@ -5,12 +5,17 @@
 <?php require_once '../../admin/includes/password.php'; ?>
 <?php
 
+        $c_sql = "SELECT id FROM dental_access_codes WHERE status='1' AND access_code='".$_POST['code']."'";
+        $c_q = mysql_query($c_sql);
+        $c_r = mysql_fetch_assoc($c_q);
+	$access_code_id = $c_r['id'];
 	
 if($_POST['userid']==''){
         $sql = "INSERT INTO dental_users set
                 name = '".mysql_real_escape_string($_POST['name'])."',
                 email= '".mysql_real_escape_string($_POST['email'])."',
                 phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."',
+		access_code_id = '".mysql_real_escape_string($access_code_id)."',
 		user_access=".DSS_USER_ACCESS_DOCTOR.",
 		use_patient_portal = '1',
                 use_digital_fax = '1',
@@ -18,7 +23,9 @@ if($_POST['userid']==''){
                 use_eligible_api = '0',
                 use_course = '0',
                 use_course_staff = '0',
-                user_type = '".DSS_USER_TYPE_SOFTWARE."'
+                user_type = '".DSS_USER_TYPE_SOFTWARE."',
+		adddate = now(),
+		ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
                 ";
         	$q = mysql_query($sql);
                 $userid = mysql_insert_id();
@@ -42,6 +49,7 @@ if($_POST['userid']==''){
         $sql = "UPDATE dental_users set
                 name = '".mysql_real_escape_string($_POST['name'])."',
                 email= '".mysql_real_escape_string($_POST['email'])."',
+		access_code_id = '".mysql_real_escape_string($access_code_id)."',
                 phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."'
 		WHERE userid='".mysql_real_escape_string($_POST['userid'])."'
                 ";

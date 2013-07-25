@@ -235,6 +235,7 @@ if($epworthid <> '')
 									}
 									*/
 									an_tot += parseInt($('#epworth_1').val());
+                                                                        an_tot += parseInt($('#epworth_2').val());
                                                                         an_tot += parseInt($('#epworth_3').val());
                                                                         an_tot += parseInt($('#epworth_4').val());
                                                                         an_tot += parseInt($('#epworth_5').val());

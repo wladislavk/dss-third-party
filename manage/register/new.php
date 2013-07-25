@@ -1,7 +1,7 @@
 <?php session_start();
 
 include 'includes/header.php';
-include 'includes/completed.php';
+//include 'includes/completed.php';
 ?>
 <link rel="stylesheet" href="css/register.css" />
 <!--[if IE]>
@@ -22,7 +22,7 @@ include 'includes/completed.php';
         </script>
 
   <?php
-  $p = mysql_fetch_assoc($q);
+  //$p = mysql_fetch_assoc($q);
   $c_sql = "SELECT c.id, c.name, c.stripe_publishable_key from companies c 
 			WHERE c.default_new = 1"; 
   $c_q = mysql_query($c_sql);
@@ -409,4 +409,4 @@ $(document).ready(function() {
 });
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php //include 'includes/footer.php'; ?>

@@ -603,6 +603,16 @@ function contacttypeabc(fa)
 	}
 }
 
+function accesscodeabc(fa)
+{
+        if(trim(fa.access_code.value) == "" )
+        {
+                alert("Access Code is Required");
+                fa.access_code.focus();
+                return false;
+        }
+}
+
 function imagetypeabc(fa)
 {
 	if(trim(fa.imagetype.value) == "" )

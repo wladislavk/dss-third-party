@@ -141,47 +141,7 @@ lga_wizard = {
                             },
 			    agreement: {
 				required: true
-			    },		
-			    practice: "required",
-                            address: "required",
-			    city: "required",
-			    state: "required",
-                            zip: "required",
-			    tax_id_or_ssn: {
-				einOrSsn: true,
-			    },
-			    username: {
-                                required: true,
-				valueLength: "5",
-                                remote: {
-                                        url: "includes/check_username.php",
-                                        type: "post",
-                                        async: false,
-                                        data: {
-                                                email: function() {
-                                                        return $("#username").val();
-                                                },
-                                                id:  function() {
-                                                        return $("#userid").val();
-                                                }
-                                        }
-                                }
-                            },
-			    password: {
-				required: true,
-                                valueLength: "8",
-			    },
-			    confirm_password: { 
-				required: true,
-				valueEquals: $("#password").val()
-			    },
-			    mailing_name: "required",
-                            mailing_practice: "required",
-			    mailing_phone: "required",
-                            mailing_address: "required",
-                            mailing_city: "required",
-                            mailing_state: "required",
-                            mailing_zip: "required"
+			    }		
                         },
     errorPlacement: function(error, element) {
         error.appendTo(element.parent());
@@ -198,50 +158,36 @@ lga_wizard = {
 				email: "The field requires a valid email address"
 				},
                             cell_phone: "This field is required",
-			    agreement: "You must accept the agreement to proceed",
-			    practice: "This field is required",
-			    address: "This field is required",
-                            city: "This field is required",
-                            state: "This field is required",
-                            zip: "This field is required",
-			    tax_id_or_ssn: {
-				einOrSsn: "Please also select EIN or SSN in next question"
-			    },
-			    username: {
-                                required: "This field is required",
-				valueLength: "Username must be at least 5 characters",
-                                remote: "Error: The username you have entered is either invalid or already in use. Please enter a different username."
-                                },
-                            password: {
-				required: "This field is required",
-                                valueLength: "Password must be at least 8 characters"
-			    	},
-                            confirm_password: { 
-				required: "This field is required",
-				valueEquals: 'Must match password' 
-				},
-                            mailing_name: "This field is required",
-                            mailing_practice: "This field is required",
-			    mailing_phone: "This field is required",
-                            mailing_address: "This field is required",
-                            mailing_city: "This field is required",
-                            mailing_state: "This field is required",
-                            mailing_zip: "This field is required"
+			    agreement: "You must accept the agreement to proceed"
                         }
 					}).element($(this));
-				
 					if(validator == false){	notValid = true	}
-			})
+			});
 
-				if(!notValid){
-					if(api.getIndex()==3){
-					  if($('#npi').val()=='' ||
-						$('#medicare_npi').val()=='' ||
-						$('#tax_id_or_ssn').val()==''){
-						notValid = !confirm("Notice: You will not be able to generate or file insurance claims until these fields are completed. Click Cancel to complete them now, or OK to proceed and complete later."); 
-					  } 
+
+				//WORK AROUND FOR BUG WITH REMOTE RULE ASYNC:FALSE NOT WORKING
+				$.ajax({
+					url: "includes/check_code.php",
+                                        type: "post",
+                                        async: false,
+                                        data:{ code: $("#code").val()},
+					success: function(data){
+						if(data=='false'){
+							notValid = true;
+						}
 					}
-				}
+				});
+                                $.ajax({
+                                        url: "includes/check_email.php",
+                                        type: "post",
+                                        async: false,
+                                        data:{ id: $("#userid").val(), email: $("#email").val()},
+                                        success: function(data){
+                                                if(data=='false'){
+                                                        notValid = true;
+                                                }
+                                        }
+                                });
 
 				if(notValid == true){ 
 					var page = root.find(".page").eq(api.getIndex());

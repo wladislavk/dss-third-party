@@ -105,6 +105,7 @@ NAV THIRD
 		     <li><a href="#">Text</a>
 		     <ul>
                      	<li><a href="manage_custom.php">Custom Text</a></li>
+                        <li><a href="manage_custom_letters.php">Custom Letters</a></li>
 		     </ul>
 		     </li>
 <?php

@@ -79,13 +79,13 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 include 'report_letter_count.php';
 ?>
 </div>
-<div class="half">
+<div class="half clear" >
 <h3>Date Range Ledger Report Totals</h3>
 <?php
 include 'report_ledger_totals.php';
 ?>
 </div>
-<div class="half clear">
+<div class="half">
 <h3>Date Range Ledger Report Daily</h3>
 <?php
 include 'report_ledger_daily.php';

@@ -45,7 +45,9 @@ $my = mysql_query($sql);
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 </head>
 <body>
-<br /><br />	
+<br /><br />
+<div style="margin-left:20px;">	
+<p style="color:#fff;">Please select a letter template below to use as your base for creating a custom letter.</p>
     <form name="notesfrm" method="post" >
 		<select name="template">
 			<?php while($r = mysql_fetch_assoc($my)){ ?>
@@ -58,5 +60,6 @@ if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $r['triggerid']!=1){
 		</select>
                 <input type="submit" name="submit" value=" Select " class="button" />
     </form>
+</div>
 </body>
 </html>

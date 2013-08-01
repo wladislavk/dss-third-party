@@ -1136,18 +1136,18 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
-  $diagnosising_doc = $d['diagnosising_doc'];
+  $referring_provider = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
+if($insurancetype!=1){
+  $referring_provider = '';
+  $diagnosising_npi = '';
+
+}
 
 $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 //if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 //}
-}
-if($insurancetype!=1){
-  $diagnosising_doc = '';
-  $diagnosising_npi = '';
-
 }
 // If claim doesn't yet have a preauth number, try to load it
 // from the patient's most recently completed preauth.
@@ -1909,9 +1909,7 @@ $(document).ready(function(){
 					<td valign="top">
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
-							<?
-								echo "<br /><br />".$diagnosising_doc;
-									?>
+								<input type="text" value="<?= $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 								
 					</td>
 					<td valign="top">

@@ -166,6 +166,21 @@ function trigger_letter20($pid) {
   }
 }
 
+function trigger_letter21($pid, $info_id) {
+  $letterid = '21';
+  $topatient = '1';
+  //$md_list = get_mdcontactids($pid);
+  //$md_referral_list = get_mdreferralids($pid);
+  $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '');
+  if (!is_numeric($letter)) {
+    print "Can't send letter 21: " . $letter;
+    die();
+  } else {
+    return $letter;
+  }
+}
+
+
 function trigger_letter24($pid, $info_id) {
   $letterid = '24';
   $topatient = '1';

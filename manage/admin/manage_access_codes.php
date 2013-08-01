@@ -10,8 +10,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select ac.*, count(u.userid) as num_users from dental_access_codes ac
-	JOIN dental_users u ON u.access_code_id=ac.id";
+$sql = "select ac.*, (SELECT count(u.userid) FROM dental_users u WHERE u.access_code_id=ac.id) as num_users from dental_access_codes ac";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;

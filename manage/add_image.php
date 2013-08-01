@@ -456,19 +456,26 @@ if($uploaded){
         if($(this).val() == '6'){
 	  $('.lomn_update').hide();
 	  $('.rx_update').show();	
+	  $('.rxlomn_update').hide();
 	}else if($(this).val() == '7'){
           $('.lomn_update').show();
           $('.rx_update').hide();
+	  $('.rxlomn_update').hide();
+        }else if($(this).val() == '14'){
+          $('.lomn_update').hide();
+          $('.rx_update').hide();
+	  $('.rxlomn_update').show();
         }else{
           $('.lomn_update').hide();
           $('.rx_update').hide();
+	  $('.rxlomn_update').hide();
 	}
 
   });
 </script>
 
 <?php
-$rl_sql = "SELECT rx_imgid, lomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
+$rl_sql = "SELECT rx_imgid, lomn_imgid, rxlomn_imgid FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."'";
 $rl_q = mysql_query($rl_sql);
 if(mysql_num_rows($rl_q)){
   $rl_r = mysql_fetch_assoc($rl_q);
@@ -491,6 +498,17 @@ if($rl_r['rx_imgid']!=''){
 
 <?php
 }
+if($rl_r['rxlomn_imgid']!=''){
+?>
+<tr class="image_sect rxlomn_update" <?= ($_GET['sh']==14)?'':'style="display:none;"'; ?>>
+  <td valign="top" colspan="2" class="frmhead">
+    <input type="checkbox" value="1" name="rxlomn_update" /> Use this LOMN / Rx. for insurance claims
+  </td>
+</tr>
+
+<?php
+}
+
  } ?>
         <tr class="image_sect"> 
         	<td valign="top" colspan="2" class="frmhead">

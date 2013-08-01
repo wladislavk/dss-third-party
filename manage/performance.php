@@ -45,11 +45,19 @@ if(isset($_REQUEST['start_date'])){
 $my = mysql_query($sql);
 $myarray = mysql_fetch_assoc($my);
 ?>
-
+<style type="text/css">
+.half{
+  float: left;
+}
+.half h3{
+  margin-left:20px;
+}
+</style>
 <span class="admin_head">
 	Performance
 </span>
 <br /><br /><br />
+
 <form method="post" style="margin-left: 20px;">
 Start Date: <input type="text" id="start_date" name="start_date" class="calendar" value="<?= date('m/d/Y', strtotime($start_date)); ?>" />
 End Date: <input type="text" id="end_date" name="end_date" class="calendar" value="<?= date('m/d/Y', strtotime($end_date)); ?>" />
@@ -57,7 +65,26 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 </form>
 
 <br /><br />
-
+<div class="half">
+<h3>Number of Consults/Impressions</h3>
+<?php include 'report_treatment_summary.php'; ?>
+</div>
+<div class="half">
+<h3>Patients Screened</h3>
+<?php include 'report_patients_screened.php'; ?>
+</div>
+<div class="half clear">
+<h3>Letters Sent</h3>
+<?php
+include 'report_letter_count.php';
+?>
+</div>
+<div class="half">
+<h3>Date Range Ledger Report</h3>
+<?php
+include 'report_ledger_totals.php';
+?>
+</div>
 <div class="data">
   <label>Username</label>
   <span class="value"><?= $myarray['username']; ?></span>
@@ -179,8 +206,17 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
   <label>Ins. Claims Paid</label>
   <span class="value"></span>
 </div>
+<div class="data">
+  <label>Ledger Charges</label>
+  <span class="value">$<?= number_format($total_charge,2); ?></span>
+</div>
+<div class="data">
+  <label>Ledger Credits</label>
+  <span class="value">$<?= number_format($total_credits,2); ?></span>
+</div>
 
 <div style="clear:both;">&nbsp;</div>
 <?php
+
 include 'includes/bottom.htm';
 ?>

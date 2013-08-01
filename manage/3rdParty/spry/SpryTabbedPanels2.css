@@ -1,0 +1,93 @@
+/* Horizontal Tabbed Panels */
+.TabbedPanels {
+	margin: 0px;
+	padding: 0px;
+	clear: both;
+	width: 60px; /* IE Hack to force proper layout when preceded by a paragraph. (hasLayout Bug)*/
+}
+.TabbedPanelsTabGroup {
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+}
+.TabbedPanelsTab {
+	position: relative;
+	float: left;
+	padding: 0px 0px;
+	margin: -2px 1px 0px 0px;
+	font: bold 0.7em sans-serif;
+	/*background-color: #4bb5a2;*/
+	list-style: none;
+	border-left: solid 1px #163f38;
+	/*border-bottom: solid 1px #999;
+	border-top: solid 1px #999;
+	border-right: solid 1px #999;*/
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	clear:left;
+	cursor: pointer;
+	color:black;
+}
+.TabbedPanelsTabHover {
+	background-color: #ccdee3;
+	color:black;
+}
+.TabbedPanelsTabSelected {
+	/*background-color: #206f61;
+	border-bottom: 1px solid #206f61;*/
+	padding: 1px 0px 0px 5px;
+}
+.TabbedPanelsTab a {
+	color: black;
+	text-decoration: none;
+}
+.TabbedPanelsContentGroup {
+	clear: both;
+	margin: -2px 2px 0px 5px;
+	position: relative;
+	/*border-left: solid 1px #163f38;
+	border-bottom: solid 1px #163f38;
+	border-top: solid 1px #163f38;
+	border-right: solid 1px #163f38;
+	background-color: #206f61;*/
+	
+}
+.TabbedPanelsContent {
+	padding: 0px;
+	margin: 2px;
+}
+.TabbedPanelsContentVisible {
+}
+/* Vertical Tabbed Panels */
+.VTabbedPanels .TabbedPanelsTabGroup {
+	float: left;
+	width: 50px;
+	height: 7em;
+	/*background-color: #206f61;*/
+	position: relative;
+	/*border-top: solid 1px #163f38;
+	border-right: solid 1px #163f38;
+	 border-bottom: solid 1px #163f38;
+	border-left: solid 1px #163f38;*/
+	
+}
+.VTabbedPanels .TabbedPanelsTab {
+	float: none;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+.VTabbedPanels .TabbedPanelsTabSelected {
+	/*background-color: #206f61;
+	border-bottom: solid 1px #163f38;*/
+}
+.VTabbedPanels .TabbedPanelsContentGroup {
+	position: relative;
+	clear: none;
+	float: left;
+	padding: 0px 0px 0px 0px;
+	margin: -5px 2px 0px 0px;
+	width: 300px;
+	height: 300px;
+}

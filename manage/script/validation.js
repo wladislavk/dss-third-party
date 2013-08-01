@@ -887,7 +887,15 @@ function contactabc(fa)
 
   }
 }
-
+function customlettertemplateabc(fa)
+{
+        if(trim(fa.name.value) == "" )
+        {
+                alert("Name is Required");
+                fa.name.focus();
+                return false;
+        }
+}
 function referredbyabc(fa)
 {
 	if(trim(fa.firstname.value) == "" )

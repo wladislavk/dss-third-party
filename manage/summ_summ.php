@@ -631,6 +631,7 @@ if($cpap == '')
 
   </td>
   </tr>
+   <?php if($sect == 'summ'){ ?>
   <script type="text/javascript">
         function checkIncisal(){
                 min = Number($('#ir_min').val());
@@ -660,6 +661,7 @@ if($cpap == '')
                 checkIncisal();
         })
   </script>
+    <?php } ?>
   <tr>
   <td width="17%" height="4">Best Eccovision&nbsp;&nbsp;</td>
   <td colspan="2">

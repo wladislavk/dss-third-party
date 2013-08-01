@@ -103,6 +103,9 @@ if($create){
                                                         if ($id == "11") {
                                                                 $letterid[] = trigger_letter19($pid, $insert_id);
                                                         }
+                                                        if ($id == "12") {
+                                                                $letterid[] = trigger_letter21($pid, $insert_id);
+                                                        }
                                                         if ($id == "14") {
                                                                 $letterid[] = trigger_letter7($pid, $insert_id);
                                                         }

@@ -23,6 +23,7 @@ if($_POST['userid']==''){
                 use_eligible_api = '0',
                 use_course = '0',
                 use_course_staff = '0',
+		homepage = '1',
                 user_type = '".DSS_USER_TYPE_SOFTWARE."',
 		adddate = now(),
 		ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'

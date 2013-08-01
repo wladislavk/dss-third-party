@@ -65,7 +65,15 @@ $pending_letters = mysql_num_rows($dental_letters_res);
   <li><a href="#" onclick="show_sect('sleep')" id="link_sleep">SLEEP TESTS</a></li>
   <li><a href="#" onclick="show_sect('subj')" id="link_subj">SUBJ TESTS</a></li>
 </ul>
-
+<?php
+if($_GET['sect']!=''){ 
+  $sect = $_GET['sect']; 
+ }elseif($_COOKIE['summ_sect'] && $_COOKIE['pid'] == $_GET['pid']){ 
+  $sect = $_COOKIE['summ_sect'];
+ }else{
+  $sect = 'summ';
+ }
+?>
   <div id="sections">
         <div id="sect_summ">
                 <?php include 'summ_summ.php'; ?>
@@ -102,15 +110,6 @@ $pending_letters = mysql_num_rows($dental_letters_res);
     $.cookie('pid', '<?= $_GET['pid']; ?>');
     $.cookie('summ_sect', sect);
   }
-<?php
-if($_GET['sect']!=''){ ?>
-show_sect('<?= $_GET['sect']; ?>');
-<?php }else{ ?>
-  if($.cookie('summ_sect') && $.cookie('pid') == '<?= $_GET['pid']; ?>'){
-    show_sect($.cookie('summ_sect'));
-  }else{
-    show_sect('summ');
-  }
-<?php } ?>
+show_sect('<?= $sect; ?>');
 
 </script>

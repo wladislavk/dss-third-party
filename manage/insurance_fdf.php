@@ -603,7 +603,7 @@ $fdf = "
     ";
   }
   $fdf .= "
-  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$diagnosising_doc.") >>
+  << /T(".$field_path.".name_referring_provider_fill[0]) /V(".$referring_provider.") >>
   << /T(".$field_path.".seventeenA_fill[0]) /V(".$field_17a.") >>
   << /T(".$field_path.".seventeenb_NPI_fill[0]) /V(".$diagnosising_npi.") >>
   ";

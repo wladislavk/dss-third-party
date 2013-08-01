@@ -13,9 +13,7 @@ $(document).ready( function(){
       		});
 	}
 
-
   });
-
   $('input.calendar_top').each(function(){
         var cid = $(this).attr("id");
         if(cid){

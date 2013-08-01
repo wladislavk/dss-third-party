@@ -80,11 +80,18 @@ include 'report_letter_count.php';
 ?>
 </div>
 <div class="half">
-<h3>Date Range Ledger Report</h3>
+<h3>Date Range Ledger Report Totals</h3>
 <?php
 include 'report_ledger_totals.php';
 ?>
 </div>
+<div class="half clear">
+<h3>Date Range Ledger Report Daily</h3>
+<?php
+include 'report_ledger_daily.php';
+?>
+</div>
+
 <div class="data">
   <label>Username</label>
   <span class="value"><?= $myarray['username']; ?></span>

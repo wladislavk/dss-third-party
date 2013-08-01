@@ -1,7 +1,15 @@
 <? 
 include "includes/top.htm";
 
-$sql = "select * from dental_letter_templates_custom where docid='".$_SESSION['docid']."'";
+if(isset($_GET['delid']) && $_GET['delid']){
+
+  $d = "UPDATE dental_letter_templates_custom SET status=2 WHERE docid='".$_SESSION['docid']."'
+  		AND id='".mysql_real_escape_string($_GET['delid'])."'";
+  mysql_query($d);
+}
+
+
+$sql = "select * from dental_letter_templates_custom where docid='".$_SESSION['docid']."' AND status=1";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 

@@ -33,7 +33,6 @@
               <td>4</td></tr><tr><td>%2ndEnergy%</td><td>Most recent 'Rate your energy level' rating from Subjective Findings</td>
                 <td>9</td></tr><tr><td>%2ndQuality%</td><td>Most recent 'Sleep Quality' rating from Subjective Findings</td>
                   <td>7</td></tr></TABLE></div>
-    <div class="TabbedPanelsContent">Content 5 <TABLE border="1"><tr>
   </div>
 </div>
 

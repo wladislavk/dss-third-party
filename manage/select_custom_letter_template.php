@@ -47,7 +47,7 @@ $my = mysql_query($sql);
 <body>
 <br /><br />
 <div style="margin-left:20px;">	
-<p style="color:#fff;">Please select a letter template below to use as your base for creating a custom letter.</p>
+<p style="color:#fff;">Select an existing template below as the BASE for your new letter, preferably one that most closely resembles the type of letter you wish to create.</p>
     <form name="notesfrm" method="post" >
 		<select name="template">
 			<?php while($r = mysql_fetch_assoc($my)){ ?>

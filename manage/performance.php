@@ -80,7 +80,7 @@ include 'report_letter_count.php';
 ?>
 </div>
 <div class="half clear" >
-<h3>Date Range Ledger Report Totals</h3>
+<h3>Date Range Ledger Report Cumulative Totals</h3>
 <?php
 include 'report_ledger_totals.php';
 ?>

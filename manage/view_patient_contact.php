@@ -110,7 +110,24 @@ mysql_query($psql);
 		$qualifierid = st($themyarray['qualifierid']);
 		$greeting = st($themyarray['greeting']);
 		$sincerely = st($themyarray['sincerely']);
-		$contacttypeid = st($themyarray['contacttypeid']);
+		$contacttypeid = st($themyarray['contacttype']);
+        switch($themyarray['contacttype']){
+        case '1':
+                $ct = "Sleep Physician";
+                break;
+        case '2':
+                $ct = "Primary Care Physician";
+                break;
+        case '3':
+                $ct = "Dentist";
+                break;
+        case '4':
+                $ct = "ENT";
+                break;
+        default:
+                $ct = "Unknown";
+                break;
+	}
 		$notes = st($themyarray['notes']);
 		$preferredcontact = st($themyarray['preferredcontact']);
 		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
@@ -331,8 +348,7 @@ mysql_query($psql);
                                     <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
                   ?>
                   
-                  <option value="<?=st($ctype_myarray['contacttypeid']);?>"> 
-
+                  <option <?= ($ctype_myarray['contacttype']==$ct)?'selected="selected"':''; ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
                                         	<?=st($ctype_myarray['contacttype']);?>
                                         </option>
                                     <? }?>

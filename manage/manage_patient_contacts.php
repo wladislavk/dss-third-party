@@ -268,7 +268,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="#" <?= (count($sim))?'class="plus_count"':''; ?> onclick="$('.sim_<?= $myarray['id']; ?>').toggle();return false;"><?= count($sim); ?> <?= (count($sim)>0)?'(click to view)':'';?></a>
 				</td>
 				<td valign="top">
-					<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?= $myarray["id"]; ?>')" class="editlink" title="EDIT">
+					<a href="#" onclick="loadPopup('view_patient_contact.php?id=<?= $myarray["id"]; ?>');return false;" class="editlink" title="EDIT">
 					        View
 					</a> 
                                         <a href="http://google.com/search?q=<?= $myarray["firstname"]; ?>+<?= $myarray["lastname"]; ?>+<?= $myarray["zip"]; ?>" target="_blank" class="editlink" title="SEARCH">
@@ -296,7 +296,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td>
 				</td>
 				<td valign="top">
-					<a href="#" onclick="loadPopup('add_contact.php?ed=<?= $s['id']; ?>')" class="editlink">
+					<a href="#" onclick="loadPopup('add_contact.php?ed=<?= $s['id']; ?>'); return false;" class="editlink">
                                                 View
                                         </a>
 					<a href="manage_patient_contacts.php?useid=<?= $s['id']; ?>&pcid=<?= $myarray['id']; ?>" class="editlink">

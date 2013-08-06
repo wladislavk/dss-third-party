@@ -52,7 +52,10 @@ if($_POST["staffsub"] == 1)
 			$s = ($_POST['manage_staff']==1)?1:0;
 			$ein = ($_POST['ein']==1)?1:0;
 			$ssn = ($_POST['ssn']==1)?1:0;
-			$ed_sql = "update dental_users set user_access=1, name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
+			$ed_sql = "update dental_users set user_access=1, 
+				first_name = '".s_for($_POST["first_name"])."', 
+                                last_name = '".s_for($_POST["last_name"])."',
+				email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.", 
                                 producer_files = ".$pf.",
 				npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
@@ -113,7 +116,10 @@ if($_POST["staffsub"] == 1)
                         $s = ($_POST['manage_staff']==1)?1:0;
                         $ein = ($_POST['ein']==1)?1:0;
                         $ssn = ($_POST['ssn']==1)?1:0;
-			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', name = '".s_for($_POST["name"])."', email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
+			$ins_sql = "insert into dental_users set user_access=1, docid='".$_SESSION['docid']."', username = '".s_for($_POST["username"])."', password = '".mysql_real_escape_string($password)."', salt='".$salt."', 
+				first_name = '".s_for($_POST["first_name"])."', 
+				last_name = '".s_for($_POST["last_name"])."', 
+				email = '".s_for($_POST["email"])."', address = '".s_for($_POST["address"])."', phone = '".s_for(num($_POST["phone"]))."', status = '".s_for($_POST["status"])."', producer=".$p.",
                                 producer_files = ".$pf.",
                                 npi = '".s_for($_POST["npi"])."',
                                 medicare_npi = '".s_for($_POST["medicare_npi"])."',
@@ -225,7 +231,8 @@ if($_POST["staffsub"] == 1)
 	{
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		$name = $_POST['name'];
+		$first_name = $_POST['first_name'];
+		$last_name = $_POST['last_name'];
 		$email = $_POST['email'];
 		$address = $_POST['address'];
 		$phone = $_POST['phone'];
@@ -252,7 +259,8 @@ if($_POST["staffsub"] == 1)
 	{
 		$username = st($themyarray['username']);
 		$password = st($themyarray['password']);
-		$name = st($themyarray['name']);
+		$first_name = st($themyarray['first_name']);
+		$last_name = st($themyarray['last_name']);
 		$email = st($themyarray['email']);
 		$address = st($themyarray['address']);
 		$phone = st($themyarray['phone']);
@@ -328,10 +336,19 @@ if($_POST["staffsub"] == 1)
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Full Name (e.g. John Smith)
+                First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
+                <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Last Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="last_name" value="<?=$last_name;?>" class="tbox" /> 
                 <span class="red">*</span>				
             </td>
         </tr>

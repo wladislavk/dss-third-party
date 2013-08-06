@@ -329,10 +329,10 @@ if($pat_myarray['patientid'] == '')
 					if(isset($_REQUEST['ed'])){
 						echo $themyarray["added_name"];
 					}else{
-						$s = "SELECT name from dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+						$s = "SELECT first_name, last_name from dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 						$q = mysql_query($s);
 						$r = mysql_fetch_assoc($q);
-						echo $r['name'];
+						echo $r['first_name']." ".$r['last_name'];
 					}
 				?>
             </td>

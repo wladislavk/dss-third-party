@@ -82,31 +82,35 @@ if(mysql_num_rows($q) == 0){
 													<div>
 														<div id="welcome_errors" class="form_errors" style="display:none"></div>
 		<div class="sepH_b half">
-			<label class="lbl_a"><strong>1.</strong> Name <span class="req">*</span></label>
-			<input class="inpt_a validate" type="text" name="name" id="name" value="<?= $p['name']; ?>" />
+			<label class="lbl_a"><strong>1.</strong> First Name <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" name="first_name" id="first_name" value="<?= $p['first_name']; ?>" />
 		</div>
                 <div class="sepH_b half">
+                        <label class="lbl_a"><strong>2.</strong> Last Name <span class="req">*</span></label>
+                        <input class="inpt_a validate" type="text" name="last_name" id="last_name" value="<?= $p['last_name']; ?>" />
+                </div>
+                <div class="sepH_b half clear">
 			<input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?= $p['email']; ?>" />
-                        <label class="lbl_a"><strong>2.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
+                        <label class="lbl_a"><strong>3.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?= $p['phone']; ?>" />
+                        <label class="lbl_a"><strong>4.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?= $p['phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Office Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?= $p['fax']; ?>" />
+                        <label class="lbl_a"><strong>5.</strong> Office Fax:</label><input class="inpt_a phonemask" type="text" id="fax" name="fax" value="<?= $p['fax']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>5.</strong> Practice Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="practice" name="practice" value="<?= $p['practice']; ?>" />
+                        <label class="lbl_a"><strong>6.</strong> Practice Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="practice" name="practice" value="<?= $p['practice']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>6.</strong> Practice Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="address" name="address" value="<?= $p['address']; ?>" />
+                        <label class="lbl_a"><strong>7.</strong> Practice Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="address" name="address" value="<?= $p['address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7.</strong> Practice City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="city" name="city" value="<?= $p['city']; ?>" />
+                        <label class="lbl_a"><strong>8.</strong> Practice City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="city" name="city" value="<?= $p['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
 			<?php $s = $p['state']; ?>
-                        <label class="lbl_a"><strong>8.</strong> Practice State: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>9.</strong> Practice State: <span class="req">*</span></label>
 	<select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="state" name="state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
@@ -164,7 +168,7 @@ if(mysql_num_rows($q) == 0){
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Practice Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="zip" name="zip" value="<?= $p['zip']; ?>" />
+                        <label class="lbl_a"><strong>10.</strong> Practice Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="zip" name="zip" value="<?= $p['zip']; ?>" />
                 </div>
 														<div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>

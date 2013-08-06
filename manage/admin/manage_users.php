@@ -214,7 +214,7 @@ $num_users=mysql_num_rows($my);
 					<?php } ?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?=st($myarray["first_name"]. " " .$myarray["last_name"]);?>
 				</td>
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">

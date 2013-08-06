@@ -126,7 +126,8 @@ $num_users=mysql_num_rows($my);
 					<?=st($myarray["username"]);?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?=st($myarray["first_name"]);?>
+					<?=st($myarray["last_name"]);?>
 				</td>
 			 	<td valign="top">
 					<?= ($myarray["producer"]==1)?"X":''; ?>

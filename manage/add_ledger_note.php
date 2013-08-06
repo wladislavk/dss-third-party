@@ -48,7 +48,7 @@ parent.window.scroll(0, 0);
 $p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
 $p_query = mysql_query($p_sql);
 while($p = mysql_fetch_array($p_query)){
-echo '<option value="'.$p['userid'].'">'.$p['name'].'</option>';
+echo '<option value="'.$p['userid'].'">'.$p['first_name'].' '.$p['last_name'].'</option>';
 }
 
 ?>

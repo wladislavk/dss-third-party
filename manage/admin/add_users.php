@@ -58,7 +58,8 @@ if($_POST["usersub"] == 1)
                                 ssn = '".s_for($_POST['ssn'])."',
                                 ein = '".s_for($_POST['ein'])."',
 				practice = '".s_for($_POST['practice'])."', 
-				name = '".s_for($_POST["name"])."', 
+				first_name = '".s_for($_POST["first_name"])."', 
+				last_name = '".s_for($_POST["last_name"])."',
 				email = '".s_for($_POST["email"])."', 
 				address = '".s_for($_POST["address"])."', 
 				city = '".s_for($_POST["city"])."', 
@@ -197,7 +198,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				practice = '".s_for($_POST['practice'])."', 
 				password = '".mysql_real_escape_string($password)."', 
 				salt = '".$salt."',
-				name = '".s_for($_POST["name"])."', 
+				first_name = '".s_for($_POST["first_name"])."', 
+                                last_name = '".s_for($_POST["last_name"])."',
 				email = '".s_for($_POST["email"])."', 
 				address = '".s_for($_POST["address"])."', 
 				city = '".s_for($_POST["city"])."', 
@@ -398,7 +400,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$ein = $_POST['ein'];
 		$practice = $_POST['practice'];
 		$password = $_POST['password'];
-		$name = $_POST['name'];
+		$first_name = $_POST['first_name'];
+		$last_name = $_POST['last_name'];
 		$email = $_POST['email'];
 		$address = $_POST['address'];
 		$city = $_POST['city'];
@@ -439,7 +442,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$ein = st($themyarray['ein']);
 		$practice = st($themyarray['practice']);
 		$password = st($themyarray['password']);
-		$name = st($themyarray['name']);
+		$first_name = st($themyarray['first_name']);
+		$last_name = st($themyarray['last_name']);
 		$email = st($themyarray['email']);
 		$address = st($themyarray['address']);
 		$city = st($themyarray['city']);
@@ -598,11 +602,20 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Name
+                First Name
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Last Name
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="tbox" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

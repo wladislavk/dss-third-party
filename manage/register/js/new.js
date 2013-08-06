@@ -118,7 +118,8 @@ lga_wizard = {
                                         }
                                 }
                             },
-                            name: "required",
+                            first_name: "required",
+			    last_name: "required",
                             email: {
                                 required: true,
                                 email: true,
@@ -147,7 +148,8 @@ lga_wizard = {
         error.appendTo(element.parent());
     },
                         messages: {
-                            name: "This field is required",
+                            first_name: "This field is required",
+			    last_name: "This field is required",
                             code: {
                                 required: "This field is required",
                                 remote: "Error: Invalid code."

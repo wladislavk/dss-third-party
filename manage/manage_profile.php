@@ -14,7 +14,8 @@ if(isset($_POST["profile_submit"]))
 	ein='".mysql_real_escape_string($_POST['ein'])."',
 	ssn='".mysql_real_escape_string($_POST['ssn'])."',
 	practice='".mysql_real_escape_string($_POST['practice'])."',
-	name='".mysql_real_escape_string($_POST['name'])."',
+	first_name='".mysql_real_escape_string($_POST['first_name'])."',
+        last_name='".mysql_real_escape_string($_POST['last_name'])."',
 	email='".mysql_real_escape_string($_POST['email'])."',
 	address='".mysql_real_escape_string($_POST['address'])."',
 	city='".mysql_real_escape_string($_POST['city'])."',
@@ -38,7 +39,8 @@ if(isset($_POST["practice_submit"]))
         ein='".mysql_real_escape_string($_POST['ein'])."',
         ssn='".mysql_real_escape_string($_POST['ssn'])."',
         practice='".mysql_real_escape_string($_POST['practice'])."',
-        name='".mysql_real_escape_string($_POST['name'])."',
+        first_name='".mysql_real_escape_string($_POST['first_name'])."',
+        last_name='".mysql_real_escape_string($_POST['last_name'])."',
         email='".mysql_real_escape_string($_POST['email'])."',
         address='".mysql_real_escape_string($_POST['address'])."',
         city='".mysql_real_escape_string($_POST['city'])."',
@@ -259,8 +261,12 @@ $num_custom=mysql_num_rows($my);
     <input class="value" name="practice" value="<?= $user['practice']; ?>" />
   </div>
   <div class="detail">
-    <label>Name:</label>
-    <input class="value" name="name" value="<?= $user['name']; ?>" />
+    <label>First Name:</label>
+    <input class="value" name="first_name" value="<?= $user['first_name']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Last Name:</label>
+    <input class="value" name="last_name" value="<?= $user['last_name']; ?>" />
   </div>
   <div class="detail">
     <label>Email:</label>
@@ -339,8 +345,12 @@ $num_custom=mysql_num_rows($my);
     <input class="value" name="practice" value="<?= $practice['practice']; ?>" />
   </div>
   <div class="detail">
-    <label>Name:</label>
-    <input class="value" name="name" value="<?= $practice['name']; ?>" />
+    <label>First Name:</label>
+    <input class="value" name="first_name" value="<?= $practice['first_name']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Last Name:</label>
+    <input class="value" name="last_name" value="<?= $practice['last_name']; ?>" />
   </div>
   <div class="detail">
     <label>Email:</label>

@@ -105,7 +105,8 @@ lga_wizard = {
 							$(element).closest('div').removeClass("error");
 						},
                         rules: {
-                            name: "required",
+                            first_name: "required",
+			    last_name: "required",
                             email: {
                                 required: true,
                                 email: true,
@@ -171,7 +172,8 @@ lga_wizard = {
         error.appendTo(element.parent());
     },
                         messages: {
-                            name: "This field is required",
+                            first_name: "This field is required",
+                            last_name: "This field is required",
 			    email: {
 				required: "This field is required",			
 				remote: "Error: The email address you have entered is either invalid or already in use. Please enter a different email address.",
@@ -277,7 +279,7 @@ lga_wizard = {
 $(document).ready(function(){
 $('#billing_mailing').click(function(){
   if($(this).is(':checked')){
-    $('#mailing_name').val($('#name').val());
+    $('#mailing_name').val($('#first_name').val()+" "+$('#last_name').val());
     $('#mailing_practice').val($('#practice').val());
     $('#mailing_phone').val($('#phone').val());
     $('#mailing_address').val($('#address').val());

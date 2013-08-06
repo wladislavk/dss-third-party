@@ -139,10 +139,16 @@ function areaabc(fa)
 }
 
 function userregabc(fa){
-        if(trim(fa.name.value) == "" )
+        if(trim(fa.first_name.value) == "" )
         {
-                alert("Name is Required");
-                fa.name.focus();
+                alert("First Name is Required");
+                fa.first_name.focus();
+                return false;
+        }
+        if(trim(fa.last_name.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.last_name.focus();
                 return false;
         }
         if(trim(fa.phone.value) == "" )
@@ -196,6 +202,7 @@ function userabc(fa)
 		fa.practice.focus();
 		return false;
 	}
+	if(fa.password){
 	if(trim(fa.password.value) == "" )
 	{
 		alert("Password is Required");
@@ -218,12 +225,19 @@ function userabc(fa)
 		fa.password.focus();
 		return false;
 	}
-	if(trim(fa.name.value) == "" )
+	}
+	if(trim(fa.first_name.value) == "" )
 	{
-		alert("Name is Required");
-		fa.name.focus();
+		alert("First Name is Required");
+		fa.first_name.focus();
 		return false;
 	}
+        if(trim(fa.last_name.value) == "" )
+        {
+                alert("Last Name is Required");
+                fa.last_name.focus();
+                return false;
+        }
 	if(trim(fa.email.value) == "" )
 	{
 		alert("Email is Required");

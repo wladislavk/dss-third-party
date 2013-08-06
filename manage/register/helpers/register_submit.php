@@ -8,7 +8,8 @@
 	
 
         $sql = "UPDATE dental_users set
-                name = '".mysql_real_escape_string($_POST['name'])."',
+                first_name = '".mysql_real_escape_string($_POST['first_name'])."',
+                last_name = '".mysql_real_escape_string($_POST['last_name'])."',
                 email= '".mysql_real_escape_string($_POST['email'])."',
                 phone = '".mysql_real_escape_string(num($_POST['phone']))."',
                 fax = '".mysql_real_escape_string(num($_POST['fax']))."',

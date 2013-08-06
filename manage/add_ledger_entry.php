@@ -38,7 +38,7 @@ $producer_options = '';
 $p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
 $p_query = mysql_query($p_sql);
 while($p = mysql_fetch_array($p_query)){
-$producer_options .= '<option value="'.$p['userid'].'" '.(($p['userid']==$_SESSION['userid'])?'selected="selected"':'').'>'.$p['name'].'</option>';
+$producer_options .= '<option value="'.$p['userid'].'" '.(($p['userid']==$_SESSION['userid'])?'selected="selected"':'').'>'.$p['first_name'].' '.$p['last_name'].'</option>';
 }
 $producer_options .= "";
 

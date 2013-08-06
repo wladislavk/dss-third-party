@@ -56,14 +56,18 @@ include 'includes/header.php';
                         <input class="inpt_a validate" type="password" name="code" id="code" value="" />
                 </div>
 		<div class="sepH_b">
-			<label class="lbl_a"><strong>2.</strong> Name <span class="req">*</span></label>
-			<input class="inpt_a validate" type="text" name="name" id="name" value="" />
+			<label class="lbl_a"><strong>2.</strong> First Name <span class="req">*</span></label>
+			<input class="inpt_a validate" type="text" name="first_name" id="first_name" value="" />
 		</div>
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>3.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="" />
+                        <label class="lbl_a"><strong>3.</strong> Last Name <span class="req">*</span></label>
+                        <input class="inpt_a validate" type="text" name="last_name" id="last_name" value="" />
+                </div>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>4.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="" />
                 </div>
                 <div class="sepH_b clear">
-                        <label class="lbl_a"><strong>4.</strong> Cell Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="cell_phone" name="cell_phone" value="" />
+                        <label class="lbl_a"><strong>5.</strong> Cell Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="cell_phone" name="cell_phone" value="" />
                 </div>
      <div class="sepH_b clear">
         I accept the <a id="saas_agree_but" href="#saas_agree">user agreement</a> and <a id="hipaa_agree_but" href="#hipaa_agree">HIPAA agreement</a>

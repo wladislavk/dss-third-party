@@ -11,6 +11,18 @@ if($_GET['own']==1){
 
   $own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
   mysql_query($own_sql);
+ if($_GET['own_completed']==1){
+  $q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q1_q = mysql_query($q1_sql);
+  if(mysql_num_rows($q1_q) == 0){
+    $ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
+    mysql_query($ed_sql);
+  }else{
+    $ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
+    mysql_query($ed_sql);
+  }
+ }
+
                 ?>
                 <script type="text/javascript">
                         <?php if($changed>0){ ?>
@@ -385,7 +397,7 @@ if($pat_myarray['patientid'] == '')
 
                 if($exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['history_status'] == 2){
                 ?>                                <div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. All patient changes are visible below. Review each page of the Questionnaire then
-                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.</div>
+                        <a href="q_page1.php?pid=<?= $_GET['pid']; ?>&own=1&own_completed=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.</div>
                 <?php
 
                 }

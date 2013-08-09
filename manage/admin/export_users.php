@@ -9,13 +9,26 @@ $s = "select u.name,
 	u.state, 
 	u.zip, 
 	u.phone, 
-	u.fax 
+	u.fax,
+	u.status 
 	FROM dental_users u 
 	JOIN dental_user_company uc on uc.userid=u.userid 
 	JOIN companies c ON c.id=uc.companyid";
 $q = mysql_query($s);
-$csv = "\"Name\",\"Email\",\"Company\",\"Address\",\"City\",\"State\",\"Zip\",\"Phone\",\"Fax\"\n";
+$csv = "\"Name\",\"Email\",\"Company\",\"Address\",\"City\",\"State\",\"Zip\",\"Phone\",\"Fax\",\"Status\"\n";
 while($r = mysql_fetch_assoc($q)){
+	switch($r['status']){
+		case '1':
+			$status="Active";
+			break;
+		case '2':
+			$status = "Inactive";
+			break;
+		default:
+			$status = "";
+			break;
+	}
+
 	$csv .="\"".$r['name']."\",";
         $csv .="\"".$r['email']."\",";
         $csv .="\"".$r['company_name']."\",";
@@ -25,6 +38,7 @@ while($r = mysql_fetch_assoc($q)){
         $csv .="\"".$r['zip']."\",";
         $csv .="\"".$r['phone']."\",";
         $csv .="\"".$r['fax']."\",";
+	$csv .="\"".$status."\"";
         $csv .="\n";
 }
 

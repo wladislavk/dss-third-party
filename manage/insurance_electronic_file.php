@@ -66,7 +66,11 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
-$ins_payer_id = st($pat_myarray['p_m_eligible_id']);
+if(isset($_GET['payerid']) && $_GET['payerid']!=''){
+  $ins_payer_id = $_GET['payerid'];
+}else{
+  $ins_payer_id = st($pat_myarray['p_m_eligible_id']);
+}
 $payer_sql = "SELECT * FROM dental_ins_payer WHERE id='".mysql_real_escape_string($ins_payer_id)."'";
 error_log($payer_sql);
 $payer_q = mysql_query($payer_sql);

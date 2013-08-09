@@ -77,8 +77,8 @@ if($claim['insurance_type'] == 7){
 
 
 $row[] = $claim['patientid'];
-$row[] = $pat['firstname'];
 $row[] = $pat['lastname'];
+$row[] = $pat['firstname'];
 $row[] = $pat['middilename'];
 $row[] = $pat['dob'];
 if($pat['gender']=="Male"){
@@ -98,8 +98,8 @@ if($pat['p_m_relation'] == "Self"){
   $row[] = "";
   $row[] = "";
 }else{
-  $row[] = $claim['insured_firstname'];
   $row[] = $claim['insured_lastname'];
+  $row[] = $claim['insured_firstname'];
   $row[] = $claim['insured_middle'];
 }
 
@@ -188,8 +188,8 @@ if(in_array("Employed", $patient_status_array)){
   $row[] = "";
 }
 
-$row[] = $claim['other_insured_firstname'];
 $row[] = $claim['other_insured_lastname'];
+$row[] = $claim['other_insured_firstname'];
 $row[] = $claim['other_insured_middle'];
 $row[] = $claim['other_insured_policy_group_feca'];
 $row[] = $claim['other_insured_dob'];
@@ -291,7 +291,21 @@ if($claim['outside_lab']=="NO"){
   $row[] = "";
 }
 $row[] = $claim['s_charges'];
-$row[] = $claim['diagnosis_1'];
+
+$sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
+                        JOIN dental_patients p on ss.patiendid=p.patientid
+                WHERE
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$claim['patientid']."';";
+
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $diagnosis_1 = $d['diagnosis'];
+$diag_sql = "SELECT ins_diagnosis FROM dental_ins_diagnosis WHERE ins_diagnosisid='".$diagnosis_1."'";
+$diag_q = mysql_query($diag_sql);
+$diag = mysql_fetch_assoc($diag_q);
+$row[] = $diag['ins_diagnosis'];
 $row[] = $claim['diagnosis_2'];
 $row[] = $claim['diagnosis_3'];
 $row[] = $claim['diagnosis_4'];
@@ -317,7 +331,7 @@ $diagnosis_pointer[4] = $diagnosis_4;
 // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
 $sql = "";
   $sql = "SELECT "
-       . "  ledger.*, ";
+       . "  ledger.*, trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits,";
 if($insurancetype == '1'){
         $sql .= " user.medicare_npi ";
 }else{
@@ -330,10 +344,10 @@ if($insurancetype == '1'){
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "WHERE "
-       . "  ledger.primary_claim_id = " . $insuranceid . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
-       . "  AND ledger.docid = " . $docid . " "
-       . "  AND trxn_code.docid = " . $docid . " "
+       . "  ledger.primary_claim_id = " . $claim['insuranceid'] . " "
+       . "  AND ledger.patientid = " . $claim['patientid'] . " "
+       . "  AND ledger.docid = " . $claim['docid'] . " "
+       . "  AND trxn_code.docid = " . $claim['docid'] . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
        . "ORDER BY "
        . "  ledger.service_date ASC";
@@ -350,7 +364,7 @@ if($array['diagnosispointer']!=''){
 
 $row[] = $ledger['service_date'];
 $row[] = $ledger['service_date'];
-$row[] = preg_replace("/[^0-9]/","",$ledger['placeofservice']);
+$row[] = preg_replace("/[^0-9]/","",$ledger['place']);
 $row[] = $ledger['emg'];
 $row[] = $ledger['transaction_code'];
 $row[] = $ledger['modcode'];
@@ -457,13 +471,4 @@ fclose($f);
 
 
 
-
-
-
-
-
-
-
-
-
-
+?>

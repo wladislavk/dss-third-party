@@ -25,6 +25,9 @@ if($_POST["staffsub"] == 1)
 {
 	$sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_POST['ed'])."'";
 	$query_check=mysql_query($sel_check);
+
+        $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_POST['ed'])."'";
+        $query_check2=mysql_query($sel_check2);
 	
 	if(mysql_num_rows($query_check)>0)
 	{
@@ -36,6 +39,16 @@ if($_POST["staffsub"] == 1)
 		</script>
 		<?
 	} 
+        elseif(mysql_num_rows($query_check2)>0)
+        {
+                $msg="Email already exist. So please give another Email.";
+                ?>
+                <script type="text/javascript">
+                        alert("<?=$msg;?>");
+                        window.location="#add";
+                </script>
+                <?
+        }
 	else
 	{
 		if($_POST["ed"] != "")

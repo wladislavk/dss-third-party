@@ -462,7 +462,7 @@ $data[] = $row;
 
 
 header("Content-Type: text/plain");
-header("Content-Disposition: attachment;filename=file.csv");
+header("Content-Disposition: attachment;filename=file.txt");
 $f  =   fopen('php://output', 'a');
 foreach ($data as $fields) {
     fputcsv($f, $fields, "\t");

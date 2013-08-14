@@ -5,6 +5,36 @@ require_once "admin/includes/form_updates.php";
 if(isset($_POST["profile_submit"]))
 {
 
+        $sel_check = "select * from dental_users where username = '".s_for($_POST["username"])."' and userid <> '".s_for($_SESSION['userid'])."'";
+        $query_check=mysql_query($sel_check);
+
+        $sel_check2 = "select * from dental_users where email = '".s_for($_POST["email"])."' and userid <> '".s_for($_SESSION['userid'])."'";
+        $query_check2=mysql_query($sel_check2);
+
+        if(mysql_num_rows($query_check)>0)
+        {
+                $msg="Username already exist. So please give another Username.";
+                ?>
+                <script type="text/javascript">
+                        alert("<?=$msg;?>");
+                        window.location="#add";
+                </script>
+                <?
+        }
+        elseif(mysql_num_rows($query_check2)>0)
+        {
+                $msg="Email already exist. So please give another Email.";
+                ?>
+                <script type="text/javascript">
+                        alert("<?=$msg;?>");
+                        window.location="#add";
+                </script>
+                <?
+        }
+        else
+        {
+
+
   $in_sql = "UPDATE dental_users SET
 	username='".mysql_real_escape_string($_POST['username'])."',
 	npi='".mysql_real_escape_string($_POST['npi'])."',
@@ -25,6 +55,7 @@ if(isset($_POST["profile_submit"]))
 	WHERE userid='".$_SESSION['userid']."'";
   mysql_query($in_sql);
   form_update_all($_SESSION['docid']);
+	}
 }
 
 if(isset($_POST["practice_submit"]))
@@ -229,7 +260,7 @@ $num_custom=mysql_num_rows($my);
 
 <div class="half">
   <h3>My Profile</h3>
-  <form action="#" method="post">
+  <form action="#" method="post" onsubmit="return check_dups(this);">
   <input type="hidden" name="userid" value="<?= $user['userid']; ?>" />
   <div class="detail">
     <label>Username:</label>
@@ -313,7 +344,7 @@ $num_custom=mysql_num_rows($my);
                                                 Edit
                                         </a>
 
-  <form action="#" method="post" onsubmit="return mailinglocationabc(this)">
+  <form action="#" method="post" onsubmit="return check_profile(this);">
   <input type="hidden" name="userid" value="<?= $practice['userid']; ?>" />
   <div class="detail">
     <label>Username:</label>
@@ -509,3 +540,47 @@ $num_custom=mysql_num_rows($my);
 
 <br /><br />	
 <? include "includes/bottom.htm";?>
+
+
+<script type="text/javascript">
+
+  function check_dups(f){
+
+     $.ajax({
+        url: "includes/check_dups.php",
+        type: "post",
+        data: {id: f.userid.value, email: f.email.value, username: f.username.value},
+	async: false,
+        success: function(data){
+          var r = $.parseJSON(data);
+          if(r.error){
+		if(r.username){
+		  alert('Username already taken. Please choose a new username.');
+		  returnval = false;
+		}else if(r.email){
+                  alert('Email already taken. Please choose a new email.');
+                  returnval = false;
+                }
+          }else{
+            returnval = true;
+          }
+        },
+        failure: function(data){
+          //alert('fail');
+       }
+    });
+    return returnval;
+    //return true;
+  }
+
+  function check_profile(f){
+    if(!mailinglocationabc(f)){
+      return false;
+    }else{
+      return check_dups(f);
+    }
+  }
+
+</script>
+
+

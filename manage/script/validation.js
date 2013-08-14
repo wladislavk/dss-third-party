@@ -269,7 +269,7 @@ function mailinglocationabc(fa){
         fa.mailing_fax.focus();
         return false;
   }
-
+  return true;
 }
 
 

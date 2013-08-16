@@ -128,11 +128,14 @@ function fontSizeList()
     return str.substring(0,str.length-1); // strip last comma
 }
                 tinyMCE.init({
+			oninit : "setPlainText",
+			plugins : "paste",
                         mode : "textareas",
                         theme : "advanced",
-                        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, fontsizeselect, separator,help",
+                        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, fontsizeselect, fontselect, separator,help",
                         theme_advanced_buttons2 : "",
                         theme_advanced_buttons3 : "",
+			theme_advanced_fonts : "Helvetica=helvetica;Courier New=courier new;Times New Roman=times new roman;",
                         gecko_spellcheck : true,
                         theme_advanced_toolbar_location : "top",
                         theme_advanced_toolbar_align : "left"

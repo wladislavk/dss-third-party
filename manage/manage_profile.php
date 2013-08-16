@@ -111,6 +111,20 @@ if(isset($_POST["disable_letter_header"])){
   mysql_query($in_sql);
 }
 
+if(isset($_POST["enable_address_indent"])){
+  $in_sql = "UPDATE dental_users SET
+                indent_address = '1'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+}
+
+if(isset($_POST["disable_address_indent"])){
+  $in_sql = "UPDATE dental_users SET
+                indent_address = '0'
+        WHERE userid='".$_SESSION['docid']."'";
+  mysql_query($in_sql);
+}
+
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
 {
 
@@ -456,6 +470,7 @@ $num_custom=mysql_num_rows($my);
 <?php if($practice['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
 <div class="half">
   <h3>Letter Margins</h3>
+All units in millimeters (mm).
   <form action="#" method="post">
   <div class="detail">
     <label>Header:</label>
@@ -527,6 +542,17 @@ $num_custom=mysql_num_rows($my);
     Letter return address is currently disabled. <input type="submit" name="enable_letter_header" value="Click here" class="addButton" /> to enable return address.
   <?php } ?>
 </form>
+
+  <form action="#" method="post">
+<?php
+  if($user['indent_address']=='1'){ ?>
+    Address Align: #9 Envelope. <input type="submit" name="disable_address_indent" value="Click here" class="addButton" /> to left-align letter addresses (address will no longer fit in #9 envelope window).
+  <?php }else{ ?>
+    Address Align: Left-Align. <input type="submit" name="enable_address_indent" value="Click here" class="addButton" /> to indent letter address to fit in #9 envelope.
+  <?php } ?>
+</form>
+
+
 </div>
 <div style="clear:both;"></div>
 

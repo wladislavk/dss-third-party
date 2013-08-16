@@ -49,6 +49,7 @@ if($_POST['ex_page2sub'] == 1)
 		$ins_sql = " insert into dental_ex_page2 set 
 		patientid = '".s_for($_GET['pid'])."',
 		mallampati = '".s_for($mallampati)."',
+		additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
 		tonsils = '".s_for($tonsils_arr)."',
 		tonsils_grade = '".s_for($tonsils_grade)."',
 		userid = '".s_for($_SESSION['userid'])."',
@@ -71,6 +72,7 @@ if($_POST['ex_page2sub'] == 1)
 	{
 		$ed_sql = " update dental_ex_page2 set 
 		mallampati = '".s_for($mallampati)."',
+                additional_notes = '".mysql_real_escape_string($_POST['additional_notes'])."',
 		tonsils = '".s_for($tonsils_arr)."',
 		tonsils_grade = '".s_for($tonsils_grade)."'
 		where ex_page2id = '".s_for($_POST['ed'])."'";
@@ -112,6 +114,7 @@ $myarray = mysql_fetch_array($my);
 
 $ex_page2id = st($myarray['ex_page2id']);
 $mallampati = st($myarray['mallampati']);
+$additional_notes = $myarray['additional_notes'];
 $tonsils = st($myarray['tonsils']);
 $tonsils_grade = st($myarray['tonsils_grade']);
 
@@ -184,6 +187,9 @@ $tonsils_grade = st($myarray['tonsils_grade']);
                                 </tr>
                             </table>
                         </span>
+			<span>
+				Additional Notes<br />
+				<textarea name="additional_notes" style="width:350px; height:187px"><?= $additional_notes; ?></textarea></span>
                    	</div>
                     <br />
                     

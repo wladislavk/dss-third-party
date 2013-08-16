@@ -63,7 +63,7 @@ $letterid = $master_r['letterid'];
 //$letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type FROM dental_letters l
+$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
 	 where l.letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
@@ -71,6 +71,7 @@ $row = mysql_fetch_assoc($letter_result);
   $templateid = $row['templateid'];
   $patientid = $row['patientid'];
   $topatient = $row['topatient'];
+  $cc_topatient = $row['cc_topatient'];
   $md_list = $row['md_list'];
   $md_referral_list = $row['md_referral_list'];
   $mds = explode(",", $md_list);
@@ -84,21 +85,26 @@ $row = mysql_fetch_assoc($letter_result);
   $template_type = $row['template_type'];
 
 // Pending and Sent Contacts
-$othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' OR parentid = '".$letterid."' ORDER BY letterid ASC;";
+$othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
 $othermd_result = mysql_query($othermd_query);
 $md_array = array();
 $md_referral_array = array();
 while ($row = mysql_fetch_assoc($othermd_result)) {
-	if ($row['md_list'] != null) {
+	if ($row['cc_md_list'] != null) {
+                $md_array = array_merge($md_array, explode(",", $row['cc_md_list']));
+        }elseif ($row['md_list'] != null) {
 		$md_array = array_merge($md_array, explode(",", $row['md_list']));
 	} 
-	if ($row['md_referral_list'] != null) {
+	if ($row['cc_md_referral_list'] != null) {
+                $md_referral_array = array_merge($md_referral_array, explode(",", $row['cc_md_referral_list']));
+        }elseif ($row['md_referral_list'] != null) {
 		$md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
 	}
 }
 $full_md_list = implode(",", $md_array);
 $full_md_referral_list = implode(",", $md_referral_array);
 $contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
+$md_contacts = array();
 foreach ($contacts['mds'] as $contact) {
   $md_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
@@ -249,12 +255,13 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header, fax FROM dental_users WHERE userid = '".$docid."';";
+$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header, fax, indent_address FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
 $use_letter_header = $franchisee_info['use_letter_header'];
+$indent_address = $franchisee_info['indent_address'];
 
 
 
@@ -613,7 +620,7 @@ $noncomp['description'] = $noncomp['description'];
   $template = $letter_r['body'];
   $orig_template = $letter_r['body'];
   if($use_letter_header == "1"){
-    $template = '<p>
+    $header = '<p>
 %franchisee_fullname%<br />
 %franchisee_practice%<br />
 %franchisee_addr%
@@ -621,6 +628,9 @@ $noncomp['description'] = $noncomp['description'];
 <p>&nbsp;</p>
 <p>%todays_date%</p>
 <p>&nbsp;</p>
+';
+if($indent_address == "1"){
+$header .= '
 <table border="0">
 <tr>
 <td width="70"></td>
@@ -632,8 +642,17 @@ $noncomp['description'] = $noncomp['description'];
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>' . $template;
-  $orig_template = '<p>
+<p>&nbsp;</p>';
+}else{
+$header .= '
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+<p>&nbsp;</p>';
+}
+$template = $header . $template;
+  $orig_header = '<p>
 %franchisee_fullname%<br />
 %franchisee_practice%<br />
 %franchisee_addr%
@@ -641,6 +660,9 @@ $noncomp['description'] = $noncomp['description'];
 <p>&nbsp;</p>
 <p>%todays_date%</p>
 <p>&nbsp;</p>
+';
+if($indent_address == "1"){
+$orig_header .= '
 <table border="0">
 <tr>
 <td width="70"></td>
@@ -652,10 +674,22 @@ $noncomp['description'] = $noncomp['description'];
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>' .$orig_template;
+<p>&nbsp;</p>';
+}else{
+$orig_header .= '
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+<p>&nbsp;</p>';
+}
+$orig_template = $orig_header .$orig_template;
   }else{
-    $template = '<p>%todays_date%</p>
+    $header = '<p>%todays_date%</p>
 <p>&nbsp;</p>
+';
+if($indent_address == "1"){
+$header .= '
 <table border="0">
 <tr>
 <td width="70"></td>
@@ -667,9 +701,21 @@ $noncomp['description'] = $noncomp['description'];
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>' . $template;
-  $orig_template = '<p>%todays_date%</p>
+<p>&nbsp;</p>';
+}else{
+$header .= '
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+<p>&nbsp;</p>'; 
+}
+$template = $header . $template;
+  $orig_header = '<p>%todays_date%</p>
 <p>&nbsp;</p>
+';
+if($indent_address == "1"){
+$orig_header .= '
 <table border="0">
 <tr>
 <td width="70"></td>
@@ -681,7 +727,17 @@ $noncomp['description'] = $noncomp['description'];
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>' .$orig_template;
+<p>&nbsp;</p>';
+}else{
+$orig_header .= '
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+<p>&nbsp;</p>';
+}
+
+$orig_template = $orig_header .$orig_template;
   }
 /*
 switch ($templateid) {
@@ -948,11 +1004,17 @@ if ($_POST != array()) {
                 $search[] = "%doctor_addr%";
                 $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
 		$search[] = "%patient_fullname%";
-		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+		$replace[] = "<strong>" . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+                $search[] = "%patient_titlefullname%";
+                $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%patient_lastname%";
 		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
 		$search[] = "%ccpatient_fullname%";
-		$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+		if($topatient && $contact['type']!='patient'){
+		  $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+		}else{
+		  $replace[] = "";
+		}
 		$search[] = "%patient_dob%";
 		$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
 		$search[] = "%patient_firstname%";
@@ -1395,11 +1457,17 @@ foreach ($letter_contacts as $key => $contact) {
         $search[] = "%doctor_addr%";
         $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
 	$search[] = "%patient_fullname%";
-	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+	$replace[] = "<strong>" . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+        $search[] = "%patient_titlefullname%";
+        $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%patient_lastname%";
 	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['lastname'] . "</strong>";
 	$search[] = "%ccpatient_fullname%";
-	$replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+                if($topatient && $contact['type']!='patient'){
+                  $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+                }else{
+                  $replace[] = "";
+                }
 	$search[] = "%patient_dob%";
 	$replace[] = "<strong>" . $patient_info['dob'] . "</strong>";
 	$search[] = "%patient_firstname%";
@@ -1605,7 +1673,7 @@ foreach ($letter_contacts as $key => $contact) {
 		}
 	}
 	$other_mds = rtrim($other_mds, ",<br /> ");
-	if($topatient && $contact['type']!='patient'){
+	if($cc_topatient && $contact['type']!='patient'){
 		$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
 	}
 	$replace[] = "<strong>" . $other_mds . "</strong>";

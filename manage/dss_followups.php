@@ -4,6 +4,8 @@ require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+<script src="admin/popup/popup.js" type="text/javascript"></script>
+<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <?php
 if(isset($_POST['submitaddfu'])){
   $patientid = $_POST['patientid'];
@@ -602,6 +604,10 @@ function gotoQuestionnaire(){
 }
 </script>
   
-				
+			<div id="popupContact" style="width:750px;">
+    <a id="popupContactClose"><button>X</button></a>
+    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+</div>
+<div id="backgroundPopup"></div>	
 				</body>
 				</html>

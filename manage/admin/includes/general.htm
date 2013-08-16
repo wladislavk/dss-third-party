@@ -256,7 +256,7 @@ class MDReferralFilter {
 }
 
 // Function to Create Letters
-function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null) {
+function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_patient = null, $cc_md_list = null, $cc_md_referral_list = null) {
 
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
@@ -316,14 +316,38 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   if (isset($topatient)) {
     $columns .= ", topatient";
     $values .= ", '".mysql_real_escape_string($topatient)."'";
+    if(!isset($cc_topatient)){
+      $columns .= ", cc_topatient";
+      $values .= ", '".mysql_real_escape_string($topatient)."'";
+    }
+  }
+  if(isset($cc_topatient)){
+    $columns .= ", cc_topatient";
+    $values .= ", '".mysql_real_escape_string($cc_topatient)."'";
   }
   if (isset($md_list)) {
     $columns .= ", md_list";
     $values .= ", '".mysql_real_escape_string($md_list)."'";
+    if(!isset($cc_md_list)){
+      $columns .= ", cc_md_list";
+      $values .= ", '".mysql_real_escape_string($md_list)."'";
+    }
+  }
+  if(isset($cc_md_list)){
+    $columns .= ", cc_md_list";
+    $values .= ", '".mysql_real_escape_string($cc_md_list)."'";
   }
   if (isset($md_referral_list)) {
     $columns .= ", md_referral_list";
     $values .= ", '".mysql_real_escape_string($md_referral_list)."'";
+    if(!isset($cc_md_referral_list)){
+      $columns .= ", cc_md_referral_list";
+      $values .= ", '".mysql_real_escape_string($md_referral_list)."'";
+    }
+  }
+  if(isset($cc_md_referral_list)){
+    $columns .= ", cc_md_referral_list";
+    $values .= ", '".mysql_real_escape_string($cc_md_referral_list)."'";
   }
   if (isset($template)) {
     $columns .= ",template ";
@@ -378,6 +402,8 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
   }
   if (isset($md_list)) {
     $columns .= ", md_list";
+    $values .= ", '".mysql_real_escape_string($md_list)."'";
+    $columns .= ", cc_md_list";
     $values .= ", '".mysql_real_escape_string($md_list)."'";
   }
   if (isset($status)) {
@@ -434,7 +460,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
     return $letterid;
     //return mysql_error();
   } else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
 			$status = '0';
@@ -466,7 +492,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 					}
 				}
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status); 	
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']); 	
 		}
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
                                 $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";
@@ -535,7 +561,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		  return "ERROR";
 		}
   } else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_listi, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
                 $select_result = mysql_query($select_letter);
                 while ($row = mysql_fetch_assoc($select_result)) {
                         $status = '1';
@@ -565,7 +591,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
                                         }
                                 }
                         }
-                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $template, $send_method, $status);
+                        $letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, null, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']);
                 }
                 if (is_numeric($letter)) {      // new letter was created successfully Update the parent letter by removing the recipient
                         if ($type == 'patient') {
@@ -1305,7 +1331,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	$pdf->setLanguageArray($l);
 
 	// set font
-	$pdf->SetFont('dejavusans', '', 10);
+	//$pdf->SetFont('dejavusans', '', 10);
 
 	if($cover != ''){
 		$cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
@@ -1398,7 +1424,7 @@ $rval = '';
 		$parent_result = mysql_query($parent_query);
 		return $letter_result;
   }else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".$letterid."';";
 		$select_result = mysql_query($select_letter);
 		while ($row = mysql_fetch_assoc($select_result)) {
 			$deleted = '1';
@@ -1411,22 +1437,30 @@ $rval = '';
 				$key = array_search($recipientid, $mds);
 				unset($mds[$key]);
 				$new_mds = implode(",", $mds);
+				$cc_mds = explode(",", $row['cc_md_list']);
+				$cc_key = array_search($recipientid, $cc_mds);
+                                unset($cc_mds[$cc_key]);
+                                $new_cc_mds = implode(",", $cc_mds);
 			} elseif ($type == 'md_referral') {
 				$md_referral_list = $recipientid;
 				$md_referrals = explode(",", $row['md_referral_list']);
 				$key = array_search($recipientid, $md_referrals);
 				unset($md_referrals[$key]);
 				$new_md_referrals = implode(",", $md_referrals);
+                                $cc_md_referrals = explode(",", $row['cc_md_referral_list']);
+                                $cc_key = array_search($recipientid, $cc_md_referrals);
+                                unset($cc_md_referrals[$cc_key]);
+                                $new_cc_md_referrals = implode(",", $cc_md_referrals);
 			}
 		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $row['send_method'], '', $deleted); 	
 		}
  		if (is_numeric($letter)) {
 			if ($type == 'patient') {
-				$update_letters = "UPDATE dental_letters SET topatient='".$removepatient."' WHERE letterid='".$letterid."';";
+				$update_letters = "UPDATE dental_letters SET topatient='".$removepatient."', cc_topatient='".$removepatient."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'md') {
-				$update_letters = "UPDATE dental_letters SET md_list='".$new_mds."' WHERE letterid='".$letterid."';";
+				$update_letters = "UPDATE dental_letters SET md_list='".$new_mds."', cc_md_list='".$new_cc_mds."' WHERE letterid='".$letterid."';";
 			} elseif ($type == 'md_referral') {
-				$update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."' WHERE letterid='".$letterid."';";
+				$update_letters = "UPDATE dental_letters SET md_referral_list='".$new_md_referrals."', cc_md_referral_list='".$new_cc_md_referrals."' WHERE letterid='".$letterid."';";
 			}
 			$update_result = mysql_query($update_letters);
 

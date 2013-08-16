@@ -310,6 +310,7 @@ $crossbite = st($myarray['crossbite']);
 			    <label class="exam_label">Wear Facets Tooth #</label> 
                             <input type="text" name="wear_facets" value="<?=$where_facets?>" class="field text addr tbox" readonly="readonly" />
                             <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Change</button>
+			    <button onclick="Javascript: loadPopupRefer('select_general.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Generalized</button>
                         </span>
                     </div>
                     <br />

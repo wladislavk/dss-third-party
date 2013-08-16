@@ -24,6 +24,25 @@ $row = array();
         }
 
 
+$sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss
+                        JOIN dental_patients p on ss.patiendid=p.patientid
+                WHERE
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$claim['patientid']."';";
+
+  $result = mysql_query($sleepstudies);
+  $d = mysql_fetch_assoc($result);
+  $referring_provider = $d['diagnosising_doc'];
+  $diagnosising_npi = $d['diagnosising_npi'];
+if($insurancetype!=1){
+  $referring_provider = '';
+  $diagnosising_npi = '';
+
+}
+
+
+
 $row[] = $insured_insurance_plan;
 $row[] = ''; //Insurance Payer ID
 
@@ -98,9 +117,9 @@ if($pat['p_m_relation'] == "Self"){
   $row[] = "";
   $row[] = "";
 }else{
-  $row[] = $claim['insured_lastname'];
-  $row[] = $claim['insured_firstname'];
-  $row[] = $claim['insured_middle'];
+  $row[] = $pat['p_m_partylname'];
+  $row[] = $pat['p_m_partyfname'];
+  $row[] = $pat['p_m_partymname'];
 }
 
 
@@ -188,11 +207,11 @@ if(in_array("Employed", $patient_status_array)){
   $row[] = "";
 }
 
-$row[] = $claim['other_insured_lastname'];
-$row[] = $claim['other_insured_firstname'];
-$row[] = $claim['other_insured_middle'];
-$row[] = $claim['other_insured_policy_group_feca'];
-$row[] = $claim['other_insured_dob'];
+$row[] = $pat['s_m_partylname'];
+$row[] = $pat['s_m_partyfname'];
+$row[] = $pat['s_m_partymname'];
+$row[] = $pat['s_m_ins_grp'];
+$row[] = $pat['ins2_dob'];
 if($claim['other_insured_sex']=="M"){
   $row[] = "X";
 }else{
@@ -238,7 +257,7 @@ if($claim['other_accident'] == "NO"){
 }
 $row[] = $claim['reserved_local_use']; 
 
-$row[] = $claim['insured_policy_group_feca'];
+$row[] = $pat['p_m_ins_grp'];
 $row[] = $claim['insured_dob'];
 if($claim['insured_sex']=="M"){
   $row[] = "X";
@@ -272,10 +291,10 @@ $row[] = $claim['patient_signed_date']; //insured signed date
 $row[] = $claim['date_current'];
 $row[] = $claim['date_same_illness'];
 $row[] = $claim['unable_date_from'];
-$row[] = $claim['referring_provider'];
+$row[] = $referring_provider;
 $row[] = $claim['field_17a_dd'];
 $row[] = $claim['field_17a'];
-$row[] = $claim['field_17b'];
+$row[] = $diagnosising_npi;
 $row[] = ""; //super npi
 $row[] = $claim['hospitalization_date_from'];
 $row[] = $claim['hospitalization_date_to'];
@@ -427,33 +446,113 @@ if($claim['accept_assignment'] == "No"){
   $row[] = "";
 }
 
-$row[] = $claim['total_charge'];
-$row[] = $claim['amount_paid'];
-$row[] = $claim['balance_due'];
+  $sql = "SELECT "
+       . "  SUM(ledger.amount) as 'total_charge' "
+       . "FROM "
+       . "  dental_ledger ledger "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "WHERE "
+       . "  ledger.status = " . DSS_TRXN_PENDING . " "
+       . "  AND ledger.patientid = " . $claim['patientid'] . " "
+       . "  AND ledger.docid = " . $claim['docid'] . " "
+       . "  AND trxn_code.docid = " . $claim['docid'] . " "
+       . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
+       . "ORDER BY "
+       . "  ledger.service_date ASC";
+
+  $charge_my = mysql_query($sql);
+  if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
+    $charge_row = mysql_fetch_array($charge_my);
+    $total_charge = $charge_row['total_charge'];
+  }
+
+
+  $sql = "SELECT "
+       . "  SUM(ledger.paid_amount) as 'amount_paid' "
+       . "FROM "
+       . "  dental_ledger ledger "
+       . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
+       . "WHERE "
+       . "  ledger.status = " . DSS_TRXN_PENDING . " "
+       . "  AND ledger.patientid = " . $claim['patientid'] . " "
+       . "  AND ledger.docid = " . $claim['docid'] . " "
+       . "  AND trxn_code.docid = " . $claim['docid'] . " "
+       . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
+       . "ORDER BY "
+       . "  ledger.service_date ASC";
+
+  $paid_my = mysql_query($sql);
+  if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
+    $paid_row = mysql_fetch_array($paid_my);
+    $amount_paid = $paid_row['amount_paid'];
+  }
+
+  // re-calculate balance due
+  $balance_due = $total_charge - $amount_paid;
+
+  // format calculations
+  $total_charge = number_format($total_charge, 2);
+  $amount_paid = number_format($amount_paid, 2);
+  $balance_due = number_format($balance_due, 2, '.','');
+
+
+$row[] = $total_charge;
+$row[] = $amount_paid;
+$row[] = $balance_due;
 $row[] = "X"; //Physician Signature
-$row[] = $claim['physician_signed_date'];
+$row[] = date('m/d/Y');
 
 $row[] = $user['last_name'];//Physician name
 $row[] = $user['first_name'];
 $row[] = "";
 
-$row[] = $claim['service_facility_info_name'];
-$row[] = $claim['service_facility_info_address'];
+
+        $claim_producer = $claim['producer'];
+
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+
+
+
+$row[] = $practice;
+$row[] = $address;
 $row[] = "";
 $row[] = "";
-$row[] = $claim['service_facility_info_city'];
-$row[] = $claim['service_facility_info_a'];
+$row[] = "";
+$row[] = $city.", ".$state." ".$zip;
+$row[] = (($insurancetype == '1')?$medicare_npi:$npi);
 $row[] = ""; //facility_id
-$row[] = $claim[''];
-$row[] = $claim['billing_provider_name'];
-$row[] = $claim['billing_provider_address'];
-$row[] = $claim[''];
-$row[] = $claim[''];
-$row[] = $claim[''];
-$row[] = $claim['billing_provider_city'];
-$row[] = $claim['billing_provider_phone_code']. " ".$claim['billing_provider_phone'];
-$row[] = $claim['billing_provider_a'];
-$row[] = $claim['insured_policy_group_feca'];
+$row[] = "";
+$row[] = $practice;
+$row[] = $address;
+$row[] = "";
+$row[] = "";
+$row[] = "";
+$row[] = $city.", ".$state." ".$zip;
+$row[] = $phone;
+$row[] = (($insurancetype == '1')?$medicare_npi:$npi);
+$row[] = $pat['p_m_ins_grp'];
 
 $data[] = $row;
 }

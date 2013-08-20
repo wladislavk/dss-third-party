@@ -522,9 +522,12 @@ $title = "test";
         $filename = '/manage/q_file/percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
+if(!isset($redirect) || $redirect){
 ?>
 
 <script type="text/javascript">
   window.open("<?= $filename; ?>");
   window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
 </script>
+<?php
+} ?>

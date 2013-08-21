@@ -129,7 +129,7 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        (ss.filename!='' AND ss.filename IS NOT NULL) AND ss.patiendid = '".$_GET['pid']."';";
 
   $result = mysql_query($sleepstudies);
   $numsleepstudy = mysql_num_rows($result);

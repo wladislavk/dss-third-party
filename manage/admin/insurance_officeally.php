@@ -375,8 +375,8 @@ $query = mysql_query($sql);
 $c=0;
 $claim_lines = array();
 while ($ledger = mysql_fetch_assoc($query)) {
-if($array['diagnosispointer']!=''){
-  if(isset($diagnosis_pointer[$array['diagnosispointer']])){
+if($ledger['diagnosispointer']!=''){
+  if(isset($diagnosis_pointer[$ledger['diagnosispointer']])){
     $diagnosis = $diagnosis_pointer[$array['diagnosispointer']];
   }
 }
@@ -390,7 +390,7 @@ $row[] = $ledger['modcode'];
 $row[] = $ledger['modcode2'];
 $row[] = $ledger['modcode3'];
 $row[] = $ledger['modcode4'];
-$row[] = $diagnosis;
+$row[] = $ledger['diagnosispointer'];
 $row[] = $ledger['amount'];
 $row[] = $ledger['daysorunits'];
 $row[] = $ledger['epsdt'];
@@ -422,13 +422,46 @@ $c++;
 }
 
 
-$row[] = $claim['federal_tax_id_number'];
-if($claim['ssn']=="1"){
+        $claim_producer = $claim['producer'];
+
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+			$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+			$ssn = $userinfo['ssn'];
+			$ein = $userinfo['ein'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+			if($tax_id_or_ssn == ""){ $tax_id_or_ssn = $docinfo['tax_id_or_ssn']; }
+			if($ssn == "" && $ein == ""){ $ssn = $docinfo['ssn']; }
+                        if($ssn == "" && $ein == ""){ $ein = $docinfo['ein']; }
+
+
+$row[] = $tax_id_or_ssn;
+if($ssn=="1"){
   $row[] = "X";
 }else{
   $row[] = "";
 }
-if($claim['ein']=="1"){
+if($ein=="1"){
   $row[] = "X";
 }else{
   $row[] = "";
@@ -506,32 +539,6 @@ $row[] = $user['last_name'];//Physician name
 $row[] = $user['first_name'];
 $row[] = "";
 
-
-        $claim_producer = $claim['producer'];
-
-                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysql_query($getuserinfo);
-                      if($userinfo = mysql_fetch_array($userquery)){
-                        $phone = $userinfo['phone'];
-                        $practice = $userinfo['practice'];
-                        $address = $userinfo['address'];
-                        $city = $userinfo['city'];
-                        $state = $userinfo['state'];
-                        $zip = $userinfo['zip'];
-                        $npi = $userinfo['npi'];
-                        $medicare_npi = $userinfo['medicare_npi'];
-                      }
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
-                        if($phone == ""){ $phone = $docinfo['phone']; }
-                        if($practice == ""){ $practice = $docinfo['practice']; }
-                        if($address == ""){ $address = $docinfo['address']; }
-                        if($city == ""){ $city = $docinfo['city']; }
-                        if($state == ""){ $state = $docinfo['state']; }
-                        if($zip == ""){ $zip = $docinfo['zip']; }
-                        if($npi == ""){ $npi = $docinfo['npi']; }
-                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
 
 
 

@@ -5,7 +5,9 @@ require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 
 $data = array();
-$claim_sql = "SELECT * FROM dental_insurance WHERE status='".DSS_CLAIM_PENDING."'";
+$claim_sql = "SELECT i.* FROM dental_insurance i 
+	JOIN dental_patients p on p.patientid=i.patientid
+	WHERE i.status='".DSS_CLAIM_PENDING."' and p.p_m_dss_file=1";
 $claim_q = mysql_query($claim_sql);
 while($claim = mysql_fetch_assoc($claim_q)){
 $row = array();
@@ -381,6 +383,8 @@ if($ledger['diagnosispointer']!=''){
   }
 }
 
+$diagnosispointer = ($ledger['diagnosispointer'])?$ledger['diagnosispointer']:'1';
+
 $row[] = $ledger['service_date'];
 $row[] = $ledger['service_date'];
 $row[] = preg_replace("/[^0-9]/","",$ledger['place']);
@@ -390,7 +394,7 @@ $row[] = $ledger['modcode'];
 $row[] = $ledger['modcode2'];
 $row[] = $ledger['modcode3'];
 $row[] = $ledger['modcode4'];
-$row[] = $ledger['diagnosispointer'];
+$row[] = $diagnosispointer;
 $row[] = $ledger['amount'];
 $row[] = $ledger['daysorunits'];
 $row[] = $ledger['epsdt'];

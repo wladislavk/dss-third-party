@@ -110,7 +110,11 @@ updateNumber2('s_m_ins_phone');
 	  die();
         }
         if ($num_rows == 0 && $contact != "") {
-  	  $recipients[] = $contact;
+	  $c_sql = "select * from dental_contact where contactid='".mysql_real_escape_string($contact)."' and status=1";
+	  $c_q = mysql_query($c_sql);
+	  if(mysql_num_rows($c_q)>0){
+  	    $recipients[] = $contact;
+	  }
         }
       }
     } 

@@ -5,7 +5,7 @@ if($_REQUEST["delid"] != "")
 {
 
 	delete_contact_letters($_REQUEST["delid"]);
-
+	delete_contact_from_patients($_REQUEST["delid"]);
 	$del_sql = "delete from dental_contact where contactid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	

@@ -49,7 +49,7 @@ $my=mysql_query($sql) or die(mysql_error());
                         $user_myarray = mysql_fetch_array($user_my);
                 ?>
                         <tr id="note_<?= $myarray['notesid'];?>" class="<?=$tr_class;?>" <? if(st($myarray["signed_id"]) == '') {?> style="background-color:#FF9999" <? }?>>
-                                <td valign="top">
+                                <td valign="top" style="border:solid 1px #000;">
                                         <table width="100%" cellpadding="2" cellspacing="1" border="0">
                                                 <tr>
                                                         <td valign="top" width="35%">
@@ -101,6 +101,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                         </table>
                                 </td>
                         </tr>
+			<tr><td style="line-height:2px;">&nbsp;</td></tr>
         <?      }
         }?>
 </table>

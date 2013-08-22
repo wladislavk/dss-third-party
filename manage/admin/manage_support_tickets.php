@@ -6,7 +6,7 @@ if(isset($_GET['rid'])){
   mysql_query($u_sql);
 }
 $sql = "select t.*,
-	u.name as user,
+	CONCAT(u.first_name,' ',u.last_name) as user,
 	c.name as company,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,

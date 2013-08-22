@@ -1674,7 +1674,7 @@ foreach ($letter_contacts as $key => $contact) {
 	}
 	$other_mds = rtrim($other_mds, ",<br /> ");
 	if($cc_topatient && $contact['type']!='patient'){
-		$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
+		//$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
 	}
 	$replace[] = "<strong>" . $other_mds . "</strong>";
 	$search[] = "%nonpcp_mds%";

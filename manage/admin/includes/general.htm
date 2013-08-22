@@ -1498,6 +1498,18 @@ function delete_contact_letters($contact){
 
 }
 
+/**
+ * Deletes contact from patients
+ *
+ */
+function delete_contact_from_patients($contact){
+  $docs = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother', 'docmdother2', 'docmdother3');
+  foreach($docs as $doc){
+    $s = "UPDATE dental_patients SET ".$doc."='' WHERE ".$doc."=".mysql_real_escape_string($contact);
+    mysql_query($s);
+  }
+}
+
 
 /**
  * Returns a mysql resultset resource for dental_users table on success,

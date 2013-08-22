@@ -41,6 +41,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 = $name.'_'.date('dmy_Hi');
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
@@ -125,6 +126,7 @@ if($_POST["imagesub"] == 1)
                         $banner1 = $name.'_'.date('dmy_Hi');
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
 		// Get new sizes
@@ -164,6 +166,7 @@ if($_POST["imagesub"] == 1)
                         $banner1 = $name.'_'.date('dmy_Hi');
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
 		// Output
@@ -198,6 +201,7 @@ if($_POST["imagesub"] == 1)
 			$banner1 = $name.'_'.date('dmy_Hi');
 			$banner1 = str_replace(" ","_",$banner1);
 			$banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
 			$banner1 .= ".".$extension;
 			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
 			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1, $profile);

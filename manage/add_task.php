@@ -121,7 +121,7 @@ $task = mysql_fetch_assoc($t_q);
 
 					$r_q = mysql_query($r_sql);
 					while($responsible = mysql_fetch_assoc($r_q)){ ?>
-						<option value="<?= $responsible['userid']; ?>" <?= ($responsible['userid']==$responsibleid)?'selected="selected"':'';?>><?= $responsible['name']; ?></option>
+						<option value="<?= $responsible['userid']; ?>" <?= ($responsible['userid']==$responsibleid)?'selected="selected"':'';?>><?= $responsible['first_name']." ".$responsible['last_name']; ?></option>
 					<?php } ?>
 				</select>
             </td>

@@ -92,7 +92,7 @@ $num_pending_claims = mysql_num_rows($claim_res);
 
 
 // Count Claims
-$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status='".DSS_CLAIM_PENDING."' OR status='".DSS_CLAIM_SEC_PENDING."')";
+$claim_query = "SELECT * FROM dental_insurance WHERE docid = '".$docid."' AND (status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE."))";
 $claim_res = mysql_query($claim_query);
 $num_pending_claims = mysql_num_rows($claim_res);
 
@@ -101,7 +101,7 @@ $num_pending_claims = mysql_num_rows($claim_res);
                          JOIN dental_users user ON user.userid = ledger.docid
                          JOIN dental_patients p ON p.patientid = ledger.patientid
                   WHERE
-                         ledger.status = " . DSS_TRXN_PENDING ."
+                         ledger.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.")
                          AND ledger.docid = " . $_SESSION['docid'] . "
                          AND trxn_code.docid = " . $_SESSION['docid'] . "
 			 AND p.p_m_dss_file = '2'

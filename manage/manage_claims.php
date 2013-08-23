@@ -30,7 +30,7 @@ if(isset($_REQUEST["delid"]))
 
 
 $pend_sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
-$pend_sql .= " AND (i.status =  ".DSS_CLAIM_PENDING." OR i.status = ".DSS_CLAIM_SEC_PENDING.")" ;
+$pend_sql .= " AND (i.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE."))" ;
 if(isset($_GET['sort2'])){
   if($_GET['sort2']=='patient'){
     $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
@@ -46,7 +46,7 @@ $pend_my=mysql_query($pend_sql) or die(mysql_error());
 	
 $sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
 if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
-  $sql .= " AND i.status !=  ".DSS_CLAIM_PENDING." AND i.status != ".DSS_CLAIM_SEC_PENDING;
+  $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.")";
 }
 if(isset($_GET['unpaid'])){
   $sql .= " AND i.status NOT IN  (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.") AND i.adddate < DATE_SUB(NOW(), INTERVAL ".mysql_real_escape_string($_GET['unpaid'])." day) ";

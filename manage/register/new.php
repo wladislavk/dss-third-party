@@ -87,7 +87,7 @@ include 'includes/header.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
                                                                                                         <h3 class="sepH_a">Payment Information</h3>
-                                                                                                        <p class="s_color">Please enter the credit card billing information to be associated with this account. You must supply a valid card in order to create your account.</p>
+                                                                                                        <p class="s_color">Please enter the credit card billing information to be associated with this account. You must supply a valid card in order to create your account. Your card will not be billed at this time.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>

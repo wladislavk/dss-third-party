@@ -43,9 +43,11 @@ if($insurancetype!=1){
 
 }
 
+$ins_sql = "SELECT * FROM dental_contact where contactid='".$pat['p_m_ins_co']."'";
+$ins_q = mysql_query($ins_sql);
+$ins_co = mysql_fetch_assoc($ins_q);
 
-
-$row[] = $insured_insurance_plan;
+$row[] = $ins_co['company'];
 $row[] = ''; //Insurance Payer ID
 
 	$ins_sql = "SELECT * FROM dental_contact WHERE contactid='".mysql_real_escape_string($pat['p_m_ins_co'])."'";
@@ -425,12 +427,28 @@ $row[] = "";
 $c++;
 }
 
+			//reset values
+			$producer_last_name = "";
+			$producer_first_name = "";
+                        $phone = "";
+                        $practice = "";
+                        $address = "";
+                        $city = "";
+                        $state = "";
+                        $zip = "";
+                        $npi = "";
+                        $medicare_npi = "";
+                        $tax_id_or_ssn = "";
+                        $ssn = "";
+                        $ein = "";
 
         $claim_producer = $claim['producer'];
 
                       $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
                       $userquery = mysql_query($getuserinfo);
                       if($userinfo = mysql_fetch_array($userquery)){
+                        $producer_last_name = $userinfo['last_name'];
+                        $producer_first_name = $userinfo['first_name'];
                         $phone = $userinfo['phone'];
                         $practice = $userinfo['practice'];
                         $address = $userinfo['address'];
@@ -446,6 +464,8 @@ $c++;
                       $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
                       $docquery = mysql_query($getdocinfo);
                       $docinfo = mysql_fetch_array($docquery);
+			if($producer_last_name == ""){ $producer_last_name = $docinfo['last_name']; }
+                        if($producer_first_name == ""){ $producer_first_name = $docinfo['first_name']; }
                         if($phone == ""){ $phone = $docinfo['phone']; }
                         if($practice == ""){ $practice = $docinfo['practice']; }
                         if($address == ""){ $address = $docinfo['address']; }
@@ -539,8 +559,8 @@ $row[] = $balance_due;
 $row[] = "X"; //Physician Signature
 $row[] = date('m/d/Y');
 
-$row[] = $user['last_name'];//Physician name
-$row[] = $user['first_name'];
+$row[] = $producer_last_name;//Physician name
+$row[] = $producer_first_name;
 $row[] = "";
 
 

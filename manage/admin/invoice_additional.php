@@ -179,7 +179,14 @@ if(isset($_POST['submit'])){
         if(isset($_GET['bill']) && $_GET['bill']=="1"){
                 if($user['cc_id']!=''){
                   bill_card($user['cc_id'] ,$total_amount, $user['userid'], $invoiceid);
+                }else{
+                  ?>
+                    <script type="text/javascript">
+                      alert('<?= $user['first_name']." ".$user['last_name']; ?> does not have a credit card on record.');
+                    </script>
+                  <?php
                 }
+
         }
 
 

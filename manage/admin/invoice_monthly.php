@@ -2,7 +2,7 @@
   require_once 'includes/config.php';
   require_once '../includes/constants.inc';
   require_once '../3rdParty/stripe/lib/Stripe.php';
-  
+ $no_card = array(); 
   $sql = "SELECT du.*, c.name AS company_name, c.free_fax,
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
@@ -62,6 +62,8 @@
 	if(isset($_GET['bill']) && $_GET['bill']=="1"){
 		if($r['cc_id']!=''){
 		  bill_card($r['cc_id'] ,$doc['monthly_fee'], $r['userid'], $invoiceid);	
+		}else{
+ 		  array_push($no_card, $r['first_name']." ".$r['last_name']);
 		}
 	}
 
@@ -99,7 +101,20 @@ $redirect = false;
 include 'percase_invoice_pdf.php';
   }
 $msg = mysql_num_rows($q) . " invoices created.";
-?>
+	if(count($no_card)==1){
+                  ?>
+                    <script type="text/javascript">
+                      alert('<?= implode($no_card); ?> does not have a credit card on record.');
+                    </script>
+                  <?php
+	}elseif(count($no_card)>0){
+                  ?>
+                    <script type="text/javascript">
+                      alert('<?= implode($no_card, ', '); ?> do not have credit cards on record.');
+                    </script>
+                  <?php
+	}
+		?>
 
 
 <script type="text/javascript">

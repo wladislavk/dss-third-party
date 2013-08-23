@@ -104,9 +104,9 @@ $num_users=mysql_num_rows($my);
   <a class="addButton" href="invoice_monthly.php?bill=1">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
 </div>
 <div style="float:right;">
-  <a class="addButton">&nbsp;Invoice Additional&nbsp;</a>
+  <a class="addButton" href="invoice_additional.php?bill=0">&nbsp;Invoice Additional&nbsp;</a>
   &nbsp;
-  <a class="addButton">&nbsp;Invoice And Bill Additional&nbsp; </a>
+  <a class="addButton" href="invoice_additional.php?bill=1">&nbsp;Invoice And Bill Additional&nbsp; </a>
   &nbsp;
 </div>
 <div align="center" class="red" style="clear:both;">

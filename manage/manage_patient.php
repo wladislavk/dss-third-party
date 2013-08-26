@@ -141,7 +141,7 @@ background:#999999;
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sh=".$_GET['sh']);
 			?>
 		</TD>        
 	</TR>

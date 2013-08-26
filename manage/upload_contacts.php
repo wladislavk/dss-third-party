@@ -164,6 +164,9 @@ if($_FILES['csv']['error'] == 0){
                                         case 'sleep disorder specialist':
                                                 $c = "Sleep Physician";
                                                 break;
+					case 'pulmonologist':
+						$c = "Pulmonologist";
+						break;
 					default:
 						$c = "Other Physician";
 						break;

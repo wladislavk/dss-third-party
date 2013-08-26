@@ -98,11 +98,18 @@ $num_users=mysql_num_rows($my);
 	Invoicing	
 </span>
 <br />
-<div style="float:left; width:48%;">
+<div style="float:left; width:43%;">
   &nbsp;
   <a class="addButton" href="invoice_monthly.php?bill=0">&nbsp;Invoice Monthly Only&nbsp;</a>
   <a class="addButton" href="invoice_monthly.php?bill=1">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
 </div>
+<div style="float:left;">
+  <a class="addButton" href="invoice_additional.php?show=all&bill=0">&nbsp;Invoice All&nbsp;</a>
+  &nbsp;
+  <a class="addButton" href="invoice_additional.php?show=all&bill=1">&nbsp;Invoice And Bill All&nbsp; </a>
+  &nbsp;
+</div>
+
 <div style="float:right;">
   <a class="addButton" href="invoice_additional.php?bill=0">&nbsp;Invoice Additional&nbsp;</a>
   &nbsp;

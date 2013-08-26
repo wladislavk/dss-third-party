@@ -10,7 +10,9 @@ else
 	
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT i.*, du.username, du.first_name, du.last_name, c.name as company_name, du.cc_id
+  $sql = "SELECT i.*, du.username, du.first_name, du.last_name, c.name as company_name, du.cc_id,
+		(SELECT COUNT(*) FROM dental_charge WHERE invoice_id = i.id) bill_attempts,
+		(SELECT charge_date from dental_charge WHERE invoice_id = i.id order by charge_date DESC limit 1) bill_date
                 FROM dental_percase_invoice i
 		JOIN dental_users du ON du.userid = i.docid
                 JOIN dental_user_company uc ON uc.userid = du.userid
@@ -84,17 +86,6 @@ $num_users=mysql_num_rows($my);
 	Invoicing	
 </span>
 <br />
-<div style="float:left; width:48%;">
-  &nbsp;
-  <a class="addButton" href="invoice_monthly.php?bill=0">&nbsp;Invoice Monthly Only&nbsp;</a>
-  <a class="addButton" href="invoice_monthly.php?bill=1">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
-</div>
-<div style="float:right;">
-  <a class="addButton" href="invoice_additional.php?bill=0">&nbsp;Invoice Additional&nbsp;</a>
-  &nbsp;
-  <a class="addButton" href="invoice_additional.php?bill=1">&nbsp;Invoice And Bill Additional&nbsp; </a>
-  &nbsp;
-</div>
 <div align="center" class="red" style="clear:both;">
 	<b><? echo $_GET['msg'];?></b>
 </div>
@@ -126,6 +117,15 @@ $num_users=mysql_num_rows($my);
                 <td class="col_head <?= ($_REQUEST['sort'] == 'invoice')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
                         <a href="manage_payment_errors.php?sort=invoice&sort_dir=<?php echo ($_REQUEST['sort']=='invoice'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Amount</a>
                 </td>
+		<td class="col_head">
+			Invoice Date
+		</td>
+		<td class="col_head">
+			Last Bill Date
+		</td>
+		<td class="col_head">
+			Bill Attempts
+		</td>
 		<td valign="top" class="col_head" width="10%">
 			History
 		</td>
@@ -185,12 +185,21 @@ $total_charge += $case_r['percase_amount'];
 $<?php
                                             echo number_format($total_charge, 2); ?>
                                 </td>
+				<td valign="top">
+					<?= ($myarray['adddate'])?date('m/d/y', strtotime($myarray['adddate'])):''; ?>
+				</td>
+				<td valign="top">
+					<?= ($myarray['bill_date'])?date('m/d/y', strtotime($myarray['bill_date'])):''; ?>
+				</td>
+				<td valign="top">
+					<?= $myarray['bill_attempts']; ?>
+				</td>
 				<td valign="top" align="center">
-					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["userid"];?>">History</a>
+					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["docid"];?>">History</a>
 				</td>	
 				<td valign="top">
                                         <?php if($myarray['cc_id']!=''){ ?>
-                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>&invoice=<?=$myarray["id"];?>'); return false;"  class="button" title="EDIT" style="padding:3px 5px;">
+                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["docid"];?>&invoice=<?=$myarray["id"];?>'); return false;"  class="button" title="EDIT" style="padding:3px 5px;">
                                                 Rebill 
                                         </a>
                                         <?php } ?>

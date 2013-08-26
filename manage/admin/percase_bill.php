@@ -97,6 +97,7 @@ try{
                         stripe_customer='".mysql_real_escape_string($stripe_customer)."',
                         stripe_charge='".mysql_real_escape_string($stripe_charge)."',
                         stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
+			invoice_id='".mysql_real_escape_string((isset($_REQUEST['invoice']) && $_REQUEST['invoice']!='')?$_REQUEST['invoice']:'')."',
                         adddate=NOW(),
                         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
   	mysql_query($charge_sql); 

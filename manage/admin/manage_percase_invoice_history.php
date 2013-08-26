@@ -195,10 +195,17 @@ $total_charge += $case_r['percase_amount'];
         WHERE 
                 dl.percase_invoice='".$myarray['id']."'
 ";
+?>
+  <style type="text/css">
+    tr.status_2 td{
+      color:#f33;
+    }
+  </style>
+<?php
 $case_q = mysql_query($case_sql);
 		$case = mysql_fetch_assoc($case_q);
 		?>
-			<tr>
+			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
 					<?=st(date('m/d/Y g:i a', strtotime($myarray["adddate"])));?>
 				</td>

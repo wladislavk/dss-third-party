@@ -7,10 +7,15 @@ include "includes/top.htm";
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
-                WHERE du.docid=0 AND 
+                WHERE du.docid=0
+AND 
                 ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
                         ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND du.adddate < DATE_SUB(now(), INTERVAL 1 MONTH)))
-                        AND
+ ";
+  if(isset($_GET['show']) && $_GET['show']=='all'){
+   	$sql .= " limit 1";
+  }else{
+	$sql .= " AND 
                 ((SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                         JOIN dental_patients dp ON dl.patientid=dp.patientid
                         WHERE 
@@ -29,6 +34,7 @@ include "includes/top.htm";
 		)
 		limit 1
                 ";
+  }
 $q = mysql_query($sql) or die(mysql_error());
 $num_docs = mysql_num_rows($q);
 if($num_docs == 0){
@@ -180,6 +186,17 @@ if(isset($_POST['submit'])){
                 if($user['cc_id']!=''){
                   bill_card($user['cc_id'] ,$total_amount, $user['userid'], $invoiceid);
                 }else{
+		    $charge_sql = "INSERT INTO dental_charge SET
+                        amount='".mysql_real_escape_string(str_replace(',','',$total_amount))."',
+                        userid='".mysql_real_escape_string($user['userid'])."',
+                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+                        charge_date=NOW(),
+                        status='2',
+                        adddate=NOW(),
+                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+        		mysql_query($charge_sql);
+                     $i_sql = "UPDATE dental_percase_invoice set status=2 WHERE id='".$invoiceid."'";
+                        mysql_query($i_sql);
                   ?>
                     <script type="text/javascript">
                       alert('<?= $user['first_name']." ".$user['last_name']; ?> does not have a credit card on record.');
@@ -195,7 +212,7 @@ if(isset($_POST['submit'])){
   include 'percase_invoice_pdf.php';
   ?>
   <script type="text/javascript">
-    window.location = 'invoice_additional.php?bill=<?= $_GET['bill']; ?>';
+    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?>';
     //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
   </script>
   <?php
@@ -214,6 +231,22 @@ if(isset($_POST['submit'])){
 		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
   $doc_q = mysql_query($doc_sql);
   $doc = mysql_fetch_assoc($doc_q);
+
+        if($user['last_monthly_fee_date']){
+          $date = $user['last_monthly_fee_date'];
+          $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+          $monthly_date = date ( 'm/d/Y' , $newdate );
+        }elseif($user['registration_date']){
+          $date = $user['registration_date'];
+          $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+          $monthly_date = date ( 'm/d/Y' , $newdate );
+        }elseif($user['adddate']){
+          $date = $user['adddate'];
+          $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+          $monthly_date = date ( 'm/d/Y' , $newdate );
+        }else{
+          $monthly_date = date('m/d/Y');
+        }
 
 
 ?>
@@ -248,7 +281,7 @@ if(isset($_POST['submit'])){
                                         MONTHLY FEE 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="monthly_date" value="<?=date('m/d/Y');?>" />
+                                        <input type="text" name="monthly_date" value="<?=$monthly_date;?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>
@@ -422,7 +455,7 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
 Stripe::setApiKey($key_r['stripe_secret_key']);
-
+$status = 1;
 try{
     $charge = Stripe_Charge::create(array(
       "amount" => $amount, # $15.00 this time
@@ -434,37 +467,37 @@ try{
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_InvalidRequestError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_AuthenticationError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_ApiConnectionError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_Error $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Exception $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 }
 
   $stripe_charge = $charge->id;
@@ -478,13 +511,16 @@ try{
                         stripe_customer='".mysql_real_escape_string($stripe_customer)."',
                         stripe_charge='".mysql_real_escape_string($stripe_charge)."',
                         stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
+			status='".mysql_real_escape_string($status)."',
                         adddate=NOW(),
                         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
         mysql_query($charge_sql);
+  if($status == 1){
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=1
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
+  }
   return true;
 
 }

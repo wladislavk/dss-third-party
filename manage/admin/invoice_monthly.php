@@ -63,6 +63,18 @@
 		if($r['cc_id']!=''){
 		  bill_card($r['cc_id'] ,$doc['monthly_fee'], $r['userid'], $invoiceid);	
 		}else{
+                    $charge_sql = "INSERT INTO dental_charge SET
+                        amount='".mysql_real_escape_string(str_replace(',','',$doc['monthly_fee']))."',
+                        userid='".mysql_real_escape_string($user['userid'])."',
+                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+                        charge_date=NOW(),
+			invoice_id='".mysql_real_escape_string($invoiceid)."',
+                        status='2',
+                        adddate=NOW(),
+                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+                        mysql_query($charge_sql);
+		     $i_sql = "UPDATE dental_percase_invoice set status=2 WHERE id='".$invoiceid."'";
+			mysql_query($i_sql);
  		  array_push($no_card, $r['first_name']." ".$r['last_name']);
 		}
 	}
@@ -131,8 +143,8 @@ $key_sql = "SELECT stripe_secret_key FROM companies c
                  WHERE uc.userid='".mysql_real_escape_string($userid)."'";
 $key_q = mysql_query($key_sql);
 $key_r= mysql_fetch_assoc($key_q);
-error_log($key_r['stripe_secret_key']);
 Stripe::setApiKey($key_r['stripe_secret_key']);
+$status = 1;
 
 try{
     $charge = Stripe_Charge::create(array(
@@ -145,37 +157,37 @@ try{
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_InvalidRequestError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_AuthenticationError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_ApiConnectionError $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Stripe_Error $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 } catch (Exception $e) {
   $invoice_sql = "UPDATE dental_percase_invoice SET
                         status=2
                         WHERE id='".mysql_real_escape_string($invoiceid)."'";
   mysql_query($invoice_sql);
-  return false;
+  $status = 2;
 }
 
   $stripe_charge = $charge->id;
@@ -189,13 +201,17 @@ try{
                         stripe_customer='".mysql_real_escape_string($stripe_customer)."',
                         stripe_charge='".mysql_real_escape_string($stripe_charge)."',
                         stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
+			invoice_id='".mysql_real_escape_string($invoiceid)."',
+			status='".$status."',
                         adddate=NOW(),
                         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
         mysql_query($charge_sql);
-  $invoice_sql = "UPDATE dental_percase_invoice SET
+  if($status==1){
+    $invoice_sql = "UPDATE dental_percase_invoice SET
 			status=1
 			WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
+    mysql_query($invoice_sql);
+  }
   return true;
 
 }

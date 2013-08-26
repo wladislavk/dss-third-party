@@ -100,6 +100,10 @@ try{
                         adddate=NOW(),
                         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";	
   	mysql_query($charge_sql); 
+  if(isset($_REQUEST['invoice']) && $_REQUEST['invoice']!=''){
+    $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST['invoice'])."'";
+    mysql_query($i_sql);
+  }
     ?><h3><?= $r['name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
 	die();
@@ -110,9 +114,44 @@ try{
 
   }
 }
+
+  if(isset($_GET['invoice']) && $_GET['invoice']!=''){
+    $a_sql = "SELECT id, monthly_fee_amount, docid FROM dental_percase_invoice WHERE id='".mysql_real_escape_string($_GET['invoice'])."'";
+    $a_q = mysql_query($a_sql);
+    $myarray = mysql_fetch_assoc($a_q);
+    $total_charge = $myarray['monthly_fee_amount'];
+$case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['docid']."' AND
+                dl.percase_invoice='".$myarray['id']."'
+        UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl
+         WHERE 
+                dl.percase_invoice='".$myarray['id']."'
+        UNION                   
+SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
+        WHERE                   
+                invoice_id='".$myarray['id']."'
+        UNION                           
+SELECT description,             
+start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
+                invoice_id='".$myarray['id']."'";
+$case_q = mysql_query($case_sql);
+while($case_r = mysql_fetch_assoc($case_q)){
+$total_charge += $case_r['percase_amount'];
+}
+ 
+  }else{
+    $total_charge= "";
+  }
 ?>
 <form action="#" method="post" onsubmit="return confirm_charge();">
-Amount to charge credit card for <?= $r['name']; ?> $<input type="text" id="amount" name="amount" />
+<?php  if(isset($_GET['invoice']) && $_GET['invoice']!=''){
+  ?><input type="hidden" name="invoice" value="<?= $_GET['invoice']; ?>" /><?php
+}
+?>
+Amount to charge credit card for <?= $r['name']; ?> $<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>
 <br /><br />
 

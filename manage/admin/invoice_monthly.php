@@ -28,6 +28,10 @@
                 p.doc_id='".$_REQUEST['docid']."' AND
                 p.invoice_status = '".DSS_PERCASE_PENDING."') = 0
                 ";
+  if(isset($_GET['company']) && $_GET['company'] != ""){
+        $sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
+  }
+
   $q = mysql_query($sql)  or die(mysql_error());
   while($r = mysql_fetch_assoc($q)){
 	  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, u.name, u.user_type

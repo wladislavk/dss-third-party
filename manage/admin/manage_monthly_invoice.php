@@ -10,7 +10,7 @@ else
 	
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT du.*, c.name AS company_name,
+  $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id,
 		(SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
 		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                 	JOIN dental_patients dp ON dl.patientid=dp.patientid
@@ -31,6 +31,10 @@ if(is_super($_SESSION['admin_access'])){
                 WHERE du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
 		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND du.adddate < DATE_SUB(now(), INTERVAL 1 MONTH)))
 		";
+  if(isset($_GET['company']) && $_GET['company'] != ""){
+        $sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
+  }
+
 }else{
   $sql = "SELECT du.*, c.name AS company_name,
                 (SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
@@ -100,20 +104,20 @@ $num_users=mysql_num_rows($my);
 <br />
 <div style="float:left; width:43%;">
   &nbsp;
-  <a class="addButton" href="invoice_monthly.php?bill=0">&nbsp;Invoice Monthly Only&nbsp;</a>
-  <a class="addButton" href="invoice_monthly.php?bill=1">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
+  <a class="addButton" href="invoice_monthly.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice Monthly Only&nbsp;</a>
+  <a class="addButton" href="invoice_monthly.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
 </div>
 <div style="float:left;">
-  <a class="addButton" href="invoice_additional.php?show=all&bill=0">&nbsp;Invoice All&nbsp;</a>
+  <a class="addButton" href="invoice_additional.php?show=all&bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice All&nbsp;</a>
   &nbsp;
-  <a class="addButton" href="invoice_additional.php?show=all&bill=1">&nbsp;Invoice And Bill All&nbsp; </a>
+  <a class="addButton" href="invoice_additional.php?show=all&bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill All&nbsp; </a>
   &nbsp;
 </div>
 
 <div style="float:right;">
-  <a class="addButton" href="invoice_additional.php?bill=0">&nbsp;Invoice Additional&nbsp;</a>
+  <a class="addButton" href="invoice_additional.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice Additional&nbsp;</a>
   &nbsp;
-  <a class="addButton" href="invoice_additional.php?bill=1">&nbsp;Invoice And Bill Additional&nbsp; </a>
+  <a class="addButton" href="invoice_additional.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill Additional&nbsp; </a>
   &nbsp;
 </div>
 <div align="center" class="red" style="clear:both;">
@@ -182,7 +186,7 @@ $num_users=mysql_num_rows($my);
 					<?=st($myarray["username"]);?>
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["company_name"]);?>
+                                        <a href="manage_monthly_invoice.php?company=<?=$myarray["company_id"]; ?>"><?=st($myarray["company_name"]);?></a>
                                 </td>
                                 <td valign="top">
                                         <?=st($myarray["name"]);?>

@@ -12,8 +12,14 @@ AND
                 ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
                         ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND du.adddate < DATE_SUB(now(), INTERVAL 1 MONTH)))
  ";
+  if(isset($_GET['company']) && $_GET['company'] != ""){
+    	$sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
+  }
+  if(isset($_GET['uid']) && $_GET['uid'] != ""){
+        $sql .= " AND du.userid > '".mysql_real_escape_string($_GET['uid'])."' ";
+  }
   if(isset($_GET['show']) && $_GET['show']=='all'){
-   	$sql .= " limit 1";
+   	$sql .= " ORDER BY du.userid ASC ";
   }else{
 	$sql .= " AND 
                 ((SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
@@ -32,11 +38,17 @@ AND
                 p.doc_id='".$_REQUEST['docid']."' AND
                 p.invoice_status = '".DSS_PERCASE_PENDING."') != 0
 		)
-		limit 1
+		ORDER BY du.userid ASC
                 ";
   }
+
+$count_q = mysql_query($sql);
+$num_docs = mysql_num_rows($count_q);
+
+$sql .= " limit 1";
 $q = mysql_query($sql) or die(mysql_error());
-$num_docs = mysql_num_rows($q);
+$count_invoices = (isset($_GET['ci']) && $_GET['ci']!='')?$_GET['ci']:$num_docs;
+$count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
 if($num_docs == 0){
   ?>
     <script type="text/javascript">
@@ -212,7 +224,7 @@ if(isset($_POST['submit'])){
   include 'percase_invoice_pdf.php';
   ?>
   <script type="text/javascript">
-    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?>';
+    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>';
     //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
   </script>
   <?php
@@ -260,7 +272,10 @@ if(isset($_POST['submit'])){
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <br /><br />
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>?bill=<?=$_GET['bill'];?>" method="post">
+<div style=" margin:0 10px;border: solid 1px #000;">
+<h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
+
+<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
 <input type="hidden" name="docid" value="<?=$user["userid"];?>" />
 <table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
@@ -393,10 +408,12 @@ to
 			<td valign="top" class="col_head">
 				<input type="submit" name="submit" value=" Create Invoice " class="button" />
 				<a href="manage_monthly_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
+				<a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" style="margin-left:20px;color:#c33;">Skip</a>
 			</td>
 		</tr>
 </table>
 </form>
+</div>
 <script type="text/javascript">
 
 var row_count = 1;

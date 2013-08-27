@@ -315,7 +315,7 @@ if(isset($_POST['submit'])){
 					<input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" />
 				</td>
 				<td valign="top">
-					<input type="text" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
+					<input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="calendar" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
 				</td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();">Remove</a>
@@ -337,7 +337,7 @@ if(isset($_POST['submit'])){
 					Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?> 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
+                                        <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="calendar" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();">Remove</a>
@@ -362,9 +362,9 @@ if(isset($_POST['submit'])){
                                         <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" />
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
+                                        <input type="text" id="free_fax_start_date" class="calendar" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
 to
-                                        <input type="text" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
+                                        <input type="text" id="free_fax_end_date" class="calendar" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();">Remove</a>
@@ -383,9 +383,9 @@ to
                                         <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" style="width:100%;" />
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
+                                        <input type="text" id="fax_start_date" class="calendar" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
 to
-                                        <input type="text" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
+                                        <input type="text" id="fax_end_date" class="calendar" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#fax_row').remove(); calcTotal();">Remove</a>

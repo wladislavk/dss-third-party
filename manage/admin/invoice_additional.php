@@ -1,6 +1,7 @@
 <? 
 include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
+include '../includes/calendarinc.php';
 
   $sql = "SELECT du.*, c.name AS company_name, c.free_fax,
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
@@ -296,7 +297,7 @@ if(isset($_POST['submit'])){
                                         MONTHLY FEE 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="monthly_date" value="<?=$monthly_date;?>" />
+                                        <input type="text" id="monthly_date" name="monthly_date" class="calendar" value="<?=$monthly_date;?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>

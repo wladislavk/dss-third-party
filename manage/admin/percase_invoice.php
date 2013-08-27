@@ -1,6 +1,6 @@
 <? 
 include "includes/top.htm";
-
+include '../includes/calendarinc.php';
 $case_sql = "SELECT * FROM dental_ledger dl 
 		JOIN dental_patients dp ON dl.patientid=dp.patientid
 	WHERE 
@@ -180,7 +180,7 @@ if(isset($_POST['submit'])){
                                         MONTHLY FEE 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="monthly_date" value="<?=date('m/d/Y');?>" />
+                                        <input type="text" id="monthly_date" name="monthly_date" class="calendar" value="<?=date('m/d/Y');?>" />
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>

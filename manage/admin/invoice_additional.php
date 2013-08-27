@@ -503,7 +503,7 @@ Stripe::setApiKey($key_r['stripe_secret_key']);
 $status = 1;
 try{
     $charge = Stripe_Charge::create(array(
-      "amount" => $amount, # $15.00 this time
+      "amount" => ($amount*100), # $15.00 this time
       "currency" => "usd",
       "customer" => $customerID)
     );

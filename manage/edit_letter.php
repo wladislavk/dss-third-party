@@ -625,9 +625,7 @@ $noncomp['description'] = $noncomp['description'];
 %franchisee_practice%<br />
 %franchisee_addr%
 </p>
-<p>&nbsp;</p>
 <p>%todays_date%</p>
-<p>&nbsp;</p>
 ';
 if($indent_address == "1"){
 $header .= '
@@ -642,14 +640,13 @@ $header .= '
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>';
+';
 }else{
 $header .= '
 %contact_fullname%<br />
 %practice%
 %addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-<p>&nbsp;</p>';
+%city%, %state% %zip%';
 }
 $template = $header . $template;
   $orig_header = '<p>
@@ -657,9 +654,7 @@ $template = $header . $template;
 %franchisee_practice%<br />
 %franchisee_addr%
 </p>
-<p>&nbsp;</p>
 <p>%todays_date%</p>
-<p>&nbsp;</p>
 ';
 if($indent_address == "1"){
 $orig_header .= '
@@ -674,20 +669,17 @@ $orig_header .= '
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>';
+';
 }else{
 $orig_header .= '
 %contact_fullname%<br />
 %practice%
 %addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-<p>&nbsp;</p>';
+%city%, %state% %zip%';
 }
 $orig_template = $orig_header .$orig_template;
   }else{
-    $header = '<p>%todays_date%</p>
-<p>&nbsp;</p>
-';
+    $header = '<p>%todays_date%</p>';
 if($indent_address == "1"){
 $header .= '
 <table border="0">
@@ -701,14 +693,13 @@ $header .= '
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>';
+';
 }else{
 $header .= '
 %contact_fullname%<br />
 %practice%
 %addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-<p>&nbsp;</p>'; 
+%city%, %state% %zip%'; 
 }
 $template = $header . $template;
   $orig_header = '<p>%todays_date%</p>
@@ -727,7 +718,7 @@ $orig_header .= '
 </td>
 </tr>
 </table>
-<p>&nbsp;</p>';
+';
 }else{
 $orig_header .= '
 %contact_fullname%<br />

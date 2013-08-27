@@ -275,7 +275,7 @@ if(isset($_POST['submit'])){
 <div style=" margin:0 10px;border: solid 1px #000;">
 <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
 
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
+<form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
 <input type="hidden" name="docid" value="<?=$user["userid"];?>" />
 <table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
@@ -457,6 +457,33 @@ $('.amount').keyup(function(){
 
 setupAmount();
 calcTotal();
+
+//START OF FEATURE TO CHECK AND MAKE SURE ITEMS HAVENT ALREADY BEEN BILLED
+function check_billed(){
+ f = $('#invoice').serialize();
+ $.ajax({
+   url: "includes/check_billed.php",
+   type: "post",
+   data: f,
+   success: function(data){
+     alert(data);
+     var r = $.parseJSON(data);
+     if(r.error){
+     }else{
+     }
+   },
+   failure: function(data){
+     //alert('fail');
+   }
+ });
+ return false;
+}
+
+
+
+
+
+
 </script>
 
 <br /><br />	
@@ -541,4 +568,6 @@ try{
   return true;
 
 }
+
+
 

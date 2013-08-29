@@ -99,7 +99,7 @@ if($claim['insurance_type'] == 7){
 }
 
 
-$row[] = $claim['patientid'];
+$row[] = $pat['p_m_ins_id'];
 $row[] = $pat['lastname'];
 $row[] = $pat['firstname'];
 $row[] = $pat['middilename'];
@@ -351,6 +351,60 @@ $diagnosis_pointer[2] = $diagnosis_2;
 $diagnosis_pointer[3] = $diagnosis_3;
 $diagnosis_pointer[4] = $diagnosis_4;
 
+
+
+
+                        //reset values
+                        $producer_last_name = "";
+                        $producer_first_name = "";
+                        $phone = "";
+                        $practice = "";
+                        $address = "";
+                        $city = "";
+                        $state = "";
+                        $zip = "";
+                        $npi = "";
+                        $medicare_npi = "";
+                        $tax_id_or_ssn = "";
+                        $ssn = "";
+                        $ein = "";
+
+        $claim_producer = $claim['producer'];
+
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $producer_last_name = $userinfo['last_name'];
+                        $producer_first_name = $userinfo['first_name'];
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+                        $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+                        $ssn = $userinfo['ssn'];
+                        $ein = $userinfo['ein'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($producer_last_name == ""){ $producer_last_name = $docinfo['last_name']; }
+                        if($producer_first_name == ""){ $producer_first_name = $docinfo['first_name']; }
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+                        if($tax_id_or_ssn == ""){ $tax_id_or_ssn = $docinfo['tax_id_or_ssn']; }
+                        if($ssn == "" && $ein == ""){ $ssn = $docinfo['ssn']; }
+                        if($ssn == "" && $ein == ""){ $ein = $docinfo['ein']; }
+
 // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
 $sql = "";
   $sql = "SELECT "
@@ -402,7 +456,7 @@ $row[] = $ledger['daysorunits'];
 $row[] = $ledger['epsdt'];
 $row[] = $ledger['idqual'];
 $row[] = "";
-$row[] = "";
+$row[] = (($insurancetype == '1')?$medicare_npi:$npi);
 $c++;
 }
 
@@ -426,57 +480,6 @@ $row[] = "";
 $row[] = "";
 $c++;
 }
-
-			//reset values
-			$producer_last_name = "";
-			$producer_first_name = "";
-                        $phone = "";
-                        $practice = "";
-                        $address = "";
-                        $city = "";
-                        $state = "";
-                        $zip = "";
-                        $npi = "";
-                        $medicare_npi = "";
-                        $tax_id_or_ssn = "";
-                        $ssn = "";
-                        $ein = "";
-
-        $claim_producer = $claim['producer'];
-
-                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysql_query($getuserinfo);
-                      if($userinfo = mysql_fetch_array($userquery)){
-                        $producer_last_name = $userinfo['last_name'];
-                        $producer_first_name = $userinfo['first_name'];
-                        $phone = $userinfo['phone'];
-                        $practice = $userinfo['practice'];
-                        $address = $userinfo['address'];
-                        $city = $userinfo['city'];
-                        $state = $userinfo['state'];
-                        $zip = $userinfo['zip'];
-                        $npi = $userinfo['npi'];
-                        $medicare_npi = $userinfo['medicare_npi'];
-			$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-			$ssn = $userinfo['ssn'];
-			$ein = $userinfo['ein'];
-                      }
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$claim['docid']."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
-			if($producer_last_name == ""){ $producer_last_name = $docinfo['last_name']; }
-                        if($producer_first_name == ""){ $producer_first_name = $docinfo['first_name']; }
-                        if($phone == ""){ $phone = $docinfo['phone']; }
-                        if($practice == ""){ $practice = $docinfo['practice']; }
-                        if($address == ""){ $address = $docinfo['address']; }
-                        if($city == ""){ $city = $docinfo['city']; }
-                        if($state == ""){ $state = $docinfo['state']; }
-                        if($zip == ""){ $zip = $docinfo['zip']; }
-                        if($npi == ""){ $npi = $docinfo['npi']; }
-                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
-			if($tax_id_or_ssn == ""){ $tax_id_or_ssn = $docinfo['tax_id_or_ssn']; }
-			if($ssn == "" && $ein == ""){ $ssn = $docinfo['ssn']; }
-                        if($ssn == "" && $ein == ""){ $ein = $docinfo['ein']; }
 
 
 $row[] = $tax_id_or_ssn;
@@ -595,7 +598,8 @@ header("Content-Type: text/plain");
 header("Content-Disposition: attachment;filename=file.txt");
 $f  =   fopen('php://output', 'a');
 foreach ($data as $fields) {
-    fputcsv($f, $fields, "\t");
+    //fputcsv($f, $fields, "\t", " ");
+    fputs($f, implode($fields, "\t")."\n");
 }
 fclose($f);
 

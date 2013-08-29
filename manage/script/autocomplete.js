@@ -5,7 +5,9 @@
 	function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pid){
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');
-                		$('#'+source).val('');
+				if(source!=''){
+                		  $('#'+source).val('');
+				}
                                 var a = e.which; // ascii decimal value                                //var c = String.fromCharCode(a);
                                 var listSize = $('#'+hint+' ul li').size();
                                 var stringSize = $(this).val().length;
@@ -104,7 +106,9 @@
 function update_referredby(in_field, name, id_field, id, source, t, hint){
   $('#'+in_field).val(name);
   $('#'+id_field).val(id);
-  $('#'+source).val(t);
+  if(source != ''){
+    $('#'+source).val(t);
+  }
   $('#'+hint).css('display', 'none');
 }
 

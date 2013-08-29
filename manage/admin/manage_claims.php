@@ -11,11 +11,11 @@ if(isset($_GET['upstatus'])){
 
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 $pid = (isset($_REQUEST['pid']))?$_REQUEST['pid']:'';
-define('SORT_BY_DATE', 0);
-define('SORT_BY_STATUS', 1);
-define('SORT_BY_PATIENT', 2);
-define('SORT_BY_FRANCHISEE', 3);
-define('SORT_BY_USER', 4);
+define('SORT_BY_DATE', '0');
+define('SORT_BY_STATUS', '1');
+define('SORT_BY_PATIENT', '2');
+define('SORT_BY_FRANCHISEE', '3');
+define('SORT_BY_USER', '4');
 
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;

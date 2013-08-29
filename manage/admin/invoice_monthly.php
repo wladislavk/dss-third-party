@@ -8,7 +8,7 @@
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
-                WHERE du.docid=0 AND 
+                WHERE du.status=1 AND du.docid=0 AND 
 		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
                 	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND du.adddate < DATE_SUB(now(), INTERVAL 1 MONTH)))
 			AND

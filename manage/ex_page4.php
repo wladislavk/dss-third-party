@@ -521,8 +521,9 @@ $crossbite = st($myarray['crossbite']);
                     <div>
                     	<span>
                     		<label class="exam_label">Open proximal contact(s) present between teeth numbers</label> 
-                            <input type="text" name="open_proximal" value="<?=$open_proximal;?>" class="field text addr tbox" readonly="readonly" />
+                            <input type="text" name="open_proximal" value="<?=$open_proximal;?>" class="field text addr tbox" readonly="readonly" id="open_proximal" />
                             <button onclick="Javascript: loadPopupRefer('select_teeth_cross.php?tx=open_proximal&fval=<?=$open_proximal;?>'); return false;">Chart</button>
+                            <button onclick="$('#open_proximal').val('None'); return false;">None</button>
                     	</span>
                     </div>
                     <br />

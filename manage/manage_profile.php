@@ -97,32 +97,13 @@ if(isset($_POST["practice_submit"]))
 form_update_all($_SESSION['docid']);
 }
 
-if(isset($_POST["enable_letter_header"])){
-  $in_sql = "UPDATE dental_users SET
-                use_letter_header = '1'
+if(isset($_POST["letter_settings_but"])){
+  $up_sql = "UPDATE dental_users SET
+                use_letter_header = '".$_POST['letter_header']."',
+                indent_address = '".$_POST['indent_address']."',
+                header_space = '".$_POST['header_space']."'
         WHERE userid='".$_SESSION['docid']."'";
-  mysql_query($in_sql);
-}
-
-if(isset($_POST["disable_letter_header"])){
-  $in_sql = "UPDATE dental_users SET
-                use_letter_header = '0'
-        WHERE userid='".$_SESSION['docid']."'";
-  mysql_query($in_sql);
-}
-
-if(isset($_POST["enable_address_indent"])){
-  $in_sql = "UPDATE dental_users SET
-                indent_address = '1'
-        WHERE userid='".$_SESSION['docid']."'";
-  mysql_query($in_sql);
-}
-
-if(isset($_POST["disable_address_indent"])){
-  $in_sql = "UPDATE dental_users SET
-                indent_address = '0'
-        WHERE userid='".$_SESSION['docid']."'";
-  mysql_query($in_sql);
+  mysql_query($up_sql);
 }
 
 if(isset($_POST["margins_submit"]) || isset($_POST['margins_test']))
@@ -468,7 +449,7 @@ $num_custom=mysql_num_rows($my);
 <div style="clear:both;"></div>
 
 <?php if($practice['user_type'] == DSS_USER_TYPE_SOFTWARE){ ?>
-<div class="half">
+<div style="width:98%; margin-left:1%">
   <h3>Letter Margins</h3>
 All units in millimeters (mm).
   <form action="#" method="post">
@@ -504,6 +485,62 @@ All units in millimeters (mm).
 	<p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
   </div>
   </form>
+<style type="text/css">
+  .third{ width: 32%; float:left; }
+</style>
+<div style="width:100%">
+  <div id="num_nine" class="third letter_templates">
+	<h4>#9 Envelope</h4>
+	<input type="button" onclick="set_num_nine();return false;" value="select" />
+  </div>
+  <div id="num_nine" class="third letter_templates">
+        <h4> No return address + Left-aligned + Single Spacing</h4>
+        <input type="button" onclick="set_ls();return false;" value="select" />
+  </div>
+  <div id="num_nine" class="third letter_templates">
+        <h4>Return address + Left + Single</h4>
+        <input type="button" onclick="set_rls();return false;" value="select" />
+  </div>
+</div>
+
+<script type-"text/javascript">
+
+function set_num_nine(){
+  $('#letter_header').attr("checked", true);
+  $('#indent_address').attr("checked", true);
+  $('#header_space').attr("checked", true);
+}
+
+function set_ls(){
+  $('#letter_header').attr("checked", false);
+  $('#indent_address').attr("checked", false);
+  $('#header_space').attr("checked", false);
+}
+
+function set_rls(){
+  $('#letter_header').attr("checked", true);
+  $('#indent_address').attr("checked", false);
+  $('#header_space').attr("checked", false);
+}
+
+</script>
+<br /><br />
+  <form action="#" method="post" style="clear:both;">
+
+  <input type="checkbox" value="1" <?=($user['use_letter_header']=='1')?'checked="checked"':'';?> id="letter_header" name="letter_header" /> Use Letter Return Address
+<br />
+  <input type="checkbox" value="1" <?=($user['indent_address']=='1')?'checked="checked"':'';?> id="indent_address" name="indent_address" /> Address Align: #9 Envelope
+<br />
+  <input type="checkbox" value="1" <?=($user['header_space']=='1')?'checked="checked"':'';?> id="header_space" name="header_space" /> Extra space in the header
+<br />
+<br />
+<input type="submit" name="letter_settings_but" value="Save Settings" />
+
+</form>
+
+
+
+
 <?php }else{ ?>
 <div class="half">
   <h3>Letter Margins</h3>
@@ -533,25 +570,6 @@ All units in millimeters (mm).
   </div>
 
 <?php } ?>
-
-  <form action="#" method="post">
-<?php
-  if($user['use_letter_header']=='1'){ ?>
-    Letter return address is currently enabled. <input type="submit" name="disable_letter_header" value="Click here" class="addButton" /> to disable return address.
-  <?php }else{ ?>
-    Letter return address is currently disabled. <input type="submit" name="enable_letter_header" value="Click here" class="addButton" /> to enable return address.
-  <?php } ?>
-</form>
-
-  <form action="#" method="post">
-<?php
-  if($user['indent_address']=='1'){ ?>
-    Address Align: #9 Envelope. <input type="submit" name="disable_address_indent" value="Click here" class="addButton" /> to left-align letter addresses (address will no longer fit in #9 envelope window).
-  <?php }else{ ?>
-    Address Align: Left-Align. <input type="submit" name="enable_address_indent" value="Click here" class="addButton" /> to indent letter address to fit in #9 envelope.
-  <?php } ?>
-</form>
-
 
 </div>
 <div style="clear:both;"></div>

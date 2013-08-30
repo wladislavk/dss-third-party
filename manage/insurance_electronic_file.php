@@ -62,9 +62,12 @@ $referred_source = st($pat_myarray['referred_source']);
 $docid = st($pat_myarray['docid']);
 
 $sql = "select * from dental_insurance where insuranceid='".$_GET['insid']."' and patientid='".$_GET['pid']."'";
+
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
+$is_sent = ($status == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_SEC_PENDING) ? true : false;
 $insuranceid = st($myarray['insuranceid']);
 if(isset($_GET['payerid']) && $_GET['payerid']!=''){
   $ins_payer_id = $_GET['payerid'];
@@ -367,6 +370,29 @@ $accept_assignmentnew = st($pat_myarray['p_m_ins_ass']);
 //if ($dent_rows <= 0) {
     $accept_assignment = $accept_assignmentnew;
 //}
+if($is_pending){
+$p_m_dss_file = $pat_myarray['p_m_dss_file'];
+$s_m_dss_file = $pat_myarray['s_m_dss_file'];
+$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
+$insurancetype = st($pat_myarray['p_m_ins_type']);
+$insured_firstname = st($pat_myarray['p_m_partyfname']);
+$insured_lastname = st($pat_myarray['p_m_partylname']);
+$insured_middle = st($pat_myarray['p_m_partymname']);
+$other_insured_firstname = st($pat_myarray['s_m_partyfname']);
+$other_insured_lastname = st($pat_myarray['s_m_partymname']);
+$other_insured_middle = st($pat_myarray['s_m_partylname']);
+$insured_id_number = st($pat_myarray['p_m_ins_id']);
+$insured_dob = st($pat_myarray['ins_dob']);
+$p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
+$other_insured_dob = st($pat_myarray['ins2_dob']);
+$insured_insurance_plan = st($pat_myarray['p_m_ins_plan']);
+$other_insured_insurance_plan = st($pat_myarray['s_m_ins_plan']);
+$insured_policy_group_feca = st($pat_myarray['p_m_ins_grp']);
+$other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
+$referredby = st($pat_myarray['referred_by']);
+$referred_source = st($pat_myarray['referred_source']);
+$docid = $pat_myarray['docid'];
+}
 
 $sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        

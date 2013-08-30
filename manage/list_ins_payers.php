@@ -1,7 +1,7 @@
 <?php
 
 require_once('admin/includes/main_include.php');
-include("includes/sescheck.php");
+//include("includes/sescheck.php");
 require_once("admin/includes/general.htm");
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');

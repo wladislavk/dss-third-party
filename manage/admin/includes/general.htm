@@ -432,7 +432,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
 
 
 
-function save_letter($letterid, $parent = null, $type, $recipientid, $template = null, $update_send = null) {
+function save_letter($letterid, $parent = null, $type, $recipientid, $template = null, $update_send = null, $font_size = null, $font_family = null) {
   if (!isset($letterid)) {
 		return false;
   }
@@ -449,6 +449,9 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
+                if($font_size && $font_family){
+                        $letter_query .= ", font_size='".mysql_real_escape_string($font_size)."', font_family='".mysql_real_escape_string($font_family)."' ";
+		}
 		if($update_send){
 			$letter_query .= ", send_method='".mysql_real_escape_string($update_send)."' ";
 			if($update_send == 'paper' || $update_send == 'email'){
@@ -745,7 +748,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
                 }else{
                   $footerText = "";
                 }
-                create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid);
+                create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid, $letterid);
                 $letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
                 $letter_result = mysql_query($letter_query);
 }
@@ -1015,7 +1018,7 @@ If you are not the intended recipient, you are hereby notified that any disclosu
 		}else{
 		  $footerText = "";
 		}
-		create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid);
+		create_pdf($title, $filename, $html, null, '', $footerText, $cover, $docid, $letterid);
 		$letter_query = "UPDATE dental_letters SET pdf_path = '" . $filename . "' WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
 		$fax_send = false;	
@@ -1244,7 +1247,7 @@ class MYPDF extends TCPDF {
         }
 }
 
-function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null) {	
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {	
 	// create new PDF document
   if ($fax) {
 		global $pdf_header, $pdf_footer;
@@ -1286,7 +1289,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
 	// set default monospaced font
 	$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
+                $font_size = 10;
+                $font_family = "dejavusans";
 	if($docid){
 		$m_sql = "SELECT * from dental_users where userid='".mysql_real_escape_string($docid)."'";
 		$m_q = mysql_query($m_sql);
@@ -1298,6 +1302,13 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
                 $margin_bottom = $m_r['letter_margin_bottom'];
                 $margin_header = $m_r['letter_margin_header']; 
                 $margin_footer = $m_r['letter_margin_footer'];
+			if($letterid){
+				$l_sql = "SELECT * FROM dental_letters where letterid='".mysql_real_escape_string($letterid)."'";
+				$l_q = mysql_query($l_sql);
+				$l_r = mysql_fetch_assoc($l_q);
+				$font_size = $l_r['font_size'];
+				$font_family = $l_r['font_family'];
+			}
 		}else{
                 $margin_top = PDF_MARGIN_TOP;
                 $margin_left = PDF_MARGIN_LEFT;
@@ -1328,10 +1339,10 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 	//set some language-dependent strings
-	$pdf->setLanguageArray($l);
+	//$pdf->setLanguageArray($l);
 
 	// set font
-	//$pdf->SetFont('dejavusans', '', 10);
+	$pdf->SetFont($font_family, '', $font_size);
 
 	if($cover != ''){
 		$cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);

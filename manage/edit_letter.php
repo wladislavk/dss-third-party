@@ -63,7 +63,7 @@ $letterid = $master_r['letterid'];
 //$letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type FROM dental_letters l
+$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type, l.font_size, l.font_family FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
 	 where l.letterid = ".$letterid.";";
 $letter_result = mysql_query($letter_query);
@@ -83,6 +83,8 @@ $row = mysql_fetch_assoc($letter_result);
   $username = $row['username'];
   $edit_date = $row['edit_date'];
   $template_type = $row['template_type'];
+  $font_size = $row['font_size'];
+  $font_family = $row['font_family'];
 
 // Pending and Sent Contacts
 $othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
@@ -255,15 +257,20 @@ $patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926
 $did = $patient_info['docid'];
 
 // Get Franchisee Name and Address
-$franchisee_query = "SELECT mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header, fax, indent_address FROM dental_users WHERE userid = '".$docid."';";
+$franchisee_query = "SELECT user_type, mailing_name as name, mailing_practice as practice, mailing_address as address, mailing_city as city, mailing_state as state, mailing_zip as zip, email, use_digital_fax, use_letter_header, fax, indent_address, header_space FROM dental_users WHERE userid = '".$docid."';";
 $franchisee_result = mysql_query($franchisee_query);
 while ($row = mysql_fetch_assoc($franchisee_result)) {
 	$franchisee_info = $row;
 }
+if($franchisee_info['user_type'] == DSS_USER_TYPE_SOFTWARE){
 $use_letter_header = $franchisee_info['use_letter_header'];
 $indent_address = $franchisee_info['indent_address'];
-
-
+$header_space = $franchisee_info['header_space'];
+}else{
+$use_letter_header = true;
+$indent_address = true;
+$header_space = true;
+}
 
 $loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $loc_q = mysql_query($loc_sql);
@@ -619,117 +626,47 @@ $noncomp['description'] = $noncomp['description'];
   $letter_r = mysql_fetch_assoc($letter_q);
   $template = $letter_r['body'];
   $orig_template = $letter_r['body'];
-  if($use_letter_header == "1"){
-    $header = '<p>
+
+$header = '';
+if($use_letter_header == "1"){
+    $header .= '<p>
 %franchisee_fullname%<br />
 %franchisee_practice%<br />
 %franchisee_addr%
 </p>
-<p>%todays_date%</p>
 ';
-if($indent_address == "1"){
-$header .= '
-<table border="0">
-<tr>
-<td width="70"></td>
-<td>
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-</td>
-</tr>
-</table>
-';
-}else{
-$header .= '
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%';
-}
-$template = $header . $template;
-  $orig_header = '<p>
-%franchisee_fullname%<br />
-%franchisee_practice%<br />
-%franchisee_addr%
-</p>
-<p>%todays_date%</p>
-';
-if($indent_address == "1"){
-$orig_header .= '
-<table border="0">
-<tr>
-<td width="70"></td>
-<td>
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-</td>
-</tr>
-</table>
-';
-}else{
-$orig_header .= '
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%';
-}
-$orig_template = $orig_header .$orig_template;
-  }else{
-    $header = '<p>%todays_date%</p>';
-if($indent_address == "1"){
-$header .= '
-<table border="0">
-<tr>
-<td width="70"></td>
-<td>
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-</td>
-</tr>
-</table>
-';
-}else{
-$header .= '
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%'; 
-}
-$template = $header . $template;
-  $orig_header = '<p>%todays_date%</p>
-<p>&nbsp;</p>
-';
-if($indent_address == "1"){
-$orig_header .= '
-<table border="0">
-<tr>
-<td width="70"></td>
-<td>
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-</td>
-</tr>
-</table>
-';
-}else{
-$orig_header .= '
-%contact_fullname%<br />
-%practice%
-%addr1%%addr2%<br />
-%city%, %state% %zip%<br />
-<p>&nbsp;</p>';
+if($header_space){ $header .= "<p> &nbsp; </p>"; }
 }
 
-$orig_template = $orig_header .$orig_template;
-  }
+$header .= '<p>%todays_date%</p>
+';
+if($header_space){ $header .= "<p> &nbsp; </p>"; }
+if($indent_address == "1"){
+$header .= '
+<table border="0">
+<tr>
+<td width="70"></td>
+<td>
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%<br />
+</td>
+</tr>
+</table>
+';
+}else{
+  $header .= '
+%contact_fullname%<br />
+%practice%
+%addr1%%addr2%<br />
+%city%, %state% %zip%
+';
+}
+$header .= "<br />";
+$orig_header = $header;
+$template = $header . $template;
+$orig_template = $header . $orig_template;
 /*
 switch ($templateid) {
 	case 1:
@@ -1757,7 +1694,21 @@ foreach ($letter_contacts as $key => $contact) {
 	<?php } ?>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
-
+<?php if(isset($_SESSION['user_type']) && $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){ ?>
+<select name="font_size" style="display:none;" class="edit_letter<?=$cur_letter_num?>">
+  <option <?= ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
+  <option <?= ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
+  <option <?= ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
+  <option <?= ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
+  <option <?= ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
+</select>
+<select name="font_family" style="display:none;" class="edit_letter<?=$cur_letter_num?>">
+  <option <?= ($font_family=='dejavusans')?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
+  <option <?= ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
+  <option <?= ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
+  <option <?= ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
+</select>
+<?php } ?>
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
 		<tr>
 			<td valign="top">
@@ -1880,6 +1831,13 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
 		$message = $new_template[$cur_letter_num];
                         $search= array("<strong>","</strong>");
                         $message = str_replace($search, "", $message);
+		if(isset($_POST['font_size']) && $_POST['font_family']){
+		  $font_size = $_POST['font_size'];
+		  $font_family = $_POST['font_family'];
+		}else{
+		  $font_size = null;
+		  $font_family = null;
+		}
 if($_POST['fax_letter'][$cur_letter_num] != null){
   $send_method = 'fax';
 }elseif($_POST['paper_letter'][$cur_letter_num] != null){
@@ -1889,7 +1847,7 @@ if($_POST['fax_letter'][$cur_letter_num] != null){
 }else{
   $send_method = '';
 }
-            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method);
+            $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method, $font_size, $font_family);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
 	if($_POST['send_letter'][$cur_letter_num] != null){
                         create_letter_pdf($saveletterid);

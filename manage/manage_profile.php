@@ -491,14 +491,17 @@ All units in millimeters (mm).
 <div style="width:100%">
   <div id="num_nine" class="third letter_templates">
 	<h4>#9 Envelope</h4>
+	<img src="images/letter_template_number9-envelope.png" /><br />
 	<input type="button" onclick="set_num_nine();return false;" value="select" />
   </div>
   <div id="num_nine" class="third letter_templates">
         <h4> No return address + Left-aligned + Single Spacing</h4>
+        <img src="images/letter_template_NOreturn-left-single.png" /><br />
         <input type="button" onclick="set_ls();return false;" value="select" />
   </div>
   <div id="num_nine" class="third letter_templates">
         <h4>Return address + Left + Single</h4>
+        <img src="images/letter_template_return-left-single.png" /><br />
         <input type="button" onclick="set_rls();return false;" value="select" />
   </div>
 </div>

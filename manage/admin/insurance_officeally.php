@@ -571,19 +571,19 @@ $row[] = "";
 
 $row[] = $practice;
 $row[] = $address;
+$row[] = $city;
+$row[] = $state;
+$row[] = $zip;
 $row[] = "";
-$row[] = "";
-$row[] = "";
-$row[] = $city.", ".$state." ".$zip;
 $row[] = (($insurancetype == '1')?$medicare_npi:$npi);
 $row[] = ""; //facility_id
 $row[] = "";
 $row[] = $practice;
 $row[] = $address;
+$row[] = $city;
+$row[] = $state;
+$row[] = $zip;
 $row[] = "";
-$row[] = "";
-$row[] = "";
-$row[] = $city.", ".$state." ".$zip;
 $row[] = $phone;
 $row[] = (($insurancetype == '1')?$medicare_npi:$npi);
 $row[] = $pat['p_m_ins_grp'];

@@ -1672,7 +1672,7 @@ foreach ($letter_contacts as $key => $contact) {
 </div>
 		</div>
 		<div align="right" style="width:40%; padding: 3px; float: right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>');return false;" >
+		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>', '<?=$font_size;?>','<?=$font_family;?>');return false;" >
 			Edit Letter
 		</button>
 		&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1695,24 +1695,27 @@ foreach ($letter_contacts as $key => $contact) {
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
 <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){ ?>
-<select name="font_size" style="display:none;" class="edit_letter<?=$cur_letter_num?>">
+<select name="font_size[<?=$cur_letter_num?>]" style="display:none;" class="edit_letter<?=$cur_letter_num?>" onchange="this.form.submit()";>
   <option <?= ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
   <option <?= ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
   <option <?= ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
   <option <?= ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
   <option <?= ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
 </select>
-<select name="font_family" style="display:none;" class="edit_letter<?=$cur_letter_num?>">
+<select name="font_family[<?=$cur_letter_num?>]" style="display:none;" class="edit_letter<?=$cur_letter_num?>" onchange="this.form.submit()">
   <option <?= ($font_family=='dejavusans')?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
   <option <?= ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
   <option <?= ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
   <option <?= ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
 </select>
 <?php } ?>
+<style type="text/css">
+    #letter<?=$cur_letter_num?> td{ font-size:<?= $font_size;?>px;font-family:<?= $font_family; ?>;}
+</style>
 	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
 		<tr>
 			<td valign="top">
-				<div id="letter<?=$cur_letter_num?>">
+				<div id="letter<?=$cur_letter_num?>" style="font-size:<?= $font_size;?>px;font-family:<?= $font_family; ?>">
 						
 				<?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
 				</div>
@@ -1820,6 +1823,8 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
 	|| $_POST['fax_letter'][$cur_letter_num] != null
         || $_POST['paper_letter'][$cur_letter_num] != null
         || $_POST['email_letter'][$cur_letter_num] != null
+        || $_POST['font_family'][$cur_letter_num] != null
+        || $_POST['font_size'][$cur_letter_num] != null
 	) && $numletters == $_POST['numletters']) {
     if (count($letter_contacts) == 1) {
                 $parent = true;
@@ -1831,9 +1836,9 @@ if(isset($_GET['edit_send']) && $_GET['edit_send']==$cur_letter_num){
 		$message = $new_template[$cur_letter_num];
                         $search= array("<strong>","</strong>");
                         $message = str_replace($search, "", $message);
-		if(isset($_POST['font_size']) && $_POST['font_family']){
-		  $font_size = $_POST['font_size'];
-		  $font_family = $_POST['font_family'];
+		if(isset($_POST['font_size'][$cur_letter_num]) && isset($_POST['font_family'][$cur_letter_num])){
+		  $font_size = $_POST['font_size'][$cur_letter_num];
+		  $font_family = $_POST['font_family'][$cur_letter_num];
 		}else{
 		  $font_size = null;
 		  $font_family = null;

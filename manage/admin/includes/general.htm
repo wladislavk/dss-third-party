@@ -256,7 +256,7 @@ class MDReferralFilter {
 }
 
 // Function to Create Letters
-function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_patient = null, $cc_md_list = null, $cc_md_referral_list = null) {
+function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_patient = null, $cc_md_list = null, $cc_md_referral_list = null, $font_size = null, $font_family = null) {
 
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
@@ -370,7 +370,14 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
                 $columns .= ", template_type";
                 $values .= ", '".mysql_real_escape_string($template_type)."'";
         }
-
+  if($font_size){
+                $columns .= ", font_size";
+                $values .= ", '".mysql_real_escape_string($font_size)."'";
+  }
+  if($font_family){
+                $columns .= ", font_family";
+                $values .= ", '".mysql_real_escape_string($font_family)."'";
+  }
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
@@ -449,9 +456,13 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
-                if($font_size && $font_family){
-                        $letter_query .= ", font_size='".mysql_real_escape_string($font_size)."', font_family='".mysql_real_escape_string($font_family)."' ";
+                if($font_size ){
+                        $letter_query .= ", font_size='".mysql_real_escape_string($font_size)."' ";
 		}
+                if($font_family ){
+                        $letter_query .= ", font_family='".mysql_real_escape_string($font_family)."' ";
+                }
+
 		if($update_send){
 			$letter_query .= ", send_method='".mysql_real_escape_string($update_send)."' ";
 			if($update_send == 'paper' || $update_send == 'email'){
@@ -495,7 +506,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 					}
 				}
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list']); 	
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
 		}
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
                                 $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";

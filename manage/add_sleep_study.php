@@ -7,6 +7,8 @@ require_once('includes/dental_patient_summary.php');
 require_once('includes/general_functions.php');
 ?>
   <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+ <script type="text/javascript" src="script/autocomplete.js"></script>
+<link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <?php
 include("includes/calendarinc.php");
 // Determine Type of Appliance
@@ -372,14 +374,27 @@ function addstudylab(v){
         </tr>
 	<tr>
                 <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" name="diagnosising_doc" /> 
-		<?php
-			if($pat_r['p_m_ins_type']==1){
-		?>
-		<span id="req_0" class="req">*</span>
-		<?php
-			}
-		?>
+                  <input style="width:100px;" type="text" id="diagnosising_doc" autocomplete="false" name="diagnosising_doc" /> 
+                <?php
+                        if($pat_r['p_m_ins_type']==1){
+                ?>
+                <span id="req_0" class="req">*</span>
+                <?php
+                        }
+                ?>
+
+		<br />
+	        <div id="diagnosising_doc_hints" class="search_hints" style="display:none;">
+                <ul id="diagnosising_doc_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+  				setup_autocomplete('diagnosising_doc', 'diagnosising_doc_hints', 'diagnosising_npi', '', 'list_contacts_npi.php', 'contact', '<?= $_GET['pid']; ?>');
+			});
+		</script>
+
                 </td>
         </tr>
 <script type="text/javascript">
@@ -387,7 +402,7 @@ update_home(document.getElementById('new_sleep_study_form'));
 </script>
 	<tr>
                 <td valign="top" class="even">
-                  <input style="width:100px;" type="text" name="diagnosising_npi" />
+                  <input style="width:100px;" type="text" id="diagnosising_npi" name="diagnosising_npi" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>
@@ -560,7 +575,7 @@ $device = mysql_result($device_result, 0);
         </tr>
         <tr>
                 <td valign="top" class="odd">
-                  <input type="text" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" />
+                  <input type="text" id="diagnosising_doc_<?php echo $s_lab['id']; ?>" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>
@@ -568,12 +583,24 @@ $device = mysql_result($device_result, 0);
                 <?php
                         }
                 ?>
+                <br />
+                <div id="diagnosising_doc_<?php echo $s_lab['id']; ?>_hints" class="search_hints" style="display:none;">
+                <ul id="diagnosising_doc_<?php echo $s_lab['id']; ?>_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+                </div>
+                <script type="text/javascript">
+                        $(document).ready(function(){
+                                setup_autocomplete('diagnosising_doc_<?php echo $s_lab['id']; ?>', 'diagnosising_doc_<?php echo $s_lab['id']; ?>_hints', 'diagnosising_npi_<?php echo $s_lab['id']; ?>', '', 'list_contacts_npi.php', 'npi', '<?= $_GET['pid']; ?>');
+                        });
+                </script>
+
  
                 </td>
         </tr>
         <tr>
                 <td valign="top" class="even">
-                  <input type="text" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" />
+                  <input type="text" id="diagnosising_npi_<?php echo $s_lab['id']; ?>" name="diagnosising_npi" value="<?php echo $s_lab['diagnosising_npi']; ?>" style="width:100px;" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>

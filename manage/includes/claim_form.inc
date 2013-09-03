@@ -10,6 +10,7 @@ $status_r = mysql_fetch_assoc($status_q);
 $status = $status_r['status'];
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
 
 
 
@@ -936,6 +937,7 @@ $referring_provider = st($myarray['referring_provider']);
 $field_17a_dd = st($myarray['field_17a_dd']);
 $field_17a = st($myarray['field_17a']);
 $field_17b = st($myarray['field_17b']);
+$diagnosising_npi = st($myarray['field_17b']);
 $hospitalization_date_from = st($myarray['hospitalization_date_from']);
 $hospitalization_date_to = st($myarray['hospitalization_date_to']);
 $reserved_local_use1 = st($myarray['reserved_local_use1']);
@@ -1121,7 +1123,7 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
@@ -1132,7 +1134,7 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$_GET['pid']."' ORDER BY id DESC LIMIT 1;";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
@@ -1196,7 +1198,7 @@ input{text-transform:uppercase;}
     <script type="text/javascript" src="<?=$manage_path?>script/masks.js"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
-<?php if ($is_sent || (!$is_new_claim && !$is_pending && $is_front_office)) { ?>
+<?php if ($is_sent || (!$is_new_claim && !$is_pending && !is_disputed && $is_front_office)) { ?>
   <script>
 	$(function() {
 	  $('input, select, textarea').attr('disabled', 'true');
@@ -1652,7 +1654,7 @@ $(document).ready(function(){
 							<tr>
 								<td align="left" valign="top" style="line-height:33px;">
 									<span class="num">10.</span>
-									Is paitients Condition Related To :
+									Is patient's Condition Related To :
 								</td>
 							</tr>
 							<tr>
@@ -1973,7 +1975,7 @@ $(document).ready(function(){
 									NPI
 								</td>
 								<td valign="top" style="padding-top:3px;">
-									<input disabled="disabled" type="text" value="<?= $diagnosising_npi; ?>" name="field_17b" class="inbox_line3" size="30"/>
+									<input type="text" value="<?= $diagnosising_npi; ?>" name="field_17b" class="inbox_line3" size="30"/>
 								</td>
 							</tr>
 						</table>

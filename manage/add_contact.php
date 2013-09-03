@@ -398,9 +398,9 @@ if($_POST["contactsub"] == 1)
             	<ul>
             		<li id="foli8" class="complex">	
                         <div>
-			    <span style="font-size:10px;">These fields required only for Medicare referring physicians.</span><br />
+			    <span style="font-size:10px;">These fields required for Medicare referring physicians.</span><br />
                             <span>
-                            	National Provider ID
+                            	National Provider ID (NPI)
                                 <input id="national_provider_id" name="national_provider_id" type="text" class="field text addr tbox" value="<?=$national_provider_id?>" tabindex="15" maxlength="255" style="width:200px;" />
                             </span>
                         </div>

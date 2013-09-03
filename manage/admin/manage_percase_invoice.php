@@ -207,7 +207,7 @@ $num_users=mysql_num_rows($my);
                                         <?=st($myarray["company_name"]);?>
                                 </td>
                                 <td valign="top">
-                                        <?=st($myarray["name"]);?>
+                                        <?=st($myarray["first_name"]);?> <?=st($myarray["last_name"]);?>
                                 </td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?=st($myarray['num_case30']);?>

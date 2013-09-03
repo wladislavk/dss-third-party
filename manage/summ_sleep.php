@@ -17,7 +17,7 @@ Patient has no completed sleep studies. Click here to add a study.
 <table width="97%" align="center" style="float:left;margin-left:15px;">
 <tr>
 <td style="background:#333; color:#FFFFFF; font-size: 14px; font-weight:bold; height:30px;">
-Sleep Studies:
+Sleep Tests:
 </td>
 </tr>
 </table>

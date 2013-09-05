@@ -68,6 +68,8 @@ if($_POST["contactsub"] == 1)
 		$c_r = mysql_fetch_assoc($c_q);
 		$contact = $c_r['contacttype'];
 		$name = $_POST['lastname'].", ".$_POST['firstname']." - ".$contact;
+		$npi_name = $_POST['firstname']." ".$_POST['lastname'];
+		$npi = $_POST['national_provider_id'];
 		$msg = "Added Successfully";
 	  	if($_GET['from']=='add_patient'){	
 		  if($_GET['from_id']!=''){
@@ -79,11 +81,19 @@ if($_POST["contactsub"] == 1)
 		    </script>
 		    <?php
 		  }elseif($_GET['in_field']!='' && $_GET['id_field']!=''){	
+			if(substr($_GET['in_field'],0,16)=='diagnosising_doc'){
+                     ?>
+                        <script type="text/javascript">
+                           parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= addslashes($npi_name); ?>', '<?= $_GET['id_field']; ?>', '<?= $npi; ?>');
+                        </script>
+                     <?php
+			}else{
 		     ?>
 			<script type="text/javascript">
 			   parent.updateContactField('<?= $_GET['in_field']; ?>', '<?= addslashes($name); ?>', '<?= $_GET['id_field']; ?>', '<?= $rid; ?>');
 			</script>
-		     <?php	
+		     <?php
+			}	
 		  } ?>
 		  <script type="text/javascript">
                     parent.disablePopupRefClean();

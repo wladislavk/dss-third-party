@@ -134,7 +134,7 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
-     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
@@ -159,7 +159,7 @@ $sql = "SELECT "
 }else{
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
-     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
@@ -271,7 +271,7 @@ if(isset($_GET['msg'])){
       <?php $franchisees = get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
         <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;

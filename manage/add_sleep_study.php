@@ -1,14 +1,10 @@
 <?php
-session_start();
 require_once('admin/includes/main_include.php');
-include("includes/sescheck.php"); 
+include_once("includes/sescheck.php"); 
 require_once('includes/constants.inc');
 require_once('includes/dental_patient_summary.php');
 require_once('includes/general_functions.php');
 ?>
-  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
- <script type="text/javascript" src="script/autocomplete.js"></script>
-<link href="css/search-hints.css" rel="stylesheet" type="text/css">
 <?php
 include("includes/calendarinc.php");
 // Determine Type of Appliance
@@ -29,8 +25,6 @@ if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++;
 }
 $body_width = ($num_labs*185)+215;
 ?>
-<html style="overflow:hidden;">
-<head>
  <link href="css/admin.css" rel="stylesheet" type="text/css" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
   <link rel="stylesheet" href="css/form.css" />
@@ -63,8 +57,6 @@ function autoselect(selectedOption, f) {
 }
 
 </script>
-</head>
-<body style="width:<?= $body_width;?>px; background: none repeat 0% 0% transparent; height: 557px; position:absolute;top:0;margin:0; padding:0;">
 
  <?php 
  if(isset($_POST['submitdeletesleeplabsumm'])){
@@ -374,7 +366,7 @@ function addstudylab(v){
         </tr>
 	<tr>
                 <td valign="top" class="odd">
-                  <input style="width:100px;" type="text" id="diagnosising_doc" autocomplete="false" name="diagnosising_doc" /> 
+                  <input style="width:100px;" type="text" id="diagnosising_doc" autocomplete="off" name="diagnosising_doc" /> 
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>
@@ -515,7 +507,7 @@ $device = mysql_result($device_result, 0);
 ?>
 <form action="#" style="float:left;" method="post" enctype="multipart/form-data">
 <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
-<table id="sleepstudyscrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
+<table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
 	<tr>
 		<td valign="top" class="odd">
 		<input type="text" name="date" id="date<?= $s_lab['id']; ?>" class="calendar" value="<?php echo $s_lab['date']; ?>" />	
@@ -575,7 +567,7 @@ $device = mysql_result($device_result, 0);
         </tr>
         <tr>
                 <td valign="top" class="odd">
-                  <input type="text" id="diagnosising_doc_<?php echo $s_lab['id']; ?>" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" />
+                  <input type="text" id="diagnosising_doc_<?php echo $s_lab['id']; ?>" name="diagnosising_doc" value="<?php echo $s_lab['diagnosising_doc']; ?>" style="width:100px;" autocomplete="off" />
                 <?php
                         if($pat_r['p_m_ins_type']==1){
                 ?>
@@ -591,7 +583,7 @@ $device = mysql_result($device_result, 0);
                 </div>
                 <script type="text/javascript">
                         $(document).ready(function(){
-                                setup_autocomplete('diagnosising_doc_<?php echo $s_lab['id']; ?>', 'diagnosising_doc_<?php echo $s_lab['id']; ?>_hints', 'diagnosising_npi_<?php echo $s_lab['id']; ?>', '', 'list_contacts_npi.php', 'npi', '<?= $_GET['pid']; ?>');
+                                setup_autocomplete('diagnosising_doc_<?php echo $s_lab['id']; ?>', 'diagnosising_doc_<?php echo $s_lab['id']; ?>_hints', 'diagnosising_npi_<?php echo $s_lab['id']; ?>', '', 'list_contacts_npi.php', 'contact', '<?= $_GET['pid']; ?>');
                         });
                 </script>
 
@@ -709,9 +701,5 @@ $device = mysql_result($device_result, 0);
 
 
 
-
   
 
-</div>
-</body>
-</html>

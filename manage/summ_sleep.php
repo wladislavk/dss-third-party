@@ -138,8 +138,11 @@ function show_study_table(){
 }
 </script>
 
-        <div style="border: medium none; width: 500px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
-                    <iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>
+        <div style="border: medium none; width: 650px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
+		<div style="border: medium none; overflow: hidden;width:<?= $body_width; ?>px;">
+		<?php include 'add_sleep_study.php'; ?>
+		</div>
+                    <!--<iframe id="sleepstudies" height="532" width="<?= $body_width; ?>" style="border: medium none; overflow: hidden;" src="add_sleep_study.php?pid=<?php echo $_GET['pid']; ?>&yellow=1">Iframes must be enabled to view this area.</iframe>-->
 
         </div>
 
@@ -150,4 +153,8 @@ function show_study_table(){
         $('#sleepstudies').contents().find('.place_select').append("<option value='"+i+"'>"+c+"</option>");
         disablePopupClean();
  }
+function updateContactField(inField, inVal, idField, idVal){
+$('#'+inField).val(inVal);
+$('#'+idField).val(idVal);
+}
 </script>

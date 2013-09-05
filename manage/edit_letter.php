@@ -94,6 +94,9 @@ $row = mysql_fetch_assoc($letter_result);
         case '12':
                 $show_font_size = '16';
                 break;
+        case '14':
+                $show_font_size = '18';
+                break;
         case '16':
                 $show_font_size = '20';
                 break;
@@ -1692,7 +1695,7 @@ foreach ($letter_contacts as $key => $contact) {
   <!--<input type="submit" name="email_letter[<?=$cur_letter_num?>]" class="addButton" value="Email" />-->
 </div>
 		</div>
-		<div align="right" style="width:40%; padding: 3px; float: right">
+		<div align="right" style="width:30%; padding: 3px; float: right">
 		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>', '<?=$font_size;?>','<?=$font_family;?>');return false;" >
 			Edit Letter
 		</button>

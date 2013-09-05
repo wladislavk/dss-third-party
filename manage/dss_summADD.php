@@ -1,5 +1,6 @@
 <?php 
 
+/*
 if(isset($_POST['submitaddfu'])){
 $patientid = $_GET['pid'];
 $ep_dateadd = $_POST['ep_dateadd'];
@@ -26,7 +27,7 @@ if(!$fuinsert_qry){
 } 
 
 }
-
+*/
 
 
 $fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY id DESC";
@@ -118,20 +119,14 @@ $('#new_followup_but').show();
 </script>
 
 
-	<div style=" border: medium none;float: left;height: 570px;margin-bottom: 20px;margin-top: -4px;">
-		 <table width="480" style="overflow-x: hidden; height: 570px;">
-		   <tr>
-		    <td valign="top">
+	<div style=" width:577px;border: medium none;float: left;height: 570px;margin-bottom: 20px;margin-top: -4px; overflow-x:scroll;">
+			<?php include 'dss_followups.php'; ?>
+<!-- IFRAME for FOLLOW UPS-->
+
+<!--<iframe height="533" width="100%" id="followup_frame" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>-->
 
 <!-- IFRAME for FOLLOW UPS-->
 
-<iframe height="533" width="100%" id="followup_frame" style="border: medium none; overflow-y: hidden;overflow-x: scroll;" src="dss_followups.php?pid=<?php echo $_GET['pid']; ?>">Iframes must be enabled to view this area.</iframe>
-
-<!-- IFRAME for FOLLOW UPS-->
-
-         </td>
-      </tr>
-		 </table>
 	</div>
 
 

@@ -3,9 +3,6 @@ session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
-  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
-<script src="admin/popup/popup.js" type="text/javascript"></script>
-<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <?php
 if(isset($_POST['submitaddfu'])){
   $patientid = $_POST['patientid'];
@@ -13,8 +10,8 @@ if(isset($_POST['submitaddfu'])){
   $devadd = $_POST['devadd'];
   $dsetadd = $_POST['dsetadd'];
 	$nightsperweek = $_POST['nightsperweek'];
-  $ep_eadd = $_POST['ep_eadd'];
-  $ep_tsadd = $_POST['ep_tsadd'];
+  $ep_eadd = $_POST['ep_eadd_new'];
+  $ep_tsadd = $_POST['ep_tsadd_new'];
   $ep_sadd = $_POST['ep_sadd'];
   $ep_eladd = $_POST['ep_eladd'];
   $sleep_qualadd = $_POST['sleep_qualadd'];
@@ -25,8 +22,32 @@ if(isset($_POST['submitaddfu'])){
   $appt_notesadd = $_POST['appt_notesadd'];
   $insertquery = "INSERT INTO dentalsummfu (`patientid`, `ep_dateadd`,`devadd`,`dsetadd`,`nightsperweek`,`ep_eadd`,`ep_tsadd`,`ep_sadd`,`ep_eladd`,`sleep_qualadd`,`ep_hadd`,`ep_wadd`,`wapnadd`,`hours_sleepadd`,`appt_notesadd`) VALUES (".$patientid.", '".$ep_dateadd."', '".$devadd."','".$dsetadd."','".$nightsperweek."','".$ep_eadd."','".$ep_tsadd."','".$ep_sadd."','".$ep_eladd."','".$sleep_qualadd."','".$ep_hadd."','".$ep_wadd."','".$wapnadd."','".$hours_sleepadd."','".$appt_notesadd."');";
   $insert = mysql_query($insertquery);
+  $fu_id = mysql_insert_id();
   if(!$insert){
   echo "Could not insert follow up, please try again!";
+  }else{
+
+
+        $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+        $epworth_my = mysql_query($epworth_sql);
+        while($epworth_myarray = mysql_fetch_array($epworth_my)){
+                $i = "INSERT INTO dentalsummfu_ess SET
+                        epworthid='".$epworth_myarray['epworthid']."',
+                        followupid='".$fu_id."',
+                        answer='".mysql_real_escape_string($_POST['epworth_new_'.$epworth_myarray['epworthid']])."',
+                        adddate=now(),
+                        ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                mysql_query($i);
+        }
+        for($thorntonid=1;$thorntonid<=5;$thorntonid++){
+                $i = "INSERT INTO dentalsummfu_tss SET
+                        thorntonid='".$thorntonid."',
+                        followupid='".$fu_id."',
+                        answer='".mysql_real_escape_string($_POST['thornton_new_'.$thorntonid])."',
+                        adddate=now(),
+                        ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                mysql_query($i);
+        }
   }
 }elseif(isset($_POST['submitupdatefu'])){
   $id = $_POST['id'];
@@ -65,6 +86,33 @@ WHERE followupid='".$id."'
   $insert = mysql_query($insertquery);
   if(!$insert){
   echo "Could not update follow up, please try again!";
+  }else{
+
+  $d = "DELETE FROM dentalsummfu_ess WHERE followupid = '".mysql_real_escape_string($id)."'";
+  mysql_query($d);
+
+        $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+        $epworth_my = mysql_query($epworth_sql);
+        while($epworth_myarray = mysql_fetch_array($epworth_my)){
+		$i = "INSERT INTO dentalsummfu_ess SET
+			epworthid='".$epworth_myarray['epworthid']."',
+			followupid='".$id."',
+			answer='".mysql_real_escape_string($_POST['epworth_'.$id.'_'.$epworth_myarray['epworthid']])."',
+			adddate=now(),
+			ip_address='".$_SERVER['REMOTE_ADDR']."'";
+		mysql_query($i);
+	}
+  $d = "DELETE FROM dentalsummfu_tss WHERE followupid = '".mysql_real_escape_string($id)."'";
+  mysql_query($d);
+	for($thorntonid=1;$thorntonid<=5;$thorntonid++){
+                $i = "INSERT INTO dentalsummfu_tss SET
+                        thorntonid='".$thorntonid."',
+                        followupid='".$id."',
+                        answer='".mysql_real_escape_string($_POST['thornton_'.$id.'_'.$thorntonid])."',
+                        adddate=now(),
+                        ip_address='".$_SERVER['REMOTE_ADDR']."'";
+                mysql_query($i);
+	}
   }
 }elseif(isset($_POST['submitdeletefu'])){
     $id = $_POST['id'];
@@ -72,10 +120,6 @@ WHERE followupid='".$id."'
   mysql_query($delsql);
 } 
 ?>
-<html>
-<head>
- <link href="css/admin.css" rel="stylesheet" type="text/css" />
-</head>
 <?php
 $fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
 $fuquery_array = mysql_query($fuquery_sql);
@@ -87,7 +131,8 @@ function show_new_followup(){
   $('#sleepstudyadd').show();
 }
 </script>
-<body style="width:<?= $bodywidth; ?>px;background:none;">
+<!--<body style="width:<?= $bodywidth; ?>px;background:none;">-->
+<div style="width:<?= $bodywidth; ?>px;">
 <form id="sleepstudyadd" style="float:left; display:none;" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <style type="text/css">
 #sleepstudyscrolltable tr{ height:28px; }
@@ -154,18 +199,41 @@ $dentaldevice = st($myarrayex['dentaldevice']);
 
   <tr >
   	    <td >
-      <input type="text" size="12" name="ep_eadd" />
+      <input type="text" size="12" id="ep_eadd_new" name="ep_eadd_new" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo $_GET['pid']; ?>&id=new');return false;" />
       
     </td>
   </tr>
-  
+ <!--- ESS ANSWERS -->
+    <tr style="display:none;">
+            <td style="background: #E4FFCF;">
+<?php
+                                        $epworth_sql = "select e.* from dental_epworth e 
+                                                where e.status=1 order by e.sortby";
+                                        $epworth_my = mysql_query($epworth_sql);
+                                        $epworth_number = mysql_num_rows($epworth_my);
+                                        while($epworth_myarray = mysql_fetch_array($epworth_my))
+                                        {
+?>
+      <input type="text" size="12" id="epworth_new_<?php echo $epworth_myarray['epworthid']; ?>" name="epworth_new_<?php echo $epworth_myarray['epworthid']; ?>" /><br />
+  <?php } ?>
+    </td>
+  </tr>
+ 
   <tr >
   	    <td >
-      <input type="text" size="12" name="ep_tsadd" />
+      <input type="text" size="12" id="ep_tsadd_new" name="ep_tsadd_new" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo $_GET['pid']; ?>&id=new');return false;" />
       
     </td>
   </tr>
-  
+      <tr style="display:none;">
+            <td style="background: #E4FFCF;">
+<?php
+                                        for($thorntonid=1;$thorntonid<=5;$thorntonid++){
+?>      <input type="text" size="12" id="thornton_new_<?php echo $thorntonid; ?>" name="thornton_new_<?php echo $thorntonid; ?>" /><br />
+  <?php } ?>
+    </td>
+  </tr>
+ 
   <tr >
   	    <td >
       <input type="text" size="12" name="ep_sadd" />
@@ -246,7 +314,7 @@ $dentaldevice = st($myarrayex['dentaldevice']);
   	    <td >
   	  <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
       <input type="submit" name="submitaddfu" value="Submit Follow Up" id="submitaddfu" style="width:120px;" />
-      <input type="button" value="cancel" onclick="$('#sleepstudyadd').hide(); parent.show_new_but(); return false;" value="Cancel" /> 
+      <input type="button" value="cancel" onclick="$('#sleepstudyadd').hide(); parent.show_new_but(); return false;" value="Cancel" style="width:120px;" /> 
     </td>
   </tr>
 					
@@ -323,18 +391,55 @@ $device = mysql_result($device_result, 0);
 
   <tr>
   	    <td style="background: #E4FFCF;">
-      <input type="text" size="12" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" />
+      <input type="text" size="12" id="ep_eadd_<?php echo $fuquery['followupid'];?>" name="ep_eadd" value="<?php echo $fuquery['ep_eadd'];?>" onclick="loadPopup('summ_subj_ess.php?pid=<?php echo $_GET['pid']; ?>&id=<?php echo $fuquery['followupid'];?>');return false;"  />
       
     </td>
   </tr>
   
+<!--- ESS ANSWERS -->
+    <tr style="display:none;">
+            <td style="background: #E4FFCF;">
+<?php
+                                        $epworth_sql = "select e.*, fu.answer from dental_epworth e 
+						LEFT JOIN dentalsummfu_ess fu ON fu.epworthid=e.epworthid AND fu.followupid='".mysql_real_escape_string($fuquery['followupid'])."'
+						where e.status=1 order by e.sortby";
+                                        $epworth_my = mysql_query($epworth_sql);
+                                        $epworth_number = mysql_num_rows($epworth_my);
+                                        while($epworth_myarray = mysql_fetch_array($epworth_my))
+                                        {
+?>
+      <input type="text" size="12" id="epworth_<?php echo $fuquery['followupid'];?>_<?php echo $epworth_myarray['epworthid']; ?>" name="epworth_<?php echo $fuquery['followupid'];?>_<?php echo $epworth_myarray['epworthid']; ?>" value="<?= $epworth_myarray['answer']; ?>" /><br />
+  <?php } ?>    
+    </td>
+  </tr>
+
+
+
+
+
   <tr>
   	    <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" />
+      <input type="text" size="12" id="ep_tsadd_<?php echo $fuquery['followupid'];?>" name="ep_tsadd" value="<?php echo $fuquery['ep_tsadd'];?>" onclick="loadPopup('summ_subj_tss.php?pid=<?php echo $_GET['pid']; ?>&id=<?php echo $fuquery['followupid'];?>');return false;" />
       
     </td>
   </tr>
-  
+     <tr style="display:none;">
+            <td style="background: #E4FFCF;">
+<?php
+                                        for($thorntonid=1;$thorntonid<=5;$thorntonid++){
+				$t_sql = "SELECT answer FROM dentalsummfu_tss
+					WHERE followupid='".mysql_real_escape_string($fuquery['followupid'])."' 
+						AND thorntonid='".$thorntonid."'";
+				$t_q = mysql_query($t_sql);
+				$thornton_myarray = mysql_fetch_assoc($t_q);
+?>      <input type="text" size="12" id="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" name="thornton_<?php echo $fuquery['followupid'];?>_<?php echo $thorntonid; ?>" value="<?= $thornton_myarray['answer']; ?>" /><br />
+  <?php } ?>    
+    </td>
+  </tr>
+
+
+
+ 
   <tr>
   	    <td style="background: #E4FFCF;">
       <input type="text" size="12" name="ep_sadd" value="<?php echo $fuquery['ep_sadd'];?>" />
@@ -592,7 +697,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-	  <input type="button" value="Save Baseline" onclick="gotoQuestionnaire();" />
+	  <input type="button" value="Save Baseline" onclick="gotoQuestionnaire();" style="width:120px;" />
     </td>
   </tr>
 
@@ -602,12 +707,19 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 function gotoQuestionnaire(){
   parent.window.location = 'q_page1.php?pid=<?= $_GET['pid']; ?>';
 }
+
+function update_ess(f, v){
+  $('#'+f).val(v);
+}
+
+function update_tss(f, one, two, three, four, five, total){
+  $('#thornton_'+f+'_1').val(one);
+  $('#thornton_'+f+'_2').val(two);
+  $('#thornton_'+f+'_3').val(three);
+  $('#thornton_'+f+'_4').val(four);
+  $('#thornton_'+f+'_5').val(five);
+  $('#ep_tsadd_'+f).val(total);
+}
+
 </script>
-  
-			<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>	
-				</body>
-				</html>
+ </div> 

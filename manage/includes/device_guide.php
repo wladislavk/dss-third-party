@@ -5,9 +5,9 @@ require_once('../includes/constants.inc');
 include("../includes/sescheck.php");
 require_once('../includes/general_functions.php');
 ?>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+<script type="text/javascript" src="/manage/js/device/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/manage/js/device/jquery-ui.js"></script>
+<link rel="stylesheet" href="/manage/js/device/jquery-ui.css" />
 <?php
 if(isset($_REQUEST['submit']))
 {

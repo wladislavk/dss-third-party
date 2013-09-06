@@ -138,7 +138,7 @@ function show_study_table(){
 }
 </script>
 
-        <div style="border: medium none; width: 650px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
+        <div style="border: medium none; width: 630px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
 		<div style="border: medium none; overflow: hidden;width:<?= $body_width; ?>px;">
 		<?php include 'add_sleep_study.php'; ?>
 		</div>

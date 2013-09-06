@@ -145,7 +145,7 @@ function show_new_followup(){
 
   <tr >
     <td >
-      <input type="text" size="12" style="width:100px;" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" />
+      <input type="text" size="12" style="width:100px;" class="calendar" id="ep_dateadd" name="ep_dateadd" value="<?php echo date('m/d/Y'); ?>" />
     </td>
   </tr>
   
@@ -345,7 +345,7 @@ $device = mysql_result($device_result, 0);
 
   <tr>
     <td style="background: #F9FFDF;">
-      <input type="text" size="12" style="width:75px;" name="ep_dateadd" value="<?php echo ($fuquery['ep_dateadd'])?date('m/d/Y', strtotime($fuquery['ep_dateadd'])):''; ?>" />
+      <input type="text" size="12" style="width:75px;"  class="calendar" id="ep_dateadd_<?php echo $fuquery['followupid'];?>" name="ep_dateadd" value="<?php echo ($fuquery['ep_dateadd'])?date('m/d/Y', strtotime($fuquery['ep_dateadd'])):''; ?>" />
     </td>
   </tr>
   
@@ -549,7 +549,7 @@ $s_row = mysql_fetch_assoc($s_q);
 $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 
 ?>
-<form style="float:left;" class="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form style="float:left;" class="sleepstudybaseline" id="sleepstudybaseline" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <input type="hidden" name="id" value="baseline" />
  <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">
@@ -697,7 +697,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-	  <input type="button" value="Save Baseline" onclick="gotoQuestionnaire();" style="width:120px;" />
+	  <input type="button" value="Edit Baseline" onclick="gotoQuestionnaire();" style="width:120px;" />
     </td>
   </tr>
 
@@ -720,6 +720,10 @@ function update_tss(f, one, two, three, four, five, total){
   $('#thornton_'+f+'_5').val(five);
   $('#ep_tsadd_'+f).val(total);
 }
+
+$('#sleepstudybaseline input').not(':input[type=button], :input[type=submit], :input[type=reset]').click(function(){
+  alert('Error: The baseline results are compiled from the patient\'s original Questionnaire. Click \"Edit Baseline\" to change these values in the patient\'s chart.');
+});
 
 </script>
  </div> 

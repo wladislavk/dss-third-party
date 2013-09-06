@@ -30,7 +30,7 @@ $patients = array();
 $i = 0;
 while ($row = mysql_fetch_assoc($result)) {
   $patients[$i]['id'] = $row['national_provider_id'];
-  $patients[$i]['name'] = $row['firstname']." ".$row['lastname'];
+  $patients[$i]['name'] = $row['firstname']." ".$row['lastname'] ." - " . $row['contacttype'];
   $patients[$i]['source'] = $row['referral_type'];
   $i++;
 }

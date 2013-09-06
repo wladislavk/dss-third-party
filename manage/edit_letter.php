@@ -659,12 +659,16 @@ if($use_letter_header == "1"){
 %franchisee_addr%
 </p>
 ';
-if($header_space){ $header .= "<p> &nbsp; </p>"; }
+  if($header_space){ 
+	$header .= "<p> &nbsp; </p>
+"; 
+  }
 }
 
 $header .= '<p>%todays_date%</p>
 ';
-if($header_space){ $header .= "<p> &nbsp; </p>"; }
+if($header_space){ $header .= "<p> &nbsp; </p>
+"; }
 if($indent_address == "1"){
 $header .= '
 <table border="0">

@@ -131,9 +131,13 @@ Epworth Sleep Questionnaire
 					$epworth_number = mysql_num_rows($epworth_my);
                                         while($epworth_myarray = mysql_fetch_array($epworth_my))
                                         {
-
+				$a_sql = "SELECT answer FROM dentalsummfu_ess
+						WHERE epworthid='".$epworth_myarray['epworthid']."' AND
+							followupid='".mysql_real_escape_string($_GET['id'])."';";
+				$a_q = mysql_query($a_sql);
+				$a = mysql_fetch_assoc($a_q);
+				$chk = $a['answer'];
 					?>
-                   </td></tr> 
                             <tr>
                 <td valign="top" width="60%" class="frmhead">        
 			<?=st($epworth_myarray['epworth']);?><br />&nbsp;
@@ -147,6 +151,11 @@ Epworth Sleep Questionnaire
                             </select>
                         </td>
                     </tr>
+<script type="text/javascript">
+  v = parent.top.$('#epworth_<?=$_GET['id'];?>_<?=st($epworth_myarray['epworthid']);?>').val();
+  $('#epworth_<?=st($epworth_myarray['epworthid']);?>').val(v);
+</script>
+
                     <? }?>
 </table>
 </td></tr> 

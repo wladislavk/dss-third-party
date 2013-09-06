@@ -1505,7 +1505,7 @@ $num_face = mysql_num_rows($itype_my);
                                                 echo 'Unregistered';
                                                 break;
                                         case 1:
-                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton']));
+                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton'])) . ' ET';
                                                 break;
                                         case 2:
                                                 echo 'Registered';
@@ -1518,6 +1518,9 @@ $num_face = mysql_num_rows($itype_my);
                                 </span>
 <br />
 <input type="submit" name="sendPin" value="Patient can't recieve text message?" class="button" />
+<?php if($themyarray['registration_status']==1){
+ ?>PIN Code: <?= $themyarray['access_code']; ?> 
+<?php } ?>
             </div>            </div>
                     </li>
                 </ul>

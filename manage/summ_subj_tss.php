@@ -29,6 +29,14 @@ $snore_3 = 0;//st($myarray['snore_3']);
 $snore_4 = 0;//st($myarray['snore_4']);
 $snore_5 = 0;//st($myarray['snore_5']);
 
+                                $a_sql = "SELECT answer, thorntonid FROM dentalsummfu_tss
+                                                WHERE
+                                                        followupid='".mysql_real_escape_string($_GET['id'])."';";
+                                $a_q = mysql_query($a_sql);
+                                while($a = mysql_fetch_assoc($a_q)){
+                                  ${'snore_'.$a['thorntonid']} = $a['answer'];
+				}
+
 
 $sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
@@ -108,7 +116,7 @@ Thornton Snoring Scale
 		1. My snoring affects my relationship with my partner:
 	</td>
 	<td valign="top" class="frmdata">
-		<select name="snore_1" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		<select id="snore_1" name="snore_1" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
 			<option value="0" <? if($snore_1 == 0) echo " selected";?>>0</option>
 			<option value="1" <? if($snore_1 == 1) echo " selected";?>>1</option>
 			<option value="2" <? if($snore_1 == 2) echo " selected";?>>2</option>
@@ -121,7 +129,7 @@ Thornton Snoring Scale
 		2. My snoring causes my partner to be irritable or tired:
 	</td>
 	<td valign="top" class="frmdata">
-		<select name="snore_2" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		<select id="snore_2" name="snore_2" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
 			<option value="0" <? if($snore_2 == 0) echo " selected";?>>0</option>
 			<option value="1" <? if($snore_2 == 1) echo " selected";?>>1</option>
 			<option value="2" <? if($snore_2 == 2) echo " selected";?>>2</option>
@@ -134,7 +142,7 @@ Thornton Snoring Scale
 		3. My snoring requires us to sleep in separate rooms:
 	</td>
 	<td valign="top" class="frmdata">
-		<select name="snore_3" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		<select id="snore_3" name="snore_3" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
 			<option value="0" <? if($snore_3 == 0) echo " selected";?>>0</option>
 			<option value="1" <? if($snore_3 == 1) echo " selected";?>>1</option>
 			<option value="2" <? if($snore_3 == 2) echo " selected";?>>2</option>
@@ -147,7 +155,7 @@ Thornton Snoring Scale
 		4. My snoring is loud:
 	</td>
 	<td valign="top" class="frmdata">
-		<select name="snore_4" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		<select id="snore_4" name="snore_4" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
 			<option value="0" <? if($snore_4 == 0) echo " selected";?>>0</option>
 			<option value="1" <? if($snore_4 == 1) echo " selected";?>>1</option>
 			<option value="2" <? if($snore_4 == 2) echo " selected";?>>2</option>
@@ -160,7 +168,7 @@ Thornton Snoring Scale
 		5. My snoring affects people when I am sleeping away from home:
 	</td>
 	<td valign="top" class="frmdata">
-		<select name="snore_5" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+		<select id="snore_5" name="snore_5" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
 			<option value="0" <? if($snore_5 == 0) echo " selected";?>>0</option>
 			<option value="1" <? if($snore_5 == 1) echo " selected";?>>1</option>
 			<option value="2" <? if($snore_5 == 2) echo " selected";?>>2</option>
@@ -193,6 +201,18 @@ Thornton Snoring Scale
 &nbsp;&nbsp;&nbsp;
 </div>
 </form>
+<script type="text/javascript">
+  v = parent.top.$('#thornton_<?=$_GET['id'];?>_1').val();
+  $('#snore_1').val(v);
+  v = parent.top.$('#thornton_<?=$_GET['id'];?>_2').val();
+  $('#snore_2').val(v);
+  v = parent.top.$('#thornton_<?=$_GET['id'];?>_3').val();
+  $('#snore_3').val(v);
+  v = parent.top.$('#thornton_<?=$_GET['id'];?>_4').val();
+  $('#snore_4').val(v);
+  v = parent.top.$('#thornton_<?=$_GET['id'];?>_5').val();
+  $('#snore_5').val(v);
+</script>
 
 
 

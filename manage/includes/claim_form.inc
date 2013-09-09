@@ -881,8 +881,10 @@ if(!$is_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
-$insurancetype = st($myarray['insurance_type']);
+$p_m_dss_file = $pat_myarray['p_m_dss_file'];
+$s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $patient_lastname = st($myarray['patient_lastname']);
+$insurancetype = st($myarray['insurance_type']);
 $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
@@ -1240,16 +1242,16 @@ input{text-transform:uppercase;}
         <?php } ?>
 
 		<?php } else if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-               <?php if($status == DSS_CLAIM_PENDING && $p_m_dss_file == '2'){ ?>
+               <?php if(($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_REJECTED) && $p_m_dss_file == '2'){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
-          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
+          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
 
         <?php } ?>
 
-               <?php }elseif($status == DSS_CLAIM_SEC_PENDING && $s_m_dss_file == '2'){ ?>
+               <?php }elseif(($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_REJECTED) && $s_m_dss_file == '2'){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
         <?php if (!$is_sent) {  ?>

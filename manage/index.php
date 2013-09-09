@@ -315,6 +315,11 @@ ALERT THIRD
   <a href="manage_claims.php?unmailed=1" class=" count_<?= $num_unmailed_claims; ?> notification <?= ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unmailed_claims;?></span><span class="label">Unmailed Claims</span></a>
 <?php } ?>
 
+
+  <a href="manage_rejected_claims.php" class=" count_<?= $num_rejected_claims; ?> notification <?= ($num_rejected_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_rejected_claims;?></span><span class="label">Rejected Claims</span></a>
+
+
+
   <a href="manage_unsigned_notes.php" class=" count_<?= $num_; ?> notification <?= ($num_unsigned==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_unsigned;?></span><span class="label">Unsigned Notes</span></a>
 
 <?php $num_alerts = $num_fax_alerts + $num_rejected_preauth; ?>

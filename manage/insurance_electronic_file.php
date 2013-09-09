@@ -708,7 +708,7 @@ $result = curl_exec($ch);
 
 $json_response = json_decode($result);
 $ref_id = $json_response->{"reference_id"};
-
+$success = $json_response->{"success"};
 $up_sql = "INSERT INTO dental_claim_electronic SET 
         claimid='".mysql_real_escape_string($_GET['insid'])."',
 	reference_id = '".mysql_real_escape_string($ref_id)."',
@@ -717,7 +717,10 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
-
+if($success == "false"){
+  $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+  mysql_query($up_sql);
+}
 ?>
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');

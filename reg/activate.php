@@ -1,7 +1,7 @@
 <?php include '../manage/admin/includes/main_include.php'; ?>
 <?php require_once("twilio/twilio.config.php");
 
-$s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
+$s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.mailing_phone, dp.docid FROM dental_patients dp JOIN dental_users du on du.userid=dp.docid 
 	WHERE dp.patientid='".mysql_real_escape_string($_GET['id'])."' AND
 		dp.recover_hash='".mysql_real_escape_string($_GET['hash'])."' AND
 		dp.use_patient_portal='1' AND
@@ -9,6 +9,19 @@ $s = "SELECT dp.access_type, dp.email, dp.cell_phone, du.mailing_practice, du.ma
 $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);
+
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($_GET['id'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT * FROM dental_locations WHERE id='".mysql_real_escape_string($loc_r['location'])."' AND docid='".mysql_real_escape_string($r['docid'])."'";
+}else{
+  $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysql_real_escape_string($r['docid'])."'";
+}
+$location_result = mysql_query($location_query);
+$location_info = mysql_fetch_assoc($location_result);
+
+  $n = $location_info['phone'];
 /*
                 $recover_hash = substr(hash('sha256', $r['patientid'].$r['email'].rand()), 0, 7);
                 $ins_sql = "UPDATE dental_patients set access_code='".$recover_hash."' WHERE patientid='".$r['patientid']."'";
@@ -123,14 +136,14 @@ $(document).ready(function(){
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn’t receive a PIN code?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
-		Didn't receive a PIN access code from <?= $r['mailing_practice']; ?>? Don't worry. Just call the office at <?= format_phone($r['mailing_phone']); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
+		Didn't receive a PIN access code from <?= $r['mailing_practice']; ?>? Don't worry. Just call the office at <?= format_phone($n); ?> and ask them to provide you the PIN again. Then enter your PIN below to register.
           </p>
        </div>
 	<?php }else{ ?>
        <span><a href="#" onclick="$('#text_instructions').show('slow');">Didn't receive a text message?</a></span>
        <div style="display:none;" id="text_instructions">
           <p>
-		Didn't receive a text message from us? Don't worry. Click here and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
+		Didn't receive a text message from us? Don't worry. Click "Text Access Code" and we'll send a new text message to your phone number ending in -<?= substr($r['cell_phone'], strlen($r['cell_phone'])-2); ?>.
 	  </p>
           <button class="fr" onclick="send_text('button', this)">Text Access Code</button>
        </div>

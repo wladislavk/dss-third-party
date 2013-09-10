@@ -720,7 +720,16 @@ mysql_query($up_sql);
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
-}
+?>
+<script type="text/javascript">
+  c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
+  if(c){
+   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>"; 
+  }
+</script>
+<?php
+
+}else{
 ?>
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
@@ -729,6 +738,7 @@ if($success == "false"){
   }
 </script>
 <?php
+}
 //echo($result);
 
 /*

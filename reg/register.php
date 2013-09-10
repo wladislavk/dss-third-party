@@ -61,7 +61,7 @@ include 'includes/completed.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp100">
                                                                                                         <h3 class="sepH_a">Welcome!</h3>
-                                                                                                        <p>Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+                                                                                                        <p>Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
 <br />
                                                                                                                 <div class="cf">
 <a href="javascript:void(0)" class="fr next btn btn_d">Proceed &raquo;</a>
@@ -79,7 +79,7 @@ include 'includes/completed.php';
 											<div class="cf">
 												<div class="dp25">
 													<h3 class="sepH_a">Welcome!</h3>
-													<p class="s_color small">Please accurately complete the information on the following pages. This will save you time at your next Dental Sleep Solutions appointment, and allow you to avoid completing additional forms later.  All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
+													<p class="s_color small">Please accurately complete the information on the following pages. This will save you time at your next appointment, and allow you to avoid completing additional forms later. All information you input here is securely stored using the latest encryption technology that meets or exceeds HIPAA medical privacy standards, and you can access and update your information anytime.  We take your privacy seriously, and we never share your information without your consent.  We're excited to see you at your next visit!</p>
 												</div>
 												<div class="dp75">
 													<div>

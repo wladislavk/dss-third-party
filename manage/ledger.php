@@ -323,7 +323,7 @@
 
 <? if($_GET['pt_lastname'] <> '')
 {
-	$pat_sql = "select * from dental_patients where lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
+	$pat_sql = "select * from dental_patients where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND lastname like '%".s_for($_GET['pt_lastname'])."%' and status=1";
 	$pat_my = mysql_query($pat_sql);
 ?>
 <a name="pat_list"></a>

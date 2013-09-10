@@ -1455,8 +1455,22 @@ $total_insurance = mysql_num_rows($insurance_my);
         <?php
         }
 
-
-
+	$rc_sql = "SELECT * FROM dental_insurance WHERE 
+			(status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
+			AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+	$rc_q = mysql_query($rc_sql);
+	if(mysql_num_rows($rc_q) > 0){
+		?><span class="warning">
+		Warning! Patient has the following rejected claims: <br />
+		<?php
+	  while($rejected = mysql_fetch_assoc($rc_q)){
+		?><a href="view_claim.php?claimid=<?= $rejected['insuranceid']; ?>&pid=<?= $_GET['pid']; ?>">
+		<?= $rejected['insuranceid']; ?> - <?= date('m/d/Y', strtotime($rejected['adddate'])); ?>
+		</a><br />
+		<?php
+	  }
+		?></span><?php
+	}
   }
 
   $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";

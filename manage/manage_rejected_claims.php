@@ -75,15 +75,41 @@ if(isset($_GET['msg'])){
 				    <?=$dss_claim_status_labels[$myarray['status']];?>
 				</td>
 				<td valign="top">
-<a href="insurance.php?insid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
+<a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $myarray['patientid']; ?>" class="editlink" title="EDIT">
                                                 Fix 
                                         </a>
 				</td>
 			</tr>
+			<tr><td colspan="4">
+			    <?php 
+
+				$e_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."' ORDER BY adddate DESC LIMIT 1";
+				$e_q = mysql_query($e_sql);
+				while($electronic = mysql_fetch_assoc($e_q)){
+					$r = json_decode($electronic['response']);
+					$errors = $r->{"errors"}->{"messages"};
+					foreach($errors as $error){
+					  echo $error."<br />";
+					}
+					$r_sql = "SELECT * FROM dental_eligible_response WHERE reference_id !='' AND reference_id='".mysql_real_escape_string($electronic['reference_id'])."'";
+					$r_q = mysql_query($r_sql);
+					while($response = mysql_fetch_assoc($r_q)){
+						$r = json_decode($response['response']);
+						$codes = $r->{"details"}->{"codes"};
+						echo $codes->{"category_code"}." - ";
+						echo $codes->{"category_label"}."<br />";
+                                                echo $codes->{"status_code"}." - ";
+                                                echo $codes->{"status_label"};
+					}
+				}
+
+				?>
+			</td>
+			</tr>
 	<? 	}
 	}?>
 </table>
-</insurance>
+</form>
 
 <br/><br/>
 

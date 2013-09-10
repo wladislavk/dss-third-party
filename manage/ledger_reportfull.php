@@ -246,7 +246,7 @@ background:#999999;
           <?php
 	if($myarray[0] == 'ledger'){
 	  if($myarray["amount"] <> 0){
-          echo $myarray["amount"];
+          echo number_format($myarray["amount"],2);
 	  $tot_charges += $myarray["amount"];
 	  }
 	}

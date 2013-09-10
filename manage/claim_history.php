@@ -26,7 +26,15 @@ $claim = mysql_fetch_assoc($cq);
 	?><div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
 		<h3>Claim Electronically filed on
     		<?= $r['adddate']; ?></h3>
-		<p>Response: <?= $r['response'];?></p>
+		<p><strong>Response:</strong><br /> 
+			<?php
+ 			$d = json_decode($r['response']);
+                                        $errors = $d->{"errors"}->{"messages"};
+                                        foreach($errors as $error){
+                                          echo $error."<br />";
+                                        }
+			?>
+		<?= $r['response'];?></p>
      		<h4>Webhook responses</h4> 
 		<?php
 			$w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."'";

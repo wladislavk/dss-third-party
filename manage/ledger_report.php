@@ -200,9 +200,10 @@ background:#999999;
                    $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
                    $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
                    $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
+		   $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
                 }else{
-                  $i_date = $n_date = $l_date = '';
+                  $p_date = $i_date = $n_date = $l_date = '';
                 }
 $newquery = "select 
                 'ledger',
@@ -279,8 +280,8 @@ select
         from dental_ledger dl 
                 JOIN dental_patients as pat ON dl.patientid = pat.patientid
                 LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-        where dl.docid='".$_SESSION['docid']."' 
-        AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'
+        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
+	".$l_date."
  UNION
         select 
                 'ledger_payment',
@@ -302,9 +303,9 @@ select
                 JOIN dental_patients pat on dl.patientid = pat.patientid
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' 
+                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
                         AND dlp.amount != 0
-                        AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."' 
+			".$p_date."
 ";
 
 
@@ -320,7 +321,6 @@ select
                     $newquery .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];	
                   }
                   }
-
                 $runquery = mysql_query($newquery);
 		while($myarray = mysql_fetch_array($runquery))
 		{
@@ -363,7 +363,7 @@ select
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
-          echo $myarray["amount"];
+          echo number_format($myarray["amount"],2);
           $tot_charge += $myarray["amount"];
           ?>
 

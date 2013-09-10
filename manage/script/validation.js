@@ -400,7 +400,8 @@ function regabc(fa){
                 fa.cell_phone.focus();
                 return false;
         }
-	return confirm('You are about to send the patient an email. Are you sure you want to continue?');
+	return confirm('You are about to send the patient a registration email. The patient will receive a text message activation code by clicking a link contained in this email, and the patient can complete his/her forms online. Are you sure you want to continue?');
+	//return confirm('You are about to send the patient an email. Are you sure you want to continue?');
 }
 
 function remabc(fa){

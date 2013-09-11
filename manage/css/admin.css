@@ -1242,6 +1242,10 @@ float:left;
   cursor: pointer;
 }
 
+.status_4 td, .status_13 td{
+  background: #fcc;
+}
+
 .statement td{
   color: #0066CC;
   }

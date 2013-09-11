@@ -52,7 +52,7 @@ if($_POST['sortsub'] == 1)
 			$val = 999;
 		}
 		
-		$up_sort_sql = "update dental_transaction_code_doc set sortby='".s_for($val)."' where transaction_codeid='".$smyarray["transaction_codeid"]."' WHERE doc='".$_SESSION['docid']."';";
+		$up_sort_sql = "update dental_transaction_code set sortby='".s_for($val)."' where transaction_codeid='".$smyarray["transaction_codeid"]."' AND docid='".$_SESSION['docid']."';";
 		mysql_query($up_sort_sql);
 	}
 	$msg = "Sort By Changed Successfully";

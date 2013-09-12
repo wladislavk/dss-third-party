@@ -559,7 +559,7 @@ if($claim['accept_assignment'] == "No"){
 $row[] = $total_charge;
 $row[] = $amount_paid;
 $row[] = $balance_due;
-$row[] = "X"; //Physician Signature
+$row[] = $producer_first_name." ".$producer_last_name; //Physician Signature
 $row[] = date('m/d/Y');
 
 $row[] = $producer_last_name;//Physician name

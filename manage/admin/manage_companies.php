@@ -72,11 +72,17 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="60%">
+		<td valign="top" class="col_head" width="40%">
 			Name
 		</td>
 		<td valign="top" class="col_head">
  			Number of Admins
+		</td>
+		<td valign="top" class="col_head">
+			Number of Users
+		</td>
+		<td valign="top" class="col_head">
+		  	Type
 		</td>
 		<td valign="top" class="col_head">
 			Logo
@@ -107,6 +113,18 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?= st($myarray["num_admin"]); ?>
 				</td>		
+				<td valign="top">
+				  <?php $u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysql_real_escape_string($myarray["id"])."'";
+					$u_q = mysql_query($u_sql);
+					$num_users = mysql_num_rows($u_q);
+					?>
+					<a href="billing_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+					<?php
+				  ?>
+				</td>
+				<td valign="top">
+					<?= $dss_company_type_labels[$myarray["company_type"]];?>
+				</td>
                                 <td valign="top">
                                         <a href="Javascript:;"  onclick="Javascript: loadPopup('add_company_logo.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
                                                 Edit

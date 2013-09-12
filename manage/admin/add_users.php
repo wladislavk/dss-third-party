@@ -76,7 +76,8 @@ if($_POST["usersub"] == 1)
                                 homepage = '".s_for($_POST['homepage'])."',
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
-				status = '".s_for($_POST["status"])."' 
+				status = '".s_for($_POST["status"])."',
+				billing_company_id = '".$_POST['billing_company_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			$loc_sql = "UPDATE dental_locations SET
@@ -87,7 +88,7 @@ if($_POST["usersub"] == 1)
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
-				fax = '".s_for(num($_POST["mailing_fax"]))."'
+				fax = '".s_for(num($_POST["mailing_fax"]))."',
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
 			form_update_all($_POST['ed']);
@@ -216,6 +217,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 homepage = '".s_for($_POST['homepage'])."',
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
+                                billing_company_id = '".$_POST['billing_company_id']."',
 				";
 		                if(isset($_POST['reg_but'])){
 					$ins_sql .= " recover_hash='".$recover_hash."',
@@ -430,6 +432,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$homepage = $_POST['homepage'];
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
+		$billing_company_id = $_POST['billing_company_id'];
 	}
 	else
 	{
@@ -472,6 +475,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$homepage = st($themyarray['homepage']);
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
+		$billing_company_id = $themyarray['billing_company_id'];
 		$but_text = "Add ";
 	}
 
@@ -846,7 +850,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <td valign="top" class="frmdata">
                 <select name="companyid" class="tbox">
 			<?php
-			  $bu_sql = "SELECT * FROM companies ORDER BY name ASC";
+			  $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_SOFTWARE."' ORDER BY name ASC";
 			  $bu_q = mysql_query($bu_sql);
 			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
  			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
@@ -867,6 +871,22 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </td>
         </tr>
 <?php } ?>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 Billing Company
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="billing_company_id" class="tbox">
+			<option value="">None</option>
+                        <?php
+                          $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_BILLING."' ORDER BY name ASC";
+                          $bu_q = mysql_query($bu_sql);
+                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+                            <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                          <?php } ?>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">

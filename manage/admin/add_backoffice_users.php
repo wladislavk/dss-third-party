@@ -38,7 +38,8 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = "update admin set 
-				name = '".mysql_real_escape_string($_POST["name"])."',
+				first_name = '".mysql_real_escape_string($_POST["first_name"])."',
+				last_name = '".mysql_real_escape_string($_POST["last_name"])."',
 				username = '".mysql_real_escape_string($_POST["username"])."',
 				admin_access='".mysql_real_escape_string($_POST["admin_access"])."',
 				email = '".mysql_real_escape_string($_POST["email"])."', 
@@ -77,7 +78,8 @@ if($_POST["usersub"] == 1)
                                 status = '".mysql_real_escape_string($_POST["status"])."', 
 				password = '".mysql_real_escape_string($password)."', 
 				salt = '".$salt."',
-				name = '".mysql_real_escape_string($_POST["name"])."', 
+                                first_name = '".mysql_real_escape_string($_POST["first_name"])."',
+                                last_name = '".mysql_real_escape_string($_POST["last_name"])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -124,7 +126,8 @@ if($_POST["usersub"] == 1)
 	{
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		$name = $_POST['name'];
+		$first_name = $_POST['first_name'];
+                $last_name = $_POST['last_name'];
 		$email = $_POST['email'];
 		$admin_access = $_POST['admin_access'];
 		$status = $_POST['status'];
@@ -134,7 +137,8 @@ if($_POST["usersub"] == 1)
 	{
 		$username = st($themyarray['username']);
 		$password = st($themyarray['password']);
-		$name = st($themyarray['name']);
+		$first_name = st($themyarray['first_name']);
+                $last_name = st($themyarray['last_name']);
 		$email = st($themyarray['email']);
 		$status = st($themyarray['status']);
 		$companyid = st($themyarray['companyid']);
@@ -200,11 +204,20 @@ if($_POST["usersub"] == 1)
 	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Name
+                First Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Last Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="tbox" />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -228,6 +241,8 @@ if($_POST["usersub"] == 1)
 			<?php } ?>
                         <option value="<?= DSS_ADMIN_ACCESS_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_ADMIN) echo " selected";?>>Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
+                        <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
                 </select>
             </td>
         </tr>

@@ -23,7 +23,8 @@ if($_POST["compsub"] == 1)
 				sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
 				sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
 				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
-				status = '".mysql_real_escape_string($_POST["status"])."'
+				status = '".mysql_real_escape_string($_POST["status"])."',
+				company_type = '".mysql_real_escape_string($_POST['company_type'])."'
 			where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
@@ -61,6 +62,7 @@ if($_POST["compsub"] == 1)
                                 sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
                                 sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
+                                company_type = '".mysql_real_escape_string($_POST['company_type'])."',
 				adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -112,6 +114,7 @@ if($_POST["compsub"] == 1)
                 $sfax_app_key = $_POST['sfax_app_key'];
                 $sfax_init_vector = $_POST['sfax_init_vector'];
 		$status = $_POST['status'];
+		$company_type = $_POST['company_type'];
 	}
 	else
 	{
@@ -129,6 +132,7 @@ if($_POST["compsub"] == 1)
                 $sfax_app_key = st($themyarray['sfax_app_key']);
                 $sfax_init_vector = st($themyarray['sfax_init_vector']);
 		$status = st($themyarray['status']);
+		$company_type = st($themyarray['company_type']);
 		$but_text = "Add ";
 	}
 	
@@ -277,6 +281,17 @@ if($_POST["compsub"] == 1)
             	<select name="status" class="tbox">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Company Type
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="company_type" class="tbox">
+                        <option value="<?= DSS_COMPANY_TYPE_SOFTWARE; ?>" <? if($company_type == DSS_COMPANY_TYPE_SOFTWARE) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE]; ?></option>
+                        <option value="<?= DSS_COMPANY_TYPE_BILLING; ?>" <? if($company_type!='' && $company_type == DSS_COMPANY_TYPE_BILLING) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING]; ?></option>
                 </select>
             </td>
         </tr>

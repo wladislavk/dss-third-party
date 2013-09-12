@@ -242,11 +242,15 @@ $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE] = "Software";
 define('DSS_ADMIN_ACCESS_SUPER', 1);
 define('DSS_ADMIN_ACCESS_ADMIN', 2);
 define('DSS_ADMIN_ACCESS_BASIC', 3);
+define('DSS_ADMIN_ACCESS_BILLING_ADMIN', 4);
+define('DSS_ADMIN_ACCESS_BILLING_BASIC', 5);
 
 $dss_admin_access_labels = array();
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_ADMIN] = "Admin User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_BILLING_ADMIN] = "Billing Admin User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_BILLING_BASIC] = "Billing Basic User";
 
 define('DSS_USER_ACCESS_STAFF', 1);
 define('DSS_USER_ACCESS_DOCTOR', 2);
@@ -289,3 +293,11 @@ $dss_ticket_status_labels = array();
 $dss_ticket_status_labels[DSS_TICKET_STATUS_OPEN] = "Open";
 $dss_ticket_status_labels[DSS_TICKET_STATUS_REOPENED] = "Re-opened";
 $dss_ticket_status_labels[DSS_TICKET_STATUS_CLOSED] = "Closed";
+
+
+define('DSS_COMPANY_TYPE_BILLING', 0);
+define('DSS_COMPANY_TYPE_SOFTWARE', 1);
+
+$dss_company_type_labels = array();
+$dss_company_type_labels[DSS_COMPANY_TYPE_BILLING] = "Billing";
+$dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE] = "Software";

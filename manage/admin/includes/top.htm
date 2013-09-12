@@ -276,6 +276,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                         </ul>                </li>
                 <li class="dir">SOFTWARE
 			<ul>
+				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
                                 <li class="dir">Questionnaire Edits
 					<ul>
 	                                	<li class="dir">Bmi/Symptoms
@@ -394,6 +395,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<li><a href="/manage/admin/manage_device_guide_settings.php">Settings</a></li>
 					</ul>
 				</li>
+				<?php } ?>
 				<li><a href="/manage/admin/manage_claim_settings.php">Claim Settings</a></li>
 				<li><a href="/manage/admin/manage_claim_history.php">Electronic Claim History</a></li>
 			</ul>

@@ -186,6 +186,38 @@ if ($status == 'pending') {
 				dental_letters.templateid LIKE '".$filter."' AND
 				u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
 			ORDER BY dental_letters.letterid ASC;";
+  }elseif(is_billing($_SESSION['admin_access'])){
+  $letters_query = "SELECT dental_letters.letterid, 
+                        dental_letters.templateid, 
+                        dental_letters.patientid, 
+                        UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                        UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                        UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                        dental_letters.pdf_path,
+                        dental_letters.topatient, 
+                        dental_letters.md_list, 
+                        dental_letters.md_referral_list, 
+                        dental_letters.docid, 
+                        dental_letters.userid, 
+                        dental_letters.send_method, 
+                        dental_patients.firstname, 
+                        dental_patients.lastname, 
+                        dental_patients.middlename, 
+                        dental_letters.status,
+                        dental_letters.template_type
+                                FROM dental_letters 
+        JOIN dental_user_company uc ON uc.userid = dental_letters.docid
+        JOIN dental_users u ON u.userid = dental_letters.docid
+        LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                WHERE u.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
+                        ((dental_letters.status = '1' AND dental_letters.delivered=0) 
+                                        OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
+                                ) AND
+                        dental_letters.deleted = '0' AND 
+                        dental_letters.templateid LIKE '".$filter."' AND
+                        u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
+                ORDER BY dental_letters.letterid ASC;";
+
   }else{
   $letters_query = "SELECT dental_letters.letterid, 
 			dental_letters.templateid, 

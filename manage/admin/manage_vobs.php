@@ -147,6 +147,20 @@ $sql = "SELECT "
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
+}elseif(is_billing($_SESSION['admin_access'])){
+$sql = "SELECT "
+     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_user_company uc ON uc.userid = p.docid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid AND users.billing_company_id = '".$_SESSION['admincompanyid']."'"
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
+
 }else{
 $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "

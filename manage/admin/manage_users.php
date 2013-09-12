@@ -62,12 +62,23 @@ if(isset($_GET['cid'])){
   $sql .= " AND c.id='".mysql_real_escape_string($_GET['cid'])."' ";
 }
 	 $sql .= " order by u.username";
-}else{
+}elseif(is_admin($_SESSION['admin_access'])){
   $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
 		INNER JOIN dental_user_company uc ON uc.userid = u.userid
 		INNER JOIN companies c ON c.id=uc.companyid
 		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
 		ORDER BY username";
+}elseif(is_billing($_SESSION['admin_access'])){
+  $a_sql = "SELECT ac.companyid FROM admin_company ac
+			JOIN admin a ON a.adminid = ac.adminid
+			WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+  $a_q = mysql_query($a_sql);
+  $admin = mysql_fetch_assoc($a_q);
+  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
+                INNER JOIN dental_user_company uc ON uc.userid = u.userid
+                INNER JOIN companies c ON c.id=uc.companyid
+                WHERE u.user_access=2 AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."'
+                ORDER BY username";
 }
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);

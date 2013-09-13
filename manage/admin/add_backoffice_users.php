@@ -6,6 +6,7 @@ include_once('includes/password.php');
 require_once('../includes/constants.inc');
 include_once '../includes/general_functions.php';
 require_once 'includes/access.php';
+?>  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script><?php
 if($_POST["usersub"] == 1)
 {
 	$sel_check = "select * from admin where username = '".s_for($_POST["username"])."' and adminid <> '".s_for($_POST['ed'])."'";
@@ -230,12 +231,31 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
+        <?php if(is_super($_SESSION['admin_access'])){ ?>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+               Company
+            </td>
+            <td valign="top" class="frmdata">
+                <select id="companyid" name="companyid" class="tbox" onchange="update_access()">
+			<option value="">Select Company</option>
+                        <?php
+                        $c_sql = "SELECT * FROM companies ORDER BY name asc";
+                        $c_q = mysql_query($c_sql);
+                        while($c_r = mysql_fetch_assoc($c_q)){ ?>
+                                <option value="<?= $c_r['id']; ?>" <?= ($companyid == $c_r['id'])?'selected="selected"':''; ?>><?= $c_r['name']; ?></option>
+                        <?php } ?>
+                </select>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Access Level
             </td>
             <td valign="top" class="frmdata">
-                <select name="admin_access" class="tbox">
+                <select id="admin_access" name="admin_access" class="tbox">
+			<option value="">Select Access</option>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
 			<?php } ?>
@@ -247,22 +267,6 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
-	<?php if(is_super($_SESSION['admin_access'])){ ?>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-               Company 
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="companyid" class="tbox">
-			<?php
-			$c_sql = "SELECT * FROM companies ORDER BY name asc";
-			$c_q = mysql_query($c_sql);
-			while($c_r = mysql_fetch_assoc($c_q)){ ?>
-				<option value="<?= $c_r['id']; ?>" <?= ($companyid == $c_r['id'])?'selected="selected"':''; ?>><?= $c_r['name']; ?></option>	
-			<?php } ?>
-                </select>
-            </td>
-        </tr>
 	<?php } ?>
 
         <tr bgcolor="#FFFFFF">
@@ -293,5 +297,34 @@ if($_POST["usersub"] == 1)
         </tr>
     </table>
     </form>
+
+<script type="text/javascript">
+var selected_company = '';
+function update_access(){
+  var new_company = $('#companyid').val();
+                                  $.ajax({
+                                        url: "includes/update_access.php",
+                                        type: "post",
+                                        data: {oid: selected_company, nid:new_company},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+						selected_company = new_company;
+                                                if(r.change){
+							$('#admin_access').html(r.change);	
+                                                }else{
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+}
+$(document).ready(function(){
+update_access();
+selected_company = '<?= $companyid; ?>';
+});
+</script>
+
 </body>
 </html>

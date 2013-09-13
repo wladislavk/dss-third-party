@@ -1247,8 +1247,15 @@ input{text-transform:uppercase;}
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
         <?php if (!$is_sent) {  ?>
           <input type="submit" name="ex_pagebtn" value="Print Claim" />
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+?>
           <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
-
+<?php } ?>
         <?php } ?>
 
                <?php }elseif(($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_REJECTED) && $s_m_dss_file == '2'){ ?>

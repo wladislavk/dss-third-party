@@ -13,7 +13,7 @@ function is_billing_admin($admin_access){
 }
 
 function is_billing($admin_access){
-  return ($admin_access==DSS_ADMIN_ACCESS_BILLING_ADMIN || $admin_access==DSS_ADMIN_ACCESS_BILLING_USER);
+  return ($admin_access==DSS_ADMIN_ACCESS_BILLING_ADMIN || $admin_access==DSS_ADMIN_ACCESS_BILLING_BASIC);
 }
 
 ?>

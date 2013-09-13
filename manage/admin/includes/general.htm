@@ -1542,6 +1542,15 @@ function get_franchisees() {
     return mysql_query($sql);
 }
 
+function get_billing_franchisees() {
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+
+    $sql = "SELECT * FROM dental_users WHERE billing_company_id='".$c['companyid']."' AND docid = 0 ORDER BY name ASC";
+    return mysql_query($sql);
+}
+
 /**
  * Returns a mysql resultset resource for dental_patients table on success,
  * false otherwise.

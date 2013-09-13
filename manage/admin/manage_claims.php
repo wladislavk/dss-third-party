@@ -293,10 +293,10 @@ if(isset($_GET['msg'])){
     </select>
     &nbsp;&nbsp;&nbsp;
 
-    Franchisees:
+    Account:
     <select name="fid">
       <option value="">Any</option>
-      <?php $franchisees = get_franchisees(); ?>
+      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
         <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
         <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
@@ -351,7 +351,7 @@ if(isset($_GET['msg'])){
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Franchisee</a>
+			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
 		</td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>

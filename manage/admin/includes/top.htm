@@ -141,7 +141,12 @@ $sql .= " AND
     THEN p.p_m_dss_file
     ELSE p.s_m_dss_file
    END = '1'";
-
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $sql .= " AND users.billing_company_id='".$c['companyid']."'"; 
+}
 $my = mysql_query($sql);
 $num_pending_claims = mysql_num_rows($my);
 
@@ -193,7 +198,7 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'"
+     . ((!is_billing($_SESSION['admin_access']))?"  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'":'')
      . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
 }
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
@@ -208,7 +213,12 @@ $sql .= " AND
     ELSE p.s_m_dss_file
    END = '1'";
 //echo $sql;
-
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $sql .= " AND users.billing_company_id='".$c['companyid']."'";
+}
 $pending_q = mysql_query($sql);
 $num_pending_claims = mysql_num_rows($pending_q);
 
@@ -401,8 +411,18 @@ $num_pending_claims = mysql_num_rows($pending_q);
 			</ul>
 		</li>
 <?php
-  $t_sql = "SELECT * FROM dental_support_tickets
+  if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $t_sql = "SELECT t.* FROM dental_support_tickets t
+		JOIN dental_users u ON u.userid=t.userid
+                WHERE (t.status=0 OR t.status=1)
+			AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
+  }else{
+    $t_sql = "SELECT * FROM dental_support_tickets
 		WHERE status=0 OR status=1;";
+  }
   $t_q = mysql_query($t_sql);
   $num_open_tickets = mysql_num_rows($t_q);
 ?>

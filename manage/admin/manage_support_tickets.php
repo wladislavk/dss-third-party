@@ -17,6 +17,12 @@ $sql = "select t.*,
 		LEFT JOIN dental_users c ON c.userid=t.docid
 		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+  $sql .= " AND u.billing_company_id='".$c['companyid']."' ";
+}
 if(isset($_REQUEST['catid'])){
   $sql .= " AND t.category_id = ".mysql_real_escape_string($_REQUEST['catid']);
 }

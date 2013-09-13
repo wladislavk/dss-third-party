@@ -24,8 +24,10 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select c.*, count(ac.adminid) as num_admin from companies c
+$sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users from companies c
 	 LEFT JOIN admin_company ac ON ac.companyid = c.id
+	 LEFT JOIN admin a ON a.adminid=ac.adminid AND (a.admin_access=".DSS_ADMIN_ACCESS_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_BILLING_ADMIN.")
+         LEFT JOIN admin b ON b.adminid=ac.adminid AND (b.admin_access=".DSS_ADMIN_ACCESS_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_BILLING_BASIC.")
 	 group by c.id
 	 order by name ASC";
 $my = mysql_query($sql);
@@ -81,6 +83,10 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head">
 			Number of Users
 		</td>
+                <td valign="top" class="col_head">
+                        Number of Clients
+                </td>
+
 		<td valign="top" class="col_head">
 		  	Type
 		</td>
@@ -112,14 +118,28 @@ $num_users=mysql_num_rows($my);
 				</td>
 				<td valign="top">
 					<?= st($myarray["num_admin"]); ?>
-				</td>		
+				</td>	
 				<td valign="top">
-				  <?php $u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysql_real_escape_string($myarray["id"])."'";
+                                        <?= st($myarray["num_users"]); ?>
+                                </td>	
+				<td valign="top">
+				  <?php 
+					if($myarray['company_type']==DSS_COMPANY_TYPE_BILLING){
+					$u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysql_real_escape_string($myarray["id"])."'";
 					$u_q = mysql_query($u_sql);
 					$num_users = mysql_num_rows($u_q);
 					?>
 					<a href="billing_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
 					<?php
+					}else{
+                                        $u_sql = "SELECT id FROM dental_user_company WHERE companyid='".mysql_real_escape_string($myarray["id"])."'";
+                                        $u_q = mysql_query($u_sql);
+                                        $num_users = mysql_num_rows($u_q);
+                                        ?>
+                                        <a href="software_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+                                        <?php
+
+					}
 				  ?>
 				</td>
 				<td valign="top">

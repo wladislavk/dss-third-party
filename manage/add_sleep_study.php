@@ -323,7 +323,7 @@ function update_home(f){
 
 function addstudylab(v){
   if(v == 'add'){
-    parent.loadPopup('add_sleeplab.php?r=flowsheet');
+    loadPopup('add_sleeplab.php?r=flowsheet');
   }
 }
 

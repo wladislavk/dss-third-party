@@ -13,6 +13,7 @@ require_once('includes/formatters.php');
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_units.js' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_pdf.js' type="text/javascript" charset="utf-8"></script>
 <?php
 /*
 */?>
@@ -26,11 +27,17 @@ require_once('includes/formatters.php');
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
         <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/calendar.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
  	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css">
 <div style="clear: both">
 <span class="admin_head">
 	Calendar
+</span>
+<span class="pdf_link" style="float: right; margin-right: 30px; margin-bottom: 5px;">
+<input type="button" name="save" value="Save to PDF" 
+onclick="scheduler.toPDF('3rdParty/pdfgen/generate.php')" 
+style="width:100px;">
 </span>
 
 <br />
@@ -86,6 +93,7 @@ require_once('includes/formatters.php');
 		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
 		scheduler.config.hour_date="%h:%i%A";
+		scheduler.config.hour_size_px = 53;
 		scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
 		scheduler.config.mark_now = true;
 		scheduler.config.details_on_create = true;
@@ -100,7 +108,19 @@ require_once('includes/formatters.php');
                 scheduler.locale.labels.section_resource = "Resource";
 		scheduler.locale.labels.section_patient = "Patient";
 		scheduler.locale.labels.workweek_tab = "W-Week"
+
+		scheduler.templates.event_text = function(start_date, end_date, event){
+			if(event.patient && event.patient != 0 && event.title && event.patientfn && event.patientln)
+			{
+				return event.title + ", " + event.patientfn + " " + event.patientln;
+			}
+			else
+			{
+				return event.text;
+			}
+		};
                 scheduler.templates.event_class=function(start, end, event){
+
 
                   if(event.category) // if event has subject property then special class should be assigned
                     return "event_"+event.category;
@@ -311,14 +331,17 @@ require_once('includes/formatters.php');
 			{name:"time", height:72, type:"time", map_to:"auto"}
 		]
                 scheduler.init('scheduler_here',null,"workweek");
+		scheduler._els["dhx_cal_data"][0].scrollTop = scheduler.config.hour_size_px*8;
 		<?php
-		$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";
+		//$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";
+		$sql = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.docid='".$_SESSION['docid']."' order by dc.id asc";
 		$q = mysql_query($sql);
 		while($r = mysql_fetch_assoc($q)){
 			?>scheduler.addEvent({
 				start_date: "<?= date('d-m-Y H:i', strtotime($r['start_date'])); ?>",
 				end_date: "<?= date('d-m-Y H:i', strtotime($r['end_date'])); ?>",
 				text: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
+				title: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
 				rec_type: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
 				rec_pattern: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
 				event_length: "<?= $r['event_length']; ?>",
@@ -328,10 +351,29 @@ require_once('includes/formatters.php');
 				resource: "<?= $r['res_id']; ?>",
 				patient: "<?= $r['patientid']; ?>",
 				id: "<?= $r['event_id']; ?>",
-				table_id: "<?= $r['id']; ?>"
+				table_id: "<?= $r['id']; ?>",
+				patientfn: "<?= $r['firstname']; ?>",
+				patientln: "<?= $r['lastname']; ?>",
 			});<?php
 		}
 		?>
+	function _lookup_ptname(id, callback)
+	{
+		$.ajax({
+			url: "includes/calendar_check_ptname.php",
+			type: "post",
+			data: {id: id},
+			success: function(data){
+				var r = $.parseJSON(data);
+				callback(r);
+				if(r.error){
+				}else{
+				}
+			},
+			failure: function(data){},
+		});
+	}
+
                 scheduler.init('scheduler_here',null,"workweek");
 		//scheduler.load("../common/events2010.xml");
 		scheduler.attachEvent("onEventAdded", function(event_id,event_object){
@@ -351,12 +393,14 @@ require_once('includes/formatters.php');
 			var epid = event_object.event_pid;
 
 		    var e_id = event_id;
+
                                   $.ajax({
                                         url: "includes/calendar_add_event.php",
                                         type: "post",
-                                        data: {foo: 'foobar', id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
+                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
+						_lookup_ptname(r.eventid, _add_event_ptname)
                                                 if(r.error){
                                                 }else{
                                                 }
@@ -367,6 +411,13 @@ require_once('includes/formatters.php');
                                   });
 
                     //any custom logic here
+			function _add_event_ptname(r)
+			{
+				event_object.patientfn = r.firstname; 
+				event_object.patientln = r.lastname;
+				event_object.title = event_object.text;
+				scheduler.updateEvent(event_object.id);
+			}
           	});		
                 scheduler.attachEvent("onEventChanged", function(event_id,event_object){
                     var sd = event_object.start_date;
@@ -392,6 +443,7 @@ require_once('includes/formatters.php');
                                         data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
+						_lookup_ptname(r.eventid, _add_event_ptname)
                                                 if(r.error){
                                                 }else{
                                                 }
@@ -402,6 +454,13 @@ require_once('includes/formatters.php');
                                   });
 
                     //any custom logic here
+			function _add_event_ptname(r)
+			{
+				event_object.patientfn = r.firstname; 
+				event_object.patientln = r.lastname;
+				event_object.title = event_object.text;
+				scheduler.updateEvent(event_object.id);
+			}
                 }); 
                 scheduler.attachEvent("onEventDeleted", function(event_id,event_object){
                     var e_id = event_id;

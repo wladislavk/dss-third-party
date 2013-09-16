@@ -35,7 +35,7 @@ $s = "UPDATE dental_calendar SET
 	patientid=".$pid."
 	WHERE event_id='".$e_id."'";
 if(mysql_query($s)){
-  echo '{"success":true}';
+  echo '{"success":true, "eventid":"' . $e_id .'"}';
 }else{
   echo '{"error":true}';
 }

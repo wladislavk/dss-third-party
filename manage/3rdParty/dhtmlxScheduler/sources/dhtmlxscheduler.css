@@ -322,7 +322,7 @@ div.dhx_modal_cover {
 	background-image:url(imgs/databg_now.png);
 }
 .dhx_scale_hour{
-	height:41px;
+	height:48px;
 	width:50px;
 	border-bottom:1px dotted #8894A3;
 	background-color:#C2D5FC;
@@ -579,7 +579,7 @@ div.icon_delete{
     padding-left:10px;
 }
 .dhx_ie6 .dhx_mark{
-    background-position: 6px -41px;
+    background-position: 6px -53px;
 }
 
 .dhx_cal_light select{

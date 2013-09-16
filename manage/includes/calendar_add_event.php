@@ -24,7 +24,19 @@ $s = "INSERT INTO dental_calendar
 	('".$sd."', '".$ed."', '".$id."', '".mysql_real_escape_string($de)."', '".$cat."', ".$pi.", '".$docid."', '".$pid."', '" . $r_type . "', " . $e_length . ", " . $e_pid . ", " . $res . ")";
 
 if(mysql_query($s)){
-  echo '{"success":true}';
+	$sql2 = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.event_id='".$id."' order by dc.id desc";
+	$q2 = mysql_query($sql2);
+	if($r = mysql_fetch_assoc($q2))
+	{
+		$fn = $r['firstname'];
+		$ln = $r['lastname'];
+		echo '{"success":true, "eventid":"' . $id .'"}';
+//		echo '{"success":true, "firstname":"' . $fn . '", "lastname":"' . $ln . '"}';
+	}
+	else
+	{
+		echo '{"success":true, "eventid":"' . $id . '"}';
+	}
 }else{
   echo '{"error":true}';
 }

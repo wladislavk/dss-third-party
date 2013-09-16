@@ -13,7 +13,8 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "select e.*,
  	CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
 	c.name AS company_name,
-	(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action
+	(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,
+	i.status
 	FROM dental_claim_electronic e
 	  JOIN dental_insurance i ON i.insuranceid=e.claimid
 	  LEFT JOIN dental_patients p ON p.patientid=i.patientid
@@ -64,6 +65,9 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
+		<td valign="top" class="col_head" width="10%">
+			Claim ID
+		</td>
 		<td valign="top" class="col_head" width="20%">
 			Added
 		</td>
@@ -99,12 +103,16 @@ $num_users=mysql_num_rows($my);
 		?>
 			<tr>
 				<td valign="top">
+					<?= $myarray['claimid']; ?>
+				</td>
+				<td valign="top">
 					<?= $myarray['adddate']; ?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["last_action"]);?>
 				</td>
 				<td valign="top">
+					<?= $dss_claim_status_labels[$myarray['status']]; ?>
 				</td>
 				
 				<td valign="top">

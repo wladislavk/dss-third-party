@@ -240,7 +240,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<?php } ?>
 		
 						<?php
-                                                        if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])){
+                                                        if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])){
 						?>
 						<li><a href="/manage/admin/manage_backoffice.php">Backoffice Accounts</a></li>
 						<?php } ?>

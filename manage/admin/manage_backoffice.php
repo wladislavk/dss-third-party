@@ -40,6 +40,13 @@ if(is_super($_SESSION['admin_access'])){
         LEFT join admin_company ac ON a.adminid=ac.adminid
         LEFT JOIN companies c ON ac.companyid=c.id";
     $sql .= " WHERE c.id=".mysql_real_escape_string($_SESSION['admincompanyid'])." ";
+}elseif(is_billing_admin($_SESSION['admin_access'])){
+  $sql = "select a.*, c.id as company_id, c.name as company_name
+         from admin a
+        LEFT join admin_company ac ON a.adminid=ac.adminid
+        LEFT JOIN companies c ON ac.companyid=c.id";
+    $sql .= " WHERE c.id=".mysql_real_escape_string($_SESSION['admincompanyid'])." ";
+
 }
 $sql .= " order by admin_access ASC, username ASC";
 $my = mysql_query($sql);

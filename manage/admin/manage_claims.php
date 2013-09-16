@@ -285,11 +285,13 @@ if(isset($_GET['msg'])){
       <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
       <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
       <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
+      <?php $rejected_selected = ($status == DSS_CLAIM_REJECTED) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
       <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
       <option value="unpaid21" <?= $unpaid45_selected; ?>>Unpaid 21+ Days</option>
       <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
+      <option value="<?=DSS_CLAIM_REJECTED?>" <?=$rejected_selected;?>><?=$dss_claim_status_labels[DSS_CLAIM_REJECTED];?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
 

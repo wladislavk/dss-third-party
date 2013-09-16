@@ -11,7 +11,7 @@ $status = $status_r['status'];
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
 $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
-
+$is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false; 
 
 
 //confirm ledger transactions and make sure they haven't changed.
@@ -1200,7 +1200,7 @@ input{text-transform:uppercase;}
     <script type="text/javascript" src="<?=$manage_path?>script/masks.js"></script>
 <script src="<?=$admin_path?>popup/popup.js" type="text/javascript"></script>
 
-<?php if ($is_sent || (!$is_new_claim && !$is_pending && !is_disputed && $is_front_office)) { ?>
+<?php if ($is_sent || (!$is_new_claim && !$is_pending && !$is_rejected && !$is_disputed && $is_front_office)) { ?>
   <script>
 	$(function() {
 	  $('input, select, textarea').attr('disabled', 'true');
@@ -1216,6 +1216,60 @@ input{text-transform:uppercase;}
   <a href="manage_claims.php?status=0&pid=<?=$_REQUEST['pid_filter']?>">
 	<b>&lt;&lt;Back to Manage Claims Page</b></a>
 <?php } ?>
+
+
+<?php
+  if($is_rejected){
+  $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
+$r_my = mysql_query($r_sql);
+$r = mysql_fetch_assoc($r_my);
+if($r['reference_id']){
+  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
+    $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+    $w_q = mysql_query($w_sql);
+    $w_r = mysql_fetch_assoc($w_q);
+    if($w_r['response']!=''){
+                          ?><h3><?= $w_r['event_type']; ?> on
+                <?= $w_r['adddate']; ?></h3>
+<?php $p = json_decode($w_r['response']); ?>
+                                <p>Category: <?= $p->{"details"}->{"codes"}->{"category_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"category_label"}; ?><br />
+                                Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
+                                </p>
+
+                                <p><?= $w_r['response']; ?></p>
+                        <?php
+    }else{
+ 	?>
+                <h3>Claim Electronically filed on
+                <?= $r['adddate']; ?></h3>
+                        <?php
+                        $d = json_decode($r['response']);
+                        $success = $d->{"success"};
+                        if($success=="true"){
+                                ?><p><strong>Success Response:</strong><br /><?php
+                        }else{
+                                ?><p><strong>Error Response:</strong><br /><?php
+                                        $errors = $d->{"errors"}->{"messages"};
+                                        foreach($errors as $error){
+                                          echo $error."<br />";
+                                        }
+                        }
+                        ?>
+                <?= $r['response'];?></p>
+<?php } ?>
+        </div>
+
+<?php
+}
+
+}
+
+
+
+
+
+
+?>
 
 <form name="insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?insid=<?=$_GET['insid']?>&pid=<?=$_GET['pid']?>" method="post">
 	<input type="hidden" name="insurancesub" value="1" />
@@ -1241,8 +1295,8 @@ input{text-transform:uppercase;}
 
         <?php } ?>
 
-		<?php } else if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-               <?php if(($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_REJECTED) && $p_m_dss_file == '2'){ ?>
+		<?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+               <?php if(($is_pending || $is_rejected) && $p_m_dss_file == '2'){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
         <?php if (!$is_sent) {  ?>
@@ -1253,8 +1307,14 @@ input{text-transform:uppercase;}
   $api_q = mysql_query($api_sql);
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1){
+  if($is_pending){
 ?>
-          <input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />
+          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
+  <?php }elseif($is_rejected){
+?>
+          <input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />
+  <?php 
+  } ?>
 <?php } ?>
         <?php } ?>
 
@@ -2796,7 +2856,14 @@ var key = e.charCode || e.keyCode || 0;
                 (key >= 96 && key <= 105));
 });
 
-
+function file_reject_claim(){
+  if($('#p_m_ins_payer_id').val()==""){
+    alert('Insurance payer must be selected to electronically file claim.');
+    return false;
+  }
+  c = confirm('You are about to resubmit a rejected claim. Please make sure you have corrected all errors, then click OK to resend the claim.');
+  return c;
+}
 function file_claim(){
   if($('#p_m_ins_payer_id').val()==""){
     alert('Insurance payer must be selected to electronically file claim.');

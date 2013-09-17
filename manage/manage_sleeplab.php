@@ -35,7 +35,7 @@ if(isset($_REQUEST['sort']) && $_REQUEST['sort'] != ''){
   }
 }else{
   $_REQUEST['sort']='company';
-  $_REQUEST['sortdir']='DESC';
+  $_REQUEST['sortdir']='ASC';
   $sort = "company";
 }
 if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
@@ -138,12 +138,12 @@ $num_sleeplab=mysql_num_rows($my);
 					<?=$name;?>
 				</td>
 				<td valign="top" width="20%">
+	                                        <a href="#" onclick="loadPopup('view_sleeplab.php?ed=<?=$myarray["sleeplabid"];?>')" class="editlink" title="EDIT">
+                                                Quick View
+                                        </a>	
+					|
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_sleeplab.php?ed=<?=$myarray["sleeplabid"];?>');" class="editlink" title="EDIT">
 						Edit 
-					</a>
-                    
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["sleeplabid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-						 Delete 
 					</a>
 				</td>
 			</tr>

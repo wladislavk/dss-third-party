@@ -19,6 +19,13 @@ if ($debug == true) {
 $xmlString = urldecode($xmlString);
 $xml = new SimpleXMLElement($xmlString, LIBXML_NOCDATA);
 
+$mode = $xml->xpath('//scale/@mode');
+$mode = substr(substr(trim($mode[0]->asXML()), 6), 0, -1);
+if($mode == 'month' || $mode == 'timeline')
+{
+}
+else
+{
 list($val) = $xml->xpath('//scale/y');
 unset($val[0]);
 $xml->scale->addChild('y', '');
@@ -46,6 +53,13 @@ $xml->scale->y->addChild('row', '8:00');
 $xml->scale->y->addChild('row', '9:00');
 $xml->scale->y->addChild('row', '10:00');
 $xml->scale->y->addChild('row', '11:00');
+}
+
+/*
+print_r('<pre>');
+print_r($xml);
+print_r('</pre>');
+*/
 
 $scPDF = new schedulerPDF();
 $scPDF->printScheduler($xml);

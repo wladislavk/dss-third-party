@@ -18,6 +18,35 @@ if ($debug == true) {
 
 $xmlString = urldecode($xmlString);
 $xml = new SimpleXMLElement($xmlString, LIBXML_NOCDATA);
+
+list($val) = $xml->xpath('//scale/y');
+unset($val[0]);
+$xml->scale->addChild('y', '');
+$xml->scale->y->addChild('row', '12AM');
+$xml->scale->y->addChild('row', '1:00');
+$xml->scale->y->addChild('row', '2:00');
+$xml->scale->y->addChild('row', '3:00');
+$xml->scale->y->addChild('row', '4:00');
+$xml->scale->y->addChild('row', '5:00');
+$xml->scale->y->addChild('row', '6:00');
+$xml->scale->y->addChild('row', '7:00');
+$xml->scale->y->addChild('row', '8:00');
+$xml->scale->y->addChild('row', '9:00');
+$xml->scale->y->addChild('row', '10:00');
+$xml->scale->y->addChild('row', '11:00');
+$xml->scale->y->addChild('row', '12PM');
+$xml->scale->y->addChild('row', '1:00');
+$xml->scale->y->addChild('row', '2:00');
+$xml->scale->y->addChild('row', '3:00');
+$xml->scale->y->addChild('row', '4:00');
+$xml->scale->y->addChild('row', '5:00');
+$xml->scale->y->addChild('row', '6:00');
+$xml->scale->y->addChild('row', '7:00');
+$xml->scale->y->addChild('row', '8:00');
+$xml->scale->y->addChild('row', '9:00');
+$xml->scale->y->addChild('row', '10:00');
+$xml->scale->y->addChild('row', '11:00');
+
 $scPDF = new schedulerPDF();
 $scPDF->printScheduler($xml);
 function PDFErrorHandler ($errno, $errstr, $errfile, $errline) {

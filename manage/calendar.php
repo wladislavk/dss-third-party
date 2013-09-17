@@ -34,11 +34,6 @@ require_once('includes/formatters.php');
 <span class="admin_head">
 	Calendar
 </span>
-<span class="pdf_link" style="float: right; margin-right: 30px; margin-bottom: 5px;">
-<input type="button" name="save" value="Save to PDF" 
-onclick="scheduler.toPDF('3rdParty/pdfgen/generate.php')" 
-style="width:100px;">
-</span>
 
 <br />
 <div align="center" class="red">
@@ -107,16 +102,19 @@ style="width:100px;">
                 scheduler.locale.labels.section_producer = "Producer";
                 scheduler.locale.labels.section_resource = "Resource";
 		scheduler.locale.labels.section_patient = "Patient";
-		scheduler.locale.labels.workweek_tab = "W-Week"
+		scheduler.locale.labels.workweek_tab = "W-Week";
+/*scheduler.attachEvent("onXLE", function () {
+    scheduler.config.export_.pdf_mode = "fullcolor";
+});*/
 
 		scheduler.templates.event_text = function(start_date, end_date, event){
 			if(event.patient && event.patient != 0 && event.title && event.patientfn && event.patientln)
 			{
-				return event.title + ", " + event.patientfn + " " + event.patientln;
+				return event.patientfn + " " + event.patientln + ", " + event.title;
 			}
 			else
 			{
-				return event.text;
+				return event.title;
 			}
 		};
                 scheduler.templates.event_class=function(start, end, event){
@@ -515,6 +513,12 @@ $(document).ready(function(){
                         <div class="dhx_cal_tab" name="timeline_tab" style="right:335px;"></div>
                         <div class="dhx_cal_tab" name="chairs_tab" style="right:415px;"></div>
 			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+
+<div class="dhx_cal_tab pdf_link" style="right: 5px;">
+<a name="print" value="Print" href="#"
+onclick="scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor')" 
+style="text-decoration: none !important; border: none; height: 15px;">Print</a>
+</div>
 		</div>
 		<div class="dhx_cal_header">
 		</div>

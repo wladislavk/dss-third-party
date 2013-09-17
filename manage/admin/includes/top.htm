@@ -110,7 +110,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
   }
   $letters_res = mysql_query($letters_query);
   $pending_letters = mysql_num_rows($letters_res);
-$sql = "SELECT "
+if(is_super($_SESSION['admin_access'])){
+  $sql = "SELECT "
      . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
@@ -121,8 +122,37 @@ $sql = "SELECT "
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
-     . " WHERE preauth.status = " . DSS_PREAUTH_PENDING;
-
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.")";
+}elseif(is_billing($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.") "
+     . "   AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}else{
+$sql = "SELECT "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_user_company uc ON uc.userid=users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.") "
+     . "   AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}
 $my = mysql_query($sql);
 $num_pending_preauth = mysql_num_rows($my);
 

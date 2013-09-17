@@ -12,22 +12,38 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "select e.*,
  	CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
+	CONCAT(u.first_name, ' ', u.last_name) AS account_name,
 	c.name AS company_name,
 	(SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,
 	i.status
 	FROM dental_claim_electronic e
 	  JOIN dental_insurance i ON i.insuranceid=e.claimid
+	  LEFT JOIN dental_users u ON u.userid=i.docid
 	  LEFT JOIN dental_patients p ON p.patientid=i.patientid
 	  LEFT JOIN dental_user_company uc ON uc.userid=i.docid
 	  LEFT JOIN companies c ON uc.companyid=c.id
 	  order by e.adddate DESC";
-}else{
+}elseif(is_billing($_SESSION['admin_access'])){
   $sql = "SELECT e.*
 		FROM dental_claim_electronic e
 		INNER JOIN dental_user_company uc ON uc.userid = e.userid
 		INNER JOIN companies c ON c.id=uc.companyid
 		WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
 		ORDER BY username";
+$sql = "select e.*,
+        CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
+        CONCAT(u.first_name, ' ', u.last_name) AS account_name,
+        c.name AS company_name,
+        (SELECT MAX(r.adddate) FROM dental_eligible_response r WHERE r.reference_id = e.reference_id) AS last_action,
+        i.status
+        FROM dental_claim_electronic e
+          JOIN dental_insurance i ON i.insuranceid=e.claimid
+          LEFT JOIN dental_users u ON u.userid=i.docid
+          LEFT JOIN dental_patients p ON p.patientid=i.patientid
+          LEFT JOIN dental_user_company uc ON uc.userid=i.docid
+          LEFT JOIN companies c ON uc.companyid=c.id
+	  WHERE u.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
+          order by e.adddate DESC";
 }
 
 $my = mysql_query($sql);
@@ -80,6 +96,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Patient Name
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        Account 
+                </td>
 		<td valign="top" class="col_head" width="10%">
 			Company		
 		</td>
@@ -118,6 +137,9 @@ $num_users=mysql_num_rows($my);
 				<td valign="top">
 					<?= $myarray['pat_name']; ?>
 				</td>
+                                <td valign="top" align="center">
+                                        <?= $myarray["account_name"]; ?>
+                                </td>
 			 	<td valign="top" align="center">
                                         <?= $myarray["company_name"]; ?>
 				</td>			

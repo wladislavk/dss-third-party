@@ -1220,11 +1220,11 @@ input{text-transform:uppercase;}
 
 <?php
   if($is_rejected){
+  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
   $r_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysql_real_escape_string($_GET['insid'])."' ORDER BY adddate DESC LIMIT 1";
 $r_my = mysql_query($r_sql);
 $r = mysql_fetch_assoc($r_my);
 if($r['reference_id']){
-  ?> <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">  <?php
     $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysql_real_escape_string($r['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
     $w_q = mysql_query($w_sql);
     $w_r = mysql_fetch_assoc($w_q);
@@ -1238,7 +1238,9 @@ if($r['reference_id']){
 
                                 <p><?= $w_r['response']; ?></p>
                         <?php
-    }else{
+    }
+}
+if(!$r['reference_id'] || !$w_r['response']){
  	?>
                 <h3>Claim Electronically filed on
                 <?= $r['adddate']; ?></h3>
@@ -1262,7 +1264,6 @@ if($r['reference_id']){
 <?php
 }
 
-}
 
 
 

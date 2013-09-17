@@ -14,7 +14,8 @@ $sql = "select t.*,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
 	 FROM dental_support_tickets t
 		LEFT JOIN dental_users u ON u.userid=t.userid
-		LEFT JOIN dental_users c ON c.userid=t.docid
+                LEFT JOIN dental_user_company uc ON uc.userid=t.docid
+                LEFT JOIN companies c ON c.id=uc.companyid
 		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
    	WHERE t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") ";
 if(is_billing($_SESSION['admin_access'])){
@@ -124,7 +125,7 @@ else
 
 <?php
 $sql = "select t.*,
-        u.name as user,
+        CONCAT(u.first_name, ' ', u.last_name) as user,
         c.name as company,
         cat.title as category,
         (SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
@@ -132,14 +133,15 @@ $sql = "select t.*,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
          FROM dental_support_tickets t
                 LEFT JOIN dental_users u ON u.userid=t.userid
-                LEFT JOIN dental_users c ON c.userid=t.docid
+		LEFT JOIN dental_user_company uc ON uc.userid=t.docid
+                LEFT JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 WHERE t.status IN (".DSS_TICKET_STATUS_CLOSED.") ";
 if(isset($_REQUEST['catid'])){
 	$sql .= " AND category_id = ".mysql_real_escape_string($_REQUEST['catid']);
 }
 $sql .= " order by adddate DESC";
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 
 ?>

@@ -56,12 +56,13 @@ if(isset($_POST['respond'])){
 
 
 $sql = "select t.*,
-        u.name as user,
+        CONCAT(u.first_name, ' ',u.last_name) as user,
         c.name as company,
         cat.title as category 
 	FROM dental_support_tickets t 
                 LEFT JOIN dental_users u ON u.userid=t.userid
-                LEFT JOIN dental_users c ON c.userid=t.docid
+                LEFT JOIN dental_user_company uc ON uc.userid=t.docid
+                LEFT JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
 	 WHERE t.id = ".mysql_real_escape_string($_REQUEST['ed']);
 $my = mysql_query($sql);

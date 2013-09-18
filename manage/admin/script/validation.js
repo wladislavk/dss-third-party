@@ -87,6 +87,38 @@ function isValidCreditCard(type, ccnum)
    if ((checksum % 10) == 0) return true; else return false;
 }
 
+
+function adminticketabc(fa){
+
+  if(trim(fa.docid.value) == ""){
+        alert("Account is Required")
+        fa.docid.focus();
+        return false;
+  }
+  if(trim(fa.userid.value) == ""){
+        alert("User is Required")
+        fa.userid.focus();
+        return false;
+  }
+  if(trim(fa.category_id.value) == ""){
+        alert("Category is Required")
+        fa.category_id.focus();
+        return false;
+  }
+  if(trim(fa.title.value) == ""){
+        alert("Title is Required")
+        fa.title.focus();
+        return false;
+  }
+  if(trim(fa.body.value) == ""){
+        alert("Message is Required")
+        fa.body.focus();
+        return false;
+  }
+
+}
+
+
 <!--
 function loginabc(fa)
 {

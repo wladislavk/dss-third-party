@@ -125,7 +125,7 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename FROM dental_letters 
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
 		LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
 		WHERE dental_letters.docid='".$docid."' AND dental_letters.delivered=0 AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
@@ -150,7 +150,8 @@ dental_letters.send_method,
 dental_patients.firstname, 
 dental_patients.lastname, 
 dental_patients.middlename, 
-dental_letters.mailed_date
+dental_letters.mailed_date,
+dental_letters.template_type
 FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
 WHERE 
 	dental_letters.docid='".$docid."' AND 
@@ -193,6 +194,13 @@ if (count($dental_letters) % $page_limit) {
 foreach ($dental_letters as $key => $letter) {
 	// Get Correspondance Column
 	$template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
+echo $letter['template_type'];
+        if($letter['template_type']=='0'){
+          $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
+        }else{
+          $template_sql = "SELECT name FROM dental_letter_templates_custom WHERE id = '".$letter['templateid']."';";
+        }
+
 	$template_res = mysql_query($template_sql);
 	$correspondance = array();
 	$correspondance = mysql_fetch_assoc($template_res);
@@ -339,10 +347,16 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
   Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
     <option value="%"></option>
     <?php
-    $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
+    $templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates t 
+                        INNER JOIN dental_letter_templates ct ON ct.triggerid = t.id
+                        WHERE ct.companyid='".$_SESSION['companyid']."'
+                        ORDER BY id ASC;";
     $result = mysql_query($templates);
     while ($row = mysql_fetch_assoc($result)) {
-      print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+      //DO NOT SHOW LETTER 1 (FROM DSS) FOR USER TYPE SOFTWARE
+      if($_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE || $row['triggerid']!=1){
+        print "<option " . (($filter == $row['id']) ? "selected " : "") . "value=\"" . $row['id'] . "\">" . $row['id'] . " - " . $row['name'] . "</option>";
+      }
     }
     ?>
     </select>

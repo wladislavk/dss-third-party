@@ -1727,6 +1727,7 @@ foreach ($letter_contacts as $key => $contact) {
   <option <?= ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
   <option <?= ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
   <option <?= ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
+  <option <?= ($font_size==14)?'selected="selected"':''; ?> value="14">14</option>
   <option <?= ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
   <option <?= ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
 </select>

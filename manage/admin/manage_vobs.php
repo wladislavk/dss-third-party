@@ -138,9 +138,9 @@ $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  users2.name as user_name "
+     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "

@@ -149,10 +149,9 @@ function show_study_table(){
 </div>
 
 <script type="text/javascript">
- function updatelabs(i,c,s=null){
+ function updatelabs(i,c,s){
         $('#sleepstudies').contents().find('.place_select').append("<option value='"+i+"'>"+c+"</option>");
 	if(s){
-		alert(s);
 		$('#'+s).val(i);
 	}
         disablePopupClean();

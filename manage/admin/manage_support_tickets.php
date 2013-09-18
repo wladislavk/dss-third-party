@@ -42,8 +42,9 @@ $total_rec = mysql_num_rows($my);
 </span>
 <br />
 <br />
-
-
+<div align="right">
+<button onclick="loadPopup('add_ticket.php'); return false;" class="addButton">Add Ticket</button>
+</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>

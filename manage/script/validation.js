@@ -184,6 +184,7 @@ function ticketabc(fa){
 
 }
 
+
 function locationabc(fa){
   if(trim(fa.location.value) == ""){
 	alert("Practice location is Required")

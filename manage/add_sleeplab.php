@@ -91,6 +91,7 @@ if($_POST["sleeplabsub"] == 1)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <link href="css/admin.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
@@ -321,10 +322,22 @@ if($_POST["sleeplabsub"] == 1)
                 </span><br />
                 <input type="hidden" name="sleeplabsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["sleeplabid"]?>" />
+<a href="#" id="google_link" target="_blank" style="float:left;" />
+                Google
+</a>
                 <input type="submit" value=" <?=$but_text?> Sleep Lab" class="button" />
+                                   <a style="float:right;" href="manage_sleeplab.php?delid=<?=$themyarray["sleeplabid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" target="_parent" title="DELETE">
+                                                 Delete                                         </a>
+
             </td>
         </tr>
     </table>
     </form>
+<script type="text/javascript">
+  $('#google_link').click(function(){ 
+        $('#google_link').attr('href', 'http://google.com/search?q='+$('#firstname').val()+'+'+$('#lastname').val()+'+'+$('#company').val()+'+'+$('#add1').val()+'+'+$('#city').val()+'+'+$('#state').val()+'+'+$('#zip').val());
+  });
+</script>
+
 </body>
 </html>

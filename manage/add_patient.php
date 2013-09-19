@@ -349,6 +349,14 @@ $headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "
 ==========================================*/
 if($_POST["patientsub"] == 1)
 {
+
+	if($_POST['p_m_eligible_payer']!=''){
+		$p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));
+		$p_m_eligible_payer_name = substr($_POST['p_m_eligible_payer'],(strpos($_POST['p_m_eligible_payer'], '-')+1));
+	}else{
+		$p_m_eligible_payer_id = '';
+		$p_m_eligible_payer_name = '';
+	}
 	$use_patient_portal = $_POST['use_patient_portal'];
 	if($_POST["ed"] != "") //existing patient (update)
 	{
@@ -431,7 +439,8 @@ $ed_sql .="
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
-		p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."',
+		p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
+                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -673,7 +682,8 @@ mysql_query($s1);
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
 		p_m_ins_co = '".s_for($_POST["p_m_ins_co"])."', 
 		p_m_ins_id = '".s_for($_POST["p_m_ins_id"])."', 
-                p_m_eligible_id = '".s_for($_POST['p_m_ins_payer_id'])."',
+                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
+                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
 		has_s_m_ins = '".s_for($_POST["s_m_ins"])."',
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
@@ -971,17 +981,8 @@ mysql_query($s1);
 		$p_m_employer = st($themyarray["p_m_employer"]);
 		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
 		$p_m_ins_id = st($themyarray["p_m_ins_id"]);
-		$p_m_ins_payer_id = st($themyarray["p_m_eligible_id"]);
-                if($p_m_ins_payer_id){
-                  $dsql = "SELECT name, payer_id FROM dental_ins_payer
-                        WHERE id=".mysql_real_escape_string($p_m_ins_payer_id);
-                  $dq = mysql_query($dsql);
-                  $d = mysql_fetch_assoc($dq);
-                  $p_m_ins_payer_name = $d['payer_id']." - ".$d['name'];
-                }else{
-                  $p_m_ins_payer_name = "";
-                }
-
+		$p_m_eligible_payer_id = st($themyarray["p_m_eligible_payer_id"]);
+                $p_m_eligible_payer_name = st($themyarray["p_m_eligible_payer_name"]);
 		$has_s_m_ins = st($themyarray["has_s_m_ins"]);
 		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
@@ -1929,7 +1930,7 @@ $(document).ready(function(){
 	                <tr>
                 <td valign="top" colspan="2" class="frmhead">
 		Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_ins_payer_name!='')?$p_m_ins_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
 <br />
         <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="ins_payer_list" class="search_list">
@@ -1938,10 +1939,10 @@ $(document).ready(function(){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_ins_payer_id', '', 'list_ins_payers.php');
+  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'list_ins_payers.php', 'ins_payer');
 });
 </script>
-<input type="hidden" name="p_m_ins_payer_id" id="p_m_ins_payer_id" value="<?=$p_m_ins_payer_id;?>" />
+<input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
 		</td></tr>	
 <?php } ?>
 		<tr> 

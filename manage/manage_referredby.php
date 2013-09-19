@@ -31,6 +31,7 @@ $sql = "select
 		dc.firstname,
 		dc.middlename,
 		dc.lastname, 
+		p.referred_source,
 		count(p.patientid) as num_ref, 
 		(SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref30,
                 (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref60,
@@ -50,6 +51,7 @@ $sql = "select
 		dp.firstname,
 		dp.middlename,
 		dp.lastname,
+		p.referred_source,
 		count(p.patientid),
                 (SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref30,
                 (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref60,
@@ -190,7 +192,11 @@ background:#999999;
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top" width="20%">
-					<?=$name;?>
+					<?php if($myarray['referred_source']==DSS_REFERRED_PHYSICIAN){
+						?><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $myarray['contactid'];?>');return false;"><?=$name;?></a><?php
+					}else{
+						echo $name;
+					} ?>
 				</td>
 				<td valign="top" width="30%">
 					<?=st($myarray['contacttype']);?>

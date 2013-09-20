@@ -205,7 +205,7 @@ console.log(response);
 	$.ajax({
           url: "includes/update_token.php",
           type: "get",
-          data: {id: $("#userid").val(), name: $('#name').val(), address: address, email: $("#email").val(), token: token},
+          data: {id: $("#userid").val(), name: $('#first_name').val()+" "+$('#last_name').val(), address: address, email: $("#email").val(), token: token},
           success: function(data){
 	    console.log(data);
             $('#loader').hide();      
@@ -241,7 +241,7 @@ console.log(response);
           url: "includes/update_token_new.php",
           type: "post",
           data: {id: $("#userid").val(), 
-		name: $('#name').val(), 
+		name: $('#first_name').val()+" "+$('#last_name').val(), 
 		email: $("#email").val(),
 		cnumber: $('.card-number').val(),
 		cname: $('.card-name').val(),

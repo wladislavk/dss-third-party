@@ -194,7 +194,7 @@ if (count($dental_letters) % $page_limit) {
 foreach ($dental_letters as $key => $letter) {
 	// Get Correspondance Column
 	$template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
-echo $letter['template_type'];
+//echo $letter['template_type'];
         if($letter['template_type']=='0'){
           $template_sql = "SELECT name, template FROM dental_letter_templates WHERE id = '".$letter['templateid']."';";
         }else{

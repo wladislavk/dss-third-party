@@ -55,6 +55,8 @@ $patient_dob = $pat_myarray['dob'];
         $insured_employer_school_name = $pat_myarray['employer'];
         $insured_policy_group_feca = $pat_myarray['group_number'];
         $insured_insurance_plan = $pat_myarray['plan_name'];
+        $p_m_eligible_payer_id = $pat_myarray['p_m_eligible_payer_id'];
+        $p_m_eligible_payer_name = $pat_myarray['p_m_eligible_payer_name'];
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
                 WHERE                                 
@@ -295,6 +297,8 @@ if (empty($prior_authorization_number)) {
                 billing_provider_a = '".s_for($billing_provider_a)."',
                 billing_provider_dd = '".s_for($billing_provider_dd)."',
                 billing_provider_b_other = '".s_for($billing_provider_b_other)."',
+                p_m_eligible_payer_id = '".mysql_real_escape_string($p_m_eligible_payer_id)."',
+                p_m_eligible_payer_name = '".mysql_real_escape_string($p_m_eligible_payer_name)."',
                 status = '".s_for(DSS_CLAIM_PENDING)."',
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',

@@ -1413,7 +1413,7 @@ while($od_r = mysql_fetch_assoc($od_q)){
 <br />
 
 <?php
-  if(isset($_GET['pid'])){
+  if(isset($_GET['pid']) && $_GET['pid']!='' && $_GET['pid']!='0'){
 	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
                                 $q = mysql_query($s);
                                 $n = mysql_num_rows($q);

@@ -69,6 +69,7 @@ $dent_rows = mysql_num_rows($my);
 $is_sent = ($status == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_SEC_PENDING) ? true : false;
 $insuranceid = st($myarray['insuranceid']);
+/*
 if(isset($_GET['payerid']) && $_GET['payerid']!=''){
   $ins_payer_id = $_GET['payerid'];
 }else{
@@ -80,7 +81,9 @@ $payer_q = mysql_query($payer_sql);
 $payer = mysql_fetch_assoc($payer_q);
 $eligible_id = $payer['payer_id'];
 $eligible_ins = $payer['name'];
-
+*/
+$eligible_id = $myarray['p_m_eligible_payer_id'];
+$eligible_ins = $myarray['p_m_eligible_payer_name'];
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
@@ -692,7 +695,7 @@ $data['claim'] = array(
 	"service_lines" => $claim_lines
 	);
 $data_string = json_encode($data);                                                                                   
-//error_log($data_string);
+error_log($data_string);
 //echo $data_string."<br /><br />"; 
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/claims.json');

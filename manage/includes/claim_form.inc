@@ -364,6 +364,14 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
     }
 
 	$patient_status_arr = '~'.$patient_status.'~'.$work_status.'~';
+
+        if($_POST['p_m_eligible_payer']!=''){
+                $p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));
+                $p_m_eligible_payer_name = substr($_POST['p_m_eligible_payer'],(strpos($_POST['p_m_eligible_payer'], '-')+1));
+        }else{
+                $p_m_eligible_payer_id = '';
+                $p_m_eligible_payer_name = '';
+        }
 	
 	// Insert new claim into dental_insurance table
 	if ($is_new_claim) {
@@ -558,6 +566,8 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
 		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
+		p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
+                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."',
 		status = '".s_for(DSS_CLAIM_PENDING)."',
 		userid = '".s_for($_SESSION['userid'])."',
 		docid = '".s_for($_SESSION['docid'])."',
@@ -797,7 +807,9 @@ if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
 		billing_provider_city = '".s_for($billing_provider_city)."',
 		billing_provider_a = '".s_for($billing_provider_a)."',
 		billing_provider_dd = '".s_for($billing_provider_dd)."',
-		billing_provider_b_other = '".s_for($billing_provider_b_other)."'";
+		billing_provider_b_other = '".s_for($billing_provider_b_other)."',
+                p_m_eligible_payer_id = '".$p_m_eligible_payer_id."',
+                p_m_eligible_payer_name = '".$p_m_eligible_payer_name."'";
 		if(isset($_POST['reject_but'])){
 		  $ed_sql .= ", status = '".s_for(DSS_CLAIM_REJECTED)."'";
                   $ed_sql .= ", reject_reason = '".s_for($reject_reason)."'";
@@ -877,6 +889,8 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
+$p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
+$p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
 if(!$is_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
@@ -1336,7 +1350,7 @@ if(!$r['reference_id'] || !$w_r['response']){
 		&nbsp;&nbsp;&nbsp;
 	</div>
 <?php
-if ($is_back_office){
+if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($is_pending || $is_rejected) && $p_m_dss_file == '2')){ 
                 $p_m_ins_payer_id = st($pat_myarray["p_m_eligible_id"]);
                 if($p_m_ins_payer_id){
                   $dsql = "SELECT name, payer_id FROM dental_ins_payer
@@ -1350,7 +1364,7 @@ if ($is_back_office){
 ?>
 
  Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_ins_payer_name!='')?$p_m_ins_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
 <br />
         <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
                 <ul id="ins_payer_list" class="search_list">
@@ -1359,10 +1373,10 @@ if ($is_back_office){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_ins_payer_id', '', '../list_ins_payers.php');
+  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', '/manage/list_ins_payers.php');
 });
 </script>
-<input type="hidden" name="p_m_ins_payer_id" id="p_m_ins_payer_id" value="<?=$p_m_ins_payer_id;?>" />
+<input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
 
 
 

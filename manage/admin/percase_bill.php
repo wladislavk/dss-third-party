@@ -105,7 +105,7 @@ try{
     $i_sql = "UPDATE dental_percase_invoice SET status=1 WHERE id='".mysql_real_escape_string($_REQUEST['invoice'])."'";
     mysql_query($i_sql);
   }
-    ?><h3><?= $r['name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
+    ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
      ?><button onclick="parent.disablePopupClean()" class="addButton">Close</button><?php
 	die();
   }else{
@@ -152,7 +152,7 @@ $total_charge += $case_r['percase_amount'];
   ?><input type="hidden" name="invoice" value="<?= $_GET['invoice']; ?>" /><?php
 }
 ?>
-Amount to charge credit card for <?= $r['name']; ?> $<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
+Amount to charge credit card for <?= $r['first_name']; ?> <?=$r['last_name'];?> $<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>
 <br /><br />
 
@@ -172,7 +172,7 @@ Amount to charge credit card for <?= $r['name']; ?> $<input type="text" id="amou
     $('#loading_image').hide();
 	return false;
     }
-    rval =  confirm("Credit card for <?= $r['name']; ?> will be charged $"+a+". Proceed?");
+    rval =  confirm("Credit card for <?= $r['first_name']; ?> <?= $r['last_name']; ?> will be charged $"+a+". Proceed?");
     if(!rval){
       $('#bill_submit').show();
     $('#loading_image').hide();

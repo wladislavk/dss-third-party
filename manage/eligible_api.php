@@ -42,7 +42,7 @@ function clear_payer_name(f){
 }
 
 $(document).ready(function(){
-  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers.php', 'eligibility');
+  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers2.php', 'eligibility');
 });
 
 </script>
@@ -156,26 +156,25 @@ $(document).ready(function(){
 */
 					//API - 33b2e3a5-8642-1285-d573-07a22f8a15b4
                                   $.ajax({
-                                        url: "https://v1.eligibleapi.net/service/general.json",
+                                        url: "https://gds.eligibleapi.com/v1.1/coverage/all.json",
                                         type: "get",
                                         dataType: 'json',
                                         data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
-                                                payer_name: $('#payer_name').val(),
                                                 payer_id: $('#payer_id').val(),
-                                                service_provider_first_name: $('#provider_first_name').val(),
-                                                service_provider_last_name: $('#provider_last_name').val(),
-                                                service_provider_NPI: $('#provider_npi').val(),
-                                                subscriber_id: $('#patient_member_id').val(),
-                                                subscriber_first_name: $('#patient_first_name').val(),
-                                                subscriber_last_name: $('#patient_last_name').val(),
-                                                subscriber_dob: $('#patient_dob').val(),
-						service_type_code: $('#service_type_code').val() 
+                                                provider_first_name: $('#provider_first_name').val(),
+                                                provider_last_name: $('#provider_last_name').val(),
+                                                provider_npi: $('#provider_npi').val(),
+                                                member_id: $('#patient_member_id').val(),
+                                                member_first_name: $('#patient_first_name').val(),
+                                                member_last_name: $('#patient_last_name').val(),
+                                                member_dob: $('#patient_dob').val(),
+						service_type: $('#service_type_code').val() 
                                                 },
                                         complete: function(data){
+console.log(data);
                                                 //$('#api_output').html(data.responseText);
                                                 $('#api_output').html('');
                                                 var r = $.parseJSON(data.responseText);
-						/*
 						$.ajax({
 							url: "includes/eligibility_save.php",
 							type: "post",
@@ -184,7 +183,7 @@ $(document).ready(function(){
 								//$('#api_output').append(data2);
 								//alert(data2);
 							}
-						}); */
+						}); 
                                                 pr = false;//r['primary_insurance'];
 if(pr){
 						din_ind = r.deductible_in_network.individual

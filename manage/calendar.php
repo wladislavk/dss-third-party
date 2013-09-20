@@ -516,7 +516,7 @@ $(document).ready(function(){
 
 <div class="dhx_cal_tab pdf_link" style="right: 5px;">
 <a name="print" value="Print" href="#"
-onclick="scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor')" 
+onclick="if(scheduler._mode == 'timeline'){ alert('This view cannot be printed to PDF, please try another view.'); }else{scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor');}" 
 style="text-decoration: none !important; border: none; height: 15px;">Print</a>
 </div>
 		</div>

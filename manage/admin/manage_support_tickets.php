@@ -2,7 +2,9 @@
 include "includes/top.htm";
 include_once "../includes/constants.inc";
 if(isset($_GET['rid'])){
-  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' LIMIT 1";
+  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' AND create_type=1 ";
+  mysql_query($u_sql);
+  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=1 ";
   mysql_query($u_sql);
 }
 $sql = "select t.*,
@@ -87,9 +89,14 @@ else
 {
 	while($myarray = mysql_fetch_array($my))
 	{
+  if($myarray['create_type']=="1" && $myarray['viewed']=="1"){
+    $ticket_read = true;
+  }else{
+    $ticket_read = false;
+  }
 		$latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
 		?>
-			<tr class="<?= ($myarray["viewed"]=='0' || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+			<tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
 			<td valign="top">
 			<?=st($myarray["title"]);?>
 			</td>
@@ -115,7 +122,7 @@ else
 			<?php if($myarray['attachment']!='' || $myarray['response_attachment'] !=''){ ?>
 					<span class="attachment"></span>
 					<?php } ?> 
-					<?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
+        <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>
 						| <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
 							<?php } ?>
 							</td>

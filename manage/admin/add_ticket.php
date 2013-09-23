@@ -33,6 +33,8 @@ if($_POST["ticketsub"] == 1)
 				body = '".mysql_real_escape_string($_POST['body'])."',
 				userid = '".mysql_real_escape_string($_POST['userid'])."',
 				docid = '".mysql_real_escape_string($_POST['docid'])."',
+				create_type = '0',
+				creator_id = '".mysql_real_escape_string($_SESSION['adminuserid'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$t_id = mysql_insert_id();

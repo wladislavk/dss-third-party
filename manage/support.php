@@ -3,7 +3,9 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 if(isset($_GET['rid'])){
-  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=0 LIMIT 1";
+  $u_sql = "UPDATE dental_support_tickets SET viewed=0 WHERE id='".mysql_real_escape_string($_GET['rid'])."' AND create_type=0 ";
+  mysql_query($u_sql);
+  $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=0 ";
   mysql_query($u_sql);
 }
 ?>
@@ -37,8 +39,13 @@ $t_q = mysql_query($t_sql);
 <?php
 
 while($r = mysql_fetch_assoc($t_q)){
+  if($r['create_type']=="0" && $r['viewed']=="1"){
+    $ticket_read = true;
+  }else{
+    $ticket_read = false;
+  }
 ?>
-  <tr class="r_viewed_<?=$r['response_viewed']; ?>"> 
+  <tr class="<?= (($r["viewed"]=='0' && $r["create_type"]=="0") || $r["response_viewed"]=='0')?"unviewed":""; ?>"> 
     <td><?= $r['title']; ?></td>
     <td><?= substr($r['body'], 0, 50); ?></td>
     <td><?= $dss_ticket_status_labels[$r['status']]; ?></td>
@@ -46,7 +53,7 @@ while($r = mysql_fetch_assoc($t_q)){
 	<?php if($r['attachment']!='' || $r['response_attachment']!=''){ ?>
 		<span class="attachment"></span>	
 	<?php } ?>
-	<?php if($r['response_viewed']=='1'){ ?>
+	<?php if(($ticket_read && $r["response_viewed"]!='0') || $r['response_viewed'] == '1' ){ ?>
 	  | <a href="?rid=<?= $r['id']; ?>">Mark Unread</a>
 	<?php } ?>
 	</td>

@@ -3,7 +3,7 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_sleeplab where userid='".$_REQUEST["delid"]."'";
+	$del_sql = "delete from dental_sleeplab where sleeplabid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
 	
 	$msg= "Deleted Successfully";

@@ -181,8 +181,8 @@ $num_fax_alerts = mysql_num_rows($fax_res);
 
 
 $support_query = "SELECT * FROM dental_support_tickets t
-			JOIN dental_support_responses r ON r.ticket_id = t.id
-		 WHERE t.docid='".$_SESSION['docid']."' AND r.viewed=0 AND r.response_type=0";
+			LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
+		 WHERE t.docid='".$_SESSION['docid']."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)) group by t.id";
 $support_res = mysql_query($support_query);
 $num_support = mysql_num_rows($support_res);
 

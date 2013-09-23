@@ -95,7 +95,9 @@ Name: <input type="text" id="name" name="name" value="<?= $r['name']; ?>" />
 <?php
 if(isset($_GET['ed']) && $_GET['ed']!=''){
 ?>
+
 <a class="addButton" style="float:right;" href="manage_custom_letters.php?delid=<?= $_GET['ed']; ?>" onclick="return confirm('Warning, you are attempting to delete a letter template. Any letters already using this template will not be affected, but you will not be able to create new letters with the template after it is deleted. Proceed?');">Delete Letter</a>
+<a class="addButton" style="float:right;" href="manage_custom_letters.php">Cancel Changes</a>
 <?php
 }else{
 ?>

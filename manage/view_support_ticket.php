@@ -4,6 +4,8 @@ include "includes/top.htm";
 
 <a href="support.php" style="float:right; margin-right:20px;" class="button">Return to support</a>
 <?php
+$v_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE create_type = 0 && id = ".mysql_real_escape_string($_REQUEST['ed']);
+mysql_query($v_sql);
 $v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = ".mysql_real_escape_string($_REQUEST['ed']);
 mysql_query($v_sql);
 if(isset($_POST['respond'])){
@@ -71,13 +73,30 @@ $t = mysql_fetch_assoc($my);
 </span>
 <br />
 <br />
-    <div class="response_type_1">
+    <div class="response_type_<?= $t['create_type']; ?>">
 	<?= $t['body']; ?>
     <?php
       if($t['attachment']!=''){
         ?> | <a href="./q_file/<?= $t['attachment']; ?>">View Attachment</a><?php
       }
     ?>
+    <div class="info">
+      <?php
+        if($t['create_type']=='0'){
+          $u_sql = "SELECT username name FROM admin WHERE adminid='".mysql_real_escape_string($t['creator_id'])."'";
+          $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          ?>Support - <?= $u_r['name'];
+        }elseif($t['create_type']=='1'){
+          $u_sql = "SELECT name FROM dental_users WHERE userid='".mysql_real_escape_string($t['creator_id'])."'";
+          $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          echo $u_r['name'];
+        }
+
+      ?>
+      <?= date('m/d/Y h:i:s a', strtotime($t['adddate'])); ?>
+    </div>
     </div>
 </div>
 

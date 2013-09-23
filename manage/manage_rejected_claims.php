@@ -3,7 +3,8 @@ include "includes/top.htm";
 include_once "includes/constants.inc";
 
 	
-$sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+$sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
+	where i.docid='".$_SESSION['docid']."' ";
 $sql .= " AND i.status IN (".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";
 
 $my=mysql_query($sql) or die(mysql_error());
@@ -63,10 +64,16 @@ if(isset($_GET['msg'])){
 				$tr_class = "tr_inactive";
 			}
 			$tr_class = "tr_active";
+
+			$e_sql = "SELECT * FROM dental_claim_electronic where claimid='".$myarray['insuranceid']."' ORDER BY adddate DESC LIMIT 1";
+			$e_q = mysql_query($e_sql);
+			$e_r = mysql_fetch_assoc($e_q);
+			$last_date = ($e_r['adddate']!='')?$e_r['adddate']:$myarray['adddate'];
+
 		?>
 			<tr class="<?=$tr_class;?> status_<?= $myarray['status']; ?> claim">
 				<td valign="top">
-                	<?=date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+                	<?=date('m-d-Y H:i',strtotime(st($last_date)));?>
 				</td>
 				<td valign="top">
 					<?= $myarray['firstname'].' '.$myarray['lastname']; ?>	

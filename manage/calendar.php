@@ -112,9 +112,13 @@ require_once('includes/formatters.php');
 			{
 				return event.patientfn + " " + event.patientln + ", " + event.title;
 			}
-			else
+			else if(event.title)
 			{
 				return event.title;
+			}
+			else
+			{
+				return event.text;
 			}
 		};
                 scheduler.templates.event_class=function(start, end, event){

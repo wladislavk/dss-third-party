@@ -1,6 +1,11 @@
 <? 
 include "includes/top.htm";
 
+if(is_billing($_SESSION['admin_access'])){
+  ?><h2>You are not authorized to view this page.</h2><?php
+  die();
+}
+
 if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
 {
 	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";

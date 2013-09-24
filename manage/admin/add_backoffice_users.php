@@ -248,7 +248,7 @@ if($_POST["usersub"] == 1)
                 </select>
             </td>
         </tr>
-
+	<?php } ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Access Level
@@ -267,7 +267,6 @@ if($_POST["usersub"] == 1)
             </td>
         </tr>
 
-	<?php } ?>
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

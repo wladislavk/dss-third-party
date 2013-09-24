@@ -45,7 +45,13 @@ if($_POST['passsub'] == 1)
 ?>
 
 <span class="admin_head">
-	Change Password
+	Change Password - 
+<?php
+ $a_sql = "SELECT * FROM admin WHERE adminid='".$_SESSION['adminuserid']."'";
+ $a_q = mysql_query($a_sql);
+ $a_r = mysql_fetch_assoc($a_q);
+ echo $a_r['username']; 
+?>
 </span>
 <br /><br />
 

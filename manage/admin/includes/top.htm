@@ -282,30 +282,37 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				</li>
                                 <!--<li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>-->
                                 <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
-                                <li class="dir">Franchisee Analysis
+                                <li class="dir">Account Analysis
                                         <ul>
+						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
                                                 <li><a href="/manage/admin/manage_percase_invoice.php">Invoicing</a></li>
                                                 <li><a href="/manage/admin/manage_monthly_invoice.php">Monthly Invoicing</a></li>
 						<li><a href="/manage/admin/manage_payment_errors.php">Invoicing Payment Errors</a></li>
-                                                <li><a href="/manage/admin/franchisee_monthly.php">Monthly Report</a></li>
                                                 <li><a href="/manage/admin/franchisee_faxes.php">Fax Report</a></li>
+						<?php } ?>
+                                                <li><a href="/manage/admin/franchisee_monthly.php">Monthly Report</a></li>
                                         </ul>
                                 </li>
                                 <li class="dir">Insurance Codes
                                         <ul>
+						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
                                                 <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>
+						<?php } ?>
                                                 <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
                                 </li>
+				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
                                 <li class="dir">Progress Note Text
                                         <ul>
                                                 <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
                                                 <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>                                        </ul>
                                 </li>
+				<?php } ?>
                                 <li class="dir">Password
                                         <ul>
-                                                <li><a href="/manage/admin/changepassword.php">Change Admin Password</a></li>
+                                                <li><a href="/manage/admin/changepassword.php">Change My Password</a></li>
                                         </ul>
                                 </li>
+				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
                                 <li class="dir">Security
                                         <ul>
                                                 <li><a href="/manage/admin/manage_log.php">Login Data</a></li>
@@ -313,6 +320,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                                         </ul>
                                 </li>
 				<li><a href="/manage/admin/email_bounce.php">Email Bounces</a></li>
+				<?php } ?>
                         </ul>                </li>
                 <li class="dir">SOFTWARE
 			<ul>

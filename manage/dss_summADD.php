@@ -48,7 +48,7 @@ $fuquery_array = mysql_query($fuquery_sql);
   </tr>
 
   <tr>
-  	    <td style="background: #F9FFDF;"><strong>Date</strong> - Baseline</td>
+  	    <td style="background: #F9FFDF;"><strong>Date</strong></td>
   </tr>
   
   <tr>
@@ -63,11 +63,11 @@ $fuquery_array = mysql_query($fuquery_sql);
   	<td style="background: #F9FFDF;"><strong>N/W</strong> - Nights Worn per Week</td>
   </tr>
   <tr>
-  	<td style="background: #E4FFCF;"><strong>ESS</strong></td>
+  	<td style="background: #E4FFCF;"><strong>ESS</strong> - Epworth Sleepiness Scale</td>
   </tr>
   
   <tr>
-  	<td style="background: #F9FFDF;"><strong>TSS</strong></td>
+  	<td style="background: #F9FFDF;"><strong>TSS</strong> - Thornton Snoring Scale</td>
   </tr>
   
   <tr>

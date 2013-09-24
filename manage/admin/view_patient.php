@@ -4,10 +4,6 @@ require_once('../includes/constants.inc');
 require_once('../includes/dental_patient_summary.php');
 require_once('includes/password.php');
 
-$docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-$docq = mysql_query($docsql);
-$docr = mysql_fetch_assoc($docq);
-$doc_patient_portal = $docr['use_patient_portal'];
 
 include "includes/similar.php";
 function trigger_letter20($pid) {
@@ -904,6 +900,11 @@ mysql_query($s1);
 	}
 	else
 	{
+$docsql = "SELECT use_patient_portal, username FROM dental_users WHERE userid='".mysql_real_escape_string($themyarray['docid'])."'";
+$docq = mysql_query($docsql);
+$docr = mysql_fetch_assoc($docq);
+$doc_patient_portal = $docr['use_patient_portal'];
+$doc_username = $docr['username'];
 		$firstname = st($themyarray['firstname']);
 		$middlename = st($themyarray['middlename']);
 		$lastname = st($themyarray['lastname']);
@@ -1349,7 +1350,7 @@ function remove_notification(id){
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	<tr>
               <td >
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
+            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION - <?= $firstname." ".$lastname; ?> - <?= $doc_username; ?></font>
               </td>
 
 		<td  align="right">

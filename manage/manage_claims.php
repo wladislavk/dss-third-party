@@ -44,7 +44,9 @@ $pend_my=mysql_query($pend_sql) or die(mysql_error());
 
 
 	
-$sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
+$sql = "select i.*, p.firstname, p.lastname,
+	(SELECT e.adddate FROM dental_claim_electronic e WHERE e.claimid=i.insuranceid ORDER by e.adddate DESC LIMIT 1) electronic_adddate
+	from dental_insurance i left join dental_patients p on i.patientid=p.patientid where i.docid='".$_SESSION['docid']."' ";
 if($_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE){
   $sql .= " AND i.status NOT  IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_DISPUTE.")";
 }
@@ -262,7 +264,8 @@ if(v == '100'){
 		?>
 			<tr class="<?=$tr_class;?> status_<?= $myarray['status']; ?> claim">
 				<td valign="top">
-                	<?=date('m-d-Y H:i',strtotime(st($myarray["adddate"])));?>
+				
+                	<?=date('m-d-Y H:i',strtotime((($myarray["electronic_adddate"]!='')?$myarray["electronic_adddate"]:$myarray["adddate"])));?>
 				</td>
 				<td valign="top">
 					<?= $myarray['firstname'].' '.$myarray['lastname']; ?>	

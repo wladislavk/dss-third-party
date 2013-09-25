@@ -237,7 +237,7 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, u.name, u.user_type
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id

@@ -45,10 +45,22 @@ if(is_super($_SESSION['admin_access'])){
                 WHERE du.docid=0 
 		GROUP BY du.userid
 		";
-}else{
+}elseif(is_software($_SESSION['admin_access'])){
   $sql = "SELECT du.* FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}elseif(is_billing($_SESSION['admin_access'])){
+  $a_sql = "SELECT ac.companyid FROM admin_company ac
+                        JOIN admin a ON a.adminid = ac.adminid
+                        WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
+  $a_q = mysql_query($a_sql);
+  $admin = mysql_fetch_assoc($a_q);
+  $sql = "SELECT du.*, count(s.id) AS num_screened FROM dental_users du 
+                LEFT JOIN dental_screener s ON du.userid = s.docid AND s.adddate BETWEEN '".$start_date."' AND '".$end_date."'
+                WHERE du.docid=0 
+		AND du.billing_company_id = '".mysql_real_escape_string($admin['companyid'])."'
+                GROUP BY du.userid
+                ";
 }
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);

@@ -195,7 +195,7 @@ $num_users=mysql_num_rows($my);
                                         <a href="manage_monthly_invoice.php?company=<?=$myarray["company_id"]; ?>"><?=st($myarray["company_name"]);?></a>
                                 </td>
                                 <td valign="top">
-                                        <?=st($myarray["name"]);?>
+                                        <?=st($myarray["first_name"]." ".$myarray['last_name']);?>
                                 </td>
 				<td valign="top" style="color:#f00;font-weight:bold;text-align:center;">
 					<?=st($myarray['num_case30']);?>

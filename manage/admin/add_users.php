@@ -7,6 +7,7 @@ include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
 require_once 'includes/form_updates.php';
+require_once '../includes/edx_functions.php';
 if($_POST["usersub"] == 1)
 {
 
@@ -91,44 +92,18 @@ if($_POST["usersub"] == 1)
 				fax = '".s_for(num($_POST["mailing_fax"]))."',
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
+                        edx_user_update($_POST['ed'], $edx_con);
 			form_update_all($_POST['ed']);
-                        $course_sql = "update content_type_profile SET
-                                        field_docname_value='".mysql_real_escape_string($_POST["name"])."'
-                                        where field_docid_value='".$_POST["ed"]."'";
-                        mysql_query($course_sql, $course_con);
-			
-			$course_sql = "UPDATE users set
-					name = '".mysql_real_escape_string($_POST["username"])."',
-					mail = '".mysql_real_escape_string($_POST["email"])."'
-				WHERE name = '".mysql_real_escape_string($old_username)."'";
-			mysql_query($course_sql, $course_con) or die($ed_sql." | ".mysql_error());
 
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];
                         }else{
                           $cid = $SESSION["companyid"];
                         }
-
-			$nv_sql = "SELECT n.nid, n.vid FROM node n
-					JOIN users u ON n.uid = u.uid
-					WHERE u.name='".$_POST['username']."'";
-			$nv_q = mysql_query($nv_sql, $course_con);
-			$nv_r = mysql_fetch_assoc($nv_q);
-			$nid = $nv_r['nid'];
-			$vid = $nv_r['vid'];
                         $cname_sql = "SELECT name from companies WHERE id='".mysql_real_escape_string($cid)."'";
                         $cname_q = mysql_query($cname_sql);
                         $cname_r = mysql_fetch_assoc($cname_q);
                         $cname = $cname_r['name'];
-
-                        $ctp_sql = "UPDATE content_type_profile SET
-                                                         field_companyid_value = '".mysql_real_escape_string($cid)."',
-                                                         field_companyname_value = '".mysql_real_escape_string($cname)."',
-                                                         field_docname_value = '".mysql_real_escape_string($_POST['name'])."',
-                                                         field_dssusername_value = '".mysql_real_escape_string($_POST['name'])."'
-					WHERE nid='".mysql_real_escape_string($nid)."' AND  vid='".mysql_real_escape_string($vid)."'";
-                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
-
 
 			if(is_super($_SESSION['admin_access'])){
 			  mysql_query("DELETE FROM dental_user_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
@@ -244,29 +219,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
                         mysql_query($loc_sql);
-
+			edx_user_update($userid, $edx_con);
 		if(isset($_POST['save_but'])){
-                        $course_sql = "INSERT INTO users set
-                                        name = '".mysql_real_escape_string($_POST["username"])."',
-                                        mail = '".mysql_real_escape_string($_POST["email"])."',
-					status = '1'";
-                        mysql_query($course_sql, $course_con);
-			$course_uid = mysql_insert_id($course_con);
-			$roles_sql = "INSERT INTO users_roles SET
-					uid = '".mysql_real_escape_string($course_uid)."',
-					rid = '3'";
-			mysql_query($roles_sql, $course_con) or die(mysql_error());
-			$rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
-			mysql_query($rev_sql, $course_con);
-			$vid = mysql_insert_id($course_con);
-			$profile_sql = "INSERT INTO node 
-						(type, status, title, vid, uid)
-					VALUES
-						('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
-			mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
-			$nid = mysql_insert_id($course_con);
-			$rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
-			mysql_query($rev_sql);
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];
                         }else{
@@ -278,25 +232,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			$cname_r = mysql_fetch_assoc($cname_q);
 			$cname = $cname_r['name'];
 
-			$ctp_sql = "INSERT INTO content_type_profile
-						(vid,
-							 nid,
-							 field_companyid_value,
-							 field_companyname_value,
-							 field_docid_value,
-							 field_docname_value,
-							 field_dssusername_value,
-							 field_dssuid_value)
-					VALUES
-						('".mysql_real_escape_string($vid)."',
-							'".mysql_real_escape_string($nid)."',
-                                                        '".mysql_real_escape_string($cid)."',
-                                                        '".mysql_real_escape_string($cname)."',
-                                                        '".mysql_real_escape_string($userid)."',
-                                                        '".mysql_real_escape_string($_POST['name'])."',
-                                                        '".mysql_real_escape_string($_POST['name'])."',
-                                                        '".mysql_real_escape_string($userid)."')";
-			mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
 		}
 
 

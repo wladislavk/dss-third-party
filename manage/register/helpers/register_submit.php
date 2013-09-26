@@ -3,6 +3,7 @@
 <?php require_once '../../includes/general_functions.php'; ?>
 <?php require_once '../../includes/notifications.php'; ?>
 <?php require_once '../../admin/includes/password.php'; ?>
+<?php include '../../includes/edx_functions.php'; ?>
 <?php
 
 	
@@ -69,27 +70,7 @@
                         mysql_query($loc_sql);
 
 		$userid = mysql_insert_id();
-                        $course_sql = "INSERT INTO users set
-                                        name = '".mysql_real_escape_string($_POST["username"])."',
-                                        mail = '".mysql_real_escape_string($_POST["email"])."',
-                                        status = '1'";
-                        mysql_query($course_sql, $course_con);
-                        $course_uid = mysql_insert_id($course_con);
-                        $roles_sql = "INSERT INTO users_roles SET
-                                        uid = '".mysql_real_escape_string($course_uid)."',
-                                        rid = '3'";
-                        mysql_query($roles_sql, $course_con) or die(mysql_error());
-                        $rev_sql = "INSERT INTO node_revisions (title) VALUES ('dss profile')";
-                        mysql_query($rev_sql, $course_con);
-                        $vid = mysql_insert_id($course_con);
-                        $profile_sql = "INSERT INTO node 
-                                                (type, status, title, vid, uid)
-                                        VALUES
-                                                ('profile', 1, 'dss profile', '".$vid."', '".mysql_real_escape_string($course_uid)."')";
-                        mysql_query($profile_sql, $course_con) or die($profile_sql ." | ".mysql_error($course_con));
-                        $nid = mysql_insert_id($course_con);
-                        $rev_sql = "UPDATE node_revisions SET nid=".$nid." WHERE vid=".$vid;
-                        mysql_query($rev_sql);
+		edx_user_update($userid, $edx_con);
 
                         $co_sql = "SELECT c.id, c.name from companies c
                                         JOIN dental_user_company uc ON c.id = uc.companyid
@@ -99,25 +80,6 @@
                         $co_r = mysql_fetch_assoc($co_q);
                         $cid = $co_r['id'];
                         $cname = $co_r['name'];
-                        $ctp_sql = "INSERT INTO content_type_profile
-                                                (vid,
-                                                         nid,
-                                                         field_companyid_value,
-                                                         field_companyname_value,
-                                                         field_docid_value,
-                                                         field_docname_value,
-                                                         field_dssusername_value,
-                                                         field_dssuid_value)
-                                        VALUES
-                                                ('".mysql_real_escape_string($vid)."',
-                                                        '".mysql_real_escape_string($nid)."',
-                                                        '".mysql_real_escape_string($cid)."',
-                                                        '".mysql_real_escape_string($cname)."',
-                                                        '".mysql_real_escape_string($userid)."',
-                                                        '".mysql_real_escape_string($_POST['name'])."',
-                                                        '".mysql_real_escape_string($_POST['name'])."',
-                                                        '".mysql_real_escape_string($userid)."')";
-                        mysql_query($ctp_sql, $course_con) or die(mysql_error($course_con));
 
 	if($q){
 		//echo "Successfully updated!";

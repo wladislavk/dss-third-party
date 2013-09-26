@@ -1,6 +1,6 @@
 <? 
 include "includes/top.htm";
-
+include_once 'includes/edx_functions.php';
 if($_REQUEST["delid"] != "")
 {
 	$l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($_REQUEST['delid'])."'";
@@ -12,27 +12,7 @@ if($_REQUEST["delid"] != "")
 	  $u_sql = "SELECT username FROM dental_users where userid='".mysql_real_escape_string($_REQUEST['delid'])."'";
 	  $u_q = mysql_query($u_sql);
 	  $user = mysql_fetch_assoc($u_q);
-          $nv_sql = "SELECT n.nid, n.vid, u.uid FROM node n
-                        JOIN users u ON n.uid = u.uid
-                        WHERE n.type='profile' AND u.name='".$user['username']."'";
-          $nv_q = mysql_query($nv_sql, $course_con);
-          $nv_r = mysql_fetch_assoc($nv_q);
-	  $uid = $nv_r['uid'];
-          $nid = $nv_r['nid'];
-          $vid = $nv_r['vid'];
-	  
-	  $d_sql = "DELETE FROM content_type_profile
-			WHERE
-				nid='".mysql_real_escape_string($nid)."' AND
-				vid='".mysql_real_escape_string($vid)."'";
-	  mysql_query($d_sql, $course_con);
-
-	  $d_sql = "DELETE FROM node WHERE uid='".mysql_real_escape_string($uid)."' AND type='profile'";
-	  mysql_query($d_sql, $course_con);  
-	  
-          $d_sql = "DELETE FROM users WHERE uid='".mysql_real_escape_string($uid)."'";
-          mysql_query($d_sql, $course_con);
- 
+	  edx_user_delete($_REQUEST['delid'], $edx_con);
 	  $del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	}else{
           $del_sql = "update dental_users set status=2 where userid='".$_REQUEST["delid"]."'";

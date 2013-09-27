@@ -12,7 +12,7 @@ function edx_user_update($id, $edx_con){
   $loc = mysql_fetch_assoc($loc_q);
   $address = $loc['address']." ".$loc['city'].", ".$loc['state']." ".$loc['zip'];
 
-  if($edx_id == ''){
+  if($edx_id == '' || $edx_id == '0'){
     $edx_sql = "INSERT INTO auth_user SET
 	username = '".mysql_real_escape_string($r['username'])."',
 	first_name = '".mysql_real_escape_string($r['first_name'])."',

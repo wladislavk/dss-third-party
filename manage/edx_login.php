@@ -8,6 +8,7 @@ $u = mysql_fetch_assoc($u_q);
 $userid = $u['edx_id'];
 error_log($userid);
 $ses = shell_exec('sh edxScript.sh '.$userid);
+error_log($ses);
 $expire=time()+60*60*2;
 if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
   setcookie("edxloggin", "true", $expire, "/", "dentalsleepsolutions.com", false);

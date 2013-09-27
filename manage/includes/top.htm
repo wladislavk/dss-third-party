@@ -1109,13 +1109,13 @@ if(mysql_num_rows($od_q)==0 && mysql_num_rows($tod_q) == 0 && mysql_num_rows($to
 </div> 
 
 <?php
-/*
+
 if($_SESSION['docid']==$_SESSION['userid']){
   $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
   $course_q = mysql_query($course_sql);
   $course_r = mysql_fetch_assoc($course_q);
   if($course_r['use_course']==1){
-    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="education.php" >Course</a><?php
+    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" >EdX</a><?php
   }
 }else{
   $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
@@ -1124,12 +1124,11 @@ if($_SESSION['docid']==$_SESSION['userid']){
   $course_q = mysql_query($course_sql);
   $course_r = mysql_fetch_assoc($course_q);
   if($course_r['use_course']==1 && $course_r['use_course_staff']==1){
-    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="course.php" target="_blank">Course</a><?php
+    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank">EdX</a><?php
   }
 }
 ?>
 
-*/ ?>
 <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
  <script type="text/javascript" src="js/task.js"></script> 
  <script type="text/javascript" src="script/autocomplete.js"></script>

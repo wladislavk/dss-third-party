@@ -1,6 +1,7 @@
 <? 
 include "includes/top.htm";
 include_once 'includes/edx_functions.php';
+include_once 'includes/help_functions.php';
 if($_REQUEST["delid"] != "")
 {
 	$l_sql = "SELECT * from dental_login WHERE userid='".mysql_real_escape_string($_REQUEST['delid'])."'";

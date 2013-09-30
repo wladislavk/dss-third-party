@@ -102,8 +102,42 @@ $(document).ready(function(){
   </div>
 
 
-  <a id="api_submit" href="#" onclick="return false;" class="addButton">Submit Request</a>
+  <input type="submit"  name="api_submit" id="api_submit_old" class="addButton" value="Submit Request" />
+  <a href="#" onclick="return false;" class="addButton" id="api_submit">Submit AJAX</a>
 </form>
+
+<?php
+  if(isset($_POST['api_submit'])){
+$data = array();
+$data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+$data['payer_id'] =  $_POST['payer_id'];
+$data['service_provider_first_name'] =  $_POST['provider_first_name'];
+$data['service_provider_last_name'] =  $_POST['provider_last_name'];
+$data['provider_npi'] =  $_POST['provider_npi'];
+$data['member_id'] =  $_POST['patient_member_id'];
+$data['member_first_name'] =  $_POST['patient_first_name'];
+$data['member_last_name'] =  $_POST['patient_last_name'];
+$data['member_dob'] =  $_POST['patient_dob'];
+$data['service_type'] =  $_POST['service_type_code'];
+
+$data_string = json_encode($data);                                                                               
+
+echo $data_string."<br /><br />"; 
+//$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
+$ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                  
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                      
+    'Content-Type: application/json',                                                                            
+    'Content-Length: ' . strlen($data_string))                                                                   
+);                                                                                                               
+
+$result = curl_exec($ch);
+echo $result;
+}
+?>
+
 <div id="api_output"></div>
   <script type="text/javascript">
     $('#api_submit').click( function(){
@@ -158,11 +192,10 @@ $(document).ready(function(){
                                   $.ajax({
                                         url: "https://gds.eligibleapi.com/v1.1/coverage/all.json",
                                         type: "get",
-                                        dataType: 'json',
                                         data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
                                                 payer_id: $('#payer_id').val(),
-                                                provider_first_name: $('#provider_first_name').val(),
-                                                provider_last_name: $('#provider_last_name').val(),
+                                                service_provider_first_name: $('#provider_first_name').val(),
+                                                service_provider_last_name: $('#provider_last_name').val(),
                                                 provider_npi: $('#provider_npi').val(),
                                                 member_id: $('#patient_member_id').val(),
                                                 member_first_name: $('#patient_first_name').val(),

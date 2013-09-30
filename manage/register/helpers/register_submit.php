@@ -4,6 +4,7 @@
 <?php require_once '../../includes/notifications.php'; ?>
 <?php require_once '../../admin/includes/password.php'; ?>
 <?php include '../../includes/edx_functions.php'; ?>
+<?php include_once '../../includes/help_functions.php'; ?>
 <?php
 
 	
@@ -71,6 +72,7 @@
 
 		$userid = mysql_insert_id();
 		edx_user_update($userid, $edx_con);
+		help_user_update($userid, $help_con);
 
                         $co_sql = "SELECT c.id, c.name from companies c
                                         JOIN dental_user_company uc ON c.id = uc.companyid

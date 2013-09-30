@@ -8,6 +8,7 @@ require_once '../includes/constants.inc';
 require_once 'includes/access.php';
 require_once 'includes/form_updates.php';
 require_once '../includes/edx_functions.php';
+include_once '../includes/help_functions.php';
 if($_POST["usersub"] == 1)
 {
 
@@ -93,6 +94,7 @@ if($_POST["usersub"] == 1)
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
                         edx_user_update($_POST['ed'], $edx_con);
+			help_user_update($_POST['ed'], $help_con);
 			form_update_all($_POST['ed']);
 
                         if(is_super($_SESSION['admin_access'])){
@@ -220,6 +222,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
                         mysql_query($loc_sql);
 			edx_user_update($userid, $edx_con);
+			help_user_update($userid, $edx_con);
 		if(isset($_POST['save_but'])){
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];

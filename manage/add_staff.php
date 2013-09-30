@@ -5,6 +5,7 @@ include("includes/sescheck.php");
 include_once('admin/includes/password.php');
 include('includes/general_functions.php');
 include('includes/edx_functions.php');
+include_once 'includes/help_functions.php';
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 $q = mysql_query($sql);
 $r = mysql_fetch_assoc($q);
@@ -87,7 +88,7 @@ if($_POST["staffsub"] == 1)
 				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			edx_user_update($_POST['ed'], $edx_con);
-			
+			help_user_update($_POST['ed'] ,$help_con);	
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>
@@ -148,7 +149,7 @@ if($_POST["staffsub"] == 1)
                         $cname = $co_r['name'];
 
 			edx_user_update($userid, $edx_con);
-
+			help_user_update($userid, $help_con);
 		
 			$msg = "Added Successfully";
 			?>

@@ -79,7 +79,7 @@ $t = mysql_fetch_assoc($my);
 </span>
 <br />
 <br />
-    <div class="response_type_<?=$t['create_type'];?>">
+    <div class="response_type_<?=($t['create_type']!='')?$t['create_type']:'1';?>">
 	<?= $t['body']; ?>
       <?php if($t['attachment']){
         ?> | <a href="../q_file/<?= $t['attachment']; ?>">View Attachment</a><?php

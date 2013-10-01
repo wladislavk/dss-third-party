@@ -626,7 +626,8 @@ while ($row = mysql_fetch_assoc($followup_result)) {
 }
 
 // Nights per Week and Current ESS TSS 
-$initesstss_query = "SELECT ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+//$initesstss_query = "SELECT ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+$initesstss_query = "SELECT ess, tss from dental_q_page1 WHERE patientid = '".$patientid."' LIMIT 1;";
 $initesstss_result = mysql_query($initesstss_query);
 $initess = mysql_result($initesstss_result, 0, 0);
 $inittss = mysql_result($initesstss_result, 0, 1);

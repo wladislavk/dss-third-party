@@ -15,7 +15,7 @@ function help_user_update($id, $help_con){
   if($help_id == '' || $help_id == '0'){
     $help_sql = "INSERT INTO help_wp.wp_users 
 		(user_login, 
-		user_nicename
+		user_nicename,
 		user_email,
 		display_name) VALUES 
 		('".mysql_real_escape_string($r['username'])."', 

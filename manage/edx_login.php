@@ -21,9 +21,9 @@ if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
 <script type="text/javascript">
 <?php
                 if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='stage.dss-rh.xforty.com'){
-?>  window.location='http://edx.dss-rh.xforty.com:8001/'; <?php
+?>  window.location='http://edx.dss-rh.xforty.com/dashboard'; <?php
                 }else{
-?>  window.location='http://edx.dss-rh.xforty.com:8001/'; <?php
+?>  window.location='http://edx.dss-rh.xforty.com/dashboard'; <?php
                 }
 ?>
 </script>

@@ -116,8 +116,8 @@ $task = mysql_fetch_assoc($t_q);
 				<?php 
 					$responsibleid = ($task['responsibleid'])?$task['responsibleid']:$_SESSION['userid'];
 					$r_sql = "SELECT * FROM dental_users
-						WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."' OR
-							docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+						WHERE (userid='".mysql_real_escape_string($_SESSION['docid'])."' OR
+							docid='".mysql_real_escape_string($_SESSION['docid'])."') AND status=1 ";
 
 					$r_q = mysql_query($r_sql);
 					while($responsible = mysql_fetch_assoc($r_q)){ ?>

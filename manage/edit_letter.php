@@ -1165,7 +1165,7 @@ if ($_POST != array()) {
 		$other_mds = "";
 		$count = 1;
 		foreach ($md_contacts as $index => $md) {
-			if ($md['type'] != "md_referral") {
+			//if ($md['type'] != "md_referral") {
 				$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 				if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
 					$other_mds .= $md_fullname;
@@ -1174,7 +1174,7 @@ if ($_POST != array()) {
 					}	
 					$count++;
 				}
-			}
+			//}
 		}
 		$other_mds = rtrim($other_mds, ",<br /> ");
 		$other_mds .= "PAT,<br />";
@@ -1618,18 +1618,18 @@ foreach ($letter_contacts as $key => $contact) {
 	$other_mds = "";
 	$count = 1;
 	foreach ($md_contacts as $index => $md) {
-		if ($md['type'] != "md_referral") {
+		//if ($md['type'] != "md_referral") {
 			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
-				$other_mds .= $md_fullname;
-				if ($count < count($contacts['mds'])) {
+				if ($count != 1)  {
 					$other_mds .= ",<br /> ";
 				}	
-				$count++;
+                                $other_mds .= $md_fullname;
 			}
-		}
+				$count++;
+		//}
 	}
-	$other_mds = rtrim($other_mds, ",<br /> ");
+	//$other_mds = rtrim($other_mds,", ");
 	if($cc_topatient && $contact['type']!='patient'){
 		//$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
 	}

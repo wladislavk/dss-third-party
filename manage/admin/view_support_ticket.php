@@ -57,10 +57,12 @@ if(isset($_POST['respond'])){
 
 $sql = "select t.*,
         CONCAT(u.first_name, ' ',u.last_name) as user,
+        CONCAT(a.first_name, ' ',a.last_name) as account,
         c.name as company,
         cat.title as category 
 	FROM dental_support_tickets t 
                 LEFT JOIN dental_users u ON u.userid=t.userid
+		LEFT JOIN dental_users a ON a.userid=t.docid
                 LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
@@ -75,7 +77,7 @@ $t = mysql_fetch_assoc($my);
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 <div id="support_ticket">
 <span class="admin_head">
-	<?= $t['title']; ?>  - User: <?= $t['user']; ?> - Company: <?= $t['company']; ?> - Category: <?= $t['category']; ?>
+	<?= $t['title']; ?>  - User: <?= $t['user']; ?> - Account: <?= $t['account']; ?> - Company: <?= $t['company']; ?> - Category: <?= $t['category']; ?>
 </span>
 <br />
 <br />

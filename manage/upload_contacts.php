@@ -43,7 +43,7 @@ if($_FILES['csv']['error'] == 0){
                                 $fields[] = 'middlename';  
                                 break;
                         case 'title':
-                                $fields[] = '';  
+                                $fields[] = 'salutation';  
                                 break;
                         case 'companyname':
                                 $fields[] = 'company';       

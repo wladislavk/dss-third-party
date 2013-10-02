@@ -77,8 +77,9 @@ $t = mysql_fetch_assoc($my);
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 <div id="support_ticket">
 <span class="admin_head">
-	<?= $t['title']; ?>  - User: <?= $t['user']; ?> - Account: <?= $t['account']; ?> - Company: <?= $t['company']; ?> - Category: <?= $t['category']; ?>
+	<?= $t['title']; ?>  - Category: <?= $t['category']; ?>
 </span>
+<h3 style="margin-left:15px;">User: <?= $t['user']; ?> - Account: <?= $t['account']; ?> - Company: <?= $t['company']; ?></h3>
 <br />
 <br />
     <div class="response_type_<?=($t['create_type']!='')?$t['create_type']:'1';?>">

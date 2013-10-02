@@ -1617,12 +1617,15 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%other_mds%";
 	$other_mds = "";
 	$count = 1;
+        $firstmd = true;
 	foreach ($md_contacts as $index => $md) {
 		//if ($md['type'] != "md_referral") {
 			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
-				if ($count != 1)  {
+				if (!$firstmd)  {
 					$other_mds .= ",<br /> ";
+				}else{
+					$firstmd = false;
 				}	
                                 $other_mds .= $md_fullname;
 			}

@@ -14,9 +14,9 @@ $s2 = "SELECT * FROM dental_contact WHERE " .
                 "(add1 = '".$r['address1']."' AND add1!='' AND " .
                 "city = '".$r['city']."' AND city!='' AND " .
                 "state = '".$r['state']."' AND state!='' AND " .
-                "zip = '".$r['zip']."' AND zip!='')) ";
+                "zip = '".$r['zip']."' AND zip!='')) 
 
-
+		AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $q2 = mysql_query($s2);
 $docs = array();
 $c = 0;
@@ -43,7 +43,9 @@ $s2 = "SELECT * FROM dental_contact WHERE status IN (1,2) AND docid='".mysql_rea
                 "(add1 = '".$r['add1']."' AND add1!='' AND " .
                 "city = '".$r['city']."' AND city!='' AND " .
                 "state = '".$r['state']."' AND state!='' AND " .
-                "zip = '".$r['zip']."' AND zip!='')) ";
+                "zip = '".$r['zip']."' AND zip!='')) 
+
+                AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 
 $q2 = mysql_query($s2);
 $docs = array();
@@ -67,13 +69,19 @@ $r = mysql_fetch_assoc($q);
 $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND 
                 ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
                 (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-                )";
+                )
+
+
+                AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $s2 = "SELECT * FROM dental_patients WHERE " .
 		"patientid != ".$id." AND " .
 		"status='1' AND docid='".mysql_real_escape_string($_SESSION['docid'])."' AND " .
 		"((firstname = '".$r['firstname']."' AND " .
 	        "lastname = '".$r['lastname']."') OR " .
-		"(add1 = '".$r['add1']."' AND add1!= '' AND city = '".$r['city']."' AND city!='' AND state = '".$r['state']."' AND state!='' AND zip = '".$r['zip']."' AND zip!=''))";
+		"(add1 = '".$r['add1']."' AND add1!= '' AND city = '".$r['city']."' AND city!='' AND state = '".$r['state']."' AND state!='' AND zip = '".$r['zip']."' AND zip!=''))
+
+
+                AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 
 		 
 $q2 = mysql_query($s2);
@@ -103,7 +111,9 @@ $s2 = "SELECT * FROM dental_contact WHERE " .
                 "(add1 = '".$r['address1']."' AND add1!='' AND " .
                 "city = '".$r['city']."' AND city!='' AND " .
                 "state = '".$r['state']."' AND state!='' AND " .
-                "zip = '".$r['zip']."' AND zip!='')) ";
+                "zip = '".$r['zip']."' AND zip!='')) 
+
+                AND docid='".mysql_real_escape_string($_SESSION['docid'])."'";
 
 $q2 = mysql_query($s2);
 $docs = array();

@@ -468,6 +468,9 @@ if(isset($_GET['msg'])){
 if(isset($_GET['sendins'])&&$_GET['sendins']==1){
   include '../insurance_electronic_file.php';
 }
+if(isset($_GET['checkstatus'])&&$_GET['checkstatus']==1){
+  include '../insurance_check_status.php';
+}
 if(isset($_GET['showins'])&&$_GET['showins']==1){
   /*
   $api_sql = "SELECT u.use_eligible_api, p.p_m_eligible_id FROM dental_users u

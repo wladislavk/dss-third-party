@@ -462,7 +462,13 @@ function trigger_letter($letterid, $pid, $topatient, $md_referral_list, $md_list
 	}else{
 	  $template_type = 0;
 	}
-        $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method, null, null, true, $template_type);
+	if($letterid=='16' || $letterid=='19'){
+		$check_recipient = false;
+	}else{
+		$check_recipient = true;
+	}
+	
+        $letter = create_letter($letterid, $pid, '', $topatient, $md_list, $md_referral_list, '', '', $send_method, null, null, $check_recipient, $template_type);
         if (!is_numeric($letter)) {
                 print "Can't send letter ".$letterid.": " . $letter;
                 die();

@@ -9,6 +9,12 @@ if($_GET['backoffice'] == '1') {
 } else {
   include 'includes/top.htm';
 }
+
+if($_GET['lid'] == '' || $_GET['lid'] == '0'){
+ ?><h2>Unable to find letter.</h2><?php
+  die();
+}
+
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
@@ -20,11 +26,22 @@ $status_q = mysql_query($status_sql);
 $status_r = mysql_fetch_assoc($status_q);
 $parent_status = $status_r['status'];
 
+$pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$pat_q = mysql_query($pat_sql);
+$pat = mysql_fetch_assoc($pat_q);
+
+
+//Check and make sure user can access this patient
+if($_SESSION['docid'] != $pat['docid'] && (!isset($_SESSION['adminuserid']) || $_SESSION['adminuserid']=='')){
+  ?><h2>You are not permitted to view this letter.</h2><?php
+  die();
+}
 
 $masterid=$_GET['lid'];
 $master_sql = "SELECT * FROM dental_letters l
 		WHERE (l.letterid='".mysql_real_escape_string($_GET['lid'])."'
 			OR l.parentid='".mysql_real_escape_string($_GET['lid'])."')
+			AND l.docid='".mysql_real_escape_string($pat['docid'])."'
 			AND status='".$parent_status."' AND deleted=0 ORDER BY edit_date DESC";
 $master_c = mysql_query($master_sql);
 $master_q = mysql_query($master_sql);
@@ -35,7 +52,7 @@ $cur_template_num = 0;
 //TO COUNT NUMBER OF LETTERS
 while($master_r = mysql_fetch_assoc($master_c)){
   $letterid = $master_r['letterid'];
-  $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
+  $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' AND docid='".mysql_real_escape_string($pat['docid'])."' ORDER BY letterid ASC;";
   $othermd_result = mysql_query($othermd_query);
   $md_array = array();
   $md_referral_array = array();
@@ -65,7 +82,8 @@ $letterid = $master_r['letterid'];
 // Select Letter
 $letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type, l.font_size, l.font_family FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
-	 where l.letterid = ".$letterid.";";
+	 where l.letterid = ".$letterid."
+	AND l.docid='".mysql_real_escape_string($pat['docid'])."';";
 $letter_result = mysql_query($letter_query);
 $row = mysql_fetch_assoc($letter_result); 
   $templateid = $row['templateid'];
@@ -111,7 +129,7 @@ $row = mysql_fetch_assoc($letter_result);
   $font_family = $row['font_family'];
 
 // Pending and Sent Contacts
-$othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
+$othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters where letterid = '".$letterid."' AND docid='".mysql_real_escape_string($pat['docid'])."' ORDER BY letterid ASC;";
 $othermd_result = mysql_query($othermd_query);
 $md_array = array();
 $md_referral_array = array();

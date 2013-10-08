@@ -266,12 +266,11 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
       return -1;
     }
   }
-
   if((!$topatient && !$md_referral_list && !$md_list) || ($check_recipient && !$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
 	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
-    return 0;
+    return false;
   }
 
   //To remove referral source from md list if exists

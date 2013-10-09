@@ -113,9 +113,16 @@ die();
 <?php
 if($_POST["imagesub"] == 1)
 {
+
+$title = $_POST['title'];
+                $imagetypeid = $_POST['imagetypeid'];
+
+
+if($_FILES['image_file']['error'] == 4){
+  $uploaded = false;
+}else{
+
 	if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
-		$title = $_POST['title'];
-		$imagetypeid = $_POST['imagetypeid'];
 	
 
 	  	if($imagetypeid == '0'){
@@ -223,15 +230,24 @@ if($_POST["imagesub"] == 1)
 		$uploaded = false;
 	     }     
 	}	
-if($uploaded){		
+        } else {
+                ?>
+                        <script type="text/javascript">
+                                alert("Invalid File Type");
+                        </script>
+                <?php
+        }
+}
+if($uploaded || $_FILES['image_file']['error'] == 4){		
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = " update dental_q_image set 
 			title = '".s_for($title)."',
-			imagetypeid = '".s_for($imagetypeid)."',
-			image_file = '".s_for($banner1)."'
-			where imageid = '".s_for($_POST['ed'])."'";
-			
+			imagetypeid = '".s_for($imagetypeid)."' ";
+			if($uploaded){
+			  $ed_sql .= ", image_file = '".s_for($banner1)."' ";
+			}
+			$ed_sql .= " where imageid = '".s_for($_POST['ed'])."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			$msg = "Edited Successfully";
@@ -328,13 +344,6 @@ if($uploaded){
                         </script>
                 <?php
 }
-	} else {
-		?>
-			<script type="text/javascript">
-				alert("Invalid File Type");
-			</script>           
-		<?php
-	}
 }
 
 ?>

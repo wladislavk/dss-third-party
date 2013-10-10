@@ -16,8 +16,7 @@ if($_GET['lid'] == '' || $_GET['lid'] == '0'){
 }
 
 ?>
-<!-- FOR TINY MCE 4 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/tinymce.min.js"></script> -->
-<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script> 
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
 

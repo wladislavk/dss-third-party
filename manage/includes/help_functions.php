@@ -25,6 +25,19 @@ function help_user_update($id, $help_con){
     $help_q = mysql_query($help_sql, $help_con) or die(mysql_error($help_con));
 error_log($help_sql);
     $help_id = mysql_insert_id($help_con);
+    
+
+    //USER ROLES
+
+      //remove previous roles
+	$del_role_sql = "delete from wp_usermeta where userid=".mysql_real_escape_string($help_id)." AND meta_key = 'wp_capabilities'";
+	mysql_query($del_role_sql);
+
+    $role_sql = "insert into wp_usermeta (user_id, meta_key, meta_value) values (".mysql_real_escape_string($help_id).", 'wp_capabilities', 'a:1:{s:10:\"subscriber\";b:1;}');";
+    mysql_query($role_sql);
+
+
+
     $u_sql = "UPDATE dental_users SET help_id='".mysql_real_escape_string($help_id)."' WHERE userid='".mysql_real_escape_string($id)."'";
     mysql_query($u_sql);
 	

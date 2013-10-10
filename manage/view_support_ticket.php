@@ -34,6 +34,11 @@ if(isset($_POST['respond'])){
                 status='1'
                 WHERE id = '".mysql_real_escape_string($_GET['ed'])."'";
     mysql_query($s);
+	?>
+        <script type="text/javascript">
+	alert("This ticket was closed and has now been reopened. We will respond promptly to your inquiry. Thank you!");
+	</script>
+	<?php
   }
 
                 if($_FILES['attachment']['tmp_name']!=''){
@@ -151,7 +156,7 @@ $t = mysql_fetch_assoc($my);
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
     <input type="checkbox" value="2" name="close" /> Close Ticket<br />
   <?php }else{ ?>
-    <input type="checkbox" value="1" name="reopen" /> Reopen Ticket<br />
+    <input type="hidden" value="1" name="reopen" />
   <?php } ?>
   </div>
 </div>

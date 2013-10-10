@@ -8,22 +8,15 @@ function edit_letter(divid, size, family) {
 		$("#" + divid).replaceWith(textarea);
 		tinyMCE.init({
 			mode : "textareas",
-			theme : "advanced",
-			theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, separator,help",
-			theme_advanced_buttons2 : "",
-			theme_advanced_buttons3 : "",
+			theme : "modern",
+			menubar: false,
+			toolbar1: "undo redo | bold italic ",
 			gecko_spellcheck : true,
 			plugins: "paste",
-paste_preprocess : function(pl, o) {
-  o.content = strip_tags(o.content,'');
-  //o.content = strip_tags(o.content,'<b><u><i><p><br><img>'); // use this i.e. to keep some tags
-},
-    paste_auto_cleanup_on_paste: true,
-    paste_strip_class_attributes: 'all',
-    paste_remove_styles: true,
-    paste_remove_spans: true,
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
+			valid_elements: "b,strong,i,em,p,br",
+    			valid_styles: {
+        			"*": "",
+    			},
 			entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
 			content_css : "css/font"+size+".css?" + new Date().getTime()+",css/font"+family+".css?" + new Date().getTime(),
 		});

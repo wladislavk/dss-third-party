@@ -233,7 +233,7 @@ if($pat_myarray['patientid'] == '')
 <script language="JavaScript" src="calendar2.js"></script>
     <?
 	
-    $thesql = "select n.*, u.name added_name from dental_notes n
+    $thesql = "select n.*, CONCAT(u.first_name,' ',u.last_name) added_name from dental_notes n
 	LEFT JOIN dental_users u on u.userid=n.userid
 	where notesid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);

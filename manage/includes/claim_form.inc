@@ -144,8 +144,17 @@ if ($_REQUEST["delid"] != "") {
 $is_new_claim = ((!isset($_REQUEST['insid']) || $_REQUEST['insid'] == '') && $_POST['ed'] == '') ? true : false;
 //print "\$is_new_claim: $is_new_claim";exit;
 
+if($_POST['ex_statusbtn']){
+?>
+<script type="text/javascript">
+  window.location = '<?= $called_from; ?>?insid=<?= $_GET['insid']; ?>&checkstatus=1&pid=<?= $_GET['pid']; ?>';
+</script>
+<?php
+die();
+
+
 // process inserts/updates for claim form
-if ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
+}elseif ($_POST['insurancesub'] == 1 || $_POST['ex_pagebtn']) {
     if($is_sent){
             print '<script type="text/javascript">';
         //print '  window.location="' . $called_from . '?showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
@@ -1295,6 +1304,7 @@ if(!$r['reference_id'] || !$w_r['response']){
           Claim has been sent
 		<?php if($is_back_office){ ?>
 			<input type="submit" class="print-button" name="ex_pagebtn" value="Print Claim" />
+			<input type="submit" class="print-button" name="ex_statusbtn" value="Check Status" />
 		<?php } ?>
 	    <?php } else if ($is_back_office) { ?>
                <?php if($status == DSS_CLAIM_PENDING){ ?>

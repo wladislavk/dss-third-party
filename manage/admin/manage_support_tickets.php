@@ -9,6 +9,7 @@ if(isset($_GET['rid'])){
 }
 $sql = "select t.*,
 	CONCAT(u.first_name,' ',u.last_name) as user,
+	CONCAT(a.first_name,' ',a.last_name) as account,
 	c.name as company,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
@@ -16,6 +17,7 @@ $sql = "select t.*,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
 	 FROM dental_support_tickets t
 		LEFT JOIN dental_users u ON u.userid=t.userid
+		LEFT JOIN dental_users a ON a.userid=t.docid
                 LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
 		LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
@@ -61,6 +63,9 @@ $total_rec = mysql_num_rows($my);
                         User
                 </td>
                 <td valign="top" class="col_head" width="10%">
+                        Account
+                </td>
+                <td valign="top" class="col_head" width="10%">
                         Company
                 </td>
                 <td valign="top" class="col_head" width="10%">
@@ -102,7 +107,10 @@ else
 			</td>
 			<td valign="top">
 			<?= st($myarray["user"]); ?>
-			</td>		
+			</td>	
+                        <td valign="top">
+                        <?= st($myarray["account"]); ?>
+                        </td>	
 			<td valign="top">
 			<?= $myarray["company"];?>
 			</td>
@@ -134,6 +142,7 @@ else
 <?php
 $sql = "select t.*,
         CONCAT(u.first_name, ' ', u.last_name) as user,
+	CONCAT(a.first_name, ' ', a.last_name) as account,
         c.name as company,
         cat.title as category,
         (SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
@@ -141,6 +150,7 @@ $sql = "select t.*,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment
          FROM dental_support_tickets t
                 LEFT JOIN dental_users u ON u.userid=t.userid
+                LEFT JOIN dental_users a ON a.userid=t.docid
 		LEFT JOIN dental_user_company uc ON uc.userid=t.docid
                 LEFT JOIN companies c ON c.id=uc.companyid
                 LEFT JOIN dental_support_categories cat ON cat.id = t.category_id
@@ -202,6 +212,9 @@ else
                         </td>
                         <td valign="top">
                         <?= st($myarray["user"]); ?>
+                        </td>
+                        <td valign="top">
+                        <?= st($myarray["account"]); ?>
                         </td>
                         <td valign="top">
                         <?= $myarray["company"];?>

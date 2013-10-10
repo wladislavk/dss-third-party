@@ -37,10 +37,10 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   $d = mysql_fetch_assoc($result);
   $referring_provider = $d['diagnosising_doc'];
   $diagnosising_npi = $d['diagnosising_npi'];
+$insurancetype = $claim['insurance_type'];
 if($insurancetype!=1){
   $referring_provider = '';
   $diagnosising_npi = '';
-
 }
 
 $ins_sql = "SELECT * FROM dental_contact where contactid='".$pat['p_m_ins_co']."'";

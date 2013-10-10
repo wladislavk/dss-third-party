@@ -9,16 +9,34 @@ if($_GET['backoffice'] == '1') {
 } else {
   include 'includes/top.htm';
 }
+
+if($_GET['lid'] == '' || $_GET['lid'] == '0'){
+ ?><h2>Unable to find letter.</h2><?php
+  die();
+}
+
 ?>
-<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script> 
 <script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <?php
 
-$status_sql = "SELECT status FROM dental_letters
+$status_sql = "SELECT status, docid FROM dental_letters
 		WHERE letterid='".mysql_real_escape_string($_GET['lid'])."'";
 $status_q = mysql_query($status_sql);
 $status_r = mysql_fetch_assoc($status_q);
 $parent_status = $status_r['status'];
+$letter_doc = $status_r['docid'];
+
+$pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$pat_q = mysql_query($pat_sql);
+$pat = mysql_fetch_assoc($pat_q);
+
+
+//Check and make sure user can access this patient
+if($_SESSION['docid'] != $letter_doc && (!isset($_SESSION['adminuserid']) || $_SESSION['adminuserid']=='')){
+  ?><h2>You are not permitted to view this letter.</h2><?php
+  die();
+}
 
 
 $masterid=$_GET['lid'];
@@ -65,7 +83,8 @@ $letterid = $master_r['letterid'];
 // Select Letter
 $letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type, l.font_size, l.font_family FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
-	 where l.letterid = ".$letterid.";";
+	 where l.letterid = ".$letterid;
+	
 $letter_result = mysql_query($letter_query);
 $row = mysql_fetch_assoc($letter_result); 
   $templateid = $row['templateid'];
@@ -626,7 +645,8 @@ while ($row = mysql_fetch_assoc($followup_result)) {
 }
 
 // Nights per Week and Current ESS TSS 
-$initesstss_query = "SELECT ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+//$initesstss_query = "SELECT ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+$initesstss_query = "SELECT ess, tss from dental_q_page1 WHERE patientid = '".$patientid."' LIMIT 1;";
 $initesstss_result = mysql_query($initesstss_query);
 $initess = mysql_result($initesstss_result, 0, 0);
 $inittss = mysql_result($initesstss_result, 0, 1);
@@ -1164,7 +1184,7 @@ if ($_POST != array()) {
 		$other_mds = "";
 		$count = 1;
 		foreach ($md_contacts as $index => $md) {
-			if ($md['type'] != "md_referral") {
+			//if ($md['type'] != "md_referral") {
 				$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 				if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
 					$other_mds .= $md_fullname;
@@ -1173,7 +1193,7 @@ if ($_POST != array()) {
 					}	
 					$count++;
 				}
-			}
+			//}
 		}
 		$other_mds = rtrim($other_mds, ",<br /> ");
 		$other_mds .= "PAT,<br />";
@@ -1616,19 +1636,22 @@ foreach ($letter_contacts as $key => $contact) {
 	$search[] = "%other_mds%";
 	$other_mds = "";
 	$count = 1;
+        $firstmd = true;
 	foreach ($md_contacts as $index => $md) {
-		if ($md['type'] != "md_referral") {
+		//if ($md['type'] != "md_referral") {
 			$md_fullname = $md['salutation'] . " " . $md['firstname'] . " " . $md['lastname'];
 			if ($md_fullname != $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname']) {
-				$other_mds .= $md_fullname;
-				if ($count < count($contacts['mds'])) {
+				if (!$firstmd)  {
 					$other_mds .= ",<br /> ";
+				}else{
+					$firstmd = false;
 				}	
-				$count++;
+                                $other_mds .= $md_fullname;
 			}
-		}
+				$count++;
+		//}
 	}
-	$other_mds = rtrim($other_mds, ",<br /> ");
+	//$other_mds = rtrim($other_mds,", ");
 	if($cc_topatient && $contact['type']!='patient'){
 		//$other_mds .= ",<br />".$patient_info['firstname']." ".$patient_info['lastname'];
 	}
@@ -1884,6 +1907,8 @@ if($_POST['fax_letter'][$cur_letter_num] != null){
 }else{
   $send_method = '';
 }
+
+
             $saveletterid = save_letter($letterid, $parent, $type, $recipientid, $message, $send_method, $font_size, $font_family);
  	    $num_contacts = num_letter_contacts($_GET['lid']);
 	if($_POST['send_letter'][$cur_letter_num] != null){

@@ -257,7 +257,6 @@ class MDReferralFilter {
 
 // Function to Create Letters
 function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_patient = null, $cc_md_list = null, $cc_md_referral_list = null, $font_size = null, $font_family = null) {
-
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
     $l_q = mysql_query($l_sql);
@@ -266,12 +265,11 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
       return -1;
     }
   }
-
   if((!$topatient && !$md_referral_list && !$md_list) || ($check_recipient && !$md_referral_list && !$md_list && ($templateid==16 || $templateid==19))){
 	$nsql = "SELECT name FROM dental_letter_templates where id=".$templateid;
 	$nq = mysql_query($nsql);
 	$nrow = mysql_fetch_assoc($nq);
-    return 0;
+    return false;
   }
 
   //To remove referral source from md list if exists
@@ -381,6 +379,7 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
+error_log($letter_query);
   $letter_insert = mysql_query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysql_errno().": ".mysql_error()."<br/>"."Error inserting Letter to Database");
@@ -506,7 +505,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 					}
 				}
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status, null, true, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $send_method, $status, null, false, null, $row['cc_topatient'], $row['cc_md_list'], $row['cc_md_referral_list'], $font_size, $font_family); 	
 		}
  		if (is_numeric($letter)) {	// new letter was created successfully Update the parent letter by removing the recipient
                                 $update_edit = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."' WHERE letterid='".$letter."'";

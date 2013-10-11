@@ -10,7 +10,7 @@ function edit_letter(divid, size, family) {
 			mode : "textareas",
 			theme : "modern",
 			menubar: false,
-			toolbar1: "undo redo | bold italic ",
+			toolbar1: "undo redo | italic | bullist numlist outdent indent",
 			gecko_spellcheck : true,
 			plugins: "paste",
 			valid_elements: "b,strong,i,em,p,br",

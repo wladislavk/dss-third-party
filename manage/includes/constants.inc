@@ -148,6 +148,7 @@ define('DSS_FILE_IMAGE_JPEG', 1);
 define('DSS_FILE_IMAGE_PJPEG', 2);
 define('DSS_FILE_APP_PDF', 3);
 define('DSS_FILE_IMAGE_PNG', 4);
+define('DSS_FILE_IMAGE_BMP', 5);
 
 // A convenience array to get file types
 $dss_image_file_types = array();
@@ -155,6 +156,7 @@ $dss_image_file_types[DSS_FILE_IMAGE_GIF] = "image/gif";
 $dss_image_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
 $dss_image_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
 $dss_image_file_types[DSS_FILE_IMAGE_PNG] = "image/png";
+$dss_image_file_types[DSS_FILE_IMAGE_BMP] = "image/bmp";
 
 // A convenience array to get file types
 $dss_file_types = array();
@@ -163,6 +165,7 @@ $dss_file_types[DSS_FILE_IMAGE_JPEG] = "image/jpeg";
 $dss_file_types[DSS_FILE_IMAGE_PJPEG] = "image/pjpeg";
 $dss_file_types[DSS_FILE_IMAGE_PNG] = "image/png";
 $dss_file_types[DSS_FILE_APP_PDF] = "application/pdf";
+$dss_file_types[DSS_FILE_IMAGE_BMP] = "image/bmp";
 
 define('DSS_IMAGE_MAX_SIZE', 10000000);
 define('DSS_IMAGE_MAX_WIDTH', 2000);

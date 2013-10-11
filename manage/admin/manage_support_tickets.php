@@ -206,7 +206,7 @@ else
         {
                 $latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
                 ?>
-                        <tr class="<?= ($myarray["viewed"]=='0' || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+                        <tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
                         <td valign="top">
                         <?=st($myarray["title"]);?>
                         </td>

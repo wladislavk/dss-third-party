@@ -1518,7 +1518,7 @@ $num_face = mysql_num_rows($itype_my);
                                   ?>
                                 </span>
 <br />
-<input type="submit" name="sendPin" value="Patient can't recieve text message?" class="button" />
+<input type="submit" name="sendPin" value="Patient can't receive text message?" class="button" />
 <?php if($themyarray['registration_status']==1){
  ?>PIN Code: <?= $themyarray['access_code']; ?> 
 <?php } ?>

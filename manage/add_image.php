@@ -121,7 +121,6 @@ $title = $_POST['title'];
 if($_FILES['image_file']['error'] == 4){
   $uploaded = false;
 }else{
-
 	if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 	
 

@@ -4,7 +4,7 @@ require_once 'includes/sescheck.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
 if(is_super($_SESSION['admin_access'])){
-$s = "select u.name, 
+$s = "select CONCAT(u.first_name,' ',u.last_name) name,
 	u.email, 
 	c.name as company_name, 
 	u.address, 
@@ -18,7 +18,7 @@ $s = "select u.name,
 	JOIN dental_user_company uc on uc.userid=u.userid 
 	JOIN companies c ON c.id=uc.companyid";
 }elseif(is_software($_SESSION['admin_access'])){
-$s = "select u.name, 
+$s = "select CONCAT(u.first_name,' ',u.last_name) name, 
         u.email, 
         c.name as company_name, 
         u.address, 
@@ -38,7 +38,7 @@ $s = "select u.name,
                         WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
   $a_q = mysql_query($a_sql);
   $admin = mysql_fetch_assoc($a_q);
-$s = "select u.name, 
+$s = "select CONCAT(u.first_name,' ',u.last_name) name, 
         u.email, 
         c.name as company_name, 
         u.address, 

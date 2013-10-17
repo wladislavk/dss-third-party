@@ -452,6 +452,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 			$preferred = "paper";
 		}
 	}
+$template = htmlspecialchars($template);
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";
@@ -574,7 +575,7 @@ function send_letter($letterid, $parent = null, $type, $recipientid, $template =
 		  return "ERROR";
 		}
   } else {
-    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_listi, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
+    $select_letter = "SELECT patientid, info_id, templateid, generated_date, send_method, topatient, md_list, md_referral_list, cc_topatient, cc_md_list, cc_md_referral_list FROM dental_letters WHERE letterid = '".s_for($letterid)."';";
                 $select_result = mysql_query($select_letter);
                 while ($row = mysql_fetch_assoc($select_result)) {
                         $status = '1';
@@ -866,6 +867,8 @@ function deliver_created_letter($letterid){
                         }else{
                           $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
                         }
+                        $letter_result = mysql_query($letter_query);
+                        $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
                         $letter_result = mysql_query($letter_query);
                         if (!$letter_result) {
                                 return mysql_error();

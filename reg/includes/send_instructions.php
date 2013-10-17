@@ -2,7 +2,7 @@
 require_once '../../manage/admin/includes/main_include.php';
 require_once '../../manage/includes/constants.inc';
 $t = $_POST['type'];
-    $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."'";
+    $s = "SELECT * FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['email'])."' AND parent_patientid IS NULL";
     $q = mysql_query($s);
     if(mysql_num_rows($q) > 0){
       $r = mysql_fetch_assoc($q);

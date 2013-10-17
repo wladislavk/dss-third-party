@@ -55,7 +55,7 @@ if(isset($_GET['cid'])){
 ?>
 <script type="text/javascript" src="3rdParty/spry/SpryTabbedPanels.js"></script>
 <link rel="stylesheet" href="3rdParty/spry/SpryTabbedPanels.css" />
-<script language="javascript" type="text/javascript" src="3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 
 <span class="admin_head">
@@ -130,26 +130,34 @@ function fontSizeList()
     return str.substring(0,str.length-1); // strip last comma
 }
                 tinyMCE.init({
-			oninit : "setPlainText",
-			plugins : "paste",
                         mode : "textareas",
-                        theme : "advanced",
-paste_preprocess : function(pl, o) {
-  o.content = strip_tags(o.content,'');
-  //o.content = strip_tags(o.content,'<b><u><i><p><br><img>'); // use this i.e. to keep some tags
-},
-    paste_auto_cleanup_on_paste: true,
-    paste_strip_class_attributes: 'all',
-    paste_remove_styles: true,
-    paste_remove_spans: true,
-                        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, separator,help",
-                        theme_advanced_buttons2 : "",
-                        theme_advanced_buttons3 : "",
+                        theme : "modern",
+                        menubar: false,
+                        toolbar1: "undo redo | italic | bullist numlist outdent indent",
                         gecko_spellcheck : true,
-                        theme_advanced_toolbar_location : "top",
-                        theme_advanced_toolbar_align : "left"
+                        plugins: "paste",
+                        valid_elements: "b,strong,i,em,p,br",
+                        valid_styles: {
+                                "*": "",
+                        },
+                        entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
+                        setup : function(ed) {
+                                ed.on('keyDown', function(e) {
+                                        if(e.shiftKey && e.keyCode==188){
+                                                e.preventDefault();
+                                                ed.execCommand('mceInsertContent', false, "≤");
+                                        }
+                                        if(e.shiftKey && e.keyCode==190){
+                                                //e.preventDefault();
+                                                //ed.execCommand('mceInsertContent', false, "≥");
+                                        }
+                                });
+                        },
+        paste_preprocess : function(pl, o) {
+            o.content = o.content.replace(/&lt;/g, "≤");
+            //o.content = o.content.replace(/&gt;/g, "≥");
+        }
                 });
-
 
 function strip_tags (str, allowed_tags) {
     // Strips HTML and PHP tags from a string  

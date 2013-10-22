@@ -1476,7 +1476,7 @@ $rval = '';
                                 unset($cc_md_referrals[$cc_key]);
                                 $new_cc_md_referrals = implode(",", $cc_md_referrals);
 			}
-		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $row['send_method'], '', $deleted); 	
+		 	$letter = create_letter($row['templateid'], $row['patientid'], $row['info_id'], $topatient, $md_list, $md_referral_list, $letterid, $template, $row['send_method'], '', $deleted, false); 	
 		}
  		if (is_numeric($letter)) {
 			if ($type == 'patient') {

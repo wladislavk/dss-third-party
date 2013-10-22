@@ -150,6 +150,7 @@ define('DSS_FILE_APP_PDF', 3);
 define('DSS_FILE_IMAGE_PNG', 4);
 define('DSS_FILE_IMAGE_BMP', 5);
 define('DSS_FILE_APP_DOC', 6);
+define('DSS_FILE_APP_DOCX', 7);
 
 // A convenience array to get file types
 $dss_image_file_types = array();

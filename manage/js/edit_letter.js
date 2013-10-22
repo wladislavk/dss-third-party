@@ -13,7 +13,7 @@ function edit_letter(divid, size, family) {
 			toolbar1: "undo redo | italic | bullist numlist outdent indent",
 			gecko_spellcheck : true,
 			plugins: "paste",
-			valid_elements: "b,strong,i,em,p,br",
+			valid_elements: "table,tbody,thead,tr,td[width],th,b,strong,i,em,p,br",
     			valid_styles: {
         			"*": "",
     			},

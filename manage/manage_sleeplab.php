@@ -47,6 +47,9 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']){
 	
 $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_sleeplab where docid='".$_SESSION['docid']."' ";
+if(isset($_GET['letter'])){
+  $sql .= " AND company like '".mysql_real_escape_string($_GET['letter'])."%' ";
+}
   $sql .= "ORDER BY ".$sort." ".$dir;
 
 $my = mysql_query($sql);
@@ -74,7 +77,15 @@ $num_sleeplab=mysql_num_rows($my);
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<div class="letter_select">
+<?php
+  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+  foreach($letters as $let){
+        ?><a href="manage_sleeplab.php?letter=<?=$let;?>&sort=<?=$_GET['sort'];?>&sortdir=<?=$_GET['sortdir'];?>"><?=$let;?></a>
+<?php
+  }
+?>
+</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -87,7 +98,7 @@ $num_sleeplab=mysql_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
+				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
 			?>
 		</TD>        
 	</TR>

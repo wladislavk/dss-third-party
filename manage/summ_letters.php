@@ -111,6 +111,11 @@ if(!isset($_REQUEST['sort'])){
   	$_REQUEST['sortdir'] = 'ASC';
 	}
 }
+
+if(!isset($_REQUEST['sort2'])){
+  $_REQUEST['sort2'] = 'generated_date';
+  $_REQUEST['sort2dir'] = 'DESC';
+}
 $sort = $_REQUEST['sort'];
 $sortdir = $_REQUEST['sortdir'];
 $patientid = $_REQUEST['pid'];
@@ -241,52 +246,79 @@ if (count($sent_letters) % $page_limit) {
 // Sort the letters array
 if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'userid_asc'); 
-  usort($sent_letters, 'userid_asc'); 
 }
 if ($_REQUEST['sort'] == "userid" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'userid_desc'); 
-  usort($sent_letters, 'userid_desc'); 
 }
 if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'subject_asc'); 
-  usort($sent_letters, 'subject_asc'); 
 }
 if ($_REQUEST['sort'] == "subject" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'subject_desc'); 
-  usort($sent_letters, 'subject_desc'); 
 }
 if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'method_asc'); 
-  usort($sent_letters, 'method_asc'); 
 }
 if ($_REQUEST['sort'] == "method" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'method_desc'); 
-  usort($sent_letters, 'method_desc'); 
 }
 if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'sentto_asc'); 
-  usort($sent_letters, 'sentto_asc'); 
 }
 if ($_REQUEST['sort'] == "sentto" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'sentto_desc'); 
-  usort($sent_letters, 'sentto_desc'); 
 }
 if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'generated_date_asc'); 
-  usort($sent_letters, 'generated_date_asc'); 
 }
 if ($_REQUEST['sort'] == "generated_date" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'generated_date_desc'); 
-  usort($sent_letters, 'generated_date_desc'); 
 }
 if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "ASC") {
   usort($pending_letters, 'delivery_date_asc'); 
-  usort($sent_letters, 'delivery_date_asc'); 
 }
 if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
   usort($pending_letters, 'delivery_date_desc'); 
-  usort($sent_letters, 'delivery_date_desc'); 
 }
+
+// Sort the letters array
+if ($_REQUEST['sort2'] == "userid" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'userid_asc');
+}
+if ($_REQUEST['sort2'] == "userid" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'userid_desc');
+}
+if ($_REQUEST['sort2'] == "subject" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'subject_asc');
+}
+if ($_REQUEST['sort2'] == "subject" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'subject_desc');
+}
+if ($_REQUEST['sort2'] == "method" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'method_asc');
+}
+if ($_REQUEST['sort2'] == "method" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'method_desc');
+}
+if ($_REQUEST['sort2'] == "sentto" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'sentto_asc');
+}
+if ($_REQUEST['sort2'] == "sentto" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'sentto_desc');
+}
+if ($_REQUEST['sort2'] == "generated_date" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'generated_date_asc');
+}
+if ($_REQUEST['sort2'] == "generated_date" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'generated_date_desc');
+}
+if ($_REQUEST['sort2'] == "delivery_date" && $_REQUEST['sort2dir'] == "ASC") {
+  usort($sent_letters, 'delivery_date_asc');
+}
+if ($_REQUEST['sort2'] == "delivery_date" && $_REQUEST['sort2dir'] == "DESC") {
+  usort($sent_letters, 'delivery_date_desc');
+}
+
 
 //print_r($dental_letters);
 
@@ -306,12 +338,19 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 ?>
 <div style="padding-left: 15px;">
 	<h1 class="blue" style="width: 300px; float:left;">Patient Letters</h1>
+<?php
+$let_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$let_q = mysql_query($let_sql);
+$let_r = mysql_fetch_assoc($let_q);
+if($let_r['use_letters']){
+?>
 <div style="float: right;margin:20px 40px 0 0;">
   <form method="get" action="/manage/new_letter.php">
         <input type="hidden" name="pid" value="<?=$patientid?>" />
   <input class="addButton" type="submit" value="Create New Letter">
         </form>
 </div>
+<?php } ?>
 <div style="clear:both;"></div>
   <form name="filter_letters" action="dss_summ.php" method="get" style="float:right;">
 	<input type="hidden" name="pid" value="<?=$patientid;?>" />
@@ -434,13 +473,13 @@ if ($_REQUEST['sort'] == "delivery_date" && $_REQUEST['sortdir'] == "DESC") {
 <div style="clear:both;">
 <table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
   <tr class="tr_bg_h">
-    <td class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'method')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=method&sortdir=<?php echo ($_REQUEST['sort']=='method'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
-    <td class="col_head <?= ($_REQUEST['sort'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'subject')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=subject&sort2dir=<?php echo ($_REQUEST['sort2']=='subject'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sent2to&sort2dir=<?php echo ($_REQUEST['sort2']=='sentto'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'method')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=method&sort2dir=<?php echo ($_REQUEST['sort2']=='method'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=generated_date&sort2dir=<?php echo ($_REQUEST['sort2']=='generated_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=delivery_date&sort2dir=<?php echo ($_REQUEST['sort2']=='delivery_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
+    <td class="col_head <?= ($_REQUEST['sort2'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></th>
   </tr>
 <?php
   $i = $page_limit * $page2;

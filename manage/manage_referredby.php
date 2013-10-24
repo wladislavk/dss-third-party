@@ -33,9 +33,11 @@ $sql = "select
 		dc.lastname, 
 		p.referred_source,
 		count(p.patientid) as num_ref, 
-		(SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref30,
-                (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref60,
-                (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90,
+		(SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
+                (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
+                (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
+                (SELECT count(*) FROM dental_patients p90plus WHERE p90plus.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90plus.referred_by AND STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90plus,
+
 		'".DSS_REFERRED_PHYSICIAN."' as referral_type,
 		ct.contacttype
 	from dental_contact dc 
@@ -53,9 +55,10 @@ $sql = "select
 		dp.lastname,
 		p.referred_source,
 		count(p.patientid),
-                (SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref30,
-                (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref60,
-                (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90,
+                (SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
+                (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
+                (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
+                (SELECT count(*) FROM dental_patients p90plus WHERE p90plus.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90plus.referred_by AND STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)) as num_ref90plus,
 		'".DSS_REFERRED_PATIENT."',
 		'Patient'
 	from dental_patients dp
@@ -79,6 +82,9 @@ switch($_GET['sort']){
     break;
   case 'ninty':
     $sql .= " ORDER BY num_ref90 ".$_GET['sortdir'];
+    break;
+  case 'nintyplus':
+    $sql .= " ORDER BY num_ref90plus ".$_GET['sortdir'];
     break;
   default:
     $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
@@ -109,6 +115,8 @@ $num_referredby=mysql_num_rows($my);
 	<button onclick="Javascript: loadPopup('add_referredby.php');" class="addButton">
 		Add New Referred By
 	</button>
+	&nbsp;&nbsp;
+	<a href="manage_referredby_print.php" class="button">Print List</a>
 	&nbsp;&nbsp;
 </div>
 
@@ -156,13 +164,14 @@ background:#999999;
                 <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_referredby.php?sort=ninty&sortdir=<?php echo ($_REQUEST['sort']=='ninty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">90 Days</a>
                 </td>
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_referredby.php?sort=nintyplus&sortdir=<?php echo ($_REQUEST['sort']=='nintyplus'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">90+ Days</a>
+                </td>
+
                 <td valign="top" class="col_head" width="10%">
                         Notes
                 </td>
 	</tr>
-	</table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -221,6 +230,11 @@ background:#999999;
                                                 <?=$myarray['num_ref90'];?>
                                         </a>
                                 </td>
+                                <td valign="top" width="10%">
+                                        <a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink">
+                                                <?=$myarray['num_ref90plus'];?>
+                                        </a>
+                                </td>
 				<td valign="top" width="10%">
                                         <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?=$myarray["contactid"];?>')" class="editlink">
 						View
@@ -230,7 +244,6 @@ background:#999999;
 	<? 	}
 	}?>
 </table>
-</div>
 </form>
 
 

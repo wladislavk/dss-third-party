@@ -5,6 +5,13 @@ $id = $_REQUEST['id'];
 $sched = ($_REQUEST['sched']!='')?date('Y-m-d', strtotime($_REQUEST['sched'])):'';
 $pid = $_REQUEST['pid'];
 clean_steps($pid);
+
+
+$let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$let_q = mysql_query($let_sql);
+$let_r = mysql_fetch_assoc($let_q);
+$create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
+
 		$s = "INSERT INTO dental_flow_pg2_info SET
 			patientid= ".$pid.",
 			segmentid = '".$id."',
@@ -19,16 +26,17 @@ clean_steps($pid);
         if ($consult_date != "0000-00-00") {
                 $consulted = true;
         }
-        $letterid = array();
-        if ($id == "2") { // Consultation
+	if($create_letters){
+          $letterid = array();
+          if ($id == "2") { // Consultation
 //              $letterid[] = trigger_letter5($_GET['pid'], $numsteps);
                 $letterid[] = trigger_letter6($pid, $info_id);
-        }
-        if ($consulted == true && $id == "4") { // Impressions
+          }
+          if ($consulted == true && $id == "4") { // Impressions
                 //$letterid[] = trigger_letter9($pid, $info_id);
                 //$letterid[] = trigger_letter13($pid, $numsteps);
-        }
-
+          }
+	}
 
 
 

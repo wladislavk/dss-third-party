@@ -53,7 +53,7 @@ $num_contact=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Franchise and Corporate Contacts
+	Manage Corporate Contacts
 </span>
 <br />
 <br />

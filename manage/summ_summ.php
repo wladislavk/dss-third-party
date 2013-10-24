@@ -53,11 +53,17 @@ $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
 $q = mysql_query($sql);
 $row = mysql_fetch_assoc($q);
 $num = mysql_num_rows($q);
+        if($_POST['ir_max'] !='' && $_POST['ir_min'] != ''){
+          $ir_range = abs($_POST['ir_max'] - $_POST['ir_min']);
+        }else{
+          $ir_range = $_POST['ir_range'];
+        }
 if($num > 0){
+
 $ex_ed_sql = " update dental_ex_page5 set 
                 protrusion_from = '".s_for($_POST['ir_min'])."',
                 protrusion_to = '".s_for($_POST['ir_max'])."',
-                protrusion_equal = '".s_for($_POST['ir_range'])."',
+                protrusion_equal = '".s_for($ir_range)."',
                 i_opening_from = '".s_for($_POST['i_opening_from'])."',
                 l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
                 r_lateral_from = '".s_for($_POST['r_lateral_from'])."'
@@ -68,7 +74,7 @@ $ex_ins_sql = " insert dental_ex_page5 set
                 patientid = '".s_for($_GET['pid'])."',
                 protrusion_from = '".s_for($_POST['ir_min'])."',
                 protrusion_to = '".s_for($_POST['ir_max'])."',
-                protrusion_equal = '".s_for($_POST['ir_range'])."',
+                protrusion_equal = '".s_for($ir_range)."',
                 i_opening_from = '".s_for($_POST['i_opening_from'])."',
                 l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
                 r_lateral_from = '".s_for($_POST['r_lateral_from'])."',
@@ -118,7 +124,7 @@ $myarrayex = mysql_fetch_array($myex);
 $i_opening_from = st($myarrayex['i_opening_from']);
 $protrusion_from = st($myarrayex['protrusion_from']);
 $protrusion_to = st($myarrayex['protrusion_to']);
-$protrusion_equals = st($myarrayex['protrusion_equal']);
+$protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 $dentaldevice = st($myarrayex['dentaldevice']);
@@ -627,12 +633,20 @@ if($cpap == '')
   <tr>
   <td width="17%" height="4">Incisal Edge Range:&nbsp;&nbsp;</td>
   <td colspan="2">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input disabled="disabled" type="text" name="ir_range" id="ir_range" size="5" value="<?php echo $protrusion_to-($protrusion_from); ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Incisal Range (minimum):&nbsp;&nbsp; <input type="text" name="ir_min" id="ir_min" size="5" value="<?php echo $protrusion_from; ?>" onchange="checkIncisal()" /> (maximum) <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" onkeyup="check_georges(this.form);" name="ir_range" id="ir_range" size="5" value="<?php echo $protrusion_equal; ?>" /> mm   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Incisal Range (minimum):&nbsp;&nbsp; <input type="text" name="ir_min" id="ir_min" size="5" value="<?php echo $protrusion_from; ?>" onchange="checkIncisal()" /> (maximum) <input type="text" name="ir_max" id="ir_max" size="5" value="<?php echo $protrusion_to; ?>" onchange="checkIncisal()"  />
 
   </td>
   </tr>
    <?php if($sect == 'summ'){ ?>
   <script type="text/javascript">
+function check_georges(f){
+  var to = f.ir_min.value;
+  var from = f.ir_max.value;
+  if(to != ''  && from != ''){
+    alert("This number will be updated automatically when you adjust the 'George Scale' values.");
+  }
+}
+
         function checkIncisal(){
                 min = Number($('#ir_min').val());
                 max = Number($('#ir_max').val());
@@ -658,7 +672,7 @@ if($cpap == '')
                 return true;
         }
         $('document').ready( function(){
-                checkIncisal();
+                //checkIncisal();
         })
   </script>
     <?php } ?>

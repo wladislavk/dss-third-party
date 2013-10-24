@@ -35,7 +35,12 @@ if($_POST['ex_page5sub'] == 1)
 	$i_opening_equal = $_POST['i_opening_equal'];
 	$protrusion_from = $_POST['protrusion_from'];
 	$protrusion_to = $_POST['protrusion_to'];
-	$protrusion_equal = $_POST['protrusion_equal'];
+	if($protrusion_from !='' && $protrusion_to != ''){
+	  $protrusion_equal = abs($protrusion_to-$protrusion_from);
+	}else{
+	  $protrusion_equal = $_POST['protrusion_equal'];
+	}
+	
 	$l_lateral_from = $_POST['l_lateral_from'];
 	$l_lateral_to = $_POST['l_lateral_to'];
 	$l_lateral_equal = $_POST['l_lateral_equal'];
@@ -416,7 +421,7 @@ if($jointid <> '')
 	}
 </script>
 
-<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="ex_page5sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page5id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
@@ -719,7 +724,7 @@ if($jointid <> '')
                                     </td>
                                     <td valign="top">
                                     	<span>
-                                    	<input type="text" id="protrusion_equal" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo abs($protrusion_to-($protrusion_from));?>">                                     </td>
+                                    	<input type="text" id="protrusion_equal" onkeyup="check_georges(this.form);" name="protrusion_equal" class="field text addr tbox" style="width:50px;" value="<?php echo $protrusion_equal;?>">                                     </td>
                                 </tr>
                                 
                                 <tr>
@@ -903,5 +908,17 @@ if($jointid <> '')
 
 ?>
 
+<script type="text/javascript">
+
+function check_georges(f){
+  var to = f.protrusion_to.value;
+  var from = f.protrusion_from.value;
+  if(to != ''  && from != ''){
+    alert("This number will be updated automatically when you adjust the 'George Scale' values.");
+  }
+}
+
+
+</script>
 
 <? include "includes/bottom.htm";?>

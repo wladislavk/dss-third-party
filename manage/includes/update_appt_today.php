@@ -10,6 +10,12 @@ $impression = true;
 $letterid = array();
 $create = true; //default to insert record if checks pass
 
+
+$let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+error_log($let_sql);
+$let_q = mysql_query($let_sql);
+$let_r = mysql_fetch_assoc($let_q);
+$create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
 if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 
   $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
@@ -66,6 +72,7 @@ if($create){
                 $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
                 $trigger_result = mysql_query($trigger_query);
                 $numrows = (mysql_num_rows($trigger_result));
+	if($create_letters){
                 if ($numrows > 0) {
                         $letterid[] = trigger_letter16($pid, $insert_id);
                 }
@@ -79,14 +86,15 @@ if($create){
                 //$letterid[] = trigger_letter13($pid, $numsteps);
         }
 
-
+	}
                                                         $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";
                                                         $consult_result = mysql_query($consult_query);
                                                         $consult_date = mysql_result($consult_result, 0, 0);
                                                         if ($consult_date != "0000-00-00") {
                                                                 $consulted = true;
                                                         }
-                                                        // Delaying Treatment / Waiting
+                        if($create_letters){ 
+			                               // Delaying Treatment / Waiting
                                                         if ($consulted == true && $id == "5") {
                                                                 $letterid[] = trigger_letter10($pid, $insert_id);
                                                         }
@@ -109,7 +117,7 @@ if($create){
                                                         if ($id == "14") {
                                                                 $letterid[] = trigger_letter7($pid, $insert_id);
                                                         }
-
+			}
 
 if($letterid){
 		    $letterid = array_unique($letterid);
@@ -118,7 +126,7 @@ while(($key = array_search('0', $letterid)) !== false) {
 }
 }
   $letter_count = 0;
-if(count($letterid)>0){
+if(count($letterid)>0 && $create_letters){
                     $letteridlist = implode(",", $letterid);
 
 

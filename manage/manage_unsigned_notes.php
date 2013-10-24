@@ -25,17 +25,46 @@ $unsigned_res = mysql_query($unsigned_query);
 ?>
 <h2 style="margin-left:20px;">Unsigned Progress Notes (<?= $num_unsigned; ?>)</h2>
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".patient_header").bind("mousemove", function(event) {
+    $(this).find("div.tooltip").css({
+        top: event.pageY + 10 + "px",
+        left: event.pageX + 5 + "px"
+    }).show();
+}).bind("mouseout", function() {
+    $("div.tooltip").hide();
+});
+});
+</script>
 <?php
 
 while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
-  $p_sql = "SELECT * from dental_patients where patientid=".mysql_real_escape_string($unsigned_r['patientid']);
+  $p_sql = "SELECT p.*, q.chief_complaint_text from dental_patients p LEFT JOIN dental_q_page1 q on q.patientid=p.patientid where p.patientid=".mysql_real_escape_string($unsigned_r['patientid']);
   $p_q = mysql_query($p_sql);
   $p_r = mysql_fetch_assoc($p_q);
+
+ $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysql_real_escape_string($unsigned_r['patientid'])." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+  $itype = mysql_fetch_assoc($itype_my);
+  $patient_photo = $itype['image_file'];
 ?>
 
 <tr>
-  <td>
+  <td class="patient_header">
     <h3><a href="dss_summ.php?pid=<?= $p_r['patientid']; ?>&addtopat=1&sect=notes"><?= $p_r['firstname'] . " " . $p_r['lastname']; ?> - click to view patient chart</a></h3>
+	<div class="tooltip">
+		<img src="q_file/<?= $patient_photo; ?>" style="float:left;" />
+		<div style="float:left;padding-left:10px;"> <?= $p_r['firstname'] . " " . $p_r['lastname']; ?> - <?= $p_r['dob']; ?><br />
+		REASON FOR SEEKING TX: <?= $p_r['chief_complaint_text']; ?><br />
+		<?=$p_r['add1'];?><br />
+                <?=$p_r['add2'];?><br />
+                <?=$p_r['city']. " ".$p_r['state']." ".$p_r['zip'];?> 
+
+		</div>
+		
+	</div>
   </td>
 </tr>
 

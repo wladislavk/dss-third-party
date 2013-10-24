@@ -36,7 +36,7 @@ if($_REQUEST["inactiveid"] != "")
         die();
 }
 
-$rec_disp = 20;
+$rec_disp = 50;
 
 if($_REQUEST["page"] != "")
 	$index_val = $_REQUEST["page"];
@@ -50,9 +50,13 @@ $sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.
 }elseif(isset($_GET['status']) && $_GET['status'] != ''){
 $sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND dc.status=".mysql_real_escape_string($_GET['status'])." ";
 }else{
-$sql = "select * from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND dc.status=1 ";
+$sql = "select dc.*
+ from dental_contact dc LEFT JOIN dental_contacttype dct ON dct.contacttypeid=dc.contacttypeid where docid='".$_SESSION['docid']."' AND merge_id IS NULL AND dc.status=1 ";
 }
-
+if(isset($_GET['letter'])){
+  $sql .= "AND (dc.lastname LIKE '".mysql_real_escape_string($_GET['letter'])."%' OR
+	(dc.lastname='' AND dc.company LIKE  '".mysql_real_escape_string($_GET['letter'])."%'))";
+}
 switch($_GET['sort']){
   case 'company':
     $sql .= " ORDER BY company ".$_GET['sortdir'];
@@ -138,7 +142,15 @@ $(document).ready(function(){
 	</button>
 	&nbsp;&nbsp;
 </div>
-
+<div class="letter_select">
+<?php
+  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+  foreach($letters as $let){
+	?><a href="manage_contact.php?letter=<?=$let;?>&status=<?=$_GET['status'];?>&sort=<?=$_GET['sort'];?>&sortdir=<?=$_GET['sortdir'];?>&contacttype=<?= $_GET['contacttype'];?>"><?=$let;?></a>
+<?php
+  }
+?>
+</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -150,7 +162,7 @@ $(document).ready(function(){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
+				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&status=".$_GET['status']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
 			?>
 		</TD>        
 	</TR>
@@ -168,12 +180,12 @@ $(document).ready(function(){
 		<td valign="top" class="col_head" width="10%">
 			Referrer
 		</td>
+                <td valign="top" class="col_head" width="10%">
+                        Patients
+                </td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
-	 </table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -226,8 +238,23 @@ $(document).ready(function(){
 				*/ ?>
 	      </td>
 				<td valign="top" width="10%">
-					<?= ($myarray['referrer']==1)?'X':''; ?>
+<?php
+       	$ref_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND referred_source=2 AND referred_by='".mysql_real_escape_string($myarray['contactid'])."'";
+       	$ref_q = mysql_query($ref_sql);
+       	$num_ref = mysql_num_rows($ref_q);
+                //(SELECT COUNT(*) FROM dental_patients WHERE docpcp=dc.contactid OR docent = dc.contactid OR docsleep=) as patients,
+?>
+				<?= ($num_ref)?'<a href="#" onclick="$(\'#ref_pat_'.$myarray['contactid'].'\').toggle();return false;">'.$num_ref.'</a>':''; ?>
 				</td>
+                                <td valign="top" width="10%">
+<?php
+        $pat_sql = "SELECT * FROM dental_patients WHERE (parent_patientid IS NULL OR parent_patientid='') AND (docpcp='".mysql_real_escape_string($myarray['contactid'])."' OR docent = '".mysql_real_escape_string($myarray['contactid'])."' OR docsleep='".mysql_real_escape_string($myarray['contactid'])."' OR docdentist='".mysql_real_escape_string($myarray['contactid'])."' OR docmdother='".mysql_real_escape_string($myarray['contactid'])."' OR docmdother2 = '".mysql_real_escape_string($myarray['contactid'])."' OR docmdother3='".mysql_real_escape_string($myarray['contactid'])."')";
+        $pat_q = mysql_query($pat_sql);
+        $num_pat = mysql_num_rows($pat_q);
+                //(SELECT COUNT(*) FROM dental_patients WHERE docpcp=dc.contactid OR docent = dc.contactid OR docsleep=) as patients,
+?>
+                                <?= ($num_pat)?'<a href="#" onclick="$(\'#ref_pat_'.$myarray['contactid'].'\').toggle();return false;">'.$num_pat.'</a>':''; ?>
+                                </td>
 				<td valign="top" width="20%">
 				        <a href="#" onclick="loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>')" class="editlink" title="EDIT">
                                                 Quick View
@@ -239,10 +266,29 @@ $(document).ready(function(){
                     
 				</td>
 			</tr>
+			<tr id="ref_pat_<?= $myarray['contactid'];?>" style="display:none;">
+				<td colspan="2" valign="top">
+			<strong>REFERRED</strong><br />
+		<?php
+			while($ref = mysql_fetch_assoc($ref_q)){
+				?><a href="add_patient.php?pid=<?= $ref['patientid'];?>&ed=<?= $ref['patientid'];?>"><?= $ref['firstname']." ".$ref['lastname']; ?><br /><?php
+			
+			}
+		?>
+				</td>
+                                <td colspan="4" valign="top">
+                        <strong>PATIENTS</strong><br />
+                <?php
+                        while($pat = mysql_fetch_assoc($pat_q)){
+                                ?><a href="add_patient.php?pid=<?= $pat['patientid'];?>&ed=<?= $pat['patientid'];?>"><?= $pat['firstname']." ".$pat['lastname']; ?><br /><?php
+                        
+                        }
+                ?>
+                                </td>
+			</tr>
 	<? 	}
 	}?>
 </table>
-</div>
 </form>
 
 

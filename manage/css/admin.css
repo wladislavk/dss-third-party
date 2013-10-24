@@ -1,7 +1,21 @@
 a, a:hover{
   color:#095D81;
 }
-
+.tooltip {
+    position:absolute;
+    display:none;
+    background: #fff;
+    padding: 10px;
+    z-index:1000;
+    border: 1px solid black;
+}
+.fullwidth{
+  width:98%;
+  margin: 0 1%;
+  }
+.bp{
+  font-size: 20px;
+  }
 table.ledger a{
   color:#fff;
 }
@@ -1247,7 +1261,7 @@ float:left;
 }
 
 .statement td{
-  color: #0066CC;
+  color: #099;
   }
 
 .unviewed{

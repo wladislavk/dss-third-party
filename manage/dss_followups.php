@@ -121,7 +121,7 @@ WHERE followupid='".$id."'
 } 
 ?>
 <?php
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY ep_dateadd DESC";
 $fuquery_array = mysql_query($fuquery_sql);
 $numf = mysql_num_rows($fuquery_array);
 $bodywidth = ($numf*160)+320;
@@ -323,7 +323,7 @@ $dentaldevice = st($myarrayex['dentaldevice']);
 				</form>
 
 <?php
-$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY followupid DESC";
+$fuquery_sql = "SELECT * FROM dentalsummfu WHERE patientid ='".$_GET['pid']."' ORDER BY ep_dateadd DESC";
 $fuquery_array = mysql_query($fuquery_sql);
 if($fuquery_array){
 $numrows = mysql_num_rows($fuquery_array);

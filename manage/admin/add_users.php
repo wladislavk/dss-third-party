@@ -72,6 +72,8 @@ if($_POST["usersub"] == 1)
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
+				tracker_letters = '".s_for($_POST['tracker_letters'])."',
+				intro_letters = '".s_for($_POST['intro_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
 				use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
@@ -188,6 +190,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				use_patient_portal = '".s_for($_POST['use_patient_portal'])."',
 				use_digital_fax = '".s_for($_POST['use_digital_fax'])."',
 				use_letters = '".s_for($_POST['use_letters'])."',
+                                tracker_letters = '".s_for($_POST['tracker_letters'])."',
+                                intro_letters = '".s_for($_POST['intro_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
@@ -363,6 +367,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_patient_portal = $_POST['use_patient_portal'];
 		$use_digital_fax = $_POST['use_digital_fax'];
 		$use_letters = $_POST['use_letters'];
+		$tracker_letters = $_POST['tracker_letters'];
+		$intro_letters = $_POST['intro_letters'];
 		$use_eligible_api = $_POST['use_eligible_api'];
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
@@ -406,6 +412,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
+		$tracker_letters = st($themyarray['tracker_letters']);
+		$intro_letters = st($themyarray['intro_letters']);
 		$use_eligible_api = st($themyarray['use_eligible_api']);
                 $use_course = st($themyarray['use_course']);
                 $use_course_staff = st($themyarray['use_course_staff']);
@@ -420,6 +428,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         if(!isset($_GET['ed'])){
                 $use_patient_portal = 1;
                 $use_letters = 1;
+		$tracker_letters = 1;
+		$intro_letters = 1;
                 $use_course = 0;
                 $use_course_staff = 1;
                 $homepage = 1;
@@ -725,7 +735,22 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?> />
             </td>
         </tr>
-
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Automated Tracker Letters? 
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="tracker_letters" value="1" <? if($tracker_letters == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Automated Intro Letters?
+            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="intro_letters" value="1" <? if($intro_letters == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Eligible API Active?

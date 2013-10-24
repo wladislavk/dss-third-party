@@ -12,8 +12,8 @@ function edit_letter(divid, size, family) {
 			menubar: false,
 			toolbar1: "undo redo | italic | bullist numlist outdent indent",
 			gecko_spellcheck : true,
-			plugins: "paste",
-			valid_elements: "table,tbody,thead,tr,td[width],th,b,strong,i,em,p,br",
+			plugins: "paste, save",
+			valid_elements: "table,tbody,thead,tr,td[width],img[src|width|height|align],th,b,strong,i,em,p,br",
     			valid_styles: {
         			"*": "",
     			},
@@ -38,7 +38,8 @@ function edit_letter(divid, size, family) {
 		});
 		textarea.focus();
 		$('.edit_'+divid).show();
-		//$('#send_but_'+divid).hide();
+		$('#edit_but_'+divid).hide();
+                $('#cancel_edit_but_'+divid).show();
 	}
 }
 

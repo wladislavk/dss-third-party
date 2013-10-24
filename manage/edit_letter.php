@@ -31,6 +31,10 @@ $pat_sql = "SELECT docid FROM dental_patients WHERE patientid='".mysql_real_esca
 $pat_q = mysql_query($pat_sql);
 $pat = mysql_fetch_assoc($pat_q);
 
+ $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".mysql_real_escape_string($_GET['pid'])." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+  $itype = mysql_fetch_assoc($itype_my);
+  $patient_photo = $itype['image_file'];
 
 //Check and make sure user can access this patient
 if($_SESSION['docid'] != $letter_doc && (!isset($_SESSION['adminuserid']) || $_SESSION['adminuserid']=='')){
@@ -515,7 +519,7 @@ $sleeplab_myarray = mysql_fetch_array($sleeplab_my);
 $sleeplab_name = st($sleeplab_myarray['company']);
 
 // Oldest Subjective results
-$subj1_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid ASC LIMIT 1;";
+$subj1_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY ep_dateadd ASC LIMIT 1;";
 $subj1_result = mysql_query($subj1_query);
 while ($row = mysql_fetch_assoc($subj1_result)) {
 	$subj1 = $row;
@@ -527,7 +531,7 @@ while ($row = mysql_fetch_assoc($subj1_result)) {
   $subj1 = $r;
 
 // Newest Subjective Results
-$subj2_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY followupid DESC LIMIT 1;";
+$subj2_query = "SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd FROM dentalsummfu WHERE patientid = '".$patientid."' ORDER BY ep_dateadd DESC LIMIT 1;";
 $subj2_result = mysql_query($subj2_query);
 while ($row = mysql_fetch_assoc($subj2_result)) {
 	$subj2 = $row;
@@ -638,7 +642,7 @@ foreach ($symptoms as $key => $value) {
 }
 
 // Nights per Week and Current ESS TSS 
-$followup_query = "SELECT nightsperweek, ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY followupid DESC LIMIT 1;";
+$followup_query = "SELECT nightsperweek, ep_eadd, ep_tsadd FROM dentalsummfu where patientid = '".$patientid."' ORDER BY ep_dateadd DESC LIMIT 1;";
 $followup_result = mysql_query($followup_query);
 while ($row = mysql_fetch_assoc($followup_result)) {
 	$followup = $row;
@@ -999,6 +1003,12 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
 		$search[] = "%patient_gender%";
 		$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
+		$search[] = "%patient_photo%";
+		if($patient_photo!=''){
+			$replace[] = "<img align=\"right\" src=\"q_file/".$patient_photo."\" />";
+		}else{
+			$replace[] = "";
+		}
 		$search[] = "%His/Her%";
 		$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
 		$search[] = "%his/her%";
@@ -1452,6 +1462,12 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . $patient_info['age'] . "</strong>";
 	$search[] = "%patient_gender%";
 	$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
+	$search[] = "%patient_photo%";
+                if($patient_photo!=''){
+                        $replace[] = "<img style=\"float:right;\" src=\"q_file/".$patient_photo."\" />";
+                }else{
+                        $replace[] = "";
+                }
 	$search[] = "%His/Her%";
 	$replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
 	$search[] = "%his/her%";
@@ -1723,9 +1739,13 @@ foreach ($letter_contacts as $key => $contact) {
 </div>
 		</div>
 		<div align="right" style="width:30%; padding: 3px; float: right">
-		<button class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>', '<?=$font_size;?>','<?=$font_family;?>');return false;" >
+		<button id="edit_but_letter<?=$cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?=$cur_letter_num?>', '<?=$font_size;?>','<?=$font_family;?>');return false;" >
 			Edit Letter
 		</button>
+                <button style="display:none;" id="cancel_edit_but_letter<?=$cur_letter_num;?>" class="addButton" onclick="Javascript: window.reload();return false;" >
+                        Cancel Edits
+                </button>
+
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<!--&nbsp;&nbsp;&nbsp;&nbsp;
 		<button class="addButton" onclick="Javascript: window.open('dss_intro_to_md_from_dss_print.php?pid=<?=$_GET['pid'];?>','Print_letter','width=800,height=500,scrollbars=1');" >

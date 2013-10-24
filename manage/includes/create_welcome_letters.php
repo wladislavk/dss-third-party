@@ -29,6 +29,12 @@ echo $cid;
 
 // Function to Create Letters
 function create_welcome_letters ($templateid, $md_list, $docid) {
+$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+error_log($let_sql);
+$let_q = mysql_query($let_sql);
+$let_r = mysql_fetch_assoc($let_q);
+if($let_r['use_letters'] && $let_r['intro_letters']){
+
   $gen_date = date('Y-m-d H:i:s');
   $status = '0';
   $delivered = '0';
@@ -65,5 +71,6 @@ echo $letter_query;
 
     return $id;
   }
+}
 }
 ?>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'admin/includes/main_include.php';
+require 'includes/constants.inc';
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=dss_md_export.csv");
 header("Pragma: no-cache");
@@ -25,10 +26,14 @@ $csv .= 'Qualifier,';
 $csv .= 'ID,';
 $csv .= 'Notes,';
 $csv .= 'Preferred Contact Method,';
+$csv .= 'Referrer,';
 $csv .= 'Status';
 $csv .= "\n";
 
-$sql = "select dc.*, dq.qualifier as qualifier_name from dental_contact dc
+$sql = "select dc.*, dq.qualifier as qualifier_name, 
+		(SELECT count(p.patientid) FROM dental_patients p WHERE dc.contactid=p.referred_by 
+                        AND p.referred_source=".DSS_REFERRED_PHYSICIAN.") as num_ref
+		from dental_contact dc
 		JOIN dental_contacttype dct ON dc.contacttypeid = dct.contacttypeid
 		LEFT JOIN dental_qualifier dq ON dq.qualifierid = dc.qualifier
 		where dc.docid='".$_SESSION['docid']."' 
@@ -56,6 +61,7 @@ $csv .= '"'.$r['qualifier_name'].'",';
 $csv .= '"'.$r['qualifierid'].'",';
 $csv .= '"'.$r['notes'].'",';
 $csv .= '"'.$r['preferredcontact'].'",';
+$csv .= '"'.(($r['num_ref']>0)?'Yes':'No').'",';
 $csv .= '"'.(($r['status']==1)?'Active':'Inactive').'"';
 $csv .= "\n";
 

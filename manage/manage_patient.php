@@ -19,7 +19,7 @@ if(isset($_REQUEST["delid"]))
 	die();
 }
 
-$rec_disp = 20;
+$rec_disp = 50;
 
 if(isset($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
@@ -63,7 +63,9 @@ if(!isset($_GET['sh']))
 {
         $sql .= " AND p.status = 2";
 }
-
+if(isset($_GET['letter'])){
+  $sql .= " AND p.lastname LIKE '".mysql_real_escape_string($_GET['letter'])."%' ";
+}
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
@@ -115,7 +117,15 @@ $num_users=mysql_num_rows($my);
 	</button>
 	&nbsp;&nbsp;
 </div>-->
-
+<div class="letter_select">
+<?php
+  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+  foreach($letters as $let){
+        ?><a href="manage_patient.php?letter=<?=$let;?>&sh=<?=$_GET['sh'];?>"><?=$let;?></a>
+<?php
+  }
+?>
+</div>
 <br />
 <?php
   if(isset($_GET['msg'])){
@@ -141,7 +151,7 @@ background:#999999;
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"sh=".$_GET['sh']);
+				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&sh=".$_GET['sh']);
 			?>
 		</TD>        
 	</TR>

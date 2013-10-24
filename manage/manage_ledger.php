@@ -516,6 +516,7 @@ return s;
 			}
 			$tr_class = "tr_active";
                         if($myarray[0] == 'claim'){ $tr_class .= ' clickable_row status_'.$myarray['status']; }
+			if($myarray[0] == 'ledger' && $myarray['primary_claim_id']!='' && $myarray['primary_claim_id']!='0'){ $tr_class .= ' claimed'; }
 			if($myarray[0] == 'ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ $tr_class .= ' claimless clickable_row'; }
 			if($myarray[0] == 'statement' && $myarray['filename']!=''){ $tr_class .= ' statement clickable_row'; }
 			if($myarray['status'] == 3 || $myarray['status'] == 5 || $myarray['status'] == 9){ $tr_class .= ' completed'; }

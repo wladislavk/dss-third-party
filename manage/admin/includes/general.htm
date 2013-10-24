@@ -395,6 +395,11 @@ error_log($letter_query);
 
 // Function to Create Letters
 function create_welcome_letter ($templateid, $md_list, $docid) {
+$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+error_log($let_sql);
+$let_q = mysql_query($let_sql);
+$let_r = mysql_fetch_assoc($let_q);
+if($let_r['use_letters'] && $let_r['intro_letters']){
 
   $gen_date = date('Y-m-d H:i:s');
   $status = '0';
@@ -434,6 +439,7 @@ function create_welcome_letter ($templateid, $md_list, $docid) {
     return $id;
   }
 }
+}
 
 
 
@@ -452,6 +458,9 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 			$preferred = "paper";
 		}
 	}
+$patterns = '/(<p><img)(.*)(\/><\/p>)/';
+$replace = '<span width="200" align="right"><img $2 /></span>';
+$template = preg_replace($patterns, $replace, $template);
 $template = htmlspecialchars($template);
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");

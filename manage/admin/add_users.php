@@ -81,7 +81,8 @@ if($_POST["usersub"] == 1)
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."',
-				billing_company_id = '".$_POST['billing_company_id']."'
+				billing_company_id = '".$_POST['billing_company_id']."',
+                                plan_id = '".$_POST['plan_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			$loc_sql = "UPDATE dental_locations SET
@@ -199,6 +200,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
+                                plan_id = '".$_POST['plan_id']."',
 				";
 		                if(isset($_POST['reg_but'])){
 					$ins_sql .= " recover_hash='".$recover_hash."',
@@ -377,6 +379,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
 		$billing_company_id = $_POST['billing_company_id'];
+		$plan_id = $_POST['plan_id'];
 	}
 	else
 	{
@@ -422,6 +425,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
 		$billing_company_id = $themyarray['billing_company_id'];
+		$plan_id = $themyarray['plan_id'];
 		$but_text = "Add ";
 	}
 
@@ -846,6 +850,21 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                           $bu_q = mysql_query($bu_sql);
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
                             <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                          <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 Plan
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="plan_id" class="tbox">
+                        <?php
+                          $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
+                          $p_q = mysql_query($p_sql);
+                          while($p_r = mysql_fetch_assoc($p_q)){ ?>
+                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
                           <?php } ?>
                 </select>
             </td>

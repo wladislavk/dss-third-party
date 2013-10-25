@@ -27,15 +27,90 @@ class Stripe_CustomerTest extends StripeTestCase
   {
     $customer = self::createTestCustomer();
     $customer->bogus = 'bogus';
+    $this->expectException(new IsAExpectation('Stripe_InvalidRequestError'));
+    $customer->save();
+  }
 
-    $caught = null;
-    try {
-      $customer->save();
-    } catch (Stripe_InvalidRequestError $exception) {
-      $caught = $exception;
-    }
+  public function testUpdateDescriptionEmpty()
+  {
+    $customer = self::createTestCustomer();
 
-    $this->assertTrue($caught instanceof Stripe_InvalidRequestError);
+    $this->expectException(new IsAExpectation('InvalidArgumentException'));
+
+    $customer->description = '';
+  }
+
+  public function testUpdateDescriptionNull()
+  {
+    $customer = self::createTestCustomer(array('description' => 'foo bar'));
+    $customer->description = NULL;
+
+    $customer->save();
+
+    $updatedCustomer = Stripe_Customer::retrieve($customer->id);
+    $this->assertEqual(NULL, $updatedCustomer->description);
+  }
+
+  public function testUpdateMetadata()
+  {
+    $customer = self::createTestCustomer();
+
+    $customer->metadata['test'] = 'foo bar';
+    $customer->save();
+
+    $updatedCustomer = Stripe_Customer::retrieve($customer->id);
+    $this->assertEqual('foo bar', $updatedCustomer->metadata['test']);
+  }
+
+  public function testDeleteMetadata()
+  {
+    $customer = self::createTestCustomer();
+
+    $customer->metadata = NULL;
+    $customer->save();
+
+    $updatedCustomer = Stripe_Customer::retrieve($customer->id);
+    $this->assertEqual(0, count($updatedCustomer->metadata->keys()));
+  }
+
+  public function testUpdateSomeMetadata()
+  {
+    $customer = self::createTestCustomer();
+    $customer->metadata['shoe size'] = '7';
+    $customer->metadata['shirt size'] = 'XS';
+    $customer->save();
+
+    $customer->metadata['shoe size'] = '9';
+    $customer->save();
+
+    $updatedCustomer = Stripe_Customer::retrieve($customer->id);
+    $this->assertEqual('XS', $updatedCustomer->metadata['shirt size']);
+    $this->assertEqual('9', $updatedCustomer->metadata['shoe size']);
+  }
+
+  public function testUpdateAllMetadata()
+  {
+    $customer = self::createTestCustomer();
+    $customer->metadata['shoe size'] = '7';
+    $customer->metadata['shirt size'] = 'XS';
+    $customer->save();
+
+    $customer->metadata = array('shirt size' => 'XL');
+    $customer->save();
+
+    $updatedCustomer = Stripe_Customer::retrieve($customer->id);
+    $this->assertEqual('XL', $updatedCustomer->metadata['shirt size']);
+    $this->assertFalse(isset($updatedCustomer->metadata['shoe size']));
+  }
+
+  public function testUpdateInvalidMetadata()
+  {
+    $customer = self::createTestCustomer();
+
+    $this->expectException(new IsAExpectation('Stripe_InvalidRequestError'));
+
+    $customer->metadata = 'something';
+    $customer->save();
   }
 
   public function testCancelSubscription()

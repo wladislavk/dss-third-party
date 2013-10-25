@@ -8,10 +8,11 @@ include '../includes/calendarinc.php';
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
+		JOIN dental_plans plan ON plan.id = du.plan_id
                 WHERE du.status=1 AND du.docid=0
 AND 
                 ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND du.adddate < DATE_SUB(now(), INTERVAL 1 MONTH)))
+                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < DATE_SUB(now(), INTERVAL 1 MONTH)))
  ";
   if(isset($_GET['company']) && $_GET['company'] != ""){
     	$sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
@@ -237,10 +238,11 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type
+  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
+		JOIN dental_plans p ON p.id=u.plan_id
 		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
   $doc_q = mysql_query($doc_sql);
   $doc = mysql_fetch_assoc($doc_q);

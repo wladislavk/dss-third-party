@@ -6,20 +6,6 @@ if(is_billing($_SESSION['admin_access'])){
   die();
 }
 
-if($_REQUEST["delid"] != "" && $_SESSION['admin_access']==1)
-{
-	$del_sql = "delete from dental_transaction_code where transaction_codeid='".$_REQUEST["delid"]."'";
-	mysql_query($del_sql);
-	
-	$msg= "Deleted Successfully";
-	?>
-	<script type="text/javascript">
-		//alert("Deleted Successfully");
-		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>";
-	</script>
-	<?
-	die();
-}
 
 $rec_disp = 20;
 

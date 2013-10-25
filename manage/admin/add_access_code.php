@@ -26,7 +26,8 @@ if($_POST["accesscodesub"] == 1)
 			$ed_sql = "update dental_access_codes set 
 				access_code = '".mysql_real_escape_string($_POST['access_code'])."',
 				notes = '".mysql_real_escape_string($_POST['notes'])."',
-				status = '".mysql_real_escape_string($_POST['status'])."'
+				status = '".mysql_real_escape_string($_POST['status'])."',
+				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."'
 				where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
@@ -45,6 +46,7 @@ if($_POST["accesscodesub"] == 1)
                         $ins_sql = "INSERT INTO dental_access_codes set 
                                 access_code = '".mysql_real_escape_string($_POST['access_code'])."',
                                 notes = '".mysql_real_escape_string($_POST['notes'])."',
+				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."'";
 
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -81,12 +83,14 @@ if($_POST["accesscodesub"] == 1)
 	{
 		$access_code = $_POST['access_code'];
 		$notes = $_POST['notes'];
+		$plan_id = $_POST['plan_id'];
 		$status = $_POST['status'];
 	}
 	else
 	{
 		$access_code = $themyarray['access_code'];
 		$notes = $themyarray['notes'];
+		$plan_id = $themyarray['plan_id'];
 		$status = $themyarray['status'];
 		$but_text = "Add ";
 	}
@@ -133,6 +137,21 @@ if($_POST["accesscodesub"] == 1)
             </td>
             <td valign="top" class="frmdata">
 		<textarea name="notes"><?= $notes; ?></textarea>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 Plan
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="plan_id" class="tbox">
+                        <?php
+                          $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
+                          $p_q = mysql_query($p_sql);
+                          while($p_r = mysql_fetch_assoc($p_q)){ ?>
+                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                          <?php } ?>
+                </select>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

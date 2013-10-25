@@ -31,8 +31,8 @@ $new_card = $customer->cards->create(array("card" => array(
         "name" => $cname,
         "address_zip" => $zip
                 )));
-//$cc = json_decode($new_card);
-//$customer->default_card = $cc['id'];
+$cc = json_decode($new_card);
+$customer->default_card = $cc->id;
 try {
 // create a Customer
 $customer->save();

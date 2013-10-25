@@ -1,3 +1,49 @@
+=== 1.9.0 2013-10-16
+
+* Add support for metadata API.
+
+=== 1.8.4 2013-09-18
+
+* Add support for closing disputes.
+
+=== 1.8.3 2013-08-13
+
+* Add new Balance and BalanceTransaction
+
+=== 1.8.2 2013-08-12
+
+* Add support for unsetting attributes by updating to NULL.
+  Setting properties to a blank string is now an error.
+
+=== 1.8.1 2013-07-12
+
+* Add support for multiple cards API (Stripe API version 2013-07-12: https://stripe.com/docs/upgrades#2013-07-05)
+
+=== 1.8.0 2013-04-11
+
+* Allow Transfers to be creatable
+* Add new Recipient resource
+
+=== 1.7.15 2013-02-21
+
+* Add 'id' to the list of permanent object attributes
+
+=== 1.7.14 2013-02-20
+
+* Don't re-encode strings that are already encoded in UTF-8. If you
+  were previously using plan or coupon objects with UTF-8 IDs, they
+  may have been treated as ISO-8859-1 (Latin-1) and encoded to UTF-8 a
+  2nd time. You may now need to pass the IDs to utf8_encode before
+  passing them to Stripe_Plan::retrieve or Stripe_Coupon::retrieve.
+* Ensure that all input is encoded in UTF-8 before submitting it to
+  Stripe's servers. (github issue #27)
+
+=== 1.7.13 2013-02-01
+
+* Add support for passing options when retrieving Stripe objects
+  e.g., Stripe_Charge::retrieve(array("id"=>"foo", "expand" => array("customer")))
+  Stripe_Charge::retrieve("foo") will continue to work
+
 === 1.7.12 2013-01-15
 
 * Add support for setting a Stripe API version override

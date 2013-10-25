@@ -366,7 +366,18 @@ if($_POST["patientsub"] == 1)
 	$use_patient_portal = $_POST['use_patient_portal'];
 	if($_POST["ed"] != "") //existing patient (update)
 	{
-		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status, p_m_ins_co FROM dental_patients
+		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status, 
+				p_m_relation,
+				p_m_partyfname, 
+                                p_m_partylname, 
+                                ins_dob, 
+                                p_m_ins_type, 
+                                p_m_ins_ass, 
+                                p_m_ins_co, 
+                                p_m_ins_id, 
+                                p_m_ins_grp, 
+                                p_m_ins_plan 
+				FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 		$s_q = mysql_query($s_sql);
 		$s_r = mysql_fetch_assoc($s_q);
@@ -384,8 +395,17 @@ if($_POST["patientsub"] == 1)
 		}
 
 		//Remove pending vobs if ins info has changed.
-		if($old_p_m_ins_co != $_POST['p_m_ins_co']){
-			//get user's name
+		if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
+			$s_r['p_m_relation'] != $_POST['p_m_relation'] ||
+                        $s_r['p_m_partyfname'] != $_POST['p_m_partyfname'] ||
+                        $s_r['p_m_partylname'] != $_POST['p_m_partylname'] ||
+                        $s_r['ins_dob'] != $_POST['ins_dob'] ||
+                        $s_r['p_m_ins_type'] != $_POST['p_m_ins_type'] ||
+                        $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'] ||
+                        $s_r['p_m_ins_id'] != $_POST['p_m_ins_id'] ||
+                        $s_r['p_m_ins_grp'] != $_POST['p_m_ins_grp'] ||
+                        $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan'] 
+			){
 			$vob_sql = "UPDATE dental_insurance_preauth SET
         				status = " . DSS_PREAUTH_REJECTED . ",
         				reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
@@ -1230,8 +1250,18 @@ var valid = true;
 
 
 //IF PENDING VOB MAKE SURE INSURANCE HASN'T CHANGED
-if(fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' && <?= $pending_vob; ?>){
-
+if((fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' ||
+	fa.p_m_relation.value != '<?= $p_m_relation; ?>' ||
+        fa.p_m_partyfname.value != '<?= $p_m_partyfname; ?>' ||
+        fa.p_m_partylname.value != '<?= $p_m_partylname; ?>' || 
+        fa.ins_dob.value != '<?= $ins_dob; ?>' ||
+        fa.p_m_ins_type.value != '<?= $p_m_ins_type; ?>' || 
+        $('.p_m_ins_ass:checked').val() != '<?= $p_m_ins_ass; ?>' || 
+        fa.p_m_ins_id.value != '<?= $p_m_ins_id; ?>' || 
+        fa.p_m_ins_grp.value != '<?= $p_m_ins_grp; ?>' || 
+        fa.p_m_ins_plan.value != '<?= $p_m_ins_plan ; ?>'
+)
+	&& <?= $pending_vob; ?>){
   if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
     return false;
   }
@@ -2047,7 +2077,8 @@ if($num_face == 0){ ?>
 <?php }else{
 $image = mysql_fetch_assoc($itype_my);
  ?>
-                                        <button id="p_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+
+                                        <button id="p_m_ins_card" onclick="window.open('q_file/<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                 View Insurance Card Image
         </button>
 
@@ -2077,7 +2108,7 @@ $image = mysql_fetch_assoc($itype_my);
                                 <label for="home_phone">Insurance Type</label>
                             </span>
                             <span>
-                                                                            <input id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                                                                            <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
                             </span>
 
                                                 </div>

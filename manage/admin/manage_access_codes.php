@@ -14,7 +14,8 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select ac.*, (SELECT count(u.userid) FROM dental_users u WHERE u.access_code_id=ac.id) as num_users from dental_access_codes ac";
+$sql = "select ac.*, p.name, (SELECT count(u.userid) FROM dental_users u WHERE u.access_code_id=ac.id) as num_users from dental_access_codes ac 
+	LEFT JOIN dental_plans p ON p.id=ac.plan_id";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -72,6 +73,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			# Users
 		</td>
+		<td valign="top" class="col_head" width="10%">
+                        Plan
+                </td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
@@ -107,7 +111,10 @@ $num_users=mysql_num_rows($my);
 				</td>		
 				<td valign="top" align="center">
 						<a href="#" onclick="$('.users_<?=$myarray['id'];?>').toggle();"><?= $myarray['num_users']; ?></a>
-				</td>	
+				</td>
+                                <td valign="top">
+                                        <?= $myarray['name']; ?>
+                                </td>	
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_access_code.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
 						Edit

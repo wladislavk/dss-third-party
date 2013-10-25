@@ -26,6 +26,12 @@ class Stripe_Charge extends Stripe_ApiResource
     return self::_scopedCreate($class, $params, $apiKey);
   }
 
+  public function save()
+  {
+    $class = get_class();
+    return self::_scopedSave($class);
+  }
+
   public function refund($params=null)
   {
     $requestor = new Stripe_ApiRequestor($this->_apiKey);
@@ -51,5 +57,14 @@ class Stripe_Charge extends Stripe_ApiResource
     list($response, $apiKey) = $requestor->request('post', $url, $params);
     $this->refreshFrom(array('dispute' => $response), $apiKey, true);
     return $this->dispute;
+  }
+
+  public function closeDispute()
+  {
+    $requestor = new Stripe_ApiRequestor($this->_apiKey);
+    $url = $this->instanceUrl() . '/dispute/close';
+    list($response, $apiKey) = $requestor->request('post', $url);
+    $this->refreshFrom($response, $apiKey);
+    return $this;
   }
 }

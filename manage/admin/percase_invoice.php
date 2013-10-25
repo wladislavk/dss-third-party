@@ -139,10 +139,11 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
+  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
+ 		JOIN dental_plans p ON p.id = u.plan_id
 		WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
   $doc_q = mysql_query($doc_sql);
   $doc = mysql_fetch_assoc($doc_q);

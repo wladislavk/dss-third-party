@@ -139,8 +139,8 @@ echo($customer->active_card['last4']);
                 company: "<?= addslashes($key_r['name']); ?>"
           },
           success: function(data){
-            //var r = $.parseJSON(data);
-                alert(data);
+            var r = $.parseJSON(data);
+               // alert(data);
             if(r.error){
               $('#loader').hide();      
               //$('#payment_proceed').show();

@@ -458,7 +458,7 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 		}
 	}
 $patterns = '/(<p><img)(.*)(\/><\/p>)/';
-$replace = '<span width="200" align="right"><img $2 /></span>';
+$replace = '<span style="float:right"><img $2 /></span>';
 $template = preg_replace($patterns, $replace, $template);
 $template = htmlspecialchars($template);
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed

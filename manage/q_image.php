@@ -165,15 +165,9 @@ $itype_my = mysql_query($itype_sql);
 					<?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>
 				</td>
 				<td valign="top">
-					<?php if (end(explode('.', st($myarray["image_file"]))) != "pdf" && end(explode('.', st($myarray["image_file"]))) != "doc" && end(explode('.', st($myarray["image_file"]))) != "docx") { ?>
-					<a href="javascript:void(0)" onclick="window.open('imageholder.php?image=<?=addslashes($myarray["image_file"]);?>',
-'welcome','width=800,height=400,scrollbars=yes');">
-						Preview</a>
-					<?php } else { ?>
 						<a href="javascript:void(0)" onclick="window.open('/manage/q_file/<?=addslashes($myarray["image_file"]);?>',
 'welcome','width=800,height=400,scrollbars=yes');">
 						Preview</a>
-					<?php } ?>	
 				</td>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink" title="EDIT">

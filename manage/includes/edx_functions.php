@@ -1,6 +1,7 @@
 <?php
 
 function edx_user_update($id, $edx_con){
+return true; //temp workaround until fully setup
   $sql = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($id)."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);

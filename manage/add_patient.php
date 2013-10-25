@@ -89,6 +89,12 @@ updateNumber2('s_m_ins_phone');
   =======================================================*/
   // Trigger Letter 1 and 2 if New MD was added
   function trigger_letter1and2($pid) {
+
+   //prevent letters from being generated if letters or intro letters disabled
+   $let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+   $let_q = mysql_query($let_sql);
+   $let_r = mysql_fetch_assoc($let_q);
+   if($let_r['use_letters'] && $let_r['intro_letters']){
     $letter1id = "1";
     $letter2id = "2";
     $mdcontacts = array();
@@ -135,8 +141,8 @@ updateNumber2('s_m_ins_phone');
         die();
       }
     }
+   }
   }
-
 function trigger_letter3($pid) {
   $letterid = '3';
   $topatient = '1';
@@ -360,12 +366,13 @@ if($_POST["patientsub"] == 1)
 	$use_patient_portal = $_POST['use_patient_portal'];
 	if($_POST["ed"] != "") //existing patient (update)
 	{
-		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status FROM dental_patients
+		$s_sql = "SELECT referred_by, referred_source, email, password, registration_status, p_m_ins_co FROM dental_patients
 			WHERE patientid=".mysql_real_escape_string($_GET['pid']);
 		$s_q = mysql_query($s_sql);
 		$s_r = mysql_fetch_assoc($s_q);
 		$old_referred_by = $s_r['referred_by'];
 		$old_referred_source = $s_r['referred_source'];
+		$old_p_m_ins_co = $s_r['p_m_ins_co'];
 		if($s_r['registration_status']==2 && $_POST['email'] != $s_r['email']){ //if registered attempt to send update email
 			sendUpdatedEmail($_GET['pid'], $_POST['email'], $s_r['email'], 'doc');
 		}elseif(isset($_POST['sendRem'])){ 
@@ -375,6 +382,21 @@ if($_POST["patientsub"] == 1)
 			  sendRegEmail($_POST['ed'], $_POST['email'], ''); //send reg email if email is updated and not registered 
 			}
 		}
+
+		//Remove pending vobs if ins info has changed.
+		if($old_p_m_ins_co != $_POST['p_m_ins_co']){
+			//get user's name
+			$vob_sql = "UPDATE dental_insurance_preauth SET
+        				status = " . DSS_PREAUTH_REJECTED . ",
+        				reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
+        				viewed = 1
+				 	WHERE patient_id = '".mysql_real_escape_string($_REQUEST['ed'])."'
+						AND status = ".DSS_PREAUTH_PENDING;
+			mysql_query($vob_sql) or die(mysql_error()); 
+		}
+
+
+
 		$ed_sql = "update dental_patients 
 		set 
 		firstname = '".s_for($_POST["firstname"])."', 
@@ -816,6 +838,24 @@ mysql_query($s1);
 
 
     <?
+
+	//Check if user has pending VOB
+	$vob_sql = "SELECT "
+     . "  * "
+     . "FROM "
+     . "  dental_insurance_preauth "
+     . "WHERE "
+     . "  patient_id = " . $_REQUEST['ed'] . " "
+     . "  AND status=".DSS_PREAUTH_PENDING." "
+     . "ORDER BY "
+     . "  front_office_request_date DESC "
+     . "LIMIT 1";
+$vob_my = mysql_query($vob_sql);
+$pending_vob = mysql_num_rows($vob_my);
+
+
+
+
     $thesql = "select * from dental_patients where patientid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
@@ -1187,7 +1227,30 @@ if(clickedBut == "sendPin"){
 }
 p = patientabc(fa);
 var valid = true;
-                                  $.ajax({
+
+
+//IF PENDING VOB MAKE SURE INSURANCE HASN'T CHANGED
+if(fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' && <?= $pending_vob; ?>){
+
+  if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
+    return false;
+  }
+
+}
+/*
+   if(trim(fa.p_m_partyfname.value) != "" || 
+                        trim(fa.p_m_partylname.value) != "" ||
+                        trim(fa.p_m_relation.value) != "" ||
+                        trim(fa.ins_dob.value) != "" ||
+                        trim(fa.p_m_ins_co.value) != "" ||
+                        trim(fa.p_m_party.value) != "" ||
+                        trim(fa.p_m_ins_grp.value) != "" ||
+                        trim(fa.p_m_ins_plan.value) != "" ||
+                        trim(fa.p_m_ins_type.value) != "Select Type"){ 
+*/
+
+
+                               $.ajax({
                                         url: "includes/check_email.php",
                                         type: "post",
                                         data: {email: fa.email.value<?= (isset($_GET['pid']))?", id: ".$_GET['pid']:''; ?>},

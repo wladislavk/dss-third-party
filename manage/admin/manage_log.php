@@ -14,7 +14,11 @@ else
 	
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-$sql = "select * from dental_users order by username";
+$sql = "select u.*, 
+	(select COUNT(*) from dental_login where userid=u.userid) num_logins,
+        (select login_date from dental_login where userid=u.userid ORDER BY login_date DESC LIMIT 1) last_login
+	from dental_users u
+	order by u.username";
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid OR uc.userid = u.docid
@@ -63,10 +67,16 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="20%">
 			Username	
 		</td>
-		<td valign="top" class="col_head" width="70%">
+		<td valign="top" class="col_head" width="35%">
 			Name
 		</td>
-		<td valign="top" class="col_head" width="20%">
+                <td valign="top" class="col_head" width="10%">
+                        # Logins
+                </td>
+                <td valign="top" class="col_head" width="25%">
+                        Last Login
+                </td>
+		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
 	</tr>
@@ -97,11 +107,16 @@ $num_users=mysql_num_rows($my);
 					<?=st($myarray["username"]);?>
 				</td>
 				<td valign="top">
-					<?=st($myarray["name"]);?>
+					<?=st($myarray["first_name"]. " ".$myarray["last_name"]);?>
 				</td>
-				
+                                <td valign="top">
+                                        <?=st($myarray["num_logins"]);?>
+                                </td>
+                                <td valign="top">
+                                        <?=($myarray["last_login"])?date('m/d/Y h:i:s', strtotime($myarray["last_login"])):'';?>
+                                </td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('log.php?led=<?=$myarray["userid"];?>');" class="editlink" title="EDIT" title="View">
+				<a href="Javascript:;"  onclick="Javascript: loadPopup('log.php?led=<?=$myarray["userid"];?>');" class="editlink" title="EDIT" title="View">
 						<img src="images/b_browse.png" width="16" height="16" border="0" align="View"/>
 					</a>
                     

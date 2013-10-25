@@ -43,7 +43,7 @@ if(isset($_POST["loginsub"]))
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 	
-	$check_sql = "SELECT dental_users.userid, username, name, user_access, 
+	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, 
 				CASE docid
 					WHEN 0 THEN dental_users.userid
 					ELSE docid
@@ -66,7 +66,7 @@ if(isset($_POST["loginsub"]))
 		
 		$_SESSION['userid']=$check_myarray['userid'];
 		$_SESSION['username']=$check_myarray['username'];
-		$_SESSION['name']=$check_myarray['name'];
+		$_SESSION['name']=$check_myarray['first_name']." ".$check_myarray['last_name'];
 		$_SESSION['user_access']=$check_myarray['user_access'];
 		$_SESSION['companyid']=$check_myarray['companyid'];
 		if($check_myarray['docid'] != 0)

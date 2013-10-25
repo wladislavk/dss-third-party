@@ -1,5 +1,6 @@
 <?php
 function help_user_update($id, $help_con){
+return true; //temp work around until fully setup
   $sql = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($id)."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);

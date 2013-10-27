@@ -147,6 +147,10 @@ $num_users=mysql_num_rows($my);
 					<a href="view_claim_history.php?id=<?= $myarray['id']; ?>" class="editlink" title="EDIT">
 						View
 					</a>
+
+					<a href="../insurance_check_status.php?id=<?= $myarray['id']; ?>" class="editlink" title="payment status">
+						Payment Status
+					</a>
                     
 				</td>
 			</tr>

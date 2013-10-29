@@ -411,7 +411,7 @@ if($_POST["patientsub"] == 1)
         				reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
         				viewed = 1
 				 	WHERE patient_id = '".mysql_real_escape_string($_REQUEST['ed'])."'
-						AND status = ".DSS_PREAUTH_PENDING;
+						AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
 			mysql_query($vob_sql) or die(mysql_error()); 
 		}
 
@@ -866,13 +866,15 @@ mysql_query($s1);
      . "  dental_insurance_preauth "
      . "WHERE "
      . "  patient_id = " . $_REQUEST['ed'] . " "
-     . "  AND status=".DSS_PREAUTH_PENDING." "
+     . "  AND (status=".DSS_PREAUTH_PENDING." "
+     . "  OR status=".DSS_PREAUTH_PREAUTH_PENDING.") "
      . "ORDER BY "
      . "  front_office_request_date DESC "
      . "LIMIT 1";
 $vob_my = mysql_query($vob_sql);
+$vob_myarray = mysql_fetch_assoc($vob_my);
 $pending_vob = mysql_num_rows($vob_my);
-
+$pending_vob_status = $vob_myarray['status'];
 
 
 
@@ -1262,7 +1264,12 @@ if((fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' ||
         fa.p_m_ins_plan.value != '<?= $p_m_ins_plan ; ?>'
 )
 	&& <?= $pending_vob; ?>){
+	<?php if($pending_vob_status == DSS_PREAUTH_PREAUTH_PENDING){ ?>
+		  if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB) which is currently awaiting pre-authorization from the insurance company. You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
+
+	<?php }else{ ?>
   if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
+	<?php } ?>
     return false;
   }
 

@@ -37,32 +37,18 @@ $num_users=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Today's Ledger Report
-	<? if($_POST['dailysub'] == 1)
-	{?>
-	    (<i><?=$_POST['d_mm']?>-<?=$_POST['d_dd']?>-<?=$_POST['d_yy']?></i>)
-	<? }
-	
-	if($_POST['monthlysub'] == 1)
-	{?>
-		(<i><?=$_POST['d_mm']?>-<?=$_POST['d_yy']?></i>)
-	<? }
-	
-	if($_GET['pid'] <> '')
-	{?>
-		(<i><?=$thename;?></i>)
-	<? }?>
-
-	<?php if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){ ?>
+	Unpaid Patient Report
 	   (<i><?= date('m/d/Y'); ?></i>)
-	<?php } ?>
 
 </span>
 <div align="right">
 <button onclick="Javascript:window.location='ledger_reportfull.php';" class="addButton">
                Daily Ledger
         </button>
-
+	&nbsp;&nbsp;
+<button onclick="window.location='ledger_unpaid_statements.php';" class="addButton">
+		Print All Statements
+</button>
         &nbsp;&nbsp;
 </div>
 

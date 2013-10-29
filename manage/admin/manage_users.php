@@ -54,18 +54,20 @@ else
 	
 $i_val = $index_val * $rec_disp;
 if(is_super($_SESSION['admin_access'])){
-$sql = "select u.*, c.id as company_id, c.name as company_name from dental_users u
+$sql = "select u.*, c.id as company_id, c.name as company_name, p.name as plan_name from dental_users u
 	LEFT JOIN dental_user_company uc ON uc.userid = u.userid
         LEFT JOIN companies c ON c.id=uc.companyid
+	LEFT JOIN dental_plans p ON p.id=u.plan_id
 		 where u.user_access=2 ";
 if(isset($_GET['cid'])){
   $sql .= " AND c.id='".mysql_real_escape_string($_GET['cid'])."' ";
 }
 	 $sql .= " order by u.username";
 }elseif(is_admin($_SESSION['admin_access'])){
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
+  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
 		INNER JOIN dental_user_company uc ON uc.userid = u.userid
 		INNER JOIN companies c ON c.id=uc.companyid
+		LEFT JOIN dental_plans p ON p.id=u.plan_id
 		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
 		ORDER BY username";
 }elseif(is_billing($_SESSION['admin_access'])){
@@ -74,9 +76,10 @@ if(isset($_GET['cid'])){
 			WHERE a.adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."'";
   $a_q = mysql_query($a_sql);
   $admin = mysql_fetch_assoc($a_q);
-  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name FROM dental_users u 
+  $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
                 INNER JOIN dental_user_company uc ON uc.userid = u.userid
                 INNER JOIN companies c ON c.id=uc.companyid
+        	LEFT JOIN dental_plans p ON p.id=u.plan_id
                 WHERE u.user_access=2 AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."'
                 ORDER BY username";
 }
@@ -172,6 +175,9 @@ $num_users=mysql_num_rows($my);
                         Company 
                 </td>
 		<?php } ?>
+                <td valign="top" class="col_head" width="10%">
+                        Plan
+                </td>
 		<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="10%">
 			Action
@@ -262,6 +268,9 @@ $num_users=mysql_num_rows($my);
                                         	<a href="manage_users.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>
 				</td>			
 				<?php } ?>
+                                <td valign="top" align="center">
+                                                <?= $myarray["plan_name"]; ?>
+                                </td>
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">

@@ -279,6 +279,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<li><a href="/manage/admin/insurance_officeally.php">Export Pending Office Ally Claims</a></li>
 						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
 						<li><a href="/manage/admin/manage_access_codes.php">Access Codes</a></li>
+                                                <li><a href="/manage/admin/manage_plans.php">Plans</a></li>
 						<?php } ?>
 					</ul>
 				</li>

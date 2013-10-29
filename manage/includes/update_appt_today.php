@@ -67,12 +67,12 @@ if($create){
 		if($q){ 
 		  mysql_query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($pid)."'");
 		}
+       if($create_letters){
 
         if ($id == "8") { // Follow-Up/Check
                 $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
                 $trigger_result = mysql_query($trigger_query);
                 $numrows = (mysql_num_rows($trigger_result));
-	if($create_letters){
                 if ($numrows > 0) {
                         $letterid[] = trigger_letter16($pid, $insert_id);
                 }

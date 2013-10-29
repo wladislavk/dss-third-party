@@ -17,7 +17,7 @@ Stripe::setApiKey($key_r['stripe_secret_key']);
 if($key_r['cc_id'] == ''){
 
 ?>No card on record.<?php
-
+?> <a href="#" onclick="$('.card_form').show();$('#payment_proceed_add').show();$(this).hide();return false;">Add</a><?php
 
 
 }else{
@@ -25,11 +25,11 @@ $customer = Stripe_Customer::retrieve($key_r['cc_id']);
 
 ?>Active card ending in: <?php
 echo($customer->active_card['last4']);
-
+?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a><?php
 
 }
 ?>
-<div class="clear"></div>
+<div id="card_form" style="display:none;" class="clear">
 
 <div class="form_errors" style="display:none"></div>
 <input type="hidden" id="userid" name="userid" />
@@ -53,10 +53,12 @@ echo($customer->active_card['last4']);
                         <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
                 </div>
 
-<a href="#" onclick="add_cc(); return false;" id="payment_proceed" class="fr btn btn_dL">Save</a>
-<a href="#" onclick="update_cc(); return false;" id="payment_proceed" class="fr btn btn_dL">Update</a>
+<a href="#" onclick="add_cc(); return false;" style="display:none;" id="payment_proceed_add" class="addButton">Save</a>
+<a href="#" onclick="update_cc(); return false;" style="display:none;" id="payment_proceed_update" class="addButton">Update</a>
+or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return false;" id="payment_proceed_cancel" class="fr btn btn_dL">Cancel</a>
 <div id="loader" style="display:none;">
 <img src="images/DSS-ajax-animated_loading-gif.gif" />
+</div>
 </div>
 <div class="clear"></div>
 <?php

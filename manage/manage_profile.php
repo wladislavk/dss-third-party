@@ -596,14 +596,13 @@ if(isset($_POST['auto_letters'])){
 
 
 $let_sql = "SELECT use_letters, tracker_letters, intro_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-error_log($let_sql);
 $let_q = mysql_query($let_sql);
 $let_r = mysql_fetch_assoc($let_q);
 if($let_r['use_letters']){
 ?>
 <form action="#" method="post">
 <h3>Enable Auto-Generated Letters</h3>
-<input value="1" type="checkbox" name="tracker_letters" <?= ($let_r['tracker_letters'])?'checked="checked"':''; ?> /> Allow software to automatically generate letters based on treatment steps.  Unchecking this box means no letters will be generated unless you explicitly create them.  Please leave this box CHECKED unless you know what you're doing!
+<input value="1" type="checkbox" name="tracker_letters" <?= ($let_r['tracker_letters'])?'checked="checked"':''; ?> /> Allow software to automatically generate letters based on treatment steps from the TRACKER page. Unchecking this box means no letters will be generated unless you explicitly create them. Please leave this box CHECKED unless you know what you're doing!
 <br />
 <input value="1" type="checkbox" name="intro_letters" <?= ($let_r['intro_letters'])?'checked="checked"':''; ?> /> Allow software to automatically generate welcome letters to new contacts.  Unchecking this box means no welcome letters will be generated unless you explicitly create them.  Please leave this box CHECKED unless you know what you're doing!
 <br />

@@ -142,31 +142,35 @@ $(document).ready(function(){
 	</button>
 	&nbsp;&nbsp;
 </div>
-<div class="letter_select">
-<?php
-  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-  foreach($letters as $let){
-	?><a href="manage_contact.php?letter=<?=$let;?>&status=<?=$_GET['status'];?>&sort=<?=$_GET['sort'];?>&sortdir=<?=$_GET['sortdir'];?>&contacttype=<?= $_GET['contacttype'];?>"><?=$let;?></a>
-<?php
-  }
-?>
-</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
+<td colspan="2">
+<div class="letter_select">
+<?php
+  $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+  foreach($letters as $let){
+        ?><a <?= ($_GET['letter']==$let)?'class="selected_letter"':''; ?> href="manage_contact.php?letter=<?=$let;?>&status=<?=$_GET['status'];?>&sort=<?=$_GET['sort'];?>&sortdir=<?=$_GET['sortdir'];?>&contacttype=<?= $_GET['contacttype'];?>"><?=$let;?></a>
+<?php
+  }
+if(isset($_GET['letter']) && $_GET['letter'] != ''){
+?><a href="manage_contact.php?status=<?=$_GET['status'];?>&sort=<?=$_GET['sort'];?>&sortdir=<?=$_GET['sortdir'];?>&contacttype=<?= $_GET['contacttype'];?>">Show All</a>
+<?php } ?>
+</div>
+</td>
 		<TD  align="right" colspan="15" class="bp">
+<? if($total_rec > $rec_disp) {?>
 			Pages:
 			<?
 				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&status=".$_GET['status']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&contacttype=".$_GET['contacttype']);
+}
 			?>
 		</TD>        
 	</TR>
-	<? }?>
 	<tr class="tr_bg_h">
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
                         <a href="manage_contact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>

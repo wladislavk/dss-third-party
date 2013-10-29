@@ -6,7 +6,7 @@ function trigger_letter5($pid, $info_id) {
         $topatient = '1';
         $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '', '', '', 'email');
         if (!is_numeric($letter)) {
-                print "Can't send letter 5: " . $letter;
+                //print "Can't send letter 5: " . $letter;
                 die();
         } else {
                 return $letter;
@@ -18,7 +18,7 @@ function trigger_letter6($pid, $info_id) {
         $topatient = '1';
         $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '', '', '', 'paper');
         if (!is_numeric($letter)) {
-                print "Can't send letter 6: " . $letter;
+                //print "Can't send letter 6: " . $letter;
                 die();
         } else {
                 return $letter;
@@ -32,7 +32,7 @@ function trigger_letter7($pid, $info_id) {
         //if ($md_referral_list != "") {
                 $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
                 if (!is_numeric($letter)) {
-                        print "Can't send letter 7: " . $letter;
+                        //print "Can't send letter 7: " . $letter;
                         die();
                 } else {
                         return $letter;
@@ -45,7 +45,7 @@ function trigger_letter8($pid, $info_id) {
   $topatient = '1';
   $letter = create_letter($letterid, $pid, $info_id, $topatient);
   if (!is_numeric($letter)) {
-    print "Can't send letter 8: " . $letter;
+    //print "Can't send letter 8: " . $letter;
     die();
   } else {
     return $letter;
@@ -60,7 +60,7 @@ function trigger_letter9($pid, $info_id) {
         //if ($md_referral_list != "") {
                 $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
                 if (!is_numeric($letter)) {
-                        print "Can't send letter 9: " . $letter;
+                        //print "Can't send letter 9: " . $letter;
                         //die();
                 } else {
                         return $letter;
@@ -75,7 +75,7 @@ function trigger_letter10($pid, $info_id) {
         //if ($md_referral_list != "") {
                 $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
                 if (!is_numeric($letter)) {
-                        print "Can't send letter 10: " . $letter;
+                        //print "Can't send letter 10: " . $letter;
                         die();
                 } else {
                         return $letter;
@@ -90,7 +90,7 @@ function trigger_letter11($pid, $info_id) {
         //if ($md_referral_list != "") {
                 $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
                 if (!is_numeric($letter)) {
-                        print "Can't send letter 11: " . $letter;
+                        //print "Can't send letter 11: " . $letter;
                         die();
                 } else {
                         return $letter;
@@ -104,7 +104,7 @@ function trigger_letter13($pid, $info_id) {
   $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $info_id, '', $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
-    print "Can't send letter 13: " . $letter;
+    //print "Can't send letter 13: " . $letter;
     die();
   } else {
     return $letter;
@@ -118,7 +118,7 @@ function trigger_letter16($pid, $info_id) {
         $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $info_id, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
-    print "Can't send letter 16: " . $letter;
+    //print "Can't send letter 16: " . $letter;
     die();
   } else {
     return $letter;
@@ -132,7 +132,7 @@ function trigger_letter17($pid, $info_id) {
         $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $info_id, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
-    print "Can't send letter 17: " . $letter;
+    //print "Can't send letter 17: " . $letter;
     die();
   } else {
     return $letter;
@@ -146,7 +146,7 @@ function trigger_letter19($pid, $info_id) {
         $md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $info_id, $topatient, $md_list, $md_referral_list);
   if (!is_numeric($letter)) {
-    print "Can't send letter 19: " . $letter;
+    //print "Can't send letter 19: " . $letter;
     die();
   } else {
     return $letter;
@@ -159,7 +159,7 @@ function trigger_letter20($pid) {
         $pt_referral_list = get_ptreferralids($pid);
   $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
   if (!is_numeric($letter)) {
-    print "Can't send letter 20: " . $letter;
+    //print "Can't send letter 20: " . $letter;
     die();
   } else {
     return $letter;
@@ -173,7 +173,7 @@ function trigger_letter21($pid, $info_id) {
   //$md_referral_list = get_mdreferralids($pid);
   $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '');
   if (!is_numeric($letter)) {
-    print "Can't send letter 21: " . $letter;
+    //print "Can't send letter 21: " . $letter;
     die();
   } else {
     return $letter;
@@ -186,7 +186,7 @@ function trigger_letter24($pid, $info_id) {
   $topatient = '1';
   $letter = create_letter($letterid, $pid, $info_id, $topatient);
   if (!is_numeric($letter)) {
-    print "Can't send letter 24: " . $letter;
+    //print "Can't send letter 24: " . $letter;
     die();
   } else {
     return $letter;

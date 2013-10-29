@@ -80,7 +80,7 @@ $num_referredby=mysql_num_rows($my);
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
-	Manage Referred By
+	Referral Source Printout - <?= date('m/d/Y'); ?> 
 </span>
 <br />
 <br />
@@ -102,25 +102,25 @@ background:#999999;
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table width="98%" cellpadding="5" cellspacing="0" border="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		Name
 		</td>
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		Physician Type
 		</td>
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'total')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 		Total Referrals
 		</td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		30 Days
                 </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		60 Days
                 </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		90 Days
                 </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 		90+ Days
                 </td>
 
@@ -153,18 +153,18 @@ background:#999999;
 			$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="20%">
+				<td valign="top">
 					<?php
 						echo $name;
 					 ?>
 				</td>
-				<td valign="top" width="30%">
+				<td valign="top">
 					<?=st($myarray['contacttype']);?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top">
 						<?=$myarray['num_ref'];?>
 				</td>
-                                <td valign="top" width="10%">
+                                <td valign="top">
 				<?php
 				if($myarray['referral_type']==DSS_REFERRED_PHYSICIAN){
 					$ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PHYSICIAN." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
@@ -174,12 +174,14 @@ background:#999999;
                                 $ref_q = mysql_query($ref_sql);
                                 while($ref = mysql_fetch_assoc($ref_q)){
                                         echo $ref['firstname'].' '.$ref['lastname'];
+                                        echo ($ref['copyreqdate'])?' - '. date('m/d/Y', strtotime($ref['copyreqdate'])):'';
                                         ?><br /><?php
                                 }
 
 				?>
+				&nbsp;
                                 </td>
-                                <td valign="top" width="10%">
+                                <td valign="top">
                                 <?php
                                 if($myarray['referral_type']==DSS_REFERRED_PHYSICIAN){
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PHYSICIAN." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
@@ -187,13 +189,18 @@ background:#999999;
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PATIENT." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
                                 }
 				$ref_q = mysql_query($ref_sql);
+                                if(mysql_num_rows($ref_q)>0){
 				while($ref = mysql_fetch_assoc($ref_q)){                        
 					echo $ref['firstname'].' '.$ref['lastname'];
+                                        echo ($ref['copyreqdate'])?' - '. date('m/d/Y', strtotime($ref['copyreqdate'])):'';
 					?><br /><?php
 				}
+				}else{
         ?>
+				&nbsp;
+				<?php } ?>
                                 </td>
-                                <td valign="top" width="10%">
+                                <td valign="top">
                                 <?php
                                 if($myarray['referral_type']==DSS_REFERRED_PHYSICIAN){
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PHYSICIAN." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
@@ -201,13 +208,18 @@ background:#999999;
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PATIENT." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
                                 }
                                 $ref_q = mysql_query($ref_sql);
+                                if(mysql_num_rows($ref_q)>0){
                                 while($ref = mysql_fetch_assoc($ref_q)){
                                         echo $ref['firstname'].' '.$ref['lastname'];
+                                        echo ($ref['copyreqdate'])?' - '. date('m/d/Y', strtotime($ref['copyreqdate'])):'';
                                         ?><br /><?php
                                 }
+				}else{
         ?>
+				&nbsp;
+				<?php } ?>
                                 </td>
-                                <td valign="top" width="10%">
+                                <td valign="top">
                                 <?php
                                 if($myarray['referral_type']==DSS_REFERRED_PHYSICIAN){
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PHYSICIAN." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
@@ -215,11 +227,16 @@ background:#999999;
                                         $ref_sql = "SELECT * FROM dental_patients p WHERE p.referred_source=".DSS_REFERRED_PATIENT." AND p.referred_by = '".$myarray['contactid']."' AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
                                 }
                                 $ref_q = mysql_query($ref_sql);
+				if(mysql_num_rows($ref_q)>0){
                                 while($ref = mysql_fetch_assoc($ref_q)){
                                         echo $ref['firstname'].' '.$ref['lastname'];
+					echo ($ref['copyreqdate'])?' - '. date('m/d/Y', strtotime($ref['copyreqdate'])):'';
                                         ?><br /><?php
                                 }
+				}else{
         ?>
+				&nbsp;
+				<?php } ?>
                                 </td>
 			</tr>
 	<? 	}

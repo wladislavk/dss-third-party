@@ -1384,3 +1384,12 @@ background: #1f303b;
 .current_alert{
   background: #ff3;
 }
+
+
+.selected_letter{
+  font-size:18px;
+  font-weight:bold;
+  }
+.letter_select{
+  font-size:14px;
+  }

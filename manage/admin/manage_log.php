@@ -17,13 +17,39 @@ if(is_super($_SESSION['admin_access'])){
 $sql = "select u.*, 
 	(select COUNT(*) from dental_login where userid=u.userid) num_logins,
         (select login_date from dental_login where userid=u.userid ORDER BY login_date DESC LIMIT 1) last_login
-	from dental_users u
-	order by u.username";
+	from dental_users u ";
 }else{
   $sql = "select u.* from dental_users u 
         JOIN dental_user_company uc ON uc.userid = u.userid OR uc.userid = u.docid
-        where uc.companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."'  order by u.username";
+        where uc.companyid = '".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
+
+
+$sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
+
+$sort_by  = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] : '';
+$sort_by_sql = '';
+switch ($sort_by) {
+  case "name":
+    $sort_by_sql = "u.first_name $sort_dir, u.last_name $sort_dir";
+    break;
+  case "logins":
+    $sort_by_sql = "num_logins $sort_dir";
+    break;
+  case "last_login":
+    $sort_by_sql = "last_login $sort_dir";
+    break;
+  default:
+    $sort_by_sql = "u.username $sort_dir";
+    break;
+}
+
+$sql .= " ORDER BY ".$sort_by_sql;
+
+
+
+
 
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -64,17 +90,17 @@ $num_users=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Username	
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
+			<a href="manage_log.php?sort=username&sort_dir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Username</a>	
 		</td>
-		<td valign="top" class="col_head" width="35%">
-			Name
+		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="35%">
+			<a href="manage_log.php?sort=name&sort_dir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
-                <td valign="top" class="col_head" width="10%">
-                        # Logins
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'logins')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
+                        <a href="manage_log.php?sort=logins&sort_dir=<?php echo ($_REQUEST['sort']=='logins'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>"># Logins</a>
                 </td>
-                <td valign="top" class="col_head" width="25%">
-                        Last Login
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'last_login')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="25%">
+                        <a href="manage_log.php?sort=last_login&sort_dir=<?php echo ($_REQUEST['sort']=='last_login'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Last Login</a>
                 </td>
 		<td valign="top" class="col_head" width="10%">
 			Action

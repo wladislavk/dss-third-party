@@ -45,7 +45,7 @@ $case30_q = mysql_query($case30_sql);
 
 */
 if(is_super($_SESSION['admin_access'])){
-  $sql = "SELECT du.*, c.name AS company_name,
+  $sql = "SELECT du.*, c.name AS company_name, p.name AS plan_name,
 		(SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
 		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                 	JOIN dental_patients dp ON dl.patientid=dp.patientid
@@ -62,9 +62,10 @@ if(is_super($_SESSION['admin_access'])){
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
                 JOIN companies c ON c.id=uc.companyid
+		LEFT JOIN dental_plans p ON p.id=du.plan_id
                 WHERE du.docid=0";
 }else{
-  $sql = "SELECT du.*, c.name AS company_name,
+  $sql = "SELECT du.*, c.name AS company_name, p.name as plan_name,
                 (SELECT COUNT(i.id) FROM dental_percase_invoice i WHERE i.docid=du.userid) AS num_invoices,
                 (SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                         JOIN dental_patients dp ON dl.patientid=dp.patientid
@@ -81,6 +82,7 @@ if(is_super($_SESSION['admin_access'])){
 		FROM dental_users du 
 		JOIN dental_user_company uc ON uc.userid = du.userid
 		JOIN companies c ON c.id=uc.companyid
+		LEFT JOIN dental_plans p ON p.id=du.plan_id
 		WHERE du.docid=0 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
 }
 
@@ -92,6 +94,9 @@ $sort_by_sql = '';
 switch ($sort_by) {
   case "company":
     $sort_by_sql = "company_name $sort_dir";
+    break;
+  case "plan":
+    $sort_by_sql = "plan_name $sort_dir";
     break;
   case "name":
     $sort_by_sql = "du.name $sort_dir";
@@ -157,6 +162,9 @@ $num_users=mysql_num_rows($my);
                 <td class="col_head <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
                         <a href="manage_percase_invoice.php?sort=company&sort_dir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
                 </td>
+                <td class="col_head <?= ($_REQUEST['sort'] == 'plan')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
+                        <a href="manage_percase_invoice.php?sort=plan&sort_dir=<?php echo ($_REQUEST['sort']=='plan'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Plan</a>
+                </td>
                 <td class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
                         <a href="manage_percase_invoice.php?sort=name&sort_dir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Name</a>		
 		</td>
@@ -196,6 +204,9 @@ $num_users=mysql_num_rows($my);
 				</td>
                                 <td valign="top">
                                         <?=st($myarray["company_name"]);?>
+                                </td>
+				<td valign="top">
+                                        <?=st($myarray["plan_name"]);?>
                                 </td>
                                 <td valign="top">
                                         <?=st($myarray["first_name"]);?> <?=st($myarray["last_name"]);?>

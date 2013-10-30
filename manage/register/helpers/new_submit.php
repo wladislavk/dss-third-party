@@ -5,10 +5,11 @@
 <?php require_once '../../admin/includes/password.php'; ?>
 <?php
 
-        $c_sql = "SELECT id FROM dental_access_codes WHERE status='1' AND access_code='".$_POST['code']."'";
+        $c_sql = "SELECT id, plan_id FROM dental_access_codes WHERE status='1' AND access_code='".$_POST['code']."'";
         $c_q = mysql_query($c_sql);
         $c_r = mysql_fetch_assoc($c_q);
 	$access_code_id = $c_r['id'];
+	$plan_id = $c_r['plan_id'];
 	
 if($_POST['userid']==''){
         $sql = "INSERT INTO dental_users set
@@ -17,6 +18,7 @@ if($_POST['userid']==''){
                 email= '".mysql_real_escape_string($_POST['email'])."',
                 phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."',
 		access_code_id = '".mysql_real_escape_string($access_code_id)."',
+		plan_id = '".mysql_real_escape_string($plan_id)."',
 		user_access=".DSS_USER_ACCESS_DOCTOR.",
 		use_patient_portal = '1',
                 use_digital_fax = '1',
@@ -53,6 +55,7 @@ if($_POST['userid']==''){
                 last_name = '".mysql_real_escape_string($_POST['last_name'])."',
                 email= '".mysql_real_escape_string($_POST['email'])."',
 		access_code_id = '".mysql_real_escape_string($access_code_id)."',
+		plan_id = '".mysql_real_escape_string($plan_id)."',
                 phone = '".mysql_real_escape_string(num($_POST['cell_phone']))."'
 		WHERE userid='".mysql_real_escape_string($_POST['userid'])."'
                 ";

@@ -23,7 +23,7 @@ if($key_r['cc_id'] == ''){
 }else{
 $customer = Stripe_Customer::retrieve($key_r['cc_id']);
 
-?>Active card ending in: <?php
+?>Active card is <?= $customer->active_card['type']; ?> ending in: <?php
 echo($customer->active_card['last4']);
 ?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_update').show();$(this).hide();return false;" id="show_but">Update</a><?php
 

@@ -114,7 +114,7 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status from dental_insurance_preauth preauth JOIN dental_patients p ON p.patientid=preauth.patient_id WHERE preauth.doc_id = ".$_SESSION['docid']." ";
+$sql = "select preauth.id, p.firstname, p.lastname, preauth.viewed, preauth.front_office_request_date, preauth.patient_id, preauth.status, preauth.reject_reason from dental_insurance_preauth preauth JOIN dental_patients p ON p.patientid=preauth.patient_id WHERE preauth.doc_id = ".$_SESSION['docid']." ";
 if(isset($_GET['status'])){
   $sql .= " AND preauth.status = '".mysql_real_escape_string($_GET['status'])."' ";
 }
@@ -173,11 +173,14 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'request_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=request_date&sortdir=<?php echo ($_REQUEST['sort']=='request_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Requested</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'patient_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=patient_name&sortdir=<?php echo ($_REQUEST['sort']=='patient_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="35%">
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			<a href="manage_vobs.php?pid=<?= $_GET['pid'] ?>&sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Status</a>	
+		</td>
+		<td valign="top" class="col_head" width="40%">
+			Comments
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -207,6 +210,11 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_preauth_status_labels[$myarray["status"]];?>&nbsp;
+				</td>
+				<td>
+					<?php if($myarray['status']==DSS_PREAUTH_REJECTED){ 
+						echo $myarray['reject_reason'];
+					} ?>
 				</td>
 				<td valign="top">
 					<a href="manage_insurance.php?pid=<?= $myarray["patient_id"]; ?>&vob_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">

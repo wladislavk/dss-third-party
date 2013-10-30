@@ -8,14 +8,14 @@ require_once('includes/general_functions.php');
 <?php
 include("includes/calendarinc.php");
 // Determine Type of Appliance
-$sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY date DESC LIMIT 1;";
+$sql = "SELECT dentaldevice FROM dental_summ_sleeplab WHERE patiendid ='".s_for($_GET['pid'])."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC LIMIT 1;";
 $result = mysql_query($sql);
 while ($row = mysql_fetch_array($result)) {
 	$deviceid = $row['dentaldevice'];
 }
 update_patient_summary($_GET['pid'], 'appliance', $deviceid);
 
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY date DESC";
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
 $s_lab_result = mysql_query($s_lab_query);
 $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++;
@@ -490,7 +490,7 @@ var cal1 = new calendar2(document.getElementById('date'));
 
  
 <?php 
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY date DESC";
+$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pid']."' ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
 $s_lab_result = mysql_query($s_lab_query);
 
 if($s_lab_result){

@@ -394,28 +394,6 @@ if($_POST["patientsub"] == 1)
 			}
 		}
 
-		//Remove pending vobs if ins info has changed.
-		if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
-			$s_r['p_m_relation'] != $_POST['p_m_relation'] ||
-                        $s_r['p_m_partyfname'] != $_POST['p_m_partyfname'] ||
-                        $s_r['p_m_partylname'] != $_POST['p_m_partylname'] ||
-                        $s_r['ins_dob'] != $_POST['ins_dob'] ||
-                        $s_r['p_m_ins_type'] != $_POST['p_m_ins_type'] ||
-                        $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'] ||
-                        $s_r['p_m_ins_id'] != $_POST['p_m_ins_id'] ||
-                        $s_r['p_m_ins_grp'] != $_POST['p_m_ins_grp'] ||
-                        $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan'] 
-			){
-			$vob_sql = "UPDATE dental_insurance_preauth SET
-        				status = " . DSS_PREAUTH_REJECTED . ",
-        				reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
-        				viewed = 1
-				 	WHERE patient_id = '".mysql_real_escape_string($_REQUEST['ed'])."'
-						AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
-			mysql_query($vob_sql) or die(mysql_error()); 
-		}
-
-
 
 		$ed_sql = "update dental_patients 
 		set 
@@ -536,6 +514,65 @@ $ed_sql .="
 		patientid='".$_POST["ed"]."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
+
+
+
+                //Remove pending vobs if ins info has changed.
+                if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
+                        $s_r['p_m_relation'] != $_POST['p_m_relation'] ||
+                        $s_r['p_m_partyfname'] != $_POST['p_m_partyfname'] ||
+                        $s_r['p_m_partylname'] != $_POST['p_m_partylname'] ||
+                        $s_r['ins_dob'] != $_POST['ins_dob'] ||
+                        $s_r['p_m_ins_type'] != $_POST['p_m_ins_type'] ||
+                        $s_r['p_m_ins_ass'] != $_POST['p_m_ins_ass'] ||
+                        $s_r['p_m_ins_id'] != $_POST['p_m_ins_id'] ||
+                        $s_r['p_m_ins_grp'] != $_POST['p_m_ins_grp'] ||
+                        $s_r['p_m_ins_plan'] != $_POST['p_m_ins_plan']
+                        ){
+                        $vob_sql = "UPDATE dental_insurance_preauth SET
+                                        status = " . DSS_PREAUTH_REJECTED . ",
+                                        reject_reason = '".mysql_real_escape_string($_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
+                                        viewed = 1
+                                        WHERE patient_id = '".mysql_real_escape_string($_REQUEST['ed'])."'
+                                                AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
+                        $vob_update = mysql_query($vob_sql) or die(mysql_error());
+			if(mysql_affected_rows() >= 1){
+				?>
+					<script type="text/javascript">
+                                    $.ajax({
+                                        url: "includes/vob_request_preauth.php",
+                                        type: "post",
+                                        data: {pid: <?=$_POST["ed"];?>},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                  if(r.code == "e0486_user"){
+                                                        alert("Error! You have not set a fee for the E0486 Dental Device insurance code in your software, and therefore benefits cannot be verified. Please set your E0486 amount by visiting Admin->Transaction Code and contact Support if you have any questions.\n\nError! You have not entered a valid NPI or TaxID number in your software, and therefore benefits cannot be verified. Please set these by visiting Admin->Profile and contact Support if you have any questions.");
+                                                  }else if(r.code == "user"){
+                                                        alert("Error! You have not entered a valid NPI or TaxID number in your software, and therefore benefits cannot be verified. Please set these by visiting Admin->Profile and contact Support if you have any questions.");
+
+                                                  }else if(r.code == "e0486"){
+                                                        alert("Error! You have not set a fee for the E0486 Dental Device insurance code in your software, and therefore benefits cannot be verified. Please set your E0486 amount by visiting Admin->Transaction Code and contact Support if you have any questions.");
+
+                                                  }
+                                                }else{
+                                                        //alert('VOB submitted');
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                alert('fail');
+                                        }
+                                  });
+					</script>
+				<?php
+			}
+                }
+
+
+
+
+
 	
 		if(isset($_POST['location'])){
 			$ds_sql = "SELECT * FROM dental_summary where patientid='".$_GET['pid']."';";
@@ -1265,7 +1302,7 @@ if((fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' ||
 )
 	&& <?= $pending_vob; ?>){
 	<?php if($pending_vob_status == DSS_PREAUTH_PREAUTH_PENDING){ ?>
-		  if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB) which is currently awaiting pre-authorization from the insurance company. You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){
+		  if(!confirm('Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?'));
 
 	<?php }else{ ?>
   if(!confirm('Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient\'s insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?')){

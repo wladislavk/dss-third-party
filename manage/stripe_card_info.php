@@ -17,7 +17,7 @@ Stripe::setApiKey($key_r['stripe_secret_key']);
 if($key_r['cc_id'] == ''){
 
 ?>No card on record.<?php
-?> <a href="#" onclick="$('.card_form').show();$('#payment_proceed_add').show();$(this).hide();return false;">Add</a><?php
+?> <a href="#" onclick="$('#card_form').show();$('#payment_proceed_add').show();$(this).hide();return false;" id="show_but">Add</a><?php
 
 
 }else{

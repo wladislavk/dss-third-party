@@ -448,6 +448,9 @@ width:250px;
 .tr_unregistered {
 	background-color:#888;
 }
+.tr_suspended{
+	background-color:#ff9;
+}
 
 .tr_super {
         background-color:#efefef;

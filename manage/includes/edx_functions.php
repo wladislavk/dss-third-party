@@ -1,7 +1,7 @@
 <?php
 
-function edx_user_update($id, $edx_con){
-return true; //temp workaround until fully setup
+function edx_user_update($id){
+//return true; //temp workaround until fully setup
   $sql = "SELECT * FROM dental_users WHERE userid='".mysql_real_escape_string($id)."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
@@ -17,7 +17,8 @@ return true; //temp workaround until fully setup
   if($edx_id == '' || $edx_id == '0'){
     $name = $r['first_name']. ' '.$r['last_name'];
     $pass = sha1($r['username'].'ed&$s8e'.$r['email'].rand());
-    $edx_id = shell_exec('sh ../edxNewUser.sh "'.$r['username'].'" '.$r['email'].' '.$pass.' "'.$name.'"');
+error_log('sh ../edxNewUser.sh '.$r['username'].' '.$r['email'].' 123abc "'.$name.'"');
+    $edx_id = shell_exec('sh ../edxNewUser.sh '.$r['username'].' '.$r['email'].' 123abc "'.$name.'"');
 error_log($edx_id."XXXXXXXXXXXXXXXXXXXXX");
     $u_sql = "UPDATE dental_users SET edx_id='".mysql_real_escape_string($edx_id)."' WHERE userid='".mysql_real_escape_string($id)."'";
     mysql_query($u_sql);

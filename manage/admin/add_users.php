@@ -44,11 +44,11 @@ if($_POST["usersub"] == 1)
 		if($_POST["ed"] != "")
 		{
 
-			$old_sql = "SELECT username, recover_hash FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
+			$old_sql = "SELECT status, username, recover_hash FROM dental_users WHERE userid='".mysql_real_escape_string($_POST["ed"])."'";
                         $old_q = mysql_query($old_sql);
 			$old_r = mysql_fetch_assoc($old_q);
 			$old_username = $old_r['username'];
-
+			$old_status = $old_r['status'];
 
 			$ed_sql = "update dental_users set 
 				username = '".s_for($_POST["username"])."',
@@ -81,6 +81,14 @@ if($_POST["usersub"] == 1)
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."',
+				";
+				if($old_status!=3 && $_POST['status']==3){
+				  $ed_sql.= "
+					suspended_reason = '".s_for($_POST["suspended_reason"])."',
+					suspended_date = now(),
+					";
+				}
+				$ed_sql .= "
 				billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."'
 			where userid='".$_POST["ed"]."'";
@@ -96,7 +104,7 @@ if($_POST["usersub"] == 1)
 				fax = '".s_for(num($_POST["mailing_fax"]))."',
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
-                        edx_user_update($_POST['ed'], $edx_con);
+                        //edx_user_update($_POST['ed']);
 			//help_user_update($_POST['ed'], $help_con);
 			form_update_all($_POST['ed']);
 
@@ -208,6 +216,10 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 							status=2,";
 				}else{
 					$ins_sql .= "status = '".s_for($_POST["status"])."',";
+					if($_POST['status'] == 3){
+					  $ins_sql .= "suspended_reason = '".s_for($_POST["suspended_reason"])."',";
+					  $ins_sql .= "suspended_date = now(),";
+					}
 				}
 				$ins_sql .= " adddate=now(),
 				ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -227,7 +239,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 adddate=now(),
                                 ip_address='".$_SERVER['REMOTE_ADDR']."'";
                         mysql_query($loc_sql);
-			edx_user_update($userid, $edx_con);
+			edx_user_update($userid);
 			//help_user_update($userid, $edx_con);
 		if(isset($_POST['save_but'])){
                         if(is_super($_SESSION['admin_access'])){
@@ -366,6 +378,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$mailing_fax = $_POST['mailing_fax'];
 
 		$status = $_POST['status'];
+		$suspended_reason = $_POST['suspended_reason'];
 		$use_patient_portal = $_POST['use_patient_portal'];
 		$use_digital_fax = $_POST['use_digital_fax'];
 		$use_letters = $_POST['use_letters'];
@@ -412,6 +425,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$mailing_fax = st($themyarray['mailing_fax']);
 
 		$status = st($themyarray['status']);
+		$suspended_reason = st($themyarray['suspended_reason']);
 		$use_patient_portal = st($themyarray['use_patient_portal']);
 		$use_digital_fax = st($themyarray['use_digital_fax']);
 		$use_letters = st($themyarray['use_letters']);
@@ -803,12 +817,30 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select id="status" name="status" class="tbox" onchange="showSuspended();">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+			<option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
                 </select>
             </td>
         </tr>
+<script type="text/javascript">
+  function showSuspended(){
+    if($('#status').val()==3){
+      $('#suspended_reason').show();
+    }else{
+      $('#suspended_reason').hide();
+    }
+  }
+</script>
+	<tr id="suspended_reason" <?= ($status!=3)?'style="display:none;"':''; ?>>
+		<td valign="top" class="frmhead">
+			Suspended Reason
+		</td>
+		<td>
+			<textarea name="suspended_reason"><?= $suspended_reason; ?></textarea>
+		</td>
+	</tr>
 <?php if(is_super($_SESSION['admin_access'])){ ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -877,7 +909,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
                 <input type="submit" name="save_but" onclick="return userabc(this.form);" value=" <?=$but_text?> User" class="button" />
-                <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
+                <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete
                                         </a>

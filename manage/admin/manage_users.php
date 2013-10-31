@@ -217,6 +217,10 @@ $num_users=mysql_num_rows($my);
 			{
 				$tr_class = "tr_unregistered";
 			}
+                        elseif($myarray["status"] == 3)
+                        {
+                                $tr_class = "tr_suspended";
+                        }
 			else
 			{
 				$tr_class = "tr_inactive";
@@ -229,6 +233,14 @@ $num_users=mysql_num_rows($my);
 					}else{ ?>
 					  <?=st($myarray["username"]);?>
 					<?php } ?>
+				<?php if($myarray["status"] == 3){ ?>
+					<br />
+					Activated on: <?= ($myarray['adddate'])?date('m/d/Y',strtotime($myarray['adddate'])):''; ?>
+					<br />
+					Suspended on: <?= ($myarray['suspended_date'])?date('m/d/Y',strtotime($myarray['suspended_date'])):''; ?>
+					<br />
+					Suspended Reason: <?= $myarray['suspended_reason']; ?>
+				<?php } ?>
 				</td>
 				<td valign="top">
 					<?=st($myarray["first_name"]. " " .$myarray["last_name"]);?>

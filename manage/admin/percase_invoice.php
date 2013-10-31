@@ -146,6 +146,16 @@ if(isset($_POST['submit'])){
  		JOIN dental_plans p ON p.id = u.plan_id
 		WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
   $doc_q = mysql_query($doc_sql);
+if(mysql_num_rows($doc_q) == 0){
+  //If no plan get company fees
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
+                FROM dental_users u
+                JOIN dental_user_company uc ON uc.userid = u.userid
+                JOIN companies c ON uc.companyid = c.id
+                WHERE u.userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+  $doc_q = mysql_query($doc_sql);
+
+}
   $doc = mysql_fetch_assoc($doc_q);
 
 

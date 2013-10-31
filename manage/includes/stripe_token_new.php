@@ -1,7 +1,7 @@
 <?php
-require_once '../../admin/includes/main_include.php';
-require_once '../../3rdParty/stripe/lib/Stripe.php';
-require_once '../../includes/constants.inc';
+require_once '../admin/includes/main_include.php';
+require_once '../3rdParty/stripe/lib/Stripe.php';
+require_once 'constants.inc';
 $id = $_REQUEST['id'];
 //$token = $_REQUEST['token'];
 $email = $_REQUEST['email'];
@@ -37,7 +37,6 @@ $customer = Stripe_Customer::create(array(
   "email" => $email,
   "description" => $desc)
 );
-
 } catch(Stripe_CardError $e) {
   // Since it's a decline, Stripe_CardError will be caught
   $body = $e->getJsonBody();
@@ -53,17 +52,33 @@ $customer = Stripe_Customer::create(array(
 } catch (Stripe_AuthenticationError $e) {
   // Authentication with Stripe's API failed
   // (maybe you changed API keys recently)
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+
 } catch (Stripe_ApiConnectionError $e) {
   // Network communication with Stripe failed
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+
 } catch (Stripe_Error $e) {
   // Display a very generic error to the user, and maybe send
   // yourself an email
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
-  return $e;
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+
 }
 
 // charge the Customer instead of the card
@@ -74,7 +89,7 @@ $customer = Stripe_Customer::create(array(
 //);
 
 
-$sql = "UPDATE dental_users SET cc_id='".mysql_real_escape_string($customer->id)."', 
+$sql = "UPDATE dental_users SET cc_id='".mysql_real_escape_string($customer->id)."'
 	 	WHERE userid='".mysql_real_escape_string($id)."'";
 mysql_query($sql);
 

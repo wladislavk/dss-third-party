@@ -31,7 +31,7 @@ require_once('includes/patient_changes.php');
 }
 require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
-
+require_once('includes/preauth_functions.php');
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
@@ -537,7 +537,11 @@ $ed_sql .="
                                                 AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
                         $vob_update = mysql_query($vob_sql) or die(mysql_error());
 			if(mysql_affected_rows() >= 1){
-				?>
+				$c = create_vob( $_POST['ed'] );
+
+			/*
+
+	?>
 					<script type="text/javascript">
                                     $.ajax({
                                         url: "includes/vob_request_preauth.php",
@@ -565,7 +569,7 @@ $ed_sql .="
                                         }
                                   });
 					</script>
-				<?php
+				<?php */
 			}
                 }
 

@@ -43,7 +43,7 @@ if(isset($_POST["loginsub"]))
 
 	$pass = gen_password($_POST['password'], $salt_row['salt']);
 	
-	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, 
+	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, status, 
 				CASE docid
 					WHEN 0 THEN dental_users.userid
 					ELSE docid
@@ -54,13 +54,15 @@ if(isset($_POST["loginsub"]))
                                         WHEN 0 THEN dental_users.userid
                                         ELSE docid
                                 END)
-			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status=1";
+			where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."' and status in (1, 3)";
 	$check_my = mysql_query($check_sql);
 	
 	if(mysql_num_rows($check_my) == 1) 
 	{
 		$check_myarray = mysql_fetch_array($check_my);
-		
+		if($check_myarray['status']=='3'){
+			$msg='This account has been suspended.';
+		}else{
 		/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
 		mysql_query($ins_sql);*/
 		
@@ -99,6 +101,7 @@ if(isset($_POST["loginsub"]))
 		</script>
 		<?
 		die();
+		}
 	}
 	else
 	{

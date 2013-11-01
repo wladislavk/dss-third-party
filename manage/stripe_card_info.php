@@ -52,10 +52,19 @@ echo($customer->active_card['last4']);
                 <div class="sepH_b half">
                         <label class="lbl_a"><strong>6.</strong> Card Zipcode:</label><input class="inpt_a small card-zip zipmask" id="card-zip" name="card-zip" type="text" />
                 </div>
-
+<?php
+if($key_r['cc_id'] == ''){
+?>
+<div id="payment_proceed_add_buttons">
 <a href="#" onclick="add_cc(); return false;" style="display:none;" id="payment_proceed_add" class="addButton">Save</a>
+<?php
+}else{
+?>
+<div id="payment_proceed_update_buttons">
 <a href="#" onclick="update_cc(); return false;" style="display:none;" id="payment_proceed_update" class="addButton">Update</a>
+<?php } ?>
 or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return false;" id="payment_proceed_cancel" class="fr btn btn_dL">Cancel</a>
+</div>
 <div id="loader" style="display:none;">
 <img src="images/DSS-ajax-animated_loading-gif.gif" />
 </div>
@@ -73,7 +82,8 @@ or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return fal
           return false;
         }
         $('#loader').show();
-        //$('#payment_proceed').hide();
+$('#payment_proceed_add_buttons').hide();
+
         $.ajax({
           url: "includes/stripe_token_new.php",
           type: "post",
@@ -96,6 +106,8 @@ or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return fal
               $('#loader').hide();      
               //$('#payment_proceed').show();
               alert(r.error.message);
+$('#payment_proceed_add_buttons').show();
+
             }else{
               $('.card-number').val('');
               $('.card-cvc').val('');
@@ -118,11 +130,13 @@ or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return fal
 
 
       function update_cc(){
+
         if($('.card-number').val()=='' || $('.card-cvc').val()=='' || $('.card-expiry-month').val().length!=2 || $('.card-expiry-year').val().length!=4 || $('.card-name').val()=='' || $('.card-zip').val().length!=5){
           alert('Please enter valid information for all fields');
           return false;
         }
         $('#loader').show();
+$('#payment_proceed_update_buttons').hide();
         //$('#payment_proceed').hide();
         $.ajax({
           url: "includes/stripe_token_update.php",
@@ -142,11 +156,12 @@ or <a href="#" onclick="$('#card_form').hide(); $('#show_but').show();return fal
           },
           success: function(data){
             var r = $.parseJSON(data);
-               // alert(data);
+              //  alert(data);
             if(r.error){
               $('#loader').hide();      
               //$('#payment_proceed').show();
               alert(r.error.message);
+		$('#payment_proceed_update_buttons').show();
             }else{
               $('.card-number').val('');
               $('.card-cvc').val('');

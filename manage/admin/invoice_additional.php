@@ -3,7 +3,7 @@ include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 
-  $sql = "SELECT du.*, c.name AS company_name, c.free_fax,
+  $sql = "SELECT du.*, c.name AS company_name, c.free_fax, 
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
@@ -238,7 +238,7 @@ if(isset($_POST['submit'])){
 <script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type
+  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -247,7 +247,7 @@ if(isset($_POST['submit'])){
   $doc_q = mysql_query($doc_sql);
 if(mysql_num_rows($doc_q) == 0){
   //If no plan get company fees
-  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
+  $doc_sql = "SELECT c.monthly_fee, c.fax_fee, c.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type, c.name as company_name, p.name as plan_name
                 FROM dental_users u
                 JOIN dental_user_company uc ON uc.userid = u.userid
                 JOIN companies c ON uc.companyid = c.id
@@ -278,6 +278,8 @@ if(mysql_num_rows($doc_q) == 0){
 ?>
 <span class="admin_head">
 	Invoicing - <?= $doc['name']; ?>	
+        - <?= $doc['company_name']; ?>
+        - Plan: <?= $doc['plan_name']; ?>
 </span>
 <br />
 

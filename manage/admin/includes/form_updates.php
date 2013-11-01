@@ -3450,7 +3450,7 @@ function create_form_pdf($html, $filename, $title, $fontsize = 10, $cellheight=1
         //Close and output PDF document
 
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/q_file/' . $filename, 'F');
-
+	@chmod('/manage/q_file/' . $filename,0777);
 }
 
 

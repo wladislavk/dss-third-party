@@ -23,6 +23,7 @@ $key_r= mysql_fetch_assoc($key_q);
 
 Stripe::setApiKey($key_r['stripe_secret_key']);
 $customer = Stripe_Customer::retrieve($token);
+try {
 $new_card = $customer->cards->create(array("card" => array(
         "number" => $number,
         "exp_month" => $exp_month,
@@ -31,6 +32,34 @@ $new_card = $customer->cards->create(array("card" => array(
         "name" => $cname,
         "address_zip" => $zip
                 )));
+} catch(Stripe_CardError $e) {
+  // Since it's a decline, Stripe_CardError will be caught
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+} catch (Stripe_InvalidRequestError $e) {
+  // Invalid parameters were supplied to Stripe's API
+  $body = $e->getJsonBody();
+  $err  = $body['error'];
+  echo '{"error": {"code":"'.$err['code'].'","message":"'.$err['message'].'"}}';
+  die();
+} catch (Stripe_AuthenticationError $e) {
+  // Authen-rication with Stripe's API failed
+  // (maybe you changed API keys recently)
+  return $e;
+} catch (Stripe_ApiConnectionError $e) {
+  // Network communication with Stripe failed
+  return $e;
+} catch (Stripe_Error $e) {
+  // Display a very generic error to the user, and maybe send
+  // yourself an email
+  return $e;
+} catch (Exception $e) {
+  // Something else happened, completely unrelated to Stripe
+  return $e;
+}
+
 $cc = json_decode($new_card);
 $customer->default_card = $cc->id;
 try {

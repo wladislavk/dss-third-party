@@ -7,7 +7,7 @@ $u_q = mysql_query($u_sql);
 $u = mysql_fetch_assoc($u_q);
 $userid = $u['edx_id'];
 error_log($userid);
-$ses = shell_exec('sh edxScript.sh '.$userid);
+$ses = shell_exec('sh edx_scripts/edxScript.sh '.$userid);
 error_log($ses);
 $expire=time()+60*60*2;
 if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
@@ -20,8 +20,8 @@ if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
 ?>
 <script type="text/javascript">
 <?php
-                if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='stage.dss-rh.xforty.com'){
-?>  window.location='http://edx.dss-rh.xforty.com/dashboard'; <?php
+                if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
+?>  window.location='http://edx.dentalsleepsolutions.com/dashboard'; <?php
                 }else{
 ?>  window.location='http://edx.dss-rh.xforty.com/dashboard'; <?php
                 }

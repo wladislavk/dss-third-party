@@ -1,14 +1,17 @@
 <? 
 include "includes/top.htm";
+include_once '../includes/edx_functions.php';
 if($_REQUEST["delid"] != "" && is_super($_SESSION['admin_access']))
 {
 
-	$sql = "SELECT cc_id FROM dental_users where userid='".$_REQUEST["delid"]."'";
+	$sql = "SELECT cc_id, edx_id FROM dental_users where userid='".$_REQUEST["delid"]."'";
 	$q = mysql_query($sql);
 	$r = mysql_fetch_assoc($q);
 
 	$del_sql = "delete from dental_users where userid='".$_REQUEST["delid"]."'";
 	mysql_query($del_sql);
+        edx_user_delete($r['edx_id']);
+
 	if($r['cc_id']!=''){
 	require_once '../3rdParty/stripe/lib/Stripe.php';
 	$key_sql = "SELECT stripe_secret_key FROM companies c 

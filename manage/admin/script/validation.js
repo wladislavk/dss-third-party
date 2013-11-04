@@ -211,12 +211,6 @@ function userabc(fa)
 		fa.npi.focus();
 		return false;
 	}
-	if(trim(fa.medicare_npi.value) == "" )
-	{
-		alert("Medicare NPI Number  is Required");
-		fa.medicare_npi.focus();
-		return false;
-	}
 	if(trim(fa.tax_id_or_ssn.value) == "" )
 	{
 		alert("Tax ID or SSN is Required");

@@ -80,6 +80,17 @@ $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_s
   if( $num <= 0 ){
     array_push($errors, "Flowsheet - Sleep Study: Diagnosing Phys. and Diagnosing NPI# are required for Medicare claims.");
   }
+
+  $doc_sql = "SELECT u.* FROM 
+                dental_patients p 
+                JOIN dental_users u ON p.docid = u.userid 
+                WHERE p.patientid = '".mysql_real_escape_string($pid)."'";
+  $doc_q = mysql_query($doc_sql);
+  $doc = mysql_fetch_assoc($doc_q);
+  if($doc['medicare_npi']==''){
+    array_push($errors, "No Medicare NPI on file - cannot file Medicare claims. Please add your Medicare NPI via Admin -> Profile.");
+  }
+
 }
 }
 

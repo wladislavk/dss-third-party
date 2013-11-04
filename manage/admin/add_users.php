@@ -505,7 +505,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Medicare Provider (NPI/DME) Number
-                <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
                 <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 

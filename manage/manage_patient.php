@@ -121,10 +121,13 @@ $num_users=mysql_num_rows($my);
 <?php
   $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
   foreach($letters as $let){
-        ?><a href="manage_patient.php?letter=<?=$let;?>&sh=<?=$_GET['sh'];?>"><?=$let;?></a>
+        ?><a <?= ($_GET['letter']==$let)?'class="selected_letter"':''; ?> href="manage_patient.php?letter=<?=$let;?>&sh=<?=$_GET['sh'];?>"><?=$let;?></a>
 <?php
   }
-?>
+if(isset($_GET['letter']) && $_GET['letter'] != ''){
+?><a href="manage_patient.php?sh=<?=$_GET['sh'];?>">View All</a>
+<?php } ?>
+
 </div>
 <br />
 <?php
@@ -241,17 +244,69 @@ background:#999999;
 				</td>
           <?php if($myarray['patient_info'] == 1){ ?>
 				<td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['fspage1_complete'] == 1 ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
-        </td>
+		<?php
+		  $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$myarray['patientid']."'";
+  $pat_q = mysql_query($pat_sql);
+  $pat_r = mysql_fetch_assoc($pat_q);
+  if($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $ins_error = false;
+  }elseif($pat_r['p_m_dss_file']!=1){
+    $ins_error = true;
+  }else{
+    $ins_error = false;
+  }
+$sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                WHERE                                 
+                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                        (ss.filename!='' AND ss.filename IS NOT NULL) AND ss.patiendid = '".$myarray['patientid']."';";
 
+  $result = mysql_query($sleepstudies);
+  $numsleepstudy = mysql_num_rows($result);
+  if($numsleepstudy == 0){
+    $study_error = true;
+  }else{
+    $study_error = false;
+  }
+?>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
+        </td>
+<?php
+  $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($myarray['patientid'])."' ORDER BY date_scheduled DESC";
+  $next_q = mysql_query($next_sql);
+  $next_r = mysql_fetch_assoc($next_q);
+?>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['next_visit']); ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($next_r['date_scheduled']); ?></a>
+        </td>
+<?php
+     $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".$myarray['patientid']."' ORDER BY date_completed DESC, id DESC;";
+     $last_q = mysql_query($last_sql);
+     $last_r = mysql_fetch_assoc($last_q);
+$segments = Array();
+$segments[15] = "Baseline Sleep Test";
+$segments[2] = "Consult";
+$segments[4] = "Impressions";
+$segments[7] = "Device Delivery";
+$segments[8] = "Check / Follow Up";
+$segments[10] = "Home Sleep Test";
+$segments[3] = "Sleep Study";
+$segments[11] = "Treatment Complete";
+$segments[12] = "Annual Recall";
+$segments[14] = "Not a Candidate";
+$segments[5] = "Delaying Tx / Waiting";
+$segments[9] = "Pt. Non-Compliant";
+$segments[6] = "Refused Treatment";
+$segments[13] = "Termination";
+$segments[1] = "Initial Contact";
+
+?>
+        <td valign="top">
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($last_r['date_completed'], true); ?></a>
         </td>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['last_visit'], true); ?></a>
-        </td>
-        <td valign="top">
-          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($myarray['last_treatment'] == null ? 'N/A' : $myarray['last_treatment']); ?></a>
+          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($last_r['segmentid'] == null ? 'N/A' : $segments[$last_r['segmentid']]); ?></a>
         </td>
 				<td valign="top">
 		<?php
@@ -270,40 +325,19 @@ background:#999999;
 	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
 	      </td>
         <td valign="top">
-	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'N/A' : ($myarray['vob']==1 ? "Yes": "Pending")); ?></a>
+	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'No' : ($myarray['vob']==1 ? "Yes": $dss_preauth_status_labels[$myarray['vob']])); ?></a>
         </td>
         <td valign="top">
                 <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>">
 			<?php 
-			  if($myarray['rxreq'] != null && $myarray['rxrec'] == null){
-        $day = (24 * 60 * 60);
-  $diff = ceil((time() - strtotime($myarray['rxreq'])) / $day);
-                                if($diff > 7){
-				  ?><span class="red">Pending</span><?php
-				}else{
-				  ?>Pending<?php
-				}
-			  }elseif($myarray['rxrec'] != null){
+			  if($myarray['lomnrec'] != null && $myarray['rxrec'] != null){
 				?>Yes<?php
-			  }else{
-				?>N/A<?php
-                          }
-			?>
-		/
-                        <?php  
-                          if($myarray['lomnreq'] != null && $myarray['lomnrec'] == null){
-        $day = (24 * 60 * 60);
-  $diff = ceil((time() - strtotime($myarray['lomnreq'])) / $day);
-                                if($diff > 7){
-                                  ?><span class="red">Pending</span><?php
-                                }else{
-                                  ?>Pending<?php
-                                }
-
-                          }elseif($myarray['lomnrec'] != null){
-                                ?>Yes<?php
+			  }elseif($myarray['rxrec']!=null && $myarray['lomnrec'] == null){
+				?>Yes/No<?php
+                          }elseif($myarray['lomnrec'] != null && $myarray['rxrec'] == null){
+                                ?>No/Yes<?php
                           }else{ 
-                                ?>N/A<?php
+                                ?>No<?php
                           } 
                         ?>
 

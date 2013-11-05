@@ -301,10 +301,11 @@ if($_POST["usersub"] == 1)
 var selected_company = '';
 function update_access(){
   var new_company = $('#companyid').val();
+  var admin_access = $('#admin_access').val();
                                   $.ajax({
                                         url: "includes/update_access.php",
                                         type: "post",
-                                        data: {oid: selected_company, nid:new_company},
+                                        data: {oid: selected_company, nid:new_company, cur:admin_access},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
 						selected_company = new_company;

@@ -173,6 +173,9 @@ $num_users=mysql_num_rows($my);
 		<td valign="top" class="col_head" width="10%">
 			Staff
 		</td>
+		<td valign="top" class="col_head" width="10%">
+		 	Patients	
+		</td>
 		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head" width="10%">
                         Company 
@@ -211,6 +214,10 @@ $num_users=mysql_num_rows($my);
                         $loc_sql = "select count(id) as loc_count from dental_locations where docid='".st($myarray['userid'])."'";
                         $loc_my = mysql_query($loc_sql) or die(mysql_error()." | ".$loc_sql);
                         $loc_myarray = mysql_fetch_array($loc_my);
+
+                        $pat_sql = "select count(patientid) as pat_count from dental_patients where docid='".st($myarray['userid'])."' ";
+                        $pat_my = mysql_query($pat_sql) or die(mysql_error()." | ".$pat_sql);
+                        $pat_myarray = mysql_fetch_array($pat_my);
 			
 			if($myarray["status"] == 1)
 			{
@@ -278,6 +285,10 @@ $num_users=mysql_num_rows($my);
 					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="staff">
                     	<?=st($staff_myarray['staff_count']);?></a>
 				</td>	
+                                <td valign="top" align="center">
+                        <?=st($pat_myarray['pat_count']);?>
+                                </td>
+
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 			 	<td valign="top" align="center">
                                         	<a href="manage_users.php?cid=<?= $myarray["company_id"]; ?>"><?= $myarray["company_name"]; ?></a>

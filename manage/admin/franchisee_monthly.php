@@ -222,7 +222,7 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
 					<?= $company; ?>
 				</td>
                                 <td valign="top">
-                                        <?=st($myarray["name"]);?>
+                                        <?=st($myarray["first_name"]." ".$myarray["last_name"]);?>
                                 </td>
 				<td valign="top" style="text-align:center;">
 					<?=st($myarray["num_screened"]);?>

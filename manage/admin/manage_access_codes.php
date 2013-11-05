@@ -127,7 +127,7 @@ $num_users=mysql_num_rows($my);
 				while($u_r = mysql_fetch_assoc($u_q)){
 			?>
 			<tr class="users_<?=$myarray['id'];?>" style="display:none;">
-			  <td><?= $u_r['name']; ?></td>
+			  <td><?= $u_r['first_name']." ".$u_r['last_name']; ?></td>
 			  <td><?= $u_r['username']; ?></td>
 			  <td><?= ($u_r['adddate'])?date('m/d/Y h:m a', strtotime($u_r['adddate'])):""; ?></td>
 			  <td></td>

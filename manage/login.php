@@ -114,6 +114,9 @@ if(isset($_POST["loginsub"]))
 		//die();
 	}
 }
+
+
+if($msg=='' && isset($_GET['msg'])){ $msg = $_GET['msg']; }
 ?>
 
 <!--[if lte IE 7]>

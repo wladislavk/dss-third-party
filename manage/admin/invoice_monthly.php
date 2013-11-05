@@ -11,7 +11,7 @@
 		JOIN dental_plans plan ON plan.id=du.plan_id
                 WHERE du.status=1 AND du.docid=0 AND 
 		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < DATE_SUB(now(), INTERVAL 1 MONTH)))
+                	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
 			AND
 		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                         JOIN dental_patients dp ON dl.patientid=dp.patientid

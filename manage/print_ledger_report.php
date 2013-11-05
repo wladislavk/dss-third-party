@@ -149,9 +149,10 @@ $num_users=mysql_num_rows($my);
 		   $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
                    $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
 		   $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'"; 
+		   $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
 		}else{
-		  $i_date = $n_date = $l_date = '';
+		  $p_date = $i_date = $n_date = $l_date = '';
 		}
 /*
 $newquery = "select 
@@ -322,6 +323,63 @@ $newqueryid = "select
     }
                 if($start_date)
                    $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
+
+
+$newquery = "
+select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                p.name, 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                '' as payer,
+                '' as payment_type,
+                dl.primary_claim_id
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
+        ".$l_date."
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                p.name,
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                dlp.payer,
+                dlp.payment_type,
+                ''
+        from dental_ledger dl 
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                        AND dlp.amount != 0
+                        ".$p_date."
+";
+
+
+
+
+
+
+
+
 
 
                 $runquery = mysql_query($newquery);

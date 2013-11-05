@@ -36,7 +36,7 @@ if(is_super($_SESSION['admin_access'])){
                 JOIN companies c ON c.id=uc.companyid
 		JOIN dental_plans p ON p.id=du.plan_id
                 WHERE du.status=1 AND du.docid=0 AND ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < DATE_SUB(now(), INTERVAL 1 MONTH)))
+		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL p.trial_period DAY) < now()))
 		";
   if(isset($_GET['company']) && $_GET['company'] != ""){
         $sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";

@@ -1393,3 +1393,8 @@ background: #1f303b;
 .letter_select{
   font-size:14px;
   }
+
+.dhtmlXTooltip.tooltip
+{
+	display: block;
+}

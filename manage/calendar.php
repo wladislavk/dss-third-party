@@ -108,13 +108,33 @@ require_once('includes/formatters.php');
 });*/
 
 		scheduler.templates.event_text = function(start_date, end_date, event){
-			if(event.patient && event.patient != 0 && event.title && event.patientfn && event.patientln)
+			var ret = '';
+			var comma = false;
+			if(event.patient && event.patient != 0 && event.patientfn && event.patientln)
 			{
-				return event.patientfn + " " + event.patientln + ", " + event.title;
+				ret += event.patientfn + " " + event.patientln;
+				comma = true;
 			}
-			else if(event.title)
+			if(event.eventtype)
 			{
-				return event.title;
+				if(comma)
+				{
+					ret += ", ";
+				}
+				ret += event.eventtype;
+				comma = true;
+			}
+			if(event.title)
+			{
+				if(comma)
+				{
+					ret += ", ";
+				}
+				ret += event.title;
+			}
+			if(ret)
+			{
+				return ret;
 			}
 			else
 			{
@@ -336,7 +356,7 @@ require_once('includes/formatters.php');
 		scheduler._els["dhx_cal_data"][0].scrollTop = scheduler.config.hour_size_px*8;
 		<?php
 		//$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";
-		$sql = "SELECT * from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid WHERE dc.docid='".$_SESSION['docid']."' order by dc.id asc";
+		$sql = "SELECT dc.*, dp.*, dt.name as etype from dental_calendar as dc left join dental_patients as dp on dc.patientid = dp.patientid inner join dental_appt_types as dt on dc.category = dt.classname WHERE dc.docid='".$_SESSION['docid']."' and dt.docid='".$_SESSION['docid']."' order by dc.id asc";
 		$q = mysql_query($sql);
 		while($r = mysql_fetch_assoc($q)){
 			?>scheduler.addEvent({
@@ -356,6 +376,7 @@ require_once('includes/formatters.php');
 				table_id: "<?= $r['id']; ?>",
 				patientfn: "<?= $r['firstname']; ?>",
 				patientln: "<?= $r['lastname']; ?>",
+				eventtype: "<?= $r['etype']; ?>",
 			});<?php
 		}
 		?>
@@ -363,6 +384,22 @@ require_once('includes/formatters.php');
 	{
 		$.ajax({
 			url: "includes/calendar_check_ptname.php",
+			type: "post",
+			data: {id: id},
+			success: function(data){
+				var r = $.parseJSON(data);
+				callback(r);
+				if(r.error){
+				}else{
+				}
+			},
+			failure: function(data){},
+		});
+	}
+	function _lookup_eventtype(id, callback)
+	{
+		$.ajax({
+			url: "includes/calendar_check_eventtype.php",
 			type: "post",
 			data: {id: id},
 			success: function(data){
@@ -403,6 +440,7 @@ require_once('includes/formatters.php');
                                         success: function(data){
                                                 var r = $.parseJSON(data);
 						_lookup_ptname(r.eventid, _add_event_ptname)
+						_lookup_eventtype(r.eventid, _add_event_type);
                                                 if(r.error){
                                                 }else{
                                                 }
@@ -418,6 +456,11 @@ require_once('includes/formatters.php');
 				event_object.patientfn = r.firstname; 
 				event_object.patientln = r.lastname;
 				event_object.title = event_object.text;
+				scheduler.updateEvent(event_object.id);
+			}
+			function _add_event_type(r)
+			{
+				event_object.eventtype = r.etype;
 				scheduler.updateEvent(event_object.id);
 			}
           	});		
@@ -445,7 +488,8 @@ require_once('includes/formatters.php');
                                         data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
-						_lookup_ptname(r.eventid, _add_event_ptname)
+						_lookup_ptname(r.eventid, _add_event_ptname);
+						_lookup_eventtype(r.eventid, _add_event_type);
                                                 if(r.error){
                                                 }else{
                                                 }
@@ -463,6 +507,12 @@ require_once('includes/formatters.php');
 				event_object.title = event_object.text;
 				scheduler.updateEvent(event_object.id);
 			}
+			function _add_event_type(r)
+			{
+				event_object.eventtype = r.etype;
+				scheduler.updateEvent(event_object.id);
+			}
+
                 }); 
                 scheduler.attachEvent("onEventDeleted", function(event_id,event_object){
                     var e_id = event_id;

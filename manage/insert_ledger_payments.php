@@ -4,6 +4,7 @@ require_once('admin/includes/main_include.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/authorization_functions.php');
+include_once 'admin/includes/claim_functions.php';
 ?>
 <html>
 <head>
@@ -246,6 +247,7 @@ if(isset($new_status)){
   }
   $x .= " WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x);
+  claim_status_history_update($_POST['claimid'], $new_status, $claim['status'], $_SESSION['userid']);
 }
 
 

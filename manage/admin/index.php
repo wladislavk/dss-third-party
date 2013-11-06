@@ -4,6 +4,7 @@ include('includes/main_include.php');
 include_once('includes/password.php');
 if(isset($_POST["loginsub"]))
 {
+  if($_POST['security_code']==$_SESSION['security_code']){
         $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."' AND status=1";
         $salt_q = mysql_query($salt_sql);
         $salt_row = mysql_fetch_assoc($salt_q);
@@ -39,6 +40,15 @@ if(isset($_POST["loginsub"]))
 		<?
 		die();
 	}
+  }else{
+                $msg='Incorrect Security Code';
+                ?>
+                <script type="text/javascript">
+                        window.location.replace('index.php?msg=<?=$msg;?>');
+                </script>
+                <?
+                die();
+  }
 }
 
 ?>

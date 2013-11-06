@@ -168,7 +168,7 @@ $sleepstudies = "SELECT count(ss.id) as num_ss FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND p.docid = '".$myarray['userid']."'
+                        ss.filename IS NOT NULL AND p.docid = '".$myarray['userid']."'
 			AND str_to_date(ss.date, '%m/%d/%Y') BETWEEN '".$start_date."' AND '".$end_date."' 
 		;";
   $ss_q = mysql_query($sleepstudies);
@@ -205,14 +205,27 @@ $vob_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
 $vob_q = mysql_query($vob_sql);
 $vob = mysql_fetch_assoc($vob_q);
 
-$ins_sent_sql = "SELECT count(p.id) as num_completed FROM dental_insurance_preauth p
+$ins_sent_sql = "SELECT count(h.id) as num_sent FROM dental_insurance i
+			JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
                         WHERE 
-                                p.doc_id='".mysql_real_escape_string($myarray['userid'])."'
-                                AND p.date_completed BETWEEN '".$start_date."' AND '".$end_date."'";
+                                i.docid='".mysql_real_escape_string($myarray['userid'])."'
+				AND (h.status = '".mysql_real_escape_string(DSS_CLAIM_SENT)."'
+					OR h.status = '".mysql_real_escape_string(DSS_CLAIM_SEC_SENT)."')
+                                AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
 $ins_sent_q = mysql_query($ins_sent_sql);
 $ins_sent = mysql_fetch_assoc($ins_sent_q);
 
-
+$ins_paid_sql = "SELECT count(h.id) as num_paid FROM dental_insurance i
+                        JOIN dental_insurance_status_history h ON i.insuranceid=h.insuranceid
+                        WHERE 
+                                i.docid='".mysql_real_escape_string($myarray['userid'])."'
+                                AND h.status IN (".mysql_real_escape_string(DSS_CLAIM_PAID_INSURANCE).",
+						".mysql_real_escape_string(DSS_CLAIM_PAID_PATIENT).",
+						".mysql_real_escape_string(DSS_CLAIM_PAID_SEC_INSURANCE).",
+						".mysql_real_escape_string(DSS_CLAIM_PAID_SEC_PATIENT).")
+                                AND h.adddate BETWEEN '".$start_date." 00:00' AND '".$end_date." 23:59'";
+$ins_paid_q = mysql_query($ins_paid_sql);
+$ins_paid = mysql_fetch_assoc($ins_paid_q);
 		?>
 			<tr>
 				<td valign="top">
@@ -249,7 +262,12 @@ $ins_sent = mysql_fetch_assoc($ins_sent_q);
                                 <td valign="top" align="center">
                                   <?= $vob['num_completed']; ?>
                                 </td>
-
+				<td valign="top" align="center">
+				  <?= $ins_sent['num_sent']; ?>
+				</td>
+                                <td valign="top" align="center">
+                                  <?= $ins_paid['num_paid']; ?>
+                                </td>
 			</tr>
 	<? 	}
 

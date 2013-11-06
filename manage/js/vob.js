@@ -2,6 +2,13 @@ $(document).ready(function(){
   $('.vob_request').click( function(){
     pid = $(this).attr('data-pid');
     ut = $(this).attr('data-ut');
+    reject = $(this).attr('data-reject');
+
+    if(reject!=''){
+	if(!confirm('This VOB was rejected because: '+reject+'. If you have fixed this problem and wish to resubmit, please click OK. Otherwise click \"Cancel\" to fix the problem before submitting again.')){
+	  return false;
+	}
+    }
     if(ut=='2'){
       if(!confirm('A Verification of Benefits request will be submitted.  Upon completion of the VOB, you will be charged and invoiced.  Continue?')){
 	  return false;

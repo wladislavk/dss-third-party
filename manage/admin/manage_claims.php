@@ -4,8 +4,12 @@ require_once('../includes/constants.inc');
 require_once "includes/general.htm";
 
 if(isset($_GET['upstatus'])){
+  $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+  $old_q = mysql_query($old_sql);
+  $old = mysql_fetch_assoc($old_q);
   $sql = "UPDATE dental_insurance SET status='".mysql_real_escape_string($_GET['upstatus'])."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($sql);
+  claim_status_history_update($_GET['ins_id'], $old['status'], $_GET['upstatus'], $_SESSION['userid']);
 }
 
 
@@ -70,15 +74,19 @@ if(isset($_REQUEST['sendid'])){
   if($status == DSS_CLAIM_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SENT, $_SESSION['userid']);
   }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_PATIENT, $_SESSION['userid']);
   }elseif($status == DSS_CLAIM_SEC_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SEC_SENT, $_SESSION['userid']);
   }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($sendid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_SEC_PATIENT, $_SESSION['userid']);
   }
 
   $note_sql = "INSERT INTO dental_ledger_note SET
@@ -101,15 +109,19 @@ if(isset($_REQUEST['cancelid'])){
   if($status == DSS_CLAIM_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SENT, $_SESSION['userid']);
   }elseif( $status == DSS_CLAIM_PATIENT_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_PATIENT, $_SESSION['userid']);
   }elseif($status == DSS_CLAIM_SEC_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SEC_SENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_SEC_SENT, $_SESSION['userid']);
   }elseif($status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $new_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_SEC_PATIENT."' WHERE insuranceid='".mysql_real_escape_string($cancelid)."'";
     mysql_query($new_sql);
+    claim_status_history_update($_GET['ins_id'], $status, DSS_CLAIM_PAID_SEC_PATIENT, $_SESSION['userid']);
   }
   $note_sql = "INSERT INTO dental_ledger_note SET
                 service_date = CURDATE(),

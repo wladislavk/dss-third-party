@@ -47,10 +47,7 @@ $my = mysql_query($sql) or die(mysql_error());
       <tr class="tr_bg">
         <td valign="top" align="center" style="color:#930;">
                 Verification of benefits request was submitted <?= date('m/d/Y', strtotime($preauth['front_office_request_date'])); ?> and has been rejected because "<strong><?= $preauth['reject_reason']; ?></strong>".
-	    <?php if($preauth['viewed']){ ?>
-              <a class="vob_request new" data-ut="<?= $_SESSION['user_type']; ?>" data-pid="<?= $_GET['pid']; ?>"
-		></a>
-	    <?php } ?>
+              <a class="vob_request reject" data-reject="<?= addslashes($preauth['reject_reason']);?>" data-ut="<?= $_SESSION['user_type']; ?>" data-pid="<?= $_GET['pid']; ?>"></a>
         </td>
       </tr>
 

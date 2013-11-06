@@ -85,7 +85,7 @@ NAV THIRD
      <li><a href="ledger_reportfull.php">Ledger</a></li>
      <li><a href="manage_claims.php">Claims (<?= $num_pending_claims; ?>)</a></li>
      <li><a href="performance.php">Performance</a></li>
-     <li><a href="manage_screeners.php">Pt. Screener</a></li>
+     <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>
      <li><a href='manage_vobs.php'>VOB History</a></li>
 	<?php
 	$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";

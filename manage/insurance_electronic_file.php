@@ -2,6 +2,7 @@
 session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/main_include.php');
+include_once 'admin/includes/claim_functions.php';
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
@@ -723,6 +724,7 @@ mysql_query($up_sql);
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);
+  claim_status_history_update($_GET['ins_id'], '', DSS_CLAIM_REJECTED, $_SESSION['userid']);
 ?>
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');

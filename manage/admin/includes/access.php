@@ -18,4 +18,12 @@ function is_billing($admin_access){
   return ($admin_access==DSS_ADMIN_ACCESS_BILLING_ADMIN || $admin_access==DSS_ADMIN_ACCESS_BILLING_BASIC);
 }
 
+function is_hst_admin($admin_access){
+  return ($admin_access==DSS_ADMIN_ACCESS_HST_ADMIN);
+}
+
+function is_hst($admin_access){
+  return ($admin_access==DSS_ADMIN_ACCESS_HST_ADMIN || $admin_access==DSS_ADMIN_ACCESS_HST_BASIC);
+}
+
 ?>

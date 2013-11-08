@@ -263,6 +263,8 @@ if($_POST["usersub"] == 1)
                         <option value="<?= DSS_ADMIN_ACCESS_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BASIC) echo " selected";?>>Basic</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BILLING_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_ADMIN) echo " selected";?>>Billing Admin</option>
                         <option value="<?= DSS_ADMIN_ACCESS_BILLING_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_BILLING_BASIC) echo " selected";?>>Billing Basic</option>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_ADMIN; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_ADMIN) echo " selected";?>>HST Admin</option>
+                        <option value="<?= DSS_ADMIN_ACCESS_HST_BASIC; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_HST_BASIC) echo " selected";?>>HST Basic</option>
                 </select>
             </td>
         </tr>

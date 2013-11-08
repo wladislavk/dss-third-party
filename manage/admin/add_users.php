@@ -90,6 +90,7 @@ if($_POST["usersub"] == 1)
 				}
 				$ed_sql .= "
 				billing_company_id = '".$_POST['billing_company_id']."',
+                                hst_company_id = '".$_POST['hst_company_id']."',
                                 plan_id = '".$_POST['plan_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -208,6 +209,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
+                                hst_company_id = '".$_POST['hst_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
 				";
 		                if(isset($_POST['reg_but'])){
@@ -392,6 +394,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
 		$billing_company_id = $_POST['billing_company_id'];
+		$hst_company_id = $_POST['hst_company_id'];
 		$plan_id = $_POST['plan_id'];
 	}
 	else
@@ -439,6 +442,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
 		$billing_company_id = $themyarray['billing_company_id'];
+		$hst_company_id = $themyarray['hst_company_id'];
 		$plan_id = $themyarray['plan_id'];
 		$but_text = "Add ";
 	}
@@ -881,6 +885,22 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                           $bu_q = mysql_query($bu_sql);
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
                             <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                          <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                 HST Company
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="hst_company_id" class="tbox">
+                        <option value="">None</option>
+                        <?php
+                          $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                          $bu_q = mysql_query($bu_sql);
+                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+                            <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $hst_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
                           <?php } ?>
                 </select>
             </td>

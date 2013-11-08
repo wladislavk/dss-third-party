@@ -17,6 +17,11 @@ if(is_billing($_SESSION['admin_access'])){
 
  $c = "<option ".(($cur==DSS_ADMIN_ACCESS_BILLING_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_ADMIN."'>Billing Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_BILLING_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_BASIC."'>Billing Basic</option>";
   echo '{"change":"'.$c.'"}';
+}elseif(is_hst($_SESSION['admin_access'])){
+ if($cur == ''){ $cur = DSS_ADMIN_ACCESS_HST_BASIC; }
+
+ $c = "<option ".(($cur==DSS_ADMIN_ACCESS_HST_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_ADMIN."'>HST Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_HST_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_BASIC."'>HST Basic</option>";
+  echo '{"change":"'.$c.'"}';
 }elseif(is_software($_SESSION['admin_access'])){
  if($cur == ''){ $cur = DSS_ADMIN_ACCESS_BASIC; }
  $c = "<option ".(($cur==DSS_ADMIN_ACCESS_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_ADMIN."'>Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BASIC."'>Basic</option>";
@@ -39,6 +44,14 @@ if(is_billing($_SESSION['admin_access'])){
  }
  $c .= "<option ".(($cur==DSS_ADMIN_ACCESS_BILLING_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_ADMIN."'>Billing Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_BILLING_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_BASIC."'>Billing Basic</option>";
   echo '{"change":"'.$c.'"}';
+}elseif($new['company_type']==DSS_COMPANY_TYPE_HST){
+ if($cur == '' || $cur == DSS_ADMIN_ACCESS_ADMIN || $cur == DSS_ADMIN_ACCESS_BASIC){ $cur = DSS_ADMIN_ACCESS_HST_BASIC; }
+ $c = '';
+ if(is_super($_SESSION['admin_access'])){
+    $c .= "<option value='".DSS_ADMIN_ACCESS_SUPER."'>Super</option>";
+ }
+ $c .= "<option ".(($cur==DSS_ADMIN_ACCESS_HST_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_ADMIN."'>HST Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_HST_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_BASIC."'>HST Basic</option>";
+  echo '{"change":"'.$c.'"}';
 }else{
  if($cur == ''){ $cur = DSS_ADMIN_ACCESS_BASIC; }
 
@@ -48,6 +61,7 @@ if(is_billing($_SESSION['admin_access'])){
  }
  $c .= "<option ".(($cur==DSS_ADMIN_ACCESS_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_ADMIN."'>Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BASIC."'>Basic</option>";
  $c .= "<option ".(($cur==DSS_ADMIN_ACCESS_BILLING_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_ADMIN."'>Billing Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_BILLING_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_BILLING_BASIC."'>Billing Basic</option>";
+ $c .= "<option ".(($cur==DSS_ADMIN_ACCESS_HST_ADMIN)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_ADMIN."'>HST Admin</option><option ".(($cur==DSS_ADMIN_ACCESS_HST_BASIC)?"selected='selected'":'')." value='".DSS_ADMIN_ACCESS_HST_BASIC."'>HST Basic</option>";
   echo '{"change":"'.$c.'"}';
 
 }

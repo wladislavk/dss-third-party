@@ -134,6 +134,12 @@ $preauth_query = "SELECT * FROM dental_insurance_preauth WHERE doc_id = '".$doci
 $preauth_res = mysql_query($preauth_query);
 $num_pending_preauth = mysql_num_rows($preauth_res);
 
+$hst_query = "SELECT * FROM dental_hst WHERE doc_id = '".$docid."' AND status=".DSS_HST_COMPLETE." AND (viewed IS NULL OR viewed != 1);";
+$hst_res = mysql_query($hst_query);
+$num_hst = mysql_num_rows($hst_res);
+
+
+
 $pc_query = "SELECT * FROM dental_patient_contacts pc inner join dental_patients p on p.patientid=pc.patientid WHERE p.docid = '".$docid."'";
 $pc_res = mysql_query($pc_query);
 $num_pc = mysql_num_rows($pc_res);

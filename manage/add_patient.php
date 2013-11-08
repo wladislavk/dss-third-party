@@ -32,6 +32,8 @@ require_once('includes/patient_changes.php');
 require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
+require_once 'includes/hst_functions.php';
+
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
@@ -515,7 +517,9 @@ $ed_sql .="
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
 
-
+		if(isset($_POST['sendHST'])){
+                  create_hst($_POST['ed']);
+		}
 
                 //Remove pending vobs if ins info has changed.
                 if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
@@ -1532,6 +1536,10 @@ function remove_notification(id){
 			<?php
 			  }	
 			} ?>
+
+<input type="submit" name="sendHST" value="Order HST" class="button" />
+
+
 		</td>
 	</tr>
         <tr>

@@ -517,9 +517,6 @@ $ed_sql .="
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 	        mysql_query("UPDATE dental_patients set email='".mysql_real_escape_string($_POST['email'])."' WHERE parent_patientid='".mysql_real_escape_string($_POST["ed"])."'");	
 
-		if(isset($_POST['sendHST'])){
-                  create_hst($_POST['ed']);
-		}
 
                 //Remove pending vobs if ins info has changed.
                 if($old_p_m_ins_co != $_POST['p_m_ins_co'] ||
@@ -669,6 +666,13 @@ mysql_query($s1);
 			</script>
 			<?php
 		}
+                if(isset($_POST['sendHST'])){
+                        ?>
+                        <script type="text/javascript">
+                        window.location = "hst_request.php?ed=<?php echo $_GET['pid']; ?>";
+                        </script>
+                        <?php
+                }
 
 		//echo $ed_sql.mysql_error();
 		$msg = "Edited Successfully";

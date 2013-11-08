@@ -6,36 +6,7 @@ function edit_letter(divid, size, family) {
 		textarea.attr('name', divid);
 		textarea.attr('style','width:940px;height:335px;');
 		$("#" + divid).replaceWith(textarea);
-		tinyMCE.init({
-			mode : "textareas",
-			theme : "modern",
-			menubar: false,
-			toolbar1: "undo redo | italic | bullist numlist outdent indent",
-			gecko_spellcheck : true,
-			plugins: "paste, save",
-			valid_elements: "table,tbody,thead,tr,td[width],img[src|width|height|align],th,b,strong,i,em,p,br",
-    			valid_styles: {
-        			"*": "",
-    			},
-			entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
-			setup : function(ed) {
-              			ed.on('keyDown', function(e) {
-					if(e.shiftKey && e.keyCode==188){
-						e.preventDefault();	
-						ed.execCommand('mceInsertContent', false, "≤");
-					}
-                                        if(e.shiftKey && e.keyCode==190){
-                                                e.preventDefault();
-                                                ed.execCommand('mceInsertContent', false, "≥");
-                                        }
-              			});
-           		},
-        paste_preprocess : function(pl, o) {
-            o.content = o.content.replace(/&lt;/g, "≤");
-	    o.content = o.content.replace(/&gt;/g, "≥");
-        },
-			content_css : "css/font"+size+".css?" + new Date().getTime()+",css/font"+family+".css?" + new Date().getTime(),
-		});
+	setup_tinymce(size, family);
 		textarea.focus();
 		$('.edit_'+divid).show();
 		$('#edit_but_'+divid).hide();
@@ -114,4 +85,37 @@ function strip_tags (str, allowed_tags) {
         }
     }
      return str;
+}
+
+function setup_tinymce(size, family){
+tinyMCE.init({
+                        mode : "textareas",
+                        theme : "modern",
+                        menubar: false,
+                        toolbar1: "undo redo | italic | bullist numlist outdent indent",
+                        gecko_spellcheck : true,
+                        plugins: "paste, save",
+                        valid_elements: "table,tbody,thead,tr,td[width],img[src|width|height|align],th,b,strong,i,em,p,br",
+                        valid_styles: {
+                                "*": "",
+                        },
+                        entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
+                        setup : function(ed) {
+                                ed.on('keyDown', function(e) {
+                                        if(e.shiftKey && e.keyCode==188){
+                                                e.preventDefault();
+                                                ed.execCommand('mceInsertContent', false, "≤");
+                                        }
+                                        if(e.shiftKey && e.keyCode==190){
+                                                e.preventDefault();
+                                                ed.execCommand('mceInsertContent', false, "≥");
+                                        }
+                                });
+                        },
+        paste_preprocess : function(pl, o) {
+            o.content = o.content.replace(/&lt;/g, "≤");
+            o.content = o.content.replace(/&gt;/g, "≥");
+        },
+                        content_css : "css/font"+size+".css?" + new Date().getTime()+",css/font"+family+".css?" + new Date().getTime(),
+                });
 }

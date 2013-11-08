@@ -57,7 +57,7 @@ if(isset($_GET['cid'])){
 <link rel="stylesheet" href="3rdParty/spry/SpryTabbedPanels.css" />
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
+<script type="text/javascript" src="js/edit_letter.js"></script>
 <span class="admin_head">
 	Manage Custom Letter Templates 
 </span>
@@ -129,7 +129,11 @@ function fontSizeList()
     }
     return str.substring(0,str.length-1); // strip last comma
 }
-                tinyMCE.init({
+  
+
+setup_tinymce('10', 'Arial');
+/*
+              tinyMCE.init({
                         mode : "textareas",
                         theme : "modern",
                         menubar: false,
@@ -158,7 +162,7 @@ function fontSizeList()
             //o.content = o.content.replace(/&gt;/g, "≥");
         }
                 });
-
+*/
 function strip_tags (str, allowed_tags) {
     // Strips HTML and PHP tags from a string  
     // 

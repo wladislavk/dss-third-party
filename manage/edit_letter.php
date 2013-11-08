@@ -491,7 +491,7 @@ $first_sleeplab_name = st($sleeplab_myarray['company']);
 $q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device, d.ins_diagnosis, d.description FROM dental_summ_sleeplab dss 
 	LEFT JOIN dental_ins_diagnosis d
 	  ON dss.diagnosis = d.ins_diagnosisid
-	LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY STR_TO_DATE(s.date, '%m/%d/%Y') DESC LIMIT 1;";
+	LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY STR_TO_DATE(dss.date, '%m/%d/%Y') DESC LIMIT 1;";
 $q2_my = mysql_query($q2_sql);
 $q2_myarray = mysql_fetch_array($q2_my);
 $second_study_date = st($q2_myarray['date']);

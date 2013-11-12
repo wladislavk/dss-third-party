@@ -3,8 +3,7 @@ $(document).ready(function(){
     pid = $(this).attr('data-pid');
     ut = $(this).attr('data-ut');
     reject = $(this).attr('data-reject');
-
-    if(reject!=''){
+    if(reject!=undefined){
 	if(!confirm('This VOB was rejected because: '+reject+'. If you have fixed this problem and wish to resubmit, please click OK. Otherwise click \"Cancel\" to fix the problem before submitting again.')){
 	  return false;
 	}

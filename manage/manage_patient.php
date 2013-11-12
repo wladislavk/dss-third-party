@@ -36,14 +36,55 @@ if(!isset($_REQUEST['sort'])){
 $sql = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
      . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
-		 . "  ex.dentaldevice_date as delivery_date, s.vob, s.ledger, s.patient_info, ex.dentaldevice as device, "
-                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec "
+		 . "  pg2.date_scheduled as next_scheduled, "
+		 . "  (SELECT pg2_info.date_completed FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = p.patientid ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1 ) as last_completed, "
+                 . "  (SELECT pg2_info2.segmentid FROM dental_flow_pg2_info pg2_info2 WHERE pg2_info2.appointment_type=1 AND pg2_info2.patientid = p.patientid ORDER BY pg2_info2.date_completed DESC, pg2_info2.id DESC LIMIT 1 ) as last_segmentid, "
+		 . "  ex.dentaldevice_date as delivery_date, s.vob, s.ledger, s.patient_info, dd.device, "
+                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, "
+                 ." 
+		CASE  
+			WHEN la.amount IS NOT NULL THEN la.amount
+			ELSE 0
+		 END as ledger_amount, 
+		 CASE 
+			WHEN la2.amount IS NOT NULL THEN la2.amount
+			ELSE 0
+		 END as ledger2_amount,
+		 CASE
+			WHEN lp.amount IS NOT NULL THEN lp.amount
+			ELSE 0
+		 END as ledger_payment_amount,
+		 CASE
+			WHEN lp2.amount IS NOT NULL THEN lp2.amount
+			ELSE 0
+		 END as ledger2_payment_amount
+"
 		 . "FROM "
 		 . "  dental_patients p  "
 		 . "  LEFT JOIN dental_patient_summary s ON p.patientid = s.pid  "
 		 . "  LEFT JOIN dental_device d ON s.appliance = d.deviceid  "
 		 . "  LEFT JOIN dental_flow_pg1 fs ON fs.pid = p.patientid " 
+		 . "  LEFT JOIN dental_flow_pg2_info pg2 ON pg2.patientid=p.patientid AND pg2.appointment_type=0 "
 		 . "  LEFT JOIN dental_ex_page5 ex ON ex.patientid = p.patientid "
+		 . "  LEFT JOIN dental_device dd ON dd.deviceid = ex.dentaldevice " 
+."
+LEFT JOIN (select sum(dl.amount) as amount, patientid  from dental_ledger dl
+                        where dl.docid='".$_SESSION['docid']."' 
+                        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
+			group by patientid
+                ) la ON la.patientid=p.patientid
+LEFT JOIN (select sum(dl.amount) amount, patientid from dental_ledger dl
+                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."'
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0) GROUP BY patientid) la2 ON la2.patientid=p.patientid
+LEFT JOIN (select sum(dlp.amount) amount, patientid        from dental_ledger dl
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0 GROUP BY patientid) lp ON lp.patientid = p.patientid
+LEFT JOIN (select sum(dl.paid_amount)  amount, patientid       from dental_ledger dl
+                        where dl.docid='".$_SESSION['docid']."'
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0) group by patientid) lp2 ON lp2.patientid = p.patientid
+"
 		 . "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
@@ -69,11 +110,14 @@ if(isset($_GET['letter'])){
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
-  } else {
+  } elseif ($_REQUEST['sort'] == 'rxrec') {
+        $sql .= " ORDER BY rxrec ".$_REQUEST['sortdir'].", lomnrec ".$_REQUEST['sortdir'];
+  } elseif ($_REQUEST['sort'] == 'ledger') {
+        $sql .= " ORDER BY (ledger_amount + ledger2_amount - ledger_payment_amount - ledger2_payment_amount) ".$_REQUEST['sortdir'];
+  } else  {
 	  $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 	}
 }
-
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -166,29 +210,29 @@ background:#999999;
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.fspage1_complete')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.fspage1_complete&sortdir=<?php echo ($_REQUEST['sort']=='s.fspage1_complete'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ready for Tx</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.next_visit')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.next_visit&sortdir=<?php echo ($_REQUEST['sort']=='s.next_visit'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Next Visit</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'pg2.date_scheduled')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=pg2.date_scheduled&sortdir=<?php echo ($_REQUEST['sort']=='pg2.date_scheduled'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Next Visit</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.last_visit')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.last_visit&sortdir=<?php echo ($_REQUEST['sort']=='s.last_visit'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Visit</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'last_completed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=last_completed&sortdir=<?php echo ($_REQUEST['sort']=='last_completed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Visit</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.last_treatment')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.last_treatment&sortdir=<?php echo ($_REQUEST['sort']=='s.last_treatment'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Treatment</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'last_segmentid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=last_segmentid&sortdir=<?php echo ($_REQUEST['sort']=='last_segmentid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Treatment</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'd.device')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=d.device&sortdir=<?php echo ($_REQUEST['sort']=='d.device'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'device')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=device&sortdir=<?php echo ($_REQUEST['sort']=='device'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='s.delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance Since</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance Since</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.vob')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.vob&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'xb')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=vob&sortdir=<?php echo ($_REQUEST['sort']=='vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.vob')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=fs.rxrec&sortdir=<?php echo ($_REQUEST['sort']=='s.vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'rxrec')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=rxrec&sortdir=<?php echo ($_REQUEST['sort']=='rxrec'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
                 </td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.ledger&sortdir=<?php echo ($_REQUEST['sort']=='s.ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=ledger&sortdir=<?php echo ($_REQUEST['sort']=='ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
 		</td>
 	</tr>
   <tr class="template" style="display:none;">
@@ -272,18 +316,10 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
 ?>
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
         </td>
-<?php
-  $next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysql_real_escape_string($myarray['patientid'])."' ORDER BY date_scheduled DESC";
-  $next_q = mysql_query($next_sql);
-  $next_r = mysql_fetch_assoc($next_q);
-?>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($next_r['date_scheduled']); ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['next_scheduled']); ?></a>
         </td>
 <?php
-     $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".$myarray['patientid']."' ORDER BY date_completed DESC, id DESC;";
-     $last_q = mysql_query($last_sql);
-     $last_r = mysql_fetch_assoc($last_q);
 $segments = Array();
 $segments[15] = "Baseline Sleep Test";
 $segments[2] = "Consult";
@@ -303,32 +339,22 @@ $segments[1] = "Initial Contact";
 
 ?>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($last_r['date_completed'], true); ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['last_completed'], true); ?></a>
         </td>
         <td valign="top">
-          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= ($last_r['segmentid'] == null ? 'N/A' : $segments[$last_r['segmentid']]); ?></a>
+          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['last_segmentid'] == null ? 'N/A' : $segments[$myarray['last_segmentid']]); ?></a>
         </td>
 				<td valign="top">
-		<?php
-		  if($myarray['device'] == null){
-			$device = "N/A";
-		  }else{
-			$device_sql = "select deviceid, device from dental_device where status=1 AND deviceid='".$myarray['device']."'";
-			$device_q = mysql_query($device_sql);
-			$device_row = mysql_fetch_assoc($device_q);
-			$device = $device_row['device'];
-		  }
-		?>
-	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $device; ?></a>
+	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['device']; ?></a>
         </td>
         <td valign="top">
-	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>&page=page2"><?= format_date($myarray['delivery_date'], true); ?></a>
+	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['delivery_date'], true); ?></a>
 	      </td>
         <td valign="top">
 	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'No' : ($myarray['vob']==1 ? "Yes": $dss_preauth_status_labels[$myarray['vob']])); ?></a>
         </td>
         <td valign="top">
-                <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>">
+                <a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>">
 			<?php 
 			  if($myarray['lomnrec'] != null && $myarray['rxrec'] != null){
 				?>Yes<?php
@@ -345,79 +371,11 @@ $segments[1] = "Initial Contact";
         </td>
         <td valign="top">
 		<?php
-$ledger_sql = "select 
-                'ledger',
-                dl.ledgerid,
-                dl.service_date,
-                dl.entry_date,
-                p.name,
-                dl.description,
-                dl.amount,
-                '' as paid_amount,
-                dl.status,
-                dl.primary_claim_id,
-                '' as payer,
-                '' as payment_type,
-                di.status as claim_status
-        from dental_ledger dl 
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-                LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
-                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
-                        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                GROUP BY dl.ledgerid
- UNION
-        select 
-                'ledger_payment',
-                dlp.id,
-                dlp.payment_date,
-                dlp.entry_date,
-                p.name,
-                '',
-                '',
-                dlp.amount,
-                '',
-                dl.primary_claim_id,
-                dlp.payer,
-                dlp.payment_type,
-                ''
-        from dental_ledger dl 
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
-                        AND dlp.amount != 0
-  UNION
-        select 
-                'ledger_paid',
-                dl.ledgerid,
-                dl.service_date,
-                dl.entry_date,
-                p.name,
-                dl.description,
-                dl.amount,
-                dl.paid_amount,
-                dl.status,
-                dl.primary_claim_id,
-                tc.type,
-                '',
-                ''      
-        from dental_ledger dl 
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-                LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
-                        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($myarray["patientid"])."' 
-                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-
-";
-$ledger_total = 0;
-$ledger_q = mysql_query($ledger_sql);
-while($ledger_r = mysql_fetch_assoc($ledger_q)){
-   $ledger_total += $ledger_r["amount"];
-   $ledger_total -= $ledger_r["paid_amount"];
-}
+$total = $myarray['ledger_amount'] + $myarray['ledger2_amount'] - $myarray['ledger_payment_amount'] - $myarray['ledger2_payment_amount'];
 ?>
 
-	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($ledger_total,0))); ?></a>
+	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
+<?= $total1; ?>
         </td>
         <?php }else{ ?>
 

@@ -4,6 +4,7 @@ include "includes/top.htm";
 include '../includes/calendarinc.php';
 
   $sql = "SELECT du.*, c.name AS company_name, c.free_fax, 
+		plan.trial_period,
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
                 JOIN dental_user_company uc ON uc.userid = du.userid
@@ -265,6 +266,10 @@ if(mysql_num_rows($doc_q) == 0){
         }elseif($user['registration_date']){
           $date = $user['registration_date'];
           $newdate = strtotime ( '+1 month' , strtotime ( $date ) ) ;
+          $monthly_date = date ( 'm/d/Y' , $newdate );
+        }elseif($user['trial_period'] !=''  && $user['adddate']){
+          $date = $user['adddate'];
+          $newdate = strtotime ( '+'.($user['trial_period']+1).' day' , strtotime ( $date ) ) ;
           $monthly_date = date ( 'm/d/Y' , $newdate );
         }elseif($user['adddate']){
           $date = $user['adddate'];

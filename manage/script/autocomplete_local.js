@@ -33,7 +33,7 @@
 		data = [];
 		r = 0
 		for(var i=0;i<local_data.length;i++){
-			if(local_data[i].payer_name.indexOf(partial_name) != -1){
+			if(local_data[i].payer_name.toLowerCase().indexOf(partial_name.toLowerCase()) != -1){
 				data[r] = [];
 				data[r][0] = local_data[i].payer_id+"-"+local_data[i].payer_name;
 				data[r][1] = local_data[i].payer_id+" - "+local_data[i].payer_name;

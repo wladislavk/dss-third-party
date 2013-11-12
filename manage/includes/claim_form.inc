@@ -1,5 +1,5 @@
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-  <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+  <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
 
 <?php
 $status_sql = "SELECT status FROM dental_insurance 
@@ -1383,7 +1383,7 @@ if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', '/manage/list_ins_payers.php');
+  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

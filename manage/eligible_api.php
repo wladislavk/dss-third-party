@@ -42,7 +42,7 @@ function clear_payer_name(f){
 }
 
 $(document).ready(function(){
-  setup_autocomplete('payer_name', 'payer_hints', 'payer_id', '', 'list_ins_payers2.php', 'eligibility');
+  setup_autocomplete_local('payer_name', 'payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/claims-payer.json', 'eligibility');
 });
 
 </script>

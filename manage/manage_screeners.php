@@ -11,6 +11,37 @@ if(isset($_REQUEST['delid'])){
   $sql = "DELETE FROM dental_screener where docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_REQUEST['delid'])."'";
   mysql_query($sql);
 }
+
+if(isset($_REQUEST['hst'])){
+
+  $sql = "SELECT * FROM dental_screener WHERE id='".mysql_real_escape_string($_REQUEST['hst'])."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+
+  $pat_sql = "INSERT INTO dental_patients SET
+		docid='".mysql_real_escape_string($r['docid'])."',
+		firstname = '".mysql_real_escape_string($r['first_name'])."',
+                lastname = '".mysql_real_escape_string($r['last_name'])."',
+                cell_phone = '".mysql_real_escape_string($r['phone'])."',
+		status='1',
+		adddate = now(),
+		ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+  mysql_query($pat_sql);
+  $pat_id = mysql_insert_id();
+  
+  $hst_sql = "UPDATE dental_hst SET
+		patient_id = '".$pat_id."',
+		status='".DSS_HST_PENDING."'
+		WHERE screener_id=".mysql_real_escape_string($r['id']);
+  mysql_query($hst_sql);
+  ?>
+  <script type="text/javascript">
+    window.location = 'manage_screeners.php';
+  </script>
+  <?php
+}		
+
+
 ?>
 <style type="text/css">
 .similar{ display:none; }
@@ -50,12 +81,13 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "SELECT s.*, u.name,
+$sql = "SELECT s.*, u.name, h.id as hst_id,
 	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total,
 	epworth_reading + epworth_public + epworth_passenger + epworth_lying + epworth_talking + epworth_lunch + epworth_traffic AS ep_total,
         rx_cpap + rx_blood_pressure + rx_hypertension + rx_heart_disease + rx_stroke + rx_apnea + rx_diabetes + rx_lung_disease + rx_insomnia + rx_depression + rx_narcolepsy + rx_medication + rx_restless_leg + rx_headaches + rx_heartburn AS sect3_total 
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
+	LEFT JOIN dental_hst h ON h.screener_id = s.id
 	WHERE s.docid='".$_SESSION['docid']."' ";
 if(isset($_GET['risk']) && $_GET['risk']!=''){
   $sql .= " AND (breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep) >= ".mysql_real_escape_string($_GET['risk'])." ";
@@ -157,6 +189,9 @@ $my=mysql_query($sql) or die(mysql_error());
                 </td>
                <td valign="top" class="col_head" width="10%">
 			Results	
+                </td>
+               <td valign="top" class="col_head" width="10%">
+                        HST
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
                         <a href="manage_screeners.php?sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Screened By</a>
@@ -276,6 +311,11 @@ $my=mysql_query($sql) or die(mysql_error());
 
 ?>
 					<a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;" id="diagnosis_count_<?=$myarray['id']; ?>">View</a>
+				</td>
+				<td valign="top">
+				  <?php if($myarray['hst_id']){ ?>
+					<a href="manage_screeners.php?hst=<?= $myarray['id']; ?>">Order</a>
+				  <?php } ?>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	

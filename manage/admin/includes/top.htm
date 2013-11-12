@@ -299,7 +299,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                 <li><a href="/manage/admin/manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
                 <li><a href="/manage/admin/manage_vobs.php?status=0">VOBs (<?= $num_pending_preauth; ?>)</a></li>
 	<?php } ?>
-		<li><a href="/manage/admin/manage_hsts.php?status=0">HSTs (<?= $num_pending_hst; ?>)</a></li>
+		<li><a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">HSTs (<?= $num_pending_hst; ?>)</a></li>
 <?php if(!is_hst($_SESSION['admin_access'])){ ?>
                 <li><a href="/manage/admin/manage_claims.php?status=0">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
                 <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>

@@ -100,12 +100,14 @@ $dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
 $dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
 // Pre-authorization statuses (pre-auth)
-define('DSS_HST_PENDING', 0);
-define('DSS_HST_SCHEDULED', 1);
-define('DSS_HST_COMPLETE', 2);
+define('DSS_HST_REQUESTED', 0);
+define('DSS_HST_PENDING', 1);
+define('DSS_HST_SCHEDULED', 2);
+define('DSS_HST_COMPLETE', 3);
 
 // A convenience array to get pre-auth labels
 $dss_hst_status_labels = array();
+$dss_hst_status_labels[DSS_HST_REQUESTED] = 'Requested';
 $dss_hst_status_labels[DSS_HST_PENDING] = 'Pending';
 $dss_hst_status_labels[DSS_HST_SCHEDULED] = 'Scheduled';
 $dss_hst_status_labels[DSS_HST_COMPLETE] = 'Complete';

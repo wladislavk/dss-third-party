@@ -1,3 +1,4 @@
+<script type="text/javascript">
 var screenerid='';
 function submit_screener(){
   $('#sect4_next').hide();
@@ -11,13 +12,15 @@ function submit_screener(){
       first_name: $('#first_name').val(),
       last_name: $('#last_name').val(), 
       phone: $('#phone').val(),
-      epworth_reading: $('#epworth_reading').val(),
-      epworth_public: $('#epworth_public').val(),
-      epworth_passenger: $('#epworth_passenger').val(),
-      epworth_lying: $('#epworth_lying').val(),
-      epworth_talking: $('#epworth_talking').val(),
-      epworth_lunch: $('#epworth_lunch').val(),
-      epworth_traffic: $('#epworth_traffic').val(),
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
+      epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
+<?php } ?>
       snore_1: $('#snore_1').val(),
       snore_2: $('#snore_2').val(),
       snore_3: $('#snore_3').val(),
@@ -61,13 +64,16 @@ function submit_screener(){
 	$('#r_first_name').text($('#first_name').val());
         $('#r_last_name').text($('#last_name').val());
         $('#r_phone').text($('#phone').val());
-        $('#r_epworth_reading').text($('#epworth_reading').val());
-        $('#r_epworth_public').text($('#epworth_public').val());
-        $('#r_epworth_passenger').text($('#epworth_passenger').val());
-        $('#r_epworth_lying').text($('#epworth_lying').val());
-        $('#r_epworth_talking').text($('#epworth_talking').val());
-        $('#r_epworth_lunch').text($('#epworth_lunch').val());
-        $('#r_epworth_traffic').text($('#epworth_traffic').val());
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
+
+        $('#r_epworth_<?= $ea['epworthid'];?>').text($('#epworth_<?=$ea['epworthid'];?>').val());
+<?php } ?>
         $('#r_breathing').text(($("input[name=breathing]:checked").val() > 0)?'Yes':'No');
         $('#r_driving').text(($("input[name=driving]:checked").val() > 0)?'Yes':'No');
         $('#r_gasping').text(($("input[name=gasping]:checked").val() > 0)?'Yes':'No');
@@ -134,13 +140,15 @@ function submit_screener(){
 
 	//get scores
 	var ep = 0;
-	ep += parseInt($('#epworth_reading').val(), 10);
-        ep += parseInt($('#epworth_public').val(), 10);
-        ep += parseInt($('#epworth_passenger').val(), 10);
-        ep += parseInt($('#epworth_lying').val(), 10);
-        ep += parseInt($('#epworth_talking').val(), 10);
-        ep += parseInt($('#epworth_lunch').val(), 10);
-        ep += parseInt($('#epworth_traffic').val(), 10);
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
+	ep += parseInt($('#epworth_<?= $ea['epworthid']; ?>').val(), 10);
+<?php } ?>
         $('#r_ep_total').text(ep);
 	var sect3 = 0;
 	sect3 += parseInt($("input[name=rx_cpap]:checked").val(), 10);
@@ -310,63 +318,21 @@ function validate_epworth(){
     $('#sect2_next_dis').show();
  var return_val = true;
   var error_text = '';
-  if($('#epworth_reading_div select').val() == ''){
-    $('#epworth_reading_div').addClass('error');
-    error_text += "<label for=\"epworth_reading\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting And Reading</strong>: Please provide an answer</label>"
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
+  if($('#epworth_<?=$ea['epworthid']; ?>_div select').val() == ''){
+    $('#epworth_<?= $ea['epworthid']; ?>_div').addClass('error');
+    error_text += "<label for=\"epworth_<?=$ea['epworthid'];?>\" generated=\"true\" class=\"error\" style=\"\"><strong><?=$ea['epworth']; ?></strong>: Please provide an answer</label>"
     return_val = false;
   }else{
-    $('#epworth_reading_div').removeClass('error');
+    $('#epworth_<?= $ea['epworthid']; ?>_div').removeClass('error');
   }
-
-  if($('#epworth_public_div select').val() == ''){
-    $('#epworth_public_div').addClass('error');
-    error_text += "<label for=\"epworth_public\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting inactive in a public place</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_public_div').removeClass('error');
-  } 
-        
-  if($('#epworth_passenger_div select').val() == ''){
-    $('#epworth_passenger_div').addClass('error');
-    error_text += "<label for=\"epworth_passenger\" generated=\"true\" class=\"error\" style=\"\"><strong>As a passenger</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_passenger_div').removeClass('error');
-  } 
-        
-  if($('#epworth_lying_div select').val() == ''){
-    $('#epworth_lying_div').addClass('error');
-    error_text += "<label for=\"epworth_lying\" generated=\"true\" class=\"error\" style=\"\"><strong>Lying down to rest</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_lying_div').removeClass('error');
-  } 
-        
-  if($('#epworth_talking_div select').val() == ''){
-    $('#epworth_talking_div').addClass('error');
-    error_text += "<label for=\"epworth_talking\" generated=\"true\" class=\"error\" style=\"\"><strong>Sitting and talking</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_talking_div').removeClass('error');
-  } 
-        
-  if($('#epworth_lunch_div select').val() == ''){
-    $('#epworth_lunch_div').addClass('error');
-    error_text += "<label for=\"epworth_lunch\" generated=\"true\" class=\"error\" style=\"\"><strong>After a lunch</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_lunch_div').removeClass('error');
-  } 
-        
-  if($('#epworth_traffic_div select').val() == ''){
-    $('#epworth_traffic_div').addClass('error');
-    error_text += "<label for=\"epworth_traffic\" generated=\"true\" class=\"error\" style=\"\"><strong>Stopped in traffic</strong>: Please provide an answer</label>"
-    return_val = false;
-  }else{
-    $('#epworth_traffic_div').removeClass('error');
-  }
-
-
+<?php } ?>
   if(return_val){
         next_sect(3);
   }else{
@@ -519,6 +485,16 @@ function submit_hst(){
       patient_last_name: $('#hst_last_name').val(),
       patient_cell_phone: $('#hst_phone').val(),
       patient_email: $('#hst_email').val(),
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
+      epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
+<?php } ?>
+
       snore_1: $('#snore_1').val(),
       snore_2: $('#snore_2').val(),
       snore_3: $('#snore_3').val(),
@@ -534,3 +510,5 @@ function submit_hst(){
     }
    });
 }
+
+</script>

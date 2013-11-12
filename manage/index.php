@@ -157,6 +157,8 @@ $r = mysql_fetch_assoc($q);
         <li><a href="videos.php">Watch Videos</a></li> 
 
         <li><a href="course.php">Get C.E.</a></li>
+	
+	<li><a href="edx_certificate.php">Certificates</a></li>
 	</ul>
     </li>
   <li><a href="sw_tutorials.php">SW Tutorials</a></li>
@@ -303,6 +305,7 @@ ALERT THIRD
 
   <a href="manage_hst.php?status=<?= DSS_HST_COMPLETE; ?>&viewed=0" class=" count_<?= $num_hst; ?> notification <?= ($num_hst==0)?"good_count":"great_count"; ?>"><span class="count"><?= $num_hst;?></span><span class="label">HSTs</span></a>
 
+  <a href="manage_hst.php?status=<?= DSS_HST_REQUESTED; ?>&viewed=0" class=" count_<?= $num_requested_hst; ?> notification <?= ($num_requested_hst==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_requested_hst;?></span><span class="label">Requested HSTs</span></a>
 
 <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>
   <a href="manage_claims.php" class="notification  count_<?= $num_pending_nodss_claims; ?> <?= ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_pending_nodss_claims;?></span><span class="label">Pending Claims</span></a>

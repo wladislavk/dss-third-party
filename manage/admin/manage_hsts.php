@@ -76,7 +76,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_hst hst "
      . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid ";
 }elseif(is_hst($_SESSION['admin_access'])){
@@ -88,7 +88,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_hst hst "
      . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  JOIN dental_user_company uc ON uc.userid = p.docid "
+     . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid "
      . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid AND users.hst_company_id = '".$_SESSION['admincompanyid']."'"
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid ";
@@ -102,7 +102,7 @@ $sql = "SELECT "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
-     . "  JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
+     . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
@@ -158,10 +158,12 @@ $my=mysql_query($sql) or die(mysql_error());
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
     Status:
     <select name="status">
+      <?php $pending_requested = ($status == DSS_PREAUTH_REQUESTED) ? 'selected' : ''; ?>
       <?php $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : ''; ?>
       <?php $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
       <option value="">Any</option>
+      <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
       <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
       <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>

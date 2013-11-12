@@ -2080,7 +2080,7 @@ $(document).ready(function(){
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'list_ins_payers.php', 'ins_payer');
+  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json', 'ins_payer');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

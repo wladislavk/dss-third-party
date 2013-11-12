@@ -41,7 +41,41 @@ $sql = "SELECT "
                  . "  (SELECT pg2_info2.segmentid FROM dental_flow_pg2_info pg2_info2 WHERE pg2_info2.appointment_type=1 AND pg2_info2.patientid = p.patientid ORDER BY pg2_info2.date_completed DESC, pg2_info2.id DESC LIMIT 1 ) as last_segmentid, "
 		 . "  ex.dentaldevice_date as delivery_date, s.vob, s.ledger, s.patient_info, dd.device, "
                  . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, "
-                 ." 
+		 . " 
+			CASE
+				WHEN fs.rxrec !='' AND fs.lomnrec !='' THEN 4
+				WHEN fs.rxrec !='' AND fs.lomnrec ='' THEN 3
+				WHEN fs.rxrec ='' AND fs.lomnrec !='' THEN 2
+				ELSE 1
+			END as rxlomn_order,
+		"
+		 . " studies.num_studies, ";
+  if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+	                $sql .= " CASE 
+                                WHEN p.p_m_dss_file != '' AND p.p_m_dss_file IS NOT NULL THEN 0
+                                ELSE 1 
+                           END as ins_error, ";
+  }else{
+		$sql .= " CASE 
+				WHEN p.p_m_dss_file != 1 THEN 1
+				ELSE 0 
+			   END as ins_error, ";
+  }
+
+  if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+                        $sql .= " CASE 
+                                WHEN p.p_m_dss_file != '' AND p.p_m_dss_file IS NOT NULL AND studies.num_studies> 0 THEN 1
+                                ELSE 0 
+                           END as ready, ";
+  }else{
+                $sql .= " CASE 
+                                WHEN p.p_m_dss_file = 1 AND studies.num_studies > 0 THEN 1
+                                ELSE 0 
+                           END as ready, ";
+  }
+
+
+                 $sql .= " 
 		CASE  
 			WHEN la.amount IS NOT NULL THEN la.amount
 			ELSE 0
@@ -84,6 +118,18 @@ LEFT JOIN (select sum(dlp.amount) amount, patientid        from dental_ledger dl
 LEFT JOIN (select sum(dl.paid_amount)  amount, patientid       from dental_ledger dl
                         where dl.docid='".$_SESSION['docid']."'
                         AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0) group by patientid) lp2 ON lp2.patientid = p.patientid
+
+
+LEFT JOIN (SELECT count(*) num_studies, patiendid FROM dental_summ_sleeplab ss                                 
+			JOIN dental_patients ssp ON ssp.patientid = ss.patiendid
+                        WHERE                                 
+                          (ssp.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                          (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
+                          (ss.filename!='' AND ss.filename IS NOT NULL) GROUP BY ss.patiendid) studies ON studies.patiendid = p.patientid 
+
+
+
+
 "
 		 . "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
@@ -110,14 +156,13 @@ if(isset($_GET['letter'])){
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
-  } elseif ($_REQUEST['sort'] == 'rxrec') {
-        $sql .= " ORDER BY rxrec ".$_REQUEST['sortdir'].", lomnrec ".$_REQUEST['sortdir'];
   } elseif ($_REQUEST['sort'] == 'ledger') {
         $sql .= " ORDER BY (ledger_amount + ledger2_amount - ledger_payment_amount - ledger2_payment_amount) ".$_REQUEST['sortdir'];
   } else  {
 	  $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 	}
 }
+
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -198,7 +243,7 @@ background:#999999;
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&sh=".$_GET['sh']);
+				 paging($no_pages,$index_val,"letter=".$_GET['letter']."&sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']."&sh=".$_GET['sh']);
 			?>
 		</TD>        
 	</TR>
@@ -207,8 +252,8 @@ background:#999999;
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'lastname')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=lastname&sortdir=<?php echo ($_REQUEST['sort']=='lastname'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
-		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 's.fspage1_complete')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=s.fspage1_complete&sortdir=<?php echo ($_REQUEST['sort']=='s.fspage1_complete'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ready for Tx</a>
+		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'ready')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=ready&sortdir=<?php echo ($_REQUEST['sort']=='ready'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ready for Tx</a>
 		</td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'pg2.date_scheduled')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=pg2.date_scheduled&sortdir=<?php echo ($_REQUEST['sort']=='pg2.date_scheduled'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Next Visit</a>
@@ -228,8 +273,8 @@ background:#999999;
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'xb')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=vob&sortdir=<?php echo ($_REQUEST['sort']=='vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'rxrec')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=rxrec&sortdir=<?php echo ($_REQUEST['sort']=='rxrec'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'rxlomn_order')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+                        <a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=rxlomn_order&sortdir=<?php echo ($_REQUEST['sort']=='rxlomn_order'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
                 </td>
 		<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="manage_patient.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=ledger&sortdir=<?php echo ($_REQUEST['sort']=='ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
@@ -366,7 +411,6 @@ $segments[1] = "Initial Contact";
                                 ?>No<?php
                           } 
                         ?>
-
 		</a>
         </td>
         <td valign="top">

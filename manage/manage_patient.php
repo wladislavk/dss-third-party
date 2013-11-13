@@ -234,6 +234,9 @@ background:#cccccc;
 #contentMain td:hover{
 background:#999999;
 }
+.arrow_asc, .arrow_desc{
+  background-color: rgb(0, 39, 94);
+}
 </style>
 </div>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post" style="clear: both">

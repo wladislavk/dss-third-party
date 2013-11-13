@@ -43,7 +43,6 @@ $num_users=mysql_num_rows($my);
 <body>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
 
 <br />

@@ -211,7 +211,6 @@ if($epworthid <> '')
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup2.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />

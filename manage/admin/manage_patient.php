@@ -76,7 +76,6 @@ $num_users=mysql_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <link href="../css/search-hints.css" rel="stylesheet" type="text/css">
 

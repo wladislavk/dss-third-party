@@ -9,7 +9,6 @@ include("includes/calendarinc.php");
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="admin/popup/popup.js"></script>
 <script src="/manage/js/add_new_sleeplab.js" type="text/javascript"></script>
 <script language="JavaScript" src="calendar1.js"></script>

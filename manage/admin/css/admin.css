@@ -580,3 +580,29 @@ th.headerSortDown {
 tr.status_2{
   background: #ccc;
   }
+
+#warn_logout{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:100%;
+width:100%;
+top:0;
+left:0;
+background:#000000;
+border:1px solid #cecece;
+z-index:1701;
+text-align:center;
+}
+
+#warn_logout h1{
+  color:#ffffff;
+}
+
+#warn_logout a{
+  padding: 20px;
+  margin: 20px;
+  background: #fff;
+  color:#000;
+}
+

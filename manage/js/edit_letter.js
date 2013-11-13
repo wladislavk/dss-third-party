@@ -95,7 +95,7 @@ tinyMCE.init({
                         toolbar1: "undo redo | italic | bullist numlist outdent indent",
                         gecko_spellcheck : true,
                         plugins: "paste, save",
-                        valid_elements: "table,tbody,thead,tr,td[width],img[src|width|height|align],th,b,strong,i,em,p,br",
+                        valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br",
                         valid_styles: {
                                 "*": "",
                         },

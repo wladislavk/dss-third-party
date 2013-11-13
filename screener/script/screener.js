@@ -1,4 +1,4 @@
-
+var screenerid='';
 function submit_screener(){
   $('#sect4_next').hide();
   $('#sect4_next_dis').show();
@@ -56,6 +56,7 @@ function submit_screener(){
       var r = $.parseJSON(data);
       if(r.error){
       }else{
+ 	screenerid=r.screenerid;
 	//update view results div
 	$('#r_first_name').text($('#first_name').val());
         $('#r_last_name').text($('#last_name').val());
@@ -229,6 +230,12 @@ function submit_screener(){
 	//$('#ep_score').text(an_text);
 	//$('#snore_score').text(snore);
 	//$('#survey_score').text(survey);
+
+	//update hst div
+	$('#hst_first_name').val($('#first_name').val());
+        $('#hst_last_name').val($('#last_name').val());
+        $('#hst_phone').val($('#phone').val());
+
 	next_sect('results');
 
       }
@@ -482,6 +489,11 @@ function validate_sect3(){
 
 }
 
+function show_hst(){
+  next_sect('hst');
+}
+
+
 $(document).ready(function(){
 				//regular dialog
 				$("a[rel='fancyReg']").fancybox({
@@ -493,3 +505,32 @@ $(document).ready(function(){
 					'hideOnOverlayClick': false
 				});
 });
+
+
+function submit_hst(){
+  $.ajax({
+    url: "script/submit_hst.php",
+    type: "post",
+    data: {
+      screenerid: screenerid,
+      docid: $('#docid').val(),
+      userid: $('#userid').val(),
+      patient_first_name: $('#hst_first_name').val(),
+      patient_last_name: $('#hst_last_name').val(),
+      patient_cell_phone: $('#hst_phone').val(),
+      patient_email: $('#hst_email').val(),
+      snore_1: $('#snore_1').val(),
+      snore_2: $('#snore_2').val(),
+      snore_3: $('#snore_3').val(),
+      snore_4: $('#snore_4').val(),
+      snore_5: $('#snore_5').val()
+    },
+    success: function(data){
+      var r = $.parseJSON(data);
+      if(r.error){
+      }else{
+	window.location = 'index.php';
+      }
+    }
+   });
+}

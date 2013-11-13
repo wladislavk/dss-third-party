@@ -236,7 +236,6 @@ if(isset($_POST['submit'])){
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
   $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name

@@ -26,8 +26,8 @@ else
 $i_val = $index_val * $rec_disp;
 $sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users from companies c
 	 LEFT JOIN admin_company ac ON ac.companyid = c.id
-	 LEFT JOIN admin a ON a.adminid=ac.adminid AND (a.admin_access=".DSS_ADMIN_ACCESS_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_BILLING_ADMIN.")
-         LEFT JOIN admin b ON b.adminid=ac.adminid AND (b.admin_access=".DSS_ADMIN_ACCESS_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_BILLING_BASIC.")
+	 LEFT JOIN admin a ON a.adminid=ac.adminid AND (a.admin_access=".DSS_ADMIN_ACCESS_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_BILLING_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_HST_ADMIN.")
+         LEFT JOIN admin b ON b.adminid=ac.adminid AND (b.admin_access=".DSS_ADMIN_ACCESS_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_BILLING_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_HST_BASIC.")
 	 group by c.id
 	 order by name ASC";
 $my = mysql_query($sql);
@@ -40,7 +40,6 @@ $num_users=mysql_num_rows($my);
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">
@@ -131,7 +130,14 @@ $num_users=mysql_num_rows($my);
 					?>
 					<a href="billing_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
 					<?php
-					}else{
+					}elseif($myarray['company_type']==DSS_COMPANY_TYPE_HST){
+                                        $u_sql = "SELECT userid FROM dental_users WHERE hst_company_id='".mysql_real_escape_string($myarray["id"])."'";
+                                        $u_q = mysql_query($u_sql);
+                                        $num_users = mysql_num_rows($u_q);
+                                        ?>
+                                        <a href="hst_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
+                                        <?php
+                                        }else{
                                         $u_sql = "SELECT id FROM dental_user_company WHERE companyid='".mysql_real_escape_string($myarray["id"])."'";
                                         $u_q = mysql_query($u_sql);
                                         $num_users = mysql_num_rows($u_q);

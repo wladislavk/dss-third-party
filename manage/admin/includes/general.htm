@@ -457,10 +457,12 @@ function save_letter($letterid, $parent = null, $type, $recipientid, $template =
 			$preferred = "paper";
 		}
 	}
+/*
 $patterns = '/(<p><img)(.*)(\/><\/p>)/';
 $replace = '<span style="float:right"><img $2 /></span>';
 $template = preg_replace($patterns, $replace, $template);
 $template = htmlspecialchars($template);
+*/
   if ($parent != null) { // If this is the last contact on the letter, set the status to sent and update the template if it has changed
 		$template = html_entity_decode( preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE,"UTF-8");
 		$letter_query = "UPDATE dental_letters SET edit_date = NOW(), edit_userid = '".$_SESSION['userid']."',date_sent = NOW(), template='".mysql_real_escape_string($template)."' ";

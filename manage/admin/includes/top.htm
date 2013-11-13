@@ -156,6 +156,46 @@ $sql = "SELECT "
 $my = mysql_query($sql);
 $num_pending_preauth = mysql_num_rows($my);
 
+if(is_super($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING;
+}elseif(is_hst($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING
+     . "   AND users.hst_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}else{
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING
+     . "   AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}
+$my = mysql_query($sql);
+$num_pending_hst = mysql_num_rows($my);
+
+
+
+
+
  $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
      . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
@@ -255,8 +295,12 @@ $num_pending_claims = mysql_num_rows($pending_q);
 
 ?>
         <ul class="dropdown dropdown-horizontal">
+	<?php if(!is_hst($_SESSION['admin_access'])){ ?>
                 <li><a href="/manage/admin/manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
                 <li><a href="/manage/admin/manage_vobs.php?status=0">VOBs (<?= $num_pending_preauth; ?>)</a></li>
+	<?php } ?>
+		<li><a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">HSTs (<?= $num_pending_hst; ?>)</a></li>
+<?php if(!is_hst($_SESSION['admin_access'])){ ?>
                 <li><a href="/manage/admin/manage_claims.php?status=0">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
                 <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
                 <li class="dir">USERS
@@ -473,6 +517,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                                 <li><a href="/manage/admin/manage_support_categories.php">Categories</a></li>
 			</ul>
 		</li>
+<?php } ?>
         </ul>
 
 	</td>

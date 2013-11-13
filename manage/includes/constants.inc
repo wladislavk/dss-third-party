@@ -99,6 +99,20 @@ $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING]['short'] = 'Pre-Auth Pen
 $dss_preauth_status_labels[DSS_PREAUTH_REJECTED] = 'Rejected';
 $dss_preauth_status_labels[DSS_PREAUTH_REJECTED]['short'] = 'Rjct.';
 
+// Pre-authorization statuses (pre-auth)
+define('DSS_HST_REQUESTED', 0);
+define('DSS_HST_PENDING', 1);
+define('DSS_HST_SCHEDULED', 2);
+define('DSS_HST_COMPLETE', 3);
+
+// A convenience array to get pre-auth labels
+$dss_hst_status_labels = array();
+$dss_hst_status_labels[DSS_HST_REQUESTED] = 'Requested';
+$dss_hst_status_labels[DSS_HST_PENDING] = 'Pending';
+$dss_hst_status_labels[DSS_HST_SCHEDULED] = 'Scheduled';
+$dss_hst_status_labels[DSS_HST_COMPLETE] = 'Complete';
+
+
 //Transaction Payers (ledger)
 define('DSS_TRXN_PAYER_PRIMARY', 0);
 define('DSS_TRXN_PAYER_SECONDARY', 1);
@@ -251,6 +265,8 @@ define('DSS_ADMIN_ACCESS_ADMIN', 2);
 define('DSS_ADMIN_ACCESS_BASIC', 3);
 define('DSS_ADMIN_ACCESS_BILLING_ADMIN', 4);
 define('DSS_ADMIN_ACCESS_BILLING_BASIC', 5);
+define('DSS_ADMIN_ACCESS_HST_ADMIN', 6);
+define('DSS_ADMIN_ACCESS_HST_BASIC', 7);
 
 $dss_admin_access_labels = array();
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_SUPER] = "Super User";
@@ -258,6 +274,9 @@ $dss_admin_access_labels[DSS_ADMIN_ACCESS_ADMIN] = "Admin User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BASIC] = "Basic User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BILLING_ADMIN] = "Billing Admin User";
 $dss_admin_access_labels[DSS_ADMIN_ACCESS_BILLING_BASIC] = "Billing Basic User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_HST_ADMIN] = "HST Admin User";
+$dss_admin_access_labels[DSS_ADMIN_ACCESS_HST_BASIC] = "HST Basic User";
+
 
 define('DSS_USER_ACCESS_STAFF', 1);
 define('DSS_USER_ACCESS_DOCTOR', 2);
@@ -304,7 +323,9 @@ $dss_ticket_status_labels[DSS_TICKET_STATUS_CLOSED] = "Closed";
 
 define('DSS_COMPANY_TYPE_BILLING', 0);
 define('DSS_COMPANY_TYPE_SOFTWARE', 1);
+define('DSS_COMPANY_TYPE_HST', 2);
 
 $dss_company_type_labels = array();
 $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING] = "Billing";
 $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE] = "Software";
+$dss_company_type_labels[DSS_COMPANY_TYPE_HST] = "HST";

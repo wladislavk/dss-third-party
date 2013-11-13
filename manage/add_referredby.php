@@ -7,7 +7,6 @@ $addtopat = $_GET['addtopat'];
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 ?>
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
 if($_POST["referredbysub"] == 1)

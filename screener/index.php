@@ -9,6 +9,7 @@ if(!isset($_SESSION['screener_doc'])){
   <?php
 	die();
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -19,7 +20,8 @@ if(!isset($_SESSION['screener_doc'])){
 <script type="text/javascript" src="../manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.easing-1.3.pack.js"></script>
 			<script type="text/javascript" src="../reg/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="script/screener.js"></script>
+<!--<script type="text/javascript" src="script/screener.js"></script>-->
+<?php include 'script/screener.php'; ?>
     <script type="text/javascript" src="../manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="script/screener_masks.js"></script>
 <link rel="stylesheet" href="css/screener.css" />
@@ -102,6 +104,20 @@ if(!isset($_SESSION['screener_doc'])){
 <div class="dp66">
 <div class="msg_box msg_error" id="epworth_error_box" style="display:none;"></div>
 
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($epworth_myarray = mysql_fetch_array($epworth_my))
+  {
+?>
+<div class="sepH_b clear" id="epworth_<?= $epworth_myarray['epworthid']; ?>_div">
+        <select class="inpt_in epworth_select" id="epworth_<?=$epworth_myarray['epworthid']; ?>" name="epworth_<?= $epworth_myarray['epworthid']; ?>"><?= $options; ?></select>
+        <label class="lbl_in"><?= $epworth_myarray['epworth']; ?></label>
+</div>
+
+<?php } ?>
+<!--
 <div class="sepH_b clear" id="epworth_reading_div">
 	<select class="inpt_in epworth_select" id="epworth_reading" name="epworth_reading"><?= $options; ?></select>
         <label class="lbl_in">Sitting and reading</label>
@@ -142,6 +158,7 @@ if(!isset($_SESSION['screener_doc'])){
         <select class="inpt_in epworth_select" id="epworth_traffic" name="epworth_traffic"><?= $options; ?></select>
         <label class="lbl_in">In a car, while stopped for a few minutes in traffic</label>
 </div>
+-->
 </div>
         <div class="legend dp33">
                         Using the following scale, choose the most appropriate number for each situation.
@@ -381,7 +398,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 </div>
 <div id="risk_image"></div>
 <a href="#results" onclick="$('#results_div').toggle();" class="fl next btn btn_medium btn_d">View Results</a>
-
+<a href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST &raquo;</a>
 <a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finished - Click Here</a>
 						<div style="display:none">
 							<div id="regModal">
@@ -411,34 +428,18 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
        <span id="r_ep_total"></span> -
        <label>Epworth Sleepiness Scale Total</label>
     </div>
+<?php
+  $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+  $epworth_my = mysql_query($epworth_sql);
+  $epworth_number = mysql_num_rows($epworth_my);
+  while($ea = mysql_fetch_array($epworth_my))
+  {
+?>
     <div class="check">
-      <span id="r_epworth_reading"></span> -
-      <label>Sitting and reading</label>
+      <span id="r_epworth_<?=$ea['epworthid'];?>"></span> -
+      <label><?=$ea['epworth']; ?></label>
     </div>
-    <div class="check">
-      <span id="r_epworth_public"></span> - 
-      <label>Sitting inactive in a public place (e.g. a theater or meeting)</label>
-    </div>
-    <div class="check">
-      <span id="r_epworth_passenger"></span> -
-      <label>As a passenger in a car for an hour without a break</label>
-    </div>
-    <div class="check">
-      <span id="r_epworth_lying"></span> - 
-      <label>Lying down to rest in the afternoon when circumstances permit</label>
-    </div>
-    <div class="check">
-      <span id="r_epworth_talking"></span> - 
-      <label>Sitting and talking to someone</label>
-    </div>
-    <div class="check">
-      <span id="r_epworth_lunch"></span> - 
-      <label>Sitting quietly after a lunch without alcohol</label>
-    </div>
-    <div class="check">
-      <span id="r_epworth_traffic"></span> - 
-      <label>In a car, while stopped for a few minutes in traffic</label>
-    </div>
+<?php } ?>
   </div>
   <div style="width:38%;float:left;">
     <div><strong>Health Symptoms</strong></div>
@@ -503,6 +504,36 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
   </div>
 </div>
 
+
+<div class="sect" id="secthst">
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
+
+<h3 class="sepH_a">Dental Sleep Solutions - Home Sleep Test Request</h3>
+<p>Please enter your contact information to request a home sleep test.</p>
+<br />
+<div class="dp50">
+
+<div class="sepH_b clear" id="hst_first_name_div">
+        <label class="lbl_a">First Name</label>
+        <input class="inpt_a" type="text" id="hst_first_name" name="hst_first_name" />
+</div>
+
+<div class="sepH_b" id="hst_last_name_div">
+        <label class="lbl_a">Last Name</label>
+        <input class="inpt_a" type="text" id="hst_last_name" name="hst_last_name" />
+</div>
+</div>
+<div class="dp50">
+<div class="sepH_b" id="hst_phone_div">
+        <label class="lbl_a">Phone Number</label>
+        <input class="inpt_a phonemask" type="text" id="hst_phone" name="hst_phone" />
+</div>
+<div class="sepH_b" id="hst_email_div">
+        <label class="lbl_a">Email</label>
+        <input class="inpt_a" type="text" id="hst_email" name="hst_email" />
+</div>
+</div>
+<a href="#" onclick="submit_hst()" id="sect4_next" class="fr next btn btn_medium btn_d">Submit Request</a>
           </div>
 <div style="clear:both;"></div>
 

@@ -235,7 +235,7 @@ background:#cccccc;
 background:#999999;
 }
 .arrow_asc, .arrow_desc{
-  background-color: rgb(0, 39, 94);
+background-color: rgb(0, 39, 94);
 }
 </style>
 </div>

@@ -59,7 +59,6 @@ if($_POST['sortsub'] == 1)
 ?>
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
-<script src="popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="popup/popup.js" type="text/javascript"></script>
 
 <span class="admin_head">

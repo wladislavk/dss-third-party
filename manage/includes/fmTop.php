@@ -821,7 +821,6 @@ form#edit textarea {
 <body onload="document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';">
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 
-<script src="admin/popup/jquery-1.2.6.min.js" type="text/javascript"></script>
 <script src="admin/popup/popup.js" type="text/javascript"></script>  
 <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
 <!-- Header and nav goes here -->

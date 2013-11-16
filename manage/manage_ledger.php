@@ -430,7 +430,7 @@ return s;
         </button>
         &nbsp;&nbsp;
         <button onclick="Javascript: window.open('ledger_statement.php?pid=<?=$_GET['pid'];?>')" class="addButton">
-               Statement 
+               Create Statement 
         </button>
         &nbsp;&nbsp;
 

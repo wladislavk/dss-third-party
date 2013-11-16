@@ -90,7 +90,6 @@ if($_POST["usersub"] == 1)
 				}
 				$ed_sql .= "
 				billing_company_id = '".$_POST['billing_company_id']."',
-                                hst_company_id = '".$_POST['hst_company_id']."',
                                 plan_id = '".$_POST['plan_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -124,7 +123,10 @@ if($_POST["usersub"] == 1)
 			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($_POST["companyid"])."'");
 			}
 
-
+		mysql_query("DELETE FROM dental_user_hst_company WHERE userid='".mysql_real_escape_string($_POST["ed"])."'");
+		foreach($_POST['hst_company'] as $hst_company){
+		  mysql_query("INSERT INTO dental_user_hst_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($hst_company)."', adddate=now(), ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'");
+		}
                 if(isset($_POST['reg_but'])){
 		$userid = $_POST['ed'];
 		$recover_hash = $old_r['recover_hash'];
@@ -209,7 +211,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
-                                hst_company_id = '".$_POST['hst_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
 				";
 		                if(isset($_POST['reg_but'])){
@@ -278,6 +279,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			}else{
   			  mysql_query("INSERT INTO dental_user_company SET userid='".mysql_real_escape_string($userid)."', companyid='".mysql_real_escape_string($_SESSION["companyid"])."'");
 			}		
+                foreach($_POST['hst_company'] as $hst_company){
+                  mysql_query("INSERT INTO dental_user_hst_company SET userid='".mysql_real_escape_string($_POST["ed"])."', companyid='".mysql_real_escape_string($hst_company)."', adddate=now(), ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'");
+                }
 
 		if(isset($_POST['reg_but'])){
   $m = "<html><body><center>
@@ -894,15 +898,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  HST Company
             </td>
             <td valign="top" class="frmdata">
-                <select name="hst_company_id" class="tbox">
-                        <option value="">None</option>
                         <?php
-                          $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                          $bu_q = mysql_query($bu_sql);
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+					LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_GET['ed'])."'
+					WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                          $bu_q = mysql_query($bu_sql); 
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $hst_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                            <input type="checkbox" name="hst_company[]" value="<?= $bu_r['id']; ?>"  <?= ($bu_r['uhc_id'])?'checked="checked"':''; ?> /> <?= $bu_r['name']; ?>
                           <?php } ?>
-                </select>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

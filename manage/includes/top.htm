@@ -1491,6 +1491,26 @@ $total_insurance = mysql_num_rows($insurance_my);
 	  }
 		?></span><?php
 	}
+
+	        $rc_sql = "SELECT * FROM dental_hst WHERE 
+                        (status='".DSS_HST_PENDING."' OR status='".DSS_HST_SCHEDULED."')
+                        AND patient_id='".mysql_real_escape_string($_GET['pid'])."'";
+        $rc_q = mysql_query($rc_sql);
+        if(mysql_num_rows($rc_q) > 0){
+                ?><span class="warning">
+                Warning! Patient has the following Home Sleep Tests: <br />
+                <?php
+          while($hst = mysql_fetch_assoc($rc_q)){
+		?>
+                HST was requested <?= date('m/d/Y', strtotime($hst['adddate'])); ?>
+		and is currently <?= $dss_hst_status_labels[$hst['status']]; ?>
+                <br />
+                <?php
+          }
+                ?></span><?php
+        }
+
+
   }
 
   $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";

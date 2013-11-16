@@ -8,18 +8,9 @@ require_once('../includes/general_functions.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <?php
-// Get patient id for updating patient summary table
-$sql = "SELECT "
-		 . "  preauth.patient_id "
-		 . "FROM "
-		 . "  dental_insurance_preauth preauth "
-		 . "WHERE "
-		 . "  preauth.id = " . $_REQUEST['ed'];
-$result = mysql_query($sql);
-$pid = mysql_result($result, 0);
 
 if (isset($_REQUEST['ed'])) {
-    // load preauth
+    // load hst
     $sql = "SELECT "
          . "  hst.* "
          . "FROM "
@@ -30,22 +21,9 @@ if (isset($_REQUEST['ed'])) {
 		$my = mysql_query($sql) or die(mysql_error());
 		$hst = mysql_fetch_array($my);
 } else {
-    // update preauth
+    // update hst
     $sql = "UPDATE dental_hst SET "
-				 . "ins_co_id = '" . s_for($_POST["ins_co_id"]) . "', "
-				 . "patient_ins_group_id = '" . s_for($_POST["patient_ins_group_id"]) . "', "
-				 . "patient_ins_id = '" . s_for($_POST["patient_ins_id"]) . "', "
-				 . "patient_firstname = '" . s_for($_POST["patient_firstname"]) . "', "
-				 . "patient_lastname = '" . s_for($_POST["patient_lastname"]) . "', "
-				 . "patient_add1 = '" . s_for($_POST["patient_add1"]) . "', "
-				 . "patient_add2 = '" . s_for($_POST["patient_add2"]) . "', "
-				 . "patient_city = '" . s_for($_POST["patient_city"]) . "', "
-				 . "patient_state = '" . s_for($_POST["patient_state"]) . "', "
-				 . "patient_zip = '" . s_for($_POST["patient_zip"]) . "', "
-				 . "patient_dob = '" . s_for($_POST["patient_dob"]) . "', "
-				 . "insured_firstname = '" . s_for($_POST["insured_firstname"]) . "', "
-				 . "insured_lastname = '" . s_for($_POST["insured_lastname"]) . "', "
-				 . "insured_dob = '" . s_for($_POST["insured_dob"]) . "', "
+				 . " office_notes = '".s_for($_POST['office_notes'])."', "
          			 . " status = " . s_for($_POST['status']) . " ";
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());
@@ -57,9 +35,6 @@ if (isset($_REQUEST['ed'])) {
     print "</script>";
 }
 
-$is_complete = ($hst['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
-$is_rejected = ($hst['status'] == DSS_PREAUTH_REJECTED) ? true : false;
-$disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -98,7 +73,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
+    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -187,33 +162,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Insured First Name
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="insured_firstname" value="<?=$hst['insured_firstname']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Insured Last Name
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="insured_lastname" value="<?=$hst['insured_lastname']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Insured DOB
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="insured_dob" value="<?=$hst['insured_dob']?>" class="tbox readonly" readonly /> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
                 Patient's Group Insurance #
             </td>
             <td valign="top" class="frmdata">
@@ -244,11 +192,27 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Status
             </td>
             <td valign="top" class="frmdata">
-                <select name="status" class="tbox">
+                <select id="status" name="status" class="tbox">
 			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hst['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
                         <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
                         <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
                 <span class="red">*</span>
+            </td>
+        </tr>
+        <tr class="status_<?= DSS_HST_SCHEDULED; ?> status">
+            <td valign="top" class="frmhead" width="30%">
+                Notes to Office
+            </td>
+            <td valign="top" class="frmdata">
+		<textarea name="office_notes"><?= $hst['office_notes']; ?></textarea>
+	    </td>
+        </tr>
+        <tr class="status_<?= DSS_HST_COMPLETE; ?> status">
+            <td valign="top" class="frmhead" width="30%">
+                HST
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="file" name="hst_file" />
             </td>
         </tr>
         <tr>
@@ -262,6 +226,17 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
     </table>
     </form>
+  <script type="text/javascript">
+    $('#status').change( function() {
+      s = $(this).val();
+      $('.status').hide();
+      $('.status_'+s).show();
+    });
 
+    $(document).ready(function(){
+      $('.status').hide();
+      $('.status_<?=$hst['status'];?>').show();
+    });
+  </script>
 </body>
 </html>

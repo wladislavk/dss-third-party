@@ -255,7 +255,9 @@ if($pat_myarray['patientid'] == '')
 
 		}	  
 
-$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$sql = "select p1.*, s.analysis from dental_q_page1 p1 
+	LEFT JOIN dental_q_sleep s ON s.patientid=p1.patientid
+	where p1.patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
@@ -263,6 +265,7 @@ $q_page1id = st($myarray['q_page1id']);
 $exam_date = st($myarray['exam_date']);
 $ess = st($myarray['ess']);
 $tss = st($myarray['tss']);
+$analysis = $myarray['analysis'];
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
@@ -395,7 +398,7 @@ if($complaintid <> '')
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
 				}
                             ?>
-
+<?= $analysis; ?>
 	  <br />
 	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $tss; ?>" />
                             <?php
@@ -403,6 +406,7 @@ if($complaintid <> '')
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);
 				}
                             ?>
+> 5 indicates snoring is significantly affecting quality of life.
 	<?php
 	  $sleep_sql = "SELECT * FROM dental_q_sleep WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
 	  $sleep_q = mysql_query($sleep_sql);
@@ -465,7 +469,7 @@ if($complaintid <> '')
 					<?php
 					}
 			?>
-
+			<?= $ess; ?> - Total
 
 		  </div>
 		  <div style="width:48%; float:left;">
@@ -489,7 +493,7 @@ if($complaintid <> '')
 			<?= $snore_4; ?> - My snoring is loud<br />
 			<?= $snore_5; ?> - My snoring affects people when I am sleeping away from home<br />
 
-
+			<?=$tss; ?> - Total
 			<?php
 
 		    ?>

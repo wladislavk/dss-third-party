@@ -424,7 +424,7 @@ select
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php
-if($myarray[0]!='claim'){
+if($myarray[0]!='claim' && $myarray['amount'] <> 0){
           echo number_format($myarray["amount"],2);
           $tot_charge += $myarray["amount"];
 }

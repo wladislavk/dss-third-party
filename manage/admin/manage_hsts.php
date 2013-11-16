@@ -13,6 +13,7 @@ define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
+define('SORT_BY_COMPANY', 6);
 
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
@@ -35,6 +36,8 @@ switch ($sort_by) {
   case SORT_BY_USER:
     $sort_by_sql = "user_name $sort_dir";
     break;
+  case SORT_BY_COMPANY:
+    $sort_by_sql = "hst_company_name $sort_dir";
   default:
     // default is SORT_BY_STATUS
     $sort_by_sql = "hst.status $sort_dir, hst.adddate $sort_dir";
@@ -72,26 +75,33 @@ $sql = "SELECT "
      . "  hst.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name "
+     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
+     . "  hst_company.name AS hst_company_name "
      . "FROM "
      . "  dental_hst hst "
-     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  LEFT JOIN dental_patients p ON hst.patient_id = p.patientid "
      . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON hst.user_id = users2.userid ";
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  LEFT JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
+     . "  LEFT JOIN companies hst_company ON uhc.companyid=hst_company.id ";
 }elseif(is_hst($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  hst.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name "
+     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
+     . "  hst_company.name AS hst_company_name "
      . "FROM "
      . "  dental_hst hst "
-     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  LEFT JOIN dental_patients p ON hst.patient_id = p.patientid "
      . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid "
-     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
-     . "  JOIN dental_users users ON hst.doc_id = users.userid AND users.hst_company_id = '".$_SESSION['admincompanyid']."'"
-     . "  JOIN dental_users users2 ON hst.user_id = users2.userid ";
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
+     . "  	AND uhc.companyid='".$_SESSION['admincompanyid']."'"
+     . "  JOIN companies hst_company ON uhc.companyid=hst_company.id ";
 
 }else{
 $sql = "SELECT "
@@ -101,7 +111,7 @@ $sql = "SELECT "
      . "  users2.name as user_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
-     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  LEFT JOIN dental_patients p ON preauth.patient_id = p.patientid "
      . "  LEFT JOIN dental_user_company uc ON uc.userid = p.docid AND uc.companyid = '".$_SESSION['admincompanyid']."'"
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
@@ -157,8 +167,8 @@ $my=mysql_query($sql) or die(mysql_error());
   <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
     Status:
     <select name="status">
-      <?php $pending_requested = ($status == DSS_PREAUTH_REQUESTED) ? 'selected' : ''; ?>
-      <?php $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : ''; ?>
+      <?php $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : ''; ?>
+      <?php $pending_selected = ($status == DSS_HST_PENDING) ? 'selected' : ''; ?>
       <?php $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
       <option value="">Any</option>
@@ -168,7 +178,6 @@ $my=mysql_query($sql) or die(mysql_error());
       <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
     </select>
     &nbsp;&nbsp;&nbsp;
-
     Account:
     <select name="fid">
       <option value="">Any</option>
@@ -207,7 +216,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>
 	</TR>
@@ -223,6 +232,9 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_COMPANY, $sort_dir) ?>" width="10%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_COMPANY, get_sort_dir($sort_by, SORT_BY_COMPANY, $sort_dir))?>">Company</a>
+                </td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
@@ -257,12 +269,16 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
-				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "yellow" : "green"; ?>
-				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
-				<?php $status_text = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "black" : "white"; ?>
+				<?php $status_color = ($myarray["status"] == DSS_HST_PENDING ) ? "yellow" : "green"; ?>
+				<?php $status_color = (($myarray["status"] == DSS_HST_PENDING) && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
+				<?php $status_text = ($myarray["status"] == DSS_HST_PENDING ) ? "black" : "white"; ?>
 				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
 					<?=st($dss_hst_status_labels[$myarray["status"]]);?>&nbsp;
+<ured_firstname' in 'field list'=$myarray['status'];?>
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["hst_company_name"]);?>
+                                </td>
 				<td valign="top">
 					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
 				</td>

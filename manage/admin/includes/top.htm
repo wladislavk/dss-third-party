@@ -162,7 +162,7 @@ if(is_super($_SESSION['admin_access'])){
      . "FROM "
      . "  dental_hst hst "
      . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
      . " WHERE hst.status = " . DSS_HST_PENDING;
@@ -172,11 +172,12 @@ if(is_super($_SESSION['admin_access'])){
      . "FROM "
      . "  dental_hst hst "
      . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
-     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  JOIN dental_user_hst_company uhc ON uhc.userid = users.userid "
      . " WHERE hst.status = " . DSS_HST_PENDING
-     . "   AND users.hst_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+     . "   AND uhc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
 }else{
   $sql = "SELECT "
      . "  hst.id "

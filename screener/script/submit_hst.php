@@ -3,6 +3,7 @@ require_once '../../manage/admin/includes/main_include.php';
 $screenerid = $_REQUEST['screenerid'];
 $docid = $_REQUEST['docid'];
 $userid = $_REQUEST['userid'];
+$companyid = $_REQUEST['companyid'];
 $patient_first_name = $_REQUEST['patient_first_name'];
 $patient_last_name = $_REQUEST['patient_last_name'];
 $patient_cell_phone = $_REQUEST['patient_cell_phone'];
@@ -17,6 +18,7 @@ $s = "INSERT INTO dental_hst SET
 	screener_id = '".mysql_real_escape_string($screenerid)."',
 	doc_id = '".mysql_real_escape_string($docid)."',
 	user_id = '".mysql_real_escape_string($userid)."',
+	company_id = '".mysql_real_escape_string($companyid)."',
 	patient_firstname = '".mysql_real_escape_string($patient_first_name)."',
         patient_lastname = '".mysql_real_escape_string($patient_last_name)."',
 	patient_cell_phone = '".mysql_real_escape_string(num($patient_cell_phone))."',

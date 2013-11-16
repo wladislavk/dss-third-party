@@ -51,10 +51,10 @@ if($_GET['sh'] <> '')
 	$sql .= " and imagetypeid='".$_GET['sh']."' ";
 
 If(!isset($_REQUEST['sort'])){
-  $_REQUEST['sort'] = 'title';
+  $_REQUEST['sort'] = 'adddate';
 }
 If(!isset($_REQUEST['sortdir'])){
-  $_REQUEST['sortdir'] = 'ASC';
+  $_REQUEST['sortdir'] = 'DESC';
 }
 $sql .= " order by ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 $my = mysql_query($sql);
@@ -107,12 +107,12 @@ $itype_my = mysql_query($itype_sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=title&sortdir=<?php echo ($_REQUEST['sort']=='title'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Title</a>
-		</td>
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'imagetypeid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
 			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=imagetypeid&sortdir=<?php echo ($_REQUEST['sort']=='imagetypeid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Image Type</a>
 		</td>
+                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=title&sortdir=<?php echo ($_REQUEST['sort']=='title'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Title</a>
+                </td>
 		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
 			<a href="q_image.php?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Add Date</a>
 		</td>
@@ -152,14 +152,14 @@ $itype_my = mysql_query($itype_sql);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=st($myarray["title"]);?>
-				</td>
-				<td valign="top">
 					<?php if($myarray['imagetypeid']==0){ ?>
 						Clinical Photos (Pre-Tx)
 					<?php }else{ ?>
 					<?=st($i_type_myarray["imagetype"]);?>
 					<?php } ?>
+				</td>
+				<td valign="top">
+					<?=st($myarray["title"]);?>
 				</td>
 				<td valign="top">
 					<?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>

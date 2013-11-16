@@ -15,7 +15,7 @@ if(isset($_POST['submit'])){
   //print_r($my_array);exit;
   $sd = date('Y-m-d H:i:s');
   $sql = "INSERT INTO dental_hst ("
-       . "  patient_id, doc_id, user_id, ins_co_id, ins_phone, patient_ins_group_id, "
+       . "  patient_id, doc_id, user_id, company_id, ins_co_id, ins_phone, patient_ins_group_id, "
        . "  patient_ins_id, patient_firstname, patient_lastname, patient_add1, "
        . "  patient_add2, patient_city, patient_state, patient_zip, patient_dob, "
        . "  patient_cell_phone, patient_home_phone, patient_email, "
@@ -28,6 +28,7 @@ if(isset($_POST['submit'])){
        . "  " . mysql_real_escape_string($_GET['ed']) . ", "
        . "  " . mysql_real_escape_string($_SESSION['docid']) . ", "
        . "  '" . mysql_real_escape_string($_SESSION['userid']) . "', "
+       . "  '" . mysql_real_escape_string($_POST['company_id']) . "', "
        . "  '" . mysql_real_escape_string($_POST['ins_co_id']) . "', "
        . "  '" . mysql_real_escape_string($_POST['ins_phone']) . "', "
        . "  '" . mysql_real_escape_string($_POST['patient_ins_group_id']) . "', "
@@ -159,6 +160,15 @@ if($epworthid <> '')
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
   <h2 align="center"><strong>Sleep Services</strong></h2>
   <h3 align="center">Home Sleep Test Order Form</h3>
+  <?php
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                 $bu_q = mysql_query($bu_sql);
+                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+                            <input type="radio" name="company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
+                          <?php } ?>
+
   <p align="left">
     <label for="patient_name">Patient First Name</label>
     <input type="text" name="patient_firstname" id="patient_firstname" value="<?= $pat['patient_firstname']; ?>"/>
@@ -204,12 +214,15 @@ if($epworthid <> '')
 
     <label for="ins_phone">Ins. Phone Number</label>
     <input type="text" name="ins_phone" id="ins_phone"  value="<?= $pat['ins_phone']; ?>" />
+<br />
     <label for="patient_ins_id">ID Number</label>
     <input type="text" name="patient_ins_id" id="patient_ins_id" value="<?= $pat['patient_ins_id']; ?>" />
     <label for="patient_ins_group_id">Group Number</label>
     <input type="text" name="patient_ins_group_id" id="patient_ins_group_id" value="<?= $pat['patient_ins_group_id']; ?>" />
   </p>
+<p>&nbsp;</p>
   <p align="left">Diganosis / Reason for Study  </p>
+<hr />
   <p align="left">
   <?php
                                 $ins_diag_sql = "select * from dental_ins_diagnosis where status=1 order by sortby";
@@ -224,7 +237,9 @@ if($epworthid <> '')
                                                                                 }?>
 
   </p>
+  <p>&nbsp;</p>
   <p align="left">Home Sleep Diagnostic Testing</p>
+  <hr />
   <p align="left">
     <input type="radio" name="hst_type" id="hst_order1" value="1" />
     <label for="hst_order">In-Home Sleep Test (2 nights)</label>
@@ -233,7 +248,9 @@ if($epworthid <> '')
     <input type="radio" name="hst_type" id="hst_order3" value="3" />
     <label for="hst_order3">In-Home Sleep Test with OAT (titration)</label>
   </p>
+  <p>&nbsp;</p>
   <p align="left">Provider Information</p>
+  <hr />
   <p align="left">
   Deliver HST Results/Report via my <strong>DS3 Software</strong></p>
   <p align="left">
@@ -249,6 +266,7 @@ if($epworthid <> '')
     <input type="text" name="provider_address" id="provider_address" value="<?= $user_info['address']; ?>" />
     <label for="provider_city">City</label>
     <input type="text" name="provider_city" id="provider_city" value="<?= $user_info['city']; ?>" />
+    <br />
     <label for="provider_state">State</label>
     <input type="text" name="provider_state" id="provider_state" value="<?= $user_info['state']; ?>" />
     <label for="provider_zip">Zip</label>

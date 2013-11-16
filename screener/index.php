@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('../manage/admin/includes/main_include.php');
+include_once '../manage/includes/constants.inc';
 if(!isset($_SESSION['screener_doc'])){
   ?>
 	<script type="text/javascript">
@@ -398,7 +399,16 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 </div>
 <div id="risk_image"></div>
 <a href="#results" onclick="$('#results_div').toggle();" class="fl next btn btn_medium btn_d">View Results</a>
+<?php
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'
+                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                 $bu_q = mysql_query($bu_sql);
+                                if(mysql_num_rows($bu_q)>0){
+?>
 <a href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST &raquo;</a>
+<?php } ?>
+
 <a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finished - Click Here</a>
 						<div style="display:none">
 							<div id="regModal">
@@ -512,7 +522,17 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <p>Please enter your contact information to request a home sleep test.</p>
 <br />
 <div class="dp50">
-
+<div class="sepH_b clear" id="hst_company_id_div">
+        <label class="lbl_a">HST Company</label>
+  <?php
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['screener_doc'])."'
+                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                 $bu_q = mysql_query($bu_sql);
+                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
+                            <input type="radio" name="hst_company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
+                          <?php } ?>
+</div>
 <div class="sepH_b clear" id="hst_first_name_div">
         <label class="lbl_a">First Name</label>
         <input class="inpt_a" type="text" id="hst_first_name" name="hst_first_name" />

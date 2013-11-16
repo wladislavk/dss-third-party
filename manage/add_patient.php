@@ -1541,8 +1541,19 @@ function remove_notification(id){
 			  }	
 			} ?>
 
-<input type="submit" name="sendHST" value="Order HST" class="button" />
-
+<?php
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                 $bu_q = mysql_query($bu_sql);
+				if(mysql_num_rows($bu_q)>0){
+?>
+<input type="submit" name="sendHST"
+ onclick="alert('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
+ value="Order HST" class="button" />
+<?php
+} 
+?>
 
 		</td>
 	</tr>

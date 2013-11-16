@@ -481,6 +481,7 @@ function submit_hst(){
       screenerid: screenerid,
       docid: $('#docid').val(),
       userid: $('#userid').val(),
+      companyid: $('input[name=hst_company_id]:checked').val(),
       patient_first_name: $('#hst_first_name').val(),
       patient_last_name: $('#hst_last_name').val(),
       patient_cell_phone: $('#hst_phone').val(),
@@ -494,7 +495,6 @@ function submit_hst(){
 ?>
       epworth_<?= $ea['epworthid']; ?>: $('#epworth_<?=$ea['epworthid'];?>').val(),
 <?php } ?>
-
       snore_1: $('#snore_1').val(),
       snore_2: $('#snore_2').val(),
       snore_3: $('#snore_3').val(),

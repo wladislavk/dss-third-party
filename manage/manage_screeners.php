@@ -83,7 +83,7 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 $i_val = $index_val * $rec_disp;
 $sql = "SELECT s.*, u.name, h.id as hst_id,
 	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total,
-	epworth_reading + epworth_public + epworth_passenger + epworth_lying + epworth_talking + epworth_lunch + epworth_traffic AS ep_total,
+	(SELECT sum(se.response) FROM dental_screener_epworth se WHERE se.screener_id = s.id) ep_total,
         rx_cpap + rx_blood_pressure + rx_hypertension + rx_heart_disease + rx_stroke + rx_apnea + rx_diabetes + rx_lung_disease + rx_insomnia + rx_depression + rx_narcolepsy + rx_medication + rx_restless_leg + rx_headaches + rx_heartburn AS sect3_total 
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
@@ -250,7 +250,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= ($myarray['rx_cpap']>0)?'Yes':'No'; ?>
 				</td>
                                 <td valign="top">
-					<?= st($myarray['epworth_lunch']+$myarray['epworth_lying']+$myarray['epworth_reading']+$myarray['epworth_passenger']+$myarray['epworth_public']+$myarray['epworth_traffic']+$myarray["epworth_talking"]); ?>
+					<?= st($myarray['ep_total']); ?>
                                 </td>
 				<td valign="top">
 					<?php
@@ -329,27 +329,16 @@ $my=mysql_query($sql) or die(mysql_error());
 			<tr id="details_<?= $myarray['id']; ?>" style="display:none;">
 			<td colspan="4" valign="top">
 				<strong>Epworth Sleepiness Score</strong><br />
-				<?php if($myarray['epworth_reading']>0) { ?>
-				<?= $myarray['epworth_reading']; ?> - <?= $epworth_labels[$myarray['epworth_reading']]; ?> - <strong>Sitting and reading:</strong> <br />
-				<?php } ?>
-                                <?php if($myarray['epworth_public']>0) { ?>
-                                <?= $myarray['epworth_public']; ?> - <?= $epworth_labels[$myarray['epworth_public']]; ?> - <strong>Sitting inactive in a public place (e.g. a theater or meeting): </strong><br />
-                                <?php } ?>
-                                <?php if($myarray['epworth_passenger']>0) { ?>
-                                <?= $myarray['epworth_passenger']; ?> - <?= $epworth_labels[$myarray['epworth_passenger']]; ?> - <strong>As a passenger in a car for an hour without a break: </strong><br />
-                                <?php } ?>
-                                <?php if($myarray['epworth_lying']>0) { ?>
-                                <?= $myarray['epworth_lying']; ?> - <?= $epworth_labels[$myarray['epworth_lying']]; ?> - <strong>Lying down to rest in the afternoon when circumstances permit: </strong><br />
-                                <?php } ?>
-                                <?php if($myarray['epworth_talking']>0) { ?>
-                                <?= $myarray['epworth_talking']; ?> - <?= $epworth_labels[$myarray['epworth_talking']]; ?> - <strong>Sitting and talking to someone: </strong><br />
-                                <?php } ?>
-                                <?php if($myarray['epworth_lunch']>0) { ?>
-                                <?= $myarray['epworth_lunch']; ?> - <?= $epworth_labels[$myarray['epworth_lunch']]; ?> - <strong>Sitting quietly after a lunch without alcohol: </strong><br />
-                                <?php } ?>
-                                <?php if($myarray['epworth_traffic']>0) { ?>
-                                <?= $myarray['epworth_traffic']; ?> - <?= $epworth_labels[$myarray['epworth_traffic']]; ?> - <strong>In a car, while stopped for a few minutes in traffic: </strong><br />
-				<?php } ?>
+	<?php $ep_sql = "SELECT se.response, e.epworth 
+				FROM dental_screener_epworth se
+				JOIN dental_epworth e ON se.epworth_id =e.epworthid
+				WHERE se.response > 0 AND se.screener_id='".mysql_real_escape_string($myarray['id'])."'";
+		$ep_q = mysql_query($ep_sql);
+		while($ep_r = mysql_fetch_assoc($ep_q)){
+		?>
+		<?= $ep_r['response']; ?> - <strong><?= $ep_r['epworth']; ?></strong><br />
+		<?php } ?>
+		<?= $myarray['ep_total']; ?> - Total
 			</td><td valign="top" colspan="6">
 			<strong>Health Symptoms</strong><br />
 			<?= ($myarray['breathing']>0)?'Yes - <strong>Have you ever been told you stop breathing while asleep?</strong><br />':''; ?>

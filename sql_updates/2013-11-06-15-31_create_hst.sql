@@ -2,6 +2,7 @@ CREATE TABLE `dental_hst` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `doc_id` int(11),
   `user_id` int(11),
+  `company_id` int(11),
   `patient_id` int(11),
   `screener_id` int(11),
   `ins_co_id` int(11),
@@ -53,6 +54,14 @@ CREATE TABLE `dental_hst_epworth` (
 );
 
 
+CREATE TABLE `dental_user_hst_company` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11),
+  `companyid` int(11),
+  `adddate` datetime,
+  `ip_address` varchar(50),
+  PRIMARY KEY (`id`)
+);
 
 
 

@@ -392,15 +392,15 @@ if($complaintid <> '')
     
     <tr>
 	<td valign="top" class="frmhead">
-	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" name="ess" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $ess; ?>" />
+	  Baseline Epworth Sleepiness Score: <input type="text" id="ess" style="width:30px;" name="ess" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $ess; ?>" />
                             <?php
 				if($pat_row['ess']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'ess', $pat_row['ess'], $ess, true, $showEdits);
 				}
                             ?>
 <?= $analysis; ?>
-	  <br />
-	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $tss; ?>" />
+	  <br /><br />
+	  Baseline Thornton Snoring Scale: <input type="text" id="tss" name="tss" style="width:30px;" onclick="window.location = 'q_sleep.php?pid=<?=$_GET['pid']; ?>';" readonly="readonly" value="<?= $tss; ?>" />
                             <?php
 				if($pat_row['tss']!=''){
                                   showPatientValue('dental_q_page1', $_GET['pid'], 'tss', $pat_row['tss'], $tss, true, $showEdits);

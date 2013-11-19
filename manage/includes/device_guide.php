@@ -129,7 +129,7 @@ $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
  });
 </script>
 	<?php }else{ ?>
-		<input type="checkbox" />
+		<input type="checkbox" name="setting<?= $s_r['id'];?>" value="1" />
 	<?php } ?>
       </div>
     <?php } ?>

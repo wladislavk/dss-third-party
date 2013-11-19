@@ -11,22 +11,33 @@ require_once('../includes/general_functions.php');
   $d_q = mysql_query($d_sql);
   while($d = mysql_fetch_assoc($d_q)){
     $tot = 0;
-    $s_sql = "SELECT ds.value, ds.setting_id FROM dental_device_guide_device_setting ds WHERE ds.device_id='".$d['id']."'";   
+    $show = true;
+    $s_sql = "select s.id, s.setting_type, ds.value FROM dental_device_guide_settings s 
+		LEFT JOIN dental_device_guide_device_setting ds ON s.id=ds.setting_id 
+			and ds.device_id='".$d['id']."'";   
     $s_q = mysql_query($s_sql);
     while($s = mysql_fetch_assoc($s_q)){
-      $s_val = $_POST['setting'.$s['setting_id']];
-      $val = $s_val*$s['value'];
-      if(isset($_POST['setting_imp_'.$s['setting_id']])){
-        $val *= 1.75;
+      if($s['setting_type'] == 1){
+	if($s['value'] != '1' && $_POST['setting'.$s['id']] == '1'){
+          $show = false;
+	}
+      }else{
+        $s_val = $_POST['setting'.$s['id']];
+        $val = $s_val*$s['value'];
+        if(isset($_POST['setting_imp_'.$s['id']])){
+          $val *= 1.75;
+        }
+        $tot += $val;
       }
-      $tot += $val;
     }
+    if($show){
     $a = array();
     $a['name'] = $d['name'];
     $a['id'] = $d['id'];
     $a['value'] = $tot;
     $a['image_path'] = ($d['image_path'])?"../q_file/".$d['image_path']:'';
     array_push($d_array, $a);
+    }
   }
 usort($d_array, "cmp");
 

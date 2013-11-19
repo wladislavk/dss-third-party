@@ -36,11 +36,24 @@
   height: 30px;
   padding-top: 6px;
   width: 317px;
-  text-align: center;
   float: left;
   color: #000;
   font-size: 22px;
   background: #fed68d url(../images/name_bg.gif) no-repeat 0 0;
+  }
+
+#patient_name_div .medicare_name{
+  width:238px;
+  vertical-align:top;
+  text-align:center;
+  display:block;
+  float:right;
+}
+
+#patient_name_div .name{
+  width:100%;
+  text-align:center;
+  display:block;
   }
 
 #patient_nav{

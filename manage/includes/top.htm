@@ -843,6 +843,7 @@ display:none;
                     while($myarray = mysql_fetch_array($my))
                                 {
 			$premed = $myarray['premedcheck'];
+			$medicare = ($myarray['p_m_ins_type'] == 1);
                     if($premed){
                         $title .= "Pre-medication: " . $myarray['premed']."\n";
                     }
@@ -1202,11 +1203,18 @@ if($_SESSION['docid']==$_SESSION['userid']){
 </script>
   <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;"><div style="width:98.6%; background:#00457c;margin:0 auto;">
   <?php if(isset($_GET['pid']) && $_GET['pid']!=''){ ?>
-    <div id="patient_name_div" <?= (strlen($thename)>20)?'style="font-size:14px"':''; ?>><?= $thename; ?>
+    <div id="patient_name_div" <?= (strlen($thename)>20)?'style="font-size:14px"':''; ?>>
+  	<?php 
+	if($medicare){ ?>
+	<img src="images/medicare_logo.png" />	
+		<span class="medicare_name">
+	<?php }else{ ?>
+		<span class="name">
+	<?php } ?><?= $thename; ?>
 		<?php if($premed == 1 || $allergen == 1){
                     echo "<a href=\"q_page3.php?pid=".$_GET['pid']."\" title=\"".$title."\" style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*Med</a>";
                     } ?>
-
+	</span>
 <?php
 $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid

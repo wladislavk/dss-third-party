@@ -669,7 +669,7 @@ mysql_query($s1);
                 if(isset($_POST['sendHST'])){
                         ?>
                         <script type="text/javascript">
-                        window.location = "hst_request.php?ed=<?php echo $_GET['pid']; ?>";
+                        window.location = "hst_request_co.php?ed=<?php echo $_GET['pid']; ?>";
                         </script>
                         <?php
                 }

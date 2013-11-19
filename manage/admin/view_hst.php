@@ -21,10 +21,23 @@ if (isset($_REQUEST['ed'])) {
 		$my = mysql_query($sql) or die(mysql_error());
 		$hst = mysql_fetch_array($my);
 } else {
+    $sql = "SELECT "
+         . "  hst.* "
+         . "FROM "
+         . "  dental_hst hst "
+         . "  JOIN dental_patients p ON p.patientid = hst.patient_id "
+         . "WHERE "
+         . "  hst.id = " . $_POST['hst_id'];
+                $my = mysql_query($sql) or die(mysql_error());
+                $hst = mysql_fetch_array($my);
+
     // update hst
     $sql = "UPDATE dental_hst SET "
 				 . " office_notes = '".s_for($_POST['office_notes'])."', "
          			 . " status = " . s_for($_POST['status']) . " ";
+    if($hst['status'] != $_POST['status']){
+      $sql .= ", updatedate=now() ";
+    }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());
     

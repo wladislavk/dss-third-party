@@ -158,16 +158,17 @@ if($epworthid <> '')
 
 ?>
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
-  <h2 align="center"><strong>Sleep Services</strong></h2>
-  <h3 align="center">Home Sleep Test Order Form</h3>
   <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
                                         JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
-                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                        WHERE h.id='".mysql_real_escape_string($_GET['hst_co'])."' AND h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysql_query($bu_sql);
-                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <input type="radio" name="company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
-                          <?php } ?>
+                          $bu_r = mysql_fetch_assoc($bu_q); ?>
+			<input type="hidden" name="company_id" value="<?= $bu_r['id']; ?>"  />
+  <h2 align="center"><strong><?=$bu_r['name']; ?></strong></h2>
+  <h3 align="center">Home Sleep Test Order Form For
+	<?= $pat['patient_firstname']." ".$pat['patient_lastname']; ?>
+  </h3>
 
   <p align="left">
     <label for="patient_name">Patient First Name</label>
@@ -194,8 +195,6 @@ if($epworthid <> '')
     <input type="text" name="patient_cell_phone" id="patient_cell_phone" value="<?= $pat['patient_cell_phone'];?>"/>
     <label for="patient_home_phone">Home Phone</label>
     <input type="text" name="patient_home_phone" id="patient_home_phone" value="<?= $pat['patient_home_phone'];?>" />
-  </p>
-  <p align="left">
     <label for="patient_email">Email</label>
     <input type="text" name="patient_email" id="patient_email" value="<?= $pat['patient_email']; ?>" />
   </p>
@@ -281,10 +280,12 @@ if($epworthid <> '')
   </p>
   <p align="left">Transmitted Electronically Via DS3 Software.</p>
   <p align="left">&nbsp;</p>
-  <p align="left">Sleep Services</p>
-  <p align="left">Office: 888-322-7108 - Fax:888-800-3851 - Email: Orders@HSTSleepServices.com</p>
+  <p align="left"><?= $bu_r['name']; ?></p>
+  <p align="left">Office: <?= format_phone($bu_r['phone']); ?> - Fax: <?= format_phone($bu_r['fax']); ?> - Email: <?= $bu_r['email']; ?></p>
 
-  <p><input type="submit" name="submit" value="Request HST" /></p>
+  <p><input type="submit" name="submit" value="Request HST" />
+	<a style="float:right;" href="add_patient.php?ed=<?= $_GET['ed']; ?>&pid=<?=$_GET['ed'];?>" onclick="return confirm('Are you sure you want to cancel?');">Cancel</a>
+</p>
 </form>
 <br />
 <?php include "includes/bottom.htm";?>

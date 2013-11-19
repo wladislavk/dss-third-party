@@ -41,7 +41,9 @@ if(isset($_REQUEST['authorize'])){
   
   $hst_sql = "UPDATE dental_hst SET
                 patient_id = '".$pat_id."',
-                status='".DSS_HST_PENDING."'
+                status='".DSS_HST_PENDING."',
+                authorized_id='".mysql_real_escape_string($_SESSION['userid'])."',
+                updatedate=now()
                 WHERE id=".mysql_real_escape_string($_REQUEST['authorize']);
   mysql_query($hst_sql);
   ?>
@@ -132,6 +134,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_hst_status_labels[$myarray["status"]];?>&nbsp;
+					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
 				</td>
 				<td valign="top">
 					<a href="hst_view.php?hst_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
@@ -150,11 +153,20 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?php } 
 					?>
                                         <?php
-                                        if($myarray['status']==DSS_HST_REQUESTED){ ?>
-                                        <a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+        $sign_q = mysql_query($sign_sql);
+        $sign_r = mysql_fetch_assoc($sign_q);
+        $user_sign = $sign_r['sign_notes'];
+
+                                        if($myarray['status']==DSS_HST_REQUESTED && ($user_sign || $_SESSION['docid']==$_SESSION['userid'])){ ?>
+                                        <br /><br /><a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" class="button" title="EDIT">
                                                 Authorize
                                         </a>
-                                        <?php } ?>
+                                        <?php }else{ ?>
+<br /><br /><a href="#" onclick="alert('You do have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="EDIT">
+                                                Authorize
+                                        </a>
+					<?php } ?>
 				</td>
 			</tr>
 	<? 	}

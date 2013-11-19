@@ -34,6 +34,12 @@ if(isset($_REQUEST['hst'])){
 		status='".DSS_HST_PENDING."'
 		WHERE screener_id=".mysql_real_escape_string($r['id']);
   mysql_query($hst_sql);
+		
+  $screener_sql = "UPDATE dental_screener SET
+		patient_id = '".$pat_id."',
+		contacted = '1'
+		WHERE id=".mysql_real_escape_string($r['id']);
+  mysql_query($screener_sql);
   ?>
   <script type="text/javascript">
     window.location = 'manage_screeners.php';
@@ -81,7 +87,7 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "SELECT s.*, u.name, h.id as hst_id,
+$sql = "SELECT s.*, u.name, h.id as hst_id, h.status as hst_status,
 	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total,
 	(SELECT sum(se.response) FROM dental_screener_epworth se WHERE se.screener_id = s.id) ep_total,
         rx_cpap + rx_blood_pressure + rx_hypertension + rx_heart_disease + rx_stroke + rx_apnea + rx_diabetes + rx_lung_disease + rx_insomnia + rx_depression + rx_narcolepsy + rx_medication + rx_restless_leg + rx_headaches + rx_heartburn AS sect3_total 
@@ -230,7 +236,11 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= date('m/d/Y h:i a', strtotime($myarray["adddate"]));?>
 				</td>
 				<td valign="top">
+				  <?php if($myarray['patient_id'] != ''){ ?>
+					<a href="add_patient.php?ed=<?=$myarray['patient_id']; ?>&pid=<?=$myarray['patient_id']; ?>"><?= st($myarray["first_name"]); ?> <?= $myarray['last_name']; ?></a>
+				  <?php }else{ ?>
                                         <?= st($myarray["first_name"]); ?> <?= $myarray['last_name']; ?>
+				  <?php } ?>
 				</td>
                                 <td valign="top">
                                         <?= st($myarray["phone"]); ?> 
@@ -312,9 +322,15 @@ $my=mysql_query($sql) or die(mysql_error());
 					<a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;" id="diagnosis_count_<?=$myarray['id']; ?>">View</a>
 				</td>
 				<td valign="top">
-				  <?php if($myarray['hst_id']){ ?>
+				  <?php if($myarray['hst_id']){ 
+					if($myarray['hst_status'] == DSS_HST_REQUESTED){
+					?>
 					<a href="manage_screeners.php?hst=<?= $myarray['id']; ?>">Order</a>
-				  <?php } ?>
+				  <?php 
+					}else{
+						echo $dss_hst_status_labels[$myarray['hst_status']];
+					}
+					} ?>
 				</td>
 				<td valign="top">
 					<?= $myarray['name']; ?>	

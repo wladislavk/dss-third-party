@@ -474,6 +474,9 @@ $(document).ready(function(){
 
 
 function submit_hst(){
+  if($('#hst_first_name').val()=='' || $('#hst_last_name').val() == '' || $('#hst_phone').val()=='' || $('#hst_email').val() == '' ||$('input[name=hst_company_id]:checked').length == 0){
+    alert('All fields are required.');
+  }else{
   $.ajax({
     url: "script/submit_hst.php",
     type: "post",
@@ -509,6 +512,7 @@ function submit_hst(){
       }
     }
    });
+  }
 }
 
 </script>

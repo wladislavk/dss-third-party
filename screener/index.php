@@ -406,7 +406,8 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
                                  $bu_q = mysql_query($bu_sql);
                                 if(mysql_num_rows($bu_q)>0){
 ?>
-<a href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST &raquo;</a>
+
+<a style="margin-left:20px;" href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</a>
 <?php } ?>
 
 <a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finished - Click Here</a>
@@ -530,7 +531,12 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysql_query($bu_sql);
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <input type="radio" name="hst_company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
+                            <input type="radio" name="hst_company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?>
+<?php if($bu_r['logo']){ ?>
+  <img src="q_file/<?= $bu_r['logo']; ?>" />
+<?php } ?>
+
+<br />
                           <?php } ?>
 </div>
 <div class="sepH_b clear" id="hst_first_name_div">

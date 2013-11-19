@@ -16,6 +16,9 @@ if($_POST["compsub"] == 1)
                                 city = '".mysql_real_escape_string($_POST["city"])."', 
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
+                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."', 
+                                fax = '".mysql_real_escape_string(num($_POST["fax"]))."', 
+                                email = '".mysql_real_escape_string($_POST["email"])."', 
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
 				stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
                                 stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
@@ -54,6 +57,9 @@ if($_POST["compsub"] == 1)
                                 city = '".mysql_real_escape_string($_POST["city"])."', 
                                 state = '".mysql_real_escape_string($_POST["state"])."', 
                                 zip = '".mysql_real_escape_string($_POST["zip"])."', 
+                                phone = '".mysql_real_escape_string(num($_POST["phone"]))."', 
+                                fax = '".mysql_real_escape_string(($_POST["fax"]))."', 
+                                email = '".mysql_real_escape_string($_POST["email"])."', 
 				eligible_api_key= '".mysql_real_escape_string($_POST['eligible_api_key'])."',
                                 stripe_secret_key = '".mysql_real_escape_string($_POST['stripe_secret_key'])."',
                                 stripe_publishable_key = '".mysql_real_escape_string($_POST['stripe_publishable_key'])."',
@@ -106,6 +112,9 @@ if($_POST["compsub"] == 1)
 		$city = $_POST['city'];
 		$state = $_POST['state'];
 		$zip = $_POST['zip'];   	
+		$phone = $_POST['phone'];
+		$fax = $_POST['fax'];
+		$email = $_POST['email'];
 		$eligible_api_key = $_POST['eligible_api_key'];
                 $stripe_secret_key = $_POST['stripe_secret_key'];
                 $stripe_publishable_key = $_POST['stripe_publishable_key'];
@@ -124,6 +133,9 @@ if($_POST["compsub"] == 1)
                 $city = st($themyarray['city']);
                 $state = st($themyarray['state']);
                 $zip = st($themyarray['zip']);
+                $phone = st($themyarray['phone']);
+                $fax = st($themyarray['fax']);
+                $email = st($themyarray['email']);
 		$eligible_api_key = st($themyarray['eligible_api_key']);
                 $stripe_secret_key = st($themyarray['stripe_secret_key']);
                 $stripe_publishable_key = st($themyarray['stripe_publishable_key']);
@@ -217,6 +229,31 @@ if($_POST["compsub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Fax
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Email
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" />
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Eligible API Key

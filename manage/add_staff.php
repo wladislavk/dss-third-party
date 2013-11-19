@@ -428,9 +428,9 @@ Fields left blank below will default to the standard billing settings for your o
         </tr>
         <tr>
 <td valign="top" class="frmhead">
-                Sign Progress Notes? <div id="spn_info" class="info_but"></div>
+                Sign Progress Notes / Order HST? <div id="spn_info" class="info_but"></div>
                 <div id="spn_info_modal" class="info_modal" title="Sign Progress Notes explanation">
-		Check this box if this user is legally allowed to sign progress notes. In most cases, this means the user must be a licensed dentist. After checking this box, the user will be able to legally sign patient progress notes that will become permanently associated with patient charts.	
+		Check this box if this user is legally allowed to sign progress notes and/or order Home Sleep Tests (HST). In most cases, this means the user must be a licensed dentist. After checking this box, the user will be able to legally sign patient progress notes that will become permanently associated with patient charts, as well as submit Home Sleep Test (HST) order requests.
                 </div>
 
             </td>

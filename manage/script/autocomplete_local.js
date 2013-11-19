@@ -46,7 +46,7 @@
                                 $('.no_matches').remove();
                                 //$('#search_hints').css('display', 'none');
                                var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('no_matches');
-                                        template_list_ref(newLi, "No Matches")
+                                        template_list_ref_local(newLi, "No Matches")
                                                 .appendTo('#'+hint+' ul')
                                                 .fadeIn();
 				if(hinttype=='referrer'){
@@ -59,7 +59,7 @@
 				if(hinttype != 'eligibility' && hinttype != 'ins_payer'){
                                 var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('create_new')
 					.attr("onclick", "loadPopupRefer('add_contact.php?addtopat="+pid+"&from=add_patient&in_field="+in_field+"&id_field="+id_field+"&search="+(partial_name.replace(/'/g, "\\'"))+"')");
-                                        template_list_ref(newLi, "Add "+label+" with this name&#8230;")
+                                        template_list_ref_local(newLi, "Add "+label+" with this name&#8230;")
                                                 .appendTo('#'+hint+' ul')
                                                 .fadeIn();
 				}
@@ -112,7 +112,7 @@ function update_referredby_local(in_field, name, id_field, id, source, t, hint){
 
 
                 $('.autocomplete_search').click(function() {
-                        if ($(this).val() == 'Type referral name' || $(this).val() == 'Type contact name' || $(this).val() == 'Type insurance payer name') {
+                        if ($(this).val() == 'Type referral name' || $(this).val() == 'Type contact name' || $(this).val() == 'Type insurance payer name' || $(this).val() == 'TYPE INSURANCE PAYER NAME') {
                                 $(this).val('');
                         }
                 });

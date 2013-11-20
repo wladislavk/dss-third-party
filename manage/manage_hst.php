@@ -3,15 +3,20 @@ require_once('includes/constants.inc');
 include "includes/top.htm";
 include "includes/constants.inc";
 if(isset($_GET['rid'])){
-$s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['rid'], $_REQUEST['pid'], $_SESSION['docid']);
+$s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);
 mysql_query($s);
 }elseif(isset($_GET['urid'])){
-$s = sprintf("UPDATE dental_hst SET viewed=0 WHERE id=%s AND patient_id=%s AND doc_id=%s",$_REQUEST['urid'], $_REQUEST['pid'], $_SESSION['docid']);
+$s = sprintf("UPDATE dental_hst SET viewed=0 WHERE id=%s AND doc_id=%s",$_REQUEST['urid'], $_SESSION['docid']);
 mysql_query($s);
 }
 
-$sql = "select hst.*, p.firstname, p.lastname from dental_hst hst LEFT JOIN dental_patients p ON p.patientid=hst.patient_id WHERE hst.doc_id = ".$_SESSION['docid']." ";
-if(isset($_GET['status'])){
+$sql = "select hst.*, p.firstname, p.lastname,
+		CONCAT(u.first_name,' ',u.last_name) authorized_by
+		from dental_hst hst 
+		LEFT JOIN dental_patients p ON p.patientid=hst.patient_id 
+		LEFT JOIN dental_users u ON u.userid=hst.authorized_id
+		WHERE hst.doc_id = ".$_SESSION['docid']." ";
+if(isset($_GET['status']) && $_GET['status']!=''){
   $sql .= " AND hst.status = '".mysql_real_escape_string($_GET['status'])."' ";
 }
 if(isset($_GET['viewed'])){
@@ -43,6 +48,7 @@ if(isset($_REQUEST['authorize'])){
                 patient_id = '".$pat_id."',
                 status='".DSS_HST_PENDING."',
                 authorized_id='".mysql_real_escape_string($_SESSION['userid'])."',
+		authorizeddate=now(),
                 updatedate=now()
                 WHERE id=".mysql_real_escape_string($_REQUEST['authorize']);
   mysql_query($hst_sql);
@@ -77,6 +83,24 @@ $my=mysql_query($sql) or die(mysql_error());
 <br />
 <br />
 &nbsp;
+  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" class="fullwidth" method="get">
+    Status:
+    <select name="status">
+      <?php $requested_selected = ($_REQUEST['status'] == '0') ? 'selected' : ''; ?>
+      <?php $pending_selected = ($_REQUEST['status'] == DSS_HST_PENDING) ? 'selected' : ''; ?>
+      <?php $scheduled_selected = ($_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
+      <?php $complete_selected = ($_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
+      <option value="">Any</option>
+      <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
+      <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
+      <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
+      <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
+    </select>
+    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
+    <input type="submit" value="Filter List"/>
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+  </form>
 
 <br />
 <div align="center" class="red">
@@ -109,6 +133,9 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
+		<td valign="top" class="col_head" width="15%">
+			Authorize
+		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
@@ -124,17 +151,25 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?> <?= ($myarray['viewed'])?'':'unviewed'; ?>">
+			<tr class="<?=$tr_class;?> <?= (!$myarray['viewed'] && $myarray['status'] == DSS_HST_COMPLETE)?'unviewed':''; ?>">
 				<td valign="top">
 					<?=date('m/d/Y h:i a',strtotime($myarray["adddate"]));?>&nbsp;
 				</td>
 				<td valign="top">
+				  <?php if($myarray['patient_id']){?>
+					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=summ">
+					  <?=st($myarray["patient_firstname"]);?>&nbsp;
+                    			  <?=st($myarray["patient_lastname"]);?> 
+					</a>
+				  <?php }else{ ?>
 					<?=st($myarray["patient_firstname"]);?>&nbsp;
-                    <?=st($myarray["patient_lastname"]);?> 
+                    			<?=st($myarray["patient_lastname"]);?>
+				  <?php } ?>
 				</td>
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_hst_status_labels[$myarray["status"]];?>&nbsp;
 					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
+                                        <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
 				</td>
 				<td valign="top">
 					<a href="hst_view.php?hst_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
@@ -142,31 +177,41 @@ $my=mysql_query($sql) or die(mysql_error());
 					</a>
 					<br />
 					<?php 
+					if($myarray['status'] == DSS_HST_COMPLETE){
 					if(!$myarray['viewed']){ ?>
-                                        <a href="manage_hst.php?pid=<?= $myarray["patient_id"]; ?>&rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
                                                 Mark Read
                                         </a>
 					<?php }else{ ?>
-                                        <a href="manage_hst.php?pid=<?= $myarray["patient_id"]; ?>&urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
                                                 Mark Unread
                                         </a>
 					<?php } 
+					}
 					?>
+					</td>
+					<td valign="top">
                                         <?php
 $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
         $sign_q = mysql_query($sign_sql);
         $sign_r = mysql_fetch_assoc($sign_q);
         $user_sign = $sign_r['sign_notes'];
 
-                                        if($myarray['status']==DSS_HST_REQUESTED && ($user_sign || $_SESSION['docid']==$_SESSION['userid'])){ ?>
-                                        <br /><br /><a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" class="button" title="EDIT">
+                                      if($myarray['status']==DSS_HST_REQUESTED){
+					if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
+                                        <a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" class="button" title="EDIT">
                                                 Authorize
                                         </a>
                                         <?php }else{ ?>
-<br /><br /><a href="#" onclick="alert('You do have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="EDIT">
+<a href="#" onclick="alert('You do have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="EDIT">
                                                 Authorize
                                         </a>
 					<?php } ?>
+				      <?php }else{ ?>
+					Authorized 
+					<?= ($myarray['authorizeddate'])?date('m/d/Y h:i a', strtotime($myarray['authorizeddate'])):''; ?>
+					- <?= $myarray['authorized_by'] ?>
+				      <?php } ?>
 				</td>
 			</tr>
 	<? 	}

@@ -1215,6 +1215,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
                     echo "<a href=\"q_page3.php?pid=".$_GET['pid']."\" title=\"".$title."\" style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*Med</a>";
                     } ?>
 	</span>
+</div>
 <?php
 $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid
@@ -1228,8 +1229,8 @@ $t_q = mysql_query($t_num_sql);
 $num_pat_tasks = mysql_num_rows($t_q);
 if($num_pat_tasks > 0){
 ?>
-<div class="task_menu" id="pat_task_menu" style="float:right; margin-right:10px;">
-<span id="pat_task_header" style="font-size:14px; font-weight:normal">Tasks(<?= $num_pat_tasks; ?>)</span>
+<div class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
+<span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks(<?= $num_pat_tasks; ?>)</span>
 <?php
 $od_sql = $t_sql . " AND dt.due_date < CURDATE();";
 $tod_sql = $t_sql . " AND dt.due_date = CURDATE();";
@@ -1386,7 +1387,6 @@ while($od_r = mysql_fetch_assoc($od_q)){
 
 
 
-</div>
   <?php } 
 ?>
 

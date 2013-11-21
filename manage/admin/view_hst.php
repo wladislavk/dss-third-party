@@ -31,9 +31,150 @@ if (isset($_REQUEST['ed'])) {
                 $my = mysql_query($sql) or die(mysql_error());
                 $hst = mysql_fetch_array($my);
 
+
+
+
+
+  //SAVE SLEEP TEST
+if($_POST['status'] == DSS_HST_COMPLETE){
+  $date = s_for($_POST['date']);
+  $sleeptesttype = s_for($_POST['sleeptesttype']);
+  $place = s_for($_POST['place']);
+  $diagnosising_doc = s_for($_POST['diagnosising_doc']);
+  $diagnosising_npi = s_for($_POST['diagnosising_npi']);
+  $apnea = s_for($_POST['apnea']);
+  $hypopnea = s_for($_POST['hypopnea']);
+  $ahi = s_for($_POST['ahi']);
+  $ahisupine = s_for($_POST['ahisupine']);
+  $rdi = s_for($_POST['rdi']);
+  $rdisupine = s_for($_POST['rdisupine']);
+  $o2nadir = s_for($_POST['o2nadir']);
+  $t9002 = s_for($_POST['t9002']);
+  $sleepefficiency = s_for($_POST['sleepefficiency']);
+  $cpaplevel = s_for($_POST['cpaplevel']);
+  $dentaldevice = s_for($_POST['dentaldevice']);
+  $devicesetting = s_for($_POST['devicesetting']);
+  $diagnosis = s_for($_POST['diagnosis']);
+  $notes = s_for($_POST['notes']);
+  $testnumber = s_for($_POST['testnumber']);
+  $needed = s_for($_POST['needed']);
+  $scheddate = s_for($_POST['scheddate']);
+  $completed = s_for($_POST['completed']);
+  $interpolation = s_for($_POST['interpolation']);
+  $copyreqdate = s_for($_POST['copyreqdate']);
+  $sleeplab = s_for($_POST['sleeplab']);
+  $patientid = $hst['patient_id'];
+                if($_FILES["ss_file"]["name"] <> '')
+                {
+                        $fname = $_FILES["ss_file"]["name"];
+                        $lastdot = strrpos($fname,".");
+                        $name = substr($fname,0,$lastdot);
+                        $extension = substr($fname,$lastdot+1);
+                        $banner1 = $name.'_'.date('dmy_Hi');
+                        $banner1 = str_replace(" ","_",$banner1);
+                        $banner1 = str_replace(".","_",$banner1);
+                        $banner1 = str_replace("'","_",$banner1);
+                        $banner1 .= ".".$extension;
+
+                        $uploaded = uploadImage($_FILES['ss_file'], "../q_file/".$banner1);
+
+                }
+                else
+                {
+                        $banner1 = '';
+                }
+if($hst['sleep_study_id']){
+  $sleepid=$hst['sleep_study_id'];
+  $q = "update `dental_summ_sleeplab` set
+`date` = '".mysql_real_escape_string($date)."',
+`sleeptesttype`  = '".mysql_real_escape_string($sleeptesttype)."',
+`place`  = '".mysql_real_escape_string($place)."',
+`diagnosising_doc` = '".mysql_real_escape_string($diagnosising_doc)."',
+`diagnosising_npi` = '".mysql_real_escape_string($diagnosising_npi)."',
+`ahi` = '".mysql_real_escape_string($ahi)."',
+`ahisupine` = '".mysql_real_escape_string($ahisupine)."',
+`rdi` = '".mysql_real_escape_string($rdi)."',
+`rdisupine` = '".mysql_real_escape_string($rdisupine)."',
+`o2nadir` = '".mysql_real_escape_string($o2nadir)."',
+`t9002` = '".mysql_real_escape_string($t9002)."',
+`dentaldevice` = '".mysql_real_escape_string($dentaldevice)."',
+`devicesetting` = '".mysql_real_escape_string($devicesetting)."',
+`diagnosis` = '".mysql_real_escape_string($diagnosis)."',
+`filename` = '".mysql_real_escape_string($banner1)."',
+`notes` = '".mysql_real_escape_string($notes)."',
+`testnumber` = '".mysql_real_escape_string($testnumber)."',
+`sleeplab` = '".mysql_real_escape_string($sleeplab)."'
+WHERE id='".mysql_real_escape_string($sleepid)."'";
+mysql_query($q);
+}else{
+  $q = "INSERT INTO `dental_summ_sleeplab` (
+`id` ,
+`date` ,
+`sleeptesttype` ,
+`place` ,
+`diagnosising_doc`,
+`diagnosising_npi`,
+`ahi` ,
+`ahisupine` ,
+`rdi` ,
+`rdisupine` ,
+`o2nadir` ,
+`t9002` ,
+`dentaldevice` ,
+`devicesetting` ,
+`diagnosis` ,
+`filename` ,
+`notes`,
+`testnumber`,
+`sleeplab`,
+`patiendid`
+)
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."')";
+  $run_q = mysql_query($q);
+  if(!$run_q){
+   echo "Could not add sleep lab... Please try again.";
+  }else{
+        if($uploaded){
+                $sleepid = mysql_insert_id();
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = 'Sleep Study ".$sleepid."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+	}
+
+   }
+
+}
+}else{
+  $sleepid='';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // update hst
     $sql = "UPDATE dental_hst SET "
 				 . " office_notes = '".s_for($_POST['office_notes'])."', "
+				 . " sleep_study_id = '".s_for($sleepid)."', "
          			 . " status = " . s_for($_POST['status']) . " ";
     if($hst['status'] != $_POST['status']){
       $sql .= ", updatedate=now() ";
@@ -225,7 +366,7 @@ if (isset($_REQUEST['ed'])) {
                 HST
             </td>
             <td valign="top" class="frmdata">
-                <input type="file" name="hst_file" />
+		<?php include 'view_hst_sleep_study.php'; ?>
             </td>
         </tr>
         <tr>

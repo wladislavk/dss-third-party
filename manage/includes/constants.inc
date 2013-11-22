@@ -329,3 +329,12 @@ $dss_company_type_labels = array();
 $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING] = "Billing";
 $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE] = "Software";
 $dss_company_type_labels[DSS_COMPANY_TYPE_HST] = "HST";
+
+define('DSS_USER_STATUS_ACTIVE', 1);
+define('DSS_USER_STATUS_INACTIVE', 2);
+define('DSS_USER_STATUS_SUSPENDED', 3);
+
+$dss_user_status_labels = array();
+$dss_user_status_labels[DSS_USER_STATUS_ACTIVE] = 'Active';
+$dss_user_status_labels[DSS_USER_STATUS_INACTIVE] = 'In-Active';
+$dss_user_status_labels[DSS_USER_STATUS_SUSPENDED] = 'Suspended';

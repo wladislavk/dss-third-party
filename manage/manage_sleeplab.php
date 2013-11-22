@@ -104,19 +104,19 @@ $num_sleeplab=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'lab')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'lab')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
                         <a href="manage_sleeplab.php?sort=lab&sortdir=<?php echo ($_REQUEST['sort']=='lab'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Lab Name</a>
 		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="70%">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="40%">
                         <a href="manage_sleeplab.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
+		</td>
+		<td valign="top" class="col_head" width="10%">
+			# Patients
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
 	</tr>
-	</table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -142,13 +142,21 @@ $num_sleeplab=mysql_num_rows($my);
 			$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="20%">
+				<td valign="top">
 					<?=st($myarray["company"]);?>
 				</td>
-				<td valign="top" width="70%">
+				<td valign="top">
 					<?=$name;?>
 				</td>
-				<td valign="top" width="20%">
+				<td valign="top">
+					<?php
+					$pat_sql = "SELECT p.* FROM dental_patients p
+							INNER JOIN dental_summ_sleeplab s ON s.patiendid=p.patientid
+							WHERE s.place = '".mysql_real_escape_string($myarray['sleeplabid'])."' GROUP BY p.patientid";
+					$pat_q = mysql_query($pat_sql);
+					?><a href="#" onclick="$('#pat_<?=$myarray["sleeplabid"];?>').toggle();return false;"><?= mysql_num_rows($pat_q); ?></a>
+				</td>
+				<td valign="top">
 	                                        <a href="#" onclick="loadPopup('view_sleeplab.php?ed=<?=$myarray["sleeplabid"];?>')" class="editlink" title="EDIT">
                                                 Quick View
                                         </a>	
@@ -158,10 +166,17 @@ $num_sleeplab=mysql_num_rows($my);
 					</a>
 				</td>
 			</tr>
+			<tr id="pat_<?=$myarray["sleeplabid"];?>" style="display:none;">
+			<td colspan="4">
+				<h3>Patients</h3>
+			<?php while($pat_r = mysql_fetch_assoc($pat_q)){ ?>
+				<br /><a href="dss_summ.php?sect=sleep&pid=<?= $pat_r['patientid']; ?>"><?= $pat_r['firstname']." ".$pat_r['lastname']; ?></a>
+			<?php } ?>
+			</td>
+			</tr>
 	<? 	}
 	}?>
 </table>
-</div>
 </form>
 
 

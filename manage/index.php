@@ -96,6 +96,7 @@ NAV THIRD
           <li><a href="invoice_history.php">Invoices</a></li>
      	<?php } ?>
 	<li><a href="manage_faxes.php">Fax History</a></li>
+	<li><a href="manage_hst.php">Home Sleep Tests</a></li>
   </ul>
 </li>
             <li><a class="menu_item" href="#">Admin</a>

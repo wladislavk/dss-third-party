@@ -109,7 +109,7 @@ $my=mysql_query($sql) or die(mysql_error());
 
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table width="98%" cellpadding="5" id="hst_table" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -172,18 +172,17 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
 				</td>
 				<td valign="top">
-					<a href="hst_view.php?hst_id=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+					<a href="hst_view.php?hst_id=<?= $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT">
 						View
 					</a>
-					<br />
 					<?php 
 					if($myarray['status'] == DSS_HST_COMPLETE){
 					if(!$myarray['viewed']){ ?>
-                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Read
                                         </a>
 					<?php }else{ ?>
-                                        <a href="manage_hst.php?urid=<?= $myarray["id"]; ?>" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?urid=<?= $myarray["id"]; ?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Unread
                                         </a>
 					<?php } 
@@ -199,16 +198,15 @@ $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_esca
 
                                       if($myarray['status']==DSS_HST_REQUESTED){
 					if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
-                                        <a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" class="button" title="EDIT">
+                                        <a href="manage_hst.php?authorize=<?= $myarray["id"]; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" class="button" title="Authorize HST">
                                                 Authorize
                                         </a>
                                         <?php }else{ ?>
-<a href="#" onclick="alert('You do have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="EDIT">
+<a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" class="button" title="Authorize HST">
                                                 Authorize
                                         </a>
 					<?php } ?>
 				      <?php }else{ ?>
-					Authorized 
 					<?= ($myarray['authorizeddate'])?date('m/d/Y h:i a', strtotime($myarray['authorizeddate'])):''; ?>
 					- <?= $myarray['authorized_by'] ?>
 				      <?php } ?>

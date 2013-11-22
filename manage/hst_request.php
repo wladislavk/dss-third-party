@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
        . "  provider_address, provider_city, provider_state, provider_zip, "
        . "  provider_signature, provider_date, "
        . "  snore_1, snore_2, snore_3, snore_4, snore_5, "
-       . "  status, adddate, ip_address "
+       . "  status, authorized_id, adddate, ip_address "
        . ") VALUES ("
        . "  " . mysql_real_escape_string($_GET['ed']) . ", "
        . "  " . mysql_real_escape_string($_SESSION['docid']) . ", "
@@ -58,9 +58,21 @@ if(isset($_POST['submit'])){
        . "  '" . mysql_real_escape_string($thorton['snore_2']) . "', "
        . "  '" . mysql_real_escape_string($thorton['snore_3']) . "', "
        . "  '" . mysql_real_escape_string($thorton['snore_4']) . "', "
-       . "  '" . mysql_real_escape_string($thorton['snore_5']) . "', "
-       . DSS_HST_PENDING . ", "
-       . "  now(), "
+       . "  '" . mysql_real_escape_string($thorton['snore_5']) . "', ";
+
+    $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+    $sign_q = mysql_query($sign_sql);
+    $sign_r = mysql_fetch_assoc($sign_q);
+    $user_sign = $sign_r['sign_notes'];
+    if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ 
+      
+       $sql .= DSS_HST_PENDING . ", 
+		'".mysql_real_escape_string($_SESSION['userid'])."', ";
+    }else{
+       $sql .= DSS_HST_REQUESTED . ", 
+                null, ";
+    }
+      $sql .= "  now(), "
        . "  '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."' "
        . ")";
   $hst = mysql_query($sql);
@@ -157,7 +169,7 @@ if($epworthid <> '')
 
 
 ?>
-<form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
+<form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#" onsubmit="return check_fields(this);">
   <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
                                         JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
@@ -288,5 +300,53 @@ if($epworthid <> '')
 </p>
 </form>
 <br />
+
+<script type="text/javascript">
+  function check_fields(f){
+    var errors= new Array();
+    if(f.patient_firstname.value==''){
+      errors.push('First Name');
+    }
+    if(f.patient_lastname.value==''){
+      errors.push('Last Name');
+    }
+    if(f.patient_dob.value==''){
+      errors.push('DOB');
+    }
+    if(f.patient_add1.value=='' || f.patient_city.value=='' || f.patient_state.value=='' || f.patient_zip.value==''){
+      errors.push('Address');
+    }
+    if($('input[name=diagnosis_id]:checked').size() == 0){
+      errors.push('Diagnosis');
+    }
+    if($('input[name=hst_type]:checked').size() == 0){
+      errors.push('Home Sleep Diagnostic Testing');
+    }
+    if(f.provider_firstname.value==''){
+      errors.push('Provider First Name');
+    }
+    if(f.provider_lastname.value==''){
+      errors.push('Provider Last Name');
+    }
+    if(f.provider_phone.value==''){
+      errors.push('Provider Phone');
+    }
+    if(f.provider_address.value=='' || f.provider_city.value=='' || f.provider_state.value=='' || f.provider_zip.value==''){
+      errors.push('Provider Address');
+    }
+
+
+    if(errors.length > 0){
+      var a = "Following fields must be entered.\n"; 
+      for (var i = 0; i < errors.length; i++) {
+        a += errors[i]+"\n";
+      } 
+      alert(a);
+      return false;
+    }
+    return true;
+  }
+</script>
+
 <?php include "includes/bottom.htm";?>
 

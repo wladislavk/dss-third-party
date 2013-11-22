@@ -1329,6 +1329,8 @@ a.notification.count_0{
 
 td.status_1{ color:#008000; }
 td.status_3{ color:#f00; }
+#hst_table td.status_0{ color:#f00; }
+#hst_table td.status_3{ color:#00f; }
 
 
 .button, .addButton {

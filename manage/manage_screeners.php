@@ -325,7 +325,21 @@ $my=mysql_query($sql) or die(mysql_error());
 				  <?php if($myarray['hst_id']){ 
 					if($myarray['hst_status'] == DSS_HST_REQUESTED){
 					?>
-					<a href="manage_screeners.php?hst=<?= $myarray['id']; ?>">Order</a>
+                                        <?php
+$sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+        $sign_q = mysql_query($sign_sql);
+        $sign_r = mysql_fetch_assoc($sign_q);
+        $user_sign = $sign_r['sign_notes'];
+
+                                        if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
+                                        <a href="manage_screeners.php?hst=<?= $myarray['id']; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" title="Authorize HST">
+                                                Order
+                                        </a>
+                                        <?php }else{ ?>
+<a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" title="Authorize HST">
+                                                Order
+                                        </a>
+                                        <?php } ?>
 				  <?php 
 					}else{
 						echo $dss_hst_status_labels[$myarray['hst_status']];

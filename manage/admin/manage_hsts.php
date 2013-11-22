@@ -14,7 +14,7 @@ define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
 define('SORT_BY_COMPANY', 6);
-
+define('SORT_BY_AUTHORIZED', 7);
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
@@ -35,6 +35,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_USER:
     $sort_by_sql = "user_name $sort_dir";
+    break;
+  case SORT_BY_AUTHORIZED:
+    $sort_by_sql = "authorized_name $sort_dir";
     break;
   case SORT_BY_COMPANY:
     $sort_by_sql = "hst_company_name $sort_dir";
@@ -76,6 +79,7 @@ $sql = "SELECT "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
+     . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
      . "  hst_company.name AS hst_company_name "
      . "FROM "
      . "  dental_hst hst "
@@ -83,6 +87,7 @@ $sql = "SELECT "
      . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
      . "  LEFT JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
      . "  LEFT JOIN companies hst_company ON uhc.companyid=hst_company.id ";
 }elseif(is_hst($_SESSION['admin_access'])){
@@ -91,6 +96,7 @@ $sql = "SELECT "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
+     . "  CONCAT(users3.first_name, ' ',users3.last_name) as authorized_name, "
      . "  hst_company.name AS hst_company_name "
      . "FROM "
      . "  dental_hst hst "
@@ -99,6 +105,7 @@ $sql = "SELECT "
      . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
      . "  JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
      . "  	AND uhc.companyid='".$_SESSION['admincompanyid']."'"
      . "  JOIN companies hst_company ON uhc.companyid=hst_company.id ";
@@ -247,6 +254,9 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_AUTHORIZED, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_AUTHORIZED, get_sort_dir($sort_by, SORT_BY_AUTHORIZED, $sort_dir))?>">Authorized&nbsp;&nbsp;</a>
+                </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
@@ -274,7 +284,6 @@ $my=mysql_query($sql) or die(mysql_error());
 				<?php $status_text = ($myarray["status"] == DSS_HST_PENDING ) ? "black" : "white"; ?>
 				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
 					<?=st($dss_hst_status_labels[$myarray["status"]]);?>&nbsp;
-<ured_firstname' in 'field list'=$myarray['status'];?>
 				</td>
                                 <td valign="top">
                                         <?=st($myarray["hst_company_name"]);?>
@@ -291,6 +300,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["authorized_name"]);?>&nbsp;
+                                </td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">

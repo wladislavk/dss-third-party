@@ -1549,7 +1549,7 @@ function remove_notification(id){
 				if(mysql_num_rows($bu_q)>0){
 ?>
 <input type="submit" name="sendHST"
- onclick="alert('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
+ onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
  value="Order HST" class="button" />
 <?php
 } 

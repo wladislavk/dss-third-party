@@ -28,7 +28,7 @@ require_once('includes/constants.inc');
 
 ?>
 <form id="hst_order_sleep_services" class="fullwidth" name="form1" method="post" action="#">
-  <h2 align="center"><strong>Sleep Services</strong></h2>
+  <h2 align="center"><strong>Choose a Home Sleep Testing (HST) Company</strong></h2>
   <h3 align="center">Home Sleep Test Company Form For
 	<?= $pat['patient_firstname']." ".$pat['patient_lastname']; ?>
   </h3>
@@ -40,8 +40,10 @@ require_once('includes/constants.inc');
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
 			    <?php if($bu_r['logo']){ ?>
 				<img src="q_file/<?= $bu_r['logo']; ?>" />
+				<br /><br />
 			    <?php } ?>
                             <a href="hst_request.php?ed=<?=$_GET['ed'];?>&hst_co=<?= $bu_r['id']; ?>" class="button"><?= $bu_r['name']; ?></a><br />
+<br /><br />
                           <?php } ?>
 
 </form>

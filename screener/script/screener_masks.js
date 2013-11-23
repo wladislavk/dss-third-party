@@ -3,4 +3,5 @@ $(document).ready(function(){
 	$('.extphonemask').mask('(~99) 999-9999? ext99999');
         $('.phonemask').mask('(~99) 999-9999');
 	$('.ssnmask').mask('999-99-9999');
+	$('.datemask').mask('99/99/9999');
 });

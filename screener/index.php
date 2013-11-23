@@ -398,6 +398,26 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
 </div>
 <div id="risk_image"></div>
+<h2>Please return the device to your provider.</h2>
+
+
+<a href="#" onclick="return show_doctor();" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</a>
+</div>
+
+
+
+
+
+
+
+<div class="sect" id="sectdoctor">
+<h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
+
+<h3 class="sepH_a">Dental Sleep Solutions - Summary of Results</h3>
+<p>Please choose from the options below. You may view the patient results, finish this screener and allow a new patient to be screened, or request a Home Sleep Test for the patient by clicking the buttons below.</p>
+<br />
+<div id="risk_image_doc"></div>
+
 <a href="#results" onclick="$('#results_div').toggle();" class="fl next btn btn_medium btn_d">View Results</a>
 <?php
                           $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
@@ -410,7 +430,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <a style="margin-left:20px;" href="#" onclick="return show_hst();" id="sect5_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</a>
 <?php } ?>
 
-<a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finished - Click Here</a>
+<a rel="fancyReg" href="#regModal" class="fr next btn btn_medium btn_d">Finish/Screen New Patient</a>
 						<div style="display:none">
 							<div id="regModal">
 								<h4 class="sepH_a">Survey Complete</h4>
@@ -516,6 +536,10 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 </div>
 
 
+
+
+
+
 <div class="sect" id="secthst">
 <h5 style="float:right;">Health Assessment - <span class="assessment_name"></span></h5>
 
@@ -548,6 +572,10 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 <div class="sepH_b" id="hst_last_name_div">
         <label class="lbl_a">Last Name</label>
         <input class="inpt_a" type="text" id="hst_last_name" name="hst_last_name" />
+</div>
+<div class="sepH_b" id="hst_dob_div">
+        <label class="lbl_a">Date of Birth</label>
+        <input class="inpt_a datemask" type="text" id="hst_dob" name="hst_dob" />
 </div>
 </div>
 <div class="dp50">

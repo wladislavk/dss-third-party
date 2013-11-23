@@ -32,12 +32,17 @@ if(isset($_REQUEST['authorize'])){
   $sql = "SELECT s.* FROM dental_screener s JOIN dental_hst h ON h.screener_id = s.id WHERE h.id='".mysql_real_escape_string($_REQUEST['authorize'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
-
+  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysql_real_escape_string($r['id'])."'";
+  $q = mysql_query($sql);
+  $h = mysql_fetch_assoc($q);
+  $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
   $pat_sql = "INSERT INTO dental_patients SET
                 docid='".mysql_real_escape_string($r['docid'])."',
                 firstname = '".mysql_real_escape_string($r['first_name'])."',
                 lastname = '".mysql_real_escape_string($r['last_name'])."',
                 cell_phone = '".mysql_real_escape_string($r['phone'])."',
+                email = '".mysql_real_escape_string($h['patient_email'])."',
+                dob = '".mysql_real_escape_string($dob)."',
                 status='1',
                 adddate = now(),
                 ip_address = '".$_SERVER['REMOTE_ADDR']."'";
@@ -52,11 +57,22 @@ if(isset($_REQUEST['authorize'])){
                 updatedate=now()
                 WHERE id=".mysql_real_escape_string($_REQUEST['authorize']);
   mysql_query($hst_sql);
+
+  $unsent_sql = "SELECT count(*) num_unsent FROM dental_hst WHERE doc_id = ".$_SESSION['docid']." AND status='".DSS_HST_REQUESTED."'";
+  $unsent_q = mysql_query($unsent_sql);
+  if(mysql_num_rows($unsent_q) > 0){
+  ?>
+  <script type="text/javascript">
+    window.location = 'manage_hst.php?status=0';
+  </script>
+  <?php
+  }else{
   ?>
   <script type="text/javascript">
     window.location = 'manage_hst.php';
   </script>
   <?php
+  }
 }  
 
   //$sql .= "ORDER BY ".$sort." ".$dir;
@@ -157,7 +173,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top">
 				  <?php if($myarray['patient_id']){?>
-					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=summ">
+					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=sleep">
 					  <?=st($myarray["patient_firstname"]);?>&nbsp;
                     			  <?=st($myarray["patient_lastname"]);?> 
 					</a>
@@ -172,9 +188,14 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
 				</td>
 				<td valign="top">
-					<a href="hst_view.php?hst_id=<?= $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT">
+				  <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>
+					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=sleep" class="editlink" title="EDIT">
+					View</a>
+				 <?php }else{ ?>
+					<a href="hst_view.php?pid=<?= $myarray['patient_id']; ?>&hst_id=<?= $myarray["id"]; ?>" style="float:left;" class="editlink" title="EDIT">
 						View
 					</a>
+				  <?php } ?>
 					<?php 
 					if($myarray['status'] == DSS_HST_COMPLETE){
 					if(!$myarray['viewed']){ ?>

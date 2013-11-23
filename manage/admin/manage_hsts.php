@@ -88,8 +88,7 @@ $sql = "SELECT "
      . "  JOIN dental_users users ON hst.doc_id = users.userid "
      . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
      . "  LEFT JOIN dental_users users3 ON hst.authorized_id = users3.userid "
-     . "  LEFT JOIN dental_user_hst_company uhc ON uhc.userid=users.userid "
-     . "  LEFT JOIN companies hst_company ON uhc.companyid=hst_company.id ";
+     . "  LEFT JOIN companies hst_company ON hst.company_id=hst_company.id ";
 }elseif(is_hst($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  hst.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "

@@ -235,6 +235,7 @@ function submit_screener(){
 
 	$('.pat_name').text($('#first_name').val());
 	$('#risk_image').html('<img src="'+img+'" />');
+        $('#risk_image_doc').html('<img src="'+img+'" />');
 	//$('#ep_score').text(an_text);
 	//$('#snore_score').text(snore);
 	//$('#survey_score').text(survey);
@@ -459,6 +460,10 @@ function show_hst(){
   next_sect('hst');
 }
 
+function show_doctor(){
+  next_sect('doctor');
+}
+
 
 $(document).ready(function(){
 				//regular dialog
@@ -474,7 +479,7 @@ $(document).ready(function(){
 
 
 function submit_hst(){
-  if($('#hst_first_name').val()=='' || $('#hst_last_name').val() == '' || $('#hst_phone').val()=='' || $('#hst_email').val() == '' ||$('input[name=hst_company_id]:checked').length == 0){
+  if($('#hst_first_name').val()=='' || $('#hst_last_name').val() == '' || $('#hst_dob').val()=='' || $('#hst_phone').val()=='' || $('#hst_email').val() == '' ||$('input[name=hst_company_id]:checked').length == 0){
     alert('All fields are required.');
   }else{
   $.ajax({
@@ -489,6 +494,7 @@ function submit_hst(){
       patient_last_name: $('#hst_last_name').val(),
       patient_cell_phone: $('#hst_phone').val(),
       patient_email: $('#hst_email').val(),
+      patient_dob: $('#hst_dob').val(),
 <?php
   $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
   $epworth_my = mysql_query($epworth_sql);
@@ -508,6 +514,7 @@ function submit_hst(){
       var r = $.parseJSON(data);
       if(r.error){
       }else{
+	alert('HST submitted for approval and is in your Pending HST queue.');
 	window.location = 'index.php';
       }
     }

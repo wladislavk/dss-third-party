@@ -18,14 +18,21 @@ if(isset($_REQUEST['hst'])){
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
 
+  $sql = "SELECT * FROM dental_hst WHERE screener_id='".mysql_real_escape_string($r['id'])."'";
+  $q = mysql_query($sql);
+  $h = mysql_fetch_assoc($q);
+  $dob = ($h['patient_dob']!='')?date('m/d/Y', strtotime($h['patient_dob'])):'';
   $pat_sql = "INSERT INTO dental_patients SET
 		docid='".mysql_real_escape_string($r['docid'])."',
 		firstname = '".mysql_real_escape_string($r['first_name'])."',
                 lastname = '".mysql_real_escape_string($r['last_name'])."',
                 cell_phone = '".mysql_real_escape_string($r['phone'])."',
+		email = '".mysql_real_escape_string($h['patient_email'])."',
+		dob = '".mysql_real_escape_string($dob)."',
 		status='1',
 		adddate = now(),
 		ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+  error_log($pat_sql);
   mysql_query($pat_sql);
   $pat_id = mysql_insert_id();
   
@@ -333,11 +340,11 @@ $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_esca
 
                                         if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ ?>
                                         <a href="manage_screeners.php?hst=<?= $myarray['id']; ?>" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');" title="Authorize HST">
-                                                Order
+                                                Authorize/Send
                                         </a>
                                         <?php }else{ ?>
 <a href="#" onclick="alert('You do not have sufficient permission to order a Home Sleep Test. Only a dentist may do this.');return false;" title="Authorize HST">
-                                                Order
+                                                Authorize/Send
                                         </a>
                                         <?php } ?>
 				  <?php 

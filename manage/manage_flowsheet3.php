@@ -39,7 +39,22 @@ $sched_appt = (mysql_num_rows($sched_q)>0);
 
 ?>
 <link rel="stylesheet" href="css/flowsheet.css" />
-
+<?php
+                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                                 $bu_q = mysql_query($bu_sql);
+                                if(mysql_num_rows($bu_q)>0){
+if($pat_hst_num_uncompleted>0){
+  ?><a href="#" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
+}else{
+?>
+ <a href="hst_request_co.php?ed=<?php echo $_GET['pid']; ?>" style="float:right; margin-right:20px;" class="button" onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
+ >Order HST</a>
+<?php
+}
+}
+?>
 <div id="treatment_div">
 <h3>1) What did you do today?*</h3>
 <div id="treatment_list" <?= ($sched_appt)?'class="current_step"':''; ?>>

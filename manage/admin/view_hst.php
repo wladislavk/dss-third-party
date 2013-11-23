@@ -20,6 +20,10 @@ if (isset($_REQUEST['ed'])) {
          . "  hst.id = " . $_REQUEST['ed'];
 		$my = mysql_query($sql) or die(mysql_error());
 		$hst = mysql_fetch_array($my);
+    $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".mysql_real_escape_string($hst['patient_id'])."'";
+    $pat_q = mysql_query($pat_sql);
+    $pat = mysql_fetch_assoc($pat_q);
+
 } else {
     $sql = "SELECT "
          . "  hst.* "
@@ -230,9 +234,15 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
     <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
-            <td colspan="2" class="cat_head">
+            <td class="cat_head" width="30%">
                HST for <?= $hst['patient_firstname']; ?> <?= $hst['patient_lastname']; ?> 
             </td>
+	    <td class="cat_head" width="35%">
+		HST
+	    </td>
+	    <td class="cat_head" width="35%">
+ 		Patient
+	    </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -251,6 +261,19 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 </select>
                 <span class="red">*</span>
             </td>
+            <td valign="top" class="frmdata">
+          <select name="pat_ins_co_id" class="readonly" onclick="return false;" readonly="readonly">
+<?php
+                            $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contacttypeid = '11' AND docid='".$hst['doc_id']."'";
+                            $ins_contact_qry_run = mysql_query($ins_contact_qry);
+                            while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
+                            ?>
+                                <option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($pat['p_m_ins_co'] == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>;
+
+                                <?php } ?>
+</select>
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -259,6 +282,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_firstname" value="<?=$hst['patient_firstname']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_firstname" value="<?=$pat['firstname']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -269,6 +296,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" name="patient_lastname" value="<?=$hst['patient_lastname']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_lastname" value="<?=$pat['lastname']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -278,6 +309,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" name="patient_add1" class="tbox readonly" value="<?=$hst['patient_add1'];?>" readonly />
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_add1" class="tbox readonly" value="<?=$pat['add1'];?>" readonly />
+                <span class="red">*</span>
+            </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -285,6 +320,9 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_add2" class="tbox readonly" value="<?=$hst['patient_add2'];?>" readonly />
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_add2" class="tbox readonly" value="<?=$pat['add2'];?>" readonly />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -295,6 +333,11 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" value="<?=$hst['patient_city']?>" name="patient_city" class="tbox readonly" readonly />
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" value="<?=$pat['city']?>" name="pat_patient_city" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -304,6 +347,11 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" value="<?=$hst['patient_state']?>" name="patient_state" class="tbox readonly" readonly />
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" value="<?=$pat['state']?>" name="pat_patient_state" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
@@ -312,6 +360,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_zip" value="<?= $hst['patient_zip']?>" class="tbox readonly" readonly />
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_zip" value="<?= $pat['zip']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -322,6 +374,11 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" name="patient_ins_group_id" value="<?=$hst['patient_ins_group_id']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_ins_group_id" value="<?=$pat['p_m_ins_grp']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -330,6 +387,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmdata">
                 <input type="text" name="patient_ins_id" value="<?=$hst['patient_ins_id']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_ins_id" value="<?=$pat['p_m_ins_id']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -340,6 +401,11 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <input type="text" name="patient_dob" value="<?=$hst['patient_dob']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_dob" value="<?=$pat['dob']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">

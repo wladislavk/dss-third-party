@@ -1547,11 +1547,15 @@ function remove_notification(id){
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysql_query($bu_sql);
 				if(mysql_num_rows($bu_q)>0){
+if($pat_hst_num_uncompleted>0){
+  ?><a href="#" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
+}else{
 ?>
 <input type="submit" name="sendHST"
  onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
  value="Order HST" class="button" />
 <?php
+}
 } 
 ?>
 

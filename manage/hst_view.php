@@ -19,7 +19,7 @@ $hst = mysql_fetch_assoc($q);
                                         WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
                                  $bu_q = mysql_query($bu_sql);
                           while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <input type="radio" name="company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
+                            <input type="radio" <?= ($bu_r['id']==$hst['company_id'])?'checked="checked"':'';?>  name="company_id" value="<?= $bu_r['id']; ?>"  /> <?= $bu_r['name']; ?><br />
                           <?php } ?>
 
   <p align="left">

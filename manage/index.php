@@ -306,6 +306,8 @@ ALERT THIRD
 
   <a href="manage_hst.php?status=<?= DSS_HST_COMPLETE; ?>&viewed=0" class=" count_<?= $num_hst; ?> notification <?= ($num_hst==0)?"good_count":"great_count"; ?>"><span class="count"><?= $num_hst;?></span><span class="label">HSTs</span></a>
 
+  <a href="manage_hst.php?status=<?= DSS_HST_REJECTED; ?>&viewed=0" class=" count_<?= $num_rejected_hst; ?> notification <?= ($num_rejected_hst==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_rejected_hst;?></span><span class="label">Rejected HSTs</span></a>
+
   <a href="manage_hst.php?status=<?= DSS_HST_REQUESTED; ?>&viewed=0" class=" count_<?= $num_requested_hst; ?> notification <?= ($num_requested_hst==0)?"good_count":"bad_count"; ?>"><span class="count"><?= $num_requested_hst;?></span><span class="label">Unsent HSTs</span></a>
 
 <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){?>

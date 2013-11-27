@@ -80,7 +80,7 @@ function clean_steps($pid){ //Deletes not completed steps and clears scheduled
 function trigger_letter6($pid, $info_id) {
         $letterid = '6';
         $topatient = '1';
-        $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '', '', '', 'paper');
+        $letter = create_letter($letterid, $pid, $info_id, $topatient, '', '', '', '', '', 'paper');
         if (!is_numeric($letter)) {
                 print "Can't send letter 6: " . $letter;
                 die();

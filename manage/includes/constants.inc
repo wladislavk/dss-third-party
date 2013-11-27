@@ -104,6 +104,7 @@ define('DSS_HST_REQUESTED', 0);
 define('DSS_HST_PENDING', 1);
 define('DSS_HST_SCHEDULED', 2);
 define('DSS_HST_COMPLETE', 3);
+define('DSS_HST_REJECTED', 4);
 
 // A convenience array to get pre-auth labels
 $dss_hst_status_labels = array();
@@ -111,7 +112,7 @@ $dss_hst_status_labels[DSS_HST_REQUESTED] = 'Unsent';
 $dss_hst_status_labels[DSS_HST_PENDING] = 'Pending';
 $dss_hst_status_labels[DSS_HST_SCHEDULED] = 'Scheduled';
 $dss_hst_status_labels[DSS_HST_COMPLETE] = 'Complete';
-
+$dss_hst_status_labels[DSS_HST_REJECTED] = 'Rejected';
 
 //Transaction Payers (ledger)
 define('DSS_TRXN_PAYER_PRIMARY', 0);
@@ -165,6 +166,8 @@ define('DSS_FILE_IMAGE_PNG', 4);
 define('DSS_FILE_IMAGE_BMP', 5);
 define('DSS_FILE_APP_DOC', 6);
 define('DSS_FILE_APP_DOCX', 7);
+define('DSS_FILE_APP_XLS', 8);
+define('DSS_FILE_APP_XLSX', 9);
 
 // A convenience array to get file types
 $dss_image_file_types = array();
@@ -184,6 +187,9 @@ $dss_file_types[DSS_FILE_APP_PDF] = "application/pdf";
 $dss_file_types[DSS_FILE_IMAGE_BMP] = "image/bmp";
 $dss_file_types[DSS_FILE_APP_DOC] = "application/msword";
 $dss_file_types[DSS_FILE_APP_DOCX] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+$dss_file_types[DSS_FILE_APP_XLS] = "application/vnd.ms-excel";
+$dss_file_types[DSS_FILE_APP_XLSX] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
 
 define('DSS_IMAGE_MAX_SIZE', 10000000);
 define('DSS_IMAGE_MAX_WIDTH', 2000);

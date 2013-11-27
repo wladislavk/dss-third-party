@@ -44,7 +44,7 @@ function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
 	$pt_referral_list = get_ptreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
+  $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
   if (!is_numeric($letter)) {
     print "Can't send letter 20: " . $letter;
     die();
@@ -56,7 +56,7 @@ function trigger_letter20($pid) {
 // Trigger Letter 20 Thankyou
 $pt_referralid = get_ptreferralids($_GET['pid']);
 if ($pt_referralid) {
-	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."';";
+	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND pat_referral_list = '".s_for($pt_referralid)."';";
 	$result = mysql_query($sql);
 	$numrows = mysql_num_rows($result);
 	if ($numrows == 0) {
@@ -628,12 +628,40 @@ $ed_sql .="
 mysql_query($s1);
 	
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
+		if($old_referred_source == 2 AND $_POST['referred_source'] ==2){
+			//PHYSICIAN -> PHYSICIAN
+			//change pending letters to new referrer
+			$sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])."";
+		}elseif($old_referred_source == 1 AND $_POST['referred_source'] ==1){
+                        //PATIENT -> PATIENT
+                        //change pending letters to new referrer
+                        $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
+			mysql_query($sql);
+		}elseif($old_referred_source == 2 AND $_POST['referred_source']!=2){
+			//PHYSICIAN -> NOT PHYSICIAN
+			$l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
+			$l_q = mysql_query($l_sql);
+			while($l = mysql_fetch_assoc($l_q)){
+				delete_letter($l['letterid'], null, 'md_referral', $old_referred_by);
+			}
+		}elseif($old_referred_source == 1 AND $_POST['referred_source']!=1){
+                        //PHYSICIAN -> NOT PHYSICIAN
+                        $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
+                        $l_q = mysql_query($l_sql);
+                        while($l = mysql_fetch_assoc($l_q)){
+                                delete_letter($l['letterid'], null, 'pat_referral', $old_referred_by);
+                        }
+                }
+
+/*
+
 			if($_POST['referred_by']){
 				$sql = "UPDATE dental_letters SET md_referral_list=".$_POST["referred_by"]." WHERE patientid=".mysql_real_escape_string($_POST['ed'])."";
 			}else{
 				$sql = "DELETE FROM dental_letters where patientid=".mysql_real_escape_string($_POST['ed'])." AND (topatient=0 OR topatient IS NULL) AND (md_list = '' OR md_list IS NULL)";
 			}
 			mysql_query($sql);
+			*/
 		}
 
 		trigger_letter1and2($_POST['ed']);
@@ -1298,7 +1326,25 @@ if(clickedBut == "sendPin"){
 }
 p = patientabc(fa);
 var valid = true;
+<?php
+if($referred_source==1){
+$rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND status=0 AND pat_referral_list='".$referred_by."'"; 
+}else{
+$rl_sql = "SELECT * FROM dental_letters WHERE patientid='".mysql_real_escape_string($_GET['pid'])."' AND status=0 AND md_referral_list='".$referred_by."'";
+}
+$rl_q = mysql_query($rl_sql);
 
+if(mysql_num_rows($rl_q)>0){
+?>
+  if(fa.referred_by.value != '<?= $referred_by; ?>' || fa.referred_source.value != '<?= $referred_source; ?>'){
+    if(!confirm("The referrer has been update. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?")){
+      valid = false;
+    }
+  }
+<?php
+}
+
+?>
 
 //IF PENDING VOB MAKE SURE INSURANCE HASN'T CHANGED
 if((fa.p_m_ins_co.value != '<?= $p_m_ins_co; ?>' ||
@@ -1515,599 +1561,598 @@ function remove_notification(id){
         }
 
 ?>
-    <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
+<form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
-    
-    <script language="JavaScript" src="calendar1.js"></script>
+
+<script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-    
-    
-    <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-	<tr>
-              <td >
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
-              </td>
 
-		<td  align="right">
-                        <input type="submit" style="float:right; margin-left: 5px;" value=" <?=$but_text?> Patient" class="button" />
-			<?php 
-			if($doc_patient_portal && $use_patient_portal){
-			  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
-		 	    <input type="submit" name="sendReg" value="Send Registration Email" class="button" />
-			<?php 
-			  }else{ ?>
-			    <input type="submit" name="sendRem" value="Send Reminder Email" class="button" />
-			<?php
-			  }	
-			} ?>
+
+<table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<tr>
+      <td >
+    <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
+      </td>
+
+	<td  align="right">
+		<input type="submit" style="float:right; margin-left: 5px;" value=" <?=$but_text?> Patient" class="button" />
+		<?php 
+		if($doc_patient_portal && $use_patient_portal){
+		  if($themyarray['registration_status']==1 || $themyarray['registration_status']==0){  ?>
+		    <input type="submit" name="sendReg" value="Send Registration Email" class="button" />
+		<?php 
+		  }else{ ?>
+		    <input type="submit" name="sendRem" value="Send Reminder Email" class="button" />
+		<?php
+		  }	
+		} ?>
 
 <?php
-                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-                                        JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
-                                        WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                                 $bu_q = mysql_query($bu_sql);
-				if(mysql_num_rows($bu_q)>0){
+		  $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+				JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_SESSION['docid'])."'
+				WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+			 $bu_q = mysql_query($bu_sql);
+			if(mysql_num_rows($bu_q)>0){
 if($pat_hst_num_uncompleted>0){
-  ?><a href="#" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
+?><a href="#" onclick="alert('Patient has existing HST with status <?= $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;" class="button">Order HST</a><?php
 }else{
 ?>
 <input type="submit" name="sendHST"
- onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
- value="Order HST" class="button" />
+onclick="return confirm('By clicking OK, you certify that you have discussed HST protocols with this patient and are legally qualified to request a HST for this patient. Your digital signature will be attached to this submission. You will be notified by the HST company when the patient\'s HST is complete.');"
+value="Order HST" class="button" />
 <?php
 }
 } 
 ?>
 
-		</td>
-	</tr>
-        <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
+	</td>
+</tr>
+<tr>
+	<td valign="top" colspan="2" class="frmhead">
+			<ul>
+	    <li id="foli8" class="complex">	
 <div id="profile_image" style="float:right; width:270px;">
 <?php
-                                $pid = $_GET['pid'];
-  $itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
+			$pid = $_GET['pid'];
+$itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+$itype_my = mysql_query($itype_sql);
 $num_face = mysql_num_rows($itype_my);
 ?>
 <span style="float:right">
 <?php if($num_face==0){ ?>
-        <a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
-		<img src="images/add_patient_photo.png" />
-        </a>
+<a href="#" onclick="loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;" >
+	<img src="images/add_patient_photo.png" />
+</a>
 <?php }else{ 
-  while($image = mysql_fetch_array($itype_my)){
-   echo "<img src='q_file/".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
-  }
+while($image = mysql_fetch_array($itype_my)){
+echo "<img src='q_file/".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
+}
 
 } ?>
 
 </div>
-                        <label class="desc" id="title0" for="Field0" style="float:left;">
-                            Name
-                            <span id="req_0" class="req">*</span>
-                        </label>
+		<label class="desc" id="title0" for="Field0" style="float:left;">
+		    Name
+		    <span id="req_0" class="req">*</span>
+		</label>
 
-                        <div style="float:left; clear:left;">
-                            <span>
-                                <select name="salutation" style="width:80px;" >
-                                  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
-                                  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-                                  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
-                                  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
-                                </select>
-                                <label for="salutation">Salutation</label>
-                            </span>
-                            <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" style="width:150px;" />
-                                <label for="firstname">First Name</label>
-                            </span>
-                            <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" style="width:190px;" />
-                                <label for="lastname">Last Name</label>
-                            </span>
-                            <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:30px;" maxlength="1" />
-                                <label for="middlename">MI</label>
-                            </span>
-                            <span>
-                                <input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" style="width:150px" />
-                                <label for="preferred_name">Preferred Name</label>
-                            </span>
-                       </div>   
-		        <div style="float:left">
-                            <span>
-                                <input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:100px;" />
-                                <label for="home_phone">Home Phone
-                                                                                                                                <span id="req_0" class="req">*</span>
-                                                                                                                                </label>
-                            </span>
-                            <span>
-                                <input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:100px;" />
-                                <label for="cell_phone">Cell Phone</label>
-                            </span>
-                            <span>
-                                <input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
-                                <label for="work_phone">Work Phone</label>
-                            </span>
-                            <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
-                                <label for="email">Email/Pt. Portal Login</label>
+		<div style="float:left; clear:left;">
+		    <span>
+			<select name="salutation" style="width:80px;" >
+			  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
+			  <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
+			  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
+			  <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
+			</select>
+			<label for="salutation">Salutation</label>
+		    </span>
+		    <span>
+			<input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" maxlength="255" style="width:150px;" />
+			<label for="firstname">First Name</label>
+		    </span>
+		    <span>
+			<input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" maxlength="255" style="width:190px;" />
+			<label for="lastname">Last Name</label>
+		    </span>
+		    <span>
+			<input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" style="width:30px;" maxlength="1" />
+			<label for="middlename">MI</label>
+		    </span>
+		    <span>
+			<input id="preferred_name" name="preferred_name" type="text" class="field text addr tbox" value="<?=$preferred_name?>" maxlength="255" style="width:150px" />
+			<label for="preferred_name">Preferred Name</label>
+		    </span>
+	       </div>   
+		<div style="float:left">
+		    <span>
+			<input id="home_phone" name="home_phone" type="text" class="phonemask field text addr tbox" value="<?=$home_phone?>"  maxlength="255" style="width:100px;" />
+			<label for="home_phone">Home Phone
+															<span id="req_0" class="req">*</span>
+															</label>
+		    </span>
+		    <span>
+			<input id="cell_phone" name="cell_phone" type="text" class="phonemask field text addr tbox" value="<?=$cell_phone?>"  maxlength="255" style="width:100px;" />
+			<label for="cell_phone">Cell Phone</label>
+		    </span>
+		    <span>
+			<input id="work_phone" name="work_phone" type="text" class="extphonemask field text addr tbox" value="<?=$work_phone?>" maxlength="255" style="width:150px;" />
+			<label for="work_phone">Work Phone</label>
+		    </span>
+		    <span>
+			<input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>"  maxlength="255" style="width:275px;" />
+			<label for="email">Email/Pt. Portal Login</label>
 
-                            </span>
+		    </span>
 
-                                                </div>
-			<div style="clear:both">
-			    <span style="width:140px;">
-				<select id="best_time" name="best_time">
-					<option value="">Please Select</option>
-					<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
-                                        <option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
-                                        <option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
-				</select>
-				<label for="best_time">Best time to contact</label>
-			    </span>
-			    <span style="width:150px;">
-                                <select id="best_number" name="best_number">
-                                        <option value="">Please Select</option>
-                                        <option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
-                                        <option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
-                                        <option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
-                                </select>
-                                <label for="best_number">Best number to contact</label>
-			    </span>
-			    <span style="width:160px;">
-                <select id="preferredcontact" name="preferredcontact" >
-                        <option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                        <option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
-                </select>
-				<label>Preferred Contact Method</label>
-			    </span>
+					</div>
+		<div style="clear:both">
+		    <span style="width:140px;">
+			<select id="best_time" name="best_time">
+				<option value="">Please Select</option>
+				<option value="morning" <?= ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
+				<option value="midday" <?= ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
+				<option value="evening" <?= ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+			</select>
+			<label for="best_time">Best time to contact</label>
+		    </span>
+		    <span style="width:150px;">
+			<select id="best_number" name="best_number">
+				<option value="">Please Select</option>
+				<option value="home" <?= ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
+				<option value="work" <?= ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
+				<option value="cell" <?= ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+			</select>
+			<label for="best_number">Best number to contact</label>
+		    </span>
+		    <span style="width:160px;">
+	<select id="preferredcontact" name="preferredcontact" >
+		<option value="paper" <? if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
+		<option value="email" <? if($preferredcontact == 'email') echo " selected";?>>Email</option>
+	</select>
+			<label>Preferred Contact Method</label>
+		    </span>
 <div>Portal:
 <span style="color:#933; float:none;">
-                                  <?php
-                                    if($themyarray['use_patient_portal']==1){
-                                        switch($themyarray['registration_status']){
-                                        case 0:
-                                                echo 'Unregistered';
-                                                break;
-                                        case 1:
-                                                echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton'])) . ' ET';
-                                                break;
-                                        case 2:
-                                                echo 'Registered';
-                                                break;
-                                        }
-                                    }else{
-                                                echo 'Patient Portal In-active';
-                                    }
-                                  ?>
-                                </span>
+			  <?php
+			    if($themyarray['use_patient_portal']==1){
+				switch($themyarray['registration_status']){
+				case 0:
+					echo 'Unregistered';
+					break;
+				case 1:
+					echo 'Registration Emailed '.date('m/d/Y h:i a', strtotime($themyarray['registration_senton'])) . ' ET';
+					break;
+				case 2:
+					echo 'Registered';
+					break;
+				}
+			    }else{
+					echo 'Patient Portal In-active';
+			    }
+			  ?>
+			</span>
 <br />
 <input type="submit" name="sendPin" value="Patient can't receive text message?" class="button" />
 <?php if($themyarray['registration_status']==1){
- ?>PIN Code: <?= $themyarray['access_code']; ?> 
+?>PIN Code: <?= $themyarray['access_code']; ?> 
 <?php } ?>
-            </div>            </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <!-- <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
-                            Premedication
-                            <span id="req_0" class="req">*</span>
-                        </label>
-                        <div>
-                            <span>
-                                <label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
-                                
-                            </span>
-                            <span>
-                                <textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?=$premeddet;?></textarea>
-                            </span>
-                          
-                       </div>   
-                    </li>
-                </ul>
-            </td>
-        </tr>-->
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                            Address
-                            <span id="req_0" class="req">*</span>
-                        </label>
-                        <div>
-                            <span>
-                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:225px;"  maxlength="255"/>
-                                <label for="add1">Address1</label>
-                            </span>
-                            <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:175px;" maxlength="255" />
-                                <label for="add2">Address2</label>
-                            </span>
-                            <span>
-                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
-                                <label for="city">City</label>
-                            </span>
-                            <span>
-                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" style="width:25px;" maxlength="2" />
-                                <label for="state">State</label>
-                            </span>
-                            <span>
-                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
-                                <label for="zip">Zip / Post Code </label>
-                            </span>
-				<?php
-				$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
-                		$loc_q = mysql_query($loc_sql);
-				$num_loc = mysql_num_rows($loc_q);
-				if($num_loc > 1){
-				?>
-			    <span>
-				<select name="location">
-                        		<option value="">Select</option>
-        			<?php
-                		while($loc_r = mysql_fetch_assoc($loc_q)){
-                        		?><option <?= ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
-                		}
-        			?>
-                		</select>
-				<label for"location">Office Site</label>
-			    </span>
-			  <?php } ?>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                                <input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
-                                <label for="dob">Birthday</label>
-                            </span>
-                            <span>
-                            	<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
-                                	<option value="">Select</option>
-                                    <option value="Male" <? if($gender == 'Male') echo " selected";?>>Male</option>
-                                    <option value="Female" <? if($gender == 'Female') echo " selected";?>>Female</option>
-                                </select><span id="req_0" class="req">*</span>
-                                <label for="gender">Gender</label>
-                            </span>
-                            <span style="width:150px">
-                                <input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
-                                <label for="ssn">Social Security No.</label>
-                            </span>
-                <script type="text/javascript">
-                                function cal_bmi()
-                                {
-                                        fa = document.patientfrm;
-                                        if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
-                                        {
-                                                var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-                                                //alert(inc);
-                                                
-                                                var inc_sqr = parseInt(inc) * parseInt(inc);
-                                                var wei = parseInt(fa.weight.value) * 703;
-                                                var bmi = parseInt(wei) / parseInt(inc_sqr);
-                                                
-                                                //alert("BMI " + bmi.toFixed(2));
-                                                fa.bmi.value = bmi.toFixed(1);
-                                        }
-                                        else
-                                        {
-                                                fa.bmi.value = '';
-                                        }
-                                }
-                        </script>
+    </div>            </div>
+	    </li>
+	</ul>
+    </td>
+</tr>
+<!-- <tr>
+	<td valign="top" colspan="2" class="frmhead">
+			<ul>
+	    <li id="foli8" class="complex">	
+		<label class="desc" id="title0" for="Field0">
+		    Premedication
+		    <span id="req_0" class="req">*</span>
+		</label>
+		<div>
+		    <span>
+			<label for="premedcheck">Is Patient Pre-Med?<input id="premedcheck" name="premedcheck" tabindex="5" type="checkbox"  <?php if($premedcheck == 1){ echo "checked=\"checked\"";} ?> onclick="document.getElementById('premeddet').disabled=!(this.checked)" value="1" /></label>
+			
+		    </span>
+		    <span>
+			<textarea name="premeddet" id="premeddet" class="field text addr tbox" style="width:610px;" tabindex="18" <?php if($premedcheck == 0){ echo "disabled";} ?>><?=$premeddet;?></textarea>
+		    </span>
+		  
+	       </div>   
+	    </li>
+	</ul>
+    </td>
+</tr>-->
+<tr> 
+	<td valign="top" colspan="2" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">	
+		<label class="desc" id="title0" for="Field0">
+		    Address
+		    <span id="req_0" class="req">*</span>
+		</label>
+		<div>
+		    <span>
+			<input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" style="width:225px;"  maxlength="255"/>
+			<label for="add1">Address1</label>
+		    </span>
+		    <span>
+			<input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" style="width:175px;" maxlength="255" />
+			<label for="add2">Address2</label>
+		    </span>
+		    <span>
+			<input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" style="width:200px;" maxlength="255" />
+			<label for="city">City</label>
+		    </span>
+		    <span>
+			<input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" style="width:25px;" maxlength="2" />
+			<label for="state">State</label>
+		    </span>
+		    <span>
+			<input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" style="width:80px;" maxlength="255" />
+			<label for="zip">Zip / Post Code </label>
+		    </span>
+			<?php
+			$loc_sql = "SELECT * FROM dental_locations WHERE docid='".$docid."'";
+			$loc_q = mysql_query($loc_sql);
+			$num_loc = mysql_num_rows($loc_q);
+			if($num_loc > 1){
+			?>
+		    <span>
+			<select name="location">
+				<option value="">Select</option>
+			<?php
+			while($loc_r = mysql_fetch_assoc($loc_q)){
+				?><option <?= ($location==$loc_r['id'] || ($loc_r['default_location'] == 1 && !isset($_GET['pid'])))?'selected="selected"':''; ?>value="<?= $loc_r['id']; ?>"><?= $loc_r['location']; ?></option><?php
+			}
+			?>
+			</select>
+			<label for"location">Office Site</label>
+		    </span>
+		  <?php } ?>
+		</div>
+	    </li>
+			</ul>
+    </td>
+</tr>
+<tr>
+	<td valign="top" colspan="2" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">	
+		<div>
+		    <span>
+			<input id="dob" name="dob" type="text" class="field text addr tbox calendar" value="<?=$dob?>" style="width:100px;" maxlength="255" onChange="validateDate('dob');"  value="example 11/11/1234" /><span id="req_0" class="req">*</span>
+			<label for="dob">Birthday</label>
+		    </span>
+		    <span>
+			<select name="gender" id="gender" class="field text addr tbox" style="width:100px;" >
+				<option value="">Select</option>
+			    <option value="Male" <? if($gender == 'Male') echo " selected";?>>Male</option>
+			    <option value="Female" <? if($gender == 'Female') echo " selected";?>>Female</option>
+			</select><span id="req_0" class="req">*</span>
+			<label for="gender">Gender</label>
+		    </span>
+		    <span style="width:150px">
+			<input id="ssn" name="ssn" type="text" class="ssnmask field text addr tbox" value="<?=$ssn?>"  maxlength="255" style="width:100px;" />
+			<label for="ssn">Social Security No.</label>
+		    </span>
+	<script type="text/javascript">
+			function cal_bmi()
+			{
+				fa = document.patientfrm;
+				if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
+				{
+					var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
+					//alert(inc);
+					
+					var inc_sqr = parseInt(inc) * parseInt(inc);
+					var wei = parseInt(fa.weight.value) * 703;
+					var bmi = parseInt(wei) / parseInt(inc_sqr);
+					
+					//alert("BMI " + bmi.toFixed(2));
+					fa.bmi.value = bmi.toFixed(1);
+				}
+				else
+				{
+					fa.bmi.value = '';
+				}
+			}
+		</script>
 
 <span>
-                            <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
-                                <option value="0">Feet</option>
-                                <? for($i=1;$i<9;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
-                            ?>
-                            <label for="feet">Height: Feet</label>
-                        </span>
+		    <select name="feet" id="feet" class="field text addr tbox" style="width:100px;" tabindex="5" onchange="cal_bmi();" >
+			<option value="0">Feet</option>
+			<? for($i=1;$i<9;$i++)
+							{
+							?>
+								<option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
+							<?
+							}?>
+		    </select>
+		    <?php
+			//showPatientValue('dental_patients', $_GET['pid'], 'feet', $pat_row['feet'], $feet, true, $showEdits);
+		    ?>
+		    <label for="feet">Height: Feet</label>
+		</span>
 
-                        <span>
-                            <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
-                                <option value="-1">Inches</option>
-                                <? for($i=0;$i<12;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
-                            ?>
-                            <label for="inches">Inches</label>
-                        </span>
+		<span>
+		    <select name="inches" id="inches" class="field text addr tbox" style="width:100px;" tabindex="6" onchange="cal_bmi();">
+			<option value="-1">Inches</option>
+			<? for($i=0;$i<12;$i++)
+							{
+							?>
+								<option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
+							<?
+							}?>
+		    </select>
+		    <?php
+			//showPatientValue('dental_patients', $_GET['pid'], 'inches', $pat_row['inches'], $inches, true, $showEdits);
+		    ?>
+		    <label for="inches">Inches</label>
+		</span>
 
-                        <span>
-                            <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
-                                <option value="0">Weight</option>
-                                <? for($i=80;$i<=500;$i++)
-                                                                {
-                                                                ?>
-                                                                        <option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
-                                                                <?
-                                                                }?>
-                            </select>
-                            <?php
-                                //showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
-                            ?>
+		<span>
+		    <select name="weight" id="weight" class="field text addr tbox" style="width:100px;" tabindex="7" onchange="cal_bmi();">
+			<option value="0">Weight</option>
+			<? for($i=80;$i<=500;$i++)
+							{
+							?>
+								<option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
+							<?
+							}?>
+		    </select>
+		    <?php
+			//showPatientValue('dental_patients', $_GET['pid'], 'weight', $pat_row['weight'], $weight, true, $showEdits);
+		    ?>
 
-                            <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        </span>
+		    <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
+		</span>
 
-                        <span>
-                                <span style="color:#000000; padding-top:2px;">BMI</span>
-                                <input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
-                        </span>
-                        <span>
-                                <label for="inches">
-                                &lt; 18.5 is Underweight
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
-                                18.5 - 24.9 is Normal
-                                <br />
-                                &nbsp;&nbsp;&nbsp;
-                                25 - 29.9 is Overweight
-                                <br />
-                                &gt; 30 is Obese
-                            </label>
-                        </span>
-			</div>
-		  </li>
-		</ul>
-	</td>
-	</tr> 
+		<span>
+			<span style="color:#000000; padding-top:2px;">BMI</span>
+			<input id="bmi" name="bmi" type="text" class="field text addr tbox" value="<?=$bmi?>" tabindex="8" maxlength="255" style="width:50px;" readonly="readonly" />
+		</span>
+		<span>
+			<label for="inches">
+			&lt; 18.5 is Underweight
+			<br />
+			&nbsp;&nbsp;&nbsp;
+			18.5 - 24.9 is Normal
+			<br />
+			&nbsp;&nbsp;&nbsp;
+			25 - 29.9 is Overweight
+			<br />
+			&gt; 30 is Obese
+		    </label>
+		</span>
+		</div>
+	  </li>
+	</ul>
+</td>
+</tr> 
 
-        <tr>
-	<td class="frmhead">
-		<ul>
-		  <li>
-                            <span>
-                                <select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
-                                        <option value="">Select</option>
-                                    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
-                                                                        <option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
-                                    <option value="Minor" <? if($marital_status == 'Minor') echo " selected";?>>Minor</option>
-                                </select>
-                                <label for="marital_status">Marital Status</label>
-                            </span>
-                                                        <span>
-                                <input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
-                                <label for="partner_name">Partner/Guardian Name</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        	<td valign="top" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<!--<label class="desc" id="title0" for="Field0">
-                            Optional Fields (not used in letters)
-                        </label>-->
-			  <div>
-                            <span>
-                            	<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?=$patient_notes;?></textarea>
-                                <label for="patient_notes">Patient Notes</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                            In case of an emergency
-                        </label>
-                        <div>
-                            <span>
-                                <input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:200px;" />
-                                <label for="home_phone">Name</label>
-                            </span>
-                            <span>
-                                <input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:150px;" />
-                                <label for="home_phone">Relationship</label>
-                            </span>
-                            <span>
-                                <input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:150px;" />
-                                <label for="emergency_number">Number</label>
-                            </span>
-						</div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-                          <tr>
-              <td colspan="2">
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
-              </td>
-          </tr>
+<tr>
+<td class="frmhead">
+	<ul>
+	  <li>
+		    <span>
+			<select name="marital_status" id="marital_status" class="field text addr tbox" style="width:130px;" >
+				<option value="">Select</option>
+			    <option value="Married" <? if($marital_status == 'Married') echo " selected";?>>Married</option>
+			    <option value="Single" <? if($marital_status == 'Single') echo " selected";?>>Single</option>
+								<option value="Life Partner" <? if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
+			    <option value="Minor" <? if($marital_status == 'Minor') echo " selected";?>>Minor</option>
+			</select>
+			<label for="marital_status">Marital Status</label>
+		    </span>
+						<span>
+			<input id="partner_name" name="partner_name" type="text" class="field text addr tbox" value="<?=$partner_name?>"  maxlength="255" />
+			<label for="partner_name">Partner/Guardian Name</label>
+		    </span>
+		</div>
+	    </li>
+			</ul>
+    </td>
+	<td valign="top" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">	
+		<!--<label class="desc" id="title0" for="Field0">
+		    Optional Fields (not used in letters)
+		</label>-->
+		  <div>
+		    <span>
+			<textarea name="patient_notes"  id="patient_notes" class="field text addr tbox" style="width:410px;" ><?=$patient_notes;?></textarea>
+			<label for="patient_notes">Patient Notes</label>
+		    </span>
+		</div>
+	    </li>
+			</ul>
+    </td>
+</tr>
+	<tr> 
+	<td valign="top" colspan="2" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">	
+		<label class="desc" id="title0" for="Field0">
+		    In case of an emergency
+		</label>
+		<div>
+		    <span>
+			<input id="emergency_name" name="emergency_name" type="text" class="field text addr tbox" value="<?=$emergency_name?>" maxlength="255" style="width:200px;" />
+			<label for="home_phone">Name</label>
+		    </span>
+		    <span>
+			<input id="emergency_relationship" name="emergency_relationship" type="text" class="field text addr tbox" value="<?=$emergency_relationship?>" maxlength="255" style="width:150px;" />
+			<label for="home_phone">Relationship</label>
+		    </span>
+		    <span>
+			<input id="emergency_number" name="emergency_number" type="text" class="extphonemask field text addr tbox" value="<?=$emergency_number?>" maxlength="255" style="width:150px;" />
+			<label for="emergency_number">Number</label>
+		    </span>
+					</div>
+	    </li>
+			</ul>
+    </td>
+</tr>
+		  <tr>
+      <td colspan="2">
+    <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
+      </td>
+  </tr>
 
-		<tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                           &nbsp;
-                        </label>
-                        <div>
+	<tr> 
+	<td valign="top" colspan="2" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">	
+		<label class="desc" id="title0" for="Field0">
+		   &nbsp;
+		</label>
+		<div>
 <div style="float:left;">
 <?php if(!isset($pid)){ $copyreqdate = date('m/d/Y'); } ?>
-                           <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
+		   <input id="copyreqdate" name="copyreqdate" type="text" class="field text addr tbox calendar" value="<?php echo $copyreqdate; ?>"  style="width:100px;" maxlength="255" onChange="validateDate('copyreqdate');" value="example 11/11/1234" />
 <label>Date</label>
-				</div>
+			</div>
 <style type="text/css">
 #referred_source div{ float:left; }
 </style>
-				<div style="float:left;" id="referred_source_div">
-				
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
-				<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
-                                <input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
+			<div style="float:left;" id="referred_source_div">
+			
+			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':''; ?> type="radio" value="person" onclick="show_referredby('person', '')" /> Person
+			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_MEDIA; ?>" onclick="show_referredby('notes', <?= DSS_REFERRED_MEDIA; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_MEDIA]; ?>
+			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_FRANCHISE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_FRANCHISE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_FRANCHISE]; ?>
+			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_DSSOFFICE; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_DSSOFFICE; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_DSSOFFICE]; ?>
+			<input name="referred_source_r" <?= ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':''; ?> type="radio" value="<?= DSS_REFERRED_OTHER; ?>" onclick="show_referredby('notes',<?= DSS_REFERRED_OTHER; ?>)" /> <?= $dss_referred_labels[DSS_REFERRED_OTHER]; ?>
 
-				</div>
+			</div>
 <script type="text/javascript">
 function show_referredby(t, rs){
-	if(t=='person'){
-                document.getElementById('referred_notes').style.display="none";
-                document.getElementById('referred_person').style.display="block";
-	}else{
-                document.getElementById('referred_notes').style.display="block";
-		document.getElementById('referred_person').style.display="none";
-	}
-                $('#referred_source').val(rs);
+if(t=='person'){
+	document.getElementById('referred_notes').style.display="none";
+	document.getElementById('referred_person').style.display="block";
+}else{
+	document.getElementById('referred_notes').style.display="block";
+	document.getElementById('referred_person').style.display="none";
+}
+	$('#referred_source').val(rs);
 }
 </script>
-				<div style="clear:both;float:left;">
-					<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
-					<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
+			<div style="clear:both;float:left;">
+				<div id="referred_person" <?= ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>>	
+				<input type="text" id="referredby_name" onclick="updateval(this)" autocomplete="off" name="referredby_name" value="<?= ($referred_name!='')?$referred_name:'Type referral name'; ?>" style="width:300px;" />
 <input type="button" class="button" style="width:150px;" onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo $_GET['pid']; ?>&from=add_patient');" value="+ Create New Contact" />
 <br />
-        <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
-                <ul id="referredby_list" class="search_list">
-                        <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-        </div>
+<div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
+	<ul id="referredby_list" class="search_list">
+		<li class="template" style="display:none">Doe, John S</li>
+	</ul>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', '<?= $_GET['pid']; ?>');
+setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', '<?= $_GET['pid']; ?>');
 });
 </script>
-					</div>
-					<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
-						<textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea> 	
-					</div>
+				</div>
+				<div id="referred_notes" <?= ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
+					<textarea name="referred_notes" style="width:300px;"><?= $referred_notes; ?></textarea> 	
+				</div>
 <input type="hidden" name="referred_by" id="referred_by" value="<?=$referred_by;?>" />
 <input type="hidden" name="referred_source" id="referred_source" value="<?=$referred_source;?>" />
+		       <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
+		    </div>
+	    </li>
+			</ul>
+    </td>
+</tr>
+   
 
-                               <!-- <input id="referred_by" name="referred_by" type="text" class="field text addr tbox" value="<?=$referred_by?>" maxlength="255" style="width:300px;" /> -->
-                            </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-           
+		  <tr>
+      <td colspan="2">
+    <font style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</font>
+      </td>
+  </tr>
+	<tr>
+	<td valign="top" colspan="2" class="frmhead">
+	<ul>
+		<li id="foli8" class="complex">
+		<label class="desc" id="title0" for="Field0">
+		    Employer Information
+		</label>
+					<div>
+		    <span>
+			<input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:325px;"  maxlength="255"/>
+			<label for="add1">Employer</label>
+		    </span>
+						<span>
+			<input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:150px;" maxlength="255" />
+			<label for="state">&nbsp;&nbsp;Phone</label>
+		    </span>
+						<span>
+			<input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
+			<label for="state">Fax</label>
+		    </span>
 
-                          <tr>
-              <td colspan="2">
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</font>
-              </td>
-          </tr>
-                <tr>
-                <td valign="top" colspan="2" class="frmhead">
-                <ul>
-                        <li id="foli8" class="complex">
-                        <label class="desc" id="title0" for="Field0">
-                            Employer Information
-                        </label>
-                                                <div>
-                            <span>
-                                <input id="employer" name="employer" type="text" class="field text addr tbox" value="<?php echo $employer; ?>" style="width:325px;"  maxlength="255"/>
-                                <label for="add1">Employer</label>
-                            </span>
-                                                        <span>
-                                <input id="emp_phone" name="emp_phone" type="text" class="extphonemask field text addr tbox" value="<?=$emp_phone?>"  style="width:150px;" maxlength="255" />
-                                <label for="state">&nbsp;&nbsp;Phone</label>
-                            </span>
-                                                        <span>
-                                <input id="emp_fax" name="emp_fax" type="text" class="phonemask field text addr tbox" value="<?=$emp_fax?>"  style="width:120px;" maxlength="255" />
-                                <label for="state">Fax</label>
-                            </span>
-
-                        </div>
-                        <div>
-                            <span>
-                                <input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:225px;"  maxlength="255"/>
-                                <label for="add1">Address1</label>
-                            </span>
-                            <span>
-                                <input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:175px;" maxlength="255" />
-                                <label for="add2">Address2</label>
-                            </span>
-                            <span>
-                                <input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
-                                <label for="city">City</label>
-                            </span>
-                            <span>
-                                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
-                                <label for="state">State</label>
-                            </span>
-                            <span>
-                                <input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
-                                <label for="zip">Zip Code </label>
-                            </span>
-                        </div>
-                    </li>
-                                </ul>
-            </td>
-        </tr>
-
+		</div>
+		<div>
+		    <span>
+			<input id="emp_add1" name="emp_add1" type="text" class="field text addr tbox" value="<?=$emp_add1?>" style="width:225px;"  maxlength="255"/>
+			<label for="add1">Address1</label>
+		    </span>
+		    <span>
+			<input id="emp_add2" name="emp_add2" type="text" class="field text addr tbox" value="<?=$emp_add2?>" style="width:175px;" maxlength="255" />
+			<label for="add2">Address2</label>
+		    </span>
+		    <span>
+			<input id="emp_city" name="emp_city" type="text" class="field text addr tbox" value="<?=$emp_city?>" style="width:200px;" maxlength="255" />
+			<label for="city">City</label>
+		    </span>
+		    <span>
+			<input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?=$emp_state?>"  style="width:80px;" maxlength="255" />
+			<label for="state">State</label>
+		    </span>
+		    <span>
+			<input id="emp_zip" name="emp_zip" type="text" class="field text addr tbox" value="<?=$emp_zip?>" style="width:80px;" maxlength="255" />
+			<label for="zip">Zip Code </label>
+		    </span>
+		</div>
+	    </li>
+			</ul>
+    </td>
+</tr>
 
 
 
 
 
 
- 
-	  <tr>
-	      <td colspan="2">
+
+
+  <tr>
+      <td colspan="2">
 <a name="p_m_ins"></a>
-            <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>	      
-	      </td>
-	  </tr>
+    <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>	      
+      </td>
+  </tr>
 <?php
-  $api_sql = "SELECT use_eligible_api FROM dental_users
-                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $api_q = mysql_query($api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
-  if($api_r['use_eligible_api']==1){
+$api_sql = "SELECT use_eligible_api FROM dental_users
+	WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$api_q = mysql_query($api_sql);
+$api_r = mysql_fetch_assoc($api_q);
+if($api_r['use_eligible_api']==1){
 ?>
-	                <tr>
-                <td valign="top" colspan="2" class="frmhead">
-		Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+		<tr>
+	<td valign="top" colspan="2" class="frmhead">
+	Insurance Co.
+				<input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
 <br />
-        <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
-                <ul id="ins_payer_list" class="search_list">
-                        <li class="template" style="display:none"></li>
-                </ul>
-        </div>
+<div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+	<ul id="ins_payer_list" class="search_list">
+		<li class="template" style="display:none"></li>
+	</ul>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json', 'ins_payer');
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json', 'ins_payer');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

@@ -232,6 +232,7 @@ if($_FILES['image_file']['error'] == 4){
         } else {
                 ?>
                         <script type="text/javascript">
+				alert('<?=$_FILES["image_file"]["type"];?>');
                                 alert("Invalid File Type");
                         </script>
                 <?php

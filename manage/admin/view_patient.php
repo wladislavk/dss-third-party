@@ -6,7 +6,7 @@ require_once('includes/password.php');
 
 
 include "includes/similar.php";
-function trigger_letter20($pid) {
+/*function trigger_letter20($pid) {
   $letterid = '20';
   $md_list = get_mdcontactids($pid);
 	$pt_referral_list = get_ptreferralids($pid);
@@ -29,7 +29,7 @@ if ($pt_referralid) {
 		trigger_letter20($_GET['pid']);
 	}
 }
-
+*/
 
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
@@ -88,11 +88,11 @@ updateNumber2('s_m_ins_phone');
     } 
     if (count($recipients) > 0) {
       $recipients_list = implode(',', $recipients);
-      $letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
+      //$letter2 = create_letter($letter2id, $pid, '', '', $recipients_list);
       
       //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
       if($_SESSION['user_type']!= DSS_USER_TYPE_SOFTWARE){
-        $letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
+        //$letter1 = create_letter($letter1id, $pid, '', '', $recipients_list);
         if (!is_numeric($letter1)) {
           print $letter1;
           die();
@@ -108,7 +108,7 @@ updateNumber2('s_m_ins_phone');
 function trigger_letter3($pid) {
   $letterid = '3';
   $topatient = '1';
-  $letter = create_letter($letterid, $pid, '', $topatient);
+  //$letter = create_letter($letterid, $pid, '', $topatient);
   if (!is_numeric($letter)) {
     print $letter;
     die();

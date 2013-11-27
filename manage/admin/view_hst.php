@@ -178,10 +178,14 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
     // update hst
     $sql = "UPDATE dental_hst SET "
 				 . " office_notes = '".s_for($_POST['office_notes'])."', "
+				 . " rejected_reason = '".s_for($_POST['rejected_reason'])."', "
 				 . " sleep_study_id = '".s_for($sleepid)."', "
          			 . " status = " . s_for($_POST['status']) . " ";
     if($hst['status'] != $_POST['status']){
       $sql .= ", updatedate=now() ";
+	if($_POST['status']==DSS_HST_REJECTED){
+    	  $sql .= ", rejecteddate=now() ";
+	}
     }
     $sql .= "WHERE id = '" . $_POST["hst_id"] . "'";
     mysql_query($sql) or die($sql." | ".mysql_error());
@@ -416,6 +420,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hst['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
                         <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
                         <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
+                        <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
                 <span class="red">*</span>
             </td>
         </tr>
@@ -426,6 +431,14 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmdata">
 		<textarea name="office_notes"><?= $hst['office_notes']; ?></textarea>
 	    </td>
+        </tr>
+        <tr class="status_<?= DSS_HST_REJECTED; ?> status">
+            <td valign="top" class="frmhead" width="30%">
+                Rejected Reason
+            </td>
+            <td valign="top" class="frmdata">
+                <textarea name="rejected_reason"><?= $hst['rejected_reason']; ?></textarea>
+            </td>
         </tr>
         <tr class="status_<?= DSS_HST_COMPLETE; ?> status">
             <td valign="top" class="frmhead" width="30%">

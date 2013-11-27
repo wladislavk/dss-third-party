@@ -398,7 +398,7 @@ Sleep apnea is a life-threatening disease. Please mention this during your visit
 Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
 </div>
 <div id="risk_image"></div>
-<h2>Please return the device to your provider.</h2>
+<h2>Thank you for completing the survey. Please return the device to your provider.</h2>
 
 
 <a href="#" onclick="return show_doctor();" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</a>

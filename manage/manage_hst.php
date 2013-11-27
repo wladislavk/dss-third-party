@@ -106,11 +106,13 @@ $my=mysql_query($sql) or die(mysql_error());
       <?php $pending_selected = ($_REQUEST['status'] == DSS_HST_PENDING) ? 'selected' : ''; ?>
       <?php $scheduled_selected = ($_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
+      <?php $rejected_selected = ($_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
       <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
       <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
+      <option value="<?=DSS_HST_REJECTED?>" <?=$rejected_selected?>><?=$dss_hst_status_labels[DSS_HST_REJECTED]?></option>
     </select>
     <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
     <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
@@ -167,7 +169,7 @@ $my=mysql_query($sql) or die(mysql_error());
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?> <?= (!$myarray['viewed'] && $myarray['status'] == DSS_HST_COMPLETE)?'unviewed':''; ?>">
+			<tr class="<?=$tr_class;?> <?= (!$myarray['viewed'] && ($myarray['status'] == DSS_HST_COMPLETE || $myarray['status']==DSS_HST_REJECTED))?'unviewed':''; ?>">
 				<td valign="top">
 					<?=date('m/d/Y h:i a',strtotime($myarray["adddate"]));?>&nbsp;
 				</td>
@@ -184,8 +186,11 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_hst_status_labels[$myarray["status"]];?>&nbsp;
-					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
+					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['status'] != DSS_HST_REJECTED && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
                                         <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
+					<?= ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y H:i a', strtotime($myarray['rejecteddate'])):''; ?>
+					<?= ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
+
 				</td>
 				<td valign="top">
 				  <?php if($myarray['status']==DSS_HST_COMPLETE){ ?>
@@ -197,7 +202,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					</a>
 				  <?php } ?>
 					<?php 
-					if($myarray['status'] == DSS_HST_COMPLETE){
+					if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
 					if(!$myarray['viewed']){ ?>
                                         <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Read

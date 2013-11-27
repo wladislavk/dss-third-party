@@ -145,7 +145,7 @@ $sortdir = $_REQUEST['sortdir'];
 
 // Letters count and Oldest letter
 //$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
-$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
@@ -168,6 +168,7 @@ if ($status == 'pending') {
 			dental_letters.topatient, 
 			dental_letters.md_list, 
 			dental_letters.md_referral_list, 
+			dental_letters.pat_referral_list,
 			dental_letters.docid, 
 			dental_letters.userid, 
 			dental_letters.send_method, 
@@ -197,6 +198,7 @@ if ($status == 'pending') {
                         dental_letters.topatient, 
                         dental_letters.md_list, 
                         dental_letters.md_referral_list, 
+			dental_letters.pat_referral_list,
                         dental_letters.docid, 
                         dental_letters.userid, 
                         dental_letters.send_method, 
@@ -229,6 +231,7 @@ if ($status == 'pending') {
 			dental_letters.topatient, 
 			dental_letters.md_list, 
 			dental_letters.md_referral_list, 
+			dental_letters.pat_referral_list,
 			dental_letters.docid, 
 			dental_letters.userid, 
 			dental_letters.send_method, 
@@ -273,6 +276,7 @@ dental_letters.pdf_path,
 dental_letters.topatient, 
 dental_letters.md_list, 
 dental_letters.md_referral_list, 
+dental_letters.pat_referral_list,
 dental_letters.docid, 
 dental_letters.userid, 
 dental_letters.send_method, 
@@ -347,12 +351,13 @@ foreach ($dental_letters as $key => $letter) {
     $dental_letters[$key]['subject'] = "User generated";
   }
   // Get Recipients for Sent to Column
-  $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list']);
+  $contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
   //print_r($contacts); print "<br />";
   $total_contacts = 0;
     $total_contacts += (isset($contacts['patient']))?count($contacts['patient']):0;
     $total_contacts += (isset($contacts['mds']))?count($contacts['mds']):0;
     $total_contacts += (isset($contacts['md_referrals']))?count($contacts['md_referrals']):0;
+    $total_contacts += (isset($contacts['pat_referrals']))?count($contacts['pat_referrals']):0;
   if ($total_contacts > 1) {
     $dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
   } elseif ($total_contacts == 0) {
@@ -365,6 +370,7 @@ foreach ($dental_letters as $key => $letter) {
     $dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . ((isset($contacts['mds']['contacttype'])) ? (" - " . $contacts['mds']['contacttype']) : (""))) : ("");
     // MD Referral: Salutation Lastname, Firstname - Contact Type
     $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . ((isset($contacts['md_referrals']['contacttype'])) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))) : ("");
+    $dental_letters[$key]['sentto'] .= (isset($contacts['pat_referrals'][0])) ? ($contacts['pat_referrals'][0]['lastname'] . ", " . $contacts['pat_referrals'][0]['salutation'] . " " . $contacts['pat_referrals'][0]['firstname'] )  : ("");
   }
 	// Determine Delivery Method
 	if ($letter['send_method'] == '') {

@@ -57,10 +57,11 @@ $cur_template_num = 0;
 //TO COUNT NUMBER OF LETTERS
 while($master_r = mysql_fetch_assoc($master_c)){
   $letterid = $master_r['letterid'];
-  $othermd_query = "SELECT md_list, md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
+  $othermd_query = "SELECT md_list, md_referral_list, pat_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
   $othermd_result = mysql_query($othermd_query);
   $md_array = array();
   $md_referral_array = array();
+  $pat_referral_array = array();
   while ($row = mysql_fetch_assoc($othermd_result)) {
         if ($row['md_list'] != null) {
                 $md_array = array_merge($md_array, explode(",", $row['md_list']));
@@ -68,12 +69,17 @@ while($master_r = mysql_fetch_assoc($master_c)){
         if ($row['md_referral_list'] != null) {
                 $md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
         }
+	if ($row['pat_referral_list'] != null) {
+                $pat_referral_array = array_merge($pat_referral_array, explode(",", $row['pat_referral_list']));
+        }
   }
   $full_md_list = implode(",", $md_array);
   $full_md_referral_list = implode(",", $md_referral_array);
-  $contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
+  $full_pat_referral_list = implode(",", $pat_referral_array);
+  $contacts = get_contact_info('', $full_md_list, $full_md_referral_list, $full_pat_referral_list);
   $master_num += count($contacts['mds']);
   $master_num += count($contacts['md_referrals']);
+  $master_num += count($contacts['pat_referrals']);
   if($master_r['topatient']){ $master_num++; }
 }
 
@@ -85,7 +91,7 @@ $letterid = $master_r['letterid'];
 //$letterid = mysql_real_escape_string($_GET['lid']);
 
 // Select Letter
-$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type, l.font_size, l.font_family FROM dental_letters l
+$letter_query = "SELECT l.templateid, l.patientid, l.topatient, l.cc_topatient, l.md_list, l.md_referral_list, l.pat_referral_list, l.cc_pat_referral_list, l.template, l.send_method, l.status, l.docid, u.username, l.edit_date, l.template_type, l.font_size, l.font_family FROM dental_letters l
 	LEFT JOIN dental_users u ON u.userid=l.edit_userid
 	 where l.letterid = ".$letterid;
 	
@@ -97,8 +103,10 @@ $row = mysql_fetch_assoc($letter_result);
   $cc_topatient = $row['cc_topatient'];
   $md_list = $row['md_list'];
   $md_referral_list = $row['md_referral_list'];
+  $pat_referral_list = $row['pat_referral_list'];
   $mds = explode(",", $md_list);
   $md_referrals = explode(",", $md_referral_list);
+  $pat_referrals = explode(",", $pat_referral_list);
 	$altered_template = html_entity_decode($row['template'], ENT_COMPAT | ENT_IGNORE,"UTF-8");
 	$method = $row['send_method'];
   $status = $row['status'];
@@ -134,7 +142,7 @@ $row = mysql_fetch_assoc($letter_result);
   $font_family = $row['font_family'];
 
 // Pending and Sent Contacts
-$othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
+$othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list, pat_referral_list, cc_pat_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
 $othermd_result = mysql_query($othermd_query);
 $md_array = array();
 $md_referral_array = array();
@@ -149,16 +157,26 @@ while ($row = mysql_fetch_assoc($othermd_result)) {
         }elseif ($row['md_referral_list'] != null) {
 		$md_referral_array = array_merge($md_referral_array, explode(",", $row['md_referral_list']));
 	}
+        if ($row['cc_pat_referral_list'] != null) {
+                $pat_referral_array = array_merge($pat_referral_array, explode(",", $row['cc_pat_referral_list']));
+        }elseif ($row['pat_referral_list'] != null) {
+                $pat_referral_array = array_merge($pat_referral_array, explode(",", $row['pat_referral_list']));
+        }
+
 }
 $full_md_list = implode(",", $md_array);
 $full_md_referral_list = implode(",", $md_referral_array);
-$contacts = get_contact_info('', $full_md_list, $full_md_referral_list);
+$full_pat_referral_list = implode(",", $pat_referral_array);
+$contacts = get_contact_info('', $full_md_list, $full_md_referral_list, $full_pat_referral_list);
 $md_contacts = array();
 foreach ($contacts['mds'] as $contact) {
   $md_contacts[] = array_merge(array('type' => 'md'), $contact);
 }
 foreach ($contacts['md_referrals'] as $contact) {
   $md_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
+}
+foreach ($contacts['pat_referrals'] as $contact) {
+  $md_contacts[] = array_merge(array('type' => 'pat_referral'), $contact);
 }
 
 // Get Letter Subject
@@ -217,9 +235,9 @@ $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 $source = $r['referred_source'];
 if ($topatient) {
-  $contact_info = get_contact_info($patientid, $md_list, $md_referral_list);
+  $contact_info = get_contact_info($patientid, $md_list, $md_referral_list, $pat_referral_list);
 } else {
-  $contact_info = get_contact_info('', $md_list, $md_referral_list, $source);
+  $contact_info = get_contact_info('', $md_list, $md_referral_list, $pat_referral_list);
 }
 if($source == DSS_REFERRED_PHYSICIAN){
 $md_referral = get_mdreferralids($_GET['pid']);
@@ -266,6 +284,9 @@ foreach ($contact_info['patient'] as $contact) {
 }
 foreach ($contact_info['md_referrals'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'md_referral'), $contact);
+}
+foreach ($contact_info['pat_referrals'] as $contact) {
+  $letter_contacts[] = array_merge(array('type' => 'pat_referral'), $contact);
 }
 foreach ($contact_info['mds'] as $contact) {
   $letter_contacts[] = array_merge(array('type' => 'md'), $contact);

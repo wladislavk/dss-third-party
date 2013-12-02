@@ -25,8 +25,6 @@ require_once('includes/formatters.php');
         <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js' type="text/javascript" charset="utf-8"></script>
 <script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_limit.js"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="css/calendar.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
  	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css">
@@ -88,7 +86,7 @@ require_once('includes/formatters.php');
 		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
 		scheduler.config.hour_date="%h:%i%A";
-		scheduler.config.hour_size_px = 53;
+		scheduler.config.hour_size_px = 43;
 		scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
 		scheduler.config.mark_now = true;
 		scheduler.config.details_on_create = true;
@@ -553,6 +551,11 @@ $(document).ready(function(){
   initCal();
 });
 </script>
+<div class="dhx_cal_tab pdf_link" style="float:right;margin-right:10px;">
+<a name="print" value="Print" href="#"
+onclick="if(scheduler._mode == 'timeline'){ alert('This view cannot be printed to PDF, please try another view.'); }else{scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor');}" 
+style="text-decoration: none !important; border: none; height: 15px;">Print</a>
+</div>
 
 	<div id="scheduler_here" class="dhx_cal_container" style='width:960px; height:600px; margin-left:10px;'>
 		<div class="dhx_cal_navline">
@@ -568,11 +571,6 @@ $(document).ready(function(){
                         <div class="dhx_cal_tab" name="chairs_tab" style="right:415px;"></div>
 			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
 
-<div class="dhx_cal_tab pdf_link" style="right: 5px;">
-<a name="print" value="Print" href="#"
-onclick="if(scheduler._mode == 'timeline'){ alert('This view cannot be printed to PDF, please try another view.'); }else{scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor');}" 
-style="text-decoration: none !important; border: none; height: 15px;">Print</a>
-</div>
 		</div>
 		<div class="dhx_cal_header">
 		</div>

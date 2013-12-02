@@ -1,5 +1,5 @@
 <?php
-	require_once('../../codebase/connector/scheduler_connector.php');
+	require_once('../common/connector/scheduler_connector.php');
 	require_once('../common/config.php');
 	
 	$user_id = intval($_GET['user']);

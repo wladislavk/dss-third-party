@@ -188,7 +188,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= $dss_hst_status_labels[$myarray["status"]];?>&nbsp;
 					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['status'] != DSS_HST_REJECTED && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
                                         <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
-					<?= ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y H:i a', strtotime($myarray['rejecteddate'])):''; ?>
+					<?= ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y h:i a', strtotime($myarray['rejecteddate'])):''; ?>
 					<?= ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
 
 				</td>
@@ -204,11 +204,11 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?php 
 					if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
 					if(!$myarray['viewed']){ ?>
-                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>" style="float:right;" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>&status=<?=$_GET['status'];?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Read
                                         </a>
 					<?php }else{ ?>
-                                        <a href="manage_hst.php?urid=<?= $myarray["id"]; ?>" style="float:right;" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?urid=<?= $myarray["id"]; ?>&status=<?=$_GET['status'];?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Unread
                                         </a>
 					<?php } 

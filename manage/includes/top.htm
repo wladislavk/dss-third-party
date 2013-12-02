@@ -1526,6 +1526,10 @@ $total_insurance = mysql_num_rows($insurance_my);
 		<?php } ?>
 		<?= ($hst['status']==DSS_HST_SCHEDULED)?' - '.$hst['office_notes']:''; ?>
                 <?= ($hst['status']==DSS_HST_REJECTED)?' - '.$hst['rejected_reason']:''; ?>
+                <?= ($hst['status']==DSS_HST_REJECTED && $hst['rejecteddate']!='')?' - '.date('m/d/Y h:i a', strtotime($hst['rejecteddate'])):''; ?>
+		<?php if($hst['status'] == DSS_HST_REJECTED) { ?>
+                  <br /><a href="manage_hst.php?status=4">Click here</a> to remove this error
+                <?php } ?>
                 <br />
                 <?php
 		$pat_hst_status=$dss_hst_status_labels[$hst['status']];

@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Basic initialization</title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -19,8 +18,6 @@
 
 <script type="text/javascript" charset="utf-8">
 	function init() {
-		scheduler.config.multi_day = true;
-		
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.init('scheduler_here',new Date(2010,0,10),"week");
 		scheduler.load("./data/events.xml");

@@ -1,8 +1,14 @@
 <?php 
 require_once('classes/tc_calendar.php');
 include 'includes/top.htm';?>
+<?php if(is_billing($_SESSION['admin_access']) || is_hst($_SESSION['admin_access'])){ ?>
 
-		<center><B>Welcome</B></center> <p>&nbsp;</p>
+<h1>Welcome to the DS3 backoffice system.</h1>
+<p>Any unauthorized use of this system is strictly prohibited. By accessing this system you are bound to the user agreement terms as well as all applicable HIPAA-HiTECH regulations. Please take all possible measures to ensure patient data is protected at all times.</p>
+
+
+<?php }else{ ?>
+                <center><B>Welcome</B></center> <p>&nbsp;</p>
 		
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Set Global Memo</b>
 
@@ -47,7 +53,6 @@ echo "<b><font style=\"color:#FF0000;\">EXPIRED</font></b>";
 }
 ?>
  
- 
  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" style="padding-left: 20px;">
  <textarea name="memobox" cols=90 rows=6>
  <?php 
@@ -73,6 +78,5 @@ $myCalendar->writeScript();
 ?>&nbsp;&nbsp;&nbsp;<input type="submit" name="submit" value="Update Memo" />
       </form>
 <br /><br />
-<a href="send_claim.php">Send Claims</a>
-
+<?php } ?>
 <? include 'includes/bottom.htm';?>

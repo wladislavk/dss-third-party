@@ -1,9 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 	
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-
+    <title>Mini calendar outside the scheduler</title>
 	<script src='../../codebase/dhtmlxscheduler.js' type="text/javascript" charset="utf-8"></script>
 	<link rel='STYLESHEET' type='text/css' href='../../codebase/dhtmlxscheduler.css'>
 	
@@ -51,7 +50,9 @@
 
 
 <body onload="doOnLoad();">
-	<div id="cal_here" style='width:200px; float: left;'></div>
+	<div style='float: left; padding:10px;'>
+		<div id="cal_here" style='width:250px;'></div>
+	</div>
 	<div id="scheduler_here" class="dhx_cal_container" style='width:auto; height:100%;'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>

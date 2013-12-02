@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Multi-day events</title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -18,11 +17,15 @@
 </style>
 
 <script type="text/javascript" charset="utf-8">
+	function update_view(input){
+		scheduler.config.multi_day = input.checked;
+		scheduler.updateView();
+	}
+
 	function init() {
-		
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.config.multi_day = true;
-		
+		scheduler.xy.margin_top = 40;
 		scheduler.init('scheduler_here',new Date(2009,7,11),"week");
 		scheduler.load("./data/events.xml");
 		
@@ -30,6 +33,9 @@
 </script>
 
 <body onload="init();">
+	<div style='padding:5px 20px; height:30px; line-height:30px; font-family:Tahoma;'>
+		<input type='checkbox' id='mod1' checked onchange='update_view(this)'><label for='mod1'> Show multiday events</label>
+	</div>
 	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>

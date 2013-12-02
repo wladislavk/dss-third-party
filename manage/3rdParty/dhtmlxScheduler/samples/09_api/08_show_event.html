@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<head xmlns="http://www.w3.org/1999/html">
+<!doctype html>
+<head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title>dhtmlxScheduler: Show Event</title>
+	<title>Making an event currently displayable</title>
 
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title"
@@ -20,6 +19,7 @@
 	<script type="text/javascript" charset="utf-8">
 		function init() {
 			scheduler.config.multi_day = true;
+			scheduler.xy.margin_top = 80;
 
 			scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 			scheduler.init('scheduler_here', new Date(2010, 0, 10), "week");
@@ -28,11 +28,11 @@
 	</script>
 </head>
 <body onload="init();">
-<div style="height: 80px; float: left; width: 350px">
+<div style="height: 80px; width: 350px">
 	<p><a href="#" onclick="scheduler.showEvent(1261150518, 'week')">Show event with id 1261150518 in Week view</a></p>
 	<p><a href="#" onclick="scheduler.showEvent(1261150524)">Show event with id 1261150524 in current view</a></p>
 </div>
-<div style="margin-left: 350px; height: 100%; width: 800px;">
+<div style="height: 100%; width: 800px;">
 	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%'>
 		<div class="dhx_cal_navline">
 			<div class="dhx_cal_prev_button">&nbsp;</div>

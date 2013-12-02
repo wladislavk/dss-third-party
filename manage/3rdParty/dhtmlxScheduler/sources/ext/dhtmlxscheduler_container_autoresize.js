@@ -25,8 +25,9 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 			evs = this._pre_render_events_table(evs, hold);
 
 		if (this._table_view) {
-			if (hold)
-				this._colsS.heights = h_old; else {
+			if (hold){
+				this._colsS.heights = h_old;
+			} else {
 				var evl = data.firstChild;
 				if (evl.rows) {
 					for (var i = 0; i < evl.rows.length; i++) {
@@ -34,8 +35,16 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 						if ((h[i]) * hb > this._colsS.height - 22) { // 22 - height of cell's header
 							//we have overflow, update heights
 							var cells = evl.rows[i].cells;
+
+							var cHeight = this._colsS.height - 22;
+							if(this.config.max_month_events*1 !== this.config.max_month_events || h[i] <= this.config.max_month_events){
+								cHeight = h[i] * hb;
+							}else if( (this.config.max_month_events + 1) * hb > this._colsS.height - 22){
+								cHeight = (this.config.max_month_events + 1) * hb;
+							}
+
 							for (var j = 0; j < cells.length; j++) {
-								cells[j].childNodes[1].style.height = h[i] * hb + "px";
+								cells[j].childNodes[1].style.height = cHeight + "px";
 							}
 							h[i] = (h[i - 1] || 0) + cells[0].offsetHeight;
 						}
@@ -108,7 +117,12 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 							height += 2;
 							checked_div.style.height = height + "px";
 						} else {
-							height = (scheduler.matrix[mode].y_unit.length * scheduler.matrix[mode].dy)+2;
+							height = 2;
+							var cfg = scheduler.matrix[mode];
+							var rows = cfg.y_unit;
+							for(var r=0; r < rows.length; r++){
+								height += !rows[r].children ? cfg.dy : (cfg.folder_dy||cfg.dy);
+							}
 						}
 					}
 					if (mode == "day" || mode == "week") {
@@ -138,6 +152,10 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 	scheduler.attachEvent("onViewChange", conditionalUpdateContainerHeight);
 	scheduler.attachEvent("onXLE", conditionalUpdateContainerHeight);
 	scheduler.attachEvent("onEventChanged", conditionalUpdateContainerHeight);
+	scheduler.attachEvent("onEventCreated", conditionalUpdateContainerHeight);
+	scheduler.attachEvent("onEventAdded", conditionalUpdateContainerHeight);
+	scheduler.attachEvent("onEventDeleted", conditionalUpdateContainerHeight);
 	scheduler.attachEvent("onAfterSchedulerResize", conditionalUpdateContainerHeight);
+	scheduler.attachEvent("onClearAll", conditionalUpdateContainerHeight);
 
 })();

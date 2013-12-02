@@ -566,6 +566,7 @@ INSERT INTO `user` (`user_id`, `username`) VALUES
 -- Table structure for table `countries`
 --
 
+DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `item_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `item_nm` varchar(200) DEFAULT NULL,

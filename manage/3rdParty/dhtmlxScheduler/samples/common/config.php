@@ -1,6 +1,6 @@
 <?php
 
-	require_once(dirname(__FILE__).'/../../codebase/connector/db_sqlite3.php');
+	require_once(dirname(__FILE__).'/connector/db_sqlite3.php');
 	
 	// SQLite
 	$dbtype = "SQLite3";

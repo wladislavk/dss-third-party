@@ -1,5 +1,5 @@
 <?php
-	include ('../../../codebase/connector/scheduler_connector.php');
+	include ('../../common/connector/scheduler_connector.php');
 	include ('../../common/config.php');
 	
 	$scheduler = new schedulerConnector($res, $dbtype);

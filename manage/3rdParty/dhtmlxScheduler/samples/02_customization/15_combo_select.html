@@ -1,14 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Combo box in the lightbox</title>
 
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title"
 	      charset="utf-8">
-	<link rel="stylesheet" href="../../codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen"
-	      title="no title" charset="utf-8">
 	<script src="../../codebase/ext/dhtmlxscheduler_editors.js" type="text/javascript" charset="utf-8"></script>
 
 	<link rel="stylesheet" type="text/css" href="../common/dhtmlxCombo/dhtmlxcombo.css">
@@ -46,7 +43,7 @@
 
 			scheduler.config.lightbox.sections = [
 				{ name: "description", height: 50, map_to: "text", type: "textarea", focus: true },
-				{ name: "snack", options: snacks, map_to: "combo_select", type: "combo", image_path: "../common/dhtmlxCombo/imgs/", filtering: true },
+				{ name: "snack", options: snacks, map_to: "combo_select", type: "combo", image_path: "../common/dhtmlxCombo/imgs/", height:30, filtering: true },
 				{ name: "time", height: 72, type: "time", map_to: "auto"}
 			];
 

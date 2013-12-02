@@ -628,23 +628,24 @@ $ed_sql .="
 mysql_query($s1);
 	
 		if($old_referred_by != $_POST["referred_by"] || $old_referred_source != $_POST["referred_source"]){
-		if($old_referred_source == 2 AND $_POST['referred_source'] ==2){
+		if($old_referred_source == 2 && $_POST['referred_source'] ==2){
 			//PHYSICIAN -> PHYSICIAN
 			//change pending letters to new referrer
 			$sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])."";
-		}elseif($old_referred_source == 1 AND $_POST['referred_source'] ==1){
+			mysql_query($sql);
+		}elseif($old_referred_source == 1 && $_POST['referred_source'] ==1){
                         //PATIENT -> PATIENT
                         //change pending letters to new referrer
                         $sql = "UPDATE dental_letters SET template=null, pat_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])." AND pat_referral_list='".$old_referred_by."'";
 			mysql_query($sql);
-		}elseif($old_referred_source == 2 AND $_POST['referred_source']!=2){
+		}elseif($old_referred_source == 2 && $_POST['referred_source']!=2){
 			//PHYSICIAN -> NOT PHYSICIAN
 			$l_sql = "SELECT * FROM dental_letters WHERE md_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
 			$l_q = mysql_query($l_sql);
 			while($l = mysql_fetch_assoc($l_q)){
 				delete_letter($l['letterid'], null, 'md_referral', $old_referred_by);
 			}
-		}elseif($old_referred_source == 1 AND $_POST['referred_source']!=1){
+		}elseif($old_referred_source == 1 && $_POST['referred_source']!=1){
                         //PHYSICIAN -> NOT PHYSICIAN
                         $l_sql = "SELECT * FROM dental_letters WHERE pat_referral_list='".mysql_real_escape_string($old_referred_by)."'  AND patientid=".mysql_real_escape_string($_POST['ed'])." AND status=0";
                         $l_q = mysql_query($l_sql);
@@ -1337,7 +1338,7 @@ $rl_q = mysql_query($rl_sql);
 if(mysql_num_rows($rl_q)>0){
 ?>
   if(fa.referred_by.value != '<?= $referred_by; ?>' || fa.referred_source.value != '<?= $referred_source; ?>'){
-    if(!confirm("The referrer has been update. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?")){
+    if(!confirm("The referrer has been updated. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?")){
       valid = false;
     }
   }

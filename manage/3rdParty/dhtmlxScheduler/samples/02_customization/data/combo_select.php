@@ -1,5 +1,5 @@
 <?php
-	require_once('../../../codebase/connector/combo_connector.php');
+	require_once('../../common/connector/combo_connector.php');
 	require_once("../../common/config.php");
 
 	$combo = new ComboConnector($res, $dbtype);

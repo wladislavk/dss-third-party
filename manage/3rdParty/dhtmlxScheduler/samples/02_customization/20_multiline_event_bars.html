@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Multi-line event title</title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -17,11 +16,11 @@
 	}
 
 	.dhx_cal_event_clear {
-		height:26px;
+		height:40px;
 		white-space: normal;
 	}
 	.dhx_cal_event_line {
-		height:26px;
+		height:36px;
 	}
 
 </style>
@@ -32,7 +31,7 @@
 		
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.init('scheduler_here',new Date(2009,6,29),"month");
-		scheduler.xy.bar_height = 34; // default value is 20
+		scheduler.xy.bar_height = 40;
 
 		scheduler.parse([
 			{ start_date: "2009-06-30 09:00", end_date: "2009-06-30 12:00", text:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },

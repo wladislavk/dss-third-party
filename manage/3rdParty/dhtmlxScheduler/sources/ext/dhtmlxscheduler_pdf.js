@@ -197,7 +197,7 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 		if (scheduler._mode == "agenda" || scheduler._mode == "map") {
 
 			for (var i = 0; i < evs.length; i++)
-				xml += "<event><head>" + clean_html(evs[i].childNodes[0].innerHTML) + "</head><body>" + clean_html(evs[i].childNodes[2].innerHTML) + "</body></event>";
+                xml += "<event><head><![CDATA[" + clean_html(evs[i].childNodes[0].innerHTML) + "]]></head><body><![CDATA[" + clean_html(evs[i].childNodes[2].innerHTML) + "]]></body></event>";
 
 		} else if (scheduler._mode == "week_agenda") {
 
@@ -252,6 +252,7 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 				if (e_type === 'dhx_tooltip_line') continue;
 
 				var dets = scheduler.getEvent(evs[i].getAttribute("event_id"));
+                if (!dets) continue;
 				var day = dets._sday;
 				var week = dets._sweek;
 				var length = dets._length || 0;

@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Changing the Y-Axis step</title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -27,11 +26,11 @@
 		var step = 15;
 		var format = scheduler.date.date_to_str("%H:%i");
 		
-		scheduler.config.hour_size_px=(60/step)*21;
+		scheduler.config.hour_size_px=(60/step)*22;
 		scheduler.templates.hour_scale = function(date){
 			html="";
 			for (var i=0; i<60/step; i++){
-				html+="<div style='height:21px;line-height:21px;'>"+format(date)+"</div>";
+				html+="<div style='height:22px;line-height:22px;'>"+format(date)+"</div>";
 				date = scheduler.date.add(date,step,"minute");
 			}
 			return html;

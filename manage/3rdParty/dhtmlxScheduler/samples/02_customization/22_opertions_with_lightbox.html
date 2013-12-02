@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Setting/getting values of lighbox controls</title>
 </head>
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -21,8 +20,8 @@
 	</style>
 <script type="text/javascript" charset="utf-8">
 	function init() {
-		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
+		scheduler.xy.margin_top = 40;
 		scheduler.config.details_on_create = true;
 		
 		scheduler.config.buttons_right = ["dhx_custom_btn_info"];
@@ -40,7 +39,7 @@
 </script>
 
 <body onload="init();">
-	<div style='z-index:20000; position:absolute;'>
+	<div style='height:25px; font-family:Tahoma; padding:5px 10px; position:relative; z-index:100000; background-color:white;'>
 		<input type="button" value="setValue" onclick="scheduler.formSection('description').setValue('abc')">
 		<input type="button" value="getValue" onclick="alert(scheduler.formSection('description').getValue())">
 	</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title>For demo purpose only :: &1</title>
+	<title>Tooltips</title>
 
 	<script src='../../codebase/dhtmlxscheduler.js' type="text/javascript" charset="utf-8"></script>
 	<script src='../../codebase/ext/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
@@ -40,7 +40,7 @@
 
 			// while target has parent node and we haven't reached dhx_cal_data
 			// we can keep checking if it is timeline section
-			dhtmlxTooltip.isTooltipTarget = function(target) {
+			scheduler.dhtmlXTooltip.isTooltipTarget = function(target) {
 				while (target.parentNode && target != dhx_cal_data) {
 					var css = target.className.split(" ")[0];
 					// if we are over matrix cell or tooltip itself
@@ -65,7 +65,8 @@
 				e = e||window.event;
 				var target = e.target||e.srcElement;
 
-				var tooltipTarget = dhtmlxTooltip.isTooltipTarget(target);
+				var tooltip = scheduler.dhtmlXTooltip;
+				var tooltipTarget = tooltip.isTooltipTarget(target);
 				if (tooltipTarget) {
 					if (tooltipTarget.classname == "dhx_matrix_scell") {
 						// we are over cell, need to get what cell it is and display tooltip
@@ -74,10 +75,10 @@
 
 						// showing tooltip itself
 						var text = "Tooltip for <b>"+section.label+"</b>";
-						dhtmlxTooltip.delay(dhtmlxTooltip.show, dhtmlxTooltip, [e, text]);
+						tooltip.delay(tooltip.show, tooltip, [e, text]);
 					}
 					if (tooltipTarget.classname == "dhtmlXTooltip") {
-						dhtmlxTooltip.delay(dhtmlxTooltip.show, dhtmlxTooltip, [e, dhtmlxTooltip.tooltip.innerHTML]);
+						dhtmlxTooltip.delay(tooltip.show, tooltip, [e, tooltip.tooltip.innerHTML]);
 					}
 				}
 			});

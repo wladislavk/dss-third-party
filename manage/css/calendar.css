@@ -1,6 +1,6 @@
 #contentMain .dhx_cal_data .dhx_scale_holder .dhx_scale_hour
 {
-	height: 53px !important;
+	height: 43px !important;
 }
 
 /*
@@ -12,5 +12,23 @@
 
 .dhx_scale_hour_sep
 {
-	top: 27px !important;
+	top: 21px !important;
+}
+
+
+.dhx_cal_navline .dhx_cal_date{
+  text-align: left;
+  left:520px;
+  }
+
+
+.dhx_cal_navline div.dhx_minical_icon{
+  left:480px;
+  }
+
+.dhx_cal_event .dhx_header, 
+.dhx_cal_event .dhx_footer,
+.dhx_cal_event .dhx_title,
+.dhx_cal_event .dhx_body{
+  color:rgb(136, 122, 46);
 }

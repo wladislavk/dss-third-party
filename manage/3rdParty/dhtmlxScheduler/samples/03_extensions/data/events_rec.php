@@ -1,5 +1,5 @@
 <?php
-	require_once('../../../codebase/connector/scheduler_connector.php');
+	require_once('../../common/connector/scheduler_connector.php');
 	include ('../../common/config.php');
 	
 	function delete_related($action){

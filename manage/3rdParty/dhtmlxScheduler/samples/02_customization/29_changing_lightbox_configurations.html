@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Dynamic changing of lightbox configurations  </title>
 
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title"
@@ -19,7 +19,7 @@
 	<script type="text/javascript" charset="utf-8">
 		function init() {
 			scheduler.config.multi_day = true;
-
+			scheduler.config.details_on_dblclick = true;
 			scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 			scheduler.locale.labels.section_hidden = "Hidden section";
 
@@ -45,7 +45,7 @@
 			scheduler.init('scheduler_here', new Date(2009, 5, 30), "week");
 			scheduler.parse([
 				{ start_date: "2009-06-30 09:00", end_date: "2009-06-30 12:00", text: "Restricted event", hidden: "You won't see me", restricted: true },
-				{ start_date: "2009-06-30 10:00", end_date: "2009-06-30 16:00", text: "Full access", hidden: "Hidden text" }
+				{ start_date: "2009-07-02 10:00", end_date: "2009-07-02 16:00", text: "Full access", hidden: "Hidden text" }
 			], "json");
 
 		}

@@ -140,6 +140,29 @@ Suspended: <?= $count_r['num_suspended']; ?><br />
 Activated last 30 days: <?=$count_r['num_30'];?>
  30-60 days: <?=$count_r['num_60'];?>
  60+: <?= $count_r['num_plus']; ?>
+
+
+<?php
+  $count_sql = "SELECT 
+                 sum(case when suspended_date >= DATE_SUB(now(), INTERVAL 30 DAY) THEN 1 ELSE 0 end) as num_30,
+                 sum(case when suspended_date < DATE_SUB(now(), INTERVAL 30 DAY) AND suspended_date >= DATE_SUB(now(), INTERVAL 60 DAY) THEN 1 ELSE 0 end) as num_60,
+                 sum(case when suspended_date < DATE_SUB(now(), INTERVAL 60 DAY)  THEN 1 ELSE 0 END) as num_plus
+                FROM 
+                        dental_users
+			 	WHERE suspended_date !='' and suspended_date IS NOT NULL	 
+                        ";
+
+  $count_q = mysql_query($count_sql);
+  $count_r = mysql_fetch_assoc($count_q);
+?>
+<br />
+Suspended last 30 days: <?=$count_r['num_30'];?>
+ 30-60 days: <?=$count_r['num_60'];?>
+ 60+: <?= $count_r['num_plus']; ?>
+
+
+
+
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>

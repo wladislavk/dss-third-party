@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Checkbox in the lightbox</title>
 
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -32,7 +31,7 @@
 			
 			scheduler.config.lightbox.sections=[	
 				{ name:"description", height:50, map_to:"text", type:"textarea", focus:true },
-				{ name:"checkme", map_to:"single_checkbox", type:"checkbox", checked_value: "registrable", unchecked_value: "unchecked" },
+				{ name:"checkme", map_to:"single_checkbox", type:"checkbox", checked_value: "registrable", unchecked_value: "unchecked", height:40 },
 				{ name:"time", height:72, type:"time", map_to:"auto"}	
 			];
 			

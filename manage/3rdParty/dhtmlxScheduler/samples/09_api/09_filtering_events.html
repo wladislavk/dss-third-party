@@ -1,8 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-	<title></title>
+	<title>Filtering events</title>
 
 	<script src="../../codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
 	<link rel="stylesheet" href="../../codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title"
@@ -18,8 +17,6 @@
 		}
 
 		.filters_wrapper {
-			position: absolute;
-			left: 50%;
 			line-height: 12px;
 			font-size: 12px;
 		}
@@ -39,6 +36,7 @@
 			scheduler.config.xml_date = "%Y-%m-%d %H:%i";
 			scheduler.config.first_hour = 10;
 			scheduler.locale.labels.section_type = "Type";
+			scheduler.xy.margin_top = 30;
 
 			// default values for filters
 			var filters = {
@@ -64,7 +62,8 @@
 			// here we are using single function for all filters but we can have different logic for each view
 			scheduler.filter_month = scheduler.filter_day = scheduler.filter_week = function(id, event) {
 				// display event only if its type is set to true in filters obj
-				if (filters[event.type]) {
+				// or it was not defined yet - for newly created event
+				if (filters[event.type] || event.type==scheduler.undefined) {
 					return true;
 				}
 
@@ -93,27 +92,29 @@
 	</script>
 </head>
 <body onload="init();">
+<div style='height:20px; padding:5px;'>
+	<div class="filters_wrapper" id="filters_wrapper">
+		<span>Display:</span>
+		<label>
+			<input type="checkbox" name="appointment" />
+			Appointments
+		</label>
+		<label>
+			<input type="checkbox" name="task" />
+			Tasks
+		</label>
+		<label>
+			<input type="checkbox" name="training" />
+			Trainings
+		</label>
+	</div>
+</div>
 <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
 	<div class="dhx_cal_navline">
 		<div class="dhx_cal_prev_button">&nbsp;</div>
 		<div class="dhx_cal_next_button">&nbsp;</div>
 		<div class="dhx_cal_today_button"></div>
 		<div class="dhx_cal_date"></div>
-		<div class="filters_wrapper" id="filters_wrapper">
-			<span>Display:</span>
-			<label>
-				<input type="checkbox" name="appointment" />
-				Appointments
-			</label>
-			<label>
-				<input type="checkbox" name="task" />
-				Tasks
-			</label>
-			<label>
-				<input type="checkbox" name="training" />
-				Trainings
-			</label>
-		</div>
 		<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
 		<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
 		<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>

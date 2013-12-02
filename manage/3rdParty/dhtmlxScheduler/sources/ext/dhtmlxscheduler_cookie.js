@@ -25,12 +25,25 @@ to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 	scheduler.attachEvent("onBeforeViewChange",function(om,od,m,d){
 		if (first){
 			first = false;
+
+
+
 			var data=getCookie("scheduler_settings");
 			if (data){
+
+				if(!scheduler._min_date){
+					//otherwise scheduler will have incorrect date until timeout
+					//it can cause js error with 'onMouseMove' handler of key_nav.js
+					scheduler._min_date = d;
+				}
+
 				data = unescape(data).split("@");
 				data[0] = this.templates.xml_date(data[0]);
+				var view = this.isViewExists(data[1]) ? data[1] : m,
+					date = !isNaN(+data[0]) ? data[0] : d;
+
 				window.setTimeout(function(){
-					scheduler.setCurrentView(data[0],data[1]);	
+					scheduler.setCurrentView(date,view);
 				},1);
 				return false;
 			}

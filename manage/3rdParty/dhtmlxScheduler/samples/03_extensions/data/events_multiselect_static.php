@@ -1,7 +1,7 @@
 <?php
 
-	include ('../../../codebase/connector/scheduler_connector.php');
-	include ('../../../codebase/connector/crosslink_connector.php');
+	include ('../../common/connector/scheduler_connector.php');
+	include ('../../common/connector/crosslink_connector.php');
 
 	require_once ('../../common/config.php');
 

@@ -28,7 +28,7 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if(!isset($_REQUEST['sort'])){
+if(!isset($_REQUEST['sort']) || $_REQUEST['sort'] == ''){
   $_REQUEST['sort'] = 'lastname';
   $_REQUEST['sortdir'] = 'ASC';
 }

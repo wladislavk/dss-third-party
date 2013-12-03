@@ -97,7 +97,7 @@ require_once('includes/formatters.php');
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";
 		scheduler.locale.labels.section_custom="Resource";
-		scheduler.locale.labels.section_category = "Appointment Type";
+		scheduler.locale.labels.section_category = "Appt. Type";
                 scheduler.locale.labels.section_producer = "Producer";
                 scheduler.locale.labels.section_resource = "Resource";
 		scheduler.locale.labels.section_patient = "Patient";

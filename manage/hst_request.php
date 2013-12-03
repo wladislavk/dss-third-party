@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
        . "  provider_address, provider_city, provider_state, provider_zip, "
        . "  provider_signature, provider_date, "
        . "  snore_1, snore_2, snore_3, snore_4, snore_5, "
-       . "  status, authorized_id, adddate, ip_address "
+       . "  status, authorized_id, authorizeddate, adddate, ip_address "
        . ") VALUES ("
        . "  " . mysql_real_escape_string($_GET['ed']) . ", "
        . "  " . mysql_real_escape_string($_SESSION['docid']) . ", "
@@ -67,10 +67,10 @@ if(isset($_POST['submit'])){
     if($user_sign || $_SESSION['docid']==$_SESSION['userid']){ 
       
        $sql .= DSS_HST_PENDING . ", 
-		'".mysql_real_escape_string($_SESSION['userid'])."', ";
+		'".mysql_real_escape_string($_SESSION['userid'])."', now(), ";
     }else{
        $sql .= DSS_HST_REQUESTED . ", 
-                null, ";
+                null, null, ";
     }
       $sql .= "  now(), "
        . "  '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."' "
@@ -158,9 +158,9 @@ if($epworthid <> '')
        . "FROM "
        . "  dental_patients p  "
        . "  LEFT JOIN dental_contact r ON p.referred_by = r.contactid  "
-       . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+       . "  LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
        . "  JOIN dental_users d ON p.docid = d.userid "
-       . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
+       . "  LEFT JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
        . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
        . "WHERE "
        . "  p.patientid = ".$_GET['ed'];

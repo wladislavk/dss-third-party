@@ -192,9 +192,11 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
     
     //echo $ed_sql.mysql_error();
     $msg = "HST Updated Successfully";
-    print "<script type='text/javascript'>";
-    print "parent.window.location='manage_hsts.php?msg=$msg'";
-    print "</script>";
+    ?>
+    <script type='text/javascript'>
+    parent.window.location='manage_hsts.php?msg=<?= $msg; ?><?= (isset($_POST['ret_status']) && $_POST['ret_status'] != '')?"&status=".$_POST['ret_status']."&from=view":'';?>';
+    </script>
+  <?php
 }
 
 
@@ -453,8 +455,15 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 <span class="red">
                     * Required Fields					
                 </span><br />
+		<?php
+		if(isset($_REQUEST['ret_status']) && $_REQUEST['ret_status'] != ''){
+		?><input type="hidden" name="ret_status" value="<?= $_REQUEST['ret_status'] ?>"/><?php
+		}
+		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
                   <input type="submit" value="Save HST" class="button" />
+	  </td><td align="right">
+		<a href="hst_print.php?hst=<?= $_REQUEST['ed'] ?>" class="button" target="_blank">Print HST</a>
             </td>
         </tr>
     </table>

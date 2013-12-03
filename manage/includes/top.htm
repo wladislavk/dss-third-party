@@ -197,7 +197,10 @@ $num_fax_alerts = mysql_num_rows($fax_res);
 
 $support_query = "SELECT * FROM dental_support_tickets t
 			LEFT JOIN dental_support_responses r ON r.ticket_id = t.id
-		 WHERE t.docid='".$_SESSION['docid']."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)) AND t.status!='".DSS_TICKET_STATUS_CLOSED."'  group by t.id";
+		 WHERE t.docid='".$_SESSION['docid']."' AND ((r.viewed=0 AND r.response_type=0) OR (t.viewed=0 AND t.create_type=0)
+  OR (t.status=".DSS_TICKET_STATUS_CLOSED." AND r.viewed=0 AND r.response_type=0 AND r.body != '') 
+
+)  group by t.id";
 $support_res = mysql_query($support_query);
 $num_support = mysql_num_rows($support_res);
 
@@ -1520,7 +1523,7 @@ $total_insurance = mysql_num_rows($insurance_my);
                 HST was requested <?= date('m/d/Y', strtotime($hst['adddate'])); ?>
 		and is currently 
 		<?php if($hst['status'] == DSS_HST_REJECTED) { ?>
-		  <a href="manage_hst.php?status=4"><?= $dss_hst_status_labels[$hst['status']]; ?></a>
+		  <a href="manage_hst.php?status=4&viewed=0"><?= $dss_hst_status_labels[$hst['status']]; ?></a>
 		<?php }else{ ?>
 		<?= $dss_hst_status_labels[$hst['status']]; ?>
 		<?php } ?>
@@ -1528,7 +1531,7 @@ $total_insurance = mysql_num_rows($insurance_my);
                 <?= ($hst['status']==DSS_HST_REJECTED)?' - '.$hst['rejected_reason']:''; ?>
                 <?= ($hst['status']==DSS_HST_REJECTED && $hst['rejecteddate']!='')?' - '.date('m/d/Y h:i a', strtotime($hst['rejecteddate'])):''; ?>
 		<?php if($hst['status'] == DSS_HST_REJECTED) { ?>
-                  <br /><a href="manage_hst.php?status=4">Click here</a> to remove this error
+                  <br /><a href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
                 <?php } ?>
                 <br />
                 <?php

@@ -86,12 +86,13 @@ require_once('includes/formatters.php');
 		scheduler.config.multi_day = true;
 		scheduler.config.xml_date="%Y-%m-%d %h:%i %A";
 		scheduler.config.hour_date="%h:%i%A";
-		scheduler.config.hour_size_px = 43;
+		scheduler.config.hour_size_px = 44;
 		scheduler.templates.tooltip_date_format=scheduler.date.date_to_str("%H:%i %m-%d-%Y");
 		scheduler.config.mark_now = true;
 		scheduler.config.details_on_create = true;
 		scheduler.config.details_on_dblclick=true;
 		scheduler.config.scroll_hour = 8;
+		scheduler.config.start_on_monday = false;
 		scheduler.locale.labels.chairs_tab = "Resources"
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";
@@ -334,7 +335,7 @@ require_once('includes/formatters.php');
 */
 		scheduler.attachEvent("onTemplatesReady",function(){
 			//work week
-			scheduler.date.workweek_start = scheduler.date.week_start;
+			scheduler.date.workweek_start = function(date){ return scheduler.date.add(scheduler.date.week_start(date), 1, "day"); }
 			scheduler.templates.workweek_date = scheduler.templates.week_date;
 			scheduler.templates.workweek_scale_date = scheduler.templates.week_scale_date;
 			scheduler.date.add_workweek=function(date,inc){ return scheduler.date.add(date,inc*7,"day"); }

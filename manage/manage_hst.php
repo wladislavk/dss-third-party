@@ -5,6 +5,17 @@ include "includes/constants.inc";
 if(isset($_GET['rid'])){
 $s = sprintf("UPDATE dental_hst SET viewed=1 WHERE id=%s AND doc_id=%s",$_REQUEST['rid'], $_SESSION['docid']);
 mysql_query($s);
+  if(isset($_GET['status']) && isset($_GET['viewed']) && $_GET['status']==DSS_HST_REJECTED && $_GET['viewed']==0){
+	$r_sql = "SELECT * FROM dental_hst where doc_id=".$_SESSION['docid']." AND status='".DSS_HST_REJECTED."' AND viewed=0";
+	$r_q = mysql_query($r_sql);
+	if(mysql_num_rows($r_q)==0){
+		?>
+		<script type="text/javascript">
+			window.location = 'index.php';
+		</script>
+		<?php
+	}
+  }
 }elseif(isset($_GET['urid'])){
 $s = sprintf("UPDATE dental_hst SET viewed=0 WHERE id=%s AND doc_id=%s",$_REQUEST['urid'], $_SESSION['docid']);
 mysql_query($s);
@@ -25,6 +36,24 @@ if(isset($_GET['viewed'])){
   }else{
 	$sql .= " AND (hst.viewed = '0' OR hst.viewed IS NULL) ";
   }
+}
+
+switch($_GET['sort']){
+  case 'requested_date':
+    $sql .= "ORDER BY adddate ".$_GET['sortdir'];
+    break;
+  case 'patient_name':
+    $sql .= "ORDER BY patient_lastname ".$_GET['sortdir'].", patient_firstname ".$_GET['sortdir'];
+    break;
+  case 'status':
+    $sql .= "ORDER BY status ".$_GET['sortdir'];
+    break;
+  case 'authorize':
+    $sql .= "ORDER BY authorizeddate ".$_GET['sortdir'];
+    break;
+  default:
+    $sql .= "ORDER BY adddate ".$_GET['sortdir'];
+    break;
 }
 
 if(isset($_REQUEST['authorize'])){
@@ -75,7 +104,6 @@ if(isset($_REQUEST['authorize'])){
   }
 }  
 
-  //$sql .= "ORDER BY ".$sort." ".$dir;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -151,8 +179,8 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
-		<td valign="top" class="col_head" width="15%">
-			Authorize
+	  	<td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'authorize')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
+                        <a href="manage_hst.php?pid=<?= $_GET['pid'] ?>&sort=authorize&sortdir=<?php echo ($_REQUEST['sort']=='authorize'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Authorize</a>
 		</td>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
@@ -177,7 +205,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				  <?php if($myarray['patient_id']){?>
 					<a href="dss_summ.php?pid=<?= $myarray['patient_id']; ?>&addtopat=1&sect=sleep">
 					  <?=st($myarray["patient_firstname"]);?>&nbsp;
-                    			  <?=st($myarray["patient_lastname"]);?> 
+                    			  <?=st($myarray["patient_lastname"]);?>
 					</a>
 				  <?php }else{ ?>
 					<?=st($myarray["patient_firstname"]);?>&nbsp;
@@ -204,7 +232,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?php 
 					if($myarray['status'] == DSS_HST_COMPLETE || $myarray['status'] == DSS_HST_REJECTED){
 					if(!$myarray['viewed']){ ?>
-                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>&status=<?=$_GET['status'];?>" style="float:right;" class="editlink" title="EDIT">
+                                        <a href="manage_hst.php?rid=<?= $myarray["id"]; ?>&status=<?=$_GET['status'];?>&viewed=<?=$_GET['viewed'];?>" style="float:right;" class="editlink" title="EDIT">
                                                 Mark Read
                                         </a>
 					<?php }else{ ?>

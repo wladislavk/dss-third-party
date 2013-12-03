@@ -148,6 +148,14 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid))
 $sql .= "ORDER BY " . $sort_by_sql;
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
+
+if(isset($_GET['status']) && isset($_GET['from']) && $_GET['from']=='view' && $total_rec == 0){
+  ?>
+  <script type="text/javascript">
+    window.location="manage_hsts.php?msg=<?=$_GET['msg'];?>";
+  </script>
+  <?php
+}
 $no_pages = $total_rec/$rec_disp;
 
 $sql .= " limit ".$i_val.",".$rec_disp;
@@ -303,9 +311,8 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?=st($myarray["authorized_name"]);?>&nbsp;
                                 </td>
 				<td valign="top">
-				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
-						<?= $link_label ?>
+					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>');" class="editlink" title="EDIT">
+						View
 					</a>
 				</td>
 			</tr>

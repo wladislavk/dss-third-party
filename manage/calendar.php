@@ -6,14 +6,14 @@ include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 ?>
-	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
-	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_recurring.js" type="text/javascript" charset="utf-8"></script>
-	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_editors.js" type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_units.js' type="text/javascript" charset="utf-8"></script>
-	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_pdf.js' type="text/javascript" charset="utf-8"></script>
+	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js?t=20131129" type="text/javascript" charset="utf-8"></script>
+	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_recurring.js?t=20131129" type="text/javascript" charset="utf-8"></script>
+	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_editors.js?t=20131129" type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_timeline.js?t=20131129' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_tooltip.js?t=20131129' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js?t=20131129' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_units.js?t=20131129' type="text/javascript" charset="utf-8"></script>
+	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_pdf.js?t=20131129' type="text/javascript" charset="utf-8"></script>
 <?php
 /*
 */?>
@@ -22,12 +22,12 @@ require_once('includes/formatters.php');
 
 <?php /*        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script> */ ?>
 
-        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js' type="text/javascript" charset="utf-8"></script>
-<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_limit.js"></script>
-	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="css/calendar.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js?t=20131129' type="text/javascript" charset="utf-8"></script>
+<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_limit.js?t=20131129"></script>
+	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css?t=20131129" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/calendar.css?t=20131129" type="text/css" media="screen" title="no title" charset="utf-8">
 <?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
- 	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css">
+ 	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css?t=20131129">
 <div style="clear: both">
 <span class="admin_head">
 	Calendar

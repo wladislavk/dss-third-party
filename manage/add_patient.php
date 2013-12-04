@@ -631,7 +631,7 @@ mysql_query($s1);
 		if($old_referred_source == 2 && $_POST['referred_source'] ==2){
 			//PHYSICIAN -> PHYSICIAN
 			//change pending letters to new referrer
-			$sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND patientid=".mysql_real_escape_string($_POST['ed'])."";
+			$sql = "UPDATE dental_letters SET template=null, md_referral_list=".$_POST["referred_by"]." WHERE status=0 AND md_referral_list=".$old_referred_by." AND patientid=".mysql_real_escape_string($_POST['ed'])."";
 			mysql_query($sql);
 		}elseif($old_referred_source == 1 && $_POST['referred_source'] ==1){
                         //PATIENT -> PATIENT

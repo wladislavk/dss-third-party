@@ -4,7 +4,8 @@ require_once '../admin/includes/general.htm';
 
 $lid = $_REQUEST['lid'];
 $mailed = $_REQUEST['mailed'];
-$s = mail_claim($lid, $mailed);
+$type = $_REQUEST['type'];
+$s = mail_claim($lid, $mailed, $type);
 if($s){
   echo '{"success":true}';
 }else{

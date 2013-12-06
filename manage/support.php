@@ -18,7 +18,10 @@ $t_sql = "SELECT t.*,
 		WHERE t.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
 		(t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") OR
 		  (t.status IN (".DSS_TICKET_STATUS_CLOSED.") AND ( 
-			(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1)=0))
+			(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1)=0)
+			OR
+			(t.create_type=0 AND t.viewed=0)
+			)
 		)
 		ORDER BY t.adddate DESC";
 $t_q = mysql_query($t_sql);

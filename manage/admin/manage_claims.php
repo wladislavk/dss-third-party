@@ -148,7 +148,7 @@ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, "
+     . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
@@ -173,7 +173,7 @@ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, "
+     . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
@@ -200,7 +200,7 @@ $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
-     . "  claim.mailed_date, "
+     . "  claim.mailed_date, claim.mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
@@ -466,7 +466,17 @@ if(isset($_GET['msg'])){
            } ?>
 
 				</td>
-<td><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> /></td>
+<td>
+<?php
+  if($myarray['status'] == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_INSURANCE || $myarray['status'] == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_PAID_PATIENT || $myarray['status'] == DSS_CLAIM_REJECTED || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE ){
+	?><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?php
+  echo ($myarray['mailed_date'] !='')?'checked="checked"':''; 
+}elseif($myarray['status'] == DSS_CLAIM_SEC_SENT || $myarray['status'] == DSS_CLAIM_SEC_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_SEC_INSURANCE || $myarray['status'] == DSS_CLAIM_SEC_PENDING || $myarray['status'] == DSS_CLAIM_PAID_SEC_PATIENT || $myarray['status'] == DSS_CLAIM_SEC_REJECTED || $myarray['status'] == DSS_CLAIM_SEC_PATIENT_DISPUTE ){
+        ?><input type="checkbox" class="sec_mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?php
+  echo ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; 
+}
+?>
+/></td>
 			</tr>
 	<? 	}
 	}?>
@@ -508,7 +518,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                    $.ajax({
                                         url: "../includes/claim_mail.php",
                                         type: "post",
-                                        data: {lid: lid, mailed: c},
+                                        data: {lid: lid, mailed: c, type:'pri'},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){
@@ -522,4 +532,26 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
                                   });
 
   });
+
+  $('.sec_mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+                                   $.ajax({
+                                        url: "../includes/claim_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c, type: 'sec'},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+
 </script>

@@ -492,7 +492,7 @@ function patientabc(fa)
 			return false;
 		} else if(trim(fa.ins_dob.value) == "") {
 			alert("Insured Date of Birth is a Required Field");
-			fa.ins2_dob.focus();
+			fa.ins_dob.focus();
 			return false;
 		} else if(trim(fa.p_m_ins_co.value) == "") {
 			alert("Insurance Company is a Required Field");
@@ -515,6 +515,45 @@ function patientabc(fa)
 			fa.p_m_ins_type.focus();
 			return false;
 		} 
+        if(fa.s_m_ins[0].checked && fa.s_m_dss_file[0].checked)
+        {
+                if(trim(fa.s_m_partyfname.value) == "") {
+                        alert("Secondary Insured Party First Name is a Required Field");
+                        fa.s_m_partyfname.focus();
+                        return false;
+                } else if(trim(fa.s_m_partylname.value) == "") {
+                        alert("Secondary Insured Party Last Name is a Required Field");
+                        fa.s_m_partylname.focus();
+                        return false;
+                } else if(trim(fa.s_m_relation.value) == "") {
+                        alert("Secondary Relationship to insured party is a Required Field");
+                        fa.s_m_relation.focus();
+                        return false;
+                } else if(trim(fa.ins2_dob.value) == "") {
+                        alert("Secondary Insured Date of Birth is a Required Field");
+                        fa.ins2_dob.focus();
+                        return false;
+                } else if(trim(fa.s_m_ins_co.value) == "") {
+                        alert("Secondary Insurance Company is a Required Field");
+                        fa.s_m_ins_co.focus();
+                        return false;
+                } else if(trim(fa.s_m_party.value) == "") {
+                        alert("Secondary Insurance ID. is a Required Field");
+                        fa.s_m_party.focus();
+                        return false;
+                } else if(trim(fa.s_m_ins_grp.value) == "") {
+                        alert("Secondary Group # is a Required Field");
+                        fa.s_m_ins_grp.focus();
+                        return false;
+                } else if(trim(fa.s_m_ins_plan.value) == "" && fa.p_m_ins_type.value != 1) {
+                        alert("Secondary Plan Name is a Required Field");
+                        fa.s_m_ins_plan.focus();
+                        return false;
+                } else if(trim(fa.s_m_ins_type.value) == "") {
+                        alert("Secondary Insurance Type is a Required Field");
+                        fa.s_m_ins_type.focus();
+		}
+	}
 		var assignment_selected = false;
 		for (i = 0; i < fa.p_m_ins_ass.length; i++) {
 			if (fa.p_m_ins_ass[i].checked) {
@@ -527,6 +566,11 @@ function patientabc(fa)
 			return false;
 		}
 	}	
+	if(fa.s_m_ins[0].checked && !(fa.s_m_dss_file[0].checked || fa.s_m_dss_file[1].checked)){
+                        alert("Secondary DSS filing insurance is a Required Field");
+                        fa.s_m_dss_file[0].focus();
+                        return false;
+	}
 	if(fa.s_m_dss_file[0].checked)
 	{
 		if(trim(fa.s_m_partyfname.value) == "") {

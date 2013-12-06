@@ -593,9 +593,10 @@ if($jointid <> '')
                     </label>
                     
                     <div>
-                    	<span >
+                    	<span style="width:350px;">
                         	Examination Type:
                         </span>
+			<span>L = Left, R = Right, B = Both, WNL = Within Normal Limits</span>
                    	</div>
                     
                     <div>
@@ -638,7 +639,7 @@ if($jointid <> '')
 														<?=st($joint_myarray['joint']);?></span>
                                                     </td>
                                                     <td valign="top">
-                                                        <select id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:50px;">
+                                                        <select id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
                                                             <option value=""></option>
                                                             <option value="L" <? if($chkJ == 'L') echo " selected";?> >
                                                                 L
@@ -649,6 +650,10 @@ if($jointid <> '')
                                                             <option value="B" <? if($chkJ == 'B') echo " selected";?>>
                                                                 B
                                                             </option>
+                                                            <option value="WNL" <? if($chkJ == 'WNL') echo " selected";?>>
+                                                                WNL
+                                                            </option>
+
                                                         </select>
 													</td>
 												</tr>

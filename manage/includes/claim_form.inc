@@ -828,7 +828,7 @@ die();
 		$ed_sql .= " where insuranceid = '".s_for($_POST['ed'])."'";
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		// update the ledger trxns passed in with the form
-		$trxn_status = ($status == DSS_CLAIM_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
+		$trxn_status = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
 		update_ledger_trxns($_POST['ed'], $trxn_status);
 
 

@@ -1441,11 +1441,19 @@ function mail_letter($letterid, $mailed = true) {
   return mysql_query($s);
 }
 
-function mail_claim($claimid, $mailed = true) {
+function mail_claim($claimid, $mailed = true, $type = 'pri') {
+  if($type == 'pri'){
   if($mailed != 'false'){
     $s = "UPDATE dental_insurance set mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
   }else{
     $s = "UPDATE dental_insurance set mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
+  }
+  }else{
+  if($mailed != 'false'){
+    $s = "UPDATE dental_insurance set sec_mailed_date = NOW() where insuranceid='".mysql_real_escape_string($claimid)."'";
+  }else{
+    $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
+  }
   }
   return mysql_query($s);
 }

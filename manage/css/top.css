@@ -35,15 +35,23 @@
   margin: 4px 0 0 30px;
   height: 30px;
   padding-top: 6px;
-  width: 317px;
+  min-width: 317px;
   float: left;
   color: #000;
   font-size: 22px;
-  background: #fed68d url(../images/name_bg.gif) no-repeat 0 0;
+  /*background: #fed68d url(../images/name_bg.gif) no-repeat 0 0;*/
+  background: #fed68d;
+-webkit-border-top-left-radius: 5px;
+-webkit-border-top-right-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-topright: 5px;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
   }
 
 #patient_name_div .medicare_name{
-  width:238px;
+  min-width:238px;
+  padding:0 3px;
   vertical-align:top;
   text-align:center;
   display:block;

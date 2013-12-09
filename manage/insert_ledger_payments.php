@@ -252,7 +252,7 @@ if(isset($new_status)){
 
 
 
-$sqlinsertqry .= "INSERT INTO `dental_ledger_payment` (
+$sqlinsertqry = "INSERT INTO `dental_ledger_payment` (
 `ledgerid` ,
 `payment_date` ,
 `entry_date` ,

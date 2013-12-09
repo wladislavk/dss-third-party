@@ -5,7 +5,13 @@
 	var local_data = "";
 	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid){
 		$.getJSON(file).done(function(data){
-			local_data = data.claims_payer_list;
+			local_data = new Array();
+			var cpl = data;
+			for(var i=0; i<cpl.length;i++){
+				local_data[i] = new Array();
+				local_data[i]['payer_id'] = cpl[i]['payer_id'];
+				local_data[i]['payer_name'] = cpl[i]['names'].join(',');
+			}
 		});
                 $('#'+in_field).keyup(function(e) {
 				$('#'+id_field).val('');

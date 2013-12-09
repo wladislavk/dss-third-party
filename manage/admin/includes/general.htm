@@ -275,7 +275,6 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 	$nrow = mysql_fetch_assoc($nq);
     return false;
   }
-
   //To remove referral source from md list if exists
   $md_array = explode(',', $md_list);
   $md_array = array_filter($md_array, array(new MDReferralFilter($md_referral_list), 'isReferrer'));

@@ -1,9 +1,7 @@
 <?php
-session_start();
 require_once '../admin/includes/main_include.php';
 require_once 'letter_triggers.php';
 $id = $_REQUEST['id'];
-$c = $_REQUEST['c'];
 $pid = $_REQUEST['pid'];
 		$numsteps = null;
 $impression = true;
@@ -12,7 +10,6 @@ $create = true; //default to insert record if checks pass
 
 
 $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-error_log($let_sql);
 $let_q = mysql_query($let_sql);
 $let_r = mysql_fetch_assoc($let_q);
 $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
@@ -56,7 +53,6 @@ if($create){
                     $s = "INSERT INTO dental_flow_pg2_info SET
                         patientid= ".$pid.",
                         segmentid = ".$id.",
-                        letterid = '".$letteridlist."',
 			appointment_type = 1,";
 		    if($impression){
 			$s .= " device_id='".$impression."',";
@@ -89,10 +85,13 @@ if($create){
 	}
                                                         $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";
                                                         $consult_result = mysql_query($consult_query);
+							$consulted = false;
+							if(mysql_num_rows($consult_result)>0){
                                                         $consult_date = mysql_result($consult_result, 0, 0);
                                                         if ($consult_date != "0000-00-00") {
                                                                 $consulted = true;
                                                         }
+							}
                         if($create_letters){ 
 			                               // Delaying Treatment / Waiting
                                                         if ($consulted == true && $id == "5") {

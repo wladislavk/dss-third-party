@@ -2810,11 +2810,10 @@ if ($is_pending) {
 		</td>
 	</tr>
 </table>
-
-                                <?php if($myarray['status']==DSS_CLAIM_PENDING || $myarray['status']==DSS_CLAIM_REJECTED){ ?>
+                                <?php if($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED){ ?>
 			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
 				<? if( $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_claims.php?delid=<?=$myarray["insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                    <a href="manage_claims.php?delid=<?=$insuranceid;?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
 				<? } ?> 
@@ -2826,7 +2825,7 @@ if ($is_pending) {
 			</div>
 			-->
 			<?php }else{ ?>
-                    <a href="manage_insurance.php?delid=<?=$myarray["insuranceid"];?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
+                    <a href="manage_insurance.php?delid=<?=$insuranceid;?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
         <?php if (!$is_sent) { 

@@ -40,10 +40,10 @@ $sql = "SELECT "
 		 . "  (SELECT pg2_info.date_completed FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = p.patientid ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1 ) as last_completed, "
                  . "  (SELECT pg2_info2.segmentid FROM dental_flow_pg2_info pg2_info2 WHERE pg2_info2.appointment_type=1 AND pg2_info2.patientid = p.patientid ORDER BY pg2_info2.date_completed DESC, pg2_info2.id DESC LIMIT 1 ) as last_segmentid, "
 		 . "  ex.dentaldevice_date as delivery_date, s.vob, s.ledger, s.patient_info, dd.device, "
-                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, "
+                 . " fs.rxreq, fs.rxrec, fs.lomnreq, fs.lomnrec, fs.rxlomnrec, "
 		 . " 
 			CASE
-				WHEN fs.rxrec !='' AND fs.lomnrec !='' THEN 4
+				WHEN (fs.rxrec !='' AND fs.lomnrec !='') || fs.rxlomnrec !='' THEN 4
 				WHEN fs.rxrec !='' AND fs.lomnrec ='' THEN 3
 				WHEN fs.rxrec ='' AND fs.lomnrec !='' THEN 2
 				ELSE 1
@@ -404,7 +404,7 @@ $segments[1] = "Initial Contact";
         <td valign="top">
                 <a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>">
 			<?php 
-			  if($myarray['lomnrec'] != null && $myarray['rxrec'] != null){
+			  if($myarray['rxlomnrec'] != null  || ($myarray['lomnrec'] != null && $myarray['rxrec'] != null)){
 				?>Yes<?php
 			  }elseif($myarray['rxrec']!=null && $myarray['lomnrec'] == null){
 				?>Yes/No<?php

@@ -15,13 +15,14 @@ require_once('includes/formatters.php');
 <div align="center" class="red">
 	<b><? if(!empty($_GET['msg'])) {echo $_GET['msg'];} ?></b>
 </div>
-<table>
-	<tr>
-		<th>Start</th>
-		<th>End</th>
-		<th>Title</th>
-		<th>Type</th>
-		<th>Action</th>
+<br />
+<table width="90%" style="margin-left:5%;">
+	<tr class="tr_bg_h">
+		<th class="col_head">Start</th>
+		<th class="col_head">End</th>
+		<th class="col_head">Title</th>
+		<th class="col_head">Type</th>
+		<th class="col_head">View in Scheduler</th>
 	</tr>
 		<?php
 		//$sql = "SELECT * from dental_calendar WHERE docid='".$_SESSION['docid']." order by id asc'";

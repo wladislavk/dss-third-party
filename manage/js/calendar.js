@@ -79,5 +79,10 @@ $(document).ready( function(){
 
   });
 
+  //hack to force calendar on tabbing
+  $('input.calendar').focus(function(){
+    $(this).click();
+  });
+
 });
 

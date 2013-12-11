@@ -1313,9 +1313,19 @@ if(!$r['reference_id'] || !$w_r['response']){
                <?php }elseif($status == DSS_CLAIM_SEC_PENDING){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
 			<input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
-               <?php } ?>
+               <?php }elseif($status == DSS_CLAIM_REJECTED){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
+               <?php }elseif($status == DSS_CLAIM_SEC_REJECTED){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+               <?php }else ?>
         <?php if (!$is_sent) {  ?>
-          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+          <input type="submit" name="ex_pagebtn" 
+		<?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
+onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
+		<?php } ?>
+		value="Print Claim" />
           <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
 
         <?php } ?>

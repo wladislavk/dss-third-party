@@ -81,7 +81,7 @@ define('SORT_BY_PATIENT', 2);
 define('SORT_BY_FRANCHISEE', 3);
 define('SORT_BY_USER', 4);
 define('SORT_BY_INSURANCE', 5);
-
+define('SORT_BY_BC', 6);
 $sort_dir = strtolower($_REQUEST['sort_dir']);
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
@@ -102,6 +102,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_USER:
     $sort_by_sql = "user_name $sort_dir";
+    break;
+  case SORT_BY_BC:
+    $sort_by_sql = "billing_name $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -140,19 +143,22 @@ $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name "
+     . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
+     . "  c.name as billing_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid "
-     . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
-     . "  users2.name as user_name "
+     . "  users2.name as user_name, "
+     . "  c.name as billing_name "
      . "FROM "
      . "  dental_insurance_preauth preauth "
      . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
@@ -305,6 +311,10 @@ $my=mysql_query($sql) or die(mysql_error());
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
+                <td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
+                </td>
+
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
@@ -345,6 +355,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["billing_name"]);?>&nbsp;
+                                </td
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">

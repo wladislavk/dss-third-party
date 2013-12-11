@@ -20,7 +20,7 @@ define('SORT_BY_STATUS', '1');
 define('SORT_BY_PATIENT', '2');
 define('SORT_BY_FRANCHISEE', '3');
 define('SORT_BY_USER', '4');
-
+define('SORT_BY_BC', '5');
 $sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
@@ -38,6 +38,9 @@ switch ($sort_by) {
     break;
   case SORT_BY_USER:
     $sort_by_sql = "user_name $sort_dir";
+    break;
+  case SORT_BY_BC:
+    $sort_by_sql = "billing_name $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -150,6 +153,7 @@ $sql = "SELECT "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.sec_mailed_date, "
      . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     . "  c.name as billing_name, "
      //. "  dif.filename as eob, " 
      . "  CASE claim.status 
 		WHEN ".DSS_CLAIM_PENDING." THEN 1
@@ -167,7 +171,8 @@ $sql = "SELECT "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
-     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
@@ -369,6 +374,9 @@ if(isset($_GET['msg'])){
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
+                </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
 		</td>
@@ -409,6 +417,9 @@ if(isset($_GET['msg'])){
 				<td valign="top">
 					<?=st($myarray["user_name"]);?>&nbsp;
 				</td>
+                                <td valign="top">
+                                        <?=st($myarray["billing_name"]);?>&nbsp;
+                                </td>
 				<td valign="top">
 				    <?php
 					//$primary_link = ($myarray['primary_fdf']!='')?'../insurance_fdf_view.php?file='.$myarray['primary_fdf']:'../insurance_fdf.php?insid='.$myarray['insuranceid'].'&type=primary&pid='.$myarray['patientid'];

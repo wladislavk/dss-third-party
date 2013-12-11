@@ -373,6 +373,46 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Patient's Home Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_home_phone" value="<?= $hst['patient_home_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_home_phone" value="<?= $pat['home_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Patient's Cell Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_cell_phone" value="<?= $hst['patient_cell_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_cell_phone" value="<?= $pat['cell_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Patient's Email
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_email" value="<?= $hst['patient_email']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_email" value="<?= $pat['email']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Patient's Group Insurance #
             </td>

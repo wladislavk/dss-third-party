@@ -509,7 +509,7 @@ if($complaintid <> '')
     <tr>
 	<td valign="top" class="frmhead">
                     <label style="display:block;">
-                        What is the main reason that you decided to seek treatment for snoring, Sleep Disordered Breathing, or Sleep Apnea?
+                        What is the main reason you are seeking treatment? 
                     </label>
                         <textarea style="width:400px; height:100px;" name="chief_complaint_text" id="chief_complain_text"><?= $chief_complaint_text; ?></textarea>
                             <?php

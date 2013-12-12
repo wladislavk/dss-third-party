@@ -357,7 +357,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				</td>
                                 <td valign="top">
                                         <?=st($myarray["billing_name"]);?>&nbsp;
-                                </td
+                                </td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
 					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">

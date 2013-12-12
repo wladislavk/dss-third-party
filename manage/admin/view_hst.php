@@ -400,6 +400,18 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
+                Patient's Work Phone
+            </td>
+            <td valign="top" class="frmdata">
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="pat_patient_work_phone" value="<?= $pat['work_phone']?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
                 Patient's Email
             </td>
             <td valign="top" class="frmdata">

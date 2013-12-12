@@ -729,7 +729,7 @@ if($success == "false"){
 <script type="text/javascript">
   c = confirm('RESPONSE: <?= $result; ?> Do you want to mark the claim sent?');
   if(c){
-   window.location = "manage_claims.php?insid=<?= $_GET['insid']; ?>"; 
+   window.location = "manage_claims.php?status=0&insid=<?= $_GET['insid']; ?>"; 
   }
 </script>
 <?php

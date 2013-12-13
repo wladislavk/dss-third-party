@@ -165,6 +165,7 @@ $sql = "SELECT "
      . "  JOIN dental_user_company uc ON uc.userid = p.docid "
      . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
      . "  JOIN dental_users users ON preauth.doc_id = users.userid AND users.billing_company_id = '".$_SESSION['admincompanyid']."'"
+     . "  LEFT JOIN companies c on users.billing_company_id = c.id "
      . "  JOIN dental_users users2 ON preauth.userid = users2.userid ";
 
 }else{

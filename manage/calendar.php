@@ -29,9 +29,6 @@ require_once('includes/formatters.php');
 <?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
  	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css?t=20131129">
 <div style="clear: both">
-<span class="admin_head">
-	Calendar
-</span>
 
 <br />
 <div align="center" class="red">
@@ -550,8 +547,39 @@ function show_minical(){
    }
 $(document).ready(function(){
   initCal();
+  <?php if(isset($_GET['eid']) && $_GET['eid']!=''){ ?>
+    scheduler.showEvent(<?= $_GET['eid'];?>,"day");
+    scheduler.select(<?= $_GET['eid'];?>);
+  <?php } ?>
 });
 </script>
+
+<span class="admin_head" style="width:38%;">
+        Calendar
+</span>
+
+<form method="get" id="cal_search" action="calendar_pat.php" style="width:48%;float:left;">
+                                        <input type="text" id="pat_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="pat_name" value="<?= ($pat_name!='')?$pat_name:'Search Calendar'; ?>" />
+<br />        <div id="pat_hints" class="search_hints" style="display:none;">
+                <ul id="pat_list" class="search_list">
+                        <li class="template" style="display:none">Doe, John S</li>
+                </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+  setup_autocomplete('pat_name', 'pat_hints', 'pid', '', 'list_patients_basic.php');
+});
+$('.json_patient').live('click', function(){
+  $('#cal_search').submit();
+});
+</script>
+                                        </div>
+<input type="hidden" name="pid" id="pid" />
+
+</form>
+
+
+
+
 <div class="dhx_cal_tab pdf_link" style="float:right;margin-right:10px;">
 <a name="print" value="Print" href="#"
 onclick="if(scheduler._mode == 'timeline'){ alert('This view cannot be printed to PDF, please try another view.'); }else{scheduler.toPDF('3rdParty/pdfgen/generate.php', 'fullcolor');}" 

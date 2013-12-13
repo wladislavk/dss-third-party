@@ -87,18 +87,22 @@ $my=mysql_query($sql) or die(mysql_error());
 
 ?>
 <script type="text/javascript">
-function redirect(){
+function redirect(loc){
 if(prompt('Enter the password to use this function:')=='dss789'){
-  window.location = 'uploadcsv.php';
+  window.location = loc;
 }else{
   alert('Incorrect password');
 }
 return false;
 }
 </script>
-        <button style="float:right;margin-right:20px;" onclick="return redirect();" class="addButton">
-              Upload 
+        <button style="float:right;margin-right:20px;" onclick="return redirect('uploadcsv.php');" class="addButton">
+              Upload Eaglesoft
         </button>
+        <button style="float:right;margin-right:20px;" onclick="return redirect('uploadcsv_dw.php');" class="addButton">
+              Upload Dental Writer
+        </button>
+
 <br />
 <span class="admin_head">
 	Manage Pending Patients Possible Duplicates

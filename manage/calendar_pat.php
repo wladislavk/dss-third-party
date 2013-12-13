@@ -7,10 +7,11 @@ require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 ?>
 <div style="clear: both">
+<br />
 <span class="admin_head">
-	Calendar
+	All Calendar Events for <?= $thename; ?>
 </span>
-
+<a href="manage_flowsheet3.php?pid=<?=$_GET['pid'];?>&addtopat=1" class="button" style="float:right; margin-right:20px;">View Tracker</a>
 <br />
 <div align="center" class="red">
 	<b><? if(!empty($_GET['msg'])) {echo $_GET['msg'];} ?></b>

@@ -559,7 +559,7 @@ $(document).ready(function(){
 </span>
 
 <form method="get" id="cal_search" action="calendar_pat.php" style="width:48%;float:left;">
-                                        <input type="text" id="pat_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="pat_name" value="<?= ($pat_name!='')?$pat_name:'Type contact name'; ?>" />
+                                        <input type="text" id="pat_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="pat_name" value="<?= ($pat_name!='')?$pat_name:'Search Calendar'; ?>" />
 <br />        <div id="pat_hints" class="search_hints" style="display:none;">
                 <ul id="pat_list" class="search_list">
                         <li class="template" style="display:none">Doe, John S</li>

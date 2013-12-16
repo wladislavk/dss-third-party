@@ -4,6 +4,7 @@ require_once('includes/constants.inc');
 require_once('includes/formatters.php');
 require_once('includes/checkemail.php');
 require_once('includes/general_functions.php');
+require_once('includes/dental_patient_summary.php');
 ?>
 <div style="width:90%; margin-left:5%;">
 <?php
@@ -114,6 +115,7 @@ if($_FILES['csv']['error'] == 0){
  		  $row++;
 		}else{
 			$copyreqdate = '';
+			$patientphone = $patientemail = $patientdob = $patientadd = $patientcity = $patientstate = $patientzip = $patientgender = false;
 			$s = "INSERT INTO dental_patients SET ";
 		foreach($fields AS $id => $field){
 		  switch($field){
@@ -133,6 +135,7 @@ if($_FILES['csv']['error'] == 0){
 				break;*/
 			case 'dob':
 				if($data[$id]!=''){
+				  $patientdob = true;
 				  $data[$id] = str_replace('/','-', $data[$id]);
 				  $d = date('m/d/Y', strtotime($data[$id]));
 				  $s .= $field . " = '" .$d."', ";	
@@ -141,10 +144,42 @@ if($_FILES['csv']['error'] == 0){
                         case 'work_phone':
 			case 'home_phone':
 			case 'cell_phone':
-                                if($field!=''){
+                                if($field!='' && $data[$id] !=''){
+					$patientphone = true;
 					$s .= $field . " = '" .num($data[$id])."', ";
                                 }
                                 break;
+                        case 'add1':
+                                if($field!='' && $data[$id] !=''){
+                                        $patientadd = true;
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+                        case 'city':
+                                if($field!='' && $data[$id] !=''){
+                                        $patientcity = true;
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+                        case 'state':
+                                if($field!='' && $data[$id] !=''){
+                                        $patientstate = true;
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+                        case 'zip':
+                                if($field!='' && $data[$id] !=''){
+                                        $patientzip = true;
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+                        case 'gender':
+                                if($field!='' && $data[$id] !=''){
+                                        $patientgender = true;
+                                        $s .= $field . " = '" .$data[$id]."', ";
+                                }
+                                break;
+
                         case 'email':
                                 if($field!=''){
 					$email = $data[$id];
@@ -153,6 +188,7 @@ if($_FILES['csv']['error'] == 0){
                             			$error_count++;
 
                 			}else{
+						$patientemail = true;
                                         	$s .= $field . " = '" .$data[$id]."', ";
 					}
                                 }
@@ -169,6 +205,14 @@ if($_FILES['csv']['error'] == 0){
 			//echo $s;
 			mysql_query($s);
 			$pid = mysql_insert_id();
+
+        $complete_info = 0;
+        if (($patientemail || $patientphone) && $patientadd && $patientcity && $patientstate && $patientzip && $patientdob && $patientgender) {
+                $complete_info = 1;
+        }
+        // Determine Whether Patient Info has been set
+        update_patient_summary($pid, 'patient_info', $complete_info);
+
 			if($copyreqdate=='' && $last_visit!=''){
 				$copyreqdate = $last_visit;
 			}

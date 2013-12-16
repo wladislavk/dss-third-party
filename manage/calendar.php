@@ -568,7 +568,7 @@ $(document).ready(function(){
 $(document).ready(function(){
   setup_autocomplete('pat_name', 'pat_hints', 'pid', '', 'list_patients_basic.php');
 });
-$('.json_patient').live('click', function(){
+$('#cal_search .json_patient').live('click', function(){
   $('#cal_search').submit();
 });
 </script>

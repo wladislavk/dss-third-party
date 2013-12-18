@@ -597,8 +597,9 @@ if($jointid <> '')
                         	Examination Type:
                         </span>
 			<span>L = Left, R = Right, B = Both, WNL = Within Normal Limits</span>
-                   	</div>
-                    
+		<a href="#" onclick="$('.jointdd').val('WNL');return false;" class="button">Set all to WNL</a>                   
+	</div>
+                      
                     <div>
                     	<span class="full">
                         	<table width="100%" cellpadding="3" cellspacing="1" >
@@ -639,7 +640,7 @@ if($jointid <> '')
 														<?=st($joint_myarray['joint']);?></span>
                                                     </td>
                                                     <td valign="top">
-                                                        <select id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
+                                                        <select class="jointdd" id="joint_<?=st($joint_myarray['jointid']);?>" name="joint_<?=st($joint_myarray['jointid']);?>" class="field text addr tbox" style="width:60px;">
                                                             <option value=""></option>
                                                             <option value="L" <? if($chkJ == 'L') echo " selected";?> >
                                                                 L
@@ -661,7 +662,6 @@ if($jointid <> '')
 											}
 											?>
                                         </table>
-                                    	
                                     </td>
                                 </tr>
                             </table>

@@ -620,7 +620,23 @@ if($cpap == '')
 </div>
 <br />
 
-<form action="" method="POST">
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#notecontent input').change(function(){
+    window.onbeforeunload = function() { 
+        return 'You have made changes to Notes/Personal and have not saved your changes. Click OK to leave the page, or Cancel to return and save your changes.';
+    }
+  });
+
+  $('#rom_form input').change(function(){
+    window.onbeforeunload = function() { 
+	return 'You have made changes to ROM data and have not saved your changes. Click OK to leave the page, or Cancel to return and save your changes.';
+    }
+  });
+});
+</script>
+
+<form id="rom_form" action="" method="POST">
   <table width="100%" align="center" border="1" bordercolor="#000000" cellpadding="7" cellspacing="0">
   <tr valign="top">
     <td width="17%" height="4">ROM:&nbsp;&nbsp;</td>

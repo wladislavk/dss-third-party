@@ -109,7 +109,7 @@ function autoselect(selectedOption, f) {
 			if($prev_filename != ''){
                                         $ins_sql = " update dental_q_image set 
                                         image_file = '".s_for($banner1)."'
-                                        WHERE title='Sleep Study ".$id."';";
+                                        WHERE title='".$sleeptesttype." ".$date."';";
 
                                         mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
                           unlink("q_file/" . $prev_filename);
@@ -144,6 +144,11 @@ function autoselect(selectedOption, f) {
 WHERE id='".$id."'
 ";
   $run_q = mysql_query($q);
+
+  $i_sql = "UPDATE dental_q_image SET
+	title = '".$sleeptesttype." ".$date."'
+	  WHERE image_file='".$banner1."'";
+  mysql_query($i_sql);
   if(!$run_q){
    echo "Could not update sleep lab... Please try again.";
   }else{
@@ -151,7 +156,7 @@ if($prev_filename == ''){
 if($uploaded){
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
-                                        title = 'Sleep Study ".$id."',
+                                        title = '".$sleeptesttype." ".$date."',
                                         imagetypeid = '1',
                                         image_file = '".s_for($banner1)."',
                                         userid = '".s_for($_SESSION['userid'])."',
@@ -237,7 +242,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 		$ins_id = mysql_insert_id();
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
-                                        title = 'Sleep Study ".$ins_id."',
+                                        title = '".$sleeptesttype. " " .$date."',
                                         imagetypeid = '1',
                                         image_file = '".s_for($banner1)."',
                                         userid = '".s_for($_SESSION['userid'])."',

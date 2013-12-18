@@ -50,7 +50,7 @@ if(is_super($_SESSION['admin_access'])){
 		plan.name as plan_name,
 		du.adddate,
 	 	DATEDIFF(now(), du.adddate) as duration,
-		(i.ledger_amount + i2.extra_amount + i3.vob_amount) as paid,
+		(i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount) as paid,
 		du.status
 		FROM dental_users du 
 		LEFT JOIN dental_user_company uc ON uc.userid = du.userid
@@ -65,6 +65,9 @@ if(is_super($_SESSION['admin_access'])){
 				dental_percase_invoice pi 
 				 LEFT JOIN dental_ledger dl on pi.id=dl.percase_invoice
                 		GROUP BY pi.docid) i ON i.docid=du.userid
+		LEFT JOIN (SELECT COALESCE(sum(pi.monthly_fee_amount),0) as monthly_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                GROUP BY pi.docid) i1 ON i1.docid=du.userid
                 LEFT JOIN (SELECT COALESCE(sum(dle.percase_amount),0) as extra_amount, pi.docid FROM 
                                 dental_percase_invoice pi 
                                  LEFT JOIN dental_percase_invoice_extra dle ON dle.percase_invoice=pi.id

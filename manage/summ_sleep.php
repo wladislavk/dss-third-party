@@ -160,4 +160,12 @@ function updateContactField(inField, inVal, idField, idVal){
 $('#'+inField).val(inVal);
 $('#'+idField).val(idVal);
 }
+$(document).ready(function(){
+  $('.sleeplabstable input').change(function(){
+    $(this).parents('form:first').find('td').css('background', 'rgb(173, 216, 230)');
+    window.onbeforeunload = function(){
+      return 'You have made changes to a Test and have not saved your changes. Click OK to leave the page, or Cancel to return and save your changes.';
+    }
+  })
+});
 </script>

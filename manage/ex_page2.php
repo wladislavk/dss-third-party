@@ -60,12 +60,22 @@ if($_POST['ex_page2sub'] == 1)
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page3.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 	else
@@ -80,12 +90,22 @@ if($_POST['ex_page2sub'] == 1)
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page3.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 }
@@ -138,17 +158,20 @@ $tonsils_grade = st($myarray['tonsils_grade']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="ex_page2frm" name="ex_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page2frm" class="ex_form" name="ex_page2frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page2sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page2id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
-<div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="ex_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<table width="98%" style="clear:both;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
     <tr>
         <td valign="top" class="frmhead">
         	<ul>
@@ -273,9 +296,12 @@ $tonsils_grade = st($myarray['tonsils_grade']);
          
 </table>
 
-<div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

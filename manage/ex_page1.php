@@ -78,12 +78,22 @@ if($_POST['ex_page1sub'] == 1)
 		mysql_query($pat_sql);
 		
 		$msg = "Added Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 	else
@@ -107,12 +117,22 @@ if($_POST['ex_page1sub'] == 1)
                 mysql_query($pat_sql);
 	
 		$msg = "Edited Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 }
@@ -170,17 +190,20 @@ $tongue = st($myarray['tongue']);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<form id="ex_page1frm" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="ex_page1frm" class="ex_form" name="ex_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="ex_page1sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page1id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
-<div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="ex_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<table width="98%" cellpadding="5" cellspacing="1" style="clear:both;" bgcolor="#FFFFFF" align="center">
     <tr>
         <td valign="top" class="frmhead">
         	<ul style="width:48%; float:left;">
@@ -376,9 +399,12 @@ $tongue = st($myarray['tongue']);
          
 </table>
 
-<div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

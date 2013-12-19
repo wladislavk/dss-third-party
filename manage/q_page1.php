@@ -162,12 +162,22 @@ if($_POST['q_page1sub'] == 1)
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
+                if(isset($_POST['q_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='q_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
+		}
 		die();
 	}
 	else
@@ -198,12 +208,22 @@ if($_POST['q_page1sub'] == 1)
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
+                if(isset($_POST['q_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='q_page2.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>#form';
 		</script>
 		<?
+		}
 		die();
 	}
 }
@@ -354,16 +374,20 @@ if($complaintid <> '')
 	}
 </script>
 
-<form id="q_page1frm" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
+<form id="q_page1frm"  class="q_form" name="q_page1frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post">
 <input type="hidden" name="q_page1sub" value="1" />
 <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
-<div align="right">
-	<input type="reset" value="Clear" />
-	<input type="submit" id="save_but" name="q_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="q_pagebtn" value="Save" />
+        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
+<div style="clear:both;"></div>
 <?php
         $patient_sql = "SELECT * FROM dental_q_page1 WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";    
         $patient_q = mysql_query($patient_sql);
@@ -1022,11 +1046,16 @@ $('document').ready( function(){
 
 </script>
 
-<div align="right">
-	<input type="reset" value="Clear" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="q_pagebtn" value="Save" />
+        <input type="submit" name="q_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
+<div style="clear:both;"></div>
+
 </form>
 
 <br />

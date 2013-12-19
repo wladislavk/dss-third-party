@@ -9,7 +9,38 @@ $cur_page = substr($page_path,$lastslash);
 
 <br />
 <script type="text/javascript">
-
+	$(document).ready(function(){
+	  $('.q_form select').change(function(){
+            window.onbeforeunload = function(){
+		return 'Are you sure you want to proceed?';
+	    }
+	  });
+          $('.q_form input').change(function(){
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to proceed?';
+            }
+          });
+          $('.q_form textarea').change(function(){
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to proceed?';
+            }
+          });
+          $('.ex_form select').change(function(){
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to proceed?';
+            }
+          });
+          $('.ex_form input').change(function(){
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to proceed?';
+            }
+          });
+          $('.ex_form textarea').change(function(){
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to proceed?';
+            }
+          });
+	});
 	function change_page(goto_p)
 	{
 		if(!edited){

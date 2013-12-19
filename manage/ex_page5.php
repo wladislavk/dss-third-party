@@ -211,12 +211,22 @@ $num = mysql_num_rows($q);
 		mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 		
 		$msg = "Added Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page4.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 	else
@@ -256,12 +266,22 @@ $num = mysql_num_rows($q);
 		mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 		
 		$msg = "Edited Successfully";
+                if(isset($_POST['ex_pagebtn_proceed'])){
+                ?>
+                <script type="text/javascript">
+                        //alert("<?=$msg;?>");
+                        window.location='ex_page4.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
+                </script>
+                <?
+                }else{
+
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
 			window.location='<?=$_POST['goto_p']?>.php?pid=<?=$_GET['pid']?>&msg=<?=$msg;?>';
 		</script>
 		<?
+		}
 		die();
 	}
 }
@@ -421,17 +441,20 @@ if($jointid <> '')
 	}
 </script>
 
-<form id="ex_page5frm" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
+<form id="ex_page5frm" class="ex_form" name="ex_page5frm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?=$_GET['pid']?>" method="post" >
 <input type="hidden" name="ex_page5sub" value="1" />
 <input type="hidden" name="ed" value="<?=$ex_page5id;?>" />
 <input type="hidden" name="goto_p" value="<?=$cur_page?>" />
 
-<div align="right">
-	<input type="reset" value="Reset" />
-	<input type="submit" name="ex_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<table style="clear:both;" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	
     <tr>
         <td valign="top" class="frmhead">
@@ -868,9 +891,12 @@ if($jointid <> '')
     
 </table>
 
-<div align="right">
-	<input type="reset" value="Reset" />
-    <input type="submit" name="q_pagebtn" value="Save" />
+<div style="float:left; margin-left:10px;">
+        <input type="reset" value="Undo Changes" />
+</div>
+<div style="float:right;">
+        <input type="submit" name="ex_pagebtn" value="Save" />
+        <input type="submit" name="ex_pagebtn_proceed" value="Save And Proceed" />
     &nbsp;&nbsp;&nbsp;
 </div>
 </form>

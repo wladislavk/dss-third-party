@@ -82,7 +82,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
                 $ins_id = mysql_insert_id();
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
-                                        title = 'Sleep Study ".$ins_id."',
+                                        title = '".$sleeptesttype." ".$date."',
                                         imagetypeid = '1',
                                         image_file = '".s_for($banner1)."',
                                         userid = '".s_for($_SESSION['userid'])."',

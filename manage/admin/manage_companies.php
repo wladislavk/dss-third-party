@@ -131,7 +131,7 @@ $num_users=mysql_num_rows($my);
 					<a href="billing_company_users.php?id=<?= $myarray['id']; ?>"><?= $num_users; ?></a>
 					<?php
 					}elseif($myarray['company_type']==DSS_COMPANY_TYPE_HST){
-                                        $u_sql = "SELECT userid FROM dental_users WHERE hst_company_id='".mysql_real_escape_string($myarray["id"])."'";
+                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_hst_company uhc ON uhc.userid=u.userid WHERE uhc.companyid='".mysql_real_escape_string($myarray["id"])."'";
                                         $u_q = mysql_query($u_sql);
                                         $num_users = mysql_num_rows($u_q);
                                         ?>

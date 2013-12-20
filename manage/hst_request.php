@@ -125,6 +125,42 @@ if($epworthid <> '')
       mysql_query($hst_sql);
     }
   }
+
+  $c_sql = "SELECT c.email from companies c WHERE c.id='".$_POST['company_id']."'";
+  $c_q = mysql_query($c_sql);
+  $c = mysql_fetch_assoc($c_q);
+
+  if($c['email'] != ''){
+    		$headers = 'From: Dental Sleep Solutions <noreply@dentalsleepsolutions.com>' . "\r\n" .
+                    'Content-type: text/html' ."\r\n" .
+                    'Reply-To: noreply@dentalsleepsolutions.com' . "\r\n" .
+                     'X-Mailer: PHP/' . phpversion();
+
+                $subject = "New HST Order Created";
+	$user_sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+	$user_q = mysql_query($user_sql);
+	$user = mysql_fetch_assoc($user_q);
+		$m = "<html><body><center>
+<table width='600'>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
+<tr><td width='400'>
+<h2>New HST Order Created</h2>
+<p>A new HST order has been submitted to you by ".$user['first_name']." ".$user['last_name']." at ".$user['mailing_practice']." on ".date('m/d/Y h:i p').".</p>
+
+<p>Please log in to your DS3 backoffice account to check the details:<a href='http://".$_SERVER['HTTP_HOST']."/manage/admin'>http://".$_SERVER['HTTP_HOST']."/manage/admin</a></p>
+</td><td><img alt='Logo' src='".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
+</table>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>";
+
+
+
+                mail($c['email'], $subject, $m, $headers);
+
+
+  }
+
+
   ?>
     <script type="text/javascript">
       window.location = 'add_patient.php?ed=<?= $_GET['ed']; ?>&preview=1&addtopat=1&pid=<?= $_GET['ed']; ?>';

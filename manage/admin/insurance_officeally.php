@@ -4,12 +4,14 @@ session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 
+
 $data = array();
+foreach($_POST['claim'] as $claimid){
 $claim_sql = "SELECT i.* FROM dental_insurance i 
 	JOIN dental_patients p on p.patientid=i.patientid
-	WHERE i.status='".DSS_CLAIM_PENDING."' and p.p_m_dss_file=1";
+	WHERE i.insuranceid='".mysql_real_escape_string($claimid)."'";
 $claim_q = mysql_query($claim_sql);
-while($claim = mysql_fetch_assoc($claim_q)){
+if($claim = mysql_fetch_assoc($claim_q)){
 $row = array();
   $pat_sql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($claim['patientid'])."'";
   $pat_q = mysql_query($pat_sql);
@@ -590,7 +592,7 @@ $row[] = $pat['p_m_ins_grp'];
 
 $data[] = $row;
 }
-
+}
 //print_r($data);
 
 

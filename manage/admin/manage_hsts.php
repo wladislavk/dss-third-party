@@ -75,7 +75,7 @@ $i_val = $index_val * $rec_disp;
 
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
-     . "  hst.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -91,7 +91,7 @@ $sql = "SELECT "
      . "  LEFT JOIN companies hst_company ON hst.company_id=hst_company.id ";
 }elseif(is_hst($_SESSION['admin_access'])){
 $sql = "SELECT "
-     . "  hst.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  hst.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  hst.adddate, CONCAT(users.first_name, ' ',users.last_name) as doc_name, hst.status, "
      . "  DATEDIFF(NOW(), hst.adddate) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -111,7 +111,7 @@ $sql = "SELECT "
 
 }else{
 $sql = "SELECT "
-     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.id, i.company as ins_co, hst.patient_firstname, hst.patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "

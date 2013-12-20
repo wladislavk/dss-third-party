@@ -18,15 +18,17 @@ if(isset($_POST['user_sub'])){
 <form method="post">
 
 <?php
-$u_sql = "SELECT * FROM dental_users WHERE
-		docid=0
-		ORDER BY first_name ASC, last_name ASC, username ASC";
+$u_sql = "SELECT u.*, c.name as billing_company FROM dental_users u 
+		LEFT JOIN companies c on c.id=u.billing_company_id
+		WHERE
+		u.docid=0
+		ORDER BY u.first_name ASC, u.last_name ASC, u.username ASC";
 $u_q = mysql_query($u_sql);
 while($user = mysql_fetch_assoc($u_q)){
 ?>
 
-  <input type="checkbox" value="<?= $user['userid'];?>" name="user[]" <?= ($user['billing_company_id']==$_REQUEST['id'])?'checked="checked"':''; ?> <?= ($user['billing_company_id']!='' && $user['billing_company_id']!=$_REQUEST['id'])?'disabled="disabled"':''; ?> />
-  <?= $user['first_name']. " " .$user['last_name'] . " - " . $user['username']; ?><br />
+  <input type="checkbox" value="<?= $user['userid'];?>" name="user[]" <?= ($user['billing_company_id']==$_REQUEST['id'])?'checked="checked"':''; ?> <?= ($user['billing_company_id']!='' && $user['billing_company_id']!='0' && $user['billing_company_id']!=$_REQUEST['id'])?'disabled="disabled"':''; ?> />
+  <?= $user['first_name']. " " .$user['last_name'] . " - " . $user['username'] ." - ".$user['billing_company']; ?><br />
 <?php
   }
 ?>

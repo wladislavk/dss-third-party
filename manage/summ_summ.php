@@ -127,8 +127,21 @@ $protrusion_to = st($myarrayex['protrusion_to']);
 $protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
-$dentaldevice = st($myarrayex['dentaldevice']);
-$dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
+
+  $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysql_real_escape_string($_GET['pid'])."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+  $imp_q = mysql_query($imp_s);
+  $imp_r = mysql_fetch_assoc($imp_q);
+  if(mysql_num_rows($imp_q)>0){
+    $dentaldevice = st($imp_r['device_id']);
+    $dentaldevice_date = st(($imp_r['date_completed']!='')?date('m/d/Y', strtotime($imp_r['date_completed'])):'');
+  }else{
+    $dentaldevice = st($myarrayex['dentaldevice']);
+    $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
+  }
+
+
+
+
 
 $sqls = "select * from dental_summary where patientid='".$_GET['pid']."'";
 $mys = mysql_query($sqls);

@@ -4,7 +4,6 @@ session_start();
 require_once('../includes/constants.inc');
 require_once('includes/main_include.php');
 
-
 $data = array();
 foreach($_POST['claim'] as $claimid){
 $claim_sql = "SELECT i.* FROM dental_insurance i 
@@ -12,6 +11,10 @@ $claim_sql = "SELECT i.* FROM dental_insurance i
 	WHERE i.insuranceid='".mysql_real_escape_string($claimid)."'";
 $claim_q = mysql_query($claim_sql);
 if($claim = mysql_fetch_assoc($claim_q)){
+  if($_POST['claims_sent']=='1'){
+    $status_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_SENT."' WHERE insuranceid='".mysql_real_escape_string($claim['insuranceid'])."'";
+    $status_q = mysql_query($status_sql);
+  }
 $row = array();
   $pat_sql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($claim['patientid'])."'";
   $pat_q = mysql_query($pat_sql);
@@ -604,7 +607,5 @@ foreach ($data as $fields) {
     fputs($f, implode($fields, "\t")."\n");
 }
 fclose($f);
-
-
 
 ?>

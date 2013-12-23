@@ -481,8 +481,10 @@ $dentaldevice = st($myarrayex['dentaldevice']);
 	</tr>
 	<tr>	
 		<td valign="top" class="odd">
-		<input type="submit" name="submitnewsleeplabsumm" onclick="window.onbeforeunload=false;" value="Submit Study" />	
+		<input type="submit" name="submitnewsleeplabsumm" onclick="window.onbeforeunload=false;$(this).parent().find('.loading').show();" value="Submit Study" />	
 		<input type="button" onclick="$('#new_sleep_study_form').hide(); parent.show_new_sleep_but(); return false;" value="Cancel" />
+                <img src="images/loading.gif" class="loading" style="display:none;"/>
+
 		</td>
 	</tr>
 </table>
@@ -685,8 +687,9 @@ $device = mysql_result($device_result, 0);
 	</tr>
   <tr>
                 <td valign="top" class="odd">
-                <input type="submit" name="submitupdatesleeplabsumm" onclick="window.onbeforeunload=false;" value="Save" />
+                <input type="submit" name="submitupdatesleeplabsumm" onclick="window.onbeforeunload=false;$(this).parent().find('.loading').show();" value="Save" />
 		<input type="submit" name="submitdeletesleeplabsumm" onclick='return delete_confirm();' value="Delete" />
+		<img src="images/loading.gif" class="loading" style="display:none;"/>
                 </td>
         </tr>
 

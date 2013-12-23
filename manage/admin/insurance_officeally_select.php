@@ -123,7 +123,7 @@ if(isset($_GET['msg'])){
 </div>
 <div style="clear:both;"></div>
 <br />
-<form name="pagefrm" id="oa_form" action="insurance_officeally.php" method="post">
+<form name="pagefrm" id="oa_form" action="insurance_officeally.php" method="post" target="_blank" onsubmit="setTimeout(function () { window.location.reload(); }, 500)">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
@@ -205,6 +205,10 @@ if(isset($_GET['msg'])){
 	<? 	}
 	}?>
 </table>
+
+<input type="checkbox" name="claims_sent" value="1" /> Mark selected claims as sent
+<br />
+
 <input type="submit" value="Export Selected Claims" />
 </form>
 

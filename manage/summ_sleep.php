@@ -4,7 +4,6 @@ $s_lab_result = mysql_query($s_lab_query);
 $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
 $body_width = ($num_labs*245)+245;
-echo $body_width;
 
 if($num_labs == 0){
 ?>

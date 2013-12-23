@@ -3,7 +3,9 @@ $s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".$_GET['pi
 $s_lab_result = mysql_query($s_lab_query);
 $num_labs = mysql_num_rows($s_lab_result);
 if(isset($_POST['submitnewsleeplabsumm'])){ $num_labs++; }
-$body_width = ($num_labs*185)+215;
+$body_width = ($num_labs*245)+245;
+echo $body_width;
+
 if($num_labs == 0){
 ?>
 <div id="no_sleep_studies_div">
@@ -122,7 +124,7 @@ Sleep Tests:
 
 <script type="text/javascript">
 function updateiframe(w){
-$('#sleepstudies').css('width', ((w+1)*185)+'px');
+//$('#sleepstudies').css('width', ((w+1)*185)+'px');
 }
 function show_new_study(){
 $('#new_sleep_study_but').hide();

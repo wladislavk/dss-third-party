@@ -582,7 +582,7 @@ th.headerSortDown {
 } 
 
 
-tr.status_2{
+tr.status_2, #tracking_table tr.status_3{
   background: #ccc;
   }
 

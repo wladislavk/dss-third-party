@@ -108,9 +108,7 @@ $my=mysql_query($sql) or die(mysql_error());
 <span class="admin_head">
 	Manage Claims
 </span>
-<br />
-<br />
-&nbsp;
+<p style="margin-left:20px;">Select the claims you wish to export to Office Ally, then click the button to generate the export file. This file can then be uploaded to Office Ally.</p>
 
 <br />
 <?php
@@ -120,10 +118,12 @@ if(isset($_GET['msg'])){
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <?php } ?>
-<div style="width:98%;margin:auto;">
+<div style="float:right; margin-right:20px;">
+  <a href="#" style="padding:2px;" onclick="$('#oa_form :checkbox').attr('checked','checked');" class="button">Select All</a>
 </div>
-
-<form name="pagefrm" action="insurance_officeally.php" method="post">
+<div style="clear:both;"></div>
+<br />
+<form name="pagefrm" id="oa_form" action="insurance_officeally.php" method="post">
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
@@ -205,7 +205,7 @@ if(isset($_GET['msg'])){
 	<? 	}
 	}?>
 </table>
-<input type="submit" value="Submit" />
+<input type="submit" value="Export Selected Claims" />
 </form>
 
 <br /><br />	

@@ -172,7 +172,7 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<table class="sort_table" id="monthly_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table" id="tracking_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <thead>
 	<tr class="tr_bg_h">
 		<td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=username&sortdir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a>
@@ -230,7 +230,7 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 		{
 
 		?>
-			<tr>
+			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
 					<?=st($myarray["username"]);?>
 				</td>

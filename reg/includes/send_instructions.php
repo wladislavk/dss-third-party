@@ -29,40 +29,66 @@ $t = $_POST['type'];
   $ur = mysql_fetch_assoc($uq);
   $n = $ur['phone'];
 
+
+$loc_sql = "SELECT location FROM dental_summary where patientid='".mysql_real_escape_string($r['patientid'])."'";
+$loc_q = mysql_query($loc_sql);
+$loc_r = mysql_fetch_assoc($loc_q);
+if($loc_r['location'] != '' && $loc_r['location'] != '0'){
+  $location_query = "SELECT  l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip 
+from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid
+        WHERE l.id='".mysql_real_escape_string($loc_r['location'])."' AND l.docid='".mysql_real_escape_string($r['docid'])."'";
+}else{
+  $location_query = "SELECT l.phone mailing_phone, u.user_type, u.logo, l.location mailing_practice, l.address mailing_address, l.city mailing_city, l.state mailing_state, l.zip mailing_zip from dental_users u inner join dental_patients p on u.userid=p.docid 
+                LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
+        where p.patientid='".mysql_real_escape_string($r['patientid'])."'";
+}
+  $uq = mysql_query($location_query);
+  $ur = mysql_fetch_assoc($uq);
+  $n = $ur['mailing_phone'];
+  if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
+    $logo = "/manage/q_file/".$ur['logo'];
+  }else{
+    $logo = "/reg/images/email/reg_logo.gif";
+  }
+
+
+
 if($t == 'activate'){
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Your New Account - A new patient account has been created for you</h2>
 <p>Please click the following link to activate your account.</p>
 <p><a href='http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/activate.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td>
 <h3>Didn't request this change or need assistance?</h3>
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p>
 </td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
-</center></body></html>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
 ";
 $m .= $email_footer;
 }else{
   $m = "<html><body><center>
 <table width='600'>
-<tr><td colspan='2'><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_header.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_header_fo.png' /></td></tr>
 <tr><td width='400'>
 <h2>Reset your password</h2><p>Please click the following link to reset your password.</p>
 <p><a href='http://".$_SERVER['HTTP_HOST']."/reg/reset.php?id=".$r['patientid']."&hash=".$recover_hash."'>http://".$_SERVER['HTTP_HOST']."/reg/reset.php?id=".$r['patientid']."&hash=".$recover_hash."</a></p>
-</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/reg_logo.gif' /></td></tr>
+</td><td><img alt='Dental Sleep Solutions' src='http://".$_SERVER['HTTP_HOST'].$logo."' /></td></tr>
 <tr><td>
 <h3>Didn't request this change or need assistance?</h3>
 <p><b>Contact us at ".$n." or at<br>
 patient@dentalsleepsolutions.com</b></p></td></tr>
-<tr><td colspan='2'><img alt='www.dentalsleepsolutions.com' title='www.dentalsleepsolutions.com' src='http://".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer.png' /></td></tr>
+<tr><td colspan='2'><img alt='A message from your healthcare provider' src='".$_SERVER['HTTP_HOST']."/reg/images/email/email_footer_fo.png' /></td></tr>
 </table>
-</center></body></html>
+</center><span style=\"font-size:12px;\">This email was sent by Dental Sleep Solutions&reg; on behalf of ".$ur['mailing_practice'].". ".DSS_EMAIL_FOOTER."</span></body></html>
+
 ";
 }
 $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .

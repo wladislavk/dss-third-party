@@ -178,9 +178,6 @@ require_once('includes/formatters.php');
 					<?php
                         	}
 				?>
-				default:
-					prod = 'None';
-					break;
 			}
 			switch(event.resource){
 				<?php
@@ -193,9 +190,6 @@ require_once('includes/formatters.php');
 					<?php
                         	}
 				?>
-				default:
-					prod = 'None';
-					break;
 			}
 			switch(event.patient){
                                 <?php
@@ -249,7 +243,6 @@ require_once('includes/formatters.php');
 			}
 
 			?>
-			{ key: '', label: 'None' }
 		];
 		var resource = [
 			<?php
@@ -260,7 +253,6 @@ require_once('includes/formatters.php');
 			}
 
 			?>
-			{ key: '', label: 'None' }
 		];
 		var patient = [
                         <?php

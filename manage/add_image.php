@@ -116,14 +116,11 @@ if($_POST["imagesub"] == 1)
 
 $title = $_POST['title'];
                 $imagetypeid = $_POST['imagetypeid'];
-
-
-if($_FILES['image_file']['error'] == 4){
+if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 ){
   $uploaded = false;
 }else{
 	if ($_POST['imagetypeid'] ==0 || (array_search($_FILES["image_file"]["type"], $dss_file_types) !== false) ) {
 	
-
 	  	if($imagetypeid == '0'){
                         $fname = $_FILES["image_file_1"]["name"];
                         $lastdot = strrpos($fname,".");
@@ -238,7 +235,7 @@ if($_FILES['image_file']['error'] == 4){
                 <?php
         }
 }
-if($uploaded || $_FILES['image_file']['error'] == 4){		
+if($uploaded ){		
 		if($_POST["ed"] != "")
 		{
 			$ed_sql = " update dental_q_image set 

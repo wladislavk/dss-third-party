@@ -6,6 +6,12 @@ if(is_billing($_SESSION['admin_access'])){
   die();
 }
 
+
+if(isset($_GET['did']) && $_GET['did']!=''){
+  $s = "UPDATE dental_percase_invoice SET status=3 WHERE id='".mysql_real_escape_string($_GET['did'])."'";
+  mysql_query($s);
+}
+
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -205,8 +211,11 @@ $<?php
                                         <?php if($myarray['cc_id']!=''){ ?>
                                         <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["docid"];?>&invoice=<?=$myarray["id"];?>'); return false;"  class="button" title="EDIT" style="padding:3px 5px;">
                                                 Rebill 
-                                        </a>
+                                        </a><br /><br />
                                         <?php } ?>
+					<?php if(is_admin($_SESSION['admin_access'])){ ?>
+					  <a href="manage_payment_errors.php?did=<?=$myarray["id"];?>" class="button" onclick="confirm('This will remove the failed charge from this list and you will no longer be able to access it. Are you sure?');" style="padding:3px 5px;">Delete</a>
+					<?php } ?>
 				</td>			
 			</tr>
 	<? 	}

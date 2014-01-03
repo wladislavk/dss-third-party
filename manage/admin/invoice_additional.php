@@ -39,6 +39,7 @@ AND
                 JOIN dental_patients dp ON p.patient_id=dp.patientid
                         WHERE 
                 p.doc_id='".$_REQUEST['docid']."' AND
+		p.status = '".DSS_PREAUTH_COMPLETE."' AND
                 p.invoice_status = '".DSS_PERCASE_PENDING."') != 0
 		)
 		ORDER BY du.userid ASC
@@ -75,6 +76,7 @@ $vob_sql = "SELECT * FROM dental_insurance_preauth p
                 JOIN dental_patients dp ON p.patient_id=dp.patientid
         WHERE 
                 p.doc_id='".$user['userid']."' AND
+                p.status = '".DSS_PREAUTH_COMPLETE."' AND
                 p.invoice_status = '".DSS_PERCASE_PENDING."'
 ";
 $vob_q = mysql_query($vob_sql);

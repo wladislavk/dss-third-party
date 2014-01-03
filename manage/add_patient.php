@@ -2440,7 +2440,7 @@ $image = mysql_fetch_assoc($itype_my);
                             $ins_contact_qry_run = mysql_query($ins_contact_qry);
                             while($ins_contact_res = mysql_fetch_array($ins_contact_qry_run)){
                             ?>
-					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['add1']; ?>\n<?= $ins_contact_res['add2']; ?><?= ($ins_contact_res['add2'])?'\n':''; ?><?= $ins_contact_res['city']; ?> <?= $ins_contact_res['state']; ?> <?= $ins_contact_res['zip']; ?>\n<?= $ins_contact_res['phone1']; ?>"
+					insurance_nums[<?= $ins_contact_res['contactid']; ?>] = "<?= $ins_contact_res['add1']; ?>\n<?= $ins_contact_res['add2']; ?><?= ($ins_contact_res['add2'])?'\n':''; ?><?= $ins_contact_res['city']; ?> <?= $ins_contact_res['state']; ?> <?= $ins_contact_res['zip']; ?>\n<?= format_phone($ins_contact_res['phone1']); ?>"
                                 document.write('<option value="<?php echo $ins_contact_res['contactid']; ?>" <?php if($s_m_ins_co == $ins_contact_res['contactid']){echo "selected=\"selected\"";} ?>><?php echo addslashes($ins_contact_res['company']); ?></option>');
                                 
                                 <?php } ?>

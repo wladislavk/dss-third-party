@@ -210,9 +210,16 @@ return s;
 <br />
 <div style="float:left; margin-left:20px;">
         <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
-                View 1500
+                View Primary 1500
         </button>
 </div>
+<?php if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_SENT ||$claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED){ ?>
+<div style="float:left; margin-left:20px;">
+        <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>&instype=2';" class="addButton">
+                View Secondary 1500
+        </button>
+</div>
+<?php } ?>
 <div align="right" style="clear: right;">
 <?php
   $api_sql = "SELECT use_eligible_api FROM dental_users

@@ -1416,9 +1416,14 @@ $(document).ready(function(){
 		</td>
 		<td width="50%">
 		  <table>
-		  		  <?php $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 
-      $inscoarray = mysql_query($inscoquery);
-      $inscoinfo = mysql_fetch_array($inscoarray);
+		  		  <?php 
+	if(isset($_GET['instype']) && $_GET['instype']==2){
+	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'"; 
+	}else{
+	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 
+	}
+        $inscoarray = mysql_query($inscoquery);
+        $inscoinfo = mysql_fetch_array($inscoarray);
       ?>
 		  <tr>
 		      <td>
@@ -2632,7 +2637,18 @@ if ($is_pending) {
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";
-
+  if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
+    $sql = "SELECT
+                sum(dlp.amount) as amount_paid
+        from dental_ledger dl 
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
+                        AND primary_claim_id=".$_GET['insid']." 
+                        AND dlp.amount != 0
+			AND dlp.payer = 0
+	";
+  }
   $paid_my = mysql_query($sql);
   if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
     $paid_row = mysql_fetch_array($paid_my);

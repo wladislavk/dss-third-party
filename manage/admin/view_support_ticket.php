@@ -9,7 +9,7 @@ mysql_query($v_sql);
 
 if(isset($_POST['respond'])){
 
-  if($_POST['body']!='' || $_FILES['attachment']['tmp_name']!=''){
+  if($_POST['body']!='' || $_FILES['attachment']['tmp_name'][0]!=''){
     $s = "INSERT INTO dental_support_responses SET
 	ticket_id = '".mysql_real_escape_string($_GET['ed'])."',
 	responder_id='".mysql_real_escape_string($_SESSION['adminuserid'])."',
@@ -36,15 +36,19 @@ if(isset($_POST['respond'])){
     mysql_query($s);
   } 
 
-                if($_FILES['attachment']['tmp_name']!=''){
-                  $extension = end(explode(".", $_FILES["attachment"]["name"]));
-                  $attachment = "support_response_attachment_".$r_id."_".$_GET['ed'].".".$extension;
-                  move_uploaded_file($_FILES["attachment"]["tmp_name"], "../q_file/" . $attachment);
 
-                  $a_sql = "UPDATE dental_support_responses SET
-                                attachment = '".mysql_real_escape_string($attachment)."'
-                                where id=".mysql_real_escape_string($r_id);
+                for($i=0;$i < count($_FILES['attachment']['name']); $i++){
+                if($_FILES['attachment']['tmp_name'][$i]!=''){
+                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+                  $attachment = "support_attachment_".$r_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
+                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../q_file/" . $attachment);
+
+                  $a_sql = "INSERT INTO dental_support_attachment SET
+                                filename = '".mysql_real_escape_string($attachment)."',
+                                ticket_id='".mysql_real_escape_string($_GET['ed'])."',
+                                response_id='".mysql_real_escape_string($r_id)."'";
                   mysql_query($a_sql);
+                }
                 }
 
 	?>
@@ -86,7 +90,7 @@ $t = mysql_fetch_assoc($my);
       <?php if($t['attachment']){
         ?> | <a href="../q_file/<?= $t['attachment']; ?>">View Attachment</a><?php
       } 
-        $a_sql = "SELECT * FROM dental_support_attachment WHERE ticket_id='".mysql_real_escape_string($t['id'])."'";
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".mysql_real_escape_string($t['id'])."'";
         $a_q = mysql_query($a_sql);
         while($a=mysql_fetch_assoc($a_q)){
         ?> | <a href="../q_file/<?= $a['filename']; ?>">View Attachment</a><?php
@@ -126,6 +130,11 @@ $t = mysql_fetch_assoc($my);
       if($r['attachment']){
         ?> | <a href="../q_file/<?= $r['attachment']; ?>">View Attachment</a><?php
       }
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id ='".mysql_real_escape_string($r['id'])."'";
+        $a_q = mysql_query($a_sql);
+        while($a=mysql_fetch_assoc($a_q)){
+        ?> | <a href="../q_file/<?= $a['filename']; ?>">View Attachment</a><?php
+        }
     if($r['response_type']==0){
       ?> | <a href="#" onclick="loadPopup('edit_support_response.php?ed=<?= $_GET['ed']; ?>&id=<?= $r['id']; ?>'); return false;">Edit</a><?php
     } ?>
@@ -157,8 +166,13 @@ $t = mysql_fetch_assoc($my);
 <form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post" enctype="multipart/form-data">
   <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
   <input type="submit" name="respond" value="Submit Response"  style="float:left;" />
-  <div  style="float:left; width:300px;">
-<input type="file" name="attachment" id="attachment" style="float:right" class="field text addr tbox" />
+  <div style=" width:300px;">
+        <div id="attachments">
+                                <span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
+
+                                </div>
+                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" class="button">Add</a>
+
 <div style="float:right;">
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
     <input type="checkbox" value="2" name="close" /> Mark Closed<br />
@@ -168,6 +182,18 @@ $t = mysql_fetch_assoc($my);
   </div>
 </div>
 </form>
+                <script type="text/javascript">
+                        function add_attachment(){
+                                if($('.attachment').length<3){  
+                                  $('#attachments').append('<span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
+                                }
+                                if($('.attachment').length==3){
+                                  $('#add_attachment_but').hide();
+                                }
+
+                        }
+                </script>
+
 </div>
 <div id="popupContact">
     <a id="popupContactClose"><button>X</button></a>

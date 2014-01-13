@@ -47,7 +47,6 @@ if($_POST["ticketsub"] == 1)
 		  $a_sql = "INSERT INTO dental_support_attachment SET
 				filename = '".mysql_real_escape_string($attachment)."',
 				ticket_id=".mysql_real_escape_string($t_id);
-	 	  error_log($a_sql);	
 		  mysql_query($a_sql);
 		}
 		}

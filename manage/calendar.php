@@ -521,6 +521,12 @@ require_once('includes/formatters.php');
 
                     //any custom logic here
                 });
+        scheduler.attachEvent("onEventSave", function (id, data, is_new_event) {
+            if (is_new_event && !data.patient) {
+                return confirm('There is no patient associated with this appointment. Save anyway?');
+            }
+            return true;
+        });
 	}
 
 function show_minical(){
@@ -563,6 +569,7 @@ $(document).ready(function(){
 $('#cal_search .json_patient').live('click', function(){
   $('#cal_search').submit();
 });
+
 </script>
                                         </div>
 <input type="hidden" name="pid" id="pid" />

@@ -237,6 +237,17 @@ console.log(response);
 	}
         $('#loader').show();
 	$('#payment_proceed').hide();
+		var post = $('#register_form').serializeObject();
+		$.post('helpers/new_submit.php', post, function(data) {
+                  var r = $.parseJSON(data);
+                  $('#userid').val(r['userid']);
+                  //alert(data);
+                  //$('#form_summary').html(data);
+                  //alert(data);
+
+
+
+
 	$.ajax({
           url: "includes/update_token_new.php",
           type: "post",
@@ -274,7 +285,7 @@ console.log(response);
              //alert('fail');
           }
         });
-
+	});
 	/*
         // Disable the submit button to prevent repeated clicks
         Stripe.createToken({

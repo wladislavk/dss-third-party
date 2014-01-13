@@ -4,6 +4,13 @@
   return arg != value;
  }, "Value must not equal arg.");
 
+ $.validator.addMethod("valueIfNotMedicare", function(value, element, arg){
+  if($('input[name=p_m_ins_type]:checked').val() == 1){
+    return true;
+  }
+  return arg != value;
+ }, "This field is required");
+
 lga_wizard = {
 	init: function(){
 		//wizard form submit
@@ -122,7 +129,7 @@ lga_wizard = {
 			    p_m_ins_zip: "required",
 			    p_m_ins_phone: "required",
                             p_m_ins_id: "required",
-                            p_m_ins_grp: "required",
+                            p_m_ins_grp: { valueIfNotMedicare: '' },
                             p_m_ins_plan: "required",
 			    has_p_m_ins: "required",
 			    has_s_m_ins: "required",
@@ -178,7 +185,7 @@ lga_wizard = {
                             p_m_ins_zip: "This field is required",
                             p_m_ins_phone: "This field is required",
                             p_m_ins_id: "This field is required",
-                            p_m_ins_grp: "This field is required",
+                            p_m_ins_grp: { valueIfNotMedicare: 'This field is required' },
                             p_m_ins_plan: "This field is required",
                             s_m_relation: "This field is required",
                             s_m_partyfname: "This field is required",
@@ -365,6 +372,9 @@ function updateNext(v, i){
 $( document ).ready( function() { 
 
       $( "input[name='p_m_ins_type']" ).bind( "click", updateDescription )
+$('#p_m_ins_type_1').click(function(){
+  $('#p_m_ins_grp').val('NONE');
+});
       
   });
 

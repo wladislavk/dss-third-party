@@ -85,7 +85,14 @@ $t = mysql_fetch_assoc($my);
 	<?= $t['body']; ?>
       <?php if($t['attachment']){
         ?> | <a href="../q_file/<?= $t['attachment']; ?>">View Attachment</a><?php
-      } ?>
+      } 
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE ticket_id='".mysql_real_escape_string($t['id'])."'";
+        $a_q = mysql_query($a_sql);
+        while($a=mysql_fetch_assoc($a_q)){
+        ?> | <a href="../q_file/<?= $a['filename']; ?>">View Attachment</a><?php
+        }
+
+	?>
     <div class="info">
       <?php
         if($t['create_type']=='0'){

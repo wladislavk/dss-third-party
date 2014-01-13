@@ -314,7 +314,7 @@ include 'includes/completed.php';
  
                 <div class="sepH_b clear">
                         <label class="lbl_a"><strong>1.</strong> Do you have Medicare?</label>
-				<input type="radio" name="p_m_ins_type" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
+				<input type="radio" name="p_m_ins_type" id="p_m_ins_type_1" value="1" <?= ($p['p_m_ins_type'] == '1')?'checked="checked"':'';?> /> Yes
 				<input type="radio" name="p_m_ins_type" class="validate" value="7" <?= ($p['p_m_ins_type'] != '' && $p['p_m_ins_type'] != 'Select Type' && $p['p_m_ins_type'] != '1')?'checked="checked"':'';?> /> No
                 </div>
                 <div class="sepH_b">
@@ -426,7 +426,7 @@ include 'includes/completed.php';
                         <input class="inpt_a" id="p_m_ins_email" name="p_m_ins_email" type="text" value="<?= $p_m_r['email']; ?>" />
                 </div>
 
-                <div class="sepH_b third">
+                <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>8.</strong> Insurance ID.</label><input class="inpt_a validate" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">

@@ -14,6 +14,7 @@ $sql = "select t.*,
 	cat.title as category,
 	(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=1 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
         (SELECT r3.attachment FROM dental_support_responses r3 WHERE r3.ticket_id=t.id ORDER BY r3.attachment DESC LIMIT 1) AS response_attachment,
+	(SELECT a.filename FROM dental_support_attachment a WHERE a.ticket_id=t.id LIMIT 1) AS ticket_attachment,
 	response.last_response
 	 FROM dental_support_tickets t
 		LEFT JOIN dental_users u ON u.userid=t.userid
@@ -127,7 +128,7 @@ else
 			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" class="editlink" title="EDIT">
 			View
 			</a>
-			<?php if($myarray['attachment']!='' || $myarray['response_attachment'] !=''){ ?>
+			<?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
 					<span class="attachment"></span>
 					<?php } ?> 
         <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>

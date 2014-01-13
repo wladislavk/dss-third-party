@@ -27,7 +27,6 @@ if($_POST["ticketsub"] == 1)
 {
 
 
-
 		$ins_sql = "insert into dental_support_tickets set 
 				title = '".mysql_real_escape_string($_POST['title'])."',
 				category_id = '".mysql_real_escape_string($_POST['category_id'])."',
@@ -39,16 +38,18 @@ if($_POST["ticketsub"] == 1)
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$t_id = mysql_insert_id();
-
-		if($_FILES['attachment']['tmp_name']!=''){
-                  $extension = end(explode(".", $_FILES["attachment"]["name"]));
-		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid'].".".$extension;
-                  move_uploaded_file($_FILES["attachment"]["tmp_name"], "q_file/" . $attachment);
-
-		  $a_sql = "UPDATE dental_support_tickets SET
-				attachment = '".mysql_real_escape_string($attachment)."'
-				where id=".mysql_real_escape_string($t_id);
+		for($i=0;$i < count($_FILES['attachment']['name']); $i++){
+		if($_FILES['attachment']['tmp_name'][$i]!=''){
+                  $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
+		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
+                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "q_file/" . $attachment);
+		
+		  $a_sql = "INSERT INTO dental_support_attachment SET
+				filename = '".mysql_real_escape_string($attachment)."',
+				ticket_id=".mysql_real_escape_string($t_id);
+	 	  error_log($a_sql);	
 		  mysql_query($a_sql);
+		}
 		}
 		$u_sql = "SELECT a.* FROM admin a 
 				JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
@@ -188,11 +189,26 @@ if($_POST["ticketsub"] == 1)
                         </label>
                         <div>
                             <span class="full">
-                                <input type="file" name="attachment" id="attachment" class="field text addr tbox" />
+				<div id="attachments">
+                                <span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
+
+				</div>
+				<a href="#" id="add_attachment_but" onclick="add_attachment();return false;" class="button">Add</a>
                             </span>
                         </div>
                     </li>
                                 </ul>
+		<script type="text/javascript">
+			function add_attachment(){
+				if($('.attachment').length<5){	
+				  $('#attachments').append('<span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
+				}
+				if($('.attachment').length==5){
+				  $('#add_attachment_but').hide();
+				}
+
+			}
+		</script>
             </td>
         </tr> 
         <tr class="content physician insurance other">

@@ -73,7 +73,7 @@ function autoselect(selectedOption, f) {
   $date = s_for($_POST['date']);
   $sleeptesttype = s_for($_POST['sleeptesttype']);
   $place = s_for($_POST['place']);
-  $diagnosising_doc = substr($_POST['diagnosising_doc'], 0, (strrpos($_POST['diagnosising_doc'],' - ')));
+  $diagnosising_doc = (strpos($_POST['diagnosising_doc']))?substr($_POST['diagnosising_doc'], 0, (strrpos($_POST['diagnosising_doc'],' - '))):$_POST['diagnosising_doc'];
   $diagnosising_npi = s_for($_POST['diagnosising_npi']);
   $ahi = s_for($_POST['ahi']); 
   $ahisupine = s_for($_POST['ahisupine']);

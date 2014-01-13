@@ -200,13 +200,13 @@ lga_wizard = {
 			
 	                        var post = $('#register_form').serializeObject();
 				//alert(post);
-                	        $.post('helpers/new_submit.php', post, function(data) {
+                	        /*$.post('helpers/new_submit.php', post, function(data) {
 					var r = $.parseJSON(data);
 					$('#userid').val(r['userid']);
 					//alert(data);
                         	        //$('#form_summary').html(data);
                                 	//alert(data);
-                        	});
+                        	});*/
 			$("#status li").removeClass("active").eq(i).addClass("active filed");
 			$("#status li.active").prev("li").addClass("filed");
 			window.scroll(0,0);

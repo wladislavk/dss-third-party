@@ -13,7 +13,8 @@ if(isset($_GET['rid'])){
 <?php
 $t_sql = "SELECT t.*,
 		(SELECT r.viewed FROM dental_support_responses r WHERE r.ticket_id=t.id AND r.response_type=0 ORDER BY r.viewed ASC LIMIT 1) AS response_viewed,
-		(SELECT r2.attachment FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.attachment DESC LIMIT 1) AS response_attachment
+		(SELECT r2.attachment FROM dental_support_responses r2 WHERE r2.ticket_id=t.id ORDER BY r2.attachment DESC LIMIT 1) AS response_attachment,
+		(SELECT a.filename FROM dental_support_attachment a WHERE a.ticket_id=t.id LIMIT 1) as ticket_attachment
 		 FROM dental_support_tickets t
 		WHERE t.docid='".mysql_real_escape_string($_SESSION['docid'])."' AND
 		(t.status IN (".DSS_TICKET_STATUS_OPEN.", ".DSS_TICKET_STATUS_REOPENED.") OR
@@ -53,7 +54,7 @@ while($r = mysql_fetch_assoc($t_q)){
     <td><?= substr($r['body'], 0, 50); ?></td>
     <td><?= $dss_ticket_status_labels[$r['status']]; ?></td>
     <td><a href="view_support_ticket.php?ed=<?= $r['id']; ?>">View</a>
-	<?php if($r['attachment']!='' || $r['response_attachment']!=''){ ?>
+	<?php if($r['attachment']!='' || $r['response_attachment']!='' || $r['ticket_attachment'] !=''){ ?>
 		<span class="attachment"></span>	
 	<?php } ?>
 	<?php if(($ticket_read && $r["response_viewed"]!='0') || $r['response_viewed'] == '1' ){ ?>

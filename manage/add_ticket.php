@@ -189,18 +189,25 @@ if($_POST["ticketsub"] == 1)
                         <div>
                             <span class="full">
 				<div id="attachments">
-                                <span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
+                                <span class="fullwidth"><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" onchange="$('#add_attachment_but').show();" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
 
 				</div>
-				<a href="#" id="add_attachment_but" onclick="add_attachment();return false;" class="button">Add</a>
+				<a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add Additional</a>
                             </span>
                         </div>
                     </li>
                                 </ul>
 		<script type="text/javascript">
 			function add_attachment(){
+				var blank = $(".attachment").filter(function() {
+    return !this.value;
+}).length;
+			if(blank > 0){
+			  alert('Please attach another file with the "Browse" button before adding another.');
+			  return false;
+			}
 				if($('.attachment').length<5){	
-				  $('#attachments').append('<span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
+				  $('#attachments').append('<span class="fullwidth"><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
 				}
 				if($('.attachment').length==5){
 				  $('#add_attachment_but').hide();

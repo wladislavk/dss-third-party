@@ -313,7 +313,7 @@ $dentaldevice = st($myarrayex['dentaldevice']);
     <tr>
   	    <td >
   	  <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-      <input type="submit" name="submitaddfu" value="Submit Follow Up" id="submitaddfu" style="width:120px;" />
+      <input type="submit" name="submitaddfu" onclick="window.onbeforeunload=false;" value="Submit Follow Up" id="submitaddfu" style="width:120px;" />
       <input type="button" value="cancel" onclick="$('#sleepstudyadd').hide(); parent.show_new_but(); return false;" value="Cancel" style="width:120px;" /> 
     </td>
   </tr>
@@ -520,7 +520,7 @@ $device = mysql_result($device_result, 0);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-      <input type="submit" name="submitupdatefu" value="Save Follow Up" id="submitupdatefu" style="width:120px;" />
+      <input type="submit" name="submitupdatefu" onclick="window.onbeforeunload=false;" value="Save Follow Up" id="submitupdatefu" style="width:120px;" />
       <input type="submit" name="submitdeletefu" onclick="return confirm('Are you sure you want to delete this follow up?');" value="Delete" id="submitdeletefu" style="width:120px;" />
 
 

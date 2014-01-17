@@ -183,11 +183,13 @@ $my=mysql_query($sql) or die(mysql_error());
     <select name="status">
       <?php $requested_selected = ($status == DSS_HST_REQUESTED) ? 'selected' : ''; ?>
       <?php $pending_selected = ($status == DSS_HST_PENDING) ? 'selected' : ''; ?>
+      <?php $contacted_seleted = ($status == DSS_HST_CONTACTED) ? 'selected' : ''; ?>
       <?php $scheduled_selected = ($status == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($status == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
       <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
+      <option value="<?=DSS_HST_CONTACTED?>" <?=$contacted_selected?>><?=$dss_hst_status_labels[DSS_HST_CONTACTED]?></option>
       <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
     </select>

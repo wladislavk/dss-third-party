@@ -105,6 +105,7 @@ define('DSS_HST_PENDING', 1);
 define('DSS_HST_SCHEDULED', 2);
 define('DSS_HST_COMPLETE', 3);
 define('DSS_HST_REJECTED', 4);
+define('DSS_HST_CONTACTED', 5);
 
 // A convenience array to get pre-auth labels
 $dss_hst_status_labels = array();
@@ -113,6 +114,7 @@ $dss_hst_status_labels[DSS_HST_PENDING] = 'Pending';
 $dss_hst_status_labels[DSS_HST_SCHEDULED] = 'Scheduled';
 $dss_hst_status_labels[DSS_HST_COMPLETE] = 'Complete';
 $dss_hst_status_labels[DSS_HST_REJECTED] = 'Rejected';
+$dss_hst_status_labels[DSS_HST_CONTACTED] = 'Contacted';
 
 //Transaction Payers (ledger)
 define('DSS_TRXN_PAYER_PRIMARY', 0);

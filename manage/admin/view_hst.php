@@ -465,6 +465,15 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             </td>
 
         </tr>
+        <tr>
+            <td valign="top" class="frmhead" width="30%">
+                Notes to Office
+            </td>
+            <td valign="top" class="frmdata">
+                <textarea name="office_notes"><?= $hst['office_notes']; ?></textarea>
+            </td>
+        </tr>
+
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
                 Status
@@ -472,19 +481,12 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmdata">
                 <select id="status" name="status" class="tbox">
 			<option value="<?= DSS_HST_PENDING; ?>" <?= ($hst['status']==DSS_HST_PENDING)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_PENDING]; ?></option>
+			<option value="<?= DSS_HST_CONTACTED; ?>" <?= ($hst['status']==DSS_HST_CONTACTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_CONTACTED]; ?></option>
                         <option value="<?= DSS_HST_SCHEDULED; ?>" <?= ($hst['status']==DSS_HST_SCHEDULED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_SCHEDULED]; ?></option>
                         <option value="<?= DSS_HST_COMPLETE; ?>" <?= ($hst['status']==DSS_HST_COMPLETE)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_COMPLETE]; ?></option>
                         <option value="<?= DSS_HST_REJECTED; ?>" <?= ($hst['status']==DSS_HST_REJECTED)?'selected="selected"':''; ?>><?= $dss_hst_status_labels[DSS_HST_REJECTED]; ?></option>
                 <span class="red">*</span>
             </td>
-        </tr>
-        <tr class="status_<?= DSS_HST_SCHEDULED; ?> status">
-            <td valign="top" class="frmhead" width="30%">
-                Notes to Office
-            </td>
-            <td valign="top" class="frmdata">
-		<textarea name="office_notes"><?= $hst['office_notes']; ?></textarea>
-	    </td>
         </tr>
         <tr class="status_<?= DSS_HST_REJECTED; ?> status">
             <td valign="top" class="frmhead" width="30%">
@@ -498,7 +500,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
             <td valign="top" class="frmhead" width="30%">
                 HST
             </td>
-            <td valign="top" class="frmdata">
+            <td valign="top" colspan="2" class="frmdata">
 		<?php include 'view_hst_sleep_study.php'; ?>
             </td>
         </tr>
@@ -513,7 +515,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 		}
 		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
-                  <input type="submit" value="Save HST" class="button" />
+                  <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?>class="button" />
 	  </td><td align="right">
 		<a href="hst_print.php?hst=<?= $_REQUEST['ed'] ?>" class="button" target="_blank">Print HST</a>
             </td>

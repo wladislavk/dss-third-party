@@ -44,7 +44,7 @@ parent.disablePopup1();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <script language="javascript" type="text/javascript" src="../script/validation.js"></script>
-
+<link rel="stylesheet" href="../css/admin_buttons.css" />
 <script type="text/javascript" src="../script/wufoo.js"></script>
 </head>
 <body>

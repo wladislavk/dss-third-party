@@ -132,12 +132,14 @@ $my=mysql_query($sql) or die(mysql_error());
     <select name="status">
       <?php $requested_selected = ($_REQUEST['status'] == '0') ? 'selected' : ''; ?>
       <?php $pending_selected = ($_REQUEST['status'] == DSS_HST_PENDING) ? 'selected' : ''; ?>
+      <?php $contacted_selected = ($_REQUEST['status'] == DSS_HST_CONTACTED) ? 'selected' : ''; ?>
       <?php $scheduled_selected = ($_REQUEST['status'] == DSS_HST_SCHEDULED) ? 'selected' : ''; ?>
       <?php $complete_selected = ($_REQUEST['status'] == DSS_HST_COMPLETE) ? 'selected' : ''; ?>
       <?php $rejected_selected = ($_REQUEST['status'] == DSS_HST_REJECTED) ? 'selected' : ''; ?>
       <option value="">Any</option>
       <option value="<?=DSS_HST_REQUESTED?>" <?=$requested_selected?>><?=$dss_hst_status_labels[DSS_HST_REQUESTED]?></option>
       <option value="<?=DSS_HST_PENDING?>" <?=$pending_selected?>><?=$dss_hst_status_labels[DSS_HST_PENDING]?></option>
+      <option value="<?=DSS_HST_CONTACTED?>" <?=$contacted_selected?>><?=$dss_hst_status_labels[DSS_HST_CONTACTED]?></option>
       <option value="<?=DSS_HST_SCHEDULED?>" <?=$scheduled_selected?>><?=$dss_hst_status_labels[DSS_HST_SCHEDULED]?></option>
       <option value="<?=DSS_HST_COMPLETE?>" <?=$complete_selected?>><?=$dss_hst_status_labels[DSS_HST_COMPLETE]?></option>
       <option value="<?=DSS_HST_REJECTED?>" <?=$rejected_selected?>><?=$dss_hst_status_labels[DSS_HST_REJECTED]?></option>
@@ -215,7 +217,7 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top" class="status_<?= $myarray['status']; ?>">
 					<?= $dss_hst_status_labels[$myarray["status"]];?>&nbsp;
 					<?= ($myarray['status'] != DSS_HST_PENDING && $myarray['status'] != DSS_HST_REJECTED && $myarray['updatedate'])? date('m/d/Y H:i a', strtotime($myarray['updatedate'])):''; ?>
-                                        <?= ($myarray['status'] == DSS_HST_SCHEDULED)?$myarray['office_notes']:'';?>
+                                        <?= $myarray['office_notes'];?>
 					<?= ($myarray['status'] == DSS_HST_REJECTED && $myarray['rejecteddate'])? date('m/d/Y h:i a', strtotime($myarray['rejecteddate'])):''; ?>
 					<?= ($myarray['status'] == DSS_HST_REJECTED)?$myarray['rejected_reason']:'';?>
 

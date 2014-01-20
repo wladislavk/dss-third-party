@@ -35,14 +35,25 @@ $t_q = mysql_query($t_sql);
         </button>
 <br />
 <span class="admin_head">Open Tickets</span>
-<table width="98%" cellpadding="5" cellspacing="1" align="center">
+<!-- pager -->
+<div id="pager" class="pager">
+    <span class="first"><<</span>
+    <span class="prev"><</span>
+    <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+    <span class="next">></span>
+    <span class="last">>></span>
+</div>
+<table id="sort_table" width="98%" cellpadding="5" cellspacing="1" align="center">
+  <thead>
   <tr class="tr_bg_h">
-    <td class="col_head" width="25%">Title</td>
-    <td class="col_head" width="35%">Body</td>
-    <td class="col_head" width="10%">Date</td>
-    <td class="col_head" width="10%">Status</td>
-    <td class="col_head" width="20%">Action</td>
+    <th class="col_head" width="25%">Title</th>
+    <th class="col_head" width="35%">Body</th>
+    <th class="col_head" width="10%">Date</th>
+    <th class="col_head" width="10%">Status</th>
+    <th class="col_head" width="20%">Action</th>
   </tr>
+  </thead>
+  <tbody>
 <?php
 
 while($r = mysql_fetch_assoc($t_q)){
@@ -72,6 +83,7 @@ $latest = ($r['last_response']!='')?$r['last_response']:$r['adddate'];
 <?php
 }
 ?>
+</tbody>
 </table>
 
 <?php
@@ -88,14 +100,25 @@ $t_q = mysql_query($t_sql);
 ?>
 <br />
 <span class="admin_head">Closed Tickets</span>
-<table width="98%" cellpadding="5" cellspacing="1" align="center">
+<div id="pager2" class="pager">
+    <span class="first"><<</span>
+    <span class="prev"><</span>
+    <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+    <span class="next">></span>
+    <span class="last">>></span>
+</div>
+
+<table id="sort_table2" width="98%" cellpadding="5" cellspacing="1" align="center">
+  <thead>
   <tr class="tr_bg_h">
-    <td class="col_head" width="25%">Title</td>
-    <td class="col_head" width="35%">Body</td>
-    <td class="col_head" width="10%">Date</td>
-    <td class="col_head" width="10%">Status</td>
-    <td class="col_head" width="20%">Action</td>
+    <th class="col_head" width="25%">Title</th>
+    <th class="col_head" width="35%">Body</th>
+    <th class="col_head" width="10%">Date</th>
+    <th class="col_head" width="10%">Status</th>
+    <th class="col_head" width="20%">Action</th>
   </tr>
+  </thead>
+  <tbody>
 <?php
 
 while($r = mysql_fetch_assoc($t_q)){
@@ -113,6 +136,7 @@ $latest = ($r['last_response']!='')?$r['last_response']:$r['adddate'];
 <?php
 }
 ?>
+  </tbody>
 </table>
 
 <?php

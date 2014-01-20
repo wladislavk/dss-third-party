@@ -56,6 +56,36 @@ if($_POST["compsub"] == 1)
     //$newwidth=DSS_IMAGE_MAX_WIDTH;
     //$newheight=($height/$width)*$newwidth;
     $tmp=imagecreatetruecolor($newwidth,$newheight);
+
+switch (strtolower($extension))
+{
+    case "png":
+        // integer representation of the color black (rgb: 0,0,0)
+        $background = imagecolorallocate($tmp, 0, 0, 0);
+        // removing the black from the placeholder
+        imagecolortransparent($tmp, $background);
+
+        // turning off alpha blending (to ensure alpha channel information 
+        // is preserved, rather than removed (blending with the rest of the 
+        // image in the form of black))
+        imagealphablending($tmp, false);
+
+        // turning on alpha channel information saving (to ensure the full range 
+        // of transparency is preserved)
+        imagesavealpha($tmp, true);
+
+        break;
+    case "gif":
+        // integer representation of the color black (rgb: 0,0,0)
+        $background = imagecolorallocate($tmp, 0, 0, 0);
+        // removing the black from the placeholder
+        imagecolortransparent($tmp, $background);
+
+        break;
+}
+
+
+
     imagecopyresampled($tmp,$src,0,0,0,0,$newwidth,$newheight,$width,$height);
     if($extension=="jpg" || $extension=="jpeg" )
     {

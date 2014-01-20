@@ -55,33 +55,36 @@ $total_rec = mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+	<thead>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="25%">
+		<th valign="top" class="col_head" width="25%">
 			Title
-		</td>
-                <td valign="top" class="col_head" width="10%">
+		</th>
+                <th valign="top" class="col_head" width="10%">
                         User
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Account
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Company
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Category
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Date
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Status
-                </td>
-		<td valign="top" class="col_head" width="15%">
+                </th>
+		<th valign="top" class="col_head" width="15%">
 		Action
 		</td>
 	</tr>
+	</thead>
+	<tbody>
 <? if(mysql_num_rows($my) == 0)
 { ?>
 	<tr class="tr_bg">
@@ -138,6 +141,7 @@ else
 							</tr>
 							<? 	}
 }?>
+</tbody>
 </table>
 
 <?php
@@ -167,7 +171,8 @@ $total_rec = mysql_num_rows($my);
 <span class="admin_head">
 Resolved
 </span>
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+	<thead>
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="25%">
                         Title
@@ -191,7 +196,8 @@ Resolved
                 Action
                 </td>
         </tr>
-
+	</thead>
+	<tbody>
 <? if(mysql_num_rows($my) == 0)
 { ?>
 	<tr class="tr_bg">
@@ -244,6 +250,7 @@ else
                                                         <?      }
 
 }?>
+	</tbody>
 </table>
 
 

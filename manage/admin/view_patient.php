@@ -1345,7 +1345,8 @@ function remove_notification(id){
     
     <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-    
+   
+<?php include 'includes/patient_nav.php'; ?> 
     
     <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
 	<tr>

@@ -85,12 +85,12 @@ $t = mysql_fetch_assoc($my);
 	<?= $t['body']; ?>
     <?php
       if($t['attachment']!=''){
-        ?> | <a href="./q_file/<?= $t['attachment']; ?>">View Attachment</a><?php
+        ?> | <a href="./q_file/<?= $t['attachment']; ?>" target="_blank">View Attachment</a><?php
       }
 	$a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".mysql_real_escape_string($t['id'])."'";
 	$a_q = mysql_query($a_sql);
 	while($a=mysql_fetch_assoc($a_q)){
-	?> | <a href="./q_file/<?= $a['filename']; ?>">View Attachment</a><?php
+	?> | <a href="./q_file/<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
 	}
     ?>
     <div class="info">
@@ -126,12 +126,12 @@ $t = mysql_fetch_assoc($my);
 	?>
     <?php
       if($r['attachment']!=''){
-        ?> | <a href="./q_file/<?= $r['attachment']; ?>">View Attachment</a><?php
+        ?> | <a href="./q_file/<?= $r['attachment']; ?>" target="_blank">View Attachment</a><?php
       }
         $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id ='".mysql_real_escape_string($r['id'])."'";
         $a_q = mysql_query($a_sql);
         while($a=mysql_fetch_assoc($a_q)){
-        ?> | <a href="./q_file/<?= $a['filename']; ?>">View Attachment</a><?php
+        ?> | <a href="./q_file/<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
         }
 
     ?>

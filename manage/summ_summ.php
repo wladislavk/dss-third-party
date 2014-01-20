@@ -413,7 +413,7 @@ $rs = $r['referred_source'];
   <strong>Baseline Sleep Test?</strong> <?= ($baseline_numsleepstudy > 0)?'Yes':'No'; ?><br />
       <strong>Type:</strong> <?= $baseline_sleepstudy['sleeptesttype']; ?>
 	<?php if($baseline_sleepstudy['filename']!=''){ ?>
-	  - <a href="./q_file/<?= $baseline_sleepstudy['filename'];?>">View Study</a>
+	  - <a href="./q_file/<?= $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
 	<?php } ?>
 	<br />
       <strong>Most Recent:</strong> <? if($baseline_sleepstudy['date']!=''){ ?>

@@ -219,6 +219,9 @@ $num_support = mysql_num_rows($support_res);
   <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="3rdParty/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="3rdParty/jquery.tablesorter.pager.js"></script>
+    <script type="text/javascript" src="3rdParty/jquery.tablesorter.widgets.js"></script>
+
     <script type="text/javascript" src="js/masks.js"></script>
 <?php if($_SERVER['SERVER_NAME'] == "stage.dss-rh.xforty.com"){ ?>
 <script type="text/javascript" src="script/logout_timer_long.js"></script>
@@ -592,7 +595,18 @@ function popitup(url) {
 	var selection = 1;
 	var selectedUrl = '';
 	var searchVal = ""; // global variable to hold the last valid search string
+	var local_pat_data = new Array();
 	$(document).ready(function() {
+		var j=0;
+                $.getJSON('list_patients_local.php').done(function(data){
+                        var cpl = data;
+                        for(var i=0; i<cpl.length;i++){
+                                local_pat_data[j] = new Array();
+				  local_pat_data[j] = cpl[i];
+				  j = j+1;
+                        }
+                });
+
 		$('#patient_search').keyup(function(e) {
 				var a = e.which; // ascii decimal value
 				//var c = String.fromCharCode(a);
@@ -666,15 +680,14 @@ function popitup(url) {
 		});
 	});
 	function sendValue(partial_name) {
-		$.post(
-		
-		"list_patients.php",
-
-		{ 
-			"partial_name": partial_name 
-		},
-
-		function(data) {
+                data = [];
+                r = 0
+                for(var i=0;i<local_pat_data.length;i++){
+                        if(local_pat_data[i]['lastname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1 || local_pat_data[i]['firstname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1){
+                                data[r] = local_pat_data[i];
+                                r++;
+                        }
+                }
 			if (data.length == 0) {
 				$('.json_patient').remove();
                                 $('.create_new').remove();
@@ -715,10 +728,6 @@ function popitup(url) {
 				}
 			   }
 			}
-		},
-
-		"json"
-		);
 	}
 	function move_selection(direction) {
 		if ($('#patient_list > li.list_hover').size() == 0) {
@@ -1554,5 +1563,8 @@ $total_insurance = mysql_num_rows($insurance_my);
 
 
 } //CLOSE HOME PAGE CHECK
+
+$office_type = DSS_OFFICE_TYPE_FRONT;
+
 ?>
 

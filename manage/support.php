@@ -37,11 +37,13 @@ $t_q = mysql_query($t_sql);
 <span class="admin_head">Open Tickets</span>
 <!-- pager -->
 <div id="pager" class="pager">
-    <span class="first"><<</span>
-    <span class="prev"><</span>
-    <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-    <span class="next">></span>
-    <span class="last">>></span>
+	<form>
+		<img src="images/first.png" class="first">
+		<img src="images/prev.png" class="prev">
+		<input class="pagedisplay" type="text">
+		<img src="images/next.png" class="next">
+		<img src="images/last.png" class="last">
+	</form>
 </div>
 <table id="sort_table" width="98%" cellpadding="5" cellspacing="1" align="center">
   <thead>
@@ -101,11 +103,13 @@ $t_q = mysql_query($t_sql);
 <br />
 <span class="admin_head">Closed Tickets</span>
 <div id="pager2" class="pager">
-    <span class="first"><<</span>
-    <span class="prev"><</span>
-    <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
-    <span class="next">></span>
-    <span class="last">>></span>
+        <form>
+                <img src="images/first.png" class="first">
+                <img src="images/prev.png" class="prev">
+                <input class="pagedisplay" type="text">
+                <img src="images/next.png" class="next">
+                <img src="images/last.png" class="last">
+        </form>
 </div>
 
 <table id="sort_table2" width="98%" cellpadding="5" cellspacing="1" align="center">

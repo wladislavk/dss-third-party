@@ -568,7 +568,7 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 
   <tr>
             <td style="background: #E4FFCF;">
-           <select name="devadd" style="width:150px;">
+           <select name="devadd" class="no_questionnaire" style="width:150px;">
         <?php
         $device_sql = "select * from dental_device where status=1 order by sortby";
                                                                 $device_my = mysql_query($device_sql);
@@ -587,12 +587,12 @@ $ep = preg_replace("/[^0-9]/", '', $s_row['analysis']);
 
   <tr>
             <td style="background: #F9FFDF;">
-      <input type="text" size="12" name="dsetadd" value="<?php echo $fuquery['dsetadd'];?>" />
+      <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?php echo $fuquery['dsetadd'];?>" />
 
     </td>
   <tr>
             <td style="background: #E4FFCF;">
-      <select name="nightsperweek" style="width:150px;">
+      <select name="nightsperweek" class="no_questionnaire" style="width:150px;">
         <?php
                                                                 for ($i = 0; $i <= 7; $i++)
                                                                 {
@@ -721,8 +721,11 @@ function update_tss(f, one, two, three, four, five, total){
   $('#ep_tsadd_'+f).val(total);
 }
 
-$('#sleepstudybaseline input').not(':input[type=button], :input[type=submit], :input[type=reset]').click(function(){
+$('#sleepstudybaseline input, #sleepstudybaseline select').not('.no_questionnaire, :input[type=button], :input[type=submit], :input[type=reset]').click(function(){
   alert('Error: The baseline results are compiled from the patient\'s original Questionnaire. Click \"Edit Baseline\" to change these values in the patient\'s chart.');
+});
+$('#sleepstudybaseline input.no_questionnaire, #sleepstudybaseline select.no_questionnaire').not(':input[type=button], :input[type=submit], :input[type=reset]').click(function(){
+  alert('These items are not capture on the initial patient questionnaire, but are tracked in follow-up visits after you have delivered a device.');
 });
 
 </script>

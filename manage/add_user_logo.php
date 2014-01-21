@@ -7,7 +7,9 @@ include_once 'includes/general_functions.php';
 require_once 'admin/includes/form_updates.php';
 if($_POST["compsub"] == 1)
 {
-
+?>
+  <img src="images/DSS-ajax-animated_loading-gif.gif" />
+<?php
   $image = $_FILES['logo'];
   $uploadedfile = $image['tmp_name'];
   $fname = $image["name"];
@@ -127,7 +129,8 @@ switch (strtolower($extension))
 			where userid='".$_SESSION["docid"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 
-form_update_all($_SESSION['docid']);
+//not updating forms for the time being since this is not being used anywhere there isn't auto creating forms
+//form_update_all($_SESSION['docid']);
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
 			?>

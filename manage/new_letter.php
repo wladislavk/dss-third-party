@@ -761,9 +761,9 @@ if (isset($_POST['submit'])) {
 		}
 		if (contact.type == "md") {
 			if(contact.status==2){
-				div.html("MD: " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");	
+				div.html(contact.label+": " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");	
 			}else{
-				div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />MD: " + contact.name);
+				div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />"+contact.label+": " + contact.name);
 			}
 		}
 		return div;

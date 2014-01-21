@@ -166,10 +166,10 @@ $t = mysql_fetch_assoc($my);
   <input type="submit" name="respond" value="Submit Response" style="float:left;"/>
 <div style="width:300px;">
 	<div id="attachments">
-                                <span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" onchange="$('#add_attachment_but').show();" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
+                                <span><input type="file" name="attachment[]" id="attachment1" class="addattachment" onchange="$('#add_attachment_but').show();" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
 
                                 </div>
-                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add</a>
+                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="display:none;" class="button">Add Additional</a>
 
   <div style="float:right;">
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>
@@ -182,17 +182,17 @@ $t = mysql_fetch_assoc($my);
 </form>
                 <script type="text/javascript">
                         function add_attachment(){
-                                var blank = $(".attachment").filter(function() {
+                                var blank = $(".addattachment").filter(function() {
     return !this.value;}).length;
                         if(blank > 0){
                           alert('Please attach another file with the "Browse" button before adding another.');
                           return false;
                         }
 
-                                if($('.attachment').length<3){  
-                                  $('#attachments').append('<span><input type="file" name="attachment[]" id="attachment1" class="attachment field text addr tbox" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
+                                if($('.addattachment').length<3){  
+                                  $('#attachments').append('<span><input type="file" name="attachment[]" id="attachment1" class="addattachment" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$(\'#add_attachment_but\').show();return false;">Remove</a></span>');
                                 }
-                                if($('.attachment').length==3){
+                                if($('.addattachment').length==3){
                                   $('#add_attachment_but').hide();
                                 }
 

@@ -57,8 +57,9 @@ Rx.
 <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->
 					<?php
 					if ($rximgid != "") {
-                                                print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rximgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
-
+						?><a class="button" href="/manage/q_file/<?= $rximgname; ?>" target="_blank">View</a><?php
+                                                //print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rximgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
+					
 						print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=6&flow=');\" value=\"Edit\" title=\"Edit\" />";
 						print "<input id=\"rximg\" style=\"display:none;\" name=\"rximg\" type=\"file\" size=\"4\" />";
 						/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -81,7 +82,8 @@ L.O.M.N.
 <td>
                                                 <?php
                                                 if ($lomnimgid != "") {
-                                                print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$lomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
+							?><a href="/manage/q_file/<?= $lomnimgname; ?>" target="_blank" class="button">View</a><?php
+                                                //print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$lomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                                                         print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=7&flow=');\" value=\"Edit\" title=\"Edit\" />";
                                                         print "<input id=\"lomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
                                                         /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/
@@ -106,11 +108,8 @@ Rx./L.O.M.N.
 <td>
                                                 <?php
                                                 if ($rxlomnimgid != "") {
-                                         if (end(explode('.', $rxlomnimgname)) != "pdf") {
-                                                print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('imageholder.php?image=$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
-                                         } else {
-                                                print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
-                                         }
+							?><a href="/manage/q_file/<?= $rxlomnimgname; ?>" target="_blank" class="button">View</a><?php
+                                                //print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                                                         print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=13&flow=');\" value=\"Edit\" title=\"Edit\" />";
                                                         print "<input id=\"rxlomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
                                                         /*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/

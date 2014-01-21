@@ -254,9 +254,9 @@ return s;
             $file = mysql_fetch_assoc($sq);
             ?>
            
-           <button onclick="Javascript: window.location = 'q_file/<?= $file['filename']; ?>'" class="addButton">
+           <a href='q_file/<?= $file['filename']; ?>' target="_blank" class="button">
                View EOB
-           </button>
+           </a>
            &nbsp;&nbsp;
  
         <?php }elseif($claim['status'] == DSS_CLAIM_SEC_DISPUTE){ 
@@ -265,9 +265,9 @@ return s;
             $file = mysql_fetch_assoc($sq);
             ?>
            
-           <button onclick="Javascript: window.location = 'q_file/<?= $file['filename']; ?>'" class="addButton">
+           <a href='q_file/<?= $file['filename']; ?>' target="_blank" class="button">
                View EOB
-           </button>
+           </a>
            &nbsp;&nbsp;
  
         <?php } ?> 

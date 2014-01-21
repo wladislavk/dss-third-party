@@ -409,7 +409,7 @@ if(isset($_GET['msg'])){
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?>
+					<a href="view_patient.php?pid=<?=$myarray['patientid'];?>"><?=st($myarray["lastname"]);?>, <?=st($myarray["firstname"]);?></a>
 				</td>
 				<td valign="top">
 					<?=st($myarray["doc_name"]);?>&nbsp;

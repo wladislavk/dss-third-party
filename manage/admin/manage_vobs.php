@@ -140,7 +140,7 @@ $i_val = $index_val * $rec_disp;
 
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
-     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  CONCAT(users2.first_name, ' ',users2.last_name) as user_name, "
@@ -154,7 +154,7 @@ $sql = "SELECT "
      . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
-     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name, "
@@ -170,7 +170,7 @@ $sql = "SELECT "
 
 }else{
 $sql = "SELECT "
-     . "  preauth.id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
+     . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
      . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name "
@@ -345,7 +345,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?>
+					<a href="view_patient.php?pid=<?= $myarray['patient_id'];?>"><?=st($myarray["patient_lastname"]);?>, <?=st($myarray["patient_firstname"]);?></a>
 				</td>
 				<td valign="top">
 					<?=st($myarray["ins_co"]);?>&nbsp;

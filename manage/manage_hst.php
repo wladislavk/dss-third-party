@@ -22,6 +22,20 @@ mysql_query($s);
 }
 
 $sql = "select hst.*, p.firstname, p.lastname,
+		CASE hst.status
+			WHEN ".DSS_HST_REQUESTED."
+				THEN 1
+                        WHEN ".DSS_HST_PENDING."
+                                THEN 2
+                        WHEN ".DSS_HST_CONTACTED."
+                                THEN 3
+                        WHEN ".DSS_HST_SCHEDULED."
+                                THEN 4
+                        WHEN ".DSS_HST_COMPLETE."
+                                THEN 5
+                        WHEN ".DSS_HST_REJECTED."
+                                THEN 6
+		END as sort_status,
 		CONCAT(u.first_name,' ',u.last_name) authorized_by
 		from dental_hst hst 
 		LEFT JOIN dental_patients p ON p.patientid=hst.patient_id 
@@ -46,7 +60,7 @@ switch($_GET['sort']){
     $sql .= "ORDER BY patient_lastname ".$_GET['sortdir'].", patient_firstname ".$_GET['sortdir'];
     break;
   case 'status':
-    $sql .= "ORDER BY status ".$_GET['sortdir'];
+    $sql .= "ORDER BY sort_status ".$_GET['sortdir'];
     break;
   case 'authorize':
     $sql .= "ORDER BY authorizeddate ".$_GET['sortdir'];

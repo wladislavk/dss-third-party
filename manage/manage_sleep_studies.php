@@ -689,7 +689,8 @@ if($numrows){
 
 						<?php 
 						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
-							print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('q_file/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
+							?><a href="q_file/<?= $sleepstudy['filename'].".".$sleepstudy['scanext']; ?>" target="_blank" class="button">View Scan</a><?php
+							//print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('q_file/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
 							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";
 							/*<a style="font-weight:bold; font-size:15px;" href="javascript: void(0)" onClick="window.open('sleepstudies/<?=$_GET['pid']?>-<?php echo $sleepstudy['testnumber']; ?>.<?php echo $sleepstudy['scanext']; ?>','windowname1','width=400, height=400');return false;">View Scan</a>*/

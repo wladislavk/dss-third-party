@@ -615,7 +615,7 @@ $device = mysql_result($device_result, 0);
                 <td valign="top" class="odd">
                         <?php if($s_lab['filename']!=''){ ?>
                                                 <div id="file_edit_<?= $s_lab['id']; ?>">
-                                <input type="button" id="view" value="View" title="View" onClick="window.open('q_file/<?= addslashes($s_lab['filename']); ?>','windowname1','width=400, height=400');return false;" />
+					<a href="q_file/<?= addslashes($s_lab['filename']); ?>" target="_blank" class="button">View</a>
                                                         <input type="button" id="edit" onclick="$('#file_edit_<?= $s_lab['id']; ?>').hide();$('#file_<?= $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
                                                 </div>
                                                         <input id="file_<?= $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />

@@ -60,8 +60,7 @@
                                         <?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>
                                 </td>
                                 <td valign="top">
-                                                <a href="javascript:void(0)" onclick="window.open('/manage/q_file/<?=addslashes($myarray["image_file"]);?>',
-'welcome','width=800,height=400,scrollbars=yes');">
+                                                <a href="/manage/q_file/<?=addslashes($myarray["image_file"]);?>" target="_blank">
                                                 Preview</a>
                                 </td>
 				<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>

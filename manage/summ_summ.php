@@ -445,7 +445,7 @@ $rs = $r['referred_source'];
   <strong>Recent Titration</strong><br />
       <strong>Type:</strong> <?= $sleepstudy['sleeptesttype']; ?>
         <?php if($sleepstudy['filename']!=''){ ?>
-          - <a href="./q_file/<?= $sleepstudy['filename'];?>">View Study</a>
+          - <a href="./q_file/<?= $sleepstudy['filename'];?>" target="_blank">View Study</a>
         <?php } ?>
         <br />
 

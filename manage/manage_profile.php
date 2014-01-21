@@ -51,7 +51,8 @@ if(isset($_POST["profile_submit"]))
 	city='".mysql_real_escape_string($_POST['city'])."',
 	state='".mysql_real_escape_string($_POST['state'])."',
 	zip='".mysql_real_escape_string($_POST['zip'])."',
-	phone='".mysql_real_escape_string($_POST['phone'])."'
+	phone='".mysql_real_escape_string($_POST['phone'])."',
+	updated_at=now()
 	WHERE userid='".$_SESSION['userid']."'";
   mysql_query($in_sql);
   form_update_all($_SESSION['docid']);
@@ -78,7 +79,8 @@ if(isset($_POST["practice_submit"]))
         state='".mysql_real_escape_string($_POST['state'])."',
         zip='".mysql_real_escape_string($_POST['zip'])."',
         phone='".mysql_real_escape_string($_POST['phone'])."',
-	fax='".mysql_real_escape_string($_POST['fax'])."'
+	fax='".mysql_real_escape_string($_POST['fax'])."',
+	updated_at=now()
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
 

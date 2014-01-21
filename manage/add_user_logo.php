@@ -122,7 +122,8 @@ switch (strtolower($extension))
 
 
 			$ed_sql = "update dental_users set 
-				logo = '".mysql_real_escape_string($file_name)."'
+				logo = '".mysql_real_escape_string($file_name)."',
+				updated_at=now()
 			where userid='".$_SESSION["docid"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 

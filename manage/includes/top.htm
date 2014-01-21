@@ -683,7 +683,11 @@ function popitup(url) {
                 data = [];
                 r = 0
                 for(var i=0;i<local_pat_data.length;i++){
-                        if(local_pat_data[i]['lastname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1 || local_pat_data[i]['firstname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1){
+                        if(local_pat_data[i]['lastname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1 || local_pat_data[i]['firstname'].toLowerCase().indexOf(partial_name.toLowerCase()) != -1
+				|| (local_pat_data[i]['firstname']+' '+local_pat_data[i]['lastname']).toLowerCase().indexOf(partial_name.toLowerCase()) != -1
+                                || (local_pat_data[i]['lastname']+' '+local_pat_data[i]['firstname']).toLowerCase().indexOf(partial_name.toLowerCase()) != -1
+                                || (local_pat_data[i]['lastname']+', '+local_pat_data[i]['firstname']).toLowerCase().indexOf(partial_name.toLowerCase()) != -1
+				){
                                 data[r] = local_pat_data[i];
                                 r++;
                         }

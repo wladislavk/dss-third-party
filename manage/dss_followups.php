@@ -725,7 +725,7 @@ $('#sleepstudybaseline input, #sleepstudybaseline select').not('.no_questionnair
   alert('Error: The baseline results are compiled from the patient\'s original Questionnaire. Click \"Edit Baseline\" to change these values in the patient\'s chart.');
 });
 $('#sleepstudybaseline input.no_questionnaire, #sleepstudybaseline select.no_questionnaire').not(':input[type=button], :input[type=submit], :input[type=reset]').click(function(){
-  alert('These items are not capture on the initial patient questionnaire, but are tracked in follow-up visits after you have delivered a device.');
+  alert('This item is not captured on initial patient questionnaire, but is tracked in follow-up visits after you have delivered a device.');
 });
 
 </script>

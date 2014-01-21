@@ -40,7 +40,7 @@ $t_q = mysql_query($t_sql);
 	<form>
 		<img src="images/first.png" class="first">
 		<img src="images/prev.png" class="prev">
-		<input class="pagedisplay" type="text">
+		<input class="pagedisplay" style="width:75px;" type="text">
 		<img src="images/next.png" class="next">
 		<img src="images/last.png" class="last">
 	</form>
@@ -106,7 +106,7 @@ $t_q = mysql_query($t_sql);
         <form>
                 <img src="images/first.png" class="first">
                 <img src="images/prev.png" class="prev">
-                <input class="pagedisplay" type="text">
+                <input class="pagedisplay" style="width:75px;" type="text">
                 <img src="images/next.png" class="next">
                 <img src="images/last.png" class="last">
         </form>

@@ -42,16 +42,21 @@ if($_POST["staffsub"] == 1)
 	{
 		if($_POST["ed"] != "")
 		{
-                        $old_sql = "SELECT name FROM dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
+                        $old_sql = "SELECT name, classname FROM dental_appt_types WHERE docid='".mysql_real_escape_string($_SESSION['docid'])."' AND id='".mysql_real_escape_string($_POST["ed"])."'";
                         $old_q = mysql_query($old_sql);
                         $old_r = mysql_fetch_assoc($old_q);
-                        $old_username = $old_r['name'];
+                        $old_name = $old_r['name'];
+			$old_class = $old_r['classname'];
 
 			$ed_sql = "update dental_appt_types set name = '".s_for($_POST["name"])."', ";
 				$ed_sql .= "color='" . $_POST['color'] . "', ";
 				$ed_sql .= "classname='" . $classname . "' ";
 				$ed_sql .= " where id='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
+	
+
+			$update_sql = "update dental_calendar SET category='".mysql_real_escape_string($classname)."' WHERE category='".mysql_real_escape_string($old_class)."' and docid='".mysql_real_escape_string($_SESSION['docid'])."'";
+			mysql_query($update_sql);
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully" . $_POST['name'];
 			?>

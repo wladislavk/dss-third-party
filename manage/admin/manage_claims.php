@@ -235,9 +235,13 @@ if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQU
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
 	if($_REQUEST['status'] == '0' ){
 		//echo DSS_CLAIM_PENDING;
-	   	$sql .= " (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
+	   	$sql .= " (
+			(claim.mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SENT." OR claim.status=".DSS_CLAIM_PAID_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_PATIENT." ))
+			OR (claim.sec_mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SEC_SENT." OR claim.status=".DSS_CLAIM_PAID_SEC_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_SEC_PATIENT." ))
+			 OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
 	}elseif($_REQUEST['status'] == '1'){
-                $sql .= " (claim.mailed_date IS NOT NULL AND claim.status NOT IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
+		$sql .= " ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
+				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
         }elseif($_REQUEST['status'] == 'unpaid21'){
                 $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
         }elseif($_REQUEST['status'] == 'unpaid45'){

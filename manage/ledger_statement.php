@@ -411,7 +411,7 @@ $head .= $docr['name'];
 
 $head .= '<br />'.st($docr['city']).', '.st($docr['state']).' '.st($docr['zip']);
 $head .= '</div>';
-$head .= '<br /><br />';
+$head .= '<br /><br /><br /><br />';
 $head .= '<div style="display:block; ">';
 $head .= $name;
  if(st($pat_myarray['add1']) <> '') {

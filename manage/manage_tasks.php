@@ -13,7 +13,7 @@ mysql_query($del_sql);
 die();
 }
 
-$sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+$sql = "select dt.*, CONCAT(du.first_name, ' ', du.last_name) as name, p.firstname, p.lastname from dental_task dt
 	JOIN dental_users du ON dt.responsibleid=du.userid
 	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
    WHERE (dt.status = '0' OR
@@ -170,7 +170,7 @@ if($_GET['mine']==1){ ?>
 	}?>
 </table>
 <?php
-$sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
+$sql = "select dt.*, CONCAT(du.first_name, ' ', du.last_name) as name, p.firstname, p.lastname from dental_task dt
         JOIN dental_users du ON dt.responsibleid=du.userid
 	LEFT JOIN dental_patients p ON p.patientid=dt.patientid
    WHERE dt.status = '1' AND ";

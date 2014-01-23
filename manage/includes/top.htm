@@ -598,6 +598,7 @@ function popitup(url) {
 	var local_pat_data = new Array();
 	$(document).ready(function() {
 		$('#patient_search').keyup(function(e) {
+			console.log('START = '+$('#patient_search').val()+"|"+(new Date().getTime()));
 				var a = e.which; // ascii decimal value
 				//var c = String.fromCharCode(a);
 				var listSize = $('#patient_list li').size();
@@ -706,18 +707,8 @@ function popitup(url) {
 					template_list(newLi, data[i])
 						.appendTo('#patient_list')
 						.fadeIn();
-					<?php if ($_SERVER['PHP_SELF'] == "/manage/manage_patient.php") { ?>
-					if (data[i].stat == "1") {
-						var tr_class = "tr_active";
-					} else {
-						var tr_class = "tr_inactive";
-					}
-					var newRow = $('#patients .template').clone().removeClass('template').addClass('json_patient').addClass(tr_class);
-					template_table(newRow, data[i])
-						.appendTo('#patients')
-						.fadeIn();
-					<?php } ?>
 				}
+console.log('END = '+$('#patient_search').val()+"|"+(new Date().getTime()));
 			   }
 			}
                 },
@@ -773,7 +764,7 @@ function popitup(url) {
                 li.html(str);
                 return li;
         }
-
+/*
 	function template_table(row, patient) {
 		var pm = "";
 		if (patient.premedcheck == "1") {
@@ -796,20 +787,21 @@ function popitup(url) {
 			row.find('.ledger').html("<a href=\"manage_ledger.php?pid=" + patient.patientid + "\">" + patient.ledger + "</a>");
 		} else {
 			row.html("<td><a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + mid + "</a>" + pm+"</td><td colspan=\"9\" align=\"center\" class=\"pat_incomplete\">-- Patient Incomplete --</td>");
-			/*
-			row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
-			row.find('.flowsheet').html(patient.fspage1_complete);
-			row.find('.next_visit').html(patient.next_visit);
-			row.find('.last_visit').html(patient.last_visit);
-			row.find('.last_treatment').html(patient.last_treatment);
-			row.find('.appliance').html(patient.device);
-			row.find('.appliance_since').html(patient.delivery_date);
-			row.find('.vob').html(patient.vob);
-			row.find('.ledger').html(patient.ledger)
-			*/
+		
+			//row.find('.patient_name').html("<a href=\"add_patient.php?pid=" + patient.patientid + "&ed=" + patient.patientid + "\">" + patient.lastname + ", " + patient.firstname + " " + patient.middlename + "</a>" + pm);
+			//row.find('.flowsheet').html(patient.fspage1_complete);
+			//row.find('.next_visit').html(patient.next_visit);
+			//row.find('.last_visit').html(patient.last_visit);
+			//row.find('.last_treatment').html(patient.last_treatment);
+			//row.find('.appliance').html(patient.device);
+			//row.find('.appliance_since').html(patient.delivery_date);
+			//row.find('.vob').html(patient.vob);
+			//row.find('.ledger').html(patient.ledger)
+			
 		}
 		return row;
 	}
+*/
 </script>
 
 </head>

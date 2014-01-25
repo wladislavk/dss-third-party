@@ -69,7 +69,7 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<!-- title goes here -->Invoice '.str_pad($_GET['invoice_id'], 8, '0', STR_PAD_LEFT).'<br />
 									Invoice Date: '.date('m/d/Y').'<br />';
 									if($invoice['user_type']==DSS_USER_TYPE_SOFTWARE){
-                                                                          $html .= 'Payment Charged: '.date('m/d/Y');
+                                                                          $html .= 'Payment Charged: '.date('m/d/Y', strtotime($invoice['due_date']));
 									}else{
 									  $html .= 'Payment Charged: '.date('m/d/Y', strtotime(date() . " +7 day"));
 									}
@@ -91,8 +91,8 @@ $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 									<tr>
 									<td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
 									Dental Sleep Solutions Franchising, LLC<br />
-									3909 East Bay Drive, Ste 205<br />
-									Holmes Beach, FL 34217
+									402 43rd St. West, Ste A<br />
+									Bradenton, FL 34209
 									</td>
 									</tr>
 								</table>
@@ -385,8 +385,8 @@ Mail this page to:
                                                                         <tr>
                                                                         <td align="left" valign="top" style="font-family: Arial,Helvetica,sans-serif; font-size: 30px; color: #888888; padding-bottom: 20px;">
 Dental Sleep Solutions Franchising, LLC<br />
-                                                                        3909 East Bay Drive, Ste 205<br />
-                                                                        Holmes Beach, FL 34217
+                                                                        402 43rd St. West, Ste A<br />
+                                                                        Bradenton, FL 34209
                                                                         </td>
                                                                         </tr>
                                                                 </table>

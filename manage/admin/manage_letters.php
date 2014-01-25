@@ -132,6 +132,15 @@ if (isset($_GET['page'])) { $page = $_GET['page']; }
 //if (isset($_GET['sort'])) { $sort = mysql_real_escape_string($_GET['sort']); }
 //if (isset($_GET['column'])) { $column = mysql_real_escape_string($_GET['column']); }
 if (isset($_GET['filter'])) { $filter = mysql_real_escape_string($_GET['filter']); }
+$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
+$doc_filter = '';
+if(!empty($_REQUEST['fid'])) {
+        $doc_filter .= " AND dental_letters.docid = " . $_REQUEST['fid'] . " ";
+    }
+
+    if (!empty($_REQUEST['pid'])) {
+        $doc_filter .= " AND dental_letters.patientid = " . $_REQUEST['pid'] . " ";
+    }
 if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'date_sent';
 	if ($status == 'sent') {
@@ -145,7 +154,7 @@ $sortdir = $_REQUEST['sortdir'];
 
 // Letters count and Oldest letter
 //$dental_letters_query = "SELECT UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date FROM dental_letters JOIN dental_patients ON dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' ORDER BY generated_date ASC;";
-$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
+$dental_letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.docid, dental_letters.userid, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters, mailed_date FROM dental_letters LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid WHERE dental_letters.status = '1' AND dental_letters.delivered = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." ORDER BY dental_letters.letterid ASC;";
 $dental_letters_res = mysql_query($dental_letters_query);
 $pending_letters = mysql_num_rows($dental_letters_res);
 $generated_date = mysql_fetch_array($dental_letters_res);
@@ -184,7 +193,7 @@ if ($status == 'pending') {
 					OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
 				) AND 
 				dental_letters.deleted = '0' AND 
-				dental_letters.templateid LIKE '".$filter."' AND
+				dental_letters.templateid LIKE '".$filter."' ".$doc_filter." AND
 				u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
 			ORDER BY dental_letters.letterid ASC;";
   }elseif(is_billing($_SESSION['admin_access'])){
@@ -216,7 +225,7 @@ if ($status == 'pending') {
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND
                         dental_letters.deleted = '0' AND 
-                        dental_letters.templateid LIKE '".$filter."' AND
+                        dental_letters.templateid LIKE '".$filter."' ".$doc_filter." AND
                         u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
                 ORDER BY dental_letters.letterid ASC;";
 
@@ -249,7 +258,7 @@ if ($status == 'pending') {
                                         OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
                                 ) AND
 			dental_letters.deleted = '0' AND 
-			dental_letters.templateid LIKE '".$filter."' AND
+			dental_letters.templateid LIKE '".$filter."' ".$doc_filter." AND
 			u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
 		ORDER BY dental_letters.letterid ASC;";
 
@@ -289,7 +298,7 @@ dental_letters.template_type
  FROM dental_letters 
 JOIN dental_users u ON dental_letters.docid = u.userid
 LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
-	WHERE dental_letters.mailed_date IS NOT NULL AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' AND u.user_type = '".DSS_USER_TYPE_FRANCHISEE."' ORDER BY dental_letters.letterid ASC;";
+	WHERE dental_letters.mailed_date IS NOT NULL AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ".$doc_filter." AND u.user_type = '".DSS_USER_TYPE_FRANCHISEE."' ORDER BY dental_letters.letterid ASC;";
   }else{
 
   }
@@ -493,7 +502,7 @@ color: white;
   <h1 class="blue"><?php echo ($status == 'pending') ? "Pending" : "Sent" ?> Letters (<?php echo count($dental_letters); ?>)</h1>
   <form name="filter_letters" action="/manage/admin/manage_letters.php" method="get">
 		<input type="hidden" name="status" value="<?=$status?>" />
-  Filter by type: <select name="filter" onchange="document.filter_letters.submit();">
+  Filter by type: <select name="filter"> <!-- onchange="document.filter_letters.submit();">-->
     <option value="%"></option>
     <?php
     $templates = "SELECT id, name FROM dental_letter_templates ORDER BY id ASC;";
@@ -503,6 +512,33 @@ color: white;
     }
     ?>
     </select>
+    Account:
+    <select name="fid">
+      <option value="">Any</option>
+      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
+      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
+        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
+      <?php } ?>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+
+    <?php if (!empty($_REQUEST['fid'])) { ?>
+      Patients:
+      <select name="pid">
+        <option value="">Any</option>
+        <?php $patients = get_patients($_REQUEST['fid']); ?>
+        <?php while ($row = mysql_fetch_array($patients)) { ?>
+          <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
+          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
+        <?php } ?>
+      </select>
+      &nbsp;&nbsp;&nbsp;
+    <?php } ?>
+    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
+    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
+    <input type="submit" value="Filter List"/>
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
 </div>
 <div class="letters-tryptych2">

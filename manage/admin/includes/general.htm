@@ -1587,7 +1587,7 @@ function delete_contact_from_patients($contact){
  * false otherwise. Only franchisees are included (no staff).
  */
 function get_franchisees() {
-    $sql = "SELECT * FROM dental_users WHERE docid = 0 ORDER BY name ASC";
+    $sql = "SELECT * FROM dental_users WHERE docid = 0 ORDER BY last_name ASC, first_name asc";
     return mysql_query($sql);
 }
 
@@ -1596,7 +1596,7 @@ function get_billing_franchisees() {
     $c_q = mysql_query($c_sql);
     $c = mysql_fetch_assoc($c_q);
 
-    $sql = "SELECT * FROM dental_users WHERE billing_company_id='".$c['companyid']."' AND docid = 0 ORDER BY name ASC";
+    $sql = "SELECT * FROM dental_users WHERE billing_company_id='".$c['companyid']."' AND docid = 0 ORDER BY last_name ASC, first_name asc";
     return mysql_query($sql);
 }
 

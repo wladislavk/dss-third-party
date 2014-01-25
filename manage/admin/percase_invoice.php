@@ -29,11 +29,11 @@ $fax = mysql_fetch_assoc($fax_q);
 
 if(isset($_POST['submit'])){
     if(isset($_POST['amount_monthly'])){
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, due_date, monthly_fee_date, monthly_fee_amount) " .
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
     }else{
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, due_date, adddate, ip_address) " .
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."', NOW(), '".$_SERVER['REMOTE_ADDR']."')";
     }
     mysql_query($in_sql);
     $invoiceid = mysql_insert_id();
@@ -172,7 +172,8 @@ if(mysql_num_rows($doc_q) == 0){
 <br /><br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <input type="hidden" name="docid" value="<?=$_GET["docid"];?>" />
-<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<span style="float:right;">Invoice Due Date: <input type="text" name="due_date" id="due_date" class="calendar" value="<?=  date('m/d/Y', strtotime("+7 day")); ?>" /></span>
+<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="clear:both;">
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
 			Patient Name		

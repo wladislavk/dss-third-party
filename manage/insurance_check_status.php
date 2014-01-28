@@ -8,8 +8,8 @@ $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 }
 
-$sql = "SELECT i.*, u.npi, u.tax_id_or_ssn 
-	
+$sql = "SELECT i.*, u.npi, u.tax_id_or_ssn,
+		u.first_name, u.last_name
 		FROM dental_claim_electronic ce 
 	JOIN dental_insurance i ON i.insuranceid = ce.claimid
 	JOIN dental_users u ON i.docid = u.userid
@@ -28,6 +28,8 @@ $data = array();
 
 $data['api_key'] = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 $data['payer_id'] = $r['p_m_eligible_payer_id'];
+$data['provider_first_name'] = $r['first_name'];
+$data['provider_last_name'] = $r['last_name'];
 $data['provider_npi']  = preg_replace("/[^0-9]/","",$r['npi']);
 $data['provider_tax_id'] = preg_replace("/[^0-9]/","",$r['tax_id_or_ssn']);
 $data['member_id'] = preg_replace("/[^0-9]/","",$r['insured_id_number']);

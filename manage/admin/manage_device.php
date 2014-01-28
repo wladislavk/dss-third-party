@@ -35,10 +35,9 @@ $num_users=mysql_num_rows($my);
 
 if($_POST['sortsub'] == 1)
 {
-	foreach($_POST['sortby'] as $val)
-	{
-		$smyarray = mysql_fetch_array($my);
-		
+	while($smyarray = mysql_fetch_array($my)){
+	if(isset($_POST['sortby_'.$smyarray['deviceid']])){
+		$val = $_POST['sortby_'.$smyarray['deviceid']]; 	
 		if($val == '' || is_numeric($val) === false)
 		{
 			$val = 999;
@@ -46,6 +45,7 @@ if($_POST['sortsub'] == 1)
 		
 		$up_sort_sql = "update dental_device set sortby='".s_for($val)."' where deviceid='".$smyarray["deviceid"]."'";
 		mysql_query($up_sort_sql);
+	}
 	}
 	$msg = "Sort By Changed Successfully";
 	?>
@@ -134,7 +134,7 @@ if($_POST['sortsub'] == 1)
 				
 				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					<input type="text" name="sortby_<?=$myarray['deviceid'];?>" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
 					<?php }else{ ?>
 						<?= $myarray['sortby']; ?>
 					<?php } ?>

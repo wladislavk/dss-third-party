@@ -923,7 +923,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                           $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
                           $p_q = mysql_query($p_sql);
                           while($p_r = mysql_fetch_assoc($p_q)){ ?>
-                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?></option>
+                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?><?= ($p_r['status']=='2')?" - inactive":'';?></option>
                           <?php } ?>
                 </select>
 <script type="text/javascript">

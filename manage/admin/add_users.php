@@ -9,6 +9,7 @@ require_once 'includes/access.php';
 require_once 'includes/form_updates.php';
 require_once '../includes/edx_functions.php';
 include_once '../includes/help_functions.php';
+include_once 'includes/javascript_includes.php';
 if($_POST["usersub"] == 1)
 {
 
@@ -90,7 +91,8 @@ if($_POST["usersub"] == 1)
 				}
 				$ed_sql .= "
 				billing_company_id = '".$_POST['billing_company_id']."',
-                                plan_id = '".$_POST['plan_id']."'
+                                plan_id = '".$_POST['plan_id']."',
+				access_code_id = '".$_POST['access_code_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			$loc_sql = "UPDATE dental_locations SET
@@ -212,6 +214,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
+				access_code_id = '".$_POST['access_code_id']."',
 				";
 		                if(isset($_POST['reg_but'])){
 					$ins_sql .= " recover_hash='".$recover_hash."',
@@ -399,6 +402,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$user_type = $_POST['user_type'];
 		$billing_company_id = $_POST['billing_company_id'];
 		$hst_company_id = $_POST['hst_company_id'];
+		$access_code_id = $_POST['access_code_id'];
 		$plan_id = $_POST['plan_id'];
 	}
 	else
@@ -448,6 +452,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$billing_company_id = $themyarray['billing_company_id'];
 		$hst_company_id = $themyarray['hst_company_id'];
 		$plan_id = $themyarray['plan_id'];
+		$access_code_id = $themyarray['access_code_id'];
 		$but_text = "Add ";
 	}
 
@@ -910,10 +915,46 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
+                 Access Code
+            </td>
+            <td valign="top" class="frmdata">
+                <select name="access_code_id" id="access_code_id" class="tbox">
+                        <?php
+                          $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
+                          $p_q = mysql_query($p_sql);
+                          while($p_r = mysql_fetch_assoc($p_q)){ ?>
+                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?></option>
+                          <?php } ?>
+                </select>
+<script type="text/javascript">
+  $('#access_code_id').change(function(){
+	var ac_id = $(this).val();
+                                  $.ajax({
+                                        url: "includes/access_code_plan.php",
+                                        type: "post",
+                                        data: {ac_id: ac_id},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+							$('#plan_id').val(r.plan_id);
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+</script>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
                  Plan
             </td>
             <td valign="top" class="frmdata">
-                <select name="plan_id" class="tbox">
+                <select name="plan_id" id="plan_id" class="tbox">
                         <?php
                           $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
                           $p_q = mysql_query($p_sql);

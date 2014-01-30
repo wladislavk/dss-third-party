@@ -1,4 +1,5 @@
 Copy /manage/admin/includes/config.php.dist -> config.php
+Create database from default_database.sql
 Set database info
 Set base path 
 Add /manage/q_file/

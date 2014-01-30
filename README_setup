@@ -1,0 +1,8 @@
+Copy /manage/admin/includes/config.php.dist -> config.php
+Set database info
+Set base path 
+Add /manage/q_file/
+Add /manage/letterpdfs/
+
+Header file is /manage/admin/includes/top.htm
+Footer file is /manage/admin/includes/bottom.htm

@@ -7,3 +7,8 @@ Add /manage/letterpdfs/
 
 Header file is /manage/admin/includes/top.htm
 Footer file is /manage/admin/includes/bottom.htm
+
+
+
+Cesar: Initial Job
+Begin restructuring the pages shown from .../manage/admin... to comply with Twitter-Bootstrap structure

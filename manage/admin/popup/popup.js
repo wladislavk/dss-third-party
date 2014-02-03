@@ -11,7 +11,7 @@ function loadPopup(fa){
 	centerPopup();
 	popupEdit = false;	
 	$('#aj_pop').attr('src', fa).load( function(){
-        $("#aj_pop").contents().find("input, textarea").change( function(){
+        $("#aj_pop").contents().find("input, textarea, select").change( function(){
 		popupEdit = true;
         });
 

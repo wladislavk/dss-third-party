@@ -20,7 +20,7 @@ if($pat_myarray['patientid'] == '')
 }
 
 $sql = "select * from dental_notes where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate";
-$sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
+$sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate as parent_adddate from
         (
         select * from dental_notes where status!=0 AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate desc
         ) as n
@@ -122,7 +122,7 @@ $num_users=mysql_num_rows($my);
                                                         <td valign="top" width="35%">
                                                                 Added By:
                                                                 <span style="font-weight:normal;">
-                                                                        <?=st($user_myarray["name"]);?>
+                                                                        <?=st($user_myarray["first_name"]." ".$user_myarray["last_name"]);?>
                                                                 </span>
                                                         </td>
                                                         <td valign="top" width="30%">

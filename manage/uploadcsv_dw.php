@@ -213,9 +213,8 @@ if($_FILES['csv']['error'] == 0){
         // Determine Whether Patient Info has been set
         update_patient_summary($pid, 'patient_info', $complete_info);
 
-			if($copyreqdate=='' && $last_visit!=''){
-				$copyreqdate = $last_visit;
-			}
+				$copyreqdate = date('m/d/Y');
+			
 			if($copyreqdate!=''){
 			   mysql_query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");
       				$stepid = '1';

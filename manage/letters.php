@@ -125,7 +125,7 @@ $docid = $_SESSION['docid'];
 
 // Select Letters into Array
 if ($status == 'pending') {
-  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
+  $letters_query = "SELECT dental_letters.letterid, dental_letters.templateid, dental_letters.patientid, UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, dental_letters.topatient, dental_letters.md_list, dental_letters.md_referral_list, dental_letters.pat_referral_list, dental_letters.send_method, dental_patients.firstname, dental_patients.lastname, dental_patients.middlename, dental_letters.template_type FROM dental_letters 
 		LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
 		WHERE dental_letters.docid='".$docid."' AND dental_letters.delivered=0 AND dental_letters.status = '0' AND dental_letters.deleted = '0' AND dental_letters.templateid LIKE '".$filter."' ORDER BY dental_letters.letterid ASC;";
   $letters_res = mysql_query($letters_query);
@@ -220,12 +220,14 @@ $source = $r['referred_source'];
 }else{
   $source = '';
 }
-	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $source);
+	$contacts = get_contact_info((($letter['topatient'] == "1") ? $letter['patientid'] : ''), $letter['md_list'], $letter['md_referral_list'], $letter['pat_referral_list']);
 	//print_r($contacts); print "<br />";
 	$total_contacts = 0;
 		$total_contacts += (isset($contacts['patient']))?count($contacts['patient']):0;
                 $total_contacts += (isset($contacts['mds']))?count($contacts['mds']):0;
                 $total_contacts += (isset($contacts['md_referrals']))?count($contacts['md_referrals']):0;
+                $total_contacts += (isset($contacts['pat_referrals']))?count($contacts['pat_referrals']):0;
+
 	$dental_letters[$key]['total_contacts'] = $total_contacts;
 	if ($total_contacts > 1) {
 		$dental_letters[$key]['sentto'] = $total_contacts . " Contacts";
@@ -238,6 +240,10 @@ $source = $r['referred_source'];
                 if(isset($contacts['md_referrals'])){
                   $dental_letters[$key]['md_referrals'] = $contacts['md_referrals'];
 		}
+                if(isset($contacts['pat_referrals'])){
+                  $dental_letters[$key]['pat_referrals'] = $contacts['pat_referrals'];
+                }
+
 	} elseif ($total_contacts == 0) {
 		$dental_letters[$key]['sentto'] = "<span class=\"red\">No Contacts</span>";
 	} else {
@@ -257,6 +263,11 @@ $source = $r['referred_source'];
 			$dental_letters[$key]['sentto'] .= ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . ((isset($contacts['md_referrals']['contacttype'])) ? (" - " . $contacts['md_referrals']['contacttype']) : (""))); 
 			if($status == 'pending'){ $dental_letters[$key]['sentto'] .= "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1); return false;\" class=\"delete_letter\" />Delete</a>"; }
 		}
+                if(isset($contacts['pat_referrals'][0])){
+                        $dental_letters[$key]['sentto'] .= ($contacts['pat_referrals'][0]['lastname'] . ", " . $contacts['pat_referrals'][0]['salutation'] . " " . $contacts['pat_referrals'][0]['firstname'] );
+                        if($status == 'pending'){ $dental_letters[$key]['sentto'] .= "<a href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'pat_referral', '".$contacts['pat_referrals'][0]['id']."', 1); return false;\" class=\"delete_letter\" />Delete</a>"; }
+                }
+
 	}
 	// Determine Delivery Method
 	if ($letter['send_method'] == '') {

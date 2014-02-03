@@ -252,7 +252,7 @@ $my=mysql_query($sql) or die(mysql_error());
       <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
         <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;

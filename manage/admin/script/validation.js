@@ -197,6 +197,88 @@ function userregabc(fa){
         }
   return true;
 }
+function userabc_warn(fa)
+{
+	var errors = [];
+        if(trim(fa.username.value) == "" )
+        {
+                errors.push("Username is Required");
+        }
+        if(trim(fa.npi.value) == "" )
+        {
+                errors.push("NPI Number is Required");
+        }
+        if(trim(fa.tax_id_or_ssn.value) == "" )
+        {
+                errors.push("Tax ID or SSN is Required");
+        }
+        if(!fa.ein.checked && !fa.ssn.checked){
+                errors.push("EIN or SSN is Required");
+        }
+        if(trim(fa.practice.value) == "" )
+        {
+                errors.push("Practice is Required");
+        }
+        if(fa.password){
+        if(trim(fa.password.value) == "" )
+        {
+                errors.push("Password is Required");
+        }
+        var pass = fa.password.value;
+        if(pass.search(/[A-Za-z]/)<0){
+                errors.push("Password must contain an alpha character");
+        }
+        if(pass.search(/[0-9]/)<0){
+                errors.push("Password must contain a numeric character");
+        }
+        if(trim(fa.password.value) != trim(fa.password2.value)){
+                errors.push("Password fields must match");
+        }
+        }
+        if(trim(fa.first_name.value) == "" )
+        {
+                errors.push("First Name is Required");
+        }
+        if(trim(fa.last_name.value) == "" )
+        {
+                errors.push("Last Name is Required");
+        }
+        if(trim(fa.email.value) == "" )
+        {
+                errors.push("Email is Required");
+        }
+        if(! is_email(trim(fa.email.value)))
+        {
+                errors.push("In-Valid Email ");
+        }
+        if(trim(fa.address.value) == "" )
+        {
+                errors.push("Address is Required");
+        }
+        if(trim(fa.city.value) == "" )
+        {
+                errors.push("City is Required");
+        }
+        if(trim(fa.state.value) == "" )
+        {
+                errors.push("State is Required");
+        }
+        if(trim(fa.zip.value) == "" )
+        {
+                errors.push("Zip is Required");
+        }
+        if(trim(fa.phone.value) == "" )
+        {
+                errors.push("Phone is Required");
+        }
+if(errors.length> 0){
+  return confirm("Warning! There following fields are incomplete in this user profile:\n"+errors+"\nContinue and save without completing the remaining fields?")
+}else{
+  return true;
+}
+
+}
+
 function userabc(fa)
 {
 	if(trim(fa.username.value) == "" )

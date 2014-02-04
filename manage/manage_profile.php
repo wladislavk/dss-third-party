@@ -55,6 +55,11 @@ if(isset($_POST["profile_submit"]))
 	updated_at=now()
 	WHERE userid='".$_SESSION['userid']."'";
   mysql_query($in_sql);
+$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$u_q = mysql_query($u_sql);
+$u = mysql_fetch_assoc($u_q);
+$userid = $u['edx_id'];
+shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
   form_update_all($_SESSION['docid']);
 	}
 }
@@ -83,6 +88,12 @@ if(isset($_POST["practice_submit"]))
 	updated_at=now()
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
+$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$u_q = mysql_query($u_sql);
+$u = mysql_fetch_assoc($u_q);
+$userid = $u['edx_id'];
+shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
+
 
                         $loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 

@@ -401,7 +401,7 @@ require_once('includes/formatters.php');
 		});
 	}
 
-                scheduler.init('scheduler_here',null,"workweek");
+                scheduler.init('scheduler_here',null,"chairs");
 		//scheduler.load("../common/events2010.xml");
 		scheduler.attachEvent("onEventAdded", function(event_id,event_object){
 		    var sd = event_object.start_date;

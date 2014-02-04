@@ -6,9 +6,7 @@ $u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_stri
 $u_q = mysql_query($u_sql);
 $u = mysql_fetch_assoc($u_q);
 $userid = $u['edx_id'];
-error_log($userid);
 $ses = shell_exec('sh edx_scripts/edxScript.sh '.$userid);
-error_log($ses);
 $expire=time()+60*60*2;
 if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
   setcookie("edxloggin", "true", $expire, "/", "dentalsleepsolutions.com", false);

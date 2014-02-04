@@ -971,7 +971,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </span><br />
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
-                <input type="submit" name="save_but" onclick="return userabc(this.form);" value=" <?=$but_text?> User" class="button" />
+                <input type="submit" name="save_but" onclick="return userabc_warn(this.form);" value=" <?=$but_text?> User" class="button" />
                 <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

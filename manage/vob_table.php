@@ -119,15 +119,15 @@ $my = mysql_query($sql) or die(mysql_error());
           <td>$<?= $preauth['trxn_code_amount'] ?></td>
         </tr>
         <tr class="tr_bg">
-          <td>Expected insurance payment?</td>
+          <td>Maximum possible insurance payment*</td>
           <td>$<?= $preauth['expected_insurance_payment'] ?></td>
         </tr>
         <tr class="tr_bg">
-          <td>Expected patient payment?</td>
+          <td>Minimum possible patient payment*</td>
           <td>$<?= $preauth['expected_patient_payment'] ?></td>
         </tr>
 	<tr>
-	  <td style="font-size:10px;">Benefits are based on this insurance plan’s allowable amount, NOT your fee. The benefits quoted here are NOT a guarantee of payment, final benefits/reimbursement will be determined at the time a claim is processed.</td>
+	  <td style="font-size:10px;">Final benefits are based on the insurance plan allowable amount, NOT your fee. The patient contribution is specified by the insurance plan, but out-of-network providers CANNOT know final insurance reimbursement until a claim has been submitted. THE 'MAXIMUM POSSIBLE INSURANCE PAYMENT' IS NOT A GUARANTEE OF *ANY* INSURANCE PAYMENT. DO NOT RELY ON THIS ESTIMATE WHEN CALCULATING INSURANCE REIMBURSEMENT.</td>
 	</tr>
 	<tr>
 	  <td>

@@ -99,15 +99,11 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
 </head>
 <body onload="set_interval();" class="loading-new-theme">
-<table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
-  <tr bgcolor="#FFFFFF">
-    <td colspan="2" class="header_bg"> 
-		DENTAL SLEEP SOLUTIONS
-		<a href="logout.php" class="logout">Logout</a>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
+    <div class="container">
+        <div class="well">
+            <h1>Dental Sleep Solutions</h1>
+            <a class="btn btn-warning pull-right" href="logout.php" class="logout">Logout</a>
+        </div>
 <?php
 // Count letters
 // Select Letters into Array
@@ -354,238 +350,265 @@ $num_pending_claims = mysql_num_rows($pending_q);
 
 
 ?>
-        <ul class="dropdown dropdown-horizontal">
-	<?php if(!is_hst($_SESSION['admin_access'])){ ?>
-                <li><a href="/manage/admin/manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
-                <li><a href="/manage/admin/manage_vobs.php?status=0">VOBs (<?= $num_pending_preauth; ?>)</a></li>
-	<?php } ?>
-		<li><a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">HSTs (<?= $num_pending_hst; ?>)</a></li>
-<?php if(!is_hst($_SESSION['admin_access'])){ ?>
-                <li><a href="/manage/admin/manage_claims.php?status=0">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
-                <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
-                <li class="dir">USERS
-                        <ul>
-				<li class="dir">Accounts
-					<ul>
-						<?php
-                                  			if(is_super($_SESSION['admin_access'])){
-                                 		?>
-                                		<li><a href="/manage/admin/manage_companies.php">Companies</a></li>
-						<?php } ?>
-		
-						<?php
-                                                        if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])){
-						?>
-						<li><a href="/manage/admin/manage_backoffice.php">Backoffice Accounts</a></li>
-						<?php } ?>
-						<li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
-						<li><a href="/manage/admin/export_users.php">Export Users</a></li>
-						<li><a href="/manage/admin/insurance_officeally_select.php">Export Pending Office Ally Claims</a></li>
-						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-						<li><a href="/manage/admin/manage_access_codes.php">Access Codes</a></li>
-                                                <li><a href="/manage/admin/manage_plans.php">Plans</a></li>
-						<?php } ?>
-					</ul>
-				</li>
-                                <!--<li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>-->
-                                <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
-                                <li class="dir">Account Analysis
-                                        <ul>
-						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                                <li><a href="/manage/admin/manage_percase_invoice.php">Invoicing</a></li>
-                                                <li><a href="/manage/admin/manage_monthly_invoice.php">Monthly Invoicing</a></li>
-						<li><a href="/manage/admin/manage_payment_errors.php">Invoicing Payment Errors</a></li>
-                                                <li><a href="/manage/admin/franchisee_faxes.php">Fax Report</a></li>
-						<li><a href="/manage/admin/client_tracking.php">Client Tracking</a></li>
-						<?php } ?>
-                                                <li><a href="/manage/admin/franchisee_monthly.php">Monthly Report</a></li>
-                                        </ul>
-                                </li>
-                                <li class="dir">Insurance Codes
-                                        <ul>
-						<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                                <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>
-						<?php } ?>
-                                                <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
-                                </li>
-				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                <li class="dir">Progress Note Text
-                                        <ul>
-                                                <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
-                                                <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>                                        </ul>
-                                </li>
-				<?php } ?>
-                                <li class="dir">Password
-                                        <ul>
-                                                <li><a href="/manage/admin/changepassword.php">Change My Password</a></li>
-                                        </ul>
-                                </li>
-				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                <li class="dir">Security
-                                        <ul>
-                                                <li><a href="/manage/admin/manage_log.php">Login Data</a></li>
-                                                <li><a href="/manage/admin/manage_pages.php">Custom Pages</a></li>
-                                        </ul>
-                                </li>
-				<li><a href="/manage/admin/email_bounce.php">Email Bounces</a></li>
-				<?php } ?>
-                        </ul>                </li>
-                <li class="dir">SOFTWARE
-			<ul>
-				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                <li class="dir">Questionnaire Edits
-					<ul>
-	                                	<li class="dir">Bmi/Symptoms
-							<ul>
-                                                		<li><a href="/manage/admin/manage_complaint.php">Chief Complaint</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">Sleepiness test
-							<ul>
-                                                                <li><a href="/manage/admin/manage_epworth.php">Epworth</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">Sleep Study / Cpap
-							<ul>
-                                                                <li><a href="/manage/admin/manage_intolerance.php">Cpap Intolerance</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">Medical Hx
-							<ul>
-                                                                <li><a href="/manage/admin/manage_allergens.php">Allergens</a></li>
-                                                                <li><a href="/manage/admin/manage_medications.php">Medications</a></li>
-                                                                <li><a href="/manage/admin/manage_history.php">Medical Hx</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-                                <li class="dir">Clinical Exam Edits
-					<ul>
-	                                	<li class="dir">Dental Exam
-							<ul>
-                                                                <li><a href="/manage/admin/manage_exam_teeth.php">Teeth Examination</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">Vital Data / Tongue 
-							<ul>
-                                                                <li><a href="/manage/admin/manage_tongue.php">Tongue Evaluation</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">Airway Evaluation
-							<ul>
-                                                                <li><a href="/manage/admin/manage_maxilla.php">Maxilla</a></li>
-                                                                <li><a href="/manage/admin/manage_mandible.php">Mandible</a></li>
-                                                                <li><a href="/manage/admin/manage_soft_palate.php">Soft Palate</a></li>
-                                                                <li><a href="/manage/admin/manage_uvula.php">Uvula</a></li>
-                                                                <li><a href="/manage/admin/manage_gag_reflex.php">Gag Reflex</a></li>
-                                                                <li><a href="/manage/admin/manage_nasal_passages.php">Nasal Passages</a></li>
-							</ul>
-						</li>
-	                                	<li class="dir">TMJ / ROM
-							<ul>
-                                                                <li><a href="/manage/admin/manage_palpation.php">Muscles & Palpation</a></li>
-                                                                <li><a href="/manage/admin/manage_joint_exam.php">Joint Exam Type</a></li>
-                                                                <li><a href="/manage/admin/manage_joint.php">Joint Exam</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-                                <li class="dir">Contacts (Global List And Type)
-					<ul>
-                                                <li><a href="/manage/admin/manage_contacttype.php">Contact Types</a></li>
-                                                <li><a href="/manage/admin/manage_fcontact.php">Corporate Contacts (Global List)</a></li>
-                                                <li><a href="/manage/admin/manage_doc_lab.php">Dental Appliance Labs (Global List)</a></li>
-                                                <li><a href="/manage/admin/manage_doc_insurance.php">Insurance Info (Global List)</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Images
-					<ul>
-                                                <li><a href="/manage/admin/manage_imagetype.php">Image Type (Global List)</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Letters
-                                        <ul>
-                                                <li><a href="/manage/admin/manage_default_letters.php">Default Letters</a></li>
-                                        </ul>
-                                </li>
-                                <li class="dir">Home Page
-					<ul>
-                                                <li><a href="/manage/admin/manage_doc_welcome.php">Welcome Screen Message (Global)</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Insurance Claim
-					<ul>
-                                                <li><a href="/manage/admin/manage_ins_diagnosis.php">Insurance Diagnosis</a></li>
-                                                <li><a href="/manage/admin/manage_place_service.php">Place Of Service</a></li>
-                                                <li><a href="/manage/admin/manage_type_service.php">Type Of Service</a></li>
-                                                <li><a href="/manage/admin/manage_cpt_code.php">Cpt Code</a></li>
-                                                <li><a href="/manage/admin/manage_modifier_code.php">Modifier Code</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Files
-					<ul>
-                                                <li><a href="/manage/admin/manage_doc_categories.php">Dss Files For Franchisees (Global)</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Additional Items
-					<ul>
-                                                <li><a href="/manage/admin/manage_ins_type.php">Insurance Type</a></li>
-                                                <li><a href="/manage/admin/manage_diagnostic.php">Diagnostic Test</a></li>
-                                                <li><a href="/manage/admin/manage_assessment.php">Assessment</a></li>
-                                                <li><a href="/manage/admin/manage_assess_addition.php">Assessment Addition</a></li>
-                                                <li><a href="/manage/admin/manage_consultation.php">Consultation</a></li>
-                                                <li><a href="/manage/admin/manage_evaluation_new.php">Evaluation New</a></li>
-                                                <li><a href="/manage/admin/manage_evaluation_est.php">Evaluation Established</a></li>
-                                                <li><a href="/manage/admin/manage_followup.php">Follow Up</a></li>
-                                                <li><a href="/manage/admin/manage_plan_text.php">Plan / Progress Text</a></li>
-					</ul>
-				</li>
-                                <li class="dir">Flowsheet
-                                        <ul>
-                                                <li><a href="/manage/admin/manage_flowsheet_steps.php">Steps</a></li>
-                                        </ul>
-                                </li>
-                                <li class="dir">Dental Devices
-                                        <ul>
-						<li><a href="/manage/admin/manage_device.php">Dental Device List</a></li>
-						<li><a href="/manage/admin/manage_device_guide_settings.php">Settings</a></li>
-					</ul>
-				</li>
-				<?php } ?>
-				<li><a href="/manage/admin/manage_claim_settings.php">Claim Settings</a></li>
-				<li><a href="/manage/admin/manage_claim_history.php">Electronic Claim History</a></li>
-			</ul>
-		</li>
-<?php
-  if(is_billing($_SESSION['admin_access'])){
+        <ul class="nav nav-tabs">
+        <?php if (!is_hst($_SESSION['admin_access'])) { ?>
+            <li><a href="/manage/admin/manage_letters.php">LETTERS (<?= $pending_letters; ?>)</a></li>
+            <li><a href="/manage/admin/manage_vobs.php?status=0">VOBs (<?= $num_pending_preauth; ?>)</a></li>
+        <?php } ?>
+            <li><a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">HSTs (<?= $num_pending_hst; ?>)</a></li>
+        <?php if (!is_hst($_SESSION['admin_access'])) { ?>
+            <li><a href="/manage/admin/manage_claims.php?status=0">CLAIMS (<?= $num_pending_claims; ?>)</a></li>
+            <li><a href="/manage/admin/manage_new_patient_calls.php">NEW PATIENT CALLS</a></li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    USERS
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-submenu">
+                        <a href="#">Accounts</a>
+                        <ul class="dropdown-menu">
+                        <?php if (is_super($_SESSION['admin_access'])) { ?>
+                            <li><a href="/manage/admin/manage_companies.php">Companies</a></li>
+                        <?php } ?>
+                        <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
+                            <li><a href="/manage/admin/manage_backoffice.php">Backoffice Accounts</a></li>
+                        <?php } ?>
+                            <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
+                            <li><a href="/manage/admin/export_users.php">Export Users</a></li>
+                            <li><a href="/manage/admin/insurance_officeally_select.php">Export Pending Office Ally Claims</a></li>
+                        <?php if(!is_billing($_SESSION['admin_access'])){ ?>
+                            <li><a href="/manage/admin/manage_access_codes.php">Access Codes</a></li>
+                            <li><a href="/manage/admin/manage_plans.php">Plans</a></li>
+                        <?php } ?>
+                        </ul>
+                    </li>
+                    <!--<li><a href="/manage/admin/manage_admin.php">Admin Accounts</a></li>-->
+                    <li><a href="/manage/admin/manage_patient.php">Patient List (All)</a></li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Account Analysis</a>
+                        <ul class="dropdown-menu">
+                        <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                            <li><a href="/manage/admin/manage_percase_invoice.php">Invoicing</a></li>
+                            <li><a href="/manage/admin/manage_monthly_invoice.php">Monthly Invoicing</a></li>
+                            <li><a href="/manage/admin/manage_payment_errors.php">Invoicing Payment Errors</a></li>
+                            <li><a href="/manage/admin/franchisee_faxes.php">Fax Report</a></li>
+                            <li><a href="/manage/admin/client_tracking.php">Client Tracking</a></li>
+                        <?php } ?>
+                            <li><a href="/manage/admin/franchisee_monthly.php">Monthly Report</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Insurance Codes</a>
+                        <ul class="dropdown-menu">
+                        <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                            <li><a href="/manage/admin/manage_transaction_code.php">Default Codes (Global)</a></li>
+                        <?php } ?>
+                            <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>
+                        </ul>
+                    </li>
+                    <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                    <li class="dropdown-submenu">
+                        <a href="#">Progress Note Text</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
+                            <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>
+                        </ul>
+                    </li>
+                    <?php } ?>
+                    <li class="dropdown-submenu">
+                        <a href="#">Password</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/changepassword.php">Change My Password</a></li>
+                        </ul>
+                    </li>
+                    <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                    <li class="dropdown-submenu">
+                        <a href="#">Security</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_log.php">Login Data</a></li>
+                            <li><a href="/manage/admin/manage_pages.php">Custom Pages</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/manage/admin/email_bounce.php">Email Bounces</a></li>
+                    <?php } ?>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    SOFTWARE
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                    <li class="dropdown-submenu">
+                        <a href="#">Questionnaire Edits</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a href="#">Bmi/Symptoms</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_complaint.php">Chief Complaint</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Sleepiness test</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_epworth.php">Epworth</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Sleep Study / Cpap</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_intolerance.php">Cpap Intolerance</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Medical Hx</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_allergens.php">Allergens</a></li>
+                                    <li><a href="/manage/admin/manage_medications.php">Medications</a></li>
+                                    <li><a href="/manage/admin/manage_history.php">Medical Hx</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Clinical Exam Edits</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a href="#">Dental Exam</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_exam_teeth.php">Teeth Examination</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Vital Data / Tongue </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_tongue.php">Tongue Evaluation</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">Airway Evaluation</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_maxilla.php">Maxilla</a></li>
+                                    <li><a href="/manage/admin/manage_mandible.php">Mandible</a></li>
+                                    <li><a href="/manage/admin/manage_soft_palate.php">Soft Palate</a></li>
+                                    <li><a href="/manage/admin/manage_uvula.php">Uvula</a></li>
+                                    <li><a href="/manage/admin/manage_gag_reflex.php">Gag Reflex</a></li>
+                                    <li><a href="/manage/admin/manage_nasal_passages.php">Nasal Passages</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu">
+                                <a href="#">TMJ / ROM</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/manage/admin/manage_palpation.php">Muscles & Palpation</a></li>
+                                    <li><a href="/manage/admin/manage_joint_exam.php">Joint Exam Type</a></li>
+                                    <li><a href="/manage/admin/manage_joint.php">Joint Exam</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Contacts (Global List And Type)</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_contacttype.php">Contact Types</a></li>
+                            <li><a href="/manage/admin/manage_fcontact.php">Corporate Contacts (Global List)</a></li>
+                            <li><a href="/manage/admin/manage_doc_lab.php">Dental Appliance Labs (Global List)</a></li>
+                            <li><a href="/manage/admin/manage_doc_insurance.php">Insurance Info (Global List)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Images</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_imagetype.php">Image Type (Global List)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Letters</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_default_letters.php">Default Letters</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Home Page</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_doc_welcome.php">Welcome Screen Message (Global)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Insurance Claim</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_ins_diagnosis.php">Insurance Diagnosis</a></li>
+                            <li><a href="/manage/admin/manage_place_service.php">Place Of Service</a></li>
+                            <li><a href="/manage/admin/manage_type_service.php">Type Of Service</a></li>
+                            <li><a href="/manage/admin/manage_cpt_code.php">Cpt Code</a></li>
+                            <li><a href="/manage/admin/manage_modifier_code.php">Modifier Code</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Files</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_doc_categories.php">Dss Files For Franchisees (Global)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Additional Items</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_ins_type.php">Insurance Type</a></li>
+                            <li><a href="/manage/admin/manage_diagnostic.php">Diagnostic Test</a></li>
+                            <li><a href="/manage/admin/manage_assessment.php">Assessment</a></li>
+                            <li><a href="/manage/admin/manage_assess_addition.php">Assessment Addition</a></li>
+                            <li><a href="/manage/admin/manage_consultation.php">Consultation</a></li>
+                            <li><a href="/manage/admin/manage_evaluation_new.php">Evaluation New</a></li>
+                            <li><a href="/manage/admin/manage_evaluation_est.php">Evaluation Established</a></li>
+                            <li><a href="/manage/admin/manage_followup.php">Follow Up</a></li>
+                            <li><a href="/manage/admin/manage_plan_text.php">Plan / Progress Text</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Flowsheet</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_flowsheet_steps.php">Steps</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#">Dental Devices</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/manage/admin/manage_device.php">Dental Device List</a></li>
+                            <li><a href="/manage/admin/manage_device_guide_settings.php">Settings</a></li>
+                        </ul>
+                    </li>
+                <?php } ?>
+                    <li><a href="/manage/admin/manage_claim_settings.php">Claim Settings</a></li>
+                    <li><a href="/manage/admin/manage_claim_history.php">Electronic Claim History</a></li>
+                </ul>
+            </li>
+            <?php if (is_billing($_SESSION['admin_access'])) { ?>
+                <?php
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
     $c_q = mysql_query($c_sql);
     $c = mysql_fetch_assoc($c_q);
     $t_sql = "SELECT t.* FROM dental_support_tickets t
-		JOIN dental_users u ON u.userid=t.userid
+        JOIN dental_users u ON u.userid=t.userid
                 WHERE (t.status=0 OR t.status=1)
-			AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
-  }else{
+            AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
+  } else {
     $t_sql = "SELECT * FROM dental_support_tickets
-		WHERE status=0 OR status=1;";
+        WHERE status=0 OR status=1;";
   }
   $t_q = mysql_query($t_sql);
   $num_open_tickets = mysql_num_rows($t_q);
-?>
-                <li class="dir">TICKETS (<?= $num_open_tickets; ?>)
-			<ul>
-				<li><a href="/manage/admin/manage_support_tickets.php">Tickets</a></li>
-                                <li><a href="/manage/admin/manage_support_categories.php">Categories</a></li>
-			</ul>
-		</li>
-<?php } ?>
+                ?>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    TICKETS (<?= $num_open_tickets; ?>)
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/manage/admin/manage_support_tickets.php">Tickets</a></li>
+                    <li><a href="/manage/admin/manage_support_categories.php">Categories</a></li>
+                </ul>
+            </li>
+            <?php } ?>
         </ul>
-
-	</td>
-  </tr>
-  <tr bgcolor="#FFFFFF">
-	<td bgcolor='#FFFFFF' valign='top' height="400" width="100%">
-
-
 <?php $office_type = DSS_OFFICE_TYPE_BACK; ?> 
- 

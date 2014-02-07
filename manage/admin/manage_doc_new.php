@@ -68,8 +68,9 @@ if($_POST['sortsub'] == 1)
 <br />
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_doc_new.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_doc_new.php');" class="btn btn-success">
 		Add New What&prime;s New
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

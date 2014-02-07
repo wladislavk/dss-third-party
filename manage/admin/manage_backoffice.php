@@ -80,8 +80,9 @@ $num_users=mysql_num_rows($my);
 ?>
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_backoffice_users.php');" class="btn btn-success">
 		Add New Backoffice User
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

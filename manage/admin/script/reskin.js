@@ -8,6 +8,7 @@ $(function(){
         };
     });
     
+    /*
     $('button').addClass('btn btn-primary');
     $('.button, .addButton').removeClass('button addButton').addClass('btn btn-primary');
     
@@ -16,14 +17,17 @@ $(function(){
     $('table input[type=text]').css({ width: '' }).addClass('text-center')
     
     $('select').addClass('btn btn-default');
+    */
     
     /**
      * Allow buttons to have variety
      */
+    /*
     $('.btn:icontains(edit)').removeClass('btn-success').addClass('btn-primary').append('<span>&nbsp;</span><span class="glyphicon glyphicon-pencil"/>');
     $('.btn:icontains(create), .btn:icontains("add ")').removeClass('btn-default').addClass('btn-success').append('<span>&nbsp;</span><span class="glyphicon glyphicon-plus"/>');
     $('.btn:icontains(delete), .btn:icontains(remove)').removeClass('btn-default').addClass('btn-danger').append('<span>&nbsp;</span><span class="glyphicon glyphicon-remove"/>');
     $('table:not(:first)').addClass('table table-bordered');
+    */
     
     /**
      * Append dropdown to change skin

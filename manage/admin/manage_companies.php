@@ -50,8 +50,9 @@ $num_users=mysql_num_rows($my);
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_company.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_company.php');" class="btn btn-success">
 		Add New Company
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

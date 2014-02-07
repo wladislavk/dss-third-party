@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_nasal_passages.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_nasal_passages.php');" class="btn btn-success">
 		Add New Nasal Passages
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

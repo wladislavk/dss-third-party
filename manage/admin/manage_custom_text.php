@@ -45,8 +45,9 @@ $num_users=mysql_num_rows($my);
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_custom_text.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_custom_text.php');" class="btn btn-success">
 		Add New Custom Text
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

@@ -38,8 +38,9 @@ $total_rec = mysql_num_rows($my);
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_support_category.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_support_category.php');" class="btn btn-success">
 		Add New Category
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

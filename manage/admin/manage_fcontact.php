@@ -45,8 +45,9 @@ $num_contact=mysql_num_rows($my);
 &nbsp;
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_fcontact.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_fcontact.php');" class="btn btn-success">
 		Add Franchise or Corporate Contact
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_qualifier.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_qualifier.php');" class="btn btn-success">
 		Add New Qualifier
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

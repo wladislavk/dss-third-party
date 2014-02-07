@@ -45,8 +45,9 @@ $num_users=mysql_num_rows($my);
 
 <?php if($_SESSION["admin_access"]==1){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_admin.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_admin.php');" class="btn btn-success">
 		Add New Admin 
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

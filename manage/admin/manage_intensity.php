@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_intensity.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_intensity.php');" class="btn btn-success">
 		Add New Intensity
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

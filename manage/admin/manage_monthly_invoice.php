@@ -112,23 +112,37 @@ $num_users=mysql_num_rows($my);
 	Invoicing	
 </span>
 <br />
-<div style="float:left; width:43%;">
-  &nbsp;
-  <a class="addButton" href="invoice_monthly.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice Monthly Only&nbsp;</a>
-  <a class="addButton" href="invoice_monthly.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill Monthly Only&nbsp;</a>
-</div>
-<div style="float:left;">
-  <a class="addButton" href="invoice_additional.php?show=all&bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice All&nbsp;</a>
-  &nbsp;
-  <a class="addButton" href="invoice_additional.php?show=all&bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill All&nbsp; </a>
-  &nbsp;
-</div>
-
-<div style="float:right;">
-  <a class="addButton" href="invoice_additional.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice Additional&nbsp;</a>
-  &nbsp;
-  <a class="addButton" href="invoice_additional.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">&nbsp;Invoice And Bill Additional&nbsp; </a>
-  &nbsp;
+<div class="row text-center">
+    <div class="col-md-4">
+        <a class="btn btn-sm btn-info" href="invoice_monthly.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice Monthly Only
+            <span class="glyphicon glyphicon-envelope"></span>
+        </a>
+        <a class="btn btn-sm btn-primary" href="invoice_monthly.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice And Bill Monthly Only
+            <span class="glyphicon glyphicon-usd"></span>
+        </a>
+    </div>
+    <div class="col-md-4 text-center">
+        <a class="btn btn-sm btn-info" href="invoice_additional.php?show=all&bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice All
+            <span class="glyphicon glyphicon-envelope"></span>
+        </a>
+        <a class="btn btn-sm btn-primary" href="invoice_additional.php?show=all&bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice And Bill All
+            <span class="glyphicon glyphicon-usd"></span>
+        </a>
+    </div>
+    <div class="col-md-4 text-right">
+        <a class="btn btn-sm btn-info" href="invoice_additional.php?bill=0<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice Additional
+            <span class="glyphicon glyphicon-envelope"></span>
+        </a>
+        <a class="btn btn-sm btn-primary" href="invoice_additional.php?bill=1<?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>">
+            Invoice And Bill Additional
+            <span class="glyphicon glyphicon-usd"></span>
+        </a>
+    </div>
 </div>
 <div align="center" class="red" style="clear:both;">
 	<b><? echo $_GET['msg'];?></b>

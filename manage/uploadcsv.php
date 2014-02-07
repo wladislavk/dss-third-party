@@ -148,6 +148,8 @@ if($_FILES['csv']['error'] == 0){
 			$pid = mysql_insert_id();
 			if($copyreqdate=='' && $last_visit!=''){
 				$copyreqdate = $last_visit;
+			}elseif($copyreqdate==''){
+				$copyreqdate = date('m/d/Y');
 			}
 			if($copyreqdate!=''){
 			   mysql_query("INSERT INTO dental_flow_pg1 (`pid`,`copyreqdate`) VALUES ('".$pid."', '".$copyreqdate."')");

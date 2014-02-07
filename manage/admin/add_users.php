@@ -472,7 +472,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	
 	if($themyarray["userid"] != '')
 	{
-		$but_text = "Edit ";
+		$but_text = "Edit/Save ";
 	}
 	else
 	{

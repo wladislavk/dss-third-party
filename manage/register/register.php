@@ -91,7 +91,7 @@ if(mysql_num_rows($q) == 0){
                 </div>
                 <div class="sepH_b half clear">
 			<input class="inpt_a validate" type="hidden" id="oldemail" name="oldemail" value="<?= $p['email']; ?>" />
-                        <label class="lbl_a"><strong>3.</strong> Email: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
+                        <label class="lbl_a"><strong>3.</strong> Personal Email (for DS3 account login): <span class="req">*</span></label><input class="inpt_a validate" type="text" id="email" name="email" value="<?= $p['email']; ?>" />
                 </div>
                 <div class="sepH_b half clear">
                         <label class="lbl_a"><strong>4.</strong> Office Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="phone" name="phone" value="<?= $p['phone']; ?>" />
@@ -192,29 +192,33 @@ if(mysql_num_rows($q) == 0){
 		<div class="sepH_b">
 			<input type="checkbox" id="billing_mailing"> My mailing information is the same as my billing information.
 		</div>
-                <div class="sepH_b half">
-                        <label class="lbl_a"><strong>1.</strong> Physician's Mailing Name: <span class="req">*</span></label>
+                <div class="sepH_b ">
+                        <label class="lbl_a"><strong>1.</strong> Practice Email (for website and patients, NOT a personal email): <span class="req">*</span></label>
+                        <input class="inpt_a validate" type="text" id="mailing_email" name="mailing_email" value="<?= $p['mailing_email']; ?>" />
+                </div>
+                <div class="sepH_b half clear">
+                        <label class="lbl_a"><strong>2.</strong> Physician's Mailing Name: <span class="req">*</span></label>
                         <input class="inpt_a validate" type="text" id="mailing_name" name="mailing_name" value="<?= $p['mailing_name']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>2.</strong> Mailing Practice Name: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>3.</strong> Mailing Practice Name: <span class="req">*</span></label>
 			<input class="inpt_a validate" type="text" id="mailing_practice" name="mailing_practice" value="<?= $p['mailing_practice']; ?>" />
 		</div>
                 <div class="sepH_b half clear">
-                        <label class="lbl_a"><strong>3.</strong> Mailing Phone: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>4.</strong> Mailing Phone: <span class="req">*</span></label>
                         <input class="inpt_a phonemask validate" type="text" id="mailing_phone" name="mailing_phone" value="<?= $p['mailing_phone']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>4.</strong> Mailing Address: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>5.</strong> Mailing Address: <span class="req">*</span></label>
                         <input class="inpt_a validate" type="text" id="mailing_address" name="mailing_address" value="<?= $p['mailing_address']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>5.</strong> Mailing City: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>6.</strong> Mailing City: <span class="req">*</span></label>
 			<input class="inpt_a validate" type="text" id="mailing_city" name="mailing_city" value="<?= $p['mailing_city']; ?>" />
                 </div>
                 <div class="sepH_b third">
                         <?php $s = $p['mailing_state']; ?>
-                        <label class="lbl_a"><strong>6.</strong> Mailing State: <span class="req">*</span></label>
+                        <label class="lbl_a"><strong>7.</strong> Mailing State: <span class="req">*</span></label>
         <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="mailing_state" name="mailing_state">
                                 <option value=""></option>
                                 <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
@@ -272,7 +276,7 @@ if(mysql_num_rows($q) == 0){
 
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7.</strong> Mailing Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="mailing_zip" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
+                        <label class="lbl_a"><strong>8.</strong> Mailing Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="mailing_zip" name="mailing_zip" value="<?= $p['mailing_zip']; ?>" />
                 </div>
                                                                                                                 <div class="cf">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>

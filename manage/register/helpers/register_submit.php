@@ -44,6 +44,7 @@
 			$loc_r = mysql_fetch_assoc($loc_q);
                         $loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
+				email = '".s_for($_POST['mailing_email'])."',
                                 name = '".s_for($_POST["mailing_name"])."', 
                                 address = '".s_for($_POST["mailing_address"])."', 
                                 city = '".s_for($_POST["mailing_city"])."', 
@@ -56,6 +57,7 @@
 		}else{
                         $loc_sql = "INSERT INTO dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
+				email = '".s_for($_POST['mailing_email'])."',
                                 name = '".s_for($_POST["mailing_name"])."', 
                                 address = '".s_for($_POST["mailing_address"])."', 
                                 city = '".s_for($_POST["mailing_city"])."', 

@@ -68,8 +68,9 @@ if($_POST['sortsub'] == 1)
 <br />
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_doc_lab.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_doc_lab.php');" class="btn btn-success">
 		Add New Dental Appliance Lab Info
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

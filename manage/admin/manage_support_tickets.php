@@ -48,7 +48,10 @@ $total_rec = mysql_num_rows($my);
 <br />
 <br />
 <div align="right">
-<button onclick="loadPopup('add_ticket.php'); return false;" class="addButton">Add Ticket</button>
+<button onclick="loadPopup('add_ticket.php'); return false;" class="btn btn-success">
+    Add Ticket
+    <span class="glyphicon glyphicon-plus"></span>
+</button>
 </div>
 <br />
 <div align="center" class="red">

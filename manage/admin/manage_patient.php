@@ -338,8 +338,9 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <?php if(!is_billing($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?=$_GET['docid']?>');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_patient.php?docid=<?=$_GET['docid']?>');" class="btn btn-success">
 		Add New Patient
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

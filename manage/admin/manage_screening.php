@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_screening.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_screening.php');" class="btn btn-success">
 		Add New Screening
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

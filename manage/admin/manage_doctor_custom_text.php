@@ -46,8 +46,9 @@ $num_users=mysql_num_rows($my);
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_doctor_custom_text.php?docid=<?= $_GET['docid']; ?>');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_doctor_custom_text.php?docid=<?= $_GET['docid']; ?>');" class="btn btn-success">
 		Add New Custom Text
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

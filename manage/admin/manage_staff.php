@@ -61,8 +61,9 @@ $num_users=mysql_num_rows($my);
 	<b>&lt;&lt; Back</b></a>
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_staff.php?docid=<?=$_GET['docid'];?>');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_staff.php?docid=<?=$_GET['docid'];?>');" class="btn btn-success">
 		Add New Staff
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

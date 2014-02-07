@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_contacttype.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_contacttype.php');" class="btn btn-success">
 		Add New Contact Type
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

@@ -69,8 +69,9 @@ if($_POST['sortsub'] == 1)
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_doctor_transaction_code.php?docid=<?= $_GET['docid']; ?>');" class="btn btn-success">
 		Add New Transaction Code
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

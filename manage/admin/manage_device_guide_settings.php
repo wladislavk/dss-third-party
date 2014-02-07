@@ -21,8 +21,9 @@ $num_users=mysql_num_rows($my);
 
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_device_guide_setting.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_device_guide_setting.php');" class="btn btn-success">
 		Add Setting
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

@@ -48,8 +48,9 @@ $num_pages=mysql_num_rows($my);
 <br />
 
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_page.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_page.php');" class="btn btn-success">
 		Add New Pages
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

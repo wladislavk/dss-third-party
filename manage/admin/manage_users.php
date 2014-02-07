@@ -119,15 +119,17 @@ $num_users=mysql_num_rows($my);
 
 <?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 <!--<div align="right">
-        <button onclick="Javascript: loadPopup('add_users_reg.php');" class="addButton">
+        <button onclick="Javascript: loadPopup('add_users_reg.php');" class="btn btn-success">
                 Add New Registration User
+                <span class="glyphicon glyphicon-plus">
         </button>
         &nbsp;&nbsp;
 </div>
 -->
 <div align="right">
-	<button onclick="Javascript: loadPopup('add_users.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_users.php');" class="btn btn-success">
 		Add New User
+		<span class="glyphicon glyphicon-plus">
 	</button>
 	&nbsp;&nbsp;
 </div>

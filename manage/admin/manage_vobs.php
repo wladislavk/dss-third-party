@@ -155,7 +155,7 @@ $sql = "SELECT "
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  preauth.id, preauth.patient_id, i.company as ins_co, p.firstname as patient_firstname, p.lastname as patient_lastname, "
-     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  preauth.front_office_request_date, CONCAT(users.first_name, ' ',users.last_name) as doc_name, preauth.status, "
      . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
      . "  users2.name as user_name, "
      . "  c.name as billing_name "
@@ -252,7 +252,7 @@ $my=mysql_query($sql) or die(mysql_error());
       <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
       <?php while ($row = mysql_fetch_array($franchisees)) { ?>
         <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['name'] ?></option>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name']." ".$row['last_name']; ?></option>
       <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;

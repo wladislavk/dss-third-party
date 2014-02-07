@@ -200,7 +200,7 @@ $sql = "select
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code
+		LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
                         where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for($_GET['pid'])."' 
 			AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
   UNION

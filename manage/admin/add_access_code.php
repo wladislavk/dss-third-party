@@ -3,8 +3,19 @@ session_start();
 require_once('includes/main_include.php');
 include("includes/sescheck.php");
 
+if(isset($_POST['accesscodedelete'])){
+  $sql = "DELETE FROM dental_access_codes WHERE id='".mysql_real_escape_string($_POST['ed'])."'";
+  mysql_query($sql);
+                        ?>
+                        <script type="text/javascript">
+                                //alert("<?=$msg;?>");
+                                parent.window.location='manage_access_codes.php?msg=<?=$msg;?>';
+                        </script>
+                        <?
+                        die();
+}
 
-if($_POST["accesscodesub"] == 1)
+if(isset($_POST["accesscodesub"]))
 {
 	$sel_check = "select * from dental_access_codes where access_code = '".s_for($_POST["access_code"])."' and id <> '".s_for($_POST['ed'])."'";
 	$query_check=mysql_query($sel_check);
@@ -170,9 +181,19 @@ if($_POST["accesscodesub"] == 1)
                 <span class="red">
                     * Required Fields					
                 </span><br />
-                <input type="hidden" name="accesscodesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Access Code" class="button" />
+                <input type="submit" name="accesscodesub" value=" <?=$but_text?> Access Code" class="button" />
+		<?php		
+		if($themyarray['id']!=''){  
+		$c_sql = "SELECT * FROM dental_users WHERE access_code_id='".$themyarray["id"]."'";
+		$c_q = mysql_query($c_sql);
+		if(mysql_num_rows($c_q)==0){ ?>
+		<input type="submit" name="accesscodedelete" value="Delete" class="button" />
+		<?php }else{ ?>
+		<input type="submit" onclick="alert('Error! There are users associated with this access code. You must reassign these users. Only access codes with no users may be deleted.');return false;" value="Delete" class="button">
+		<?php } 
+		}
+		?>
             </td>
         </tr>
     </table>

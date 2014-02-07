@@ -41,6 +41,7 @@ if(isset($_REQUEST['start_date'])){
 }
 if(is_super($_SESSION['admin_access'])){
   $sql = "SELECT du.userid, du.username, 
+		CONCAT(du.first_name,' ', du.last_name) as doc_name,
 		co.name as company_name,
 		bc.name as billing_name,
 		s.num_staff,
@@ -51,7 +52,8 @@ if(is_super($_SESSION['admin_access'])){
 		du.adddate,
 	 	DATEDIFF(now(), du.adddate) as duration,
 		(i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount) as paid,
-		du.status
+		du.status,
+		du.suspended_reason
 		FROM dental_users du 
 		LEFT JOIN dental_user_company uc ON uc.userid = du.userid
 		LEFT JOIN companies co ON co.id=uc.companyid
@@ -162,8 +164,102 @@ Activated last 30 days: <?=$count_r['num_30'];?>
 Suspended last 30 days: <?=$count_r['num_30'];?>
  30-60 days: <?=$count_r['num_60'];?>
  60+: <?= $count_r['num_plus']; ?>
+<br/>
+<?php
+  $count_sql = "SELECT count(du.userid) num_paid from dental_users du
+                LEFT JOIN (SELECT COALESCE(sum(dl.percase_amount),0) as ledger_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_ledger dl on pi.id=dl.percase_invoice
+                                GROUP BY pi.docid) i ON i.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(pi.monthly_fee_amount),0) as monthly_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                GROUP BY pi.docid) i1 ON i1.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(dle.percase_amount),0) as extra_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_percase_invoice_extra dle ON dle.percase_invoice=pi.id
+                                GROUP BY pi.docid) i2 ON i2.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(ip.invoice_amount), 0) as vob_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_insurance_preauth ip ON ip.invoice_id = pi.id
+                                GROUP BY pi.docid) i3 ON i3.docid=du.userid
 
 
+                WHERE du.docid=0 AND
+	 (i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount) > 0";
+  $count_q = mysql_query($count_sql);
+  $count_r = mysql_fetch_assoc($count_q); 
+?>
+Total Paid Users: <?= $count_r['num_paid']; ?>
+<br />
+<?php
+  $count_sql = "SELECT count(du.userid) num_paid from dental_users du
+                LEFT JOIN (SELECT COALESCE(sum(dl.percase_amount),0) as ledger_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_ledger dl on pi.id=dl.percase_invoice
+                                GROUP BY pi.docid) i ON i.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(pi.monthly_fee_amount),0) as monthly_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                GROUP BY pi.docid) i1 ON i1.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(dle.percase_amount),0) as extra_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_percase_invoice_extra dle ON dle.percase_invoice=pi.id
+                                GROUP BY pi.docid) i2 ON i2.docid=du.userid
+                LEFT JOIN (SELECT COALESCE(sum(ip.invoice_amount), 0) as vob_amount, pi.docid FROM 
+                                dental_percase_invoice pi 
+                                 LEFT JOIN dental_insurance_preauth ip ON ip.invoice_id = pi.id
+                                GROUP BY pi.docid) i3 ON i3.docid=du.userid
+
+
+                WHERE du.docid=0 AND
+         COALESCE((i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount), 0) = 0";
+  $count_q = mysql_query($count_sql);
+  $count_r = mysql_fetch_assoc($count_q);
+?>
+
+Total Unpaid Users: <?= $count_r['num_paid']; ?>
+<br />
+<?php
+  $count_sql = "SELECT COALESCE(sum(dc.amount),0) cc_paid from dental_charge dc
+                WHERE charge_date >= DATE_SUB(now(), INTERVAL 30 DAY)";
+  $count_q = mysql_query($count_sql);
+  $count_r = mysql_fetch_assoc($count_q);
+?>
+
+Credit Card Billing Last 30 days: $<?= $count_r['cc_paid']; ?>
+<br />
+<?php
+  $total_charge = 0;
+  $sql = "SELECT id, monthly_fee_amount FROM dental_percase_invoice pi
+	WHERE adddate >= DATE_SUB(now(), INTERVAL 30 DAY)
+	AND NOT EXISTS (SELECT dc.invoice_id FROM dental_charge dc WHERE dc.invoice_id=pi.id)
+	";
+  $q = mysql_query($sql);
+  while($myarray = mysql_fetch_assoc($q)){
+$total_charge += $myarray['monthly_fee_amount'];
+$case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
+        WHERE 
+                dl.transaction_code='E0486' AND
+                dl.docid='".$myarray['docid']."' AND                dl.percase_invoice='".$myarray['id']."'
+        UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl         WHERE 
+                dl.percase_invoice='".$myarray['id']."'
+        UNION
+SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
+        WHERE
+                invoice_id='".$myarray['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_fax_invoice        WHERE
+                invoice_id='".$myarray['id']."'";
+$case_q = mysql_query($case_sql);
+while($case_r = mysql_fetch_assoc($case_q)){
+$total_charge += $case_r['percase_amount'];
+}
+}
+?>
+Other Invoices Last 30 days: $<?= $total_charge; ?>
+<br />
+Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
 
 
 <div align="center" class="red">
@@ -175,43 +271,40 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 <table class="sort_table" id="tracking_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <thead>
 	<tr class="tr_bg_h">
-		<td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=username&sortdir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a>
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'company_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=company_name&sortdir=<?php echo ($_REQUEST['sort']=='company_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
-                </td>
-		<th valign="top" class="col_head">
-			HST	
+		<th class="col_head">Username</th>
+		<th class="col_head">Name</th>
+		<th class="col_head">Company</th>
+		<th class="col_head">HST</th>
+                <th class="col_head"> 
+                        Billing Company
+                </th>
+                <th class="col_head">
+			# Staff
 		</th>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'billing_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=billing_name&sortdir=<?php echo ($_REQUEST['sort']=='billing_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-                        Billing Company</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'num_staff')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=num_staff&sortdir=<?php echo ($_REQUEST['sort']=='num_staff'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			# Staff</a>
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'num_patient')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=num_patient&sortdir=<?php echo ($_REQUEST['sort']=='num_patient'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			# Patients</a>
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'num_contact')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=num_contact&sortdir=<?php echo ($_REQUEST['sort']=='num_contact'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			# Contacts</a>
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'access_code')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=access_code&sortdir=<?php echo ($_REQUEST['sort']=='access_code'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			Act. Code</a>
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'plan_name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=plan_name&sortdir=<?php echo ($_REQUEST['sort']=='plan_name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			Plan</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			Activated</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'duration')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=duration&sortdir=<?php echo ($_REQUEST['sort']=='duration'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			Duration</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'paid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=paid&sortdir=<?php echo ($_REQUEST['sort']=='paid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			$ Paid</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=status&sortdir=<?php echo ($_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">
-			Status</a>
-		</td>
+                <th class="col_head">
+			# Patients
+		</th>
+                <th class="col_head">
+			# Contacts
+		</th>
+                <th class="col_head">
+			Act. Code
+		</th>
+                <th class="col_head">
+			Plan
+                </th>
+                <th class="col_head">
+			Activated
+                </th>
+                <th class="col_head">
+			Duration
+                </th>
+                <th class="col_head">
+			$ Paid
+                </th>
+                <th class="col_head">
+			Status
+		</th>
 	</tr>
 </thead>
 <tbody>
@@ -233,6 +326,9 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 			<tr class="status_<?= $myarray['status']; ?>">
 				<td valign="top">
 					<?=st($myarray["username"]);?>
+				</td>
+				<td valign="top">
+					<?= $myarray['doc_name']; ?>
 				</td>
 				<td valign="top">
 					<?= $myarray['company_name']; ?>
@@ -276,7 +372,11 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
                                   <?= $myarray['paid']; ?>
                                 </td>
 				<td valign="top" align="center">
+				  <?php if($myarray['status']==DSS_USER_STATUS_SUSPENDED){ ?>
+					<a href="#" onclick="return false;" title="<?= $myarray['suspended_reason']; ?>"><?= $dss_user_status_labels[$myarray['status']]; ?></a>	
+				  <?php }else{ ?>
 				  <?= $dss_user_status_labels[$myarray['status']]; ?>
+				  <?php } ?>
 				</td>
 			</tr>
 	<? 	}

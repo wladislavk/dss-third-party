@@ -372,6 +372,941 @@ Does the patient have Secondary Insurance? <?= $pat['has_s_m_ins']; ?>
 
 <?php } ?>
 
+<!--  PART 2 -->
+
+
+<?php
+$sql = "select * from dental_q_sleep where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_sleepid = st($myarray['q_sleepid']);
+$epworthid = st($myarray['epworthid']);
+$analysis = st($myarray['analysis']);
+
+if($epworthid <> '')
+{
+        $epworth_arr1 = split('~',$epworthid);
+
+        foreach($epworth_arr1 as $i => $val)
+        {
+                $epworth_arr2 = explode('|',$val);
+
+                $epid[$i] = $epworth_arr2[0];
+                $epseq[$i] = $epworth_arr2[1];
+        }
+}
+?>
+<span class="admin_head">
+Epworth Sleep Questionnaire
+</span>
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr>
+                <td valign="top" colspan="2" >
+                        Using the following scale, choose the most appropriate number for each situation.
+
+                        <br />
+                        0 = No chance of dozing<br />
+                        1 = Slight chance of dozing<br />
+                        2 = Moderate chance of dozing<br />
+                        3 = High chance of dozing<br />
+                </td>
+        </tr>
+                    <?
+                                        $epworth_sql = "select * from dental_epworth where status=1 order by sortby";
+                                        $epworth_my = mysql_query($epworth_sql);
+                                        $epworth_number = mysql_num_rows($epworth_my);
+                                        ?>
+
+                    <?
+                                        while($epworth_myarray = mysql_fetch_array($epworth_my))
+                                        {
+                                                if(@array_search($epworth_myarray['epworthid'],$epid) === false)
+                                                {
+                                                        $chk = '';
+                                                }
+                                                else
+                                                {
+                                                        $chk = $epseq[@array_search($epworth_myarray['epworthid'],$epid)];
+                                                }
+
+                                        ?>
+                            <tr>
+                <td valign="top" width="60%" class="frmhead">
+                        <?=st($epworth_myarray['epworth']);?><br />&nbsp;
+                </td>
+                <td valign="top" class="frmdata">
+                                <select id="epworth_<?=st($epworth_myarray['epworthid']);?>" name="epworth_<?=st($epworth_myarray['epworthid']);?>" class="field text addr tbox" style="width:125px;" onchange="cal_analaysis(this.value);">
+                                <option value="0" <? if($chk == '0') echo " selected";?>>0</option>
+                                <option value="1" <? if($chk == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($chk == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($chk == 3) echo " selected";?>>3</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <? }?>
+                    <tr>
+                        <td colspan="2">
+                                <span style="color:#000000; padding-top:0px;">
+                                Analysis
+                            </span>
+                            <br />
+                            <textarea name="analysis" class="field text addr tbox" style="width:650px; height:100px;"><?=$analysis;?></textarea>
+                        </td>
+                    </tr>
+</table>
+
+
+<?php
+$sql = "select * from dental_thorton where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$thortonid = st($myarray['thortonid']);
+$snore_1 = st($myarray['snore_1']);
+$snore_2 = st($myarray['snore_2']);
+$snore_3 = st($myarray['snore_3']);
+$snore_4 = st($myarray['snore_4']);
+$snore_5 = st($myarray['snore_5']);
+$tot_score = $snore_1+$snore_2+$snore_3+$snore_4+$snore_5;
+?>
+<span class="admin_head">
+        Thornton Snoring Scale
+</span>
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <tr>
+                <td valign="top" colspan="2" >
+                        Using the following scale, choose the most appropriate number for each situation.
+
+                        <br />
+                        0 = Never<br />
+                        1 = Infrequently (1 night per week)<br />
+                        2 = Frequently (2-3 nights per week)<br />
+                        3 = Most of the time (4 or more nights)<br />
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" width="60%" class="frmhead">
+                        1. My snoring affects my relationship with my partner:
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="snore_1" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                                <option value="0" <? if($snore_1 == 0) echo " selected";?>>0</option>
+                                <option value="1" <? if($snore_1 == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($snore_1 == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($snore_1 == 3) echo " selected";?>>3</option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                        2. My snoring causes my partner to be irritable or tired:
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="snore_2" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                                <option value="0" <? if($snore_2 == 0) echo " selected";?>>0</option>
+                                <option value="1" <? if($snore_2 == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($snore_2 == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($snore_2 == 3) echo " selected";?>>3</option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                        3. My snoring requires us to sleep in separate rooms:
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="snore_3" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                                <option value="0" <? if($snore_3 == 0) echo " selected";?>>0</option>
+                                <option value="1" <? if($snore_3 == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($snore_3 == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($snore_3 == 3) echo " selected";?>>3</option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                        4. My snoring is loud:
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="snore_4" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                                <option value="0" <? if($snore_4 == 0) echo " selected";?>>0</option>
+                                <option value="1" <? if($snore_4 == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($snore_4 == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($snore_4 == 3) echo " selected";?>>3</option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                        5. My snoring affects people when I am sleeping away from home:
+                </td>
+                <td valign="top" class="frmdata">
+                        <select name="snore_5" onchange="Javascript: cal_snore()" class="tbox" style="width:80px;">
+                                <option value="0" <? if($snore_5 == 0) echo " selected";?>>0</option>
+                                <option value="1" <? if($snore_5 == 1) echo " selected";?>>1</option>
+                                <option value="2" <? if($snore_5 == 2) echo " selected";?>>2</option>
+                                <option value="3" <? if($snore_5 == 3) echo " selected";?>>3</option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmhead">
+                        Your Score:
+                </td>
+                <td valign="top" class="frmdata">
+                        <input type="text" name="tot_score" value="<?= $tot_score;?>" class="tbox" style="width:80px;" readonly="readonly" >
+                </td>
+        </tr>
+        <tr>
+                <td valign="top" class="frmdata" colspan="2" style="text-align:right;">
+                        <b>A score of 5 or greater indicates your snoring may be significantly affecting your quality of life.  </b>
+                </td>
+        </tr>
+</table>
+
+<?php
+$sql = "select * from dental_q_page1 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_page1id = st($myarray['q_page1id']);
+$exam_date = st($myarray['exam_date']);
+$ess = st($myarray['ess']);
+$tss = st($myarray['tss']);
+$chief_complaint_text = st($myarray['chief_complaint_text']);
+$complaintid = st($myarray['complaintid']);
+$other_complaint = st($myarray['other_complaint']);
+?>
+<h4>Complaints</h4>
+<div class="box">
+<strong>Reason for seeking tx:</strong>
+<?php
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$c_q = mysql_query($c_sql);
+$c_r = mysql_fetch_assoc($c_q);
+echo $c_r['chief_complaint_text'];
+if($complaintid <> '')
+{
+        $comp_arr1 = split('~',$complaintid);
+
+        foreach($comp_arr1 as $i => $val)
+        {
+                $comp_arr2 = explode('|',$val);
+
+                $compid[$i] = $comp_arr2[0];
+                $compseq[$i] = $comp_arr2[1];
+        }
+}
+
+?>
+<br /><br />
+
+<?php if($complaintid != '' || in_array('0', $compid)){ ?>
+<strong>Other Complaints</strong>
+<ul>
+                <?php if($complaintid != ''){ ?>
+                    <?
+                                        $complaint_sql = "select * from dental_complaint where status=1 order by sortby";
+                                        $complaint_my = mysql_query($complaint_sql);
+                                        $complaint_number = mysql_num_rows($complaint_my);
+                                        while($complaint_myarray = mysql_fetch_array($complaint_my))
+                                        {
+                                                if(@array_search($complaint_myarray['complaintid'],$compid) === false)
+                                                {
+                                                        $chk = '';
+
+                                                }
+                                                else
+                                                {
+                                                   #     $chk = ($compseq[@array_search($complaint_myarray['complaintid'],$compid)])?1:0;
+                                                        ?><li><?= $complaint_myarray['complaint']; ?></li><?php
+                                                }
+                                        }
+?>
+<?php } ?>
+<?php if($other_complaint != '' && in_array('0', $compid)){ ?>
+<li><?= $other_complaint; ?></li>
+<?php } ?>
+</ul>
+<?php } ?>
+
+<strong>Bed Partner:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $bed_time_partner ?><br />
+                        &nbsp;&nbsp;
+      <strong>Same room:</strong>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sleep_same_room; ?><br />
+                                <?php if($quit_breathing != ''){ ?>
+                                        How many times per night does your bedtime partner notice you quit breathing?
+                                            <?= $quit_breathing;?>
+                                <? } ?>
+
+
+</div>
+
+
+
+<h4>CPAP</h4>
+<div class="box">
+
+        <?php
+          $pat_sql = "select cpap from dental_q_page2 where patientid='".s_for($_GET['pid'])."'";
+          $pat_my = mysql_query($pat_sql);
+          $pat_myarray = mysql_fetch_array($pat_my);
+          if($pat_myarray['cpap']=="No"){
+
+            ?>Patient has not previously attempted CPAP therapy.<?php
+
+          }else{
+        //echo $pat_myarray['cpap'];
+        ?>
+    <label>
+<br />
+    <span style="font-weight:bold;">Problems w/ CPAP</span><br />
+        <?=$problem_cpap;?>
+      </label>
+
+     <?php } ?>
+
+<?php
+$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_page2id = st($myarray['q_page2id']);
+$polysomnographic = st($myarray['polysomnographic']);
+$sleep_center_name_text = st($myarray['sleep_center_name_text']);
+$sleep_study_on = st($myarray['sleep_study_on']);
+$confirmed_diagnosis = st($myarray['confirmed_diagnosis']);
+$rdi = st($myarray['rdi']);
+$ahi = st($myarray['ahi']);
+$cpap = st($myarray['cpap']);
+$cur_cpap = st($myarray['cur_cpap']);
+$intolerance = st($myarray['intolerance']);
+$other_intolerance = st($myarray['other_intolerance']);
+$other = st($myarray['other']);
+$affidavit = st($myarray['affidavit']);
+$type_study = st($myarray['type_study']);
+$nights_wear_cpap = st($myarray['nights_wear_cpap']);
+$percent_night_cpap = st($myarray['percent_night_cpap']);
+$custom_diagnosis = st($myarray['custom_diagnosis']);
+$sleep_study_by = st($myarray['sleep_study_by']);
+$triedquittried = st($myarray['triedquittried']);
+$timesovertime = st($myarray['timesovertime']);
+
+if($cpap == '')
+        $cpap = 'No';
+?>
+                                <?php if($polysomnographic != ''){ ?>
+                    <div>
+                        <span>
+                                                        <strong>Have you had a sleep study</strong>
+
+<?= ($polysomnographic == '1')?'Yes':'No'; ?>
+<?php if($polysomnographic == '1'){ ?>
+                                <?php if($sleep_center_name_text != ''){ ?>
+                            <strong>At</strong> <?=$sleep_center_name_text;?>
+                                <? } ?>
+                                <?php if($sleep_study_on != ''){ ?>
+                            <strong>Date</strong>
+                            <?=$sleep_study_on;?>
+                                <? } ?>
+<?php } ?>
+                        </span>
+                    </div>
+                <?php } ?>
+                    <label class="desc" id="title0" for="Field0">
+                        CPAP Intolerance
+                    </label>
+                                <?php if($cpap != ''){ ?>
+                    <div>
+                        <span>
+                                <strong>Have you tried CPAP?</strong>
+                            <?= $cpap;?>
+                </span>
+                        </div>
+                                <? } ?>
+                                <?php if($cur_cpap != ''){  ?>
+                    <div class="cpap_options">
+                        <span>
+                                <strong>Are you currently using CPAP?</strong>
+                            <?= $cur_cpap;?>
+                        </span>
+                        </div>
+
+                                <? } ?>
+                                <?php if($nights_wear_cpap != ''){ ?>
+                                        <div class="cpap_options2">                        <span>
+                                                        <strong>If currently using CPAP, how many nights / week do you wear it?</strong> <?=$nights_wear_cpap;?>
+                                                        <br />&nbsp;
+                                                </span>
+                                        </div>
+                                <? } ?>
+                                                                                            <?php if($percent_night_cpap != ''){ ?>
+                                        <div class="cpap_options2">
+                        <span>
+                                                        <strong>How many hours each night do you wear it?</strong> <?=$percent_night_cpap;?>
+
+                                                        <br />&nbsp;
+                                                </span>
+                                        </div>
+                                <? } ?>
+                                <?php if($intolerance != ''){ ?>
+                        <div id="cpap_options" class="cpap_options">
+                        <span>
+                                <strong>What are your chief complaints about CPAP?</strong>
+
+                            <br />
+                            <?
+                                                        $intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
+                                                        $intolerance_my = mysql_query($intolerance_sql);
+
+                                                        while($intolerance_myarray = mysql_fetch_array($intolerance_my))
+                                                        {
+                                                        ?>
+                                                                <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { ?>
+<?=st($intolerance_myarray['intolerance']);?><br />
+<?php }?>
+                                                        <?
+                                                        }
+                                                        ?>
+                        </span>
+                                        </div>
+                                <? } ?>
+                                <?php if($other_intolerance != ''){ ?>
+                    <br />
+                    <div class="cpap_options">
+                        <span class="cpap_other_text">
+                                <span style="color:#000000; padding-top:0px;">
+                                <strong>Other Items</strong><br />
+                            </span>
+                            <?=$other_intolerance;?>
+                                                        <br />&nbsp;
+                        </span>
+                    </div>
+                                <? } ?>
+
+
+
+
+
+</div>
+
+
+
+<? include '../summ_sleep.php'; ?>
+
+<h3 class="sect_header" style="clear:both;">Previous Treatments</h3>
+<div class="box">
+
+<?php
+
+$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$other_therapy = st($myarray['other_therapy']);
+$dd_wearing = st($myarray['dd_wearing']);
+$dd_prev = st($myarray['dd_prev']);
+$dd_otc = st($myarray['dd_otc']);
+$dd_fab = st($myarray['dd_fab']);
+$dd_who = st($myarray['dd_who']);
+$dd_experience = st($myarray['dd_experience']);
+$surgery = st($myarray['surgery']);
+
+if($dd_wearing == '' &&
+  $dd_prev == '' &&
+  $dd_otc == '' &&
+  $dd_fab == '' &&
+  $dd_who == '' &&
+  $dd_experience == '' &&
+  $surgery == '' &&
+  $other_therapy == ''){
+?>
+<p>No previous treatments documented.</p>
+
+<?php
+}else{
+?>
+                    <label class="desc" id="title0" for="Field0">
+                        Dental Devices
+                    </label>
+                                <?php if($dd_wearing != ''){ ?>
+                    <div>
+                        <span>
+                                Are you currently wearing a dental device?
+                                <?= $dd_wearing; ?>
+                        </span>
+                    </div>
+                                <? } ?>
+                                <?php if($dd_prev != ''){ ?>
+                    <div>
+                        <span>
+                                Have you previously tried a dental device?
+                                <?= $dd_prev; ?>
+                        </span>
+                    </div>
+                                <? } ?>
+                                <?php if($dd_otc != ''){ ?>
+                    <div class="dd_options">
+                        <span>
+                                Was it over-the-counter (OTC)?
+                                <?= $dd_otc; ?>
+                        </span>
+                    </div>
+                                <? } ?>
+                                <?php if($dd_fab != ''){ ?>
+                    <div class="dd_options">
+                        <span>
+                                Was it fabricated by a dentist?
+                                <?= $dd_fab; ?>
+                        <span>
+                    </div>
+                                <? } ?>
+                                <?php if($dd_who != ''){ ?>
+                    <div class="dd_options">
+                        <span>
+                                Who: <?= $dd_who; ?>
+                        </span>
+                    </div>
+                                <? } ?>
+                                <?php if($dd_experience != ''){ ?>
+                    <div class="dd_options">
+                        <span>
+                                Describe your experience<br />
+                                <?= $dd_experience; ?>
+                        </span>
+                    </div>
+                                <? } ?>
+                    <label class="desc" id="title0" for="Field0">
+                        Surgery
+                    </label>
+                                <?php if($surgery != ''){ ?>
+                    <div>
+                        <span>
+                                Have you had surgery for snoring or sleep apnea?
+                                <?= $surgery; ?>
+                        </span>                    </div>
+                                <? } ?>
+                                <?php
+                  $s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysql_real_escape_string($_REQUEST['pid'])."'";
+                  $s_q = mysql_query($s_sql);
+                  $s_num = mysql_num_rows($s_q);
+                                if($s_num != 0){ ?>
+                    <div class="s_options">
+                        <span>
+Please list any nose, palatal, throat, tongue, or jaw surgeries you have had.  (each is individual text field in SW)
+        <table id="surgery_table">
+        <tr><th>Date</th><th>Surgeon</th><th>Surgery</th><th></th></tr>
+                <?php
+                  $s_count = 0;
+                  while($s_row = mysql_fetch_assoc($s_q)){
+                ?>
+          <tr id="surgery_row_<?= $s_count; ?>">
+                <td><?= $s_row['surgery_date']; ?></td>
+                <td><?= $s_row['surgeon']; ?></td>
+                <td><?= $s_row['surgery']; ?></td>
+          </tr>
+                <?php
+                        $s_count++;
+                        }
+                ?>
+        </table>
+                        </span>
+                    </div>
+                <?php } ?>
+
+        <?php if($other_therapy != ''){ ?>
+                    <label class="desc" id="title0" for="Field0">
+                        OTHER ATTEMPTED THERAPIES
+                    </label>
+                    <div>
+                        <span>
+                                <?=$other_therapy;?>
+                        </span>
+                        </div>
+        <? } ?>
+<?php } ?>
+</div>
+
+
+
+<?php
+
+$sql = "select * from dental_q_page3 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$q_page3id = st($myarray['q_page3id']);
+$allergens = st($myarray['allergens']);
+$other_allergens = st($myarray['other_allergens']);
+$medications = st($myarray['medications']);
+$other_medications = st($myarray['other_medications']);
+$history = st($myarray['history']);
+$other_history = st($myarray['other_history']);
+$dental_health = st($myarray['dental_health']);
+$injurytohead = st($myarray['injurytohead']);
+        $injurytoface = st($myarray['injurytoface']);
+        $injurytoneck = st($myarray['injurytoneck']);
+        $injurytoteeth = st($myarray['injurytoteeth']);
+        $injurytomouth = st($myarray['injurytomouth']);
+        $drymouth = st($myarray['drymouth']);
+$removable = st($myarray['removable']);
+$year_completed = st($myarray['year_completed']);
+$tmj = st($myarray['tmj']);
+$gum_problems = st($myarray['gum_problems']);
+$dental_pain = st($myarray['dental_pain']);
+$dental_pain_describe = st($myarray['dental_pain_describe']);
+$completed_future = st($myarray['completed_future']);
+$clinch_grind = st($myarray['clinch_grind']);
+$wisdom_extraction = st($myarray['wisdom_extraction']);
+$jawjointsurgery = st($myarray['jawjointsurgery']);
+$no_allergens = st($myarray['no_allergens']);
+$no_medications = st($myarray['no_medications']);
+$no_history = st($myarray['no_history']);
+$orthodontics = st($myarray['orthodontics']);
+$psql = "SELECT * FROM dental_patients where patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$pmy = mysql_query($psql);
+$pmyarray = mysql_fetch_array($pmy);
+$premedcheck = st($pmyarray["premedcheck"]);
+$allergenscheck = st($myarray["allergenscheck"]);
+$medicationscheck = st($myarray["medicationscheck"]);
+$historycheck = st($myarray["historycheck"]);
+$premeddet = st($pmyarray["premed"]);
+$family_hd = st($myarray["family_hd"]);
+
+$family_bp = st($myarray["family_bp"]);
+$family_dia = st($myarray["family_dia"]);
+$family_sd = st($myarray["family_sd"]);
+$alcohol = st($myarray['alcohol']);
+$sedative = st($myarray['sedative']);
+$caffeine = st($myarray['caffeine']);
+$smoke = st($myarray['smoke']);
+$smoke_packs = st($myarray['smoke_packs']);
+$tobacco = st($myarray['tobacco']);
+$additional_paragraph = st($myarray['additional_paragraph']);
+        $wisdom_extraction_text = $myarray['wisdom_extraction_text'];
+        $removable_text  = $myarray['removable_text'];
+        $dentures  = $myarray['dentures'];
+        $dentures_text  = $myarray['dentures_text'];
+        $tmj_cp  = $myarray['tmj_cp'];
+        $tmj_cp_text  = $myarray['tmj_cp_text'];
+        $tmj_pain  = $myarray['tmj_pain'];
+        $tmj_pain_text  = $myarray['tmj_pain_text'];
+        $tmj_surgery  = $myarray['tmj_surgery'];
+        $tmj_surgery_text  = $myarray['tmj_surgery_text'];
+        $injury  = $myarray['injury'];
+        $injury_text  = $myarray['injury_text'];
+        $gum_prob  = $myarray['gum_prob'];
+        $gum_prob_text  = $myarray['gum_prob_text'];
+        $gum_surgery  = $myarray['gum_surgery'];
+        $gum_surgery_text  = $myarray['gum_surgery_text'];
+        $clinch_grind_text  = $myarray['clinch_grind_text'];
+        $future_dental_det = $myarray['future_dental_det'];
+        $drymouth_text = $myarray['drymouth_text'];
+
+?>
+<h3 class="sect_header">Medications / Allergies</h3>
+<div class="box">
+                <?php if($premedcheck!=''){ ?>
+                <label class="desc" id="title0" for="Field0" style="width:90%;">
+                            Premedication
+                            <span id="req_0" class="req">*</span>
+                                <?= ($premedcheck)?"- Yes":"- No";?>
+                        </label>
+                        <div>
+                          <?php if($premeddet != ''){ ?>
+                            <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
+                                <?=$premeddet;?>
+                            </span>
+                          <?php } ?>
+                       </div>
+                <?php } ?>
+                          <?php if($allergenscheck != ''){ ?>
+                    <label class="desc" id="title0" for="Field0" style="width:90%">
+                        Allergens <?= ($allergenscheck)?"- Yes":"- No"; ?>
+                    </label>
+                    <div>
+                        <span>
+                          <?php if($other_allergens != ''){ ?>
+                            <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
+                                <?=$other_allergens;?>
+                            </span>
+                          <?php } ?>
+                        </span>
+                    </div>
+                          <?php } ?>
+
+                          <?php if($medicationscheck != ''){ ?>
+                    <label class="desc" id="title0" for="Field0" style="width:90%">
+                        Current Medications <?= ($medicationscheck)?"- Yes":"- No"; ?>
+                    </label>
+                    <div>
+                        <span>
+                          <?php if($other_medications != ''){ ?>
+                        <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
+                                <?=$other_medications;?>
+                        </span>
+                          <?php } ?>
+                        </span>
+                    </div>
+                          <?php } ?>
+</div>
+
+<h3 class="sect_header">Health History</h3>
+<div class="box">
+                          <?php if($other_history != ''){ ?>
+                    <label class="desc" id="title0" for="Field0" style="width:90%;">
+                        Medical History
+                    </label>
+                    <div>
+                        <span>
+                             <span id="h_det" >
+                                <?=$other_history;?>
+                             </span>
+                        </span>
+                    </div>
+                          <?php } ?>
+                        <br />
+
+                    <label class="desc" id="title0" for="Field0">
+                        Dental History
+                    </label>
+                        <table width="90%">
+                <?php if($dental_health != ''){ ?>
+                    <tr>
+                      <td>How would you describe your dental health?</td>
+                                <td><?= $dental_health;?></td>
+                        <td></td>
+                    </tr>
+                <?php } ?>
+                <?php if($wisdom_extraction == 'Yes' || $wisdom_extraction_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you ever had teeth extracted?</td>
+
+                                                 <td><?= $wisdom_extraction;?></td>
+                                                        <td id="wisdom_extraction_extra">Please describe: <?= $wisdom_extraction_text; ?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($removable == 'Yes' || $removable_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you wear removable partials?</td>
+
+                                                        <td><?= $removable;?></td>
+                                                        <td id="removable_extra">Please describe: <?= $removable_text; ?>
+</td>
+                                        </tr>
+                <?php } ?>
+                <?php if($dentures == 'Yes' || $dentures_text != ''){ ?>
+                                       <tr>
+                                                        <td>Do you wear dentures?</td>
+
+                                                        <td><?= $dentures; ?></td>
+
+                                                        <td id="dentures_extra">Please describe: <?= $dentures_text; ?>
+
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($orthodontics == 'Yes' || $year_completed != ''){ ?>
+
+                                        <tr>
+                                                        <td>Have you worn orthodontics (braces)?</td>
+
+                                                        <td><?= $orthodontics;?></td>
+
+                                                        <td id="orthodontics_extra">Year completed: <?=$year_completed;?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($tmj_cp == 'Yes' || $tmj_cp_text != ''){ ?>
+                                        <tr>
+                                                        <td>Does your TMJ (jaw joint) click or pop?</td>
+                                                        <td><?= $tmj_cp;?></td>
+
+                                                        <td id="tmj_cp_extra">Please describe: <?= $tmj_cp_text; ?>
+
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($tmj_pain == 'Yes' || $tmj_pain_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you have pain in this joint?</td>
+                                                        <td><?= $tmj_pain;?></td>
+
+                                                        <td id="tmj_pain_extra">Please describe: <?= $tmj_pain_text; ?>
+                                                </td>
+                                        </tr>
+
+                <?php } ?>
+                <?php if($tmj_surgery == 'Yes' || $tmj_surgery_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you had TMJ (jaw joint) surgery?</td>
+                                                        <td><?= $tmj_surgery;?></td>
+                                                        <td id="tmj_surgery_extra">Please describe: <?= $tmj_surgery_text; ?>
+</td>
+
+                                        </tr>
+                <?php } ?>
+                <?php if($gum_prob == 'Yes' || $gum_prob_text != ''){ ?>
+                                        <tr>
+                                                        <td>Have you ever had gum problems?</td>
+                                                        <td><?= $gum_prob;?></td>
+
+                                                        <td id="gum_prob_extra">Please describe: <?= $gum_prob_text; ?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($gum_surgery == 'Yes' || $gum_surgery_text != ''){ ?>
+
+                                        <tr>
+                                                        <td>Have you ever had gum surgery?</td>
+
+                                                        <td><?= $gum_surgery; ?></td>
+                                                        <td id="gum_surgery_extra">Please describe: <?= $gum_surgery_text; ?>
+                                                </td>
+                                        </tr>
+
+                <?php } ?>
+                <?php if($drymouth == 'Yes' || $drymouth_text != ''){ ?>
+
+                                        <tr>
+                                                        <td>Do you have morning dry mouth?</td>
+
+                                                        <td><?= $drymouth;?></td>
+                                                        <td id="drymouth_extra">Please describe: <?= $drymouth_text; ?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($injury == 'Yes' || $injury_text != ''){ ?>
+
+                                 <tr>
+                                                        <td>Have you ever had injury to your head, face, neck, mouth, or teeth?</td>
+
+                                                        <td><?= $injury; ?></td>
+                                                        <td id="injury_extra">Please describe: <?= $injury_text; ?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+                <?php if($completed_future == 'Yes' || $future_dental_det != ''){ ?>
+                                        <tr>
+                                                        <td>Are you planning to have dental work done in the near future?</td>
+
+
+                                                        <td><?=$completed_future;?></td>
+
+<td id="completed_future_extra">Please describe: <?= $future_dental_det; ?>
+</td>
+                                        </tr>
+                <?php } ?>
+                <?php if($clinch_teeth == 'Yes' || $clinch_grind_text != ''){ ?>
+                                        <tr>
+                                                        <td>Do you clinch or grind your teeth?</td>
+
+                                                        <td><?= $clinch_grind; ?></td>
+
+                                                        <td id="clinch_grind_extra">Please describe: <?= $clinch_grind_text; ?>
+                                                </td>
+                                        </tr>
+                <?php } ?>
+</table>
+<label class="desc" id="title0" for="Field0">
+                        Family History
+                    </label>
+                <?php if($family_hd == 'Yes'){ ?>
+                    <div>
+                        <span class="full">
+                                <label>Have genetic members of your family had Heart Disease?</label>
+                                <?= $family_hd; ?>
+
+                        </span>
+                    </div>
+                <?php } ?>
+                <?php if($family_bp == 'Yes'){ ?>
+                    <div>
+                        <span>
+                                <label>High Blood Pressure?</label>
+                                 <?= $family_bp; ?>
+                        </span>
+                    </div>
+                <?php } ?>
+                <?php if($family_dia == 'Yes'){ ?>
+                    <div>
+                        <span>
+                             <label>Diabetes?</label>
+                             <?= $family_dia; ?>
+                                        </span>
+                </div>
+                <?php } ?>
+                <?php if($family_sd == 'Yes'){ ?>
+                <div>
+                        <span>
+                                <label>Have any genetic members of your family been diagnosed or treated for a sleep disorder?</label>
+                                <?= $family_sd; ?>
+                        </span>
+
+                </div>
+                <?php } ?>
+
+                <label class="desc" id="title0" for="Field0">
+                        SOCIAL HISTORY
+                    </label>
+                <?php if($alcohol != ''){ ?>
+                                Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?= $alcohol;?>
+                            <br /><br />
+                <?php } ?>
+                <?php if($sedative != ''){ ?>
+                            Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?= $sedative;?>
+                            <br /><br />
+                <?php } ?>
+                <?php if($caffeine != ''){ ?>
+
+                            Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?= $caffeine;?>
+                            <br /><br />
+                <?php } ?>
+                <?php if($smoke != ''){ ?>
+                            Do you Smoke?
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?= $smoke;?>
+
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div id="smoke">If Yes, number of packs per day
+                            <?=$smoke_packs?>
+
+                            </div>
+                            <br /><br />
+                <?php } ?>
+                <?php if($tobacco != ''){ ?>
+                            Do you use Chewing Tobacco?
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?= $tobacco;?>
+
+                        </span>
+                <br /><br />
+                <?php } ?>
+                <?php if($additional_paragraph != ''){ ?>
+                <div>
+                        <span>
+                                Additional Paragraph<br />
+                            <textarea name="additional_paragraph" class="field text addr tbox" style="width:650px; height:100px;"><?=$additional_paragraph;?></textarea>
+
+                        </span>
+                    </div>
+                <?php } ?>
+</div>
+
+
+
 
 
 <?php include "includes/bottom.htm"; ?>

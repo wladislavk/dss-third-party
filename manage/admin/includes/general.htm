@@ -260,7 +260,7 @@ class MDReferralFilter {
 }
 
 // Function to Create Letters
-function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $pat_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_patient = null, $cc_md_list = null, $cc_md_referral_list = null, $cc_pat_referral_list = null, $font_size = null, $font_family = null) {
+function create_letter ($templateid, $pid = null, $info_id = null, $topatient = null, $md_list = null, $md_referral_list = null, $pat_referral_list = null, $parentid = null, $template = null, $send_method = null, $status = null, $deleted = null, $check_recipient = true, $template_type = null, $cc_topatient = null, $cc_md_list = null, $cc_md_referral_list = null, $cc_pat_referral_list = null, $font_size = null, $font_family = null) {
   if(isset($_SESSION['docid'])){
     $l_sql = "SELECT use_letters FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
     $l_q = mysql_query($l_sql);

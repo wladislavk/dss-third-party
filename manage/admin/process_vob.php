@@ -437,15 +437,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Reference # pertaining to call
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$disabled?>/> 
-                <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
                 Insurance Effective Date
             </td>
             <td valign="top" class="frmdata">
@@ -466,7 +457,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Is this code covered under their plan?
+		Is the CPT code E0486 covered under the patient's plan?
             </td>
             <td valign="top" class="frmdata">
                 <?php $yes_checked = ($preauth['trxn_code_covered'] == '1') ? 'CHECKED' : ''; ?>
@@ -540,30 +531,6 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                     Notes:<br/>
                     <textarea name="hmo_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['hmo_auth_notes']?></textarea>
                   </div>
-                </div>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF" class="covered-row">
-            <td valign="top" class="frmhead" width="30%">
-                Is Pre-Authorization required?
-            </td>
-            <td valign="top" class="frmdata">
-                <?php $yes_checked = ($preauth['is_pre_auth_required'] == '1') ? 'CHECKED' : ''; ?>
-                <?php $no_checked  = ($preauth['is_pre_auth_required'] != '1') ? 'CHECKED' : ''; ?>
-                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
-                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
-                <br/><br/>
-
-                <div id="is_pre_auth_required_yes" class="sub-question">
-                  <h3>Verbal</h3>
-                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox covered" <?=$disabled?>/><br/>
-                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox covered" <?=$disabled?>/><br/>
-                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
-                  
-                  <h3>Written</h3>
-                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered calendar" <?=$disabled?>/> <br/>
-                  Pre-Authorization Number <input id="pre_auth_num" type="text" name="pre_auth_num" value="<?=$preauth['pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
-                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
                 </div>
             </td>
         </tr>
@@ -663,6 +630,39 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <?php $no_checked  = ($preauth['out_of_pocket_met'] != '1') ? 'CHECKED' : ''; ?>
                 <input id="out_of_pocket_met_yes" type="radio" name="out_of_pocket_met" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
                 <input id="out_of_pocket_met_no" type="radio" name="out_of_pocket_met" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF" class="covered-row">
+            <td valign="top" class="frmhead" width="30%">
+                Is Pre-Authorization required?
+            </td>
+            <td valign="top" class="frmdata">
+                <?php $yes_checked = ($preauth['is_pre_auth_required'] == '1') ? 'CHECKED' : ''; ?>
+                <?php $no_checked  = ($preauth['is_pre_auth_required'] != '1') ? 'CHECKED' : ''; ?>
+                <input type="radio" name="is_pre_auth_required" value="1" <?= $yes_checked ?> <?=$disabled?> class="covered"/> Yes
+                <input type="radio" name="is_pre_auth_required" value="0" <?= $no_checked ?> <?=$disabled?> class="covered"/> No
+                <br/><br/>
+
+                <div id="is_pre_auth_required_yes" class="sub-question">
+                  <h3>Verbal</h3>
+                  Name <input type="text" name="verbal_pre_auth_name" value="<?=$preauth['verbal_pre_auth_name']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Ref Num <input type="text" name="verbal_pre_auth_ref_num" value="<?=$preauth['verbal_pre_auth_ref_num']?>" class="tbox covered" <?=$disabled?>/><br/>
+                  Notes<br/><textarea name="verbal_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['verbal_pre_auth_notes']?></textarea><br/>
+
+                  <h3>Pre-Auth Approval</h3>
+                  Date Received <input id="written_pre_auth_date_received" type="text" name="written_pre_auth_date_received" value="<?=$preauth['written_pre_auth_date_received']?>" onchange="validateDate('written_pre_auth_date_received');" class="tbox covered calendar" <?=$disabled?>/> <br/>
+                  Pre-Authorization Number <input id="pre_auth_num" type="text" name="pre_auth_num" value="<?=$preauth['pre_auth_num']?>" class="tbox covered" <?=$disabled?>/> <br/>
+                  Notes<br/><textarea name="written_pre_auth_notes" class="tbox covered" <?=$disabled?>><?=$preauth['written_pre_auth_notes']?></textarea><br/>
+                </div>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Reference # pertaining to call
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="call_reference_num" value="<?=$preauth['call_reference_num']?>" class="tbox" <?=$disabled?>/>
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

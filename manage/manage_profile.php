@@ -55,6 +55,11 @@ if(isset($_POST["profile_submit"]))
 	updated_at=now()
 	WHERE userid='".$_SESSION['userid']."'";
   mysql_query($in_sql);
+$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$u_q = mysql_query($u_sql);
+$u = mysql_fetch_assoc($u_q);
+$userid = $u['edx_id'];
+shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
   form_update_all($_SESSION['docid']);
 	}
 }
@@ -83,6 +88,12 @@ if(isset($_POST["practice_submit"]))
 	updated_at=now()
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
+$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+$u_q = mysql_query($u_sql);
+$u = mysql_fetch_assoc($u_q);
+$userid = $u['edx_id'];
+shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
+
 
                         $loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
@@ -91,6 +102,7 @@ if(isset($_POST["practice_submit"]))
                                 city = '".s_for($_POST["mailing_city"])."', 
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
+				email = '".s_for($_POST["mailing_email"])."',
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
                                 fax = '".s_for(num($_POST["mailing_fax"]))."'
                                 where default_location=1 AND docid='".$_SESSION["docid"]."'";
@@ -223,7 +235,7 @@ $num_custom=mysql_num_rows($my);
   $user = mysql_fetch_assoc($u_q);
 
   $p_sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-    $p_sql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
+    $p_sql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
                 LEFT JOIN dental_user_company c ON u.userid = c.userid
                 LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
                 where u.userid='".mysql_real_escape_string($_SESSION["docid"])."'";
@@ -411,6 +423,10 @@ $num_custom=mysql_num_rows($my);
   <div class="detail">
     <label>Mailing Practice:</label>
     <input class="value" name="mailing_practice" value="<?= $practice['mailing_practice']; ?>" />
+  </div>
+  <div class="detail">
+    <label>Practice Email:</label>
+    <input class="value" name="mailing_email" value="<?= $practice['mailing_email']; ?>" />
   </div>
   <div class="detail">
     <label>Mailing Name:</label>
@@ -618,7 +634,7 @@ if($let_r['use_letters']){
 <?php include 'stripe_card_info.php'; ?>
 </div>
 
-
+<?php include 'signature_test.php'; ?>
 
 
 <div id="popupContact" style="width:750px;height:460px">

@@ -115,7 +115,7 @@ if($_POST["contactsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -313,7 +313,7 @@ if($_POST["contactsub"] == 1)
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Contact" class="button" />
+                <input type="submit" value="<?=$but_text?> Contact" class="btn btn-primary">
 		<?php if($themyarray["contactid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_fcontact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                  Delete 

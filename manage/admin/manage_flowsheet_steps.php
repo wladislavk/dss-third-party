@@ -42,7 +42,7 @@ if(isset($_REQUEST['order_submit'])){
   ?>
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -110,13 +110,13 @@ if(isset($_REQUEST['order_submit'])){
 				</td>
 						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="$('#next_<?= $myarray['id'];?>').toggle()" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="$('#next_<?= $myarray['id'];?>').toggle()" title="Edit" class="btn btn-primary btn-sm">
 						<?php if(is_super($_SESSION['admin_access'])){ ?>
 							Change Next	
 						<?php }else{ ?>
 							View Next
 						<?php } ?>
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
@@ -127,7 +127,7 @@ if(isset($_REQUEST['order_submit'])){
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

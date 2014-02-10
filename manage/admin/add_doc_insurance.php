@@ -129,14 +129,7 @@ if($_POST["doc_insuranceub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_doc_insurance where doc_insuranceid='".$_REQUEST["ed"]."'";
@@ -175,12 +168,12 @@ if($_POST["doc_insuranceub"] == 1)
 	<br /><br />
     
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="doc_insurancefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_insuranceabc(this)" enctype="multipart/form-data">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Insurance Information
@@ -194,7 +187,7 @@ if($_POST["doc_insuranceub"] == 1)
                 Title
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="title" value="<?=$title?>" class="tbox" /> 
+                <input type="text" name="title" value="<?=$title?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -272,7 +265,7 @@ if($_POST["doc_insuranceub"] == 1)
                 <b>Select Doctor from the List</b>
                 <br />
                 
-                <select name="docid[]" multiple="multiple" size="5" class="tbox">
+                <select name="docid[]" multiple="multiple" size="5" class="form-control">
                 	<? while($doc_myarray = mysql_fetch_array($doc_my))
 					{?>
                     	<option value="<?=st($doc_myarray['userid'])?>"  <? if(strpos($docid,'~'.st($doc_myarray['userid']).'~') === false){ } else { echo " selected";}?>>
@@ -289,7 +282,7 @@ if($_POST["doc_insuranceub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -297,7 +290,7 @@ if($_POST["doc_insuranceub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -310,7 +303,7 @@ if($_POST["doc_insuranceub"] == 1)
                 </span><br />
                 <input type="hidden" name="doc_insuranceub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["doc_insuranceid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Insurance Information " class="button" />
+                <input type="submit" value="<?=$but_text?> Insurance Information " class="btn btn-primary">
 		<?php if($themyarray["doc_insuranceid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_doc_insurance.php?delid=<?=$themyarray["doc_insuranceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete

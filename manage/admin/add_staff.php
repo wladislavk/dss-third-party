@@ -149,14 +149,7 @@ if($_POST["staffsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_users where userid='".$_REQUEST["ed"]."'";
@@ -232,12 +225,12 @@ if($_POST["staffsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="stafffrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" onSubmit="return staffabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Staff 
@@ -251,7 +244,7 @@ if($_POST["staffsub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="username" value="<?=$username?>" class="tbox" /> 
+                <input type="text" name="username" value="<?=$username?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -261,7 +254,7 @@ if($_POST["staffsub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="password" value="<?=$password;?>" class="tbox" /> 
+                <input type="text" name="password" value="<?=$password;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -271,7 +264,7 @@ if($_POST["staffsub"] == 1)
                 First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
+                <input type="text" name="first_name" value="<?=$first_name;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -280,7 +273,7 @@ if($_POST["staffsub"] == 1)
                 Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="last_name" value="<?=$last_name;?>" class="tbox" />
+                <input type="text" name="last_name" value="<?=$last_name;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -289,7 +282,7 @@ if($_POST["staffsub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input type="text" name="email" value="<?=$email;?>" class="form-control" /> 
                 <span class="red">*</span>
             </td>
         </tr>
@@ -298,7 +291,7 @@ if($_POST["staffsub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -331,7 +324,7 @@ Fields left blank below will default to the standard billing settings for your o
                 NPI
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="npi" value="<?=$npi;?>" class="tbox" />
+                <input type="text" name="npi" value="<?=$npi;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -339,7 +332,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Medicare Provider (NPI/DME) Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="medicare_npi" value="<?=$medicare_npi;?>" class="tbox" />
+                <input type="text" name="medicare_npi" value="<?=$medicare_npi;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -347,7 +340,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Medicare PTAN Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="medicare_ptan" value="<?=$medicare_ptan;?>" class="tbox" />
+                <input type="text" name="medicare_ptan" value="<?=$medicare_ptan;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -355,7 +348,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Tax ID or SSN
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn;?>" class="tbox" />
+                <input type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -372,7 +365,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Practice
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="practice" value="<?=$practice;?>" class="tbox" />
+                <input type="text" name="practice" value="<?=$practice;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -380,8 +373,8 @@ Fields left blank below will default to the standard billing settings for your o
                 Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
-                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+                <input type="text" name="address" class="form-control" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="form-control"><?=$address;?></textarea>-->
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -389,7 +382,7 @@ Fields left blank below will default to the standard billing settings for your o
                 City
             </td>
             <td valign="top" class="frmdata">
-                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
+                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -397,7 +390,7 @@ Fields left blank below will default to the standard billing settings for your o
                 State
             </td>
             <td valign="top" class="frmdata">
-                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
+                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -405,7 +398,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Zip
             </td>
             <td valign="top" class="frmdata">
-                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
+                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="form-control" />
             </td>
         </tr>
         <tr class="files_field" bgcolor="#FFFFFF">
@@ -413,7 +406,7 @@ Fields left blank below will default to the standard billing settings for your o
                 Phone
             </td>
             <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control" />
             </td>
         </tr>
 	<tr>
@@ -440,7 +433,7 @@ Fields left blank below will default to the standard billing settings for your o
                 </span><br />
                 <input type="hidden" name="staffsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Staff" class="button" />
+                <input type="submit" value="<?=$but_text?> Staff" class="btn btn-primary">
 		<?php if($themyarray["userid"] != ''){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_staff.php?delid=<?=$themyarray["userid"];?>&docid=<?=$_GET['docid'];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

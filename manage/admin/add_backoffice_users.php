@@ -107,14 +107,7 @@ if($_POST["usersub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select a.*, ac.companyid from admin  a
@@ -160,12 +153,12 @@ if($_POST["usersub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Backoffice User 
@@ -179,7 +172,7 @@ if($_POST["usersub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
+                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -189,7 +182,7 @@ if($_POST["usersub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
+                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -198,7 +191,7 @@ if($_POST["usersub"] == 1)
                 Re-type Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="tbox" />
+                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -208,7 +201,7 @@ if($_POST["usersub"] == 1)
                 First Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
+                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -217,7 +210,7 @@ if($_POST["usersub"] == 1)
                 Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="tbox" />
+                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -226,7 +219,7 @@ if($_POST["usersub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -237,7 +230,7 @@ if($_POST["usersub"] == 1)
                Company
             </td>
             <td valign="top" class="frmdata">
-                <select id="companyid" name="companyid" class="tbox" onchange="update_access()">
+                <select id="companyid" name="companyid" class="form-control" onchange="update_access()">
 			<option value="">Select Company</option>
                         <?php
                         $c_sql = "SELECT * FROM companies ORDER BY name asc";
@@ -254,7 +247,7 @@ if($_POST["usersub"] == 1)
                 Access Level
             </td>
             <td valign="top" class="frmdata">
-                <select id="admin_access" name="admin_access" class="tbox">
+                <select id="admin_access" name="admin_access" class="form-control">
 			<option value="">Select Access</option>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
@@ -275,7 +268,7 @@ if($_POST["usersub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -288,7 +281,7 @@ if($_POST["usersub"] == 1)
                 </span><br />
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["adminid"]?>" />
-                <input type="submit" value=" <?=$but_text?> User" class="button" />
+                <input type="submit" value="<?=$but_text?> User" class="btn btn-primary">
                 <?php if($themyarray["adminid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?=$themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

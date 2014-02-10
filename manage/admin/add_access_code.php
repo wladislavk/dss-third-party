@@ -65,14 +65,7 @@ if($_POST["accesscodesub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_access_codes where id='".$_REQUEST["ed"]."'";
@@ -108,12 +101,12 @@ if($_POST["accesscodesub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="contacttypefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return accesscodeabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Access Code
@@ -127,7 +120,7 @@ if($_POST["accesscodesub"] == 1)
                 Access Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="access_code" value="<?=$access_code;?>" class="tbox" /> 
+                <input type="text" name="access_code" value="<?=$access_code;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -144,7 +137,7 @@ if($_POST["accesscodesub"] == 1)
                  Plan
             </td>
             <td valign="top" class="frmdata">
-                <select name="plan_id" class="tbox">
+                <select name="plan_id" class="form-control">
                         <?php
                           $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
                           $p_q = mysql_query($p_sql);
@@ -172,7 +165,7 @@ if($_POST["accesscodesub"] == 1)
                 </span><br />
                 <input type="hidden" name="accesscodesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Access Code" class="button" />
+                <input type="submit" value="<?=$but_text?> Access Code" class="btn btn-primary">
             </td>
         </tr>
     </table>

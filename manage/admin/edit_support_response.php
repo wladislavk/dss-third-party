@@ -49,7 +49,7 @@ if($_POST["ressub"] == 1)
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?ed=<?= $_GET['ed']; ?>" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td class="cat_head">
                <?=$but_text?> Support Response
@@ -68,7 +68,7 @@ if($_POST["ressub"] == 1)
                 </span><br />
                 <input type="hidden" name="ressub" value="1" />
                 <input type="hidden" name="id" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" Update Response " class="button" />
+                <input type="submit" value=" Update Response " class="btn btn-warning">
             </td>
         </tr>
     </table>

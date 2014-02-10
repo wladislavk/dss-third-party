@@ -339,14 +339,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
@@ -483,12 +476,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> User 
@@ -503,7 +496,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		<span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
+                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -512,7 +505,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="npi" type="text" name="npi" value="<?=$npi?>" class="tbox" /> 
+                <input id="npi" type="text" name="npi" value="<?=$npi?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -520,7 +513,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Medicare Provider (NPI/DME) Number
             </td>
             <td valign="top" class="frmdata">
-                <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="tbox" /> 
+                <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded"  bgcolor="#FFFFFF">
@@ -528,7 +521,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Medicare PTAN Number
             </td>
             <td valign="top" class="frmdata">
-                <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="tbox" />
+                <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -537,7 +530,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="tbox" /> 
+                <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -547,9 +540,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?> class="tbox" />
+                <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?> class="form-control" />
 		EIN
-		<input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?> class="tbox" />
+		<input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?> class="form-control" />
                 SSN
             </td>
         </tr>
@@ -559,7 +552,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="practice" type="text" name="practice" value="<?=$practice?>" class="tbox" /> 
+                <input id="practice" type="text" name="practice" value="<?=$practice?>" class="form-control" /> 
             </td>
         </tr>
 	<?php if(!isset($_REQUEST['ed'])){ ?>
@@ -569,7 +562,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
+                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -578,7 +571,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="tbox" />
+                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control" />
             </td>
         </tr>
 	<?php } ?>
@@ -588,7 +581,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="tbox" /> 
+                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control" /> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -597,7 +590,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="tbox" />
+                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -606,7 +599,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -615,8 +608,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-		<input type="text" name="address" class="tbox" id="address" value="<?= $address; ?>" />
-                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+		<input type="text" name="address" class="form-control" id="address" value="<?= $address; ?>" />
+                <!--<textarea name="address" class="form-control"><?=$address;?></textarea>-->
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -625,7 +618,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="tbox" />
+                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -634,7 +627,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="tbox" />
+                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -643,7 +636,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="tbox" />
+                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -652,7 +645,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" /> 
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control" /> 
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -660,7 +653,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Fax
             </td>
             <td valign="top" class="frmdata">
-                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="tbox" />
+                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="form-control" />
             </td>
         </tr>
 
@@ -670,7 +663,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="tbox" />
+                <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -679,7 +672,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="tbox" />
+                <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -688,8 +681,8 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="mailing_address" class="tbox" id="mailing_address" value="<?= $mailing_address; ?>" />
-                <!--<textarea name="address" class="tbox"><?=$address;?></textarea>-->
+                <input type="text" name="mailing_address" class="form-control" id="mailing_address" value="<?= $mailing_address; ?>" />
+                <!--<textarea name="address" class="form-control"><?=$address;?></textarea>-->
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -698,7 +691,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="tbox" />
+                <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -707,7 +700,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="tbox" />
+                <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -716,7 +709,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="tbox" />
+                <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -725,7 +718,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <span class="red">*</span>
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="tbox" />
+                <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="form-control" />
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
@@ -733,7 +726,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Mailing Fax 
             </td>
             <td valign="top" class="frmdata">
-                <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="tbox" />
+                <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="form-control" />
             </td>
         </tr>
 
@@ -829,7 +822,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select id="status" name="status" class="tbox" onchange="showSuspended();">
+            	<select id="status" name="status" class="form-control" onchange="showSuspended();">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
 			<option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
@@ -859,7 +852,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  Admin Company
             </td>
             <td valign="top" class="frmdata">
-                <select name="companyid" class="tbox">
+                <select name="companyid" class="form-control">
 			<?php
 			  $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_SOFTWARE."' ORDER BY name ASC";
 			  $bu_q = mysql_query($bu_sql);
@@ -874,7 +867,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  User Type
             </td>
             <td valign="top" class="frmdata">
-                <select name="user_type" class="tbox">
+                <select name="user_type" class="form-control">
                             <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
                             <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
 
@@ -887,7 +880,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  Billing Company
             </td>
             <td valign="top" class="frmdata">
-                <select name="billing_company_id" class="tbox">
+                <select name="billing_company_id" class="form-control">
 			<option value="">None</option>
                         <?php
                           $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_BILLING."' ORDER BY name ASC";
@@ -918,7 +911,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  Access Code
             </td>
             <td valign="top" class="frmdata">
-                <select name="access_code_id" id="access_code_id" class="tbox">
+                <select name="access_code_id" id="access_code_id" class="form-control">
                         <?php
                           $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
                           $p_q = mysql_query($p_sql);
@@ -954,7 +947,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  Plan
             </td>
             <td valign="top" class="frmdata">
-                <select name="plan_id" id="plan_id" class="tbox">
+                <select name="plan_id" id="plan_id" class="form-control">
                         <?php
                           $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
                           $p_q = mysql_query($p_sql);

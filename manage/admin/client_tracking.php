@@ -287,7 +287,7 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

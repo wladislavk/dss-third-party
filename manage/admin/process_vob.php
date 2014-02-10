@@ -204,7 +204,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
     </div>
     <? }?>
     <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                Verification of benefits for <?= $preauth['patient_firstname']; ?> <?= $preauth['patient_lastname']; ?> 
@@ -709,7 +709,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 <input type="hidden" name="preauth_id" value="<?= $_REQUEST['ed'] ?>"/>
                 Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
                 <?php if (!$is_complete && !$is_rejected ) { ?>
-                  <input type="submit" value="Save Verfication of Benefits" class="button" />
+                  <input type="submit" value="Save Verfication of Benefits" class="btn btn-warning">
                 <?php } ?>
 		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>
                     <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel dellink" title="DELETE">

@@ -32,7 +32,7 @@ $num_users=mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">

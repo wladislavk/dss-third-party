@@ -83,14 +83,7 @@ if($_POST["adminsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from admin where adminid='".$_REQUEST["ed"]."'";
@@ -128,12 +121,12 @@ if($_POST["adminsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> User 
@@ -147,7 +140,7 @@ if($_POST["adminsub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="tbox" /> 
+                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -169,7 +162,7 @@ if($_POST["adminsub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="tbox" />
+                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -178,7 +171,7 @@ if($_POST["adminsub"] == 1)
                 Re-type Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="tbox" />
+                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -188,7 +181,7 @@ if($_POST["adminsub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -197,7 +190,7 @@ if($_POST["adminsub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -208,7 +201,7 @@ if($_POST["adminsub"] == 1)
                 </span><br />
                 <input type="hidden" name="adminsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["adminid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Admin" class="button" />
+                <input type="submit" value="<?=$but_text?> Admin" class="btn btn-primary">
             </td>
         </tr>
     </table>

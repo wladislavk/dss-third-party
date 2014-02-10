@@ -86,14 +86,7 @@ if($_POST["devsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_device_guide_devices where id='".$_REQUEST["ed"]."'";
@@ -123,12 +116,12 @@ if($_POST["devsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Device Setting
@@ -142,7 +135,7 @@ if($_POST["devsub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
             </td>
         </tr>
 <?php
@@ -160,7 +153,7 @@ if($_POST["devsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
 		<?php if($set_r["setting_type"] == DSS_DEVICE_SETTING_TYPE_RANGE){ ?>
-                  <input id="setting_<?= $set_r['id']; ?>" type="text" name="setting_<?= $set_r['id']; ?>" value="<?=$set_r['value'];?>" class="tbox" />
+                  <input id="setting_<?= $set_r['id']; ?>" type="text" name="setting_<?= $set_r['id']; ?>" value="<?=$set_r['value'];?>" class="form-control" />
 		<?php }else{ ?>
 		  <input type="checkbox" <?= ($set_r['value']==1)?'checked="checked"':''; ?> id="setting_<?= $set_r['id']; ?>" type="text" name="setting_<?= $set_r['id']; ?>" value="1" />
 		<?php } ?>
@@ -175,7 +168,7 @@ if($_POST["devsub"] == 1)
             <td  colspan="2" align="center">
                 <input type="hidden" name="devsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Device" class="button" />
+                <input type="submit" value="<?=$but_text?> Device" class="btn btn-primary">
             </td>
         </tr>
     </table>

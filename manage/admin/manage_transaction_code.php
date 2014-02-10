@@ -86,7 +86,7 @@ if(is_super($_SESSION['admin_access'])){
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -166,7 +166,7 @@ if(is_super($_SESSION['admin_access'])){
 				</td>
 				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
 					  <?=st($myarray['sortby'])?>
 					<?php } ?>
@@ -174,9 +174,9 @@ if(is_super($_SESSION['admin_access'])){
 						
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_transaction_code.php?ed=<?=$myarray["transaction_codeid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
@@ -189,7 +189,7 @@ if(is_super($_SESSION['admin_access'])){
 			<td valign="top" class="col_head" colspan="2">
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />
-				<input type="submit" value=" Change " class="button" />
+				<input type="submit" value=" Change " class="btn btn-warning">
 				<?php } ?>
 			</td>
 		</tr>
@@ -200,7 +200,7 @@ if(is_super($_SESSION['admin_access'])){
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

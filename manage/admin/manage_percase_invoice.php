@@ -143,7 +143,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -253,7 +253,7 @@ $num_users=mysql_num_rows($my);
 </form>
 
 <br /><br />
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="20%">
                         Company
@@ -296,7 +296,7 @@ $num_users=mysql_num_rows($my);
 
 </table>
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

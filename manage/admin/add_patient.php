@@ -444,7 +444,7 @@ if($_POST["patientsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -1464,7 +1464,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="19">
+            	<select name="status" class="form-control" tabindex="19">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -1479,7 +1479,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 Assign to 
             </td>
             <td valign="top" class="frmdata">
-            	<select name="docid" class="tbox" tabindex="19">
+            	<select name="docid" class="form-control" tabindex="19">
             	<?php
               $query = "SELECT * FROM dental_users WHERE `user_access` = 2;";
               $result = mysql_query($query);
@@ -1502,7 +1502,7 @@ echo "<option value=\"". $pcont_l['contactid'] ."\"". $selected .">".$pcont_l['f
                 </span><br />
                 <input type="hidden" name="patientsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["patientid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Patient" class="button" />
+                <input type="submit" value="<?=$but_text?> Patient" class="btn btn-primary">
 <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_patient.php?delid=<?=$themyarray["patientid"];?>&docid=<?=$_GET['docid']?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete

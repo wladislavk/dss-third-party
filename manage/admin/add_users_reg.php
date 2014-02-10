@@ -102,14 +102,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 	<?php
 		$name = $_POST['name'];
 		$email = $_POST['email'];
@@ -129,12 +122,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return userregabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                Add User 
@@ -148,7 +141,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -166,7 +159,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -176,7 +169,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  Admin Company
             </td>
             <td valign="top" class="frmdata">
-                <select name="companyid" class="tbox">
+                <select name="companyid" class="form-control">
 			<?php
 			  $bu_sql = "SELECT * FROM companies ORDER BY name ASC";
 			  $bu_q = mysql_query($bu_sql);
@@ -246,7 +239,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                  User Type
             </td>
             <td valign="top" class="frmdata">
-                <select name="user_type" class="tbox">
+                <select name="user_type" class="form-control">
                             <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
                             <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
 
@@ -262,7 +255,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </span><br />
                 <input type="hidden" name="usersub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
-                <input type="submit" value=" Add User" class="button" />
+                <input type="submit" value="Add User" class="btn btn-primary">
             </td>
         </tr>
     </table>

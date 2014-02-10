@@ -124,7 +124,7 @@ if(isset($_GET['msg'])){
 <div style="clear:both;"></div>
 <br />
 <form name="pagefrm" id="oa_form" action="insurance_officeally.php" method="post" target="_blank" onsubmit="setTimeout(function () { window.location.reload(); }, 500)">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">

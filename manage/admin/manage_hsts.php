@@ -226,7 +226,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -313,9 +313,9 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?=st($myarray["authorized_name"]);?>&nbsp;
                                 </td>
 				<td valign="top">
-					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;" onclick="Javascript: loadPopup('view_hst.php?ed=<?=$myarray["id"];?><?= (isset($_GET['status']) && $_GET['status']!='')?"&ret_status=".$_GET['status']:""; ?>');" title="Edit" class="btn btn-primary btn-sm">
 						View
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>
 			</tr>
 	<? 	}
@@ -325,7 +325,7 @@ $my=mysql_query($sql) or die(mysql_error());
 
 
 <div id="popupContact" style="width:750px;height:500px;">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

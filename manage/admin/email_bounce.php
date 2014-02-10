@@ -76,13 +76,13 @@ if(isset($_REQUEST['email'])){
 			<td><?= $r['email']; ?></td>
 			<td><?= $r['user_name']; ?></td>
 			<Td><?= $r['company_name']; ?></td>
-			<td><a style="margin-right:20px;" href="#" onclick="Javascript: loadPopup('add_patient.php?ed=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>');" class="editlink" title="EDIT">
+			<td><a style="margin-right:20px;" href="#" onclick="Javascript: loadPopup('add_patient.php?ed=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
 				
-				<a href="email_bounce.php?pid=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>&bounce=1&email=<?= urlencode($_REQUEST['email']); ?>" class="editlink" title="EDIT">
+				<a href="email_bounce.php?pid=<?= $r['patientid']; ?>&amp;docid=<?= $r['docid']; ?>&bounce=1&email=<?= urlencode($_REQUEST['email']); ?>" title="Edit" class="btn btn-primary btn-sm">
                                                 Mark Bounce 
-                                        </a>
+                                         <span class="glyphicon glyphicon-pencil"></span></a>
 			</td>
 		<?php
 	}
@@ -92,7 +92,7 @@ if(isset($_REQUEST['email'])){
 ?>
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

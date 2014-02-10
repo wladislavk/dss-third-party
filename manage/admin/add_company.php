@@ -90,14 +90,7 @@ if($_POST["compsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from companies where id='".$_REQUEST["ed"]."'";
@@ -161,12 +154,12 @@ if($_POST["compsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Company 
@@ -180,7 +173,7 @@ if($_POST["compsub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -189,7 +182,7 @@ if($_POST["compsub"] == 1)
                 Address 1
             </td>
             <td valign="top" class="frmdata">
-                <input id="add1" type="text" name="add1" value="<?=$add1;?>" class="tbox" />
+                <input id="add1" type="text" name="add1" value="<?=$add1;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -198,7 +191,7 @@ if($_POST["compsub"] == 1)
                 Address 2
             </td>
             <td valign="top" class="frmdata">
-                <input id="add2" type="text" name="add2" value="<?=$add2;?>" class="tbox" />
+                <input id="add2" type="text" name="add2" value="<?=$add2;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -207,7 +200,7 @@ if($_POST["compsub"] == 1)
                 City
             </td>
             <td valign="top" class="frmdata">
-                <input id="city" type="text" name="city" value="<?=$city;?>" class="tbox" />
+                <input id="city" type="text" name="city" value="<?=$city;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -216,7 +209,7 @@ if($_POST["compsub"] == 1)
                 State
             </td>
             <td valign="top" class="frmdata">
-                <input id="state" type="text" name="state" value="<?=$state;?>" class="tbox" />
+                <input id="state" type="text" name="state" value="<?=$state;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -225,7 +218,7 @@ if($_POST["compsub"] == 1)
                 Postal Code
             </td>
             <td valign="top" class="frmdata">
-                <input id="zip" type="text" name="zip" value="<?=$zip;?>" class="tbox" />
+                <input id="zip" type="text" name="zip" value="<?=$zip;?>" class="form-control" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -234,7 +227,7 @@ if($_POST["compsub"] == 1)
                 Phone
             </td>
             <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="tbox" />
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -242,7 +235,7 @@ if($_POST["compsub"] == 1)
                 Fax
             </td>
             <td valign="top" class="frmdata">
-                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="tbox" />
+                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -250,7 +243,7 @@ if($_POST["compsub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="tbox" />
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" />
             </td>
         </tr>
 
@@ -259,7 +252,7 @@ if($_POST["compsub"] == 1)
                 Eligible API Key
             </td>
             <td valign="top" class="frmdata">
-                <input id="zip" type="text" name="eligible_api_key" value="<?=$eligible_api_key;?>" class="tbox" />
+                <input id="zip" type="text" name="eligible_api_key" value="<?=$eligible_api_key;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -267,7 +260,7 @@ if($_POST["compsub"] == 1)
                 Stripe SECRET Key
             </td>
             <td valign="top" class="frmdata">
-                <input id="stripe_secret_key" type="text" name="stripe_secret_key" value="<?=$stripe_secret_key;?>" class="tbox" />
+                <input id="stripe_secret_key" type="text" name="stripe_secret_key" value="<?=$stripe_secret_key;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -275,7 +268,7 @@ if($_POST["compsub"] == 1)
                 Stripe PUBLISHABLE Key
             </td>
             <td valign="top" class="frmdata">
-                <input id="stripe_publishable_key" type="text" name="stripe_publishable_key" value="<?=$stripe_publishable_key;?>" class="tbox" />
+                <input id="stripe_publishable_key" type="text" name="stripe_publishable_key" value="<?=$stripe_publishable_key;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -283,7 +276,7 @@ if($_POST["compsub"] == 1)
                 SFAX Security Context
             </td>
             <td valign="top" class="frmdata">
-                <input id="sfax_security_context" type="text" name="sfax_security_context" value="<?=$sfax_security_context;?>" class="tbox" />
+                <input id="sfax_security_context" type="text" name="sfax_security_context" value="<?=$sfax_security_context;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -291,7 +284,7 @@ if($_POST["compsub"] == 1)
                 SFAX App ID
             </td>
             <td valign="top" class="frmdata">
-                <input id="sfax_app_id" type="text" name="sfax_app_id" value="<?=$sfax_app_id;?>" class="tbox" />
+                <input id="sfax_app_id" type="text" name="sfax_app_id" value="<?=$sfax_app_id;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -299,7 +292,7 @@ if($_POST["compsub"] == 1)
                 SFAX App Key
             </td>
             <td valign="top" class="frmdata">
-                <input id="sfax_app_key" type="text" name="sfax_app_key" value="<?=$sfax_app_key;?>" class="tbox" />
+                <input id="sfax_app_key" type="text" name="sfax_app_key" value="<?=$sfax_app_key;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -307,7 +300,7 @@ if($_POST["compsub"] == 1)
                 SFAX Init Vector
             </td>
             <td valign="top" class="frmdata">
-                <input id="sfax_init_vector" type="text" name="sfax_init_vector" value="<?=$sfax_init_vector;?>" class="tbox" />
+                <input id="sfax_init_vector" type="text" name="sfax_init_vector" value="<?=$sfax_init_vector;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -315,7 +308,7 @@ if($_POST["compsub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -326,7 +319,7 @@ if($_POST["compsub"] == 1)
                 Company Type
             </td>
             <td valign="top" class="frmdata">
-                <select name="company_type" class="tbox">
+                <select name="company_type" class="form-control">
                         <option value="<?= DSS_COMPANY_TYPE_SOFTWARE; ?>" <? if($company_type == DSS_COMPANY_TYPE_SOFTWARE) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_SOFTWARE]; ?></option>
                         <option value="<?= DSS_COMPANY_TYPE_BILLING; ?>" <? if($company_type!='' && $company_type == DSS_COMPANY_TYPE_BILLING) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_BILLING]; ?></option>
                         <option value="<?= DSS_COMPANY_TYPE_HST; ?>" <? if($company_type!='' && $company_type == DSS_COMPANY_TYPE_HST) echo " selected";?>><?= $dss_company_type_labels[DSS_COMPANY_TYPE_HST]; ?></option>
@@ -340,7 +333,7 @@ if($_POST["compsub"] == 1)
                 </span><br />
                 <input type="hidden" name="compsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Company" class="button" />
+                <input type="submit" value="<?=$but_text?> Company" class="btn btn-primary">
                 <?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_companies.php?delid=<?=$themyarray["id"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

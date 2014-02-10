@@ -63,14 +63,7 @@ if($_POST["areasub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <br />
     <?
@@ -107,12 +100,12 @@ if($_POST["areasub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="areafrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return areaabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Area 
@@ -126,7 +119,7 @@ if($_POST["areasub"] == 1)
                 Area
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="area" value="<?=$area?>" class="tbox" /> 
+                <input type="text" name="area" value="<?=$area?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -135,7 +128,7 @@ if($_POST["areasub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -143,7 +136,7 @@ if($_POST["areasub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -154,7 +147,7 @@ if($_POST["areasub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="tbox" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -164,7 +157,7 @@ if($_POST["areasub"] == 1)
                 </span><br />
                 <input type="hidden" name="areasub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["areaid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Area" class="button" />
+                <input type="submit" value="<?=$but_text?> Area" class="btn btn-primary">
             </td>
         </tr>
     </table>

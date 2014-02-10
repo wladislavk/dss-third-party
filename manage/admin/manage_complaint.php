@@ -85,7 +85,7 @@ if($_POST['sortsub'] == 1)
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -136,7 +136,7 @@ if($_POST['sortsub'] == 1)
 				
 				<td valign="top" align="center">
 					<? if(is_super($_SESSION['admin_access'])){ ?>
-					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					  <input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
 					  <?= $myarray['sortby']; ?>
 					<?php } ?>
@@ -144,9 +144,9 @@ if($_POST['sortsub'] == 1)
 						
 				<td valign="top">
 					<? if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_complaint.php?ed=<?=$myarray["complaintid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_complaint.php?ed=<?=$myarray["complaintid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>
 			</tr>
@@ -159,7 +159,7 @@ if($_POST['sortsub'] == 1)
 			<td valign="top" class="col_head" colspan="4">
 				<?php if(is_super($_SESSION['admin_access'])){ ?>
 				<input type="hidden" name="sortsub" value="1" />
-				<input type="submit" value=" Change " class="button" />
+				<input type="submit" value=" Change " class="btn btn-warning">
 				<?php } ?>
 			</td>
 		</tr>
@@ -170,7 +170,7 @@ if($_POST['sortsub'] == 1)
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

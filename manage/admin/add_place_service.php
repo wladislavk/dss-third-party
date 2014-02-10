@@ -93,14 +93,7 @@ if($_POST["place_servicesub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_place_service where place_serviceid='".$_REQUEST["ed"]."'";
@@ -136,12 +129,12 @@ if($_POST["place_servicesub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="place_servicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return place_serviceabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Place of Service 
@@ -155,7 +148,7 @@ if($_POST["place_servicesub"] == 1)
                 Place of Service
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="place_service" value="<?=$place_service?>" class="tbox" /> 
+                <input type="text" name="place_service" value="<?=$place_service?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -164,7 +157,7 @@ if($_POST["place_servicesub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -172,7 +165,7 @@ if($_POST["place_servicesub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -183,7 +176,7 @@ if($_POST["place_servicesub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="tbox" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -193,7 +186,7 @@ if($_POST["place_servicesub"] == 1)
                 </span><br />
                 <input type="hidden" name="place_servicesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["place_serviceid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Place of Service" class="button" />
+                <input type="submit" value="<?=$but_text?> Place of Service" class="btn btn-primary">
 		<?php if($themyarray["place_serviceid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_place_service.php?delid=<?=$themyarray["place_serviceid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete
@@ -206,11 +199,11 @@ if($_POST["place_servicesub"] == 1)
     
     <? if($_GET['ed'] == '')
 	{?>
-    	<div class="red" align="center">
+    	<div class="alert alert-danger text-center">
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="place_servicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return place_serviceabc(this)">
-        <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+        <table class="table table-bordered">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Place of Service 
@@ -221,7 +214,7 @@ if($_POST["place_servicesub"] == 1)
             </tr>
             <tr bgcolor="#FFFFFF">
                 <td valign="top" class="frmdata">
-                    <textarea class="tbox" name="place_service" style="width:100%; height:150px;"></textarea>
+                    <textarea class="form-control" name="place_service" style="width:100%; height:150px;"></textarea>
                 </td>
             </tr>
             <tr>
@@ -230,7 +223,7 @@ if($_POST["place_servicesub"] == 1)
                         * Required Fields					
                     </span><br />
                     <input type="hidden" name="mult_place_servicesub" value="1" />
-                    <input type="submit" value=" Add Multiple Place of Service" class="button" />
+                    <input type="submit" value="Add Multiple Place of Service" class="btn btn-primary">
                 </td>
             </tr>
         </table>

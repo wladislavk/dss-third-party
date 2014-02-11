@@ -132,6 +132,10 @@ background:#999999;
 }
 </style>
 <div align="right">
+        <a href="report_claim_aging.php" class="addButton">
+                Claim Aging
+        </a>
+&nbsp;&nbsp;&nbsp;&nbsp;
 	<a href="print_ledger_reportfull.php?dailysub=<?=$_POST['dailysub'];?>&monthlysub=<?=$_POST['monthlysub'];?>&d_mm=<?=$_POST['d_mm'];?>&d_dd=<?=$_POST['d_dd'];?>&d_yy=<?=$_POST['d_yy'];?>&pid=<?=$_GET['pid'];?>" target="_blank" class="addButton">
 		Print Ledger
 	</a>

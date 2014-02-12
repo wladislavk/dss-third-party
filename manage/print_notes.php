@@ -44,7 +44,7 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
-<body onload="Javascript: window.print(); window.close();">
+<body onload="Javascript: window.print(); ">
 
 <br />
 <span class="admin_head">

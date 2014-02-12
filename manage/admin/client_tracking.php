@@ -268,6 +268,7 @@ Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
 
 <div style="width:50%; float:left;">
 <?php include 'report_user_activated.php'; ?>
+<?php include 'report_user_paid.php'; ?>
 </div>
 
 

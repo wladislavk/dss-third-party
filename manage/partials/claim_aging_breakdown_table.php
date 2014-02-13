@@ -26,10 +26,18 @@
         <?= ($r['service_date'])?date('m/d/Y', strtotime($r['service_date'])):''; ?>
       </td>
       <td>
-        <?= $r['transaction_code']; ?>
+         <?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
+		<a href="view_claim.php?claimid=<?= $r['insuranceid']; ?>&pid=<?= $r['patientid']; ?>"><?= $r['transaction_code']; ?></a>
+	<?php }else{ ?>
+		<?= $r['transaction_code']; ?>
+	<?php } ?>
       </td>
       <td>
-        <?= $r['firstname']." ".$r['lastname']; ?>
+	<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
+          <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1"><?= $r['firstname']." ".$r['lastname']; ?></a>
+	<?php }else{ ?>
+	  <?= $r['firstname']." ".$r['lastname']; ?>
+	<?php } ?>
       </td>
       <td>
         $<?= number_format($r['amount'],2); ?>

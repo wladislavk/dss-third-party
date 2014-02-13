@@ -5,7 +5,7 @@ include "includes/top.htm";
 $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
 		FROM dental_patients p
-
+	WHERE p.docid='".$_SESSION['docid']."'
 	ORDER BY p.lastname ASC, p.firstname ASC
 	";
 //(SELECT COALESCE(SUM(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2))),0) FROM dental_insurance i WHERE i.patientid=p.patientid AND i.adddate > DATE_SUB(CURDATE(), INTERVAL 830 DAY)) as total_029
@@ -94,10 +94,14 @@ $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_tota
 		?>
 			<tr>
 				<td valign="top">
-                	<?=$r['firstname']." ".$r['lastname'];?>
+                	<a href="manage_ledger.php?pid=<?=$r['patientid']; ?>&addtopat=1"><?=$r['firstname']." ".$r['lastname'];?></a>
 				</td>
 				<td valign="top">
+				  <?php if(($c_total-$p_total)!=0){ ?>
+                                        <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1">$<?= number_format(($c_total - $p_total),2); ?></a>
+				  <?php }else{ ?>
                                         $<?= number_format(($c_total - $p_total),2); ?>
+				  <?php } ?>
 				</td>
 
 <?php
@@ -118,7 +122,12 @@ $p_total = $p_r['paid_amount'];
   $total_3059+=$c_total - $p_total;
 ?>
 			<td valign="top">
+                                  <?php if(($c_total-$p_total)!=0){ ?>
+                                        <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1">$<?= number_format(($c_total - $p_total),2); ?></a>
+                                  <?php }else{ ?>
                                         $<?= number_format(($c_total - $p_total),2); ?>
+                                  <?php } ?>
+
 			</td>
 <?php
   $c_total = $p_total = 0;  $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
@@ -137,7 +146,12 @@ $p_sql = '';
   $total_6089+=$c_total - $p_total;
 ?>
                                 <td valign="top">
+                                  <?php if(($c_total-$p_total)!=0){ ?>
+                                        <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1">$<?= number_format(($c_total - $p_total),2); ?></a>
+                                  <?php }else{ ?>
                                         $<?= number_format(($c_total - $p_total),2); ?>
+                                  <?php } ?>
+
                                 </td>
 
 <?php
@@ -157,7 +171,12 @@ $p_sql = '';
   $total_90119+=$c_total - $p_total;
 ?>
                                 <td valign="top">
+                                  <?php if(($c_total-$p_total)!=0){ ?>
+                                        <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1">$<?= number_format(($c_total - $p_total),2); ?></a>
+                                  <?php }else{ ?>
                                         $<?= number_format(($c_total - $p_total),2); ?>
+                                  <?php } ?>
+
                                 </td>
 
 <?php
@@ -177,7 +196,12 @@ $p_sql = '';
   $total_120+=$c_total - $p_total;
 ?>
                                 <td valign="top">
+                                  <?php if(($c_total-$p_total)!=0){ ?>
+                                        <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1">$<?= number_format(($c_total - $p_total),2); ?></a>
+                                  <?php }else{ ?>
                                         $<?= number_format(($c_total - $p_total),2); ?>
+                                  <?php } ?>
+
                                 </td>
                                 <td valign="top">
 					<?php $grand_total+=$pat_total; ?>

@@ -134,12 +134,12 @@ if($_POST["setsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Device Setting
@@ -153,7 +153,7 @@ if($_POST["setsub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="name" type="text" name="name" value="<?=$name;?>" class="tbox" /> 
+                <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -161,7 +161,7 @@ if($_POST["setsub"] == 1)
                 Rank
             </td>
             <td valign="top" class="frmdata">
-                <input id="rank" type="text" name="rank" value="<?=$rank;?>" class="tbox" />
+                <input id="rank" type="text" name="rank" value="<?=$rank;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -180,7 +180,7 @@ if($_POST["setsub"] == 1)
                 Range Start
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_start" type="text" name="range_start" value="<?=$range_start;?>" class="tbox" />
+                <input id="range_start" type="text" name="range_start" value="<?=$range_start;?>" class="form-control" />
             </td>
         </tr>
 	<tr bgcolor="#FFFFFF">
@@ -188,7 +188,7 @@ if($_POST["setsub"] == 1)
                 Range Start Label
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_start_label" type="text" name="range_start_label" value="<?=$range_start_label;?>" class="tbox" />
+                <input id="range_start_label" type="text" name="range_start_label" value="<?=$range_start_label;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -196,7 +196,7 @@ if($_POST["setsub"] == 1)
                 Range End
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_end" type="text" name="range_end" value="<?=$range_end;?>" class="tbox" />
+                <input id="range_end" type="text" name="range_end" value="<?=$range_end;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -204,7 +204,7 @@ if($_POST["setsub"] == 1)
                 Range End Label
             </td>
             <td valign="top" class="frmdata">
-                <input id="range_end_label" type="text" name="range_end_label" value="<?=$range_end_label;?>" class="tbox" />
+                <input id="range_end_label" type="text" name="range_end_label" value="<?=$range_end_label;?>" class="form-control" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -233,7 +233,7 @@ if($_POST["setsub"] == 1)
                 Option #<?= $i; ?> 
             </td>
             <td valign="top" class="frmdata">
-		<input id="option_<?= $i; ?>" type="text" name="option_<?= $i; ?>" value="<?=$o_r['label'];?>" class="tbox" />
+		<input id="option_<?= $i; ?>" type="text" name="option_<?= $i; ?>" value="<?=$o_r['label'];?>" class="form-control" />
             </td>
         </tr>
 		  <?php } ?>
@@ -241,7 +241,7 @@ if($_POST["setsub"] == 1)
             <td  colspan="2" align="center">
                 <input type="hidden" name="setsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Setting" class="button" />
+                <input type="submit" value="<?=$but_text?> Setting" class="btn btn-primary">
             </td>
         </tr>
     </table>

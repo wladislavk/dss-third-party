@@ -52,14 +52,7 @@ if($_POST["plansub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_plans where id='".$_REQUEST["ed"]."'";
@@ -99,12 +92,12 @@ if($_POST["plansub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return planabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Plan
@@ -118,7 +111,7 @@ if($_POST["plansub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="name" value="<?=$name?>" class="tbox" /> 
+                <input type="text" name="name" value="<?=$name?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -127,7 +120,7 @@ if($_POST["plansub"] == 1)
                 Monthly Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="monthly_fee" value="<?=$monthly_fee?>" class="tbox" />          
+                <input type="text" name="monthly_fee" value="<?=$monthly_fee?>" class="form-control" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -136,7 +129,7 @@ if($_POST["plansub"] == 1)
                 Trial Period (days)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="trial_period" value="<?=$trial_period?>" class="tbox" />          
+                <input type="text" name="trial_period" value="<?=$trial_period?>" class="form-control" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -145,7 +138,7 @@ if($_POST["plansub"] == 1)
                 Fax Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="fax_fee" value="<?=$fax_fee?>" class="tbox" />          
+                <input type="text" name="fax_fee" value="<?=$fax_fee?>" class="form-control" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -154,7 +147,7 @@ if($_POST["plansub"] == 1)
                 Free Fax
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_fax" value="<?=$free_fax?>" class="tbox" />          
+                <input type="text" name="free_fax" value="<?=$free_fax?>" class="form-control" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -164,7 +157,7 @@ if($_POST["plansub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -177,7 +170,7 @@ if($_POST["plansub"] == 1)
                 </span><br />
                 <input type="hidden" name="plansub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Plan" class="button" />
+                <input type="submit" value="<?=$but_text?> Plan" class="btn btn-primary">
 		<?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_plans.php?delid=<?=$themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete

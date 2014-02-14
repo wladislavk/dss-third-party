@@ -133,7 +133,7 @@ if($_POST["contactsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -379,7 +379,7 @@ if($_POST["contactsub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="22">
+            	<select name="status" class="form-control" tabindex="22">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -393,7 +393,7 @@ if($_POST["contactsub"] == 1)
                 </span><br />
                 <input type="hidden" name="contactsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Contact" class="button" />
+                <input type="submit" value="<?=$but_text?> Contact" class="btn btn-primary">
 		<?php  if($themyarray["contactid"] != ''){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_contact.php?delid=<?=$themyarray["contactid"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete
@@ -415,7 +415,7 @@ if($_POST["contactsub"] == 1)
 <!-- Stick Footer Section Here -->
 </table>
 <div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

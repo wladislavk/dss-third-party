@@ -347,7 +347,7 @@ if(isset($_GET['msg'])){
 </div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -432,27 +432,27 @@ if(isset($_GET['msg'])){
 					$secondary_link = "insurance_claim.php?insid=".$myarray['insuranceid']."&fid_filter=".$fid."&pid_filter=".$pid."&pid=".$myarray['patientid']."&instype=2";
 					?>
 				    <?php if($myarray["status"] == DSS_CLAIM_PENDING || $myarray["status"] == DSS_CLAIM_REJECTED){ ?>
-				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" class="editlink" title="EDIT">
+				    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a> 
+					 <span class="glyphicon glyphicon-pencil"></span></a> 
 				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
-                                    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" class="editlink" title="EDIT">
+                                    <a href="insurance_claim.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" title="Edit" class="btn btn-primary btn-sm">
                                                 Edit Secondary
-                                        </a><br />
-					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>
+                                         <span class="glyphicon glyphicon-pencil"></span></a><br />
+					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
-                                    <a href="<?= $secondary_link; ?>" class="editlink" title="EDIT">
+                                    <a href="<?= $secondary_link; ?>" title="Edit" class="btn btn-primary btn-sm">
                                                 View Secondary
-                                        </a><br />
-                                        <a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View Primary</a>
+                                         <span class="glyphicon glyphicon-pencil"></span></a><br />
+                                        <a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }else{ ?>
-					<a href="<?= $primary_link; ?>" class="editlink" title="EDIT">View</a>
+					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 				<?php 
 					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
 					$eobq = mysql_query($eobsql);
 					while($eobr = mysql_fetch_assoc($eobq)){
-						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" class="editlink" title="EDIT">View <?= $eobr['claimtype']; ?> EOB</a>
+						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";

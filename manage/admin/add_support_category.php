@@ -48,14 +48,7 @@ if($_POST["catsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_support_categories where id='".$_REQUEST["ed"]."'";
@@ -85,12 +78,12 @@ if($_POST["catsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Support Category 
@@ -101,7 +94,7 @@ if($_POST["catsub"] == 1)
                 Title
             </td>
             <td valign="top" class="frmdata">
-                <input id="title" type="text" name="title" value="<?=$title;?>" class="tbox" /> 
+                <input id="title" type="text" name="title" value="<?=$title;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -112,7 +105,7 @@ if($_POST["catsub"] == 1)
                 </span><br />
                 <input type="hidden" name="catsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Category" class="button" />
+                <input type="submit" value="<?=$but_text?> Category" class="btn btn-primary">
                 <?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_support_categories.php?delid=<?=$themyarray["id"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

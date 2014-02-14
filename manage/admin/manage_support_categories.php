@@ -50,7 +50,7 @@ $total_rec = mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
 			Title
@@ -91,9 +91,9 @@ $total_rec = mysql_num_rows($my);
                                         <a href="manage_support_category_admins.php?catid=<?= $myarray['id'];?>"><?= st($myarray["num_admins"]); ?></a>
                                 </td>	
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_support_category.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_support_category.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 			</tr>
@@ -103,7 +103,7 @@ $total_rec = mysql_num_rows($my);
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

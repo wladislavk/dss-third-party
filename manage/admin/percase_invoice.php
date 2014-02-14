@@ -195,7 +195,10 @@ if(mysql_num_rows($doc_q) == 0){
                                         <input type="text" id="monthly_date" name="monthly_date" class="calendar" value="<?=date('m/d/Y');?>" />
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>
+                                        <a href="#" onclick="$('#month_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>" />
@@ -213,7 +216,10 @@ if(mysql_num_rows($doc_q) == 0){
 					<input type="text" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
 				</td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();">Remove</a>
+                                        <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
                                 </td>
 				<td valign="top">
          				    $<input type="text" class="amount" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
@@ -235,7 +241,10 @@ if(mysql_num_rows($doc_q) == 0){
                                         <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();">Remove</a>
+                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();" class="btn btn-remove">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
@@ -262,7 +271,10 @@ to
                                         <input type="text" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();">Remove</a>
+                                        <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="free_fax_amount" value="0.00" />
@@ -283,7 +295,10 @@ to
                                         <input type="text" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#fax_row').remove(); calcTotal();">Remove</a>
+                                        <a href="#" onclick="$('#fax_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
                                 </td>
                                 <td valign="top">
                                             $<input type="text" class="amount" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>" />
@@ -298,12 +313,18 @@ to
 			<input type="hidden" name="extra_total" id="extra_total" value="0" />
 			</td>
                         <td>
-                                <a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
+                                <a href="#" onclick="add_row()" class="btn btn-primary">
+                                    Add Entry
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
                         </td>
 
 			<td valign="top" class="col_head">
-				<input type="submit" name="submit" value=" Create Invoice " class="button" />
-				<a href="manage_percase_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
+				<input type="submit" name="submit" value="Create Invoice" class="btn btn-primary">
+				<a href="manage_percase_invoice.php" class="btn btn-danger">
+                    Cancel
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
 			</td>
 		</tr>
 </table>
@@ -319,7 +340,7 @@ row += '<input type="text" name="extra_name_'+row_count+'" value="" />';
 row += '</td><td valign="top">';
 row += '<input type="text" name="extra_service_date_'+row_count+'" value="<?=date('m/d/Y');?>" />';
 row += '</td><td valign="top">';
-row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove(); calcTotal();">Remove</a>';
+row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove(); calcTotal();" class="btn btn-danger">Remove <span class="glyphicon glyphicon-remove"></span></a>';
 row += '</td><td valign="top">';
 row += '$<input type="text" class="amount" name="extra_amount_'+row_count+'" value="195.00" />';
 row += '</td></tr>';

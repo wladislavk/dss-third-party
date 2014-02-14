@@ -139,7 +139,7 @@ $num_users=mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -300,9 +300,9 @@ $num_users=mysql_num_rows($my);
                                 </td>
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				</td>
 				<?php } ?>
@@ -313,7 +313,7 @@ $num_users=mysql_num_rows($my);
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

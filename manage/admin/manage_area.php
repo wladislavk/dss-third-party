@@ -82,7 +82,7 @@ if($_POST['sortsub'] == 1)
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -132,13 +132,13 @@ if($_POST['sortsub'] == 1)
 				</td>
 				
 				<td valign="top" align="center">
-					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="tbox" style="width:30px"/>
+					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 				</td>	
 						
 				<td valign="top">
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_area.php?ed=<?=$myarray["areaid"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_area.php?ed=<?=$myarray["areaid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
                     <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["areaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 						Delete
@@ -153,7 +153,7 @@ if($_POST['sortsub'] == 1)
 			</td>
 			<td valign="top" class="col_head" colspan="4">
 				<input type="hidden" name="sortsub" value="1" />
-				<input type="submit" value=" Change " class="button" />
+				<input type="submit" value=" Change " class="btn btn-warning">
 			</td>
 		</tr>
 		<?
@@ -163,7 +163,7 @@ if($_POST['sortsub'] == 1)
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

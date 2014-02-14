@@ -117,7 +117,7 @@ if($_POST["contactsub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -252,7 +252,7 @@ if($_POST["contactsub"] == 1)
                 <input type="hidden" name="contactsub" value="1" />
 		<input type="hidden" name="docid" value="<?= $_GET['docid']; ?>" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Location" class="button" />
+                <input type="submit" value="<?=$but_text?> Location" class="btn btn-primary">
 		<?php  if($themyarray["id"] != ''){ ?>
                     <a style="float:right;" href="javascript:parent.window.location='manage_locations.php?delid=<?=$themyarray["id"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
                                                 Delete

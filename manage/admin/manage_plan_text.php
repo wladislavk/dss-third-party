@@ -52,7 +52,7 @@ $myarray = mysql_fetch_array($my);
 &nbsp;&nbsp;
 Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 <form name="planfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<tr class="tr_bg_h">
 		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head">

@@ -38,7 +38,7 @@ $doc = mysql_fetch_assoc($doc_q);
 
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="20%">
                         Date
@@ -142,7 +142,7 @@ echo $charge->card->last4;
 
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
 			Date		
@@ -231,7 +231,7 @@ $case_q = mysql_query($case_sql);
 
 
 <div id="popupContact">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

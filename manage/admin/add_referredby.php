@@ -163,7 +163,7 @@ if($_POST["referredbysub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -379,7 +379,7 @@ if($_POST["referredbysub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox" tabindex="22">
+            	<select name="status" class="form-control" tabindex="22">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -394,7 +394,7 @@ if($_POST["referredbysub"] == 1)
                 <input type="hidden" name="referredbysub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["referredbyid"]?>" />
                 <input type="hidden" name="addedtopat" value="<?php echo $_GET['addtopat']; ?>">
-                <input type="submit" value=" <?=$but_text?> Referred By" class="button" />
+                <input type="submit" value="<?=$but_text?> Referred By" class="btn btn-primary">
             </td>
         </tr>
     </table>

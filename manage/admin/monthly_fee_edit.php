@@ -68,7 +68,7 @@ if($_POST["compsub"] == 1)
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Fees 
@@ -110,7 +110,7 @@ if($_POST["compsub"] == 1)
                 </span><br />
                 <input type="hidden" name="compsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Fees" class="button" />
+                <input type="submit" value=" <?=$but_text?> Fees" class="btn btn-warning">
             </td>
         </tr>
     </table>

@@ -278,7 +278,7 @@ $my=mysql_query($sql) or die(mysql_error());
 </div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -361,9 +361,9 @@ $my=mysql_query($sql) or die(mysql_error());
                                 </td>
 				<td valign="top">
 				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" class="editlink" title="EDIT">
+					<a href="Javascript:;" onclick="Javascript: loadPopup('process_vob.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						<?= $link_label ?>
-					</a>
+					 <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>
 			</tr>
 	<? 	}
@@ -373,7 +373,7 @@ $my=mysql_query($sql) or die(mysql_error());
 
 
 <div id="popupContact" style="width:750px;height:500px;">
-    <a id="popupContactClose"><button>X</button></a>
+    <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>

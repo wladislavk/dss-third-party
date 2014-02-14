@@ -61,7 +61,7 @@ if($_POST['passsub'] == 1)
 </div>
 		
 <form name="passfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onsubmit="return passabc(this)">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+<table class="table table-bordered">
 	<tr>
 		<td colspan="2" class="cat_head">
 			Change Password
@@ -100,7 +100,7 @@ if($_POST['passsub'] == 1)
 				* Compulsory					
 			</span><br />
 			<input type="hidden" name="passsub" value="1" />
-			<input type="submit" value=" Change Password " class="button" />
+			<input type="submit" value=" Change Password " class="btn btn-warning">
 		</td>
 	</tr>
 </table>

@@ -91,7 +91,7 @@ if($_POST["ticketsub"] == 1)
 		$but_text = "Add ";
 	
 	 if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
@@ -195,7 +195,7 @@ if($_POST["ticketsub"] == 1)
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="ticketsub" value="1" />
-                <input type="submit" value=" <?=$but_text?> Ticket" class="button" />
+                <input type="submit" value="<?=$but_text?> Ticket" class="btn btn-primary">
             </td>
         </tr>
     </table>

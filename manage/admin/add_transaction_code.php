@@ -109,14 +109,7 @@ if($_POST["transaction_codesub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_transaction_code where transaction_codeid='".$_REQUEST["ed"]."'";
@@ -165,12 +158,12 @@ if($_POST["transaction_codesub"] == 1)
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return transaction_codeabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Transaction Code 
@@ -184,7 +177,7 @@ if($_POST["transaction_codesub"] == 1)
                 Transaction Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="transaction_code" value="<?=$transaction_code?>" class="tbox" /> 
+                <input type="text" name="transaction_code" value="<?=$transaction_code?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -193,7 +186,7 @@ if($_POST["transaction_codesub"] == 1)
                 Transaction Type
             </td>
             <td valign="top" class="frmdata">
-                <select name="type" class="tbox" />
+                <select name="type" class="form-control" />
                   <option value="1" <?php if($type == "1"){echo " selected='selected'";} ?>> Medical Code </option>
                   <option value="2" <?php if($type == "2"){echo " selected='selected'";} ?>> Patient Payment Code </option>
                   <option value="3" <?php if($type == "3"){echo " selected='selected'";} ?>> Insurance Payment Code </option>
@@ -209,7 +202,7 @@ if($_POST["transaction_codesub"] == 1)
                Place 
             </td>
             <td valign="top" class="frmdata">
-                <select name="place" class="tbox" />
+                <select name="place" class="form-control" />
 		  <option value=""></option>
 		  <?php 
 			$psql = "select * from dental_place_service order by sortby";
@@ -225,7 +218,7 @@ if($_POST["transaction_codesub"] == 1)
                Default Modifier Code 1
             </td>
             <td valign="top" class="frmdata">
-                <select name="modifier_code_1" class="tbox" />
+                <select name="modifier_code_1" class="form-control" />
                   <option value=""></option>
                   <?php
                         $psql = "select * from dental_modifier_code order by sortby";
@@ -242,7 +235,7 @@ if($_POST["transaction_codesub"] == 1)
                Default Modifier Code 2
             </td>
             <td valign="top" class="frmdata">
-                <select name="modifier_code_2" class="tbox" />
+                <select name="modifier_code_2" class="form-control" />
                   <option value=""></option>
                   <?php
                         $psql = "select * from dental_modifier_code order by sortby";
@@ -267,7 +260,7 @@ if($_POST["transaction_codesub"] == 1)
                 Sort By
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="sortby" value="<?=$sortby;?>" class="tbox" style="width:30px"/>		
+                <input type="text" name="sortby" value="<?=$sortby;?>" class="form-control" style="width:30px"/>		
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -275,7 +268,7 @@ if($_POST["transaction_codesub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="tbox">
+            	<select name="status" class="form-control">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -286,7 +279,7 @@ if($_POST["transaction_codesub"] == 1)
                 Amount Adjustment
             </td>
             <td valign="top" class="frmdata">
-                <select name="amount_adjust" class="tbox">
+                <select name="amount_adjust" class="form-control">
                         <option value="<?= DSS_AMOUNT_ADJUST_USER; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_USER) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_USER]; ?></option>
                         <option value="<?= DSS_AMOUNT_ADJUST_NEGATIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_NEGATIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_NEGATIVE]; ?></option>
                         <option value="<?= DSS_AMOUNT_ADJUST_POSITIVE; ?>" <? if($amount_adjust == DSS_AMOUNT_ADJUST_POSITIVE) echo " selected";?>><?= $dss_amount_adjust_labels[DSS_AMOUNT_ADJUST_POSITIVE]; ?></option>
@@ -298,7 +291,7 @@ if($_POST["transaction_codesub"] == 1)
                 Description
             </td>
             <td valign="top" class="frmdata">
-            	<textarea class="tbox" name="description" style="width:100%;"><?=$description;?></textarea>
+            	<textarea class="form-control" name="description" style="width:100%;"><?=$description;?></textarea>
             </td>
         </tr>
         <tr>
@@ -308,7 +301,7 @@ if($_POST["transaction_codesub"] == 1)
                 </span><br />
                 <input type="hidden" name="transaction_codesub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["transaction_codeid"]?>" />
-                <input type="submit" value=" <?=$but_text?> Transaction Code" class="button" />
+                <input type="submit" value="<?=$but_text?> Transaction Code" class="btn btn-primary">
 		<?php if($themyarray["transaction_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
                     <a href="manage_transaction_code.php?delid=<?=$themyarray["transaction_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
                                                 Delete

@@ -76,14 +76,7 @@ if(isset($_POST["accesscodesub"]))
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
     <?
     $thesql = "select * from dental_access_codes where id='".$_REQUEST["ed"]."'";
@@ -119,12 +112,12 @@ if(isset($_POST["accesscodesub"]))
 	<br /><br />
 	
 	<? if($msg != '') {?>
-    <div align="center" class="red">
+    <div class="alert alert-danger text-center">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="contacttypefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return accesscodeabc(this)">
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Access Code
@@ -138,7 +131,7 @@ if(isset($_POST["accesscodesub"]))
                 Access Code
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="access_code" value="<?=$access_code;?>" class="tbox" /> 
+                <input type="text" name="access_code" value="<?=$access_code;?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -155,7 +148,7 @@ if(isset($_POST["accesscodesub"]))
                  Plan
             </td>
             <td valign="top" class="frmdata">
-                <select name="plan_id" class="tbox">
+                <select name="plan_id" class="form-control">
                         <?php
                           $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
                           $p_q = mysql_query($p_sql);
@@ -182,15 +175,15 @@ if(isset($_POST["accesscodesub"]))
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" name="accesscodesub" value=" <?=$but_text?> Access Code" class="button" />
+                <input type="submit" name="accesscodesub" value=" <?=$but_text?> Access Code" class="btn brn-primary" />
 		<?php		
 		if($themyarray['id']!=''){  
 		$c_sql = "SELECT * FROM dental_users WHERE access_code_id='".$themyarray["id"]."'";
 		$c_q = mysql_query($c_sql);
 		if(mysql_num_rows($c_q)==0){ ?>
-		<input type="submit" name="accesscodedelete" value="Delete" class="button" />
+		<input type="submit" name="accesscodedelete" value="Delete" class="btn btn-primary" />
 		<?php }else{ ?>
-		<input type="submit" onclick="alert('Error! There are users associated with this access code. You must reassign these users. Only access codes with no users may be deleted.');return false;" value="Delete" class="button">
+		<input type="submit" onclick="alert('Error! There are users associated with this access code. You must reassign these users. Only access codes with no users may be deleted.');return false;" value="Delete" class="btn btn-primary">
 		<?php } 
 		}
 		?>

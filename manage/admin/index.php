@@ -56,7 +56,7 @@ if (isset($_POST["loginsub"])) {
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <?php if (isset($_GET['msg'])) { ?>
-                <div class="alert alert-warning">
+                <div class="alert alert-danger text-center">
                     <strong><?= $_GET['msg'] ?></strong>
                 </div>
                 <?php } ?>

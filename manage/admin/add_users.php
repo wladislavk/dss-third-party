@@ -107,7 +107,7 @@ if($_POST["usersub"] == 1)
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
                         edx_user_update($_POST['ed']);
-			//help_user_update($_POST['ed'], $help_con);
+			help_user_update($_POST['ed'], $help_con);
 			form_update_all($_POST['ed']);
 
                         if(is_super($_SESSION['admin_access'])){

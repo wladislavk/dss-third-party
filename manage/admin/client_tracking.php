@@ -106,10 +106,12 @@ $num_users=mysql_num_rows($my);
 	Account Analysis and Tracking
 </span>
 <br />
+<div style="width:45%; float:left;">
 <?php
   $count_sql = "SELECT 
 		 sum(case when status='1' THEN 1 ELSE 0 end) as num_active,
 		 sum(case when status='3' THEN 1 ELSE 0 end) as num_suspended,
+		 sum(case when (status='2' AND username!='' AND username IS NOT NULL) THEN 1 ELSE 0 END) as num_inactive,
 		 sum(case when status='2' AND (username='' OR username IS NULL) THEN 1 ELSE 0 END) as num_unregistered
 		FROM dental_users WHERE docid=0";
 
@@ -117,6 +119,7 @@ $num_users=mysql_num_rows($my);
   $count_r = mysql_fetch_assoc($count_q);
 ?>
 Active Users: <?= $count_r['num_active']; ?> 
+Inactive Users: <?= $count_r['num_inactive']; ?> 
 Unregistered: <?= $count_r['num_unregistered']; ?> 
 Suspended: <?= $count_r['num_suspended']; ?><br />
 
@@ -184,12 +187,12 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
                                 GROUP BY pi.docid) i3 ON i3.docid=du.userid
 
 
-                WHERE du.docid=0 AND
+                WHERE du.docid=0 AND status=1 AND
 	 (i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount) > 0";
   $count_q = mysql_query($count_sql);
   $count_r = mysql_fetch_assoc($count_q); 
 ?>
-Total Paid Users: <?= $count_r['num_paid']; ?>
+Total Paid Active Users: <?= $count_r['num_paid']; ?>
 <br />
 <?php
   $count_sql = "SELECT count(du.userid) num_paid from dental_users du
@@ -210,13 +213,13 @@ Total Paid Users: <?= $count_r['num_paid']; ?>
                                 GROUP BY pi.docid) i3 ON i3.docid=du.userid
 
 
-                WHERE du.docid=0 AND
-         COALESCE((i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount), 0) = 0";
+                WHERE du.docid=0 AND status=1 AND
+         COALESCE((i.ledger_amount + i1.monthly_amount + i2.extra_amount + i3.vob_amount), 0) <= 0";
   $count_q = mysql_query($count_sql);
   $count_r = mysql_fetch_assoc($count_q);
 ?>
 
-Total Unpaid Users: <?= $count_r['num_paid']; ?>
+Total Unpaid Active Users: <?= $count_r['num_paid']; ?>
 <br />
 <?php
   $count_sql = "SELECT COALESCE(sum(dc.amount),0) cc_paid from dental_charge dc
@@ -260,9 +263,19 @@ $total_charge += $case_r['percase_amount'];
 Other Invoices Last 30 days: $<?= $total_charge; ?>
 <br />
 Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
+</div>
 
 
-<div align="center" class="red">
+<div style="width:50%; float:left;">
+<?php include 'report_user_activated.php'; ?>
+<?php include 'report_user_paid.php'; ?>
+</div>
+
+
+
+
+
+<div align="center" class="red" style="clear:both;">
 	<b><? echo $_GET['msg'];?></b>
 </div>
 

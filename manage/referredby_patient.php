@@ -3,7 +3,7 @@ include "includes/top.htm";
 if($_GET['rsource']==DSS_REFERRED_PHYSICIAN){
 $ref_sql = "select * from dental_contact where docid='".$_SESSION['docid']."' and contactid='".s_for($_GET['rid'])."'";
 }elseif($_GET['rsource']==DSS_REFERRED_PATIENT){
-$ref_sql = "select * from dental_patient where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['rid'])."'";
+$ref_sql = "select * from dental_patients where docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['rid'])."'";
 }
 $ref_my = mysql_query($ref_sql);
 $ref_myarray = mysql_fetch_array($ref_my);
@@ -40,14 +40,23 @@ $num_referredby=mysql_num_rows($my);
 ?>
 
 <span class="admin_head">
-	Referred By Detail 
-	-
+	Referral List for:
     <i><?=$name;?></i>
+	-
+	<?php if($_GET['rsource']==DSS_REFERRED_PATIENT){ ?>
+		Patient
+	<?php }elseif($_GET['rsource']==DSS_REFERRED_PHYSICIAN){
+		$c_sql = "SELECT contacttype FROM dental_contacttype
+			WHERE contacttypeid='".mysql_real_escape_string($ref_myarray['contacttypeid'])."'";
+		$c_q = mysql_query($c_sql);
+		$c_r = mysql_fetch_assoc($c_q);
+		echo $c_r['contacttype'];
+	} ?>
 </span>
 <br>
 &nbsp;&nbsp;
-<a href="manage_referredby.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back </b></a>
+<a href="manage_referredby.php" class="button" style="float:right;margin-right:20px;" title="EDIT">
+	Return to Referrals</a>
 <br />
 
 <br />

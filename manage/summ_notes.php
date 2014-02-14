@@ -21,9 +21,9 @@ $sql = "select n.*, CONCAT(u.first_name,' ',u.last_name) signed_name, p.adddate 
 $my=mysql_query($sql) or die(mysql_error());
 
 include 'partials/patient_notes.php'; ?>
-        <button onClick="Javascript: window.open('print_notes.php?pid=<?=$_GET['pid'];?>','Print_Notes','width=800,height=500',scrollbars=1);" class="addButton" style="float: left;">
+        <a href="print_notes.php?pid=<?=$_GET['pid'];?>" target="_blank" class="addButton" style="float: left;">
                 Print All Progress Notes
-        </button>
+        </a>
         <button onClick="sign_notes(); return false;" class="addButton" style="float: right;">
                 Sign Selected Notes
         </button>

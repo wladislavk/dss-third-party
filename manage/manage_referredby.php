@@ -16,14 +16,7 @@ if($_REQUEST["delid"] != "")
 	die();
 }
 
-$rec_disp = 20;
 
-if($_REQUEST["page"] != "")
-	$index_val = $_REQUEST["page"];
-else
-	$index_val = 0;
-	
-$i_val = $index_val * $rec_disp;
 //$sql = "select * from dental_referredby where docid='".$_SESSION['docid']."' order by firstname";
 $sql = "select 
 		dc.contactid,
@@ -32,7 +25,9 @@ $sql = "select
 		dc.middlename,
 		dc.lastname, 
 		p.referred_source,
+		dc.referredby_notes,
 		count(p.patientid) as num_ref, 
+		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
 		(SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
                 (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
                 (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PHYSICIAN." AND dc.contactid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
@@ -54,7 +49,9 @@ $sql = "select
 		dp.middlename,
 		dp.lastname,
 		p.referred_source,
+		'',
 		count(p.patientid),
+		GROUP_CONCAT(CONCAT(p.firstname,' ',p.lastname)) as patients_list,
                 (SELECT count(*) FROM dental_patients p30 WHERE p30.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p30.referred_by AND STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()) as num_ref30,
                 (SELECT count(*) FROM dental_patients p60 WHERE p60.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p60.referred_by AND STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as num_ref60,
                 (SELECT count(*) FROM dental_patients p90 WHERE p90.referred_source=".DSS_REFERRED_PATIENT." AND dp.patientid=p90.referred_by AND STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND DATE_SUB(CURDATE(), INTERVAL 60 DAY)) as num_ref90,
@@ -91,12 +88,7 @@ switch($_GET['sort']){
     break;
 }
 
-$my = mysql_query($sql);
-$total_rec = mysql_num_rows($my);
-$no_pages = $total_rec/$rec_disp;
-
-$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$my = mysql_query($sql) or die(mysql_error());
 $num_referredby=mysql_num_rows($my);
 
 ?>
@@ -133,45 +125,51 @@ background:#cccccc;
 background:#999999;
 }
 </style>
-<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<? if($total_rec > $rec_disp) {?>
-	<TR bgColor="#ffffff">
-		<TD  align="right" colspan="15" class="bp">
-			Pages:
-			<?
-				 paging($no_pages,$index_val,"sort=".$_GET['sort']."&sortdir=".$_GET['sortdir']);
-			?>
-		</TD>        
-	</TR>
-	<? }?>
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-			<a href="manage_referredby.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
-		</td>
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
-			<a href="manage_referredby.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Physician Type</a>	
-		</td>
-		<td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'total')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-			<a href="manage_referredby.php?sort=total&sortdir=<?php echo ($_REQUEST['sort']=='total'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Total Referrals</a>
-		</td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'thirty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_referredby.php?sort=thirty&sortdir=<?php echo ($_REQUEST['sort']=='thirty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">30 Days</a>
-                </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'sixty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_referredby.php?sort=sixty&sortdir=<?php echo ($_REQUEST['sort']=='sixty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">60 Days</a> 
-                </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_referredby.php?sort=ninty&sortdir=<?php echo ($_REQUEST['sort']=='ninty'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">90 Days</a>
-                </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'ninty')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                        <a href="manage_referredby.php?sort=nintyplus&sortdir=<?php echo ($_REQUEST['sort']=='nintyplus'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">90+ Days</a>
-                </td>
+<div id="pager" class="pager">
+        <form>
+                <img src="images/first.png" class="first">
+                <img src="images/prev.png" class="prev">
+                <input class="pagedisplay" style="width:75px;" type="text">
+                <img src="images/next.png" class="next">
+                <img src="images/last.png" class="last">
+        </form>
+</div>
 
-                <td valign="top" class="col_head" width="10%">
+<form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<table id="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+	<thead>
+	<tr class="tr_bg_h">
+		<th valign="top" class="col_head" width="20%">
+		  Name
+		</th>
+		<th valign="top" class="col_head" width="20%">
+			Physician Type	
+		</th>
+		<th valign="top" class="col_head" width="20%">
+			Total Referrals
+		</th>
+                <th valign="top" class="col_head">
+                        30 Days
+                </th>
+                <th valign="top" class="col_head">
+                        60 Days 
+                </th>
+                <th valign="top" class="col_head">
+                        90 Days
+                </th>
+                <th valign="top" class="col_head">
+                        90+ Days
+                </th>
+
+                <th valign="top" class="col_head">
                         Notes
-                </td>
+                </th>
+		<th valign="top" class="col_head">
+			Expand
+		</th>
 	</tr>
+	</thead>
+	<tbody>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -199,7 +197,7 @@ background:#999999;
 			
 			$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr >
 				<td valign="top" width="20%">
 					<?php if($myarray['referred_source']==DSS_REFERRED_PHYSICIAN){
 						?><a href="#" onclick="loadPopup('view_contact.php?ed=<?= $myarray['contactid'];?>');return false;"><?=$name;?></a><?php
@@ -236,13 +234,19 @@ background:#999999;
                                         </a>
                                 </td>
 				<td valign="top" width="10%">
-                                        <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?=$myarray["contactid"];?>')" class="editlink">
+                                        <a href="#" onclick="loadPopup('add_referredby_notes.php?rid=<?=$myarray["contactid"];?>')" class="editlink" title="<?= ($myarray['referredby_notes'])?$myarray['referredby_notes']:'No Notes'; ?>">
 						View
                                         </a>
                                 </td>
+				<td valign="top"> 
+					<a href="referredby_patient.php?rid=<?=$myarray["contactid"];?>&rsource=<?=$myarray["referral_type"];?>" class="editlink" title="<?= $myarray['patients_list']; ?>">
+					List
+					</a>
+				</td>
 			</tr>
 	<? 	}
 	}?>
+	</tbody>
 </table>
 </form>
 

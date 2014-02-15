@@ -8,26 +8,35 @@ $(function(){
         };
     });
     
-    /*
-    $('button').addClass('btn btn-primary');
-    $('.button, .addButton').removeClass('button addButton').addClass('btn btn-primary');
-    
-    $('input[type=text]').addClass('form-control');
-    $('[type=submit], [type=button]').addClass('btn btn-default');
-    $('table input[type=text]').css({ width: '' }).addClass('text-center')
-    
-    $('select').addClass('btn btn-default');
-    */
-    
     /**
-     * Allow buttons to have variety
+     * Add breadcrumb
      */
-    /*
-    $('.btn:icontains(edit)').removeClass('btn-success').addClass('btn-primary').append('<span>&nbsp;</span><span class="glyphicon glyphicon-pencil"/>');
-    $('.btn:icontains(create), .btn:icontains("add ")').removeClass('btn-default').addClass('btn-success').append('<span>&nbsp;</span><span class="glyphicon glyphicon-plus"/>');
-    $('.btn:icontains(delete), .btn:icontains(remove)').removeClass('btn-default').addClass('btn-danger').append('<span>&nbsp;</span><span class="glyphicon glyphicon-remove"/>');
-    $('table:not(:first)').addClass('table table-bordered');
-    */
+    var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
+    $breadcrumb = $container.find('ol'),
+    path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
+    
+    $('.nav').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
+        var $this = $(this);
+        
+        if ($this.is('[href$="#"]')) {
+            $breadcrumb.append('<li/>')
+                .find('li:last')
+                .text($this.text().trim());
+        }
+        else {
+            $breadcrumb.append('<li><a/></li>')
+                .find('a:last')
+                .text($this.text().trim())
+                .attr('href',this.href);
+        }
+    });
+    
+    $breadcrumb.find('li:last').each(function(){
+        var $this = $(this);
+        
+        $this.text($this.text());
+    }).addClass('active');
+    $container.insertAfter('.nav:first');
     
     /**
      * Append dropdown to change skin

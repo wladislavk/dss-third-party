@@ -76,10 +76,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     body.loading-new-theme:before {
         content: "Loading bootstrap theme...";
     }
+    
+    #go-to-sleep.fade.in {
+        background-color: #000;
+    }
     </style>
     
     <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
-    <script type="text/javascript" src="/manage/admin/calendar.js"></script>
     
     <script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
@@ -94,7 +97,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
 </head>
-<body onload="set_interval();" class="loading-new-theme">
+<body class="loading-new-theme">
     <div class="container">
         <div class="well">
             <h1>Dental Sleep Solutions</h1>

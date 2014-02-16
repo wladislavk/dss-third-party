@@ -1,8 +1,8 @@
 <?
-include "includes/top.htm";
+include_once "includes/top.htm";
 
-include 'includes/patient_nav.php';
-include '../includes/general_functions.php';
+include_once 'includes/patient_nav.php';
+include_once '../includes/general_functions.php';
 ?>
 
 <style type="text/css">

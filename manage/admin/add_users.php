@@ -82,6 +82,20 @@ if($_POST["usersub"] == 1)
 				use_letter_header = '".s_for($_POST['use_letter_header'])."',
 				user_type = '".s_for($_POST['user_type'])."',
 				status = '".s_for($_POST["status"])."',
+        use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
+        service_name = '".mysql_real_escape_string($_POST['service_name'])."',
+        service_address = '".mysql_real_escape_string($_POST['service_address'])."',
+        service_city = '".mysql_real_escape_string($_POST['service_city'])."',
+        service_state = '".mysql_real_escape_string($_POST['service_state'])."',
+        service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
+        service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
+        service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
+        service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
+        service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
+        service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
+        service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
+        service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
+        service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
 				";
 				if($old_status!=3 && $_POST['status']==3){
 				  $ed_sql.= "
@@ -215,6 +229,20 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
 				access_code_id = '".$_POST['access_code_id']."',
+        use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
+        service_name = '".mysql_real_escape_string($_POST['service_name'])."',
+        service_address = '".mysql_real_escape_string($_POST['service_address'])."',
+        service_city = '".mysql_real_escape_string($_POST['service_city'])."',
+        service_state = '".mysql_real_escape_string($_POST['service_state'])."',
+        service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
+        service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
+        service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
+        service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
+        service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
+        service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
+        service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
+        service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
+        service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
 				";
 		                if(isset($_POST['reg_but'])){
 					$ins_sql .= " recover_hash='".$recover_hash."',
@@ -404,6 +432,22 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$hst_company_id = $_POST['hst_company_id'];
 		$access_code_id = $_POST['access_code_id'];
 		$plan_id = $_POST['plan_id'];
+
+		$use_service_npi = $_POST['use_service_npi'];
+		$service_name = $_POST['service_name'];
+		$service_address = $_POST['service_address'];
+		$service_city = $_POST['service_city'];
+		$service_state = $_POST['service_state'];
+		$service_zip = $_POST['service_zip'];
+		$service_phone = $_POST['service_phone'];
+		$service_fax = $_POST['service_fax'];
+		$service_npi = $_POST['service_npi'];
+		$service_medicare_npi = $_POST['service_medicare_npi'];
+		$service_medicare_ptan = $_POST['service_medicare_ptan'];
+		$service_tax_id_or_ssn = $_POST['service_tax_id_or_ssn'];
+		$service_ein = $_POST['service_ein'];
+		$service_ssn = $_POST['service_ssn'];
+
 	}
 	else
 	{
@@ -453,6 +497,23 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$hst_company_id = $themyarray['hst_company_id'];
 		$plan_id = $themyarray['plan_id'];
 		$access_code_id = $themyarray['access_code_id'];
+
+                $use_service_npi = $themyarray['use_service_npi'];
+                $service_name = $themyarray['service_name'];
+                $service_address = $themyarray['service_address'];
+                $service_city = $themyarray['service_city'];
+                $service_state = $themyarray['service_state'];
+                $service_zip = $themyarray['service_zip'];
+                $service_phone = $themyarray['service_phone'];
+                $service_fax = $themyarray['service_fax'];
+                $service_npi = $themyarray['service_npi'];
+                $service_medicare_npi = $themyarray['service_medicare_npi'];
+                $service_medicare_ptan = $themyarray['service_medicare_ptan'];
+                $service_tax_id_or_ssn = $themyarray['service_tax_id_or_ssn'];
+                $service_ein = $themyarray['service_ein'];
+                $service_ssn = $themyarray['service_ssn'];
+
+
 		$but_text = "Add ";
 	}
 
@@ -736,7 +797,113 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="tbox" />
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Use Service NPI?            </td>
+            <td valign="top" class="frmdata">
+                        <input type="checkbox" name="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Name
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_name" type="text" name="service_name" value="<?=$service_name;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Address
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_address" type="text" name="service_address" value="<?=$service_address;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service City
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_city" type="text" name="service_city" value="<?=$service_city;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service State
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_state" type="text" name="service_state" value="<?=$service_state;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Zip
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_zip" type="text" name="service_zip" value="<?=$service_zip;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Phone
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_phone" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Fax
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_fax" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service NPI
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_npi" type="text" name="service_npi" value="<?=$service_npi;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Medicare NPI
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_medicare_npi" type="text" name="service_medicare_npi" value="<?=$service_medicare_npi;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Medicare PTAN
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_medicare_ptan" type="text" name="service_medicare_ptan" value="<?=$service_medicare_ptan;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service Tax ID or SSN
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_tax_id_or_ssn" type="text" name="service_tax_id_or_ssn" value="<?=$service_tax_id_or_ssn;?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Service EIN or SSN
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="service_ein" type="checkbox" name="service_ein" value="1" <?= ($service_ein)?'checked="checked"':''; ?> class="tbox" />
+                EIN
+                <input id="service_ssn" type="checkbox" name="service_ssn" value="1" <?= ($service_ssn)?'checked="checked"':''; ?> class="tbox" />
+                SSN
 
+            </td>
+        </tr>
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

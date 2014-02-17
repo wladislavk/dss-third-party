@@ -26,9 +26,22 @@
                 tax_id_or_ssn = '".mysql_real_escape_string($_POST['tax_id_or_ssn'])."',
                 ein = '".mysql_real_escape_string($_POST['ein'])."',
                 ssn = '".mysql_real_escape_string($_POST['ssn'])."',
+		use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
+		service_name = '".mysql_real_escape_string($_POST['service_name'])."',
+		service_address = '".mysql_real_escape_string($_POST['service_address'])."',
+		service_city = '".mysql_real_escape_string($_POST['service_city'])."',
+		service_state = '".mysql_real_escape_string($_POST['service_state'])."',
+		service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
+		service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
+		service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
+		service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
+                service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
+                service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
+                service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
+                service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
+                service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
 		username = '".mysql_real_escape_string($_POST['username'])."'";
 	if($_POST['password'] != '' && $_POST['password'] == $_POST['confirm_password']){
-		echo $_POST['password'];
 		$salt = create_salt();
                 $password = gen_password($_POST['password'], $salt);
 		$sql .= ", password='".$password."' 

@@ -10,9 +10,11 @@ $status_r = mysql_fetch_assoc($status_q);
 $status = $status_r['status'];
 $is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
 $is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
+$is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
 $is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
 $is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false; 
-
+$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED); 
 
 //confirm ledger transactions and make sure they haven't changed.
 function confirm_ledger_trxns(){
@@ -174,27 +176,27 @@ die();
 	$pica2 = $_POST['pica2'];
 	$pica3 = $_POST['pica3'];
 	$insurance_type = $_POST['insurance_type'];
-	$insured_id_number = $_POST['insured_id_number'];
 	$patient_lastname = $_POST['patient_lastname'];
 	$patient_firstname = $_POST['patient_firstname'];
 	$patient_middle = $_POST['patient_middle'];
 	$patient_dob = $_POST['patient_dob'];
 	$patient_sex = $_POST['patient_sex'];
-	$insured_firstname = $_POST['insured_firstname'];
-	$insured_lastname = $_POST['insured_lastname'];
-	$insured_middle = $_POST['insured_middle'];
 	$patient_address = $_POST['patient_address'];
-	$patient_relation_insured = $_POST['patient_relation_insured'];
-	$insured_address = $_POST['insured_address'];
 	$patient_city = $_POST['patient_city'];
 	$patient_state = $_POST['patient_state'];
 	$patient_status = $_POST['patient_status'];
 	$work_status = $_POST['work_status'];
-	$insured_city = $_POST['insured_city'];
-	$insured_state = $_POST['insured_state'];
 	$patient_zip = $_POST['patient_zip'];
 	$patient_phone_code = num($_POST['patient_phone_code']);
 	$patient_phone = num($_POST['patient_phone'], false);
+	$insured_id_number = $_POST['insured_id_number'];
+	$insured_firstname = $_POST['insured_firstname'];
+	$insured_lastname = $_POST['insured_lastname'];
+	$insured_middle = $_POST['insured_middle'];
+	$patient_relation_insured = $_POST['patient_relation_insured'];
+	$insured_address = $_POST['insured_address'];
+	$insured_state = $_POST['insured_state'];
+	$insured_city = $_POST['insured_city'];
 	$insured_zip = $_POST['insured_zip'];
 	$insured_phone_code = num($_POST['insured_phone_code']);
 	$insured_phone = num($_POST['insured_phone'], false);
@@ -855,7 +857,7 @@ $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
 $docid = $pat_myarray['docid'];
-if($is_pending){
+if($is_pri_pending){
 // Load patient info from dental_patients table using pid on query string
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
@@ -868,8 +870,8 @@ $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partylname']);
 $insured_middle = st($pat_myarray['p_m_partymname']);
 $other_insured_firstname = st($pat_myarray['s_m_partyfname']);
-$other_insured_lastname = st($pat_myarray['s_m_partymname']);
-$other_insured_middle = st($pat_myarray['s_m_partylname']);
+$other_insured_lastname = st($pat_myarray['s_m_partylname']);
+$other_insured_middle = st($pat_myarray['s_m_partymname']);
 $insured_id_number = st($pat_myarray['p_m_ins_id']);
 $insured_dob = st($pat_myarray['ins_dob']);
 $p_m_ins_ass = st($pat_myarray['p_m_ins_ass']);
@@ -900,18 +902,19 @@ $dent_rows = mysql_num_rows($my);
 $insuranceid = st($myarray['insuranceid']);
 $p_m_eligible_payer_id = $myarray['p_m_eligible_payer_id'];
 $p_m_eligible_payer_name = $myarray['p_m_eligible_payer_name'];
-if(!$is_pending){
+if(!$is_pri_pending){
 $pica1 = st($myarray['pica1']);
 $pica2 = st($myarray['pica2']);
 $pica3 = st($myarray['pica3']);
 $p_m_dss_file = $pat_myarray['p_m_dss_file'];
 $s_m_dss_file = $pat_myarray['s_m_dss_file'];
 $patient_lastname = st($myarray['patient_lastname']);
-$insurancetype = st($myarray['insurance_type']);
 $patient_firstname = st($myarray['patient_firstname']);
 $patient_middle = st($myarray['patient_middle']);
 $patient_dob = st($myarray['patient_dob']);
 $patient_sex = st($myarray['patient_sex']);
+if($is_secondary){
+$insurancetype = st($myarray['insurance_type']);
 $other_insured_firstname = st($myarray['other_insured_firstname']);
 $other_insured_lastname = st($myarray['other_insured_lastname']);
 $other_insured_middle = st($myarray['other_insured_middle']);
@@ -925,28 +928,51 @@ $insured_lastname = st($myarray['insured_lastname']);
 $insured_dob = st($myarray['insured_dob']);
 $insured_insurance_plan = st($myarray['insured_insurance_plan']);
 $insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
-
+$insured_address = st($myarray['insured_address']);
+$insured_city = st($myarray['insured_city']);
+$insured_state = st($myarray['insured_state']);
+$insured_zip = st($myarray['insured_zip']);
+$insured_phone_code = st($myarray['insured_phone_code']);
+$insured_phone = st($myarray['insured_phone']);
+$insured_sex = st($myarray['insured_sex']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+}else{
+$insurancetype = st($myarray['insurance_type']);
+$other_insured_firstname = st($myarray['other_insured_firstname']);
+$other_insured_lastname = st($myarray['other_insured_lastname']);
+$other_insured_middle = st($myarray['other_insured_middle']);
+$other_insured_dob = st($myarray['other_insured_dob']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+$other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+$insured_id_number = st($myarray['insured_id_number']);
+$insured_firstname = st($myarray['insured_firstname']);
+$insured_middle = st($myarray['insured_middle']);
+$insured_lastname = st($myarray['insured_lastname']);
+$insured_dob = st($myarray['insured_dob']);
+$insured_insurance_plan = st($myarray['insured_insurance_plan']);
+$insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+$insured_address = st($myarray['insured_address']);
+$insured_city = st($myarray['insured_city']);
+$insured_state = st($myarray['insured_state']);
+$insured_zip = st($myarray['insured_zip']);
+$insured_phone_code = st($myarray['insured_phone_code']);
+$insured_phone = st($myarray['insured_phone']);
+$insured_sex = st($myarray['insured_sex']);
+$other_insured_sex = st($myarray['other_insured_sex']);
+}
 $patient_address = st($myarray['patient_address']);
 $patient_relation_insured = st($myarray['patient_relation_insured']);
-$insured_address = st($myarray['insured_address']);
 $patient_city = st($myarray['patient_city']);
 $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
 $patient_status_array = split('~',$patient_status);
-$insured_city = st($myarray['insured_city']);
-$insured_state = st($myarray['insured_state']);
 $patient_zip = st($myarray['patient_zip']);
 $patient_phone_code = st($myarray['patient_phone_code']);
 $patient_phone = st($myarray['patient_phone']);
-$insured_zip = st($myarray['insured_zip']);
-$insured_phone_code = st($myarray['insured_phone_code']);
-$insured_phone = st($myarray['insured_phone']);
 $employment = st($myarray['employment']);
 $auto_accident = st($myarray['auto_accident']);
 $auto_accident_place = st($myarray['auto_accident_place']);
 $other_accident = st($myarray['other_accident']);
-$insured_sex = st($myarray['insured_sex']);
-$other_insured_sex = st($myarray['other_insured_sex']);
 $insured_employer_school_name = st($myarray['insured_employer_school_name']);
 $other_insured_employer_school_name = st($myarray['other_insured_employer_school_name']);
 $reserved_local_use = st($myarray['reserved_local_use']);
@@ -2079,7 +2105,28 @@ $(document).ready(function(){
                         if($zip == ""){ $zip = $docinfo['zip']; }
 			if($npi == ""){ $npi = $docinfo['npi']; }
 			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+
+			if($docinfo['use_service_npi']==1){
+			  $service_npi = $docinfo['service_npi'];
+			  $service_practice = $docinfo['service_name'];
+			  $service_address = $docinfo['service_address'];
+			  $service_city = $docinfo['service_city'];
+			  $service_state = $docinfo['service_state'];
+			  $service_zip = $docinfo['service_zip'];
+			  $service_medicare_npi = $docinfo['service_medicare_npi'];
+			}else{
+                          $service_npi = $npi;
+                          $service_practice = $practice;
+                          $service_address = $address;
+                          $service_city = $city;
+                          $service_state = $state;
+                          $service_zip = $zip;
+                          $service_medicare_npi = $medicare_npi;
+			}
+
                       ?> 
+
+		      
 								<td valign="top">
 									NPI
 								</td>
@@ -2603,7 +2650,8 @@ $balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
 if ($is_pending) {
 
   // get total_charge
-  $sql = "SELECT "
+  if($is_pri_pending){
+    $sql = "SELECT "
        . "  SUM(ledger.amount) as 'total_charge' "
        . "FROM "
        . "  dental_ledger ledger "
@@ -2617,12 +2665,12 @@ if ($is_pending) {
        . "ORDER BY "
        . "  ledger.service_date ASC";
 
-  $charge_my = mysql_query($sql);
-  if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
-    $charge_row = mysql_fetch_array($charge_my);
-    $total_charge = $charge_row['total_charge'];
+    $charge_my = mysql_query($sql);
+    if ($charge_my && (mysql_num_rows($charge_my) > 0)) {
+      $charge_row = mysql_fetch_array($charge_my);
+      $total_charge = $charge_row['total_charge'];
+    }
   }
-  
   // get amount paid
   $sql = "SELECT "
        . "  SUM(ledger.paid_amount) as 'amount_paid' "
@@ -2717,7 +2765,7 @@ if ($is_pending) {
 											</td>
 											                
 											<td valign="top" width="90%">
-												<input disabled="disabled" type="text" value="<?php echo $practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
+												<input disabled="disabled" type="text" value="<?php echo $service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2725,7 +2773,7 @@ if ($is_pending) {
 												<span class="small_cap">Address:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 										<tr>
@@ -2733,14 +2781,14 @@ if ($is_pending) {
 												<span class="small_cap">City/State/Zip:</span>		
 											</td>
 											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
+												<input type="text" disabled="disabled" value="<?php echo $service_city;?>, <?php echo $service_state;?> <?php echo $service_zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
 											</td>
 										</tr>
 									</table>
 									<span class="num_a">
 										a.
 									</span>
-									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
+									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
 									
 									<span class="num_a">
 										b.

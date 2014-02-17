@@ -373,6 +373,7 @@ function create_claim($pid, $prod){
              $pat_myarray = mysql_fetch_array($pat_my);
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
+$other_insurancetype = st($pat_myarray['s_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partylname']);
 $insured_middle = st($pat_myarray['p_m_partymname']);
@@ -478,6 +479,7 @@ if (empty($prior_authorization_number)) {
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
 		insurance_type = '".s_for($insurancetype)."',
+		other_insurance_type = '".s_for($other_insurancetype)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',

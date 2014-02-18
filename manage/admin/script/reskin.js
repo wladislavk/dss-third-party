@@ -39,6 +39,39 @@ $(function(){
     $container.insertAfter('.nav:first');
     
     /**
+     * Popup
+     */
+    $('[onclick*=loadPopup]').each(function(){
+        var $this = $(this),
+        legend = $this.text().trim(),
+        click = $this.attr('onclick'),
+        popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i,'$2');
+        
+        console.log(popup);
+        
+        $this.removeAttr('onclick');
+        $this.data('legend',legend);
+        $this.data('popup',popup);
+    })
+    .off('click')
+    .on('click',function(e){
+        e.preventDefault();
+        
+        var $this = $(this),
+        legend = $this.data('legend'),
+        popup = $this.data('popup'),
+        modal = $('#popup-window'),
+        iframe = modal.find('iframe');
+        
+        
+        iframe.attr('src',popup);
+        modal.find('.modal-title').text(legend);
+        modal.modal('show');
+        
+        return false;
+    });
+    
+    /**
      * Append dropdown to change skin
      */
     $('body').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');

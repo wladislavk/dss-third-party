@@ -51,7 +51,6 @@ if($_POST["contactsub"] == 1)
 ?>
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-    <script type="text/javascript" src="/manage/script/wufoo.js"></script>
 
     <?
     $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
@@ -135,213 +134,212 @@ if($_POST["contactsub"] == 1)
             </div>
             <?php } ?>
             
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <?= $but_text ?> <?= $_GET['heading'] ?>
+            <div class="page-header">
+                <h1>
+                    <?= $but_text ?>
+                    <?= $_GET['heading'] ?>
                     Contact
-                    <?php if( trim($name) != "") { ?>
-                    &quot;<?=$name;?>&quot;
+                    <?php if (trim($name) != "") { ?>
+                        &quot;<?=$name;?>&quot;
                     <?php } ?>
-                </div>
-                <div class="panel-body">
-                    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&amp;activePat=<?php echo $_GET['activePat']; ?>" method="post" onSubmit="return contactabc(this)" class="form-horizontal">
-                        <div class="page-header">
-                            <strong>Name</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="salutation" class="col-md-3 control-label">Salutation</label>
-                            <div class="col-md-9">
-                                <select name="salutation" id="salutation" class="form-control" tabindex="1" style="width:80px;" >
-                                    <option value=""></option>
-                                    <option value="Dr." <?= ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
-                                    <option value="Mr." <?= ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
-                                    <option value="Mrs." <?= ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
-                                    <option value="Miss." <?= ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="firstname" class="col-md-3 control-label">First Name</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" value="<?= $firstname ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="middlename" class="col-md-3 control-label">Middle Name</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="middlename" id="middlename" placeholder="Middle name" value="<?= $middlename ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastname" class="col-md-3 control-label">Last Name</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last name" value="<?= $lastname ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="page-header">
-                            <strong>Company</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="company" class="col-md-3 control-label">Company</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="company" id="company" placeholder="Company" value="<?= $company ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="page-header">
-                            <strong>Address</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="add1" class="col-md-3 control-label">Address</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="add1" id="add1" placeholder="Address" value="<?= $add1 ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="text" class="form-control" name="add1" id="add1" placeholder="Address (second line)" value="<?= $add1 ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="city" class="col-md-3 control-label">City</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="state" class="col-md-3 control-label">State</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="page-header">
-                            <strong>Contact Information</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone1" class="col-md-3 control-label">Phone (main)</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="phone1" id="phone1" placeholder="Phone number" value="<?= $phone1 ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone2" class="col-md-3 control-label">Phone (alternative)</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="phone2" id="phone2" placeholder="Phone number" value="<?= $phone2 ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="fax" class="col-md-3 control-label">Fax</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email" class="col-md-3 control-label">Email</label>
-                            <div class="col-md-9">
-                                <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="page-header">
-                            <strong>Identification</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="national_provider_id" class="col-md-3 control-label">National Provider ID</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="national_provider_id" id="national_provider_id" placeholder="National provider ID" value="<?= $national_provider_id ?>">
-                            </div>
-                        </div>
-                        
-                        <div class="page-header">
-                            <strong>Other ID for Claim Forms</strong>
-                        </div>
-                        <div class="form-group">
-                            <label for="qualifier" class="col-md-3 control-label">Qualifier</label>
-                            <div class="col-md-9">
-                                <? 
-                                $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
-                                $qualifier_my = mysql_query($qualifier_sql);
-                                ?>
-                                <select id="qualifier" name="qualifier" class="form-control">
-                                    <option value="0"></option>
-                                    <? while($qualifier_myarray = mysql_fetch_array($qualifier_my))
-                                    {?>
-                                        <option value="<?=st($qualifier_myarray['qualifierid']);?>">
-                                            <?=st($qualifier_myarray['qualifier']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
-                            <div class="col-md-9">
-                                <? 
-                                
-                                if(isset($_GET['ed'])){
-                $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
-                $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
-                
-                $ctid = mysql_fetch_array($ctype_myquerymyarray);
-                
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }else{
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }
-                ?>
-                                <select id="contacttypeid" name="contacttypeid" class="form-control">
-                                     
-                                    <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
-                  ?>
-                  
-                  <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
-
-                                            <?=st($ctype_myarray['contacttype']);?>
-                                        </option>
-                                    <? }?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="desc" class="col-md-3 control-label">Notes</label>
-                            <div class="col-md-9">
-                                <textarea name="desc" id="desc" class="form-control"><?= $notes ?></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="status" class="col-md-3 control-label">Status</label>
-                            <div class="col-md-9">
-                                <select name="status" id="status" class="form-control">
-                                    <option value="1" <?= ($status == 1) ? 'selected' : '' ?>>Active</option>
-                                    <option value="2" <?= ($status == 2) ? 'selected' : '' ?>>In-Active</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="hidden" name="contactsub" value="1">
-                                <input type="hidden" name="ed" value="<?= $themyarray["contactid"] ?>">
-                                <input type="submit" value="<?= $but_text ?> Contact" class="btn btn-primary">
-                            <?php if ($themyarray["contactid"] != '') { ?>
-                                <a style="float:right;" href="javascript:parent.window.location='manage_contact.php?delid=<?= $themyarray["contactid"] ?>&amp;docid=<?= $_GET['docid'] ?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                    Delete
-                                </a>
-                            <?php } ?>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                </h1>
             </div>
+            <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&amp;activePat=<?php echo $_GET['activePat']; ?>" method="post" onSubmit="return contactabc(this)" class="form-horizontal">
+                <div class="page-header">
+                    <strong>Name</strong>
+                </div>
+                <div class="form-group">
+                    <label for="salutation" class="col-md-3 control-label">Salutation</label>
+                    <div class="col-md-9">
+                        <select name="salutation" id="salutation" class="form-control" tabindex="1" style="width:80px;" >
+                            <option value=""></option>
+                            <option value="Dr." <?= ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
+                            <option value="Mr." <?= ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
+                            <option value="Mrs." <?= ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
+                            <option value="Miss." <?= ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstname" class="col-md-3 control-label">First Name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" value="<?= $firstname ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="middlename" class="col-md-3 control-label">Middle Name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="middlename" id="middlename" placeholder="Middle name" value="<?= $middlename ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last name" value="<?= $lastname ?>">
+                    </div>
+                </div>
+                
+                <div class="page-header">
+                    <strong>Company</strong>
+                </div>
+                <div class="form-group">
+                    <label for="company" class="col-md-3 control-label">Company</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="company" id="company" placeholder="Company" value="<?= $company ?>">
+                    </div>
+                </div>
+                
+                <div class="page-header">
+                    <strong>Address</strong>
+                </div>
+                <div class="form-group">
+                    <label for="add1" class="col-md-3 control-label">Address</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="add1" id="add1" placeholder="Address" value="<?= $add1 ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="text" class="form-control" name="add1" id="add1" placeholder="Address (second line)" value="<?= $add1 ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city" class="col-md-3 control-label">City</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="state" class="col-md-3 control-label">State</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                    </div>
+                </div>
+                
+                <div class="page-header">
+                    <strong>Contact Information</strong>
+                </div>
+                <div class="form-group">
+                    <label for="phone1" class="col-md-3 control-label">Phone (main)</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="phone1" id="phone1" placeholder="Phone number" value="<?= $phone1 ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone2" class="col-md-3 control-label">Phone (alternative)</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="phone2" id="phone2" placeholder="Phone number" value="<?= $phone2 ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fax" class="col-md-3 control-label">Fax</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-md-3 control-label">Email</label>
+                    <div class="col-md-9">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
+                    </div>
+                </div>
+                
+                <div class="page-header">
+                    <strong>Identification</strong>
+                </div>
+                <div class="form-group">
+                    <label for="national_provider_id" class="col-md-3 control-label">National Provider ID</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="national_provider_id" id="national_provider_id" placeholder="National provider ID" value="<?= $national_provider_id ?>">
+                    </div>
+                </div>
+                
+                <div class="page-header">
+                    <strong>Other ID for Claim Forms</strong>
+                </div>
+                <div class="form-group">
+                    <label for="qualifier" class="col-md-3 control-label">Qualifier</label>
+                    <div class="col-md-9">
+                        <? 
+                        $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
+                        $qualifier_my = mysql_query($qualifier_sql);
+                        ?>
+                        <select id="qualifier" name="qualifier" class="form-control">
+                            <option value="0"></option>
+                            <? while($qualifier_myarray = mysql_fetch_array($qualifier_my))
+                            {?>
+                                <option value="<?=st($qualifier_myarray['qualifierid']);?>">
+                                    <?=st($qualifier_myarray['qualifier']);?>
+                                </option>
+                            <? }?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
+                    <div class="col-md-9">
+                        <? 
+                        
+                        if(isset($_GET['ed'])){
+        $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
+        $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
+        
+        $ctid = mysql_fetch_array($ctype_myquerymyarray);
+        
+        $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+        $ctype_my = mysql_query($ctype_sql);
+        }else{
+        $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+        $ctype_my = mysql_query($ctype_sql);
+        }
+        ?>
+                        <select id="contacttypeid" name="contacttypeid" class="form-control">
+                             
+                            <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
+          ?>
+          
+          <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
+
+                                    <?=st($ctype_myarray['contacttype']);?>
+                                </option>
+                            <? }?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="desc" class="col-md-3 control-label">Notes</label>
+                    <div class="col-md-9">
+                        <textarea name="desc" id="desc" class="form-control"><?= $notes ?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="status" class="col-md-3 control-label">Status</label>
+                    <div class="col-md-9">
+                        <select name="status" id="status" class="form-control">
+                            <option value="1" <?= ($status == 1) ? 'selected' : '' ?>>Active</option>
+                            <option value="2" <?= ($status == 2) ? 'selected' : '' ?>>In-Active</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="hidden" name="contactsub" value="1">
+                        <input type="hidden" name="ed" value="<?= $themyarray["contactid"] ?>">
+                        <input type="submit" value="<?= $but_text ?> Contact" class="btn btn-primary">
+                    <?php if ($themyarray["contactid"] != '') { ?>
+                        <a style="float:right;" href="javascript:parent.window.location='manage_contact.php?delid=<?= $themyarray["contactid"] ?>&amp;docid=<?= $_GET['docid'] ?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                            Delete
+                        </a>
+                    <?php } ?>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </body>

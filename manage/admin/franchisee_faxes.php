@@ -76,7 +76,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="sort_table" id="fax_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="fax_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head" width="14%">

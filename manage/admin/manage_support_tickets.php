@@ -58,7 +58,7 @@ $total_rec = mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head" width="25%">
@@ -174,7 +174,7 @@ $total_rec = mysql_num_rows($my);
 <span class="admin_head">
 Resolved
 </span>
-<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<thead>
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="25%">

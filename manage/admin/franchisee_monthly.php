@@ -89,7 +89,7 @@ End Date: <input type="text" id="end_date" name="end_date" class="calendar" valu
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<table class="sort_table" id="monthly_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="monthly_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head">

@@ -96,7 +96,7 @@ if($_POST["pagesub"] == 1)
     </div>
     <? }?>
     <form name="pagefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return pageabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Page

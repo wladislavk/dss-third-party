@@ -164,7 +164,7 @@ if($_POST["transaction_codesub"] == 1)
     </div>
     <? }?>
     <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?= $_GET['docid']; ?>" method="post" onSubmit="return transaction_codeabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Transaction Code 

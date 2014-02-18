@@ -134,7 +134,7 @@ if($_POST["gag_reflexsub"] == 1)
     </div>
     <? }?>
     <form name="gag_reflexfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return gag_reflexabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Gag Reflex 
@@ -203,7 +203,7 @@ if($_POST["gag_reflexsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="gag_reflexfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return gag_reflexabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Gag Reflex 

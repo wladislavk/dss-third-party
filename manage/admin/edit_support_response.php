@@ -49,7 +49,7 @@ if($_POST["ressub"] == 1)
     </div>
     <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?ed=<?= $_GET['ed']; ?>" method="post" >
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td class="cat_head">
                <?=$but_text?> Support Response

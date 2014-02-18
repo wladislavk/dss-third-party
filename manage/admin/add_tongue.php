@@ -134,7 +134,7 @@ if($_POST["tonguesub"] == 1)
     </div>
     <? }?>
     <form name="tonguefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return tongueabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Tongue Evaluation 
@@ -203,7 +203,7 @@ if($_POST["tonguesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="tonguefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return tongueabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Tongue Evaluation 

@@ -50,7 +50,7 @@ $total_rec = mysql_num_rows($my);
 	<b><? echo $_GET['msg'];?></b>
 </div>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="60%">
 			Title

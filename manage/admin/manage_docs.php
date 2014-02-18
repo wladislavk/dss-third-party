@@ -72,7 +72,7 @@ if(isset($_POST['add_doc'])){
 </form>
 <?php } ?>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="60%">
                        Name

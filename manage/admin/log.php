@@ -41,7 +41,7 @@ $num_users=mysql_num_rows($my);
     </span>
     
     <br /><br /><br />
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
 		<? if($total_rec > $rec_disp) {?>
         <TR bgColor="#ffffff">
             <TD  align="right" colspan="15" class="bp">

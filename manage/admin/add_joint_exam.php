@@ -134,7 +134,7 @@ if($_POST["joint_examsub"] == 1)
     </div>
     <? }?>
     <form name="joint_examfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return joint_examabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Joint Examination 
@@ -203,7 +203,7 @@ if($_POST["joint_examsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="joint_examfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return joint_examabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Joint Examination 

@@ -173,7 +173,7 @@ if($_POST["doc_dvdub"] == 1)
     </div>
     <? }?>
     <form name="doc_dvdfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_dvdabc(this)" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> DVD's

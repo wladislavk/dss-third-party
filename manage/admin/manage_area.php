@@ -82,7 +82,7 @@ if($_POST['sortsub'] == 1)
 </div>
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">

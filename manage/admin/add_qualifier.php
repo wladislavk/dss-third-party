@@ -134,7 +134,7 @@ if($_POST["qualifiersub"] == 1)
     </div>
     <? }?>
     <form name="qualifierfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return qualifierabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Qualifier 
@@ -198,7 +198,7 @@ if($_POST["qualifiersub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="qualifierfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return qualifierabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Qualifier 

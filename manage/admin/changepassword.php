@@ -61,7 +61,7 @@ if($_POST['passsub'] == 1)
 </div>
 		
 <form name="passfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onsubmit="return passabc(this)">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<tr>
 		<td colspan="2" class="cat_head">
 			Change Password

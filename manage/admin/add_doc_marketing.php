@@ -173,7 +173,7 @@ if($_POST["doc_marketingub"] == 1)
     </div>
     <? }?>
     <form name="doc_marketingfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return doc_marketingabc(this)" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Marketing Materials

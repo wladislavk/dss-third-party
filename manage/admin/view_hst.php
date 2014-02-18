@@ -238,7 +238,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
     </div>
     <? }?>
     <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td class="cat_head" width="30%">
                HST for <?= $hst['patient_firstname']; ?> <?= $hst['patient_lastname']; ?> 

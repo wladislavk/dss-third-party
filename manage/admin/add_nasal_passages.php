@@ -134,7 +134,7 @@ if($_POST["nasal_passagessub"] == 1)
     </div>
     <? }?>
     <form name="nasal_passagesfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return nasal_passagesabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Nasal Passages 
@@ -203,7 +203,7 @@ if($_POST["nasal_passagessub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="nasal_passagesfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return nasal_passagesabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Nasal Passages 

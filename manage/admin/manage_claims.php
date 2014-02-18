@@ -344,6 +344,12 @@ if(isset($_GET['msg'])){
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
+<?php
+  if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 
+?>
+<a style="float:right;"  href="report_claim_aging.php" class="button"> Claim Aging </a>
+<?php } ?>
+<div style="clear:both;"></div>
 </div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">

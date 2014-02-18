@@ -388,52 +388,59 @@ include 'includes/completed.php';
                                 }
 
 			?>
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Insured Gender</label><select class="inpt_a validate" name="p_m_gender">
+                                <option value=''>Select</option>
+                                <option value="Male" <?= ($p['p_m_gender']=="Male")?'selected="selected"':'';?>>Male</option>
+                                <option value="Female" <?= ($p['p_m_gender']=="Female")?'selected="selected"':'';?>>Female</option>
+                                </select>
+                </div>
 			<input type="hidden" id="p_m_patient_insuranceid" name="p_m_patient_insuranceid" value="<?= $p_m_r['id']; ?>" />
                 <div class="sepH_b">
-                        <label class="lbl_a"><strong>7a.</strong> Insurance Company</label>
+                        <label class="lbl_a"><strong>8a.</strong> Insurance Company</label>
 			<input class="inpt_a validate" id="p_m_ins_company" name="p_m_ins_company" type="text" value="<?= $p_m_r['company']; ?>" />
            	</div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>7b.</strong> Address 1</label>
+                        <label class="lbl_a"><strong>8b.</strong> Address 1</label>
                         <input class="inpt_a validate" id="p_m_ins_address1" name="p_m_ins_address1" type="text" value="<?= $p_m_r['address1']; ?>" />
                 </div>
                 <div class="sepH_b half">
-                        <label class="lbl_a"><strong>7c.</strong> Address 2</label>
+                        <label class="lbl_a"><strong>8c.</strong> Address 2</label>
                         <input class="inpt_a" id="p_m_ins_address2" name="p_m_ins_address2" type="text" value="<?= $p_m_r['address2']; ?>" />
                 </div>
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>7d.</strong> City</label>
+                        <label class="lbl_a"><strong>8d.</strong> City</label>
                         <input class="inpt_a validate" id="p_m_ins_city" name="p_m_ins_city" type="text" value="<?= $p_m_r['city']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7e.</strong> State</label>
+                        <label class="lbl_a"><strong>8e.</strong> State</label>
                         <input class="inpt_a validate" id="p_m_ins_state" name="p_m_ins_state" type="text" value="<?= $p_m_r['state']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7f.</strong> Zip</label>
+                        <label class="lbl_a"><strong>8f.</strong> Zip</label>
                         <input class="inpt_a validate" id="p_m_ins_zip" name="p_m_ins_zip" type="text" value="<?= $p_m_r['zip']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7g.</strong> Phone</label>
+                        <label class="lbl_a"><strong>8g.</strong> Phone</label>
                         <input class="inpt_a extphonemask validate" id="p_m_ins_phone" name="p_m_ins_phone" type="text" value="<?= $p_m_r['phone']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7h.</strong> Fax</label>
+                        <label class="lbl_a"><strong>8h.</strong> Fax</label>
                         <input class="inpt_a phonemask" id="p_m_ins_fax" name="p_m_ins_fax" type="text" value="<?= $p_m_r['fax']; ?>" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>7i.</strong> Email</label>
+                        <label class="lbl_a"><strong>8i.</strong> Email</label>
                         <input class="inpt_a" id="p_m_ins_email" name="p_m_ins_email" type="text" value="<?= $p_m_r['email']; ?>" />
                 </div>
 
                 <div class="sepH_b third clear">
-                        <label class="lbl_a"><strong>8.</strong> Insurance ID.</label><input class="inpt_a validate" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>9.</strong> Insurance ID.</label><input class="inpt_a validate" id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_id']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>9.</strong> Group #</label><input class="inpt_a validate" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>10.</strong> Group #</label><input class="inpt_a validate" id="p_m_ins_grp" name="p_m_ins_grp" type="text" class="field text addr tbox" value="<?=$p['p_m_ins_grp']?>" maxlength="255" />
                 </div>
                 <div class="sepH_b third">
-                        <label class="lbl_a"><strong>10.</strong> Plan Name</label><input class="inpt_a validate" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
+                        <label class="lbl_a"><strong>11.</strong> Plan Name</label><input class="inpt_a validate" id="p_m_ins_plan" name="p_m_ins_plan" type="text" value="<?=$p['p_m_ins_plan']?>" maxlength="255" />
 <br />
                 </div>
 		<div class="sepH_b clear">
@@ -534,6 +541,13 @@ include 'includes/completed.php';
 				}
                         ?>
                         <input type="hidden" id="s_m_patient_insuranceid" name="s_m_patient_insuranceid" value="<?= $s_m_r['id']; ?>" />
+                <div class="sepH_b">
+                        <label class="lbl_a"><strong>7.</strong> Insured Gender</label><select class="inpt_a validate" name="s_m_gender">
+                                <option value=''>Select</option>
+                                <option value="Male" <?= ($p['s_m_gender']=="Male")?'selected="selected"':'';?>>Male</option>
+                                <option value="Female" <?= ($p['s_m_gender']=="Female")?'selected="selected"':'';?>>Female</option>
+                                </select>
+		</div>
                 <div class="sepH_b">
                         <label class="lbl_a"><strong>6a.</strong> Insurance Company</label>
                         <input class="inpt_a validate" id="s_m_ins_company" name="s_m_ins_company" type="text" value="<?= $s_m_r['company']; ?>" />

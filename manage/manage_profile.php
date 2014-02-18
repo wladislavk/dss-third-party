@@ -471,52 +471,65 @@ $num_custom=mysql_num_rows($my);
     <input class="value phonemask" name="mailing_fax" value="<?= $practice['mailing_fax']; ?>" />
   </div>
   <div class="detail">
-    <label>Use Service NPI:</label>
-    <input type="checkbox" class="value" name="use_service_npi" value="1" <?= ($practice['use_service_npi'])?'checked="checked"':''; ?> />
+    <label>Do you use a separate NPI number for Service Facility (CMS1500 box 32) and Billing Provider (CMS1500 box 33) items when filing claims?:</label>
+    <input type="radio" class="value" name="use_service_npi" value="1" <?= ($practice['use_service_npi'])?'checked="checked"':''; ?> /> Yes
+    <input type="radio" class="value" name="use_service_npi" value="0" <?= (!$practice['use_service_npi'])?'checked="checked"':''; ?> /> No
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Name:</label>
     <input class="value" name="service_name" value="<?= $practice['service_name']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Address:</label>
     <input class="value" name="service_address" value="<?= $practice['service_address']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service City:</label>
     <input class="value" name="service_city" value="<?= $practice['service_city']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service State:</label>
     <input class="value" name="service_state" value="<?= $practice['service_state']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Zip:</label>
     <input class="value" name="service_zip" value="<?= $practice['service_zip']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service NPI:</label>
     <input class="value" name="service_npi" value="<?= $practice['service_npi']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Medicare NPI:</label>
     <input class="value" name="service_medicare_npi" value="<?= $practice['service_medicare_npi']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Medicare PTAN:</label>
     <input class="value" name="service_medicare_ptan" value="<?= $practice['service_medicare_ptan']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service Tax ID or SSN:</label>
     <input class="value" name="service_tax_id_or_ssn" value="<?= $practice['service_tax_id_or_ssn']; ?>" />
   </div>
-  <div class="detail">
+  <div class="detail service_info">
     <label>Service EIN or SSN:</label>
     <span class="value"><input type="checkbox" name="service_ein" value="1" <?= ($practice['service_ein']==1)?'checked="checked"':""; ?> /> EIN
                 <input type="checkbox" name="service_ssn" value="1" <?= ($practice['service_ssn']==1)?'checked="checked"':""; ?> />SSN</span>
 
   </div>
-
+<script type="text/javascript">
+$('input[name="use_service_npi"]').click(function(){
+  check_service();
+});
+function check_service(){
+  if($('input[name="use_service_npi"]:checked').val()==1){
+    $('.service_info').show();
+  }else{
+    $('.service_info').hide();
+  }
+}
+check_service();
+</script>
 
   <div class="detail">
     <label>&nbsp;</label>

@@ -93,6 +93,7 @@ $flow = mysql_fetch_assoc($flowresult);
 if(mysql_num_rows($flowresult) <= 0){
   $rx = false;
   $lomn = false;
+  $rxlomn = false;
 }else{
     $rx = ($flow['rxrec']!='');
     $lomn = ($flow['lomnrec']!='');
@@ -202,7 +203,7 @@ Verification CANNOT be requested*
 File<br />
 Insurance Claim
 <?php
-if($ins_error || $study_error || !$rx || !$lomn){
+if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){
 ?>
 <span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
 <?php
@@ -211,7 +212,7 @@ if($ins_error || $study_error || !$rx || !$lomn){
 
 </div>
 <?php
-if(!$ins_error && !$study_error && $rx && $lomn){ ?>
+if(!$ins_error && !$study_error && (($rx && $lomn) || $rxlomn)){ ?>
 <?php include 'patient_claims.php'; ?>
 <?php }else{ ?>
 <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item
@@ -238,7 +239,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
 
-<?php if(!$rx & !$lomn){ ?>
+<?php if(!$rx && !$lomn){ ?>
 <div id="combined_div">
 <a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=14&itro=1');" class="vob_item
 <?php
@@ -292,7 +293,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 </form>
 </div>
 <?php
-if($ins_error || $study_error || !$rx || !$lomn){
+if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){
 ?>
 <span class="sub_note">*Insurance Claims can be filed after<br />the items above are completed</span>
 <div class="clear"></div>

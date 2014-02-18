@@ -446,6 +446,7 @@ $ed_sql .="
 		p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
 		p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
 		p_m_partylname = '".s_for($_POST["p_m_partylname"])."',
+		p_m_gender = '".s_for($_POST["p_m_gender"])."',
     p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
     s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
     p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
@@ -467,6 +468,7 @@ $ed_sql .="
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
+		s_m_gender = '".s_for($_POST["s_m_gender"])."',
 		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
 		s_m_other = '".s_for($_POST["s_m_other"])."', 
 		s_m_employer = '".s_for($_POST["s_m_employer"])."', 
@@ -797,6 +799,7 @@ mysql_query($s1);
 		p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
     p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
     p_m_partylname = '".s_for($_POST["p_m_partylname"])."',  
+		p_m_gender = '".s_for($_POST["p_m_gender"])."',
 		p_m_relation = '".s_for($_POST["p_m_relation"])."', 
 		p_m_other = '".s_for($_POST["p_m_other"])."', 
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
@@ -808,6 +811,7 @@ mysql_query($s1);
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  
+		s_m_gender = '".s_for($_POST["s_m_gender"])."',
 		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
 		s_m_other = '".s_for($_POST["s_m_other"])."', 
 		s_m_employer = '".s_for($_POST["s_m_employer"])."', 
@@ -1006,6 +1010,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$p_m_partyfname = $_POST["p_m_partyfname"];
     $p_m_partymname = $_POST["p_m_partymname"];
 		$p_m_partylname = $_POST["p_m_partylname"]; 
+		$p_m_gender = $_POST['p_m_gender'];
 		$p_m_relation = $_POST["p_m_relation"];
 		$p_m_other = $_POST["p_m_other"];
 		$p_m_employer = $_POST["p_m_employer"];
@@ -1016,6 +1021,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
 		$s_m_partylname = $_POST["s_m_partylname"];  
+		$s_m_gender = $_POST['s_m_gender'];
 		$s_m_relation = $_POST["s_m_relation"];
 		$s_m_other = $_POST["s_m_other"];
 		$s_m_employer = $_POST["s_m_employer"];
@@ -1117,6 +1123,7 @@ $pending_vob_status = $vob_myarray['status'];
     $p_m_partymname = st($themyarray["p_m_partymname"]);
 		$p_m_partylname = st($themyarray["p_m_partylname"]);
 		$p_m_relation = st($themyarray["p_m_relation"]);
+		$p_m_gender = st($themyarray["p_m_gender"]);
 		$p_m_other = st($themyarray["p_m_other"]);
 		$p_m_employer = st($themyarray["p_m_employer"]);
 		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
@@ -1127,6 +1134,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
 		$s_m_partylname = st($themyarray["s_m_partylname"]);
+		$s_m_gender = st($themyarray["s_m_gender"]);
 		$s_m_relation = st($themyarray["s_m_relation"]);
 		$s_m_other = st($themyarray["s_m_other"]);
 		$s_m_employer = st($themyarray["s_m_employer"]);
@@ -2186,7 +2194,17 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                                 <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?=$ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
-			    <span>
+                                               <span>
+                        <select name="p_m_gender" id="p_m_gender" class="field text addr tbox" style="width:100px;" >
+                                <option value="">Select</option>
+                            <option value="Male" <? if($p_m_gender == 'Male') echo " selected";?>>Male</option>
+                            <option value="Female" <? if($p_m_gender == 'Female') echo " selected";?>>Female</option>
+                        </select><span id="req_0" class="req">*</span>
+                        <label for="gender">Insured Gender</label>
+                    </span>
+			</div>
+			<div>
+			    <span style="float:right">
 <?php
   $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
   $itype_my = mysql_query($itype_sql);
@@ -2205,9 +2223,7 @@ $image = mysql_fetch_assoc($itype_my);
 
 <?php } ?>
 			    </span>
-						</div>
-						<div>
-                            
+ 
 						</div>
                     </li>
 				</ul>
@@ -2366,7 +2382,19 @@ $image = mysql_fetch_assoc($itype_my);
                                 <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?=$ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
-			    <span>
+
+                                                                           <span>
+                        <select name="s_m_gender" id="s_m_gender" class="field text addr tbox" style="width:100px;" >
+                                <option value="">Select</option>
+                            <option value="Male" <? if($s_m_gender == 'Male') echo " selected";?>>Male</option>
+                            <option value="Female" <? if($s_m_gender == 'Female') echo " selected";?>>Female</option>
+                        </select><span id="req_0" class="req">*</span>
+                        <label for="gender">Insured Gender</label>
+                    </span>
+                                                </div>                                                <div>
+
+
+			    <span style="float:right">
 <?php
   $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
   $itype_my = mysql_query($itype_sql);
@@ -2386,9 +2414,7 @@ $image = mysql_fetch_assoc($itype_my);
 <?php } ?>
 
 			    </span>
-						</div>
-						<div>
-                            
+
 						</div>
                     </li>
 				</ul>

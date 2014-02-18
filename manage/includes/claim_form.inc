@@ -641,7 +641,6 @@ die();
 		patient_dob = '".s_for($patient_dob)."',
 		patient_sex = '".s_for($patient_sex)."',
 		patient_address = '".s_for($patient_address)."',
-		patient_relation_insured = '".s_for($patient_relation_insured)."',
 		patient_state = '".s_for($patient_state)."',
 		patient_status = '".s_for($patient_status_arr)."',
 		patient_city = '".s_for($patient_city)."',
@@ -809,6 +808,7 @@ die();
 		
 /*
 	//TAKE OUT INSURANCE FIELDS SO THEY KEEP ORIGINAL VALUES
+		patient_relation_insured = '".s_for($patient_relation_insured)."',
                 insurance_type = '".s_for($insurance_type)."',
                 insured_id_number = '".s_for($insured_id_number)."',
                 insured_firstname = '".s_for($insured_firstname)."',
@@ -947,6 +947,7 @@ if($_GET['instype']==2){
   $insured_phone_code = st($myarray['insured_phone_code']);
   $insured_phone = st($myarray['insured_phone']);
   $insured_sex = st($myarray['other_insured_sex']);
+  $patient_relation_insured = st($myarray['patient_relation_other_insured']);
 }else{
   $insurancetype = st($myarray['insurance_type']);
   $other_insurancetype = $myarray['other_insurance_type'];
@@ -971,9 +972,9 @@ if($_GET['instype']==2){
   $insured_phone_code = st($myarray['insured_phone_code']);
   $insured_phone = st($myarray['insured_phone']);
   $insured_sex = st($myarray['insured_sex']);
+  $patient_relation_insured = st($myarray['patient_relation_insured']);
 }
 $patient_address = st($myarray['patient_address']);
-$patient_relation_insured = st($myarray['patient_relation_insured']);
 $patient_city = st($myarray['patient_city']);
 $patient_state = st($myarray['patient_state']);
 $patient_status = st($myarray['patient_status']);
@@ -1142,7 +1143,8 @@ if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $p
   $another_plan = 'NO';
 }
 if($is_pri_pending){
-  $insured_sex = $pat_myarray['gender'];
+  $insured_sex = $pat_myarray['p_m_gender'];
+  $other_insured_sex = $pat_myarray['s_m_gender'];
   $patient_sex = $pat_myarray['gender'];
   $patient_firstname = $pat_myarray['firstname'];
 	$patient_lastname = $pat_myarray['lastname'];
@@ -1652,7 +1654,7 @@ $(document).ready(function(){
 								</td>
 								<td align="left" valign="top">
 									<span class="small_cap">Others</span>
-									<input name="patient_relation_insured" type="radio" value="Others" <? if($patient_relation_insured == "Others") echo " checked";?> />
+									<input name="patient_relation_insured" type="radio" value="Other" <? if($patient_relation_insured == "Other") echo " checked";?> />
 								</td>
 							</tr>
 						</table>
@@ -1902,9 +1904,9 @@ $(document).ready(function(){
 									Sex
 									<br />
 									M 
-									<input type="radio" name="other_insured_sex" value="M" <? if($other_insured_sex == "M") echo " checked";?> />
+									<input type="radio" name="other_insured_sex" value="M" <? if($other_insured_sex == "M" || $other_insured_sex == "Male") echo " checked";?> />
 									&nbsp;&nbsp;F 
-									<input type="radio" name="other_insured_sex" value="F" <? if($other_insured_sex == "F") echo " checked";?> />
+									<input type="radio" name="other_insured_sex" value="F" <? if($other_insured_sex == "F" || $other_insured_sex == "Female") echo " checked";?> />
 								</td>
 							</tr>
 						</table>

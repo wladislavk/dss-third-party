@@ -6,6 +6,9 @@
       <th>DOS</th>
       <th>Service</th>
       <th>Client</th>
+<?php if($office_type==DSS_OFFICE_BACK){ ?>
+      <th>Account</th>
+<?php } ?>
       <th>Charge</th>
       <th>Ins</th>
       <th>Client</th>
@@ -39,6 +42,11 @@
 	  <?= $r['firstname']." ".$r['lastname']; ?>
 	<?php } ?>
       </td>
+<?php if($office_type==DSS_OFFICE_BACK){ ?>
+      <td>
+	<?= $r['doc_name']; ?>
+      </td>
+<?php } ?>
       <td>
         $<?= number_format($r['amount'],2); ?>
       </td>

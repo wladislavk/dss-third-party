@@ -8,6 +8,11 @@ $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
 		FROM dental_patients p
 		LEFT JOIN dental_users u ON u.userid=p.docid
+	";
+if(isset($_GET['fid'])){
+  $sql .= " WHERE p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
+$sql .= "
 	ORDER BY p.lastname ASC, p.firstname ASC
 	";
 }elseif(is_software($_SESSION['admin_access'])){
@@ -17,7 +22,12 @@ $sql = "SELECT p.firstname, p.lastname,
                 FROM dental_patients p
         JOIN dental_users u ON u.userid=p.docid 
         JOIN dental_user_company uc ON uc.userid = u.userid
-        where uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' order by p.lastname, p.firstname
+        where uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' 
+        ";
+if(isset($_GET['fid'])){
+  $sql .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
+$sql .= " order by p.lastname, p.firstname
         ";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
@@ -30,7 +40,12 @@ $sql = "SELECT p.firstname, p.lastname,
                 p.patientid
                 FROM dental_patients p
         JOIN dental_users u ON u.userid=p.docid 
-        where u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' order by p.lastname, p.firstname
+        where u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' 
+        ";
+if(isset($_GET['fid'])){
+  $sql .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
+$sql .= " order by p.lastname, p.firstname
         ";
 }
 //(SELECT COALESCE(SUM(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2))),0) FROM dental_insurance i WHERE i.patientid=p.patientid AND i.adddate > DATE_SUB(CURDATE(), INTERVAL 830 DAY)) as total_029
@@ -52,8 +67,26 @@ $total_rec = mysql_num_rows($my);
 <a href="ledger.php" class="editlink" title="EDIT">
 	<b>&lt;&lt;Back</b></a>
 </div>
+<?php
+$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
+?>
+  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+    Account:
+    <select name="fid">
+      <option value="">Any</option>
+      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
+      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
+        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
+        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
+      <?php } ?>
+    </select>
+    &nbsp;&nbsp;&nbsp;
+    <input type="submit" value="Filter List"/>
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+  </form>
 
-<br />
+
+
 <style>
 #contentMain tr:hover{
 background:#cccccc;
@@ -228,6 +261,7 @@ $p_sql = '';
 			<td valign="top">
 				<b>Totals</b>
 			</td>
+			<td></td>
 			<td valign="top">
 			  <strong><?php echo "$".number_format($total_029,2); ?></strong>
 			</td>

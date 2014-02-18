@@ -19,6 +19,9 @@ if(is_software($_SESSION['admin_access'])){
 $s .= "       WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
              ";
+if(isset($_GET['fid'])){
+  $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -30,7 +33,6 @@ $a_sql = "SELECT ac.companyid FROM admin_company ac
   $admin = mysql_fetch_assoc($a_q);
   $s .= " AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."' ";
 }
-
 }else{
   $s = "SELECT i.insuranceid, i.mailed_date, l.service_date, p.patientid, p.firstname, p.lastname, i.total_charge,
 		CONCAT(u.first_name, ' ', u.last_name) doc_name,
@@ -77,6 +79,9 @@ $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND i.mailed_
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE
  l.primary_claim_id=i.insuranceid),0))>0
         ";
+if(isset($_GET['fid'])){
+  $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -133,6 +138,9 @@ if(is_software($_SESSION['admin_access'])){
 $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND i.mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
+if(isset($_GET['fid'])){
+  $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -190,6 +198,9 @@ if(is_software($_SESSION['admin_access'])){
 $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND i.mailed_date <= DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE l.primary_claim_id=i.insuranceid),0))>0
         ";
+if(isset($_GET['fid'])){
+  $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -247,6 +258,9 @@ $s .= " WHERE i.mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND
                 (COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0) - COALESCE((SELECT SUM(dlp.amount) FROM dental_ledger_payment dlp INNER JOIN dental_ledger l ON l.ledgerid=dlp.ledgerid WHERE
  l.primary_claim_id=i.insuranceid),0))>0
         ";
+if(isset($_GET['fid'])){
+  $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+}
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }

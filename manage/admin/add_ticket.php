@@ -6,19 +6,8 @@ include_once '../includes/general_functions.php';
 include_once 'includes/general.htm';
 //include "includes/top.htm";
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-  <script type="text/javascript" src="script/jquery-1.6.2.min.js"></script>
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
-    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="../js/masks.js"></script>
-<script type="text/javascript" src="script/wufoo.js"></script>
-</head>
-<body>
+
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php

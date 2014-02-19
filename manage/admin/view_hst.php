@@ -200,11 +200,10 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 }
 
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+?>
+
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+
 <style>
 .readonly {
   background-color: #cccccc;
@@ -223,13 +222,9 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
   margin-left: 20px;
 }
 </style>
-  <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
-<script language="JavaScript" src="../calendar2.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
-</head>
-<body>
+
 	<br /><br />
 	
 	<? if($msg != '') {?>

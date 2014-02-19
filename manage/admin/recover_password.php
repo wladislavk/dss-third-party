@@ -2,18 +2,20 @@
 require_once('includes/main_include.php');
 include_once('includes/password.php');
 
+?>
 
-?> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
-<title><?=$sitename;?></title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
 
-</head>
-<body onload="document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';">
+<script type="text/javascript">
+$(document).ready(function(){
+  document.getElementById('future_dental_det').style.display = 'none';
+  parent.frames[0].document.getElementById('hideshow1').style.display = 'block';
+  parent.frames[0].document.getElementById('hideshow2').style.display = 'none';
+  parent.frames[0].document.getElementById('hideshow3').style.display = 'none';
+  parent.frames[0].document.getElementById('hideshow4').style.display = 'none';
+  parent.frames[0].document.getElementById('hideshow5').style.display = 'none';
+});
+</script>
 
 <table width="980" border="0" cellpadding="1" cellspacing="1" align="center">
 <!-- Header and nav goes here -->
@@ -153,5 +155,4 @@ include_once('includes/password.php');
 </table>
 </FORM>
 
-
-<? include 'includes/bottom.htm';?>
+<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

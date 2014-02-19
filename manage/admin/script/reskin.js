@@ -72,6 +72,11 @@ $(function(){
     });
     
     /**
+     * Datepicker
+     */
+    $('.date').datepicker();
+    
+    /**
      * Append dropdown to change skin
      */
     $('body').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');

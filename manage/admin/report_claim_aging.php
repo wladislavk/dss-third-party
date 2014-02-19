@@ -8,9 +8,17 @@ $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
 		FROM dental_patients p
 		LEFT JOIN dental_users u ON u.userid=p.docid
+WHERE (SELECT (SUM(COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0)) -
+        (SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
+                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
+                WHERE dl.primary_claim_id='i.insuranceid')  
+        )
+         FROM dental_insurance i 
+WHERE i.patientid=p.patientid AND i.mailed_date IS NOT NULL) > 0
+
 	";
 if(isset($_GET['fid'])){
-  $sql .= " WHERE p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
+  $sql .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
 $sql .= "
 	ORDER BY p.lastname ASC, p.firstname ASC

@@ -494,6 +494,10 @@ function patientabc(fa)
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins_dob.focus();
 			return false;
+                } else if(trim(fa.p_m_gender.value) == "") {
+                        alert("Insured Gender is a Required Field");
+                        fa.p_m_gender.focus();
+                        return false;
 		} else if(trim(fa.p_m_ins_co.value) == "") {
 			alert("Insurance Company is a Required Field");
 			fa.p_m_ins_co.focus();
@@ -532,6 +536,10 @@ function patientabc(fa)
                 } else if(trim(fa.ins2_dob.value) == "") {
                         alert("Secondary Insured Date of Birth is a Required Field");
                         fa.ins2_dob.focus();
+                        return false;
+                } else if(trim(fa.s_m_gender.value) == "") {
+                        alert("Secondary Insured Gender is a Required Field");
+                        fa.s_m_gender.focus();
                         return false;
                 } else if(trim(fa.s_m_ins_co.value) == "") {
                         alert("Secondary Insurance Company is a Required Field");

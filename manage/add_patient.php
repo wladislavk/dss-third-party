@@ -2204,25 +2204,6 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                     </span>
 			</div>
 			<div>
-			    <span style="float:right">
-<?php
-  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
-				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
-                + Add Insurance Card Image
-        </button>
-<?php }else{
-$image = mysql_fetch_assoc($itype_my);
- ?>
-
-                                        <button id="p_m_ins_card" onclick="window.open('q_file/<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
-                View Insurance Card Image
-        </button>
-
-<?php } ?>
-			    </span>
  
 						</div>
                     </li>
@@ -2246,6 +2227,25 @@ $image = mysql_fetch_assoc($itype_my);
                             </span>
                             <span>
                                                                             <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+ <span style="float:right">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+                                        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+
+                                        <button id="p_m_ins_card" onclick="window.open('q_file/<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
                             </span>
 
                                                 </div>
@@ -2394,27 +2394,6 @@ $image = mysql_fetch_assoc($itype_my);
                                                 </div>                                                <div>
 
 
-			    <span style="float:right">
-<?php
-  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
-
-                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
-                + Add Insurance Card Image
-        </button>
-<?php }else{
-$image = mysql_fetch_assoc($itype_my);
- ?>
-                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
-                View Insurance Card Image
-        </button>
-
-<?php } ?>
-
-			    </span>
-
 						</div>
                     </li>
 				</ul>
@@ -2437,6 +2416,26 @@ $image = mysql_fetch_assoc($itype_my);
                             </span>
                             <span>
                                                                             <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+                            <span style="float:right">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+
+                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
+
                             </span>
 
                                                 </div>

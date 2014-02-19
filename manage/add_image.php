@@ -45,11 +45,25 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+			if($uploaded){
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = '".$sleeptesttype." ".$date."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+					$image_id = mysql_insert_id();
+			}
                 }
                 else
                 {
                         $banner1 = '';
+			$image_id = '';
                 }
   $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
@@ -71,26 +85,17 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 `notes`,
 `testnumber`,
 `sleeplab`,
-`patiendid`
+`patiendid`,
+`image_id`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."')";
-  $run_q = mysql_query($q);
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
+error_log($q);
+  $run_q = mysql_query($q) or die(mysql_error());
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
         if($uploaded){
                 $ins_id = mysql_insert_id();
-                                        $ins_sql = " insert into dental_q_image set 
-                                        patientid = '".s_for($_GET['pid'])."',
-                                        title = '".$sleeptesttype." ".$date."',
-                                        imagetypeid = '1',
-                                        image_file = '".s_for($banner1)."',
-                                        userid = '".s_for($_SESSION['userid'])."',
-                                        docid = '".s_for($_SESSION['docid'])."',
-                                        adddate = now(),
-                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 }
    $msg = "Successfully added sleep lab". $uploaded;
 ?>

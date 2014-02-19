@@ -1183,72 +1183,72 @@ $pending_vob_status = $vob_myarray['status'];
 	
 		$docpcp = st($themyarray["docpcp"]);
 		if($docpcp){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docpcp;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docpcp_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docpcp_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docpcp_name = "";
 		}
 
 		$docdentist = st($themyarray["docdentist"]);
 		if($docdentist){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docdentist;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docdentist_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docdentist_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docdentist_name = "";
 		}
 
 		$docent = st($themyarray["docent"]);
 		if($docent){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docent;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docent_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docent_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docent_name = "";
 		}
 
 		$docmdother = st($themyarray["docmdother"]);
 		if($docmdother){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
 				LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
 			WHERE contactid=".$docmdother;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother_name = "";
 		}
 
                 $docmdother2 = st($themyarray["docmdother2"]);
 		if($docmdother2){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother2;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother2_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother2_name = "";
 		}
 
                 $docmdother3 = st($themyarray["docmdother3"]);
 		if($docmdother3){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother3;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother3_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother3_name = "";
 		}
@@ -1262,17 +1262,17 @@ $pending_vob_status = $vob_myarray['status'];
 		$referred_by = st($themyarray["referred_by"]);
 		$referred_notes = st($themyarray["referred_notes"]);
 		if($referred_source==DSS_REFERRED_PATIENT){
-		  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
+		  $rsql = "SELECT lastname, firstname, middlename FROM dental_patients WHERE patientid=".$referred_by;
 		  $rq = mysql_query($rsql);
 		  $r = mysql_fetch_assoc($rq);
-		  $referred_name = $r['lastname'].", ".$r['firstname'] . " - Patient";
+		  $referred_name = $r['lastname'].", ".$r['firstname'] . " ". $r['middlename'] . " - Patient";
 		}elseif($referred_source==DSS_REFERRED_PHYSICIAN){
-                  $rsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $rsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
 			LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
 			WHERE contactid=".$referred_by;
                   $rq = mysql_query($rsql);
                   $r = mysql_fetch_assoc($rq);
-                  $referred_name = $r['lastname'].", ".$r['firstname'];
+                  $referred_name = $r['lastname'].", ".$r['firstname']. " ". $r['middlename'];
 		  if($r['contacttype'] != ''){
     			$referred_name .= " - " . $r['contacttype'];
 		  }

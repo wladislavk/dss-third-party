@@ -136,7 +136,7 @@ if($_POST["contacttypesub"] == 1)
     </div>
     <? }?>
     <form name="contacttypefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contacttypeabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Contact Type 
@@ -213,7 +213,7 @@ if($_POST["contacttypesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="contacttypefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contacttypeabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Contact Type 

@@ -134,7 +134,7 @@ if($_POST["palpationsub"] == 1)
     </div>
     <? }?>
     <form name="palpationfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return palpationabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Palpation 
@@ -203,7 +203,7 @@ if($_POST["palpationsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="palpationfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return palpationabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Palpation 

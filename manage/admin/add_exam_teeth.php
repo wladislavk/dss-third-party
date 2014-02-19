@@ -134,7 +134,7 @@ if($_POST["exam_teethsub"] == 1)
     </div>
     <? }?>
     <form name="exam_teethfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return exam_teethabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Teeth Examination 
@@ -203,7 +203,7 @@ if($_POST["exam_teethsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="exam_teethfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return exam_teethabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Teeth Examination 

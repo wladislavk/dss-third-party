@@ -105,7 +105,7 @@ if($_POST["areasub"] == 1)
     </div>
     <? }?>
     <form name="areafrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return areaabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Area 

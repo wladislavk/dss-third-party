@@ -281,7 +281,7 @@ Total CC + Invoice Last 30 days: $<?= $total_charge + $count_r['cc_paid']; ?>
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<table class="sort_table" id="tracking_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="tracking_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 <thead>
 	<tr class="tr_bg_h">
 		<th class="col_head">Username</th>

@@ -38,7 +38,7 @@ $doc = mysql_fetch_assoc($doc_q);
 
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="20%">
                         Date
@@ -142,7 +142,7 @@ echo $charge->card->last4;
 
 
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="40%">
 			Date		

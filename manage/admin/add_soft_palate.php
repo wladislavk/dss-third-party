@@ -134,7 +134,7 @@ if($_POST["soft_palatesub"] == 1)
     </div>
     <? }?>
     <form name="soft_palatefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return soft_palateabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Soft Palate 
@@ -203,7 +203,7 @@ if($_POST["soft_palatesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="soft_palatefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return soft_palateabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Soft Palate 

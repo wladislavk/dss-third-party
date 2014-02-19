@@ -134,7 +134,7 @@ if($_POST["assess_additionsub"] == 1)
     </div>
     <? }?>
     <form name="assess_additionfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Assessment Addition 
@@ -203,7 +203,7 @@ if($_POST["assess_additionsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="assess_additionfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return assess_additionabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Assessment Addition 

@@ -1,10 +1,10 @@
-<?php 
+<?php
 session_start();
-require_once('includes/main_include.php');
-include("includes/sescheck.php");
-include("includes/password.php");
-include("../includes/general_functions.php");
-include("../includes/edx_functions.php");
+require_once 'includes/main_include.php';
+include_once 'includes/sescheck.php';
+include_once 'includes/password.php';
+include_once '../includes/general_functions.php';
+include_once '../includes/edx_functions.php';
 include_once '../includes/help_functions.php';
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
@@ -230,7 +230,7 @@ if($_POST["staffsub"] == 1)
     </div>
     <? }?>
     <form name="stafffrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" onSubmit="return staffabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Staff 

@@ -84,7 +84,7 @@ if($_POST['sortsub'] == 1)
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>?docid=<?= $_GET['docid']; ?>" method="post">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">

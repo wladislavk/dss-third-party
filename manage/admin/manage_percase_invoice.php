@@ -143,7 +143,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -253,7 +253,7 @@ $num_users=mysql_num_rows($my);
 </form>
 
 <br /><br />
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="20%">
                         Company

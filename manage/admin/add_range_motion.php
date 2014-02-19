@@ -134,7 +134,7 @@ if($_POST["range_motionsub"] == 1)
     </div>
     <? }?>
     <form name="range_motionfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return range_motionabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Range Motion 
@@ -198,7 +198,7 @@ if($_POST["range_motionsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="range_motionfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return range_motionabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Range Motion 

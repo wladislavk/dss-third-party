@@ -134,7 +134,7 @@ if($_POST["diagnosticsub"] == 1)
     </div>
     <? }?>
     <form name="diagnosticfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return diagnosticabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Diagnostic Test 
@@ -203,7 +203,7 @@ if($_POST["diagnosticsub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="diagnosticfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return diagnosticabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Diagnostic Test 

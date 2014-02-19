@@ -67,15 +67,15 @@ echo $memo_array['memo'];
 
 }
 ?>
-End Date:<?php
-$myCalendar = new tc_calendar("date5", true, false);
-$myCalendar->setIcon("images/iconCalendar.gif");
-$myCalendar->setPath("../admin/");
-$myCalendar->setYearInterval(2000, 2015);
-$myCalendar->dateAllow('2010-01-01', '2015-03-01');
-$myCalendar->setDateFormat('Y-d-m');
-$myCalendar->writeScript();
-?>&nbsp;&nbsp;&nbsp;<input type="submit" name="submit" value="Update Memo" />
+
+<div class="input-group date col-md-3" id="datepicker" data-date="$dd" data-date-format="yyyy-dd-mm">
+  <span class="input-group-addon">End date:</span>
+  <input class="form-control text-center" type="text" name="date5" value="12-02-2012">
+  <span class="input-group-addon">
+    <i class="glyphicon glyphicon-calendar"></i>
+  </span>
+</div>
+<input type="submit" name="submit" value="Update Memo">
       </form>
 <br /><br />
 <?php } ?>

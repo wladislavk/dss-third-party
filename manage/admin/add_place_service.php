@@ -134,7 +134,7 @@ if($_POST["place_servicesub"] == 1)
     </div>
     <? }?>
     <form name="place_servicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return place_serviceabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Place of Service 
@@ -203,7 +203,7 @@ if($_POST["place_servicesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="place_servicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return place_serviceabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Place of Service 

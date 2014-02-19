@@ -105,7 +105,7 @@ if($_POST["intensitysub"] == 1)
     </div>
     <? }?>
     <form name="intensityfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return intensityabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Intensity 

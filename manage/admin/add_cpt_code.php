@@ -134,7 +134,7 @@ if($_POST["cpt_codesub"] == 1)
     </div>
     <? }?>
     <form name="cpt_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return cpt_codeabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> CPT Code 
@@ -203,7 +203,7 @@ if($_POST["cpt_codesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="cpt_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return cpt_codeabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple CPT Code 

@@ -213,7 +213,7 @@ if(!$uploaded){
     </div>
     <? }?>
     <form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)" enctype="multipart/form-data">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Device 
@@ -324,7 +324,7 @@ if($_GET['ed'] == '')
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="devicefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return deviceabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Device 

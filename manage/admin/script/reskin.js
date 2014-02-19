@@ -8,26 +8,73 @@ $(function(){
         };
     });
     
-    /*
-    $('button').addClass('btn btn-primary');
-    $('.button, .addButton').removeClass('button addButton').addClass('btn btn-primary');
+    /**
+     * Add breadcrumb
+     */
+    var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
+    $breadcrumb = $container.find('ol'),
+    path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     
-    $('input[type=text]').addClass('form-control');
-    $('[type=submit], [type=button]').addClass('btn btn-default');
-    $('table input[type=text]').css({ width: '' }).addClass('text-center')
+    $('.nav').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
+        var $this = $(this);
+        
+        if ($this.is('[href$="#"]')) {
+            $breadcrumb.append('<li/>')
+                .find('li:last')
+                .text($this.text().trim());
+        }
+        else {
+            $breadcrumb.append('<li><a/></li>')
+                .find('a:last')
+                .text($this.text().trim())
+                .attr('href',this.href);
+        }
+    });
     
-    $('select').addClass('btn btn-default');
-    */
+    $breadcrumb.find('li:last').each(function(){
+        var $this = $(this);
+        
+        $this.text($this.text());
+    }).addClass('active');
+    $container.insertAfter('.nav:first');
     
     /**
-     * Allow buttons to have variety
+     * Popup
      */
-    /*
-    $('.btn:icontains(edit)').removeClass('btn-success').addClass('btn-primary').append('<span>&nbsp;</span><span class="glyphicon glyphicon-pencil"/>');
-    $('.btn:icontains(create), .btn:icontains("add ")').removeClass('btn-default').addClass('btn-success').append('<span>&nbsp;</span><span class="glyphicon glyphicon-plus"/>');
-    $('.btn:icontains(delete), .btn:icontains(remove)').removeClass('btn-default').addClass('btn-danger').append('<span>&nbsp;</span><span class="glyphicon glyphicon-remove"/>');
-    $('table:not(:first)').addClass('table table-bordered');
-    */
+    $('[onclick*=loadPopup]').each(function(){
+        var $this = $(this),
+        legend = $this.text().trim(),
+        click = $this.attr('onclick'),
+        popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i,'$2');
+        
+        console.log(popup);
+        
+        $this.removeAttr('onclick');
+        $this.data('legend',legend);
+        $this.data('popup',popup);
+    })
+    .off('click')
+    .on('click',function(e){
+        e.preventDefault();
+        
+        var $this = $(this),
+        legend = $this.data('legend'),
+        popup = $this.data('popup'),
+        modal = $('#popup-window'),
+        iframe = modal.find('iframe');
+        
+        
+        iframe.attr('src',popup);
+        modal.find('.modal-title').text(legend);
+        modal.modal('show');
+        
+        return false;
+    });
+    
+    /**
+     * Datepicker
+     */
+    $('.date').datepicker();
     
     /**
      * Append dropdown to change skin

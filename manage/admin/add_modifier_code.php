@@ -134,7 +134,7 @@ if($_POST["modifier_codesub"] == 1)
     </div>
     <? }?>
     <form name="modifier_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return modifier_codeabc(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                <?=$but_text?> Modifier Code 
@@ -203,7 +203,7 @@ if($_POST["modifier_codesub"] == 1)
     		<b>--------------------------------- OR ---------------------------------</b>
         </div>
 		<form name="modifier_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return modifier_codeabc(this)">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover">
             <tr>
                 <td colspan="2" class="cat_head">
                    Add Multiple Modifier Code 

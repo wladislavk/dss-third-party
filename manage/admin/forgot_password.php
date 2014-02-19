@@ -53,15 +53,9 @@ $message .= DSS_EMAIL_FOOTER;
 }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Admin </title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
+
+<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
+
 <table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
   <tr bgcolor="#FFFFFF">
     <td colspan="2" class="header_bg"> 
@@ -103,9 +97,6 @@ $message .= DSS_EMAIL_FOOTER;
     	</FORM>
 	</td>
   </tr>
-  <tr bgcolor="#FFFFFF">
-    <td height="23" colspan="2" align="center" class="bottom_bg">&copy; dentalsleepsolutions.com</td>
-  </tr>
 </table>
-</BODY>
-</HTML>
+
+<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

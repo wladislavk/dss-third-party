@@ -166,11 +166,10 @@ $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
 $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+?>
+
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+
 <style>
 .readonly {
   background-color: #cccccc;
@@ -189,13 +188,8 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
   margin-left: 20px;
 }
 </style>
-  <?php include($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/calendarinc.php"); ?>
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_validation.js"></script>
-<script language="JavaScript" src="../calendar2.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
-</head>
-<body>
 	<br /><br />
 	
 	<? if($msg != '') {?>
@@ -204,7 +198,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
     </div>
     <? }?>
     <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
-    <table class="table table-bordered">
+    <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
                Verification of benefits for <?= $preauth['patient_firstname']; ?> <?= $preauth['patient_lastname']; ?> 

@@ -200,7 +200,7 @@ if($_POST["contactsub"] == 1)
                 </div>
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <input type="text" class="form-control" name="add1" id="add1" placeholder="Address (second line)" value="<?= $add1 ?>">
+                        <input type="text" class="form-control" name="add2" id="add2" placeholder="Address (second line)" value="<?= $add2 ?>">
                     </div>
                 </div>
                 <div class="form-group">

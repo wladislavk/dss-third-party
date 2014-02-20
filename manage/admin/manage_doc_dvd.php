@@ -137,7 +137,7 @@ if($_POST['sortsub'] == 1)
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["doc_dvdid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["doc_dvdid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
 						Delete
 					</a>
 				</td>

@@ -163,7 +163,7 @@ if($_POST["pagesub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["pageid"]?>" />
                 <input type="submit" value="<?=$but_text?> Page " class="btn btn-primary">
 		<?php if($themyarray["pageid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_pages.php?delid=<?=$themyarray["pageid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_pages.php?delid=<?=$themyarray["pageid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

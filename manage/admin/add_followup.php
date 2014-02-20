@@ -188,7 +188,7 @@ if($_POST["followupsub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["followupid"]?>" />
                 <input type="submit" value="<?=$but_text?> Follow Up" class="btn btn-primary">
 		<?php if($themyarray["followupid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_followup.php?delid=<?=$themyarray["followupid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent"class="editdel dellink" title="DELETE">
+                    <a href="manage_followup.php?delid=<?=$themyarray["followupid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent"class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

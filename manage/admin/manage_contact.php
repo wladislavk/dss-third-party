@@ -43,7 +43,7 @@ $num_contact=mysql_num_rows($my);
 <br />
 <br />
 &nbsp;
-<a href="manage_users.php" class="dellink" title="DELETE" >
+<a href="manage_users.php" class="btn btn-danger pull-right" title="DELETE" >
 	<b>&lt;&lt; Back</b></a>
 
 <div align="right">

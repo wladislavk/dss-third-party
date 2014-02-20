@@ -47,7 +47,7 @@ $num_users=mysql_num_rows($my);
 <br />
 <br />
 &nbsp;
-<a href="manage_login.php" class="dellink" title="DELETE" >
+<a href="manage_login.php" class="btn btn-danger pull-right" title="DELETE" >
 	<b>&lt;&lt; Back</b></a>
 
 

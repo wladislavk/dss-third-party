@@ -91,7 +91,7 @@ $num_users=mysql_num_rows($my);
 				</td>
 				
 				<td valign="top" align="center">
-                    <a href="login_detail.php?logid=<?=$myarray["loginid"];?>" class="dellink" title="DELETE">
+                    <a href="login_detail.php?logid=<?=$myarray["loginid"];?>" class="btn btn-danger pull-right" title="DELETE">
                     	View Detail</a>
 				</td>	
 			</tr>

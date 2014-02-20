@@ -188,7 +188,7 @@ if($_POST["nasal_passagessub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["nasal_passagesid"]?>" />
                 <input type="submit" value="<?=$but_text?> Nasal Passages" class="btn btn-primary">
 		<?php if($themyarray["nasal_passagesid"] != ''  && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_nasal_passages.php?delid=<?=$themyarray["nasal_passagesid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_nasal_passages.php?delid=<?=$themyarray["nasal_passagesid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

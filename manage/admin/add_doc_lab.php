@@ -305,7 +305,7 @@ if($_POST["doc_labub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["doc_labid"]?>" />
                 <input type="submit" value="<?=$but_text?> Dental Appliance Lab Info " class="btn btn-primary">
 		<?php if($themyarray["doc_labid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_doc_lab.php?delid=<?=$themyarray["doc_labid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_doc_lab.php?delid=<?=$themyarray["doc_labid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

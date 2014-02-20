@@ -188,7 +188,7 @@ if($_POST["modifier_codesub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["modifier_codeid"]?>" />
                 <input type="submit" value="<?=$but_text?> Modifier Code" class="btn btn-primary">
 		<?php if($themyarray["modifier_codeid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_modifier_code.php?delid=<?=$themyarray["modifier_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_modifier_code.php?delid=<?=$themyarray["modifier_codeid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

@@ -104,164 +104,102 @@ if($_POST["contactsub"] == 1)
 	}
 	?>
 	
-	<br /><br />
-	
-	<? if($msg != '') {?>
-    <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+    <div class="col-md-6 col-md-offset-3">
+        <?php if (isset($_GET['msg'])) { ?>
+        <div class="alert alert-danger text-center">
+            <strong><?= $_GET['msg'] ?></strong>
+        </div>
+        <?php } ?>
+        
+        <?php if ($msg != '') { ?>
+        <div class="alert alert-success text-center">
+            <?= $msg ?>
+        </div>
+        <?php } ?>
+        
+        <div class="page-header">
+            <h1>
+                <?=$but_text?> <?php echo $_GET['heading']; ?> Location 
+                <? if($location <> "") {?>
+                    &quot;<?=$location;?>&quot;
+                <? }?>
+            </h1>
+        </div>
+        <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return locationabc(this)" class="form-horizontal">
+            <div class="page-header">
+                <strong>Name</strong>
+            </div>
+            <div class="form-group">
+                <label for="location" class="col-md-3 control-label">Practice Location</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="location" id="location" placeholder="Practice Location" value="<?= $location ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="col-md-3 control-label">Doctor Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Doctor Name" value="<?= $name ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Address</strong>
+            </div>
+            <div class="form-group">
+                <label for="address" class="col-md-3 control-label">Address</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?= $address ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="city" class="col-md-3 control-label">City</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="state" class="col-md-3 control-label">State</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Contact Information</strong>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-md-3 control-label">Phone</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fax" class="col-md-3 control-label">Fax</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="hidden" name="contactsub" value="1">
+                    <input type="hidden" name="docid" value="<?= $_GET['docid']; ?>">
+                    <input type="hidden" name="ed" value="<?=$themyarray["id"]?>">
+                    <input type="submit" value="<?=$but_text?> Location" class="btn btn-primary">
+                    <?php  if($themyarray["id"] != ''){ ?>
+                    <a class="btn btn-danger pull-right" href="javascript:parent.window.location='manage_locations.php?delid=<?=$themyarray["id"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" title="DELETE">
+                        Delete
+                    </a>
+                    <?php } ?>
+                </div>
+            </div>
+        </form>
     </div>
-    <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return locationabc(this)">
-    <table width="99%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 11px;">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> <?php echo $_GET['heading']; ?> Location 
-               <? if($location <> "") {?>
-               		&quot;<?=$location;?>&quot;
-               <? }?>
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" class="frmhead">
-				<ul>        
-                    <li id="foli8" class="complex">	
-                        <div>
-                        	<span>
-                            	<input type="text" name="location" id="location" value="<?= $location; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="location">Practice Location</label>
-                            </span>
-                       </div>   
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="name" id="name" value="<?= $name; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="name">Doctor Name</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="address" id="address" value="<?= $address; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="address">Address</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="city" id="city" value="<?= $city; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="city">City</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="state" id="state" value="<?= $state; ?>" class="field text addr tbox" maxlength="2" tabindex="1" style="width:300px;" >
-                                <label for="state">State</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="zip" id="zip" value="<?= $zip; ?>" class="field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="zip">Zip</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="phone" id="phone" value="<?= $phone; ?>" class="extphonemask field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="phone">Phone</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-                <td valign="top" class="frmhead">
-                                <ul>
-                    <li id="foli8" class="complex">
-                        <div>
-                                <span>
-                                <input type="text" name="fax" id="fax" value="<?= $fax; ?>" class="phonemask field text addr tbox" tabindex="1" style="width:300px;" >
-                                <label for="fax">Fax</label>
-                            </span>
-                       </div>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-
-        <tr>
-            <td  align="center">
-                <span class="red">
-                    * Required Fields					
-                </span><br />
-                <input type="hidden" name="contactsub" value="1" />
-		<input type="hidden" name="docid" value="<?= $_GET['docid']; ?>" />
-                <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value="<?=$but_text?> Location" class="btn btn-primary">
-		<?php  if($themyarray["id"] != ''){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_locations.php?delid=<?=$themyarray["id"];?>&docid=<?=$_GET['docid']?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                                Delete
-                                        </a>
-                 <?php } ?>
-            </td>
-        </tr>
-    </table>
-    </form>
-
-
-
-
-
-      </div>
-<div style="margin:0 auto;background:url(images/dss_05.png) no-repeat top left;width:980px; height:28px;"> </div>
-  </td>
-</tr>
-<!-- Stick Footer Section Here -->
-</table>
 </body>
 </html>

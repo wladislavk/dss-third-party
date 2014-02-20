@@ -109,9 +109,9 @@ $(document).ready(function(){
 	}
 ?>
 <br />
-<span class="admin_head">
+<div class="page-header">
 	Reset Password
-</span>
+</div>
 <br />
 <br />
 <FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>">

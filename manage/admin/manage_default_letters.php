@@ -27,9 +27,9 @@ $my = mysql_query($sql);
 ?>
 <script language="javascript" type="text/javascript" src="../3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Default Letters 
-</span>
+</div>
 <br />
 <br />
 

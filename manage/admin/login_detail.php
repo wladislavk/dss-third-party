@@ -37,13 +37,13 @@ $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 ?>
 
-<span class="admin_head">
+<div class="page-header">
 	Login Detail 
 	-
 	<?=st($user_myarray['username']);?>
 	-
 	<?=date('M d, Y H:i',strtotime(st($log_myarray["login_date"])));?>
-</span>
+</div>
 <br />
 <br />
 &nbsp;

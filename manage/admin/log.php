@@ -29,9 +29,9 @@ $num_users=mysql_num_rows($my);
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 	
-    <span class="admin_head">
+    <div class="page-header">
     	Login Data For <i><?=st($doc_myarray['username']);?></i>
-    </span>
+    </div>
     
     <br /><br /><br />
     <table class="table table-bordered table-hover">

@@ -35,9 +35,9 @@ if(isset($_POST["margins_reset"]))
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Claim Settings
-</span>
+</div>
 <br />
 <br />
 

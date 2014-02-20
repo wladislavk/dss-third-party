@@ -8,9 +8,9 @@ $num_users=mysql_num_rows($my);
 
 ?>
 
-<span class="admin_head">
+<div class="page-header">
 	Claim History
-</span>
+</div>
 
 <br />
 

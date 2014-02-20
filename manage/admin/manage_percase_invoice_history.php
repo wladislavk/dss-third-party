@@ -19,10 +19,10 @@ $doc = mysql_fetch_assoc($doc_q);
 <script src="popup/popup.js" type="text/javascript"></script>
 
 
-<span class="admin_head">
+<div class="page-header">
         Credit Card Billing History - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
-</span>
+</div>
 <br />
 
 
@@ -129,10 +129,10 @@ echo $charge->card->last4;
 
 <br /><br />
 
-<span class="admin_head">
+<div class="page-header">
         Per-case Invoice History - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
-</span>
+</div>
 <br />
 
 

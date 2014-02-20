@@ -160,9 +160,9 @@ if(mysql_num_rows($doc_q) == 0){
 
 
 ?>
-<span class="admin_head">
+<div class="page-header">
 	Invoicing - <?= $doc['name']; ?>	
-</span>
+</div>
 <br />
 
 

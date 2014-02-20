@@ -1,8 +1,8 @@
 <?php include 'includes/top.htm';?>
 <br />
-<span class="admin_head">
+<div class="page-header">
 	Page Heading
-</span>
+</div>
 <br />
 <br />
 

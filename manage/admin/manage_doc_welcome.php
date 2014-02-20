@@ -61,9 +61,9 @@ if($_POST['sortsub'] == 1)
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Welcome Information
-</span>
+</div>
 <br />
 <br />
 <?php if(is_super($_SESSION['admin_access'])){ ?>

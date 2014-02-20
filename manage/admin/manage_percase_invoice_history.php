@@ -20,9 +20,9 @@ $doc = mysql_fetch_assoc($doc_q);
 
 
 <div class="page-header">
-        Credit Card Billing History - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
+        <h2>Credit Card Billing History <small>- <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
-</div>
+</small></h2></div>
 <br />
 
 
@@ -130,9 +130,9 @@ echo $charge->card->last4;
 <br /><br />
 
 <div class="page-header">
-        Per-case Invoice History - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
+        <h2>Per<small>-case Invoice History - <?= $doc['first_name']; ?> <?= $doc['last_name']; ?>
         <a href="manage_percase_invoice.php" style="float:right; font-size:14px; color: #999; margin-right:10px;">Back to Invoices</a>
-</div>
+</small></h2></div>
 <br />
 
 

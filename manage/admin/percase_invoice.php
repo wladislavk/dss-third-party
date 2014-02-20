@@ -161,8 +161,8 @@ if(mysql_num_rows($doc_q) == 0){
 
 ?>
 <div class="page-header">
-	Invoicing - <?= $doc['name']; ?>	
-</div>
+	<h2>Invoicing <small>- <?= $doc['name']; ?>	
+</small></h2></div>
 <br />
 
 

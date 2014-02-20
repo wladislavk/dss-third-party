@@ -102,216 +102,203 @@ if($_POST["contactsub"] == 1)
 	}
 	?>
 	
-	<br /><br />
-	
-	<? if($msg != '') {?>
-    <div class="alert alert-danger text-center">
-        <? echo $msg;?>
-    </div>
-    <? }?>
-    <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contactabc(this)">
-    <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> Contact
-               <? if($name <> "") {?>
-               		&quot;<?=$name;?>&quot;
-               <? }?>
-            </td>
-        </tr>
-        <tr>
-        	<td valign="top" colspan="2" class="frmhead">
-				<ul>
-                    <li id="foli8" class="complex">	
-                        <label class="desc" id="title0" for="Field0">
-                            Name
-                            <span id="req_0" class="req">*</span>
-                        </label>
-                        <div>
-                        	<span>
-                            	<select name="salutation" id="salutation" class="field text addr tbox" tabindex="1" style="width:80px;" >
-                                	<option value=""></option>
-                                    <option value="Dr." <? if($salutation == 'Dr.') echo " selected";?>>Dr.</option>
-                                    <option value="Mr." <? if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
-                                    <option value="Mrs." <? if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
-                                    <option value="Miss." <? if($salutation == 'Miss.') echo " selected";?>>Miss.</option>
-                                </select>
-                                <label for="salutation">Salutation</label>
-                            </span>
-                            <span>
-                                <input id="firstname" name="firstname" type="text" class="field text addr tbox" value="<?=$firstname?>" tabindex="2" maxlength="255" />
-                                <label for="firstname">First Name</label>
-                            </span>
-                            <span>
-                                <input id="lastname" name="lastname" type="text" class="field text addr tbox" value="<?=$lastname?>" tabindex="3" maxlength="255" />
-                                <label for="lastname">Last Name</label>
-                            </span>
-                            <span>
-                                <input id="middlename" name="middlename" type="text" class="field text addr tbox" value="<?=$middlename?>" tabindex="4" style="width:50px;" maxlength="1" />
-                                <label for="middlename">Middle <br />Init</label>
-                            </span>
-                       </div>   
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                            <span>
-                            <span style="color:#000000">Company</span>
-                            <input id="company" name="company" type="text" class="field text addr tbox" value="<?=$company;?>" tabindex="5" style="width:575px;"  maxlength="255"/>
-                            </span>
-                        </label>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	<label class="desc" id="title0" for="Field0">
-                            Address
-                            <span id="req_0" class="req">*</span>
-                        </label>
-                        <div>
-                            <span>
-                                <input id="add1" name="add1" type="text" class="field text addr tbox" value="<?=$add1?>" tabindex="6" style="width:325px;"  maxlength="255"/>
-                                <label for="add1">Address1</label>
-                            </span>
-                            <span>
-                                <input id="add2" name="add2" type="text" class="field text addr tbox" value="<?=$add2?>" tabindex="7" style="width:325px;" maxlength="255" />
-                                <label for="add2">Address2</label>
-                            </span>
-                        </div>
-                        <div>
-                            <span>
-                                <input id="city" name="city" type="text" class="field text addr tbox" value="<?=$city?>" tabindex="8" style="width:200px;" maxlength="255" />
-                                <label for="city">City</label>
-                            </span>
-                            <span>
-                                <input id="state" name="state" type="text" class="field text addr tbox" value="<?=$state?>" tabindex="9" style="width:80px;" maxlength="255" />
-                                <label for="state">State</label>
-                            </span>
-                            <span>
-                                <input id="zip" name="zip" type="text" class="field text addr tbox" value="<?=$zip?>" tabindex="10" style="width:80px;" maxlength="255" />
-                                <label for="zip">Zip / Post Code </label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                                <input id="phone1" name="phone1" type="text" class="field text addr tbox" value="<?=$phone1?>" tabindex="11" maxlength="255" style="width:200px;" />
-                                <label for="phone1">Phone 1</label>
-                            </span>
-                            <span>
-                                <input id="phone2" name="phone2" type="text" class="field text addr tbox" value="<?=$phone2?>" tabindex="12" maxlength="255" style="width:200px;" />
-                                <label for="phone2">Phone 2</label>
-                            </span>
-                            <span>
-                                <input id="fax" name="fax" type="text" class="field text addr tbox" value="<?=$fax?>" tabindex="13" maxlength="255" style="width:200px;" />
-                                <label for="fax">Fax</label>
-                            </span>
-						</div>
-                        <div>
-                            <span>
-                                <input id="email" name="email" type="text" class="field text addr tbox" value="<?=$email?>" tabindex="14" maxlength="255" style="width:325px;" />
-                                <label for="email">Email</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-        <tr> 
-
-        </tr>
-        <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                        <div>
-                            <span>
-                                <input id="greeting" name="greeting" type="text" class="field text addr tbox" value="<?=$greeting?>" tabindex="18" maxlength="255" style="width:200px;" />
-                                <label for="greeting">Greeting</label>
-                            </span>
-                            
-                            
-                    	</div>
-                        
-                        <div>
-                        	<span>
-                            	<textarea name="sincerely" id="sincerely" class="field text addr tbox" tabindex="19"><?=$sincerely?></textarea>
-                                <label for="sincerely">Sincerely</label>
-                            </span>
-                            
-                            <span>
-                            	<? 
-								$ctype_sql = "select * from dental_fcontacttype order by sortby";
-								$ctype_my = mysql_query($ctype_sql);
-								?>            
-                            	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
-
-                                	<option value="0"></option>
-                                    <? while($ctype_myarray = mysql_fetch_array($ctype_my))
-									{?>
-                                    	<option value="<?=st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
-                                        	<?=st($ctype_myarray['contacttype']);?>
-                                        </option>
-                                        
-                                    <? }?>
-                                </select>
-                                <label for="contacttype">Contact Type</label>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
+    <div class="col-md-6 col-md-offset-3">
         
-         <tr> 
-        	<td valign="top" colspan="2" class="frmhead">
-            	<ul>
-            		<li id="foli8" class="complex">	
-                    	 <label class="desc" id="title0" for="Field0">
-                            Notes:
-                        </label>
-                        <div>
-                            <span class="full">
-                            	<textarea name="notes" id="notes" class="field text addr tbox" tabindex="21" style="width:600px; height:150px;"><?=$notes?></textarea>
-                            </span>
-                        </div>
-                    </li>
-				</ul>
-            </td>
-        </tr>
-
-        <tr>
-            <td  colspan="2" align="center">
-                <span class="red">
-                    * Required Fields					
-                </span><br />
-                <input type="hidden" name="contactsub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["contactid"]?>" />
-                <input type="submit" value="<?=$but_text?> Contact" class="btn btn-primary">
-		<?php if($themyarray["contactid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_fcontact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
-                                                 Delete 
-                                        </a>
-		<?php } ?>
-            </td>
-        </tr>
-    </table>
-    </form>
+        <? if($msg != '') {?>
+        <div class="alert alert-danger text-center">
+            <? echo $msg;?>
+        </div>
+        <? }?>
+        
+        <div class="page-header">
+            <h1>
+                <?=$but_text?> Contact
+                <? if($name <> "") {?>
+                    &quot;<?=$name;?>&quot;
+                <? }?>
+            </h1>
+        </div>
+        <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return contactabc(this)" class="form-horizontal">
+            <div class="page-header">
+                <strong>Name</strong>
+            </div>
+            <div class="form-group">
+                <label for="salutation" class="col-md-3 control-label">Salutation</label>
+                <div class="col-md-9">
+                    <select name="salutation" id="salutation" class="form-control" tabindex="1" style="width:80px;" >
+                        <option value=""></option>
+                        <option value="Dr." <?= ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
+                        <option value="Mr." <?= ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
+                        <option value="Mrs." <?= ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
+                        <option value="Miss." <?= ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-md-3 control-label">First Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" value="<?= $firstname ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="middlename" class="col-md-3 control-label">Middle Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="middlename" id="middlename" placeholder="Middle name" value="<?= $middlename ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last name" value="<?= $lastname ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Company</strong>
+            </div>
+            <div class="form-group">
+                <label for="company" class="col-md-3 control-label">Company</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="company" id="company" placeholder="Company" value="<?= $company ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Address</strong>
+            </div>
+            <div class="form-group">
+                <label for="add1" class="col-md-3 control-label">Address</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="add1" id="add1" placeholder="Address" value="<?= $add1 ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="text" class="form-control" name="add2" id="add2" placeholder="Address (second line)" value="<?= $add2 ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="city" class="col-md-3 control-label">City</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="state" class="col-md-3 control-label">State</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Contact Information</strong>
+            </div>
+            <div class="form-group">
+                <label for="phone1" class="col-md-3 control-label">Phone (main)</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="phone1" id="phone1" placeholder="Phone number" value="<?= $phone1 ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone2" class="col-md-3 control-label">Phone (alternative)</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="phone2" id="phone2" placeholder="Phone number" value="<?= $phone2 ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fax" class="col-md-3 control-label">Fax</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-3 control-label">Email</label>
+                <div class="col-md-9">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Footer</strong>
+            </div>
+            <div class="form-group">
+                <label for="greeting" class="col-md-3 control-label">Greeting</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="greeting" id="greeting" placeholder="Greeting" value="<?= $greeting ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sincerely" class="col-md-3 control-label">Sincerely</label>
+                <div class="col-md-9">
+                    <textarea class="form-control" name="sincerely" id="sincerely" placeholder="Sincerely"><?= $sincerely ?></textarea>
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Other ID for Claim Forms</strong>
+            </div>
+            <div class="form-group">
+                <label for="qualifier" class="col-md-3 control-label">Qualifier</label>
+                <div class="col-md-9">
+                    <? 
+                    $qualifier_sql = "select * from dental_qualifier where status=1 order by sortby";
+                    $qualifier_my = mysql_query($qualifier_sql);
+                    ?>
+                    <select id="qualifier" name="qualifier" class="form-control">
+                        <option value="0"></option>
+                        <? while($qualifier_myarray = mysql_fetch_array($qualifier_my))
+                        {?>
+                            <option value="<?=st($qualifier_myarray['qualifierid']);?>">
+                                <?=st($qualifier_myarray['qualifier']);?>
+                            </option>
+                        <? }?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
+                <div class="col-md-9">
+                    <? 
+                            $ctype_sql = "select * from dental_fcontacttype order by sortby";
+                            $ctype_my = mysql_query($ctype_sql);
+                            ?> 
+                    <select id="contacttypeid" name="contacttypeid" class="form-control">
+                        <option value="0"></option>
+                                <? while($ctype_myarray = mysql_fetch_array($ctype_my))
+                                {?>
+                                    <option value="<?=st($ctype_myarray['contacttypeid']);?>" <?php if($ctype_myarray['contacttypeid'] === $contacttypeid){ echo " selected=\"selected\"";} ?>>
+                                        <?=st($ctype_myarray['contacttype']);?>
+                                    </option>
+                                    
+                                <? }?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="desc" class="col-md-3 control-label">Notes</label>
+                <div class="col-md-9">
+                    <textarea name="desc" id="desc" class="form-control"><?= $notes ?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="hidden" name="contactsub" value="1">
+                    <input type="hidden" name="ed" value="<?= $themyarray["contactid"] ?>">
+                    <input type="submit" value="<?= $but_text ?> Contact" class="btn btn-primary">
+                <?php if($themyarray["contactid"] != '' && $_SESSION['admin_access']==1){ ?>
+                <a class="btn btn-danger pull-right" href="manage_fcontact.php?delid=<?=$themyarray["contactid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" title="DELETE">
+                                             Delete 
+                                    </a>
+    <?php } ?>
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

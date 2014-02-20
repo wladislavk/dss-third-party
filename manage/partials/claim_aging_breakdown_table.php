@@ -5,9 +5,11 @@
       <th>Since</th>
       <th>DOS</th>
       <th>Service</th>
-      <th>Client</th>
 <?php if($office_type==DSS_OFFICE_BACK){ ?>
+      <th>Patient</th>
       <th>Account</th>
+<?php }else{ ?>
+      <th>Client</th>
 <?php } ?>
       <th>Charge</th>
       <th>Ins</th>
@@ -39,7 +41,7 @@
 	<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
           <a href="manage_ledger.php?pid=<?= $r['patientid']; ?>&addtopat=1"><?= $r['firstname']." ".$r['lastname']; ?></a>
 	<?php }else{ ?>
-	  <?= $r['firstname']." ".$r['lastname']; ?>
+          <a href="view_patient.php?pid=<?= $r['patientid']; ?>"><?= $r['firstname']." ".$r['lastname']; ?></a>
 	<?php } ?>
       </td>
 <?php if($office_type==DSS_OFFICE_BACK){ ?>

@@ -163,7 +163,7 @@ $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_tota
 		?>
 			<tr>
 				<td valign="top">
-                		  <?=$r['firstname']." ".$r['lastname'];?>
+          <a href="view_patient.php?pid=<?= $r['patientid']; ?>"><?= $r['firstname']." ".$r['lastname']; ?></a>
 				</td>
 				<td valign="top">
 				  <?= $r['doc_name']; ?>

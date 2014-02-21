@@ -98,9 +98,9 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Users
-</span>
+</div>
 <br />
 <br />
 
@@ -273,17 +273,17 @@ $num_users=mysql_num_rows($my);
 				</td>
 				<?php } ?>
 			           <td valign="top" align="center">
-                    <a href="manage_locations.php?docid=<?=$myarray["userid"];?>" class="dellink" title="locations">
+                    <a href="manage_locations.php?docid=<?=$myarray["userid"];?>" class="btn btn-danger pull-right" title="locations">
                         <?=st($loc_myarray['loc_count']);?></a>
                                 </td>	
                 
 				<td valign="top" align="center">
-                    <a href="manage_contact.php?docid=<?=$myarray["userid"];?>" class="dellink" title="contacts">
+                    <a href="manage_contact.php?docid=<?=$myarray["userid"];?>" class="btn btn-danger pull-right" title="contacts">
                     	<?=st($con_myarray['con_count']);?></a>
 				</td>	
                 
 				<td valign="top" align="center">
-					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="dellink" title="staff">
+					<a href="manage_staff.php?docid=<?=$myarray["userid"];?>" class="btn btn-danger pull-right" title="staff">
                     	<?=st($staff_myarray['staff_count']);?></a>
 				</td>	
                                 <td valign="top" align="center">

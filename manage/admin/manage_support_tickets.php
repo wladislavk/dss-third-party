@@ -42,9 +42,9 @@ $total_rec = mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/support.css" type="text/css" />
-<span class="admin_head">
+<div class="page-header">
 	Manage Support Tickets
-</span>
+</div>
 <br />
 <br />
 <div align="right">
@@ -171,9 +171,9 @@ $my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 
 ?>
-<span class="admin_head">
+<div class="page-header">
 Resolved
-</span>
+</div>
 <table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<thead>
         <tr class="tr_bg_h">

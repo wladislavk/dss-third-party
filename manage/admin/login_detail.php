@@ -37,17 +37,17 @@ $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 ?>
 
-<span class="admin_head">
+<div class="page-header">
 	Login Detail 
 	-
 	<?=st($user_myarray['username']);?>
 	-
 	<?=date('M d, Y H:i',strtotime(st($log_myarray["login_date"])));?>
-</span>
+</div>
 <br />
 <br />
 &nbsp;
-<a href="manage_login.php" class="dellink" title="DELETE" >
+<a href="manage_login.php" class="btn btn-danger pull-right" title="DELETE" >
 	<b>&lt;&lt; Back</b></a>
 
 

@@ -109,9 +109,9 @@ $fax_footer_imgname = $my['fax_footer'];
 	});
 </script>
 
-<span class="admin_head">
+<div class="page-header">
 	Update Letterhead for <?= $docname ?>
-</span>
+</div>
 
 <div><?php print $msg; ?></div>
 

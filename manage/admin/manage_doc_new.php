@@ -61,9 +61,9 @@ if($_POST['sortsub'] == 1)
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage What&prime;s New
-</span>
+</div>
 <br />
 <br />
 
@@ -137,7 +137,7 @@ if($_POST['sortsub'] == 1)
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
-                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["doc_newid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a href="<?=$_SERVER['PHP_SELF']?>?delid=<?=$myarray["doc_newid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
 						Delete
 					</a>
 				</td>

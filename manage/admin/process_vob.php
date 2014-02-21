@@ -692,7 +692,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                     * Required Fields					
                 </span><br />
 		<?php if(!$is_complete && !$is_rejected){ ?>
-                        <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
+                        <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel btn btn-danger pull-right" title="REJECT">Reject</a>
                         <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
                                 <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
                                 <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
@@ -706,7 +706,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                   <input type="submit" value="Save Verfication of Benefits" class="btn btn-warning">
                 <?php } ?>
 		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>
-                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel dellink" title="DELETE">
+                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

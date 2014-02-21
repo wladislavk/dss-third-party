@@ -188,7 +188,7 @@ if($_POST["maxillasub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["maxillaid"]?>" />
                 <input type="submit" value="<?=$but_text?> Maxilla" class="btn btn-primary">
 		<?php if($themyarray["maxillaid"] != ''  && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_maxilla.php?delid=<?=$themyarray["maxillaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_maxilla.php?delid=<?=$themyarray["maxillaid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

@@ -37,9 +37,9 @@ $num_contact=mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
-	Manage Franchise and Corporate Contacts
-</span>
+<div class="page-header">
+	<h1>Manage Franchise and Corporate Contacts</h1>
+</div>
 <br />
 <br />
 &nbsp;

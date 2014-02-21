@@ -188,7 +188,7 @@ if($_POST["tonguesub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["tongueid"]?>" />
                 <input type="submit" value="<?=$but_text?> Tongue Evaluation" class="btn btn-primary">
 		<?php if($themyarray["tongueid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_tongue.php?delid=<?=$themyarray["tongueid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_tongue.php?delid=<?=$themyarray["tongueid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

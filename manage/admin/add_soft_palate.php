@@ -188,7 +188,7 @@ if($_POST["soft_palatesub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["soft_palateid"]?>" />
                 <input type="submit" value="<?=$but_text?> Soft Palate" class="btn btn-primary">
 		<?php if($themyarray["soft_palateid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_soft_palate.php?delid=<?=$themyarray["soft_palateid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_soft_palate.php?delid=<?=$themyarray["soft_palateid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

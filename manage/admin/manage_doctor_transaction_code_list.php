@@ -28,9 +28,9 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Doctor Transaction Codes 
-</span>
+</div>
 <br />
 <br />
 

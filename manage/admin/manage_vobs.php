@@ -222,9 +222,9 @@ $my=mysql_query($sql) or die(mysql_error());
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Verification of Benefits
-</span>
+</div>
 <br />
 <br />
 &nbsp;

@@ -25,7 +25,7 @@ if(isset($_POST['edit_cat'])){
 
  ?>
 
-<span class="admin_head">Edit Category</span>
+<div class="page-header">Edit Category</div>
 
 <form action="#" method="post">
 <input type="hidden" name="categoryid" value="<?= $_GET['cat'];?>" />

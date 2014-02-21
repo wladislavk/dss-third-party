@@ -25,9 +25,9 @@ if(isset($_GET['bounce'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Email Bounces	
-</span>
+</div>
 <br />
 
 <div align="center" class="red">

@@ -79,7 +79,7 @@ $num_users=mysql_num_rows($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 <link href="../css/search-hints.css" rel="stylesheet" type="text/css">
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Patient
    <!-- -
     <select class="tbox" onchange="Javascript: window.location='<?=$_SERVER['PHP_SELF'];?>?docid='+this.value;">
@@ -90,7 +90,7 @@ $num_users=mysql_num_rows($my);
             </option>
         <? }?>
     </select>-->
-</span>
+</div>
 
 
 <script type="text/javascript">

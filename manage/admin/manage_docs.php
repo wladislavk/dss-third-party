@@ -48,7 +48,7 @@ if(isset($_POST['add_doc'])){
 
 ?>
 
-<span class="admin_head">Documents</span>
+<div class="page-header">Documents</div>
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <strong>Add Document</strong> 

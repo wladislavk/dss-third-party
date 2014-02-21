@@ -79,9 +79,9 @@ $t = mysql_fetch_assoc($my);
 <script src="popup/popup.js" type="text/javascript"></script>
 <link rel="stylesheet" href="css/support.css" type="text/css" />
 <div id="support_ticket">
-<span class="admin_head">
-	<?= $t['title']; ?>  - Category: <?= $t['category']; ?>
-</span>
+<div class="page-header">
+	<h2><?= $t['title']; ?>  <small>- Category: <?= $t['category']; ?>
+</small></h2></div>
 <h3 style="margin-left:15px;">User: <?= $t['user']; ?> - Account: <?= $t['account']; ?> - Company: <?= $t['company']; ?></h3>
 <br />
 <br />

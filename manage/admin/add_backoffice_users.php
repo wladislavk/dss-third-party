@@ -283,7 +283,7 @@ if($_POST["usersub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["adminid"]?>" />
                 <input type="submit" value="<?=$but_text?> User" class="btn btn-primary">
                 <?php if($themyarray["adminid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?=$themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a style="float:right;" href="javascript:parent.window.location='manage_backoffice.php?delid=<?=$themyarray["adminid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

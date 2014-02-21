@@ -35,9 +35,9 @@ $total_rec = mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
-	Manage Support Category Admins - <?= $r['title']; ?>
-</span>
+<div class="page-header">
+	<h2>Manage Support Category Admins <small>- <?= $r['title']; ?>
+</small></h2></div>
 <br />
 <br />
 

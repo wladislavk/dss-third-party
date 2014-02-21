@@ -107,7 +107,7 @@ if($_POST["catsub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
                 <input type="submit" value="<?=$but_text?> Category" class="btn btn-primary">
                 <?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_support_categories.php?delid=<?=$themyarray["id"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
+                    <a style="float:right;" href="javascript:parent.window.location='manage_support_categories.php?delid=<?=$themyarray["id"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

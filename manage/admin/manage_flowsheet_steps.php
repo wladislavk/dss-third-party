@@ -23,9 +23,9 @@ if(isset($_REQUEST['order_submit'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Flowsheet Steps
-</span>
+</div>
 <br />
 <br />
 

@@ -44,13 +44,13 @@ $num_contact=mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Contact
-</span>
+</div>
 <br />
 <br />
 &nbsp;
-<a href="manage_users.php" class="dellink" title="DELETE" >
+<a href="manage_users.php" class="btn btn-danger pull-right" title="DELETE" >
 	<b>&lt;&lt; Back</b></a>
 
 <div align="right">

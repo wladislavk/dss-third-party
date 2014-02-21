@@ -188,7 +188,7 @@ if($_POST["medicationssub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["medicationsid"]?>" />
                 <input type="submit" value="<?=$but_text?> Medications" class="btn btn-primary">
 		<?php if($themyarray["medicationsid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_medications.php?delid=<?=$themyarray["medicationsid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_medications.php?delid=<?=$themyarray["medicationsid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

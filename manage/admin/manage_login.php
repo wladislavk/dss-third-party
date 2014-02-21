@@ -22,9 +22,9 @@ $num_users=mysql_num_rows($my);
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Login
-</span>
+</div>
 <br />
 <br />
 
@@ -91,7 +91,7 @@ $num_users=mysql_num_rows($my);
 				</td>
 				
 				<td valign="top" align="center">
-                    <a href="login_detail.php?logid=<?=$myarray["loginid"];?>" class="dellink" title="DELETE">
+                    <a href="login_detail.php?logid=<?=$myarray["loginid"];?>" class="btn btn-danger pull-right" title="DELETE">
                     	View Detail</a>
 				</td>	
 			</tr>

@@ -62,9 +62,9 @@ if($_POST['sortsub'] == 1)
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Medical History
-</span>
+</div>
 <br />
 <br />
 

@@ -35,7 +35,7 @@ if(isset($_POST['add_cat'])){
 
 ?>
 
-<span class="admin_head">Categories</span>
+<div class="page-header">Categories</div>
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <strong>Add Category</strong>

@@ -188,7 +188,7 @@ if($_POST["ins_diagnosissub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["ins_diagnosisid"]?>" />
                 <input type="submit" value="<?=$but_text?> Insurance Diagnosis" class="btn btn-primary">
 		<?php if($themyarray["ins_diagnosisid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_ins_diagnosis.php?delid=<?=$themyarray["ins_diagnosisid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_ins_diagnosis.php?delid=<?=$themyarray["ins_diagnosisid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

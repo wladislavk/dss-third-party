@@ -39,9 +39,9 @@ $my = mysql_query($sql) or die(mysql_error());
 $myarray = mysql_fetch_array($my);
 ?>
 
-<span class="admin_head">
+<div class="page-header">
 	Manage Plan/Progress Text
-</span>
+</div>
 <br /><br /><br />
 
 <div align="center" class="red">

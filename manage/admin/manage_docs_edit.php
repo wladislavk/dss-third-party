@@ -42,7 +42,7 @@ $dq = mysql_query($ds);
 $doc = mysql_fetch_assoc($dq);
 ?>
 
-<span class="admin_head">Edit Document</span>
+<div class="page-header">Edit Document</div>
 
 <form action="#" method="post" enctype="multipart/form-data">
 <label>Name:</label> <input type="text" name="name" value="<?= $doc['name']; ?>" />

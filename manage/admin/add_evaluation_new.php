@@ -188,7 +188,7 @@ if($_POST["evaluation_newsub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["evaluation_newid"]?>" />
                 <input type="submit" value="<?=$but_text?> Assessment Addition" class="btn btn-primary">
 		<?php if($themyarray["evaluation_newid"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_evaluation_new.php?delid=<?=$themyarray["evaluation_newid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_evaluation_new.php?delid=<?=$themyarray["evaluation_newid"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>

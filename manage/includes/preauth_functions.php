@@ -49,7 +49,6 @@ function claim_errors( $pid, $medicare = false ){
         $m['ins_dob'] == "" ||
         $m['p_m_gender'] == "" ||
         $m['p_m_ins_co'] == "" ||
-        $m['p_m_party'] == "" ||
         $m['p_m_ins_grp'] == "" ||
         ($m['p_m_ins_plan'] == "" && $m['p_m_ins_type'] != 1) || 
         $m['p_m_ins_type'] == ''

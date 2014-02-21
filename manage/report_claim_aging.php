@@ -7,9 +7,9 @@ $sql = "SELECT p.firstname, p.lastname,
 		FROM dental_patients p
 	WHERE p.docid='".$_SESSION['docid']."'
 	AND (SELECT (SUM(COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0)) -
-	(SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
+	COALESCE((SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
                 LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
-                WHERE dl.primary_claim_id='i.insuranceid')  
+                WHERE dl.primary_claim_id=i.insuranceid), 0)
 	)
 	 FROM dental_insurance i 
 WHERE i.patientid=p.patientid AND i.mailed_date IS NOT NULL) > 0

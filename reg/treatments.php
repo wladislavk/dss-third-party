@@ -472,7 +472,7 @@ if($cpap == '')
 					</script>
                       	<h3 class="clear">Dental Devices</h3> 
 			<div class="sepH_b half">
-				<label class="lbl_a">Are you currently wearing a dental device?</label>
+				<label class="lbl_a">Are you currently wearing a dental device specifically designed to treat sleep apnea?</label>
                             <input type="radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
@@ -481,7 +481,7 @@ if($cpap == '')
 
 		    </div>
 		    <div class="sepH_b half">
- 				<label class="lbl_a">Have you previously tried a dental device?</label>
+ 				<label class="lbl_a">Have you previously tried a dental device for sleep apnea treatment?</label>
                             <input type="radio" name="dd_prev" value="Yes" <? if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 

@@ -686,7 +686,7 @@ if($cpap == '')
                     </label>
                     <div>
 			<span>
-				Are you currently wearing a dental device?
+				Are you currently wearing a dental device specifically designed to treat sleep apnea?
                             <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="Yes" <? if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 
@@ -700,7 +700,7 @@ if($cpap == '')
 		    </div>
 		    <div>
 			<span>
- 				Have you previously tried a dental device?	
+ 			 	Have you previously tried a dental device for sleep apnea treatment?		
                             <input type="radio" class="dd_prev_radio" name="dd_prev" value="Yes" <? if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
                             Yes
 

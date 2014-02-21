@@ -763,6 +763,10 @@ function in_array(needle, haystack)
                                             <option value="Sometimes" <? if($told_you_snore == 'Sometimes') echo " selected";?>>
                                             	Sometimes
                                             </option>
+                                            <option value="Don't know" <? if($told_you_snore == "Don't know") echo " selected";?>>
+                                                Don't know
+                                            </option>
+
                                         </select>
                             <?php
                                 showPatientValue('dental_q_page1', $_GET['pid'], 'told_you_snore', $pat_row['told_you_snore'], $told_you_snore, true, $showEdits);

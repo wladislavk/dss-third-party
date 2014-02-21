@@ -481,6 +481,9 @@ function in_array(needle, haystack)
                                             <option value="Sometimes" <? if($told_you_snore == 'Sometimes') echo " selected";?>>
                                                 Sometimes
                                             </option>
+                                            <option value="Sometimes" <? if($told_you_snore == "Don't know") echo " selected";?>>
+                                                Don't know
+                                            </option>
                                         </select>
 		</div>
 		<div class="sepH_b half num">

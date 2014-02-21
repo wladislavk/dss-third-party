@@ -26,7 +26,6 @@ include_once "includes/constants.inc";
 if(isset($_POST["enroll_but"]))
 {
 
-echo "safdsaf";
   $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
@@ -67,8 +66,17 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 );
 
 $result = curl_exec($ch);
-echo $result;
-
+$json_response = json_decode($result);
+$ref_id = $json_response->{"reference_id"};
+$success = $json_response->{"success"};
+$up_sql = "INSERT INTO dental_eligible_enrollment SET 
+        claimid='".mysql_real_escape_string($_GET['insid'])."',
+        reference_id = '".mysql_real_escape_string($ref_id)."',
+        response='".mysql_real_escape_string($result)."',
+        adddate=now(),
+        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
+        ";
+mysql_query($up_sql);
 
 
 }

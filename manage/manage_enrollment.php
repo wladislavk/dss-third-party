@@ -12,6 +12,10 @@ include "includes/top.htm";
 <br />
 &nbsp;
 
+<?php
+  $sql = "SELECT * FROM dental_eligible_enrollment WHERE user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $my = mysql_query($sql);
+?>
 <div style="margin-left:10px;margin-right:10px;">
 	<button style="margin-right:10px; float:right;" onclick="loadPopup('add_enrollment.php')" class="addButton">
 		Add New Enrollment
@@ -42,7 +46,10 @@ include "includes/top.htm";
 					<?=st($myarray["status"]);?>
 				</td>
 				<td valign="top" width="10%">
-                   			<?= $myarray["response"]; ?> 
+					<a href="#" onclick="$('#response_<?= $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>
+					<span id="response_<?= $myarray['id']; ?>" style="display:none;">
+                   			  <?= $myarray["response"]; ?> 
+					</span>
 				</td>
 			</tr>
 	<? 	}

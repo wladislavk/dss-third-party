@@ -53,8 +53,7 @@ $data['enrollment_npi'] = array(
 
 
 $data_string = json_encode($data);
-
-echo $data_string."<br /><br />";
+//echo $data_string."<br /><br />";
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.3/enrollment_npis');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -67,18 +66,34 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 
 $result = curl_exec($ch);
 $json_response = json_decode($result);
-$ref_id = $json_response->{"reference_id"};
-$success = $json_response->{"success"};
-$up_sql = "INSERT INTO dental_eligible_enrollment SET 
-        claimid='".mysql_real_escape_string($_GET['insid'])."',
+
+if(isset($json_response->{"error"})){
+  $error = $json_response->{"error"};
+  ?>
+    <script type="text/javascript">
+      alert("<?= $error; ?>");
+    </script>
+  <?php
+}else{
+  $ref_id = $json_response->{"enrollment_npi"}->{"id"};
+  $success = $json_response->{"success"};
+  $up_sql = "INSERT INTO dental_eligible_enrollment SET 
+	user_id = '".mysql_real_escape_string($_SESSION['docid'])."',
+        payer_id = '".mysql_real_escape_string($_POST['payer_id'])."',
         reference_id = '".mysql_real_escape_string($ref_id)."',
         response='".mysql_real_escape_string($result)."',
+	status='0',
         adddate=now(),
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
-mysql_query($up_sql);
-
-
+  mysql_query($up_sql);
+  ?>
+  <script type="text/javascript">
+    parent.window.location = "manage_enrollment.php";
+  </script>
+  <?php
+  die();
+}
 }
 
 ?>

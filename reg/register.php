@@ -38,7 +38,7 @@ include 'includes/completed.php';
 					<div id="main_content" class="cf">
 
 						<h2 class="sepH_c">Step-by-Step Patient Registration </h2>
-	<form action="register.php" id="register_form" method="post">
+	<form action="register.php" name="register_form" id="register_form" method="post">
 		<input type="hidden" id="last_reg_sect" name="last_reg_sect" value="<?= $p['last_reg_sect']; ?>" />
 		<input type="hidden" id="patientid" name="patientid" value="<?= $_SESSION['pid']; ?>" />
 							<ul id="status" class="cf">
@@ -270,6 +270,69 @@ include 'includes/completed.php';
                                 <option value="email" <?= ($p['preferredcontact']=="email")?'selected="selected"':'';?>>Email</option>
                                 </select>
                 </div>
+                <script type="text/javascript">
+                                function cal_bmi()
+                                {
+                                        fa = document.register_form;
+                                        if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
+                                        {
+                                                var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
+                                                //alert(inc);
+                                                
+                                                var inc_sqr = parseInt(inc) * parseInt(inc);
+                                                var wei = parseInt(fa.weight.value) * 703;
+                                                var bmi = parseInt(wei) / parseInt(inc_sqr);
+                                                
+                                                //alert("BMI " + bmi.toFixed(2));
+                                                fa.bmi.value = bmi.toFixed(1);
+                                        }
+                                        else
+                                        {
+                                                fa.bmi.value = '';
+                                        }
+                                }
+                        </script>
+        <div class="sepH_b fifth">
+                <label class="lbl_a">Feet</label>
+                            <select name="feet" id="feet" class="inpt_a" tabindex="5" onchange="cal_bmi();" >
+                                <option value="0">Feet</option>
+                                <? for($i=1;$i<9;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($p['feet'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+        </div>
+        <div class="sepH_b fifth">
+                <label class="lbl_a">Inches</label>
+                <select name="inches" id="inches" class="inpt_a" tabindex="6" onchange="cal_bmi();">
+                                <option value="-1">Inches</option>
+                                <? for($i=0;$i<12;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($p['inches']!='' && $p['inches'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+        </div>
+        <div class="sepH_b fifth">
+                <label class="lbl_a">Weight</label>
+                <select name="weight" id="weight" class="inpt_a" tabindex="7" onchange="cal_bmi();">
+                                <option value="0">Weight</option>
+                                <? for($i=80;$i<=500;$i++)
+                                                                {
+                                                                ?>
+                                                                        <option value="<?=$i?>" <? if($p['weight'] == $i) echo " selected";?>><?=$i?></option>
+                                                                <?
+                                                                }?>
+                            </select>
+        </div>
+        <div class="sepH_b fifth">
+                <label class="lbl_a">BMI</label>
+                <input id="bmi" name="bmi" type="text" class="inpt_a" value="<?=$p['bmi']?>" tabindex="8" maxlength="255" readonly="readonly" />
+        </div>
+
                 <div class="sepH_b third clear">
                         <label class="lbl_a"><strong>7.</strong> Emergency Contact Name:</label><input class="inpt_a" type="text" name="emergency_name" value="<?= $p['emergency_name']; ?>" />
                 </div>

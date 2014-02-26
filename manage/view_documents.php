@@ -19,7 +19,7 @@ while($doc = mysql_fetch_assoc($sq)){ ?>
 			<?= $doc['name']; ?>
 		</td>
 		<td>
-			<a target="_blank" href="q_file/<?= $doc['filename']; ?>">View</a>
+			<a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>">View</a>
 		</td>
 	</tr>
 <?php } ?>

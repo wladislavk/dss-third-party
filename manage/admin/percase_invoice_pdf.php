@@ -515,14 +515,14 @@ $title = "test";
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
 
-        $filename = '/manage/q_file/percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
+        $filename = '../../../shared/q_file/percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
         $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
 if(!isset($redirect) || $redirect){
 ?>
 
 <script type="text/javascript">
-  window.open("<?= $filename; ?>");
+  window.open("display_file.php?f=<?= $filename; ?>");
   window.location = "manage_percase_invoice_history.php?docid=<?= $invoice['docid']; ?>";
 </script>
 <?php

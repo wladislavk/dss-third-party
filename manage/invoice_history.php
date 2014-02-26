@@ -179,7 +179,7 @@ $case_q = mysql_query($case_sql);
 					$<?= number_format($extra['extra_total']+$case['ledger_total']+$myarray['monthly_fee_amount']+$fax['amount'],2); ?>
 				</td>
 				<td valign="top">
-					<a href="./q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">
+					<a href="display_file.php?f=percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">
 						View PDF
 					</a>
 					&nbsp;&nbsp;

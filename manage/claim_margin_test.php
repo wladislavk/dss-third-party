@@ -12,7 +12,7 @@ $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 $xfdf_file_path = "fdf_test.fdf";
 $pdf_template_path = $path.'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
-$result_pdf = "./q_file/claim_margin_".$_SESSION['docid']."_".date('YmdHis').".pdf"; 
+$result_pdf = "../../shared/q_file/claim_margin_".$_SESSION['docid']."_".date('YmdHis').".pdf"; 
 $command = "$pdftk $pdf_template_path fill_form $xfdf_file_path output $result_pdf flatten";
 
 exec( $command, $output, $ret );

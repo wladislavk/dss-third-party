@@ -9,7 +9,7 @@ $q = mysql_query($s);
 $r = mysql_fetch_assoc($q);
 $file = $r['primary_fdf'];
 
-$fdf_file_path = './q_file/'.$file;
+$fdf_file_path = '../../shared/q_file/'.$file;
 $pdf_template_path = $path . 'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
 $pdf_name = substr( $fdf_file_path, 0, -4 ) . '.pdf';

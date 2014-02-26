@@ -9,7 +9,7 @@
 
 if($_GET['did']==$_SESSION['docid']){
   $loc = (isset($_GET['locid']))?$_GET['locid'].'_':'';
-  $filename = "q_file/".$_GET['file']."_".$loc.$_GET['did'].".pdf";
+  $filename = "../../shared/q_file/".$_GET['file']."_".$loc.$_GET['did'].".pdf";
   $sql = "SELECT updated_at FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
@@ -140,7 +140,7 @@ if($_GET['did']==$_SESSION['docid']){
 
   // Let the browser know that a PDF file is coming.
   header("Content-type: application/pdf");
-  header("Content-Length: " . filesize($filename));
+  //header("Content-Length: " . filesize($filename));
   header("Content-Disposition: attachment; filename=".$output.".pdf");
 
   // Send the file to the browser.

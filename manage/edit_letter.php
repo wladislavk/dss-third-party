@@ -1026,7 +1026,7 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 		$search[] = "%patient_photo%";
 		if($patient_photo!=''){
-			$replace[] = "<img align=\"right\" src=\"q_file/".$patient_photo."\" />";
+			$replace[] = "<img align=\"right\" src=\"display_file.php?f=".$patient_photo."\" />";
 		}else{
 			$replace[] = "";
 		}
@@ -1485,7 +1485,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 	$search[] = "%patient_photo%";
                 if($patient_photo!=''){
-                        $replace[] = "<img style=\"float:right;\" src=\"q_file/".$patient_photo."\" />";
+                        $replace[] = "<img style=\"float:right;\" src=\"display_file.php?f=".$patient_photo."\" />";
                 }else{
                         $replace[] = "";
                 }

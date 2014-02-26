@@ -3449,8 +3449,8 @@ function create_form_pdf($html, $filename, $title, $fontsize = 10, $cellheight=1
         $pdf->writeHTML($html, true, false, true, false, '');
         //Close and output PDF document
 
-        $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/q_file/' . $filename, 'F');
-	@chmod('/manage/q_file/' . $filename,0777);
+        $pdf->Output('../../shared/q_file/' . $filename, 'F');
+	@chmod('../../shared/q_file/' . $filename,0777);
 }
 
 
@@ -4716,7 +4716,7 @@ function get_logo($id){
   $l_r = mysql_fetch_assoc($l_q);
   if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
     if($l_r['logo']!=''){
-      $logo = '<img src="/manage/q_file/'.$l_r['logo'].'" />';
+      $logo = '<img src="../../shared/q_file/'.$l_r['logo'].'" />';
     }else{
       $logo = "";
     }

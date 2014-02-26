@@ -57,7 +57,7 @@ Rx.
 <td><!--<a href="q_image.php?pid=<?php echo $_GET['pid']; ?>&sh=6&flow=1" id="add-rx" target="_self">Add/Edit RX</a>-->
 					<?php
 					if ($rximgid != "") {
-						?><a class="button" href="/manage/q_file/<?= $rximgname; ?>" target="_blank">View</a><?php
+						?><a class="button" href="display_file.php?f=<?= $rximgname; ?>" target="_blank">View</a><?php
                                                 //print "<input type=\"button\" id=\"rxview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rximgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
 					
 						print "<input type=\"button\" class=\"toggle_but\" id=\"rx\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=6&flow=');\" value=\"Edit\" title=\"Edit\" />";
@@ -82,7 +82,7 @@ L.O.M.N.
 <td>
                                                 <?php
                                                 if ($lomnimgid != "") {
-							?><a href="/manage/q_file/<?= $lomnimgname; ?>" target="_blank" class="button">View</a><?php
+							?><a href="display_file.php?f=<?= $lomnimgname; ?>" target="_blank" class="button">View</a><?php
                                                 //print "<input type=\"button\" id=\"lomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$lomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                                                         print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=7&flow=');\" value=\"Edit\" title=\"Edit\" />";
                                                         print "<input id=\"lomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";
@@ -108,7 +108,7 @@ Rx./L.O.M.N.
 <td>
                                                 <?php
                                                 if ($rxlomnimgid != "") {
-							?><a href="/manage/q_file/<?= $rxlomnimgname; ?>" target="_blank" class="button">View</a><?php
+							?><a href="display_file.php?f=<?= $rxlomnimgname; ?>" target="_blank" class="button">View</a><?php
                                                 //print "<input type=\"button\" id=\"rxlomnview\" value=\"View\" title=\"View\" onClick=\"window.open('/manage/q_file/$rxlomnimgname','windowname1','width=860, height=790,scrollbars=yes');return false;\" />";
                                                         print "<input type=\"button\" class=\"toggle_but\" id=\"lomn\" onclick=\"loadPopup('add_image.php?pid=".$_GET['pid']."&sh=13&flow=');\" value=\"Edit\" title=\"Edit\" />";
                                                         print "<input id=\"rxlomnimg\" style=\"display:none;\" name=\"lomnimg\" type=\"file\" size=\"4\" />";

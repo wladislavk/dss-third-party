@@ -1634,7 +1634,7 @@ $num_face = mysql_num_rows($itype_my);
 </a>
 <?php }else{ 
 while($image = mysql_fetch_array($itype_my)){
-echo "<img src='q_file/".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
+echo "<img src='display_file.php?f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
 }
 
 } ?>
@@ -2241,7 +2241,7 @@ if($num_face == 0){ ?>
 $image = mysql_fetch_assoc($itype_my);
  ?>
 
-                                        <button id="p_m_ins_card" onclick="window.open('q_file/<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                                        <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                 View Insurance Card Image
         </button>
 
@@ -2959,7 +2959,7 @@ if(inField=="referredby_name"){
 }
 
 function updateProfileImage(img){
-	$('#profile_image').html("<img src='q_file/"+img+"' height='150' style='float:right;' />");
+	$('#profile_image').html("<img src='display_file.php?f="+img+"' height='150' style='float:right;' />");
 }
 
 function updateInsCard(img, field){

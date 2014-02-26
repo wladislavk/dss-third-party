@@ -6,7 +6,7 @@ require_once '3rdParty/thomasjbradley-signature-to-image/signature-to-image.php'
 $json = $_POST['output'];
 $img = sigJsonToImage($json);
 $file = "signature_".$_SESSION['userid'].".png";
-$s = imagepng($img, 'q_file/'.$file);
+$s = imagepng($img, '../../shared/q_file/'.$file);
 imagedestroy($img);
 $s = "UPDATE dental_users SET
 	signature_file='".mysql_real_escape_string($file)."',
@@ -29,8 +29,8 @@ $(document).ready(function () {
 });
 </script>
 <?php
-if(file_exists('q_file/signature_'.$_SESSION['userid'].'.png')){ ?>
-  <img src='q_file/signature_<?=$_SESSION['userid'];?>.png' />
+if(file_exists('../../shared/q_file/signature_'.$_SESSION['userid'].'.png')){ ?>
+  <img src='display_file.php?f=signature_<?=$_SESSION['userid'];?>.png' />
 <?php } ?>
 
 <form method="post" action="" class="sigPad" style="margin-left:20px">

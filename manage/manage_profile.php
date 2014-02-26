@@ -360,7 +360,7 @@ $num_custom=mysql_num_rows($my);
   <h4>Practice Logo</h4>
    <?php
                if($practice['logo'] <> "") {?>
-                        <img src="./q_file/<?=$practice['logo'];?>" />
+			<img src="display_file.php?f=<?=$practice['logo'];?>" />
                <? }?>
 
                                         <a href="Javascript:;"  onclick="Javascript: loadPopup('add_user_logo.php');" class="editlink" title="EDIT">

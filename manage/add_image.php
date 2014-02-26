@@ -44,7 +44,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+                        $uploaded = uploadImage($_FILES['ss_file'], "../../shared/q_file/".$banner1);
 			if($uploaded){
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
@@ -181,17 +181,17 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         switch(strtolower($extension)){
                           case 'jpg':
                           case 'jpeg':
-                		imagejpeg($thumb, "q_file/".$banner1);
+                		imagejpeg($thumb, "../../shared/q_file/".$banner1);
                                 break;
                           case 'gif':
-                                imagegif($thumb, "q_file/".$banner1);                               
+                                imagegif($thumb, "../../shared/q_file/".$banner1);                               
                                 break;
                           case 'png':
-                                imagepng($thumb, "q_file/".$banner1);
+                                imagepng($thumb, "../../shared/q_file/".$banner1);
                                 break;
                         }
 
-		@chmod("q_file/".$banner1,0777);
+		@chmod("../../shared/q_file/".$banner1,0777);
 		// Free up memory
 		//imagedestroy($thumb);
 		$uploaded = true;
@@ -212,10 +212,10 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         $banner1 = str_replace("'","_",$banner1);
 			$banner1 .= ".".$extension;
 			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
-			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1, $profile);
+			$uploaded = uploadImage($_FILES['image_file'], "../../shared/q_file/".$banner1, $profile);
 			if($_POST['image_file_old'] <> '')
 			{
-				@unlink("q_file/".$_POST['image_file_old']);
+				@unlink("../../shared/q_file/".$_POST['image_file_old']);
 			}
 		}
 		else
@@ -548,7 +548,7 @@ if($rl_r['rxlomn_imgid']!=''){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<? if($image_file <> '') {?>
-                                <a href="q_file/<?=$image_file?>" target="_blank">
+                                <a href="display_file.php?f=<?=$image_file?>" target="_blank">
                                     <b>Preview</b></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             <? }?>

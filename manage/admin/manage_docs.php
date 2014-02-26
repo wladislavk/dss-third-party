@@ -20,8 +20,8 @@ if(isset($_POST['add_doc'])){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../q_file/".$banner1);
-                        @chmod("../q_file/".$banner1,0777);
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../shared/q_file/".$banner1);
+                        @chmod("../../../shared/q_file/".$banner1,0777);
 
 
   $ins = "INSERT INTO dental_document (
@@ -110,7 +110,7 @@ if(isset($_POST['add_doc'])){
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" />Edit</a>
 			<?php } ?>
-                        <a target="_blank" href="../q_file/<?= $doc['filename']; ?>">View</a>
+                        <a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>">View</a>
                 </td>
         </tr>
 

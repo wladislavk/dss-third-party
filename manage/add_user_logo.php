@@ -18,7 +18,7 @@ if($_POST["compsub"] == 1)
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   $file_name = "user_logo_".$_SESSION["docid"].".".$extension; 
-  $file_path = "./q_file/".$file_name;
+  $file_path = "../../shared/q_file/".$file_name;
   $max_width = 120;
   $max_height = 80;
   list($width,$height)=getimagesize($uploadedfile);
@@ -185,7 +185,7 @@ switch (strtolower($extension))
     </div>
     <? }?>
                <? if($logo <> "") {?>
-                        <img src="./q_file/<?=$logo;?>" />
+                        <img src="../../shared/q_file/<?=$logo;?>" />
                <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" enctype="multipart/form-data">
     <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">

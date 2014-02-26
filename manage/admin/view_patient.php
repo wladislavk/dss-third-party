@@ -1375,7 +1375,7 @@ $num_face = mysql_num_rows($itype_my);
         </a>
 <?php }else{ 
   while($image = mysql_fetch_array($itype_my)){
-   echo "<img src='q_file/".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
+   echo "<img src='display_file.php?f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
   }
 
 } ?>

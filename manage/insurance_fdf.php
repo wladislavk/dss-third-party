@@ -844,11 +844,11 @@ mysql_query($sql);
 
             // write the file out
             //echo  $fdf;
-	$handle = fopen("./q_file/".$file, 'x+');
+	$handle = fopen("../../shared/q_file/".$file, 'x+');
 	fwrite($handle, $fdf);
 	fclose($handle);
 
-$xfdf_file_path = './q_file/'.$file;
+$xfdf_file_path = '../../shared/q_file/'.$file;
 $pdf_template_path = 'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
 $pdf_name = substr( $xfdf_file_path, 0, -4 ) . '.pdf';

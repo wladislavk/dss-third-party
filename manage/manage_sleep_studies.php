@@ -270,7 +270,7 @@ if ($origfilename != '') {
 				//$filename = $patientid.'-'.$random.".".$scanext;
 				$scanext = end(explode('.', $origfilename));
 				$fullfilename = $filename . "." . $scanext;
-				$success = uploadImage($_FILES["file"],"q_file/".$fullfilename);
+				$success = uploadImage($_FILES["file"],"../../shared/q_file/".$fullfilename);
 				//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 					if ($success) {
 					  // Delete previous file if updating, then add reference to filename in database
@@ -279,7 +279,7 @@ if ($origfilename != '') {
 							$prevfile_result = mysql_query($prevfile_qry);
 							$prev_filename = mysql_result($prevfile_result, 0, 0);
 							$prev_scanext = mysql_result($prevfile_result, 0, 1);
-							unlink("q_file/" . $prev_filename . "." . $prev_scanext);
+							unlink("../../shared/q_file/" . $prev_filename . "." . $prev_scanext);
 						}
 						$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
 						$updateimgquery = "UPDATE `dental_sleepstudy` SET $filequery WHERE `id` = '".$sleepstudyid."' and `patientid` = '".$patientid."';";
@@ -689,7 +689,7 @@ if($numrows){
 
 						<?php 
 						if ($sleepstudy['testnumber'] != null && $sleepstudy['scanext'] != null) {
-							?><a href="q_file/<?= $sleepstudy['filename'].".".$sleepstudy['scanext']; ?>" target="_blank" class="button">View Scan</a><?php
+							?><a href="display_file.php?f=<?= $sleepstudy['filename'].".".$sleepstudy['scanext']; ?>" target="_blank" class="button">View Scan</a><?php
 							//print "<input type=\"button\" id=\"view$i\" value=\"View\" title=\"View Scan\" onClick=\"window.open('q_file/".$sleepstudy['filename'].".".$sleepstudy['scanext']."','windowname1','width=400, height=400');return false;\" />";
 							print "<input type=\"button\" id=\"edit$i\" value=\"Edit\" title=\"Edit Scan\" />";
 							print "<input id=\"file$i\" style=\"display:none;\" name=\"file\" type=\"file\" size=\"4\" />";

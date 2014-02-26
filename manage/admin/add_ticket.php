@@ -169,7 +169,7 @@ if($_POST["ticketsub"] == 1)
             <div class="form-group">
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="ticketsub" value="1">
-                    <input type="submit" value="<?=$but_text?> Ticket" class="btn btn-primary">
+                    <input type="submit" value="Add Ticket" class="btn btn-primary">
                 </div>
             </div>
         </form>

@@ -389,7 +389,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$use_eligible_api = $_POST['use_eligible_api'];
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
-		$use_letter_header = $_POST['user_letter_header'];
+		$use_letter_header = $_POST['use_letter_header'];
 		$homepage = $_POST['homepage'];
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
@@ -473,521 +473,468 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 	}
 	?>
 	
-	<br /><br />
-	
-	<? if($msg != '') {?>
-    <div class="alert alert-danger text-center">
-        <? echo $msg;?>
+    <div class="col-md-6 col-md-offset-3">
+        <?php if (isset($_GET['msg'])) { ?>
+        <div class="alert alert-danger text-center">
+            <strong><?= $_GET['msg'] ?></strong>
+        </div>
+        <?php } ?>
+        
+        <?php if ($msg != '') { ?>
+        <div class="alert alert-success text-center">
+            <?= $msg ?>
+        </div>
+        <?php } ?>
+        
+        <div class="page-header">
+            <h1>
+                <?= $but_text ?>
+                <?= $_GET['heading'] ?>
+                Contact
+                <?php if (trim($name) != "") { ?>
+                    &quot;<?=$name;?>&quot;
+                <?php } ?>
+            </h1>
+        </div>
+        <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal">
+            <div class="page-header">
+                <strong>ID and Access Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-md-3 control-label">Username</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?= $username ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-md-3 control-label">Username</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?= $username ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="npi" class="col-md-3 control-label">NPI Number</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="npi" id="npi" placeholder="NPI Number" value="<?= $npi ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="medicare_npi" class="col-md-3 control-label">Medicare Provider (NPI/DME) Number</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="medicare_npi" id="medicare_npi" placeholder="Medicare Provider (NPI/DME) Number" value="<?= $medicare_npi ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="medicare_ptan" class="col-md-3 control-label">Medicare PTAN Number</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="medicare_ptan" id="medicare_ptan" placeholder="Medicare PTAN Number" value="<?= $medicare_ptan ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="tax_id_or_ssn" class="col-md-3 control-label">Tax ID or SSN</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="tax_id_or_ssn" id="tax_id_or_ssn" placeholder="Tax ID/SSN" value="<?= $tax_id_or_ssn ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">EIN or SSN required</label>
+                <div class="col-md-2 col-md-push-3 checkbox">
+                    <label>
+                        EIN
+                        <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?>>
+                    </label>
+                </div>
+                <div class="col-md-2 col-md-push-3 checkbox">
+                    <label>
+                        SSN
+                        <input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?>>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="practice" class="col-md-3 control-label">Practice</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="practice" id="practice" placeholder="Practice" value="<?= $practice ?>">
+                </div>
+            </div>
+            <?php if (!isset($_REQUEST['ed'])) { ?>
+            <div class="form-group">
+                <label for="password" class="col-md-3 control-label">Password</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Your password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password2" class="col-md-3 control-label">Confirm your password</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm your password">
+                </div>
+            </div>
+            <?php } ?>
+            
+            <div class="page-header">
+                <strong>Personal Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="firstname" class="col-md-3 control-label">First Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" value="<?= $firstname ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last name" value="<?= $lastname ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-md-3 control-label">Email</label>
+                <div class="col-md-9">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address" class="col-md-3 control-label">Address</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?= $address ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="city" class="col-md-3 control-label">City</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="state" class="col-md-3 control-label">State</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-md-3 control-label">Phone</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fax" class="col-md-3 control-label">Fax</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Mailing Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="mailing_practice" class="col-md-3 control-label">Practice</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_practice" id="mailing_practice" placeholder="Practice" value="<?= $mailing_practice ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_firstname" class="col-md-3 control-label">First Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_firstname" id="mailing_firstname" placeholder="First name" value="<?= $mailing_firstname ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_lastname" class="col-md-3 control-label">Last Name</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_lastname" id="mailing_lastname" placeholder="Last name" value="<?= $mailing_lastname ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_email" class="col-md-3 control-label">Email</label>
+                <div class="col-md-9">
+                    <input type="email" class="form-control" name="mailing_email" id="mailing_email" placeholder="Email" value="<?= $mailing_email ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_address" class="col-md-3 control-label">Address</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_address" id="mailing_address" placeholder="Address" value="<?= $mailing_address ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_city" class="col-md-3 control-label">City</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_city" id="mailing_city" placeholder="City" value="<?= $mailing_city ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_state" class="col-md-3 control-label">State</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_state" id="mailing_state" placeholder="State" value="<?= $mailing_state ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_zip" class="col-md-3 control-label">Zip/Postal Code</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_zip" id="mailing_zip" placeholder="Zip/Postal Code" value="<?= $mailing_zip ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_phone" class="col-md-3 control-label">Phone</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?= $mailing_phone ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mailing_fax" class="col-md-3 control-label">Fax</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?= $mailing_fax ?>">
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Options</strong>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Active services</label>
+                <div class="col-md-9">
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_patient_portal" value="1" <? if($use_patient_portal == 1) echo " checked='checked'";?>>
+                        Patient Portal
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_digital_fax" value="1" <? if($use_digital_fax == 1) echo " checked='checked'";?>>
+                        Digital Fax
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?>>
+                        Letters
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-push-3">
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_eligible_api" value="1" <? if($use_eligible_api == 1) echo " checked='checked'";?>>
+                        Eligible API
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_course" value="1" <? if($use_course == 1) echo " checked='checked'";?>>
+                        Course
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?>>
+                        Staff Course
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Automated services</label>
+                <div class="col-md-9">
+                    <label class="col-md-4">
+                        <input type="checkbox" name="tracker_letters" value="1" <? if($tracker_letters == 1) echo " checked='checked'";?>>
+                        Tracker Letters 
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="intro_letters" value="1" <? if($intro_letters == 1) echo " checked='checked'";?>>
+                        Intro Letters 
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Visuals to use</label>
+                <div class="col-md-9">
+                    <label class="col-md-4">
+                        <input type="checkbox" name="homepage" value="1" <? if($homepage == 1) echo " checked='checked'";?>>
+                        New Homepage
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox" name="use_letter_header" value="1" <? if($use_letter_header == 1) echo " checked='checked'";?>>
+                        Letter Header 
+                    </label>
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <strong>Status Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="status" class="col-md-3 control-label">Status</label>
+                <div class="col-md-9">
+                    <select id="status" name="status" class="form-control">
+                        <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
+                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                        <option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group hidden">
+                <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
+                <div class="col-md-9">
+                    <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?= $suspended_reason ?></textarea>
+                </div>
+            </div>
+            
+            <?php if (is_super($_SESSION['admin_access'])) { ?>
+            <div class="page-header">
+                <strong>Administration Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="companyid" class="col-md-3 control-label">Admin Company</label>
+                <div class="col-md-9">
+                    <select name="companyid" id="companyid" class="form-control">
+                       <?php
+                       
+                       $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_SOFTWARE."' ORDER BY name ASC";
+                       $bu_q = mysql_query($bu_sql);
+                       
+                       while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
+                       <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                       <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user_type" class="col-md-3 control-label">User Type</label>
+                <div class="col-md-9">
+                    <select name="user_type" id="user_type" class="form-control">
+                       <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
+                       <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
+                    </select>
+                </div>
+            </div>
+            <?php } ?>
+            
+            <div class="page-header">
+                <strong>Companies Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="billing_company_id" class="col-md-3 control-label">Billing Company</label>
+                <div class="col-md-9">
+                    <select name="billing_company_id" id="billing_company_id" class="form-control">
+                        <option value="">None</option>
+                        <?php
+                        
+                        $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_BILLING."' ORDER BY name ASC";
+                        $bu_q = mysql_query($bu_sql);
+                        
+                        while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
+                        <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">HTS Company</label>
+                <div class="col-md-9">
+                    <?php
+                    
+                    $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
+                    LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_GET['ed'])."'
+                    WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
+                    $bu_q = mysql_query($bu_sql);
+                    
+                    while ($bu_r = mysql_fetch_assoc($bu_q)) { ?>
+                    <label class="checkbox">
+                        <input type="checkbox" name="hst_company[]" value="<?= $bu_r['id']; ?>"  <?= ($bu_r['uhc_id'])?'checked="checked"':''; ?>>
+                        <?= $bu_r['name']; ?>
+                    </label>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="access_code_id" class="col-md-3 control-label">Access Code</label>
+                <div class="col-md-9">
+                    <select name="access_code_id" id="access_code_id" class="form-control">
+                        <?php
+                        
+                        $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
+                        $p_q = mysql_query($p_sql);
+                        
+                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
+                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?><?= ($p_r['status']=='2')?" - inactive":'';?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="plan_id" class="col-md-3 control-label">Plan</label>
+                <div class="col-md-9">
+                    <select name="plan_id" id="plan_id" class="form-control">
+                        <?php
+                        
+                        $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
+                        $p_q = mysql_query($p_sql);
+                        
+                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
+                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <input type="hidden" name="usersub" value="1">
+                    <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>">
+                    <input type="submit" name="save_but" onclick="return userabc(this.form);" value=" <?=$but_text?> User" class="btn btn-primary">
+                <?php if ($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3) { ?>
+                    <a href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
+                    <a href="reset_password.php?id=<?=$themyarray["userid"];?>" class="btn btn-default pull-right">Reset Password</a>
+                    <?php if ($themyarray['status']==2) { ?>
+                    <input type="submit" class="btn btn-info" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email">
+                    <?php } ?>
+                <?php } else { ?>
+                    <input type="submit" class="btn btn-info" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email">
+                    <a href="#" onclick="$('.expanded').toggle(); return false;" class="btn btn-default pull-right">Expand all fields</a>
+                    <?php } ?>
+                </div>
+            </div>
+        </form>
     </div>
-    <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post">
-    <table class="table table-bordered table-hover">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> User 
-               <? if($username <> "") {?>
-               		&quot;<?=$username;?>&quot;
-               <? }?>
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Username
-		<span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                NPI Number
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="npi" type="text" name="npi" value="<?=$npi?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Medicare Provider (NPI/DME) Number
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="medicare_npi" type="text" name="medicare_npi" value="<?=$medicare_npi?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded"  bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Medicare PTAN Number
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="medicare_ptan" type="text" name="medicare_ptan" value="<?=$medicare_ptan?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Tax ID or SSN
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="tax_id_or_ssn" type="text" name="tax_id_or_ssn" value="<?=$tax_id_or_ssn?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                EIN or SSN<br />
-		(EIN or SSN is required)
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="ein" type="checkbox" name="ein" value="1" <?= ($ein)?'checked="checked"':''; ?> class="form-control" />
-		EIN
-		<input id="ssn" type="checkbox" name="ssn" value="1" <?= ($ssn)?'checked="checked"':''; ?> class="form-control" />
-                SSN
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Practice
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="practice" type="text" name="practice" value="<?=$practice?>" class="form-control" /> 
-            </td>
-        </tr>
-	<?php if(!isset($_REQUEST['ed'])){ ?>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Password
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Re-type Password
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control" />
-            </td>
-        </tr>
-	<?php } ?>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                First Name
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Last Name
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Email
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Address
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-		<input type="text" name="address" class="form-control" id="address" value="<?= $address; ?>" />
-                <!--<textarea name="address" class="form-control"><?=$address;?></textarea>-->
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                City
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="city" type="text" value="<?php echo $city;?>" name="city" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                State
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="state" type="text" value="<?php echo $state;?>" name="state" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Zip
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="zip" type="text" name="zip" value="<?php echo $zip;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Phone
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control" /> 
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Fax
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="form-control" />
-            </td>
-        </tr>
-
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Mailing Practice
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_practice" type="text" name="mailing_practice" value="<?=$mailing_practice?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing Name
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_name" type="text" name="mailing_name" value="<?=$mailing_name;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing Address
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input type="text" name="mailing_address" class="form-control" id="mailing_address" value="<?= $mailing_address; ?>" />
-                <!--<textarea name="address" class="form-control"><?=$address;?></textarea>-->
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing City
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_city" type="text" value="<?php echo $mailing_city;?>" name="mailing_city" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing State
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_state" type="text" value="<?php echo $mailing_state;?>" name="mailing_state" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing Zip
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_zip" type="text" name="mailing_zip" value="<?php echo $mailing_zip;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing Phone
-                <span class="red">*</span>
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_phone" type="text" name="mailing_phone" value="<?=$mailing_phone;?>" class="form-control" />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Mailing Fax 
-            </td>
-            <td valign="top" class="frmdata">
-                <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="form-control" />
-            </td>
-        </tr>
-
-
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Patient Portal Active? 
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_patient_portal" value="1" <? if($use_patient_portal == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Digital Fax Active?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_digital_fax" value="1" <? if($use_digital_fax == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-
-
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Letters Active?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_letters" value="1" <? if($use_letters == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Automated Tracker Letters? 
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="tracker_letters" value="1" <? if($tracker_letters == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Automated Intro Letters?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="intro_letters" value="1" <? if($intro_letters == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Eligible API Active?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_eligible_api" value="1" <? if($use_eligible_api == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Course Active?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_course" value="1" <? if($use_course == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-
-
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Staff Course Active?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_course_staff" value="1" <? if($use_course_staff == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Use new homepage?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="homepage" value="1" <? if($homepage == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-	<tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Use Letter Header?
-            </td>
-            <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_letter_header" value="1" <? if($use_letter_header == 1) echo " checked='checked'";?> />
-            </td>
-        </tr>
-        <tr class="expanded" bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Status
-            </td>
-            <td valign="top" class="frmdata">
-            	<select id="status" name="status" class="form-control" onchange="showSuspended();">
-                	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
-			<option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
-                </select>
-            </td>
-        </tr>
-<script type="text/javascript">
-  function showSuspended(){
-    if($('#status').val()==3){
-      $('#suspended_reason').show();
-    }else{
-      $('#suspended_reason').hide();
-    }
-  }
-</script>
-	<tr id="suspended_reason" <?= ($status!=3)?'style="display:none;"':''; ?>>
-		<td valign="top" class="frmhead">
-			Suspended Reason
-		</td>
-		<td>
-			<textarea name="suspended_reason"><?= $suspended_reason; ?></textarea>
-		</td>
-	</tr>
-<?php if(is_super($_SESSION['admin_access'])){ ?>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 Admin Company
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="companyid" class="form-control">
-			<?php
-			  $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_SOFTWARE."' ORDER BY name ASC";
-			  $bu_q = mysql_query($bu_sql);
-			  while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
- 			    <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $companyid)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
-			  <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 User Type
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="user_type" class="form-control">
-                            <option value="<?= DSS_USER_TYPE_FRANCHISEE; ?>" <?= ($user_type == DSS_USER_TYPE_FRANCHISEE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_FRANCHISEE]; ?></option>
-                            <option value="<?= DSS_USER_TYPE_SOFTWARE; ?>" <?= ($user_type == DSS_USER_TYPE_SOFTWARE)?'selected="selected"':''; ?>><?= $dss_user_type_labels[DSS_USER_TYPE_SOFTWARE]; ?></option>
-
-                </select>
-            </td>
-        </tr>
-<?php } ?>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 Billing Company
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="billing_company_id" class="form-control">
-			<option value="">None</option>
-                        <?php
-                          $bu_sql = "SELECT * FROM companies WHERE company_type='".DSS_COMPANY_TYPE_BILLING."' ORDER BY name ASC";
-                          $bu_q = mysql_query($bu_sql);
-                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <option value="<?= $bu_r['id']; ?>" <?= ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?= $bu_r['name']; ?></option>
-                          <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 HST Company
-            </td>
-            <td valign="top" class="frmdata">
-                        <?php
-                          $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
-					LEFT JOIN dental_user_hst_company uhc ON uhc.companyid=h.id AND uhc.userid='".mysql_real_escape_string($_GET['ed'])."'
-					WHERE h.company_type='".DSS_COMPANY_TYPE_HST."' ORDER BY name ASC";
-                          $bu_q = mysql_query($bu_sql); 
-                          while($bu_r = mysql_fetch_assoc($bu_q)){ ?>
-                            <input type="checkbox" name="hst_company[]" value="<?= $bu_r['id']; ?>"  <?= ($bu_r['uhc_id'])?'checked="checked"':''; ?> /> <?= $bu_r['name']; ?>
-                          <?php } ?>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 Access Code
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="access_code_id" id="access_code_id" class="form-control">
-                        <?php
-                          $p_sql = "SELECT * FROM dental_access_codes ORDER BY access_code ASC";
-                          $p_q = mysql_query($p_sql);
-                          while($p_r = mysql_fetch_assoc($p_q)){ ?>
-                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $access_code_id)?'selected="selected"':''; ?>><?= $p_r['access_code']; ?><?= ($p_r['status']=='2')?" - inactive":'';?></option>
-                          <?php } ?>
-                </select>
-<script type="text/javascript">
-  $('#access_code_id').change(function(){
-	var ac_id = $(this).val();
-                                  $.ajax({
-                                        url: "includes/access_code_plan.php",
-                                        type: "post",
-                                        data: {ac_id: ac_id},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-							$('#plan_id').val(r.plan_id);
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-
-  });
-</script>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                 Plan
-            </td>
-            <td valign="top" class="frmdata">
-                <select name="plan_id" id="plan_id" class="form-control">
-                        <?php
-                          $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
-                          $p_q = mysql_query($p_sql);
-                          while($p_r = mysql_fetch_assoc($p_q)){ ?>
-                            <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
-                          <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td  colspan="2" align="center">
-                <span class="red">
-                    * Required Fields					
-                </span><br />
-                <input type="hidden" name="usersub" value="1" />
-                <input type="hidden" name="ed" value="<?=$themyarray["userid"]?>" />
-                <input type="submit" name="save_but" onclick="return userabc(this.form);" value=" <?=$but_text?> User" class="button" />
-                <?php if($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3){ ?>
-                    <a style="float:right;" href="javascript:parent.window.location='manage_users.php?delid=<?=$themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
-		    <a style="float:left;" href="reset_password.php?id=<?=$themyarray["userid"];?>">Reset Password</a>
-			<?php
-				if($themyarray['status']==2){ ?>
-					<input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
-				<?php }
-			?>
-		<?php }else{ ?>
- 		  <input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
-		  <a style="float:right;" href="#" onclick="$('.expanded').toggle(); return false;">Expand all fields</a>
-		<?php } ?>
-            </td>
-        </tr>
-    </table>
-    </form>
-  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<?php if(!isset($_GET['ed'])){ ?>
-  <script type="text/javascript">
-    $('.expanded').hide();
-  </script>
-<?php } ?>
+    <?php if(!isset($_GET['ed'])){ ?>
+    <script type="text/javascript">
+    var hide_expanded = true;
+    </script>
+    <?php } ?>
+    <script>
+    $(document).ready(function(){
+        $('[name=status]').on('change keydown',function(){
+            var $this = $(this);
+            
+            if ($this.val() === '3') {
+                $this.closest('.form-group').next().removeClass('hidden');
+            }
+            else {
+                $this.closest('.form-group').next().addClass('hidden');
+            }
+        });
+        
+        $('#access_code_id').on('change',function(){
+            var ac_id = $(this).val();
+            
+            $.ajax({
+                url: "/manage/admin/includes/access_code_plan.php",
+                type: "post",
+                data: {ac_id: ac_id},
+                success: function(data){
+                    var r = $.parseJSON(data);
+                    
+                    if (r.error) {}
+                    else {
+                        $('#plan_id').val(r.plan_id);
+                    }
+                }
+            });
+        });
+        
+        if (hide_expanded) {
+            $('.expanded').hide();
+        }
+    });
+    </script>
 </body>
 </html>

@@ -438,7 +438,7 @@ if($cpap == '')
                                                 </span>
                                         </div>
 
-                   			<h5>What are your chief complaints about CPAP?</h5>	
+                   			<h5 class="cpap_options">What are your chief complaints about CPAP?</h5>	
                             
                             <?
 							$intolerance_sql = "select * from dental_intolerance where status=1 order by sortby";
@@ -447,14 +447,14 @@ if($cpap == '')
 							while($intolerance_myarray = mysql_fetch_array($intolerance_my))
 							{
 							?>
-							<div class="sepH_b half">
+							<div class="sepH_b half cpap_options">
 								<input type="checkbox" id="intolerance" name="intolerance[]" value="<?=st($intolerance_myarray['intoleranceid'])?>" <? if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
                                 <label><?=st($intolerance_myarray['intolerance']);?></label>
 							</div>
 							<?
 							}
 							?>
-					<div class="sepH_b half">
+					<div class="sepH_b half cpap_options">
 					<input type="checkbox" id="cpap_other" name="intolerance[]" value="0" <? if(strpos($intolerance,'~'.st('0~')) === false) {} else { echo " checked";}?> onclick="chk_cpap_other()" /> &nbsp;&nbsp; Other
 					</div>
                     <div class="sepH_b cpap_options">

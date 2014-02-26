@@ -109,6 +109,7 @@ NAV THIRD
                         <li><a href="manage_custom_letters.php">Custom Letters</a></li>
 		     </ul>
 		     </li>
+                     <li><a href="change_list.php">Change List</a></li>
 <?php
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
 $q = mysql_query($sql);

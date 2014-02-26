@@ -161,10 +161,12 @@ $my=mysql_query($sql) or die(mysql_error());
 <div style="font-weight:bold; font-size: 14px; margin:0 auto; width: 300px; text-align:center;">
 <?php if($_GET['risk']>=10){ ?>
 	<p>Showing High/Severe Patients only</p>
-<?php }elseif(isset($_GET['contacted']) && $_GET['contacted']==0){ ?>
+<?php }elseif(isset($_GET['contacted']) && $_GET['contacted']=='0'){ ?>
 	<p>Showing NOT contacted patients only</p>
 <?php }elseif($_GET['contacted_risk']>=10){ ?>
         <p>Showing High/Severe NOT contacted patients only</p>
+<?php }else{ ?>
+	<p>Showing ALL Patients</p>
 <?php } ?>
 </div>
 

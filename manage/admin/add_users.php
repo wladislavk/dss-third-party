@@ -116,8 +116,9 @@ if($_POST["usersub"] == 1)
                                 city = '".s_for($_POST["mailing_city"])."', 
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
+				email = '".s_for($_POST["mailing_email"])."',
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
-				fax = '".s_for(num($_POST["mailing_fax"]))."',
+				fax = '".s_for(num($_POST["mailing_fax"]))."'
 				where default_location=1 AND docid='".$_POST["ed"]."'";
 			mysql_query($loc_sql);
                         edx_user_update($_POST['ed']);
@@ -266,6 +267,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 city = '".s_for($_POST["mailing_city"])."', 
                                 state = '".s_for($_POST["mailing_state"])."', 
                                 zip = '".s_for($_POST["mailing_zip"])."', 
+				email = '".s_for($_POST["mailing_email"])."',
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
                                 fax = '".s_for(num($_POST["mailing_fax"]))."',
                                 default_location=1,
@@ -377,7 +379,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 <body>
 
     <?
-    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
+    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
 		LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
 		where u.userid='".$_REQUEST["ed"]."'";
@@ -411,6 +413,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $mailing_city = $_POST['mailing_city'];
                 $mailing_state = $_POST['mailing_state'];
                 $mailing_zip = $_POST['mailing_zip'];
+		$mailing_email = $_POST['mailing_email'];
                 $mailing_phone = $_POST['mailing_phone'];
 		$mailing_fax = $_POST['mailing_fax'];
 
@@ -476,6 +479,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 $mailing_city = st($themyarray['mailing_city']);
                 $mailing_state = st($themyarray['mailing_state']);
                 $mailing_zip = st($themyarray['mailing_zip']);
+		$mailing_email = st($themyarray['mailing_email']);
                 $mailing_phone = st($themyarray['mailing_phone']);
 		$mailing_fax = st($themyarray['mailing_fax']);
 
@@ -735,6 +739,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </td>
         </tr>
         <tr class="expanded" bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Practice Email
+                <span class="red">*</span>
+            </td>
+            <td valign="top" class="frmdata">
+                <input id="mailing_email" type="text" name="mailing_email" value="<?=$mailing_email?>" class="tbox" />
+            </td>
+        </tr>
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Mailing Name
                 <span class="red">*</span>
@@ -797,14 +810,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="mailing_fax" type="text" name="mailing_fax" value="<?=$mailing_fax;?>" class="tbox" />
             </td>
         </tr>
-        <tr bgcolor="#FFFFFF">
+        <tr class="expanded" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Use Service NPI?            </td>
             <td valign="top" class="frmdata">
-                        <input type="checkbox" name="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
+                        <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Name
             </td>
@@ -812,7 +825,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_name" type="text" name="service_name" value="<?=$service_name;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Address
             </td>
@@ -820,7 +833,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_address" type="text" name="service_address" value="<?=$service_address;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service City
             </td>
@@ -828,7 +841,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_city" type="text" name="service_city" value="<?=$service_city;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service State
             </td>
@@ -836,7 +849,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_state" type="text" name="service_state" value="<?=$service_state;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Zip
             </td>
@@ -844,7 +857,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_zip" type="text" name="service_zip" value="<?=$service_zip;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Phone
             </td>
@@ -852,7 +865,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_phone" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Fax
             </td>
@@ -860,7 +873,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_fax" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service NPI
             </td>
@@ -868,7 +881,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_npi" type="text" name="service_npi" value="<?=$service_npi;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Medicare NPI
             </td>
@@ -876,7 +889,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_medicare_npi" type="text" name="service_medicare_npi" value="<?=$service_medicare_npi;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Medicare PTAN
             </td>
@@ -884,7 +897,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_medicare_ptan" type="text" name="service_medicare_ptan" value="<?=$service_medicare_ptan;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service Tax ID or SSN
             </td>
@@ -892,7 +905,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <input id="service_tax_id_or_ssn" type="text" name="service_tax_id_or_ssn" value="<?=$service_tax_id_or_ssn;?>" class="tbox" />
             </td>
         </tr>
-        <tr class="" bgcolor="#FFFFFF">
+        <tr class="expanded service_field" bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Service EIN or SSN
             </td>
@@ -1151,7 +1164,13 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 			?>
 		<?php }else{ ?>
  		  <input type="submit" class="button" name="reg_but" onclick="return userregabc(this.form)" value="Send Registration Email" />
-		  <a style="float:right;" href="#" onclick="$('.expanded').toggle(); return false;">Expand all fields</a>
+		  <a style="float:right;" href="#" onclick="$('.expanded').toggle();check_service_npi(); return false;">Expand all fields</a>
+		<?php } ?>
+
+		<?php if($themyarray['status']==2){ 
+			$registration_link = "http://".$_SERVER['HTTP_HOST']."/manage/register/activate.php?id=".$themyarray['userid']."&hash=".$themyarray['recover_hash'];
+			?>
+			<a href="#" onclick="alert('<?= $registration_link; ?>');return false;">Registration Link</a>
 		<?php } ?>
             </td>
         </tr>
@@ -1163,5 +1182,20 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
     $('.expanded').hide();
   </script>
 <?php } ?>
+<script type="text/javascript">
+  $('#use_service_npi').click(function(){
+    check_service_npi();
+  });
+
+  function check_service_npi(){
+    if($('#use_service_npi').is(':checked')){
+      $('.service_field').show();
+    }else{
+      $('.service_field').hide();
+    }
+  }
+  check_service_npi();  
+</script>
+
 </body>
 </html>

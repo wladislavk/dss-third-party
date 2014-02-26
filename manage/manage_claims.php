@@ -251,8 +251,15 @@ if(v == '100'){
 	}
 	else
 	{
+		$sec_status = array(DSS_CLAIM_SEC_SENT, DSS_CLAIM_SEC_DISPUTE, DSS_CLAIM_PAID_SEC_INSURANCE, DSS_CLAIM_PAID_SEC_PATIENT,DSS_CLAIM_SEC_PATIENT_DISPUTE, DSS_CLAIM_SEC_REJECTED);
 		while($myarray = mysql_fetch_array($my))
 		{
+	if(in_array($myarray["status"], $sec_status)){
+	  $is_secondary = true;
+	}else{
+	  $is_secondary = false;
+ 	}
+
 			if($myarray["status"] == 1)
 			{
 				$tr_class = "tr_active";
@@ -284,7 +291,11 @@ if(v == '100'){
                                         </a>
 				</td>
 	                <?php if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-                <td><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> /></td>
+		  <?php if($is_secondary){ ?>
+                    <td><input type="checkbox" class="sec_mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['sec_mailed_date'] !='')?'checked="checked"':''; ?> /></td>
+		  <?php }else{ ?>
+                    <td><input type="checkbox" class="mailed_chk" value="<?= $myarray['insuranceid']; ?>" <?= ($myarray['mailed_date'] !='')?'checked="checked"':''; ?> /></td>
+		  <?php } ?>
                 <?php } ?>
                 <?php if($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE) { ?>
                 <td><?= ($myarray['mailed_date'] !='')?'X':''; ?></td>
@@ -311,10 +322,32 @@ if(v == '100'){
   $('.mailed_chk').click( function(){
     lid = $(this).val();
     c = $(this).is(':checked');
+    type = 'pri';
                                    $.ajax({
                                         url: "includes/claim_mail.php",
                                         type: "post",
-                                        data: {lid: lid, mailed: c},
+                                        data: {lid: lid, mailed: c, type:type},
+                                        success: function(data){
+                                                var r = $.parseJSON(data);
+                                                if(r.error){
+                                                }else{
+                                                        //window.location.reload();
+                                                }
+                                        },
+                                        failure: function(data){
+                                                //alert('fail');
+                                        }
+                                  });
+
+  });
+  $('.sec_mailed_chk').click( function(){
+    lid = $(this).val();
+    c = $(this).is(':checked');
+    type = 'sec';
+                                   $.ajax({
+                                        url: "includes/claim_mail.php",
+                                        type: "post",
+                                        data: {lid: lid, mailed: c, type:type},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
                                                 if(r.error){

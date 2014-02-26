@@ -1184,6 +1184,51 @@ function ledgerabc(fa)
 	return true;
 }
 
+
+function addledgerabc(fa)
+{
+        if(trim(fa.service_date.value) == "")
+        {
+                alert("Service Date is Required");
+                fa.service_date.focus();
+                return false;
+        }
+
+        if(! is_date(trim(fa.service_date.value)))
+        {
+                alert("Invalid Date Format For Service Date");
+                fa.service_date.focus();
+                return false;
+        }
+
+        if(trim(fa.entry_date.value) == "")
+        {
+                alert("Entry Date is Required");
+                fa.entry_date.focus();
+                return false;
+        }
+
+        if(! is_date(trim(fa.entry_date.value)))
+        {
+                alert("Invalid Date Format for Entry Date");
+                fa.entry_date.focus();
+                return false;
+        }
+        if(trim(fa.transaction_type.value) == "0")
+        {
+                alert("Transaction Type is Required");
+                fa.transaction_type.focus();
+                return false;
+        }
+        if(trim(fa.proccode.value) == "0")
+        {
+                alert("Procedure Code is Required");
+                fa.proccode.focus();
+                return false;
+        }
+  return true;
+}
+
 function dailyabc(fa)
 {
 	if(trim(fa.d_mm.value) == '')

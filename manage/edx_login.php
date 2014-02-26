@@ -18,7 +18,7 @@ if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
 ?>
 <script type="text/javascript">
 <?php
-                if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
+                if($_SERVER['HTTP_HOST']=='www.dentalsleepsolutions.com'){
 ?>  window.location='http://edx.dentalsleepsolutions.com/dashboard'; <?php
                 }else{
 ?>  window.location='http://staging1.edx.dss.xforty.com/dashboard'; <?php

@@ -3,6 +3,11 @@ session_start();
 require_once('admin/includes/main_include.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
+?>
+<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="/manage/js/masks.js"></script>
+<?php
 include("includes/calendarinc.php");
 include("includes/preauth_functions.php");
 $flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".$_GET['pid']."' LIMIT 1;";
@@ -398,7 +403,7 @@ xmlhttp.onreadystatechange=function()
 			?>
 		}
 	</script>
-    <form name="ledgerfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return ledgerabc(this)">
+    <form name="ledgerfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&pid=<?=$_GET['pid']?>" method="post" onSubmit="return addledgerabc(this)">
     <table cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
         <tr>
             <td colspan="2" class="cat_head">
@@ -472,7 +477,7 @@ $sql="SELECT * FROM dental_transaction_code WHERE type = '".$transaction_type."'
 $result = mysql_query($sql);
 
 
-echo "<select onchange='getTransCodesAmount(this.value,this.name,".$transaction_type.")' id='proccode' name='proccode'><option>Select TX Code</option>";
+echo "<select onchange='getTransCodesAmount(this.value,this.name,".$transaction_type.")' id='proccode' name='proccode'><option value='0'>Select TX Code</option>";
 while($row = mysql_fetch_array($result))
   {
   $r = ($row['transaction_code']==$transaction_code)?'selected="selected"':'';
@@ -919,7 +924,4 @@ function format_phone($num, $a){
 
 
 ?>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="/manage/js/masks.js"></script>
 

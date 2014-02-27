@@ -727,7 +727,7 @@ if($patientid!='' && $loc_r['location'] != '' && $loc_r['location'] != '0'){
                 if($send_method == 'fax' && $use_digital_fax){
 if($user_type == DSS_USER_TYPE_SOFTWARE){
   if($logo != ''){
-    $cover_image = "<img src=\"/manage/q_file/".$logo."\" />";
+    $cover_image = "<img src=\"../../shared/q_file/".$logo."\" />";
   }else{
     $cover_image = "";
   }

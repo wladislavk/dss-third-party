@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'includes/sescheck.php';
 $f = $_GET['f'];
 $ft =  mime_content_type('../../shared/q_file/'.$f);

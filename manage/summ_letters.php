@@ -341,7 +341,7 @@ if ($_REQUEST['sort2'] == "delivery_date" && $_REQUEST['sort2dir'] == "DESC") {
   if($f_num > 0){
     ?>
         <br /><br />
-        <a href="manage_vobs.php?status=3&viewed=0#fax" class="warning" id="fax_alert"><?= $f_num; ?> letter<?=($f_num>1)?'s':'';?> failed to send via digital fax. Click here to check errors and retry.</a>
+        <a href="manage_faxes.php?status=3&viewed=0#fax" class="warning" id="fax_alert"><?= $f_num; ?> letter<?=($f_num>1)?'s':'';?> failed to send via digital fax. Click here to check errors and retry.</a>
     <?php
 
 

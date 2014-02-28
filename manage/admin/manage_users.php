@@ -108,7 +108,7 @@ $num_users=mysql_num_rows($my);
   if(isset($_GET['cid'])){
 ?>
 <div style="float:left; margin-left:20px;">
-        <a href="manage_users.php" class="addButton">
+        <a href="manage_users.php" class="btn btn-success">
                 View All 
         </a>
         &nbsp;&nbsp;
@@ -267,7 +267,7 @@ $num_users=mysql_num_rows($my);
 						<input type="hidden" name="username" value="<?=st($myarray["username"]);?>">
 						<input type="hidden" name="password" value="<?=st($myarray["password"]);?>">
 			            <input type="hidden" name="loginsub" value="1">
-			            <input type="submit" name="btnsubmit" value=" Login " class="addButton">			
+			            <input type="submit" name="btnsubmit" value=" Login " class="btn btn-success">			
 					</form>
 					<?php } ?>
 				</td>

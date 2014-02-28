@@ -70,7 +70,7 @@ $num_users=mysql_num_rows($my);
   if(isset($_GET['cid'])){
 ?>
 <div style="float:left; margin-left:20px;">
-        <a href="manage_backoffice.php" class="addButton">
+        <a href="manage_backoffice.php" class="btn btn-success">
                 View All 
         </a>
         &nbsp;&nbsp;

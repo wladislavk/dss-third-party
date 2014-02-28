@@ -549,14 +549,14 @@ color: white;
 <?php if ($status == "pending"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/admin/manage_letters.php?status=sent&sort=delivery_date&sortdir=DESC">
-  	<input class="addButton" type="submit" value="Sent Letters">
+  	<input class="btn btn-success" type="submit" value="Sent Letters">
   	</form>
   </div>
 <?php endif; ?>
 <?php if ($status == "sent"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/admin/manage_letters.php?status=pending">
-  	<input class="addButton" type="submit" value="Pending Letters">
+  	<input class="btn btn-success" type="submit" value="Pending Letters">
   	</form>
   </div>
 <?php endif; ?>

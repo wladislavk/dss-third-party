@@ -149,7 +149,7 @@ $(document).ready(function(){
     <tr bgcolor="#FFFFFF">
         <td colspan="2" align="center">
             <input type="hidden" name="recoversub" value="1">
-            <input type="submit" name="btnsubmit" value="Reset Password" class="addButton">
+            <input type="submit" name="btnsubmit" value="Reset Password" class="btn btn-success">
         </td>
     </tr>
 </table>

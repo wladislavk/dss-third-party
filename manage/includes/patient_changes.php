@@ -27,6 +27,10 @@ $fields['add2'] = "Address 2";
 $fields['city'] = "City";
 $fields['state'] = "State";
 $fields['zip'] = "Zip";
+$fields['feet'] = "Height Feet";
+$fields['inches'] = "Height Inches";
+$fields['weight'] = "Weight";
+$fields['bmi'] = "BMI";
 
 $fields['dob'] = "Date of Birth";
 $fields['gender'] = "Gender";

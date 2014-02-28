@@ -14,8 +14,14 @@ WHERE (SELECT (SUM(COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)
                 WHERE dl.primary_claim_id=i.insuranceid), 0)
         )
          FROM dental_insurance i 
-WHERE i.patientid=p.patientid AND i.mailed_date IS NOT NULL) > 0
-
+WHERE i.patientid=p.patientid AND i.mailed_date IS NOT NULL";
+if(isset($_GET['bc'])){
+  $sql .= " AND i.p_m_billing_id IS NOT NULL AND i.p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $sql .= " AND (i.p_m_billing_id IS NULL OR i.p_m_billing_id = '') ";
+}
+$sql.= ") > 0
 	";
 if(isset($_GET['fid'])){
   $sql .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
@@ -58,7 +64,7 @@ $sql .= " order by p.lastname, p.firstname
 }
 //(SELECT COALESCE(SUM(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2))),0) FROM dental_insurance i WHERE i.patientid=p.patientid AND i.adddate > DATE_SUB(CURDATE(), INTERVAL 830 DAY)) as total_029
 
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 
 //echo $sql; 
@@ -148,6 +154,13 @@ $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_tota
 		{
   $c_total = $p_total = $pat_total = 0;
   $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+if(isset($_GET['bc'])){
+  $c_sql .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $c_sql .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
   $c_q = mysql_query($c_sql) or die(mysql_error());
   while($c_r = mysql_fetch_assoc($c_q)){
     $c_total += $c_r['total_charge'];
@@ -175,6 +188,13 @@ $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_tota
 <?php
 $c_total = $p_total = 0;
 $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+if(isset($_GET['bc'])){
+  $c_sql .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $c_sql .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
 $c_q = mysql_query($c_sql) or die(mysql_error());
 $p_sql = '';
 while($c_r = mysql_fetch_assoc($c_q)){
@@ -195,6 +215,13 @@ $p_total = $p_r['paid_amount'];
 			</td>
 <?php
   $c_total = $p_total = 0;  $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
+if(isset($_GET['bc'])){
+  $c_sql .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $c_sql .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
   $c_q = mysql_query($c_sql) or die(mysql_error());
 $p_sql = '';
   while($c_r = mysql_fetch_assoc($c_q)){
@@ -216,6 +243,13 @@ $p_sql = '';
 
 <?php
   $c_total = $p_total = 0;  $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
+if(isset($_GET['bc'])){
+  $c_sql .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $c_sql .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
   $c_q = mysql_query($c_sql) or die(mysql_error());
 $p_sql = '';
   while($c_r = mysql_fetch_assoc($c_q)){
@@ -237,6 +271,13 @@ $p_sql = '';
 
 <?php
   $c_total = $p_total = 0;  $c_sql = "SELECT COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance WHERE patientid='".mysql_real_escape_string($r['patientid'])."' AND mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY)";
+if(isset($_GET['bc'])){
+  $c_sql .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $c_sql .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
   $c_q = mysql_query($c_sql) or die(mysql_error());
 $p_sql = '';
   while($c_r = mysql_fetch_assoc($c_q)){

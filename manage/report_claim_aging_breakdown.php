@@ -22,6 +22,14 @@ $s .= "       WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND
 if(isset($_GET['fid'])){
   $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
+if(isset($_GET['bc'])){
+  $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $s .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
+
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -82,6 +90,13 @@ $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND i.mailed_
 if(isset($_GET['fid'])){
   $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
+if(isset($_GET['bc'])){
+  $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $s .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -141,6 +156,13 @@ $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND i.mailed_
 if(isset($_GET['fid'])){
   $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
+if(isset($_GET['bc'])){
+  $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $s .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -201,6 +223,13 @@ $s .= " WHERE i.mailed_date > DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND i.mailed
 if(isset($_GET['fid'])){
   $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
+if(isset($_GET['bc'])){
+  $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $s .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }
@@ -261,6 +290,13 @@ $s .= " WHERE i.mailed_date <= DATE_SUB(CURDATE(), INTERVAL 120 DAY) AND
 if(isset($_GET['fid'])){
   $s .= " AND p.docid='".mysql_real_escape_string($_GET['fid'])."' ";
 }
+if(isset($_GET['bc'])){
+  $s .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
+}
+if(isset($_GET['nbc'])){
+  $s .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+}
+
 if(is_software($_SESSION['admin_access'])){
   $s .= " AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' ";
 }

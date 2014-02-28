@@ -368,9 +368,13 @@ $insqry = mysql_query($sqlinsertqry2);
 <?php 
 
 function create_claim($pid, $prod){
-             $pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
+             $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
+		JOIN dental_users u ON u.userid=p.docid
+		where p.patientid='".s_for($pid)."'";
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
+$p_m_dss_file = $pat_myarray['p_m_dss_file'];
+$p_m_billing_id = $pat_myarray['billing_company_id'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
 $other_insurancetype = st($pat_myarray['s_m_ins_type']);
@@ -674,6 +678,8 @@ if (empty($prior_authorization_number)) {
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
 		producer = '".s_for($prod)."',
+		p_m_billing_id='".s_for($p_m_billing_id)."',
+		p_m_dss_file='".s_for($p_m_dss_file)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());

@@ -161,6 +161,14 @@ $image_sql = "INSERT INTO dental_insurance_file (
         }else{
 	  $msg = 'Payment Successfully Added\n\nPrimary Insurance claim closed. This patient has secondary insurance and a claim has been auto-generated for the Secondary Insurer.';
           $new_status = DSS_CLAIM_SEC_PENDING;
+	               $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
+                JOIN dental_users u ON u.userid=p.docid
+                where p.patientid='".s_for($_POST['patientid'])."'";
+             $pat_my = mysql_query($pat_sql);
+             $pat_myarray = mysql_fetch_array($pat_my);
+		$s_m_dss_file = $pat_myarray['s_m_dss_file'];
+		$s_m_billing_id = $pat_myarray['billing_company_id'];
+
         }
 	          $secsql = "UPDATE dental_insurance SET 
                 amount_paid=(SELECT SUM(lp.amount) 
@@ -244,6 +252,9 @@ if(isset($new_status)){
   $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
   if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $x .= ", mailed_date = NULL ";
+  }
+  if($new_status == DSS_CLAIM_SEC_PENDING){
+    $x .= ", s_m_billing_id = '".$s_m_billing_id."', s_m_dss_file = '".$s_m_dss_file."' ";
   }
   $x .= " WHERE insuranceid='".$_POST['claimid']."';";
   mysql_query($x);

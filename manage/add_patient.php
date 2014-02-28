@@ -2167,12 +2167,24 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
 		</td></tr>	
 <?php } ?>
+
+
+<?php
+  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_q = mysql_query($b_sql);
+  if(mysql_num_rows($b_q)>0){
+    $b_r = mysql_fetch_assoc($b_q);
+    $cname = $b_r['name'];
+  }else{
+    $cname = "DSS";
+  }
+?> 
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div>
                             <span>
@@ -2226,7 +2238,7 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                                 <label for="home_phone">Insurance Type</label>
                             </span>
                             <span>
-                                                                            <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                                                                            <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass pay_to_patient_radio" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
                             </span>
  <span style="float:right">
 <?php
@@ -2361,7 +2373,7 @@ $image = mysql_fetch_assoc($itype_my);
 
 		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
                         </label>
                         <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
@@ -2415,7 +2427,7 @@ $image = mysql_fetch_assoc($itype_my);
                                 <label for="s_m_ins_type">Insurance Type</label>
                             </span>
                             <span>
-                                                                            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                                                                            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no pay_to_patient_radio" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
                             </span>
                             <span style="float:right">
 <?php
@@ -3014,6 +3026,23 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
   });
 </script>
 <?php } ?>
+<script type="text/javascript">
+  $('.dss_file_radio').click(function(){
 
+    if($('#p_m_dss_file_no').is(':checked') && $('#s_m_dss_file_yes').is(':checked')){
+	alert('<?=$cname;?> must file Primary Insurance in order to file Secondary Insurance.');
+        return false;
+    } 
+    if($('#p_m_dss_file_yes').is(':checked') && $('#s_m_dss_file_no').is(':checked')){
+        return confirm("Are you sure you do not want <?=$cname;?> to file secondary insurance claims? Normally patients expect this; please select 'Yes' unless you are sure of your choice.");
+    } 
+
+
+  });
+  $('.pay_to_patient_radio').click(function(){
+
+    return confirm('Selecting "Payment to Patient" means NO payment will go to your office (payment will be mailed to patient). Select "Accept Assignment of Benefits" to have the insurance check go to your office instead. "Accept Assignment" is recommended in nearly all cases, so make sure you choose correctly.');
+  });
+</script>
 </body>
 </html>

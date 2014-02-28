@@ -102,7 +102,7 @@ if(isset($_REQUEST['order_submit'])){
 						?>
 						<?php if(is_super($_SESSION['admin_access'])){ ?>
 						<input type="hidden" name="parent_id" value="<?= $myarray['id']; ?>" />
-						<input type="submit" name="order_submit" value="Save order" />
+						<input type="submit" name="order_submit" value="Save order" class="btn btn-primary">
 						<?php } ?>
 						</form>
 					</div>

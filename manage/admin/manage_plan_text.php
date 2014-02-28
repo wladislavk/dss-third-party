@@ -75,7 +75,7 @@ Use <b>*DD*</b> for Dropdown of Device and <b>*PAT*</b> for Patient Name
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
 			<input type="hidden" name="ed" value="<?=st($myarray['plan_textid']);?>" />
 			<input type="hidden" name="plansub" value="1" />
-			<input type="submit" name="planbtn" value="Submit" />
+			<input type="submit" name="planbtn" value="Submit" class="btn btn-primary">
 			<?php } ?>
 		</td>
 	</tr>

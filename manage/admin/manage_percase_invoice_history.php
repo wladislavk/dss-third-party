@@ -217,7 +217,7 @@ $case_q = mysql_query($case_sql);
                                             echo number_format($total_charge, 2); ?>
                                 </td>
 				<td valign="top">
-					<a href="../q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="button" title="EDIT" style="padding:3px 5px;" target="_blank">
+					<a href="../q_file/percase_invoice_<?= $myarray['docid'];?>_<?= $myarray['id']; ?>.pdf" class="btn btn-primary" title="EDIT" style="padding:3px 5px;" target="_blank">
 						View
 					</a>
                     

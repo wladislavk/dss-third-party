@@ -424,11 +424,11 @@ to
 			<input type="hidden" name="extra_total" id="extra_total" value="0" />
 			</td>
                         <td>
-                                <a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
+                                <a href="#" onclick="add_row()" style="padding:3px 5px;" class="btn btn-primary">Add Entry</a>
                         </td>
 
 			<td valign="top" class="col_head">
-				<input type="submit" name="submit" value=" Create Invoice " class="button" />
+				<input type="submit" name="submit" value=" Create Invoice " class="btn btn-primary">
 				<a href="manage_monthly_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
 				<a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" style="margin-left:20px;color:#c33;">Skip</a>
 			</td>

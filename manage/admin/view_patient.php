@@ -2007,7 +2007,7 @@ $image = mysql_fetch_assoc($itype_my);
 				</script>
                                 </select>
                                 <label for="p_m_ins_co">Insurance Co.</label><br />
-																<!--<input class="button" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
+																<!--<input class="btn btn-primary" style="width:150px;" type="submit" name="add_ins_but" value="Add Insurance Company" />-->
                             </span>
                             <span>
 								 <input id="p_m_party" name="p_m_ins_id" type="text" class="field text addr tbox" value="<?=$p_m_ins_id?>" maxlength="255" style="width:190px;" />

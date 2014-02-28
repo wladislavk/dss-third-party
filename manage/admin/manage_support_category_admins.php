@@ -54,7 +54,7 @@ $total_rec = mysql_num_rows($my);
     <?php
   }
 ?>
-<input type="submit" name="update" value="Update" />
+<input type="submit" name="update" value="Update" class="btn btn-primary">
 </form>
 <div id="popupContact">
     <a id="popupContactClose"><span class="glyphicon glyphicon-remove"></span></a>

@@ -165,13 +165,13 @@ $t = mysql_fetch_assoc($my);
 <h4 style="clear:both;">Respond</h4>
 <form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post" enctype="multipart/form-data">
   <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
-  <input type="submit" name="respond" value="Submit Response"  style="float:left;" />
+  <input type="submit" name="respond" value="Submit Response"  style="float:left;" class="btn btn-primary">
   <div style=" width:300px;">
         <div id="attachments">
                                 <span><input type="file" name="attachment[]" id="attachment1" class="attachment" onchange="$('#add_attachment_but').show()" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
 
                                 </div>
-                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="padding:3px 5px; display:none;" class="button">Add</a>
+                                <a href="#" id="add_attachment_but" onclick="add_attachment();return false;" style="padding:3px 5px; display:none;" class="btn btn-primary">Add</a>
 
 <div style="float:right;">
   <?php if($t['status']==DSS_TICKET_STATUS_OPEN || $t['status'] == DSS_TICKET_STATUS_REOPENED){ ?>

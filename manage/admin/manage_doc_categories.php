@@ -42,7 +42,7 @@ if(isset($_POST['add_cat'])){
 <form action="#" method="post">
 <label>Name:</label> <input type="text" name="name" />
 <label>Active:</label> <input type="checkbox" name="status" value="1" checked="checked" />
-<input type="submit" name="add_cat" value="Add" />
+<input type="submit" name="add_cat" value="Add" class="btn btn-success">
 </form>
 <?php } ?>
 
@@ -74,9 +74,15 @@ if(isset($_POST['add_cat'])){
                 </td>
 		<td>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>">Edit</a>
+			<a href="manage_doc_cat_edit.php?cat=<?= $cat['categoryid'];?>" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Edit
+            </a>
 			<?php } ?>
-			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>">View</a>
+			<a href="manage_docs.php?cat=<?= $cat['categoryid']; ?>" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-eye-open"></span>
+                View
+            </a>
 		</td>
         </tr>
 

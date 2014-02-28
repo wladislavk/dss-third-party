@@ -316,7 +316,7 @@ $num_users=mysql_num_rows($my);
     <!--<form name="form" action="search.php" method="get">-->
   <div id="patient_search_div">
   <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" />
-  <!--<input type="submit" name="Submit" value="Patient Search By Last Name" />-->
+  <!--<input type="submit" name="Submit" value="Patient Search By Last Name" class="btn btn-primary">-->
         <br />
         <div id="search_hints"  class="search_hints" style="display:none;">
                 <ul id="patient_list">

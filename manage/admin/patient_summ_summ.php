@@ -652,7 +652,7 @@ Vertical <input type="text" name="initial_device_titration_equal_v" id="initial_
 
   </table>
 
-<input type="submit" name="device_submit" value="Save" />
+<input type="submit" name="device_submit" value="Save" class="btn btn-primary">
 
 </form>
 

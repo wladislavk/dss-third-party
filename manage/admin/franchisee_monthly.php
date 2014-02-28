@@ -81,7 +81,7 @@ $num_users=mysql_num_rows($my);
 <form method="post">
 Start Date: <input type="text" id="start_date" name="start_date" class="calendar" value="<?= date('m/d/Y', strtotime($start_date)); ?>" />
 End Date: <input type="text" id="end_date" name="end_date" class="calendar" value="<?= date('m/d/Y', strtotime($end_date)); ?>" />
-<input type="submit" value="Filter" />
+<input type="submit" value="Filter" class="btn btn-primary">
 </form>
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>

@@ -54,7 +54,7 @@ $row = mysql_fetch_assoc($q);
 ?>
 <div style="width:710px;float:left;">
 <textarea id="body" name="body" style="width:700px; height:400px;"><?= $row['body']; ?></textarea>
-<input type="submit" name="update_btn" value="Save" />
+<input type="submit" name="update_btn" value="Save" class="btn btn-primary">
 </div>
 </form>
 <div style="float:left;">

@@ -35,7 +35,7 @@ if(isset($_GET['bounce'])){
 </div>
 <form action="email_bounce.php" method="post">
  Email: <input type="text" name="email" value="<?= $_REQUEST['email']; ?>" />
-<input type="submit" value="Search" />
+<input type="submit" value="Search" class="btn btn-primary">
 
 </form>
 

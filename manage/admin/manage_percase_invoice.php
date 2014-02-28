@@ -226,20 +226,20 @@ $num_users=mysql_num_rows($my);
 						
 				<td valign="top">
 				  <?php if($myarray["status"]==1){ ?>
-					<a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="button" title="EDIT" style="padding:3px 5px;">
+					<a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="btn btn-primary" title="EDIT" style="padding:3px 5px;">
 						Create
 					</a>
 					<?php if($myarray['cc_id']!=''){ ?>
-					<a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>'); return false;"  class="button" title="EDIT" style="padding:3px 5px;">
+					<a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>'); return false;" class="btn btn-primary" title="EDIT" style="padding:3px 5px;">
 						Bill Card
 					</a>
                     			<?php } ?>
 				  <?php }else{ ?>
-                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="button" title="EDIT" style="padding:3px 5px;">
+                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="EDIT" style="padding:3px 5px;">
                                                 Create
                                         </a>
 					<?php if($myarray['cc_id']!=''){ ?>
-                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;"  class="button" title="EDIT" style="padding:3px 5px;">
+                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="EDIT" style="padding:3px 5px;">
                                                 Bill Card
                                         </a>
 					<?php } ?>
@@ -281,7 +281,7 @@ $num_users=mysql_num_rows($my);
     <td><?= $mf_r['monthly_fee']; ?></td>
     <td><?= $mf_r['fax_fee']; ?></td>
     <td><?= $mf_r['free_fax']; ?></td>
-    <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="button" style="padding:3px 5px;">Edit</a></td>
+    <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="btn btn-primary" style="padding:3px 5px;">Edit</a></td>
   </tr>
 
 

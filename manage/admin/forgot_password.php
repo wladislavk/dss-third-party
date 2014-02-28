@@ -90,7 +90,7 @@ $message .= DSS_EMAIL_FOOTER;
 			<tr bgcolor="#FFFFFF">
 				<td colspan="2" align="center">
 					<input type="hidden" name="emailsub" value="1">
-					<input type="submit" name="btnsubmit" value=" Recover Password " class="button">
+					<input type="submit" name="btnsubmit" value=" Recover Password " class="btn btn-primary">
 				</td>
 			</tr>
 		  </table>

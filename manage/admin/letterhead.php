@@ -128,7 +128,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<input id="emailheaderimg" name="emailheaderimg" type="file" size="4" />
 		<?php else: ?>
 		<input type="button" id="email_header_view" value="View" title="View" onClick="window.open('/manage/q_file/<?= $email_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="emailheader" value="Edit" title="Edit" />
+		<input type="button" id="emailheader" value="Edit" title="Edit"  class="btn btn-primary toggle_but">
 		<input id="emailheaderimg" style="display:none;" name="emailheaderimg" type="file" size="4" />
 		<?php endif; ?>
 	</td>
@@ -139,7 +139,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<input id="emailfooterimg" name="emailfooterimg" type="file" size="4" />
 		<?php else: ?>
 		<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('/manage/q_file/<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="emailfooter" value="Edit" title="Edit" />
+		<input type="button" id="emailfooter" value="Edit" title="Edit"  class="btn btn-primary toggle_but">
 		<input id="emailfooterimg" style="display:none;" name="emailfooterimg" type="file" size="4" />
 		<?php endif; ?>
 	</td>
@@ -154,7 +154,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<input id="faxheaderimg" name="faxheaderimg" type="file" size="4" />
 		<?php else: ?>
 		<input type="button" id="fax_header_view" value="View" title="View" onClick="window.open('/manage/q_file/<?= $fax_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="faxheader" value="Edit" title="Edit" />
+		<input type="button" id="faxheader" value="Edit" title="Edit"  class="btn btn-primary toggle_but">
 		<input id="faxheaderimg" style="display:none;" name="faxheaderimg" type="file" size="4" />
 		<?php endif; ?>
 	</td>
@@ -166,7 +166,7 @@ $fax_footer_imgname = $my['fax_footer'];
 		<input id="faxfooterimg" name="faxfooterimg" type="file" size="4" />
 		<?php else: ?>
 		<input type="button" id="fax_footer_view" value="View" title="View" onClick="window.open('/manage/q_file/<?= $fax_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="faxfooter" value="Edit" title="Edit" />
+		<input type="button" id="faxfooter" value="Edit" title="Edit"  class="btn btn-primary toggle_but">
 		<input id="faxfooterimg" style="display:none;" name="faxfooterimg" type="file" size="4" />
 		<?php endif; ?>
 	</td>

@@ -9,7 +9,7 @@ if($num_labs == 0){
 ?>
 <div id="no_sleep_studies_div">
 Patient has no completed sleep studies. Click here to add a study.
-<input type="button" id="new_sleep_study_but2" onclick="show_study_table(); return false;" value="+ Add Sleep Study" />
+<input type="button" id="new_sleep_study_but2" onclick="show_study_table(); return false;" value="+ Add Sleep Study"  class="btn btn-primary">
 </div>
 <?php
 }
@@ -115,7 +115,7 @@ Sleep Tests:
         </tr>
   <tr>
 		<td valign="top" class="odd">
-                <input type="button" id="new_sleep_study_but" onclick="show_new_study(); return false;" value="+ Add Sleep Study" />  
+                <input type="button" id="new_sleep_study_but" onclick="show_new_study(); return false;" value="+ Add Sleep Study"  class="btn btn-primary">  
                 </td>
         </tr>
   </table>

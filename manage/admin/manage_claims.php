@@ -342,7 +342,7 @@ if(isset($_GET['msg'])){
     <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
     <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 </div>
 

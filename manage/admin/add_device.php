@@ -76,7 +76,7 @@ if($_POST["devicesub"] == 1)
                         $extension = substr($fname,$lastdot+1);
                         $banner1 = 'dental_device_'.$_POST['ed'];
                         $banner1 .= ".".$extension;
-                        $uploaded = uploadImage($_FILES['image'], "../../../shared/q_file/".$banner1, 'device');
+                        $uploaded = uploadImage($_FILES['image'], "../../../../shared/q_file/".$banner1, 'device');
                 }
                 else
                 {

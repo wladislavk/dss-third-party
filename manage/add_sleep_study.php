@@ -106,7 +106,7 @@ function autoselect(selectedOption, f) {
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
-                        $uploaded = uploadImage($_FILES['ss_file'], "../../shared/q_file/".$banner1);
+                        $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 			if($image_id != ''){
                                         $ins_sql = " update dental_q_image set 
                                         image_file = '".s_for($banner1)."'
@@ -114,7 +114,7 @@ function autoselect(selectedOption, f) {
 					AND patientid='".$patientid."'
 					;";
                                         mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
-                          unlink("../../shared/q_file/" . $prev_filename);
+                          unlink("../../../shared/q_file/" . $prev_filename);
 			}else{
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
@@ -203,7 +203,7 @@ WHERE id='".$id."'
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        $uploaded = uploadImage($_FILES['ss_file'], "../../shared/q_file/".$banner1);
+                        $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
                                         title = '".$sleeptesttype. " " .$date."',

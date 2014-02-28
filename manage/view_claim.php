@@ -254,7 +254,7 @@ return s;
             $file = mysql_fetch_assoc($sq);
             ?>
            
-           <a href='../../shared/q_file/<?= $file['filename']; ?>' target="_blank" class="button">
+           <a href='../../../shared/q_file/<?= $file['filename']; ?>' target="_blank" class="button">
                View EOB
            </a>
            &nbsp;&nbsp;
@@ -265,7 +265,7 @@ return s;
             $file = mysql_fetch_assoc($sq);
             ?>
            
-           <a href='../../shared/q_file/<?= $file['filename']; ?>' target="_blank" class="button">
+           <a href='../../../shared/q_file/<?= $file['filename']; ?>' target="_blank" class="button">
                View EOB
            </a>
            &nbsp;&nbsp;
@@ -364,32 +364,32 @@ return s;
 		?>
 			<tr 
 			class="<?=$tr_class;?> <?= $myarray[0]; ?>">
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
 					<?php if($myarray["service_date"]!=$last_sd){
 						$last_sd = $myarray["service_date"];
        					      	echo date('m-d-Y',strtotime(st($myarray["service_date"])));
                                         } ?>
 				</td>
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
 					<?php if($myarray["entry_date"]!=$last_ed){
                                                 $last_ed = $myarray["entry_date"];
                                                 echo date('m-d-Y',strtotime(st($myarray["entry_date"])));
                                         } ?>
 				</td>
-                                <td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
+                                <td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                         <?=st($myarray["name"]);?>
                               <?php if($myarray[0]=='eob' && ($myarray['status']==DSS_CLAIM_DISPUTE || $myarray['status']==DSS_CLAIM_SEC_DISPUTE)){
 				echo " (".$dss_claim_status_labels[$myarray['status']].")";
 			      } ?>
                                 </td>
 
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
                 	<?=st(ucWords($myarray["description"]));?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
                         <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
 
 				</td>
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<? if(st($myarray["amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["amount"]),2);?>
 					<? 
@@ -397,7 +397,7 @@ return s;
 					}?>
 					&nbsp;
 				</td>
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<? if(st($myarray["paid_amount"]) <> 0) {?>
 	                	<?=number_format(st($myarray["paid_amount"]),2);?>
 					<? 
@@ -405,11 +405,11 @@ return s;
 					}?>
 					&nbsp;
 				</td>
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top" align="right">
 					<?=number_format(st($cur_bal),2);?>
                 	&nbsp;
 				</td>
-				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
+				<td <?php if($myarray[0]=="eob"){ echo 'onclick="window.open(\'../../../shared/q_file/'.$myarray['filename'].'\')"'; } ?> valign="top">
           <?php
              echo $dss_claim_status_labels[$myarray["status"]]; 
              /*

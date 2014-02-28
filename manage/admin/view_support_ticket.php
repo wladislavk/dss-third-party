@@ -41,7 +41,7 @@ if(isset($_POST['respond'])){
                 if($_FILES['attachment']['tmp_name'][$i]!=''){
                   $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
                   $attachment = "support_attachment_".$r_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
-                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);
+                  move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../../shared/q_file/" . $attachment);
 
                   $a_sql = "INSERT INTO dental_support_attachment SET
                                 filename = '".mysql_real_escape_string($attachment)."',

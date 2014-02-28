@@ -270,7 +270,7 @@ if ($origfilename != '') {
 				//$filename = $patientid.'-'.$random.".".$scanext;
 				$scanext = end(explode('.', $origfilename));
 				$fullfilename = $filename . "." . $scanext;
-				$success = uploadImage($_FILES["file"],"../../shared/q_file/".$fullfilename);
+				$success = uploadImage($_FILES["file"],"../../../shared/q_file/".$fullfilename);
 				//$success = move_uploaded_file($_FILES["file"]["tmp_name"],"sleepstudies/$fullfilename");
 					if ($success) {
 					  // Delete previous file if updating, then add reference to filename in database
@@ -279,7 +279,7 @@ if ($origfilename != '') {
 							$prevfile_result = mysql_query($prevfile_qry);
 							$prev_filename = mysql_result($prevfile_result, 0, 0);
 							$prev_scanext = mysql_result($prevfile_result, 0, 1);
-							unlink("../../shared/q_file/" . $prev_filename . "." . $prev_scanext);
+							unlink("../../../shared/q_file/" . $prev_filename . "." . $prev_scanext);
 						}
 						$filequery = "filename = '".$filename."', scanext = '".$scanext."'";
 						$updateimgquery = "UPDATE `dental_sleepstudy` SET $filequery WHERE `id` = '".$sleepstudyid."' and `patientid` = '".$patientid."';";

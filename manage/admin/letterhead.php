@@ -4,7 +4,7 @@ require_once('../includes/constants.inc');
 require_once('../includes/general_functions.php');
 
 function save_image($field = null, $fieldname = null) {
-	$folder = '../../../shared/q_file';
+	$folder = '../../../../shared/q_file';
 	if ((array_search($_FILES[$fieldname]["type"], $dss_image_file_types) !== false) ) {
 		$sql = "select ".st($field)." from dental_users where userid = '".s_for($_POST['uid'])."';";
 		$result = mysql_query($sql);

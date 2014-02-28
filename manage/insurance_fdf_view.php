@@ -2,7 +2,7 @@
 header("Content-type: application/vnd.fdf");
 header('Content-Disposition: attachment; filename="file.fdf"');
 $f = $_GET['file'];
-$handle = fopen('../../shared/q_file/'.$f, 'r');
+$handle = fopen('../../../shared/q_file/'.$f, 'r');
 $contents = '';
 while (!feof($handle)) {
   $contents .= fread($handle, 8192);

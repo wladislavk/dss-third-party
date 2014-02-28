@@ -32,8 +32,8 @@ if($_POST['dispute']==1){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../shared/q_file/".$banner1);
-                        @chmod("../../shared/q_file/".$banner1,0777);
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../shared/q_file/".$banner1);
+                        @chmod("../../../shared/q_file/".$banner1,0777);
          }
 
           $note_sql = "INSERT INTO dental_ledger_note SET
@@ -184,8 +184,8 @@ if($_FILES["attachment"]["name"]!=''){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../shared/q_file/".$banner1);
-                        @chmod("../../shared/q_file/".$banner1,0777);
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../shared/q_file/".$banner1);
+                        @chmod("../../../shared/q_file/".$banner1,0777);
 
 $image_sql = "INSERT INTO dental_insurance_file (
                 claimid,
@@ -218,8 +218,8 @@ if($_FILES["attachment"]["name"]!=''){
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../shared/q_file/".$banner1);
-                        @chmod("../../shared/q_file/".$banner1,0777);
+                        @move_uploaded_file($_FILES["attachment"]["tmp_name"],"../../../shared/q_file/".$banner1);
+                        @chmod("../../../shared/q_file/".$banner1,0777);
 $image_sql = "INSERT INTO dental_insurance_file (
                 claimid,
                 claimtype,

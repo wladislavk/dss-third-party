@@ -47,8 +47,6 @@ $(function(){
         click = $this.attr('onclick'),
         popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i,'$2');
         
-        console.log(popup);
-        
         $this.removeAttr('onclick');
         $this.data('legend',legend);
         $this.data('popup',popup);

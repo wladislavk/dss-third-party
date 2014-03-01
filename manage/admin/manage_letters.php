@@ -563,7 +563,7 @@ color: white;
 </div>
 <div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">
-<table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
+<table id="letters-table" class="table table-bordered table-hover">
   <tr class="tr_bg_h">
     <td class="col_head <?= ($_REQUEST['sort'] == 'franchisee')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=franchisee&sortdir=<?php echo ($_REQUEST['sort']=='franchisee'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Account</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a></td>

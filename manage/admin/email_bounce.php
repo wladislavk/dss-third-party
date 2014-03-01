@@ -61,7 +61,7 @@ if(isset($_REQUEST['email'])){
 	if(mysql_num_rows($q)==0){
 		?><h3>NO RESULTS</h3><?php
 	}else{
-	?><table width="80%">
+	?><table class="table table-bordered table-hover">
 		<tr>
 			<th>Name</th>
 			<th>Email</th>

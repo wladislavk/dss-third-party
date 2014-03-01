@@ -103,67 +103,100 @@ $num_users=mysql_num_rows($my);
 <div class="page-header">
 	Account Analysis and Tracking
 </div>
-<br />
-<?php
-  $count_sql = "SELECT 
-		 sum(case when status='1' THEN 1 ELSE 0 end) as num_active,
-		 sum(case when status='3' THEN 1 ELSE 0 end) as num_suspended,
-		 sum(case when status='2' AND (username='' OR username IS NULL) THEN 1 ELSE 0 END) as num_unregistered
-		FROM dental_users WHERE docid=0";
 
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
-?>
-Active Users: <?= $count_r['num_active']; ?> 
-Unregistered: <?= $count_r['num_unregistered']; ?> 
-Suspended: <?= $count_r['num_suspended']; ?><br />
+<div class="row">
+    <div class="col-md-4">
+            <?php
+              $count_sql = "SELECT 
+            		 sum(case when status='1' THEN 1 ELSE 0 end) as num_active,
+            		 sum(case when status='3' THEN 1 ELSE 0 end) as num_suspended,
+            		 sum(case when status='2' AND (username='' OR username IS NULL) THEN 1 ELSE 0 END) as num_unregistered
+            		FROM dental_users WHERE docid=0";
 
+              $count_q = mysql_query($count_sql);
+          $count_r = mysql_fetch_assoc($count_q);
+        ?>
+        <ul class="list-group">
+            <li class="list-group-item">
+                Active Users
+                <span class="badge"><?= intval($count_r['num_active']) ?></span>
+            </li>
+            <li class="list-group-item">
+                Unregistered
+                <span class="badge"><?= intval($count_r['num_unregistered']) ?></span>
+            </li>
+            <li class="list-group-item">
+                Suspended
+                <span class="badge"><?= intval($count_r['num_suspended']) ?></span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <?php
+          $count_sql = "SELECT 
+                         sum(case when activation_date >= DATE_SUB(now(), INTERVAL 30 DAY) THEN 1 ELSE 0 end) as num_30,
+                         sum(case when activation_date < DATE_SUB(now(), INTERVAL 30 DAY) AND activation_date >= DATE_SUB(now(), INTERVAL 60 DAY) THEN 1 ELSE 0 end) as num_60,
+                         sum(case when activation_date < DATE_SUB(now(), INTERVAL 60 DAY)  THEN 1 ELSE 0 END) as num_plus
+                        FROM (SELECT 
+                    userid, username,
+                    case 
+                              WHEN registration_date IS NOT NULL AND registration_date != ''
+                                    THEN registration_date
+                              ELSE adddate
+                            end as activation_date
+                    FROM dental_users
+                    WHERE (username!='' && username IS NOT NULL) and docid=0
+                    ) u
+                    ";
 
-<?php
-  $count_sql = "SELECT 
-                 sum(case when activation_date >= DATE_SUB(now(), INTERVAL 30 DAY) THEN 1 ELSE 0 end) as num_30,
-                 sum(case when activation_date < DATE_SUB(now(), INTERVAL 30 DAY) AND activation_date >= DATE_SUB(now(), INTERVAL 60 DAY) THEN 1 ELSE 0 end) as num_60,
-                 sum(case when activation_date < DATE_SUB(now(), INTERVAL 60 DAY)  THEN 1 ELSE 0 END) as num_plus
-                FROM (SELECT 
-			userid, username,
-			case 
-                   	  WHEN registration_date IS NOT NULL AND registration_date != ''
-                     	    THEN registration_date
-                   	  ELSE adddate
-                 	end as activation_date
-			FROM dental_users
-			WHERE (username!='' && username IS NOT NULL) and docid=0
-			) u
-			";
+          $count_q = mysql_query($count_sql);
+          $count_r = mysql_fetch_assoc($count_q);
+        ?>
+        <ul class="list-group">
+            <li class="list-group-item">
+                Activated last 30 days
+                <span class="badge"><?= intval($count_r['num_30']) ?></span>
+            </li>
+            <li class="list-group-item">
+                30-60 days
+                <span class="badge"><?= intval($count_r['num_60']) ?></span>
+            </li>
+            <li class="list-group-item">
+                60+
+                <span class="badge"><?= intval($count_r['num_plus']) ?></span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <?php
+          $count_sql = "SELECT 
+                         sum(case when suspended_date >= DATE_SUB(now(), INTERVAL 30 DAY) THEN 1 ELSE 0 end) as num_30,
+                         sum(case when suspended_date < DATE_SUB(now(), INTERVAL 30 DAY) AND suspended_date >= DATE_SUB(now(), INTERVAL 60 DAY) THEN 1 ELSE 0 end) as num_60,
+                         sum(case when suspended_date < DATE_SUB(now(), INTERVAL 60 DAY)  THEN 1 ELSE 0 END) as num_plus
+                        FROM 
+                                dental_users
+                        WHERE suspended_date !='' and suspended_date IS NOT NULL     
+                                ";
 
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
-?>
-
-Activated last 30 days: <?=$count_r['num_30'];?>
- 30-60 days: <?=$count_r['num_60'];?>
- 60+: <?= $count_r['num_plus']; ?>
-
-
-<?php
-  $count_sql = "SELECT 
-                 sum(case when suspended_date >= DATE_SUB(now(), INTERVAL 30 DAY) THEN 1 ELSE 0 end) as num_30,
-                 sum(case when suspended_date < DATE_SUB(now(), INTERVAL 30 DAY) AND suspended_date >= DATE_SUB(now(), INTERVAL 60 DAY) THEN 1 ELSE 0 end) as num_60,
-                 sum(case when suspended_date < DATE_SUB(now(), INTERVAL 60 DAY)  THEN 1 ELSE 0 END) as num_plus
-                FROM 
-                        dental_users
-			 	WHERE suspended_date !='' and suspended_date IS NOT NULL	 
-                        ";
-
-  $count_q = mysql_query($count_sql);
-  $count_r = mysql_fetch_assoc($count_q);
-?>
-<br />
-Suspended last 30 days: <?=$count_r['num_30'];?>
- 30-60 days: <?=$count_r['num_60'];?>
- 60+: <?= $count_r['num_plus']; ?>
-
-
+          $count_q = mysql_query($count_sql);
+          $count_r = mysql_fetch_assoc($count_q);
+        ?>
+        <ul class="list-group">
+            <li class="list-group-item">
+                Suspended last 30 days
+                <span class="badge"><?= intval($count_r['num_30']) ?></span>
+            </li>
+            <li class="list-group-item">
+                30-60 days
+                <span class="badge"><?= intval($count_r['num_60']) ?></span>
+            </li>
+            <li class="list-group-item">
+                60+
+                <span class="badge"><?= intval($count_r['num_plus']) ?></span>
+            </li>
+        </ul>
+    </div>
+</div>
 
 
 <div align="center" class="red">
@@ -172,7 +205,7 @@ Suspended last 30 days: <?=$count_r['num_30'];?>
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<table class="sort_table table table-bordered table-hover" id="tracking_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="tracking_table">
 <thead>
 	<tr class="tr_bg_h">
 		<td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="client_tracking.php?sort=username&sortdir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a>

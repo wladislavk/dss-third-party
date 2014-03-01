@@ -172,7 +172,7 @@ $fax_footer_imgname = $my['fax_footer'];
 	</td>
 </tr>
 <tr>
-	<td><input name="submit_letterhead" type="submit" value="Submit" /></td>
+	<td><input name="submit_letterhead" type="submit" value="Submit" class="btn btn-primary"></td>
 </tr>
 </table>
 </form>

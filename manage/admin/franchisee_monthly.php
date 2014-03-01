@@ -79,6 +79,20 @@ $num_users=mysql_num_rows($my);
 <br />
 
 <form method="post">
+    <div class="input-group date col-md-3" id="start_date" data-date="<?= date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
+        <span class="input-group-addon">Start date:</span>
+        <input class="form-control text-center" type="text" name="start_date" value="<?= date('m/d/Y', strtotime($start_date)); ?>">
+        <span class="input-group-addon">
+            <i class="glyphicon glyphicon-calendar"></i>
+        </span>
+    </div>
+    <div class="input-group date col-md-3" id="end_date" data-date="<?= date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
+        <span class="input-group-addon">End date:</span>
+        <input class="form-control text-center" type="text" name="end_date" value="<?= date('m/d/Y', strtotime($end_date)); ?>">
+        <span class="input-group-addon">
+            <i class="glyphicon glyphicon-calendar"></i>
+        </span>
+    </div>
 Start Date: <input type="text" id="start_date" name="start_date" class="calendar" value="<?= date('m/d/Y', strtotime($start_date)); ?>" />
 End Date: <input type="text" id="end_date" name="end_date" class="calendar" value="<?= date('m/d/Y', strtotime($end_date)); ?>" />
 <input type="submit" value="Filter" class="btn btn-primary">

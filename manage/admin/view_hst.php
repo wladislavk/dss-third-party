@@ -510,7 +510,7 @@ VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc.
 		}
 		?>
                 <input type="hidden" name="hst_id" value="<?= $_REQUEST['ed'] ?>"/>
-                  <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?>class="btn btn-primary" class="btn btn-primary">
+                  <input type="submit" value="Save HST" <?= ($hst['status']==DSS_HST_REQUESTED)?'onclick="alert(\'HST must be authorized by user before edits are permitted.\');return false;"':''; ?> class="btn btn-primary">
 	  </td><td align="right">
 		<a href="hst_print.php?hst=<?= $_REQUEST['ed'] ?>" class="btn btn-primary" target="_blank">Print HST</a>
             </td>

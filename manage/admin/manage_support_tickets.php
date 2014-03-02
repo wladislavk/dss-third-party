@@ -41,7 +41,7 @@ $total_rec = mysql_num_rows($my);
 
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
-<link rel="stylesheet" href="css/support.css" type="text/css" />
+<!--link rel="stylesheet" href="css/support.css" type="text/css" /-->
 <div class="page-header">
 	Manage Support Tickets
 </div>
@@ -111,6 +111,9 @@ else
 			<tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
 			<td valign="top">
 			<?=st($myarray["title"]);?>
+            <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
+                    <span class="attachment badge glyphicon glyphicon-paperclip pull-right" title="This ticket contains attachments"> <!-- space needed --></span>
+                    <?php } ?>
 			</td>
 			<td valign="top">
 			<?= st($myarray["user"]); ?>
@@ -134,11 +137,11 @@ else
 			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
 			View
 			 <span class="glyphicon glyphicon-pencil"></span></a>
-			<?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
-					<span class="attachment"></span>
-					<?php } ?> 
         <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>
-						| <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
+						<a href="?rid=<?= $myarray['id']; ?>" class="btn btn-default btn-sm">
+                            Unread
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                        </a>
 							<?php } ?>
 							</td>
 							</tr>
@@ -174,7 +177,7 @@ $total_rec = mysql_num_rows($my);
 <div class="page-header">
 Resolved
 </div>
-<table class="sort_table table table-bordered table-hover" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover">
 	<thead>
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head" width="25%">
@@ -182,6 +185,9 @@ Resolved
                 </td>
                 <td valign="top" class="col_head" width="10%">
                         User
+                </td>
+                <td valign="top" class="col_head" width="10%">
+                        Account
                 </td>
                 <td valign="top" class="col_head" width="10%">
                         Company
@@ -219,6 +225,9 @@ else
                         <tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
                         <td valign="top">
                         <?=st($myarray["title"]);?>
+                        <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
+                        <span class="attachment badge glyphicon glyphicon-paperclip pull-right" title="This ticket contains attachments"> <!-- space needed --></span>
+                        <?php } ?>
                         </td>
                         <td valign="top">
                         <?= st($myarray["user"]); ?>
@@ -242,11 +251,11 @@ else
                         <a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
                         View
                          <span class="glyphicon glyphicon-pencil"></span></a>
-                        <?php if($myarray['attachment']!='' || $myarray['response_attachment']!=''){ ?>
-                                <span class="attachment"></span>
-                                        <?php } ?>
                                         <?php if($myarray["viewed"]!='0' && $myarray["response_viewed"]!='0'){ ?>
-                                                | <a href="?rid=<?= $myarray['id']; ?>">Mark Unread</a>
+                                                <a href="?rid=<?= $myarray['id']; ?>" class="btn btn-default btn-sm">
+                                                    Unread
+                                                    <span class="glyphicon glyphicon-eye-close"></span>
+                                                </a>
                                                         <?php } ?>
                                                         </td>
                                                         </tr>

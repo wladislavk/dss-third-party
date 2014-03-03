@@ -4,7 +4,28 @@ $request_body = file_get_contents('php://input');
 $json = json_decode($request_body);
 
 $event = $json->{"event"};
-$ref_id = $json->{"reference_id"};
+
+if($event == "claim_rejected"){
+  $ref_id = $json->{"reference_id"};
+  $e_sql = "SELECT claim_id FROM dental_claim_electronic WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
+  $e_q = mysql_query($e_sql);
+  $e = mysql_fetch_assoc($e_q);
+  $up_sql = "UPDATE dental_insurance SET
+                status='".DSS_CLAIM_REJECTED."'
+                WHERE insuranceid='".mysql_real_escape_string($e['claim_id'])."'";
+  mysql_query($up_sql);
+}elseif($event == "enrollment_status"){
+  $ref_id = $json->{"details"}->{"id"};
+  $status = $json->{"details"}->{"status"};
+  if($status=="accepted"){
+    $up_sql = "UPDATE dental_eligible_enrollment SET
+		status='1'
+		WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
+    mysql_query($up_sql);
+  }
+}
+
+
 
 $sql = "INSERT INTO dental_eligible_response SET
 	response = '".mysql_real_escape_string($request_body)."',
@@ -15,13 +36,4 @@ $sql = "INSERT INTO dental_eligible_response SET
 mysql_query($sql);
 
 
-if($event == "claim_rejected"){
-  $e_sql = "SELECT claim_id FROM dental_claim_electronic WHERE reference_id='".mysql_real_escape_string($ref_id)."'";
-  $e_q = mysql_query($e_sql);
-  $e = mysql_fetch_assoc($e_q);
-  $up_sql = "UPDATE dental_insurance SET
-		status='".DSS_CLAIM_REJECTED."'
-		WHERE insuranceid='".mysql_real_escape_string($e['claim_id'])."'";
-  mysql_query($up_sql);
-}
 ?>

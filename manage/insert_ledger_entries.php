@@ -419,10 +419,30 @@ $patient_dob = $pat_myarray['dob'];
         $patient_status = $pat_myarray['marital_status'];
         $insured_id_number = $pat_myarray['p_m_ins_id'];
         //$insured_firstname = $pat_myarray['p_d_party'];
-        $insured_address = $pat_myarray['add1'];
-        $insured_city = $pat_myarray['city'];
-        $insured_state = $pat_myarray['state'];
-        $insured_zip = $pat_myarray['zip'];
+	if($pat_myarray['p_m_same_address']=='1'){
+          $insured_address = $pat_myarray['add1'];
+          $insured_city = $pat_myarray['city'];
+          $insured_state = $pat_myarray['state'];
+          $insured_zip = $pat_myarray['zip'];
+	}else{
+          $insured_address = $pat_myarray['p_m_address'];
+          $insured_city = $pat_myarray['p_m_city'];
+          $insured_state = $pat_myarray['p_m_state'];
+          $insured_zip = $pat_myarray['p_m_zip'];
+	}
+	if($pat_myarray['s_m_same_address']=='1'){
+          $other_insured_address = $pat_myarray['add1'];
+          $other_insured_city = $pat_myarray['city'];
+          $other_insured_state = $pat_myarray['state'];
+          $other_insured_zip = $pat_myarray['zip'];
+	}else{
+          $other_insured_address = $pat_myarray['s_m_address'];
+          $other_insured_city = $pat_myarray['s_m_city'];
+          $other_insured_state = $pat_myarray['s_m_state'];
+          $other_insured_zip = $pat_myarray['s_m_zip'];
+	}
+
+
         $insured_dob = $pat_myarray['ins_dob'];
         $patient_relation_insured = $pat_myarray['p_m_relation'];
         $patient_relation_other_insured = $pat_myarray['s_m_relation'];
@@ -498,16 +518,20 @@ if (empty($prior_authorization_number)) {
 		patient_address = '".s_for($patient_address)."',
 		patient_relation_insured = '".s_for($patient_relation_insured)."',
 		patient_relation_other_insured = '".s_for($patient_relation_other_insured)."',
-		insured_address = '".s_for($insured_address)."',
 		patient_city = '".s_for($patient_city)."',
 		patient_state = '".s_for($patient_state)."',
 		patient_status = '".s_for($patient_status_arr)."',
+		insured_address = '".s_for($insured_address)."',
 		insured_city = '".s_for($insured_city)."',
 		insured_state = '".s_for($insured_state)."',
+		insured_zip = '".s_for($insured_zip)."',
+		other_insured_address = '".s_for($other_insured_address)."',
+		other_insured_city = '".s_for($other_insured_city)."',
+		other_insured_state = '".s_for($other_insured_state)."',
+		other_insured_zip = '".s_for($other_insured_zip)."',
 		patient_zip = '".s_for($patient_zip)."',
 		patient_phone_code = '".s_for($patient_phone_code)."',
 		patient_phone = '".s_for($patient_phone)."',
-		insured_zip = '".s_for($insured_zip)."',
 		insured_phone_code = '".s_for($insured_phone_code)."',
 		insured_phone = '".s_for($insured_phone)."',
 		other_insured_firstname = '".s_for($other_insured_firstname)."',

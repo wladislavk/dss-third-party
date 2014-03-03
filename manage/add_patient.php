@@ -451,6 +451,16 @@ $ed_sql .="
     s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
     p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
     s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+    p_m_same_address = '".s_for($_POST["p_m_same_address"])."',
+    s_m_same_address = '".s_for($_POST["s_m_same_address"])."',
+    p_m_address = '".s_for($_POST["p_m_address"])."',
+    p_m_city = '".s_for($_POST["p_m_city"])."',
+    p_m_state = '".s_for($_POST["p_m_state"])."',
+    p_m_zip = '".s_for($_POST["p_m_zip"])."',
+    s_m_address = '".s_for($_POST["s_m_address"])."',
+    s_m_city = '".s_for($_POST["s_m_city"])."',
+    s_m_state = '".s_for($_POST["s_m_state"])."',
+    s_m_zip = '".s_for($_POST["s_m_zip"])."',
     p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
     s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
     p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
@@ -821,6 +831,16 @@ mysql_query($s1);
     s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
     p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
     s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+    p_m_same_address = '".s_for($_POST["p_m_same_address"])."',
+    s_m_same_address = '".s_for($_POST["s_m_same_address"])."',
+    p_m_address = '".s_for($_POST["p_m_address"])."',
+    p_m_city = '".s_for($_POST["p_m_city"])."',
+    p_m_state = '".s_for($_POST["p_m_state"])."',
+    p_m_zip = '".s_for($_POST["p_m_zip"])."',
+    s_m_address = '".s_for($_POST["s_m_address"])."',
+    s_m_city = '".s_for($_POST["s_m_city"])."',
+    s_m_state = '".s_for($_POST["s_m_state"])."',
+    s_m_zip = '".s_for($_POST["s_m_zip"])."',
     p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
     s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
     p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
@@ -1031,6 +1051,16 @@ $pending_vob_status = $vob_myarray['status'];
     $s_m_ins_grp = $_POST["s_m_ins_grp"];
     $p_m_dss_file = $_POST["p_m_dss_file"];
     $s_m_dss_file = $_POST["s_m_dss_file"];
+    $p_m_same_address = $_POST["p_m_same_address"];
+    $s_m_same_address = $_POST["s_m_same_address"];
+    $p_m_address = $_POST["p_m_address"];
+    $p_m_city = $_POST["p_m_city"];
+    $p_m_state = $_POST["p_m_state"];
+    $p_m_zip = $_POST["p_m_zip"];
+    $s_m_address = $_POST["s_m_address"];
+    $s_m_city = $_POST["s_m_city"];
+    $s_m_state = $_POST["s_m_state"];
+    $s_m_zip = $_POST["s_m_zip"];
     $p_m_ins_type = $_POST["p_m_ins_type"];
     $s_m_ins_type = $_POST["s_m_ins_type"];
     $p_m_ins_ass = $_POST["p_m_ins_ass"];
@@ -1144,6 +1174,16 @@ $pending_vob_status = $vob_myarray['status'];
     $s_m_ins_grp = st($themyarray["s_m_ins_grp"]);
     $p_m_dss_file = st($themyarray["p_m_dss_file"]);
     $s_m_dss_file = st($themyarray["s_m_dss_file"]);
+    $p_m_same_address = st($themyarray["p_m_same_address"]);
+    $s_m_same_address = st($themyarray["s_m_same_address"]);
+    $p_m_address = st($themyarray["p_m_address"]);
+    $p_m_city = st($themyarray["p_m_city"]);
+    $p_m_state = st($themyarray["p_m_state"]);
+    $p_m_zip = st($themyarray["p_m_zip"]);
+    $s_m_address = st($themyarray["s_m_address"]);
+    $s_m_city = st($themyarray["s_m_city"]);
+    $s_m_state = st($themyarray["s_m_state"]);
+    $s_m_zip = st($themyarray["s_m_zip"]);
     $p_m_ins_type = st($themyarray["p_m_ins_type"]);
     $s_m_ins_type = st($themyarray["s_m_ins_type"]);
     $p_m_ins_ass = st($themyarray["p_m_ins_ass"]);
@@ -2185,6 +2225,11 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
                             Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Insured Address same as Pt. address?
+			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
+			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if($p_m_same_address == '2') echo "checked='checked'";?>> No
+
                         </label>
                         <div>
                             <span>
@@ -2220,6 +2265,35 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
 						</div>
                     </li>
 				</ul>
+
+
+                <ul id="p_m_address_fields" <?= ($p_m_same_address == "1")?'style="display:none;"':''; ?>>
+                        <li id="foli8" class="complex">
+
+                <div>
+                    <span>
+                        <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?=$p_m_address?>" style="width:225px;"  maxlength="255"/>
+                        <label for="add">Address</label>
+                    </span>
+                    <span>
+                        <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?=$p_m_city?>" style="width:200px;" maxlength="255" />
+                        <label for="city">City</label>
+                    </span>
+                    <span>
+                        <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?=$p_m_state?>"  style="width:80px;" maxlength="255" />
+                        <label for="state">State</label>
+                    </span>
+                    <span>
+                        <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?=$p_m_zip?>" style="width:80px;" maxlength="255" />
+                        <label for="zip">Zip Code </label>
+                    </span>
+                </div>
+                        <div>
+
+                                                </div>
+                    </li>                                </ul>
+
+
                 <ul>
                         <li id="foli8" class="complex">
 
@@ -2374,6 +2448,11 @@ $image = mysql_fetch_assoc($itype_my);
 		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Insured Address same as Pt. address?
+                        <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <? if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
+                        <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <? if($s_m_same_address == '2') echo "checked='checked'";?>> No
+
                         </label>
                         <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
@@ -2409,6 +2488,34 @@ $image = mysql_fetch_assoc($itype_my);
 						</div>
                     </li>
 				</ul>
+
+                <ul id="s_m_address_fields" <?= ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
+                        <li id="foli8" class="complex">
+
+                <div>
+                    <span>
+                        <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?=$s_m_address?>" style="width:225px;"  maxlength="255"/>
+                        <label for="add">Address</label>
+                    </span>
+                    <span>
+                        <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?=$s_m_city?>" style="width:200px;" maxlength="255" />
+                        <label for="city">City</label>
+                    </span>
+                    <span>
+                        <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?=$s_m_state?>"  style="width:80px;" maxlength="255" />
+                        <label for="state">State</label>
+                    </span>
+                    <span>
+                        <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?=$s_m_zip?>" style="width:80px;" maxlength="255" />
+                        <label for="zip">Zip Code </label>
+                    </span>
+                </div>
+                        <div>
+
+                                                </div>
+                    </li>                                </ul>
+
+
                 <ul>
                         <li id="foli8" class="complex">
 

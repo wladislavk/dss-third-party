@@ -150,10 +150,10 @@ if($_GET['type']=='secondary'){
   $insured_dob = st($myarray['other_insured_dob']);
   $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
   $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
-  $insured_address = st($myarray['insured_address']);
-  $insured_city = st($myarray['insured_city']);
-  $insured_state = st($myarray['insured_state']);
-  $insured_zip = st($myarray['insured_zip']);
+  $insured_address = st($myarray['other_insured_address']);
+  $insured_city = st($myarray['other_insured_city']);
+  $insured_state = st($myarray['other_insured_state']);
+  $insured_zip = st($myarray['other_insured_zip']);
   $insured_phone_code = st($myarray['insured_phone_code']);
   $insured_phone = st($myarray['insured_phone']);
   $insured_sex = st($myarray['other_insured_sex']);

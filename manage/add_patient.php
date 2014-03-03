@@ -446,10 +446,21 @@ $ed_sql .="
 		p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
 		p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
 		p_m_partylname = '".s_for($_POST["p_m_partylname"])."',
+		p_m_gender = '".s_for($_POST["p_m_gender"])."',
     p_m_ins_grp = '".s_for($_POST["p_m_ins_grp"])."',
     s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
     p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
     s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+    p_m_same_address = '".s_for($_POST["p_m_same_address"])."',
+    s_m_same_address = '".s_for($_POST["s_m_same_address"])."',
+    p_m_address = '".s_for($_POST["p_m_address"])."',
+    p_m_city = '".s_for($_POST["p_m_city"])."',
+    p_m_state = '".s_for($_POST["p_m_state"])."',
+    p_m_zip = '".s_for($_POST["p_m_zip"])."',
+    s_m_address = '".s_for($_POST["s_m_address"])."',
+    s_m_city = '".s_for($_POST["s_m_city"])."',
+    s_m_state = '".s_for($_POST["s_m_state"])."',
+    s_m_zip = '".s_for($_POST["s_m_zip"])."',
     p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
     s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
     p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
@@ -467,6 +478,7 @@ $ed_sql .="
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."', 
+		s_m_gender = '".s_for($_POST["s_m_gender"])."',
 		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
 		s_m_other = '".s_for($_POST["s_m_other"])."', 
 		s_m_employer = '".s_for($_POST["s_m_employer"])."', 
@@ -797,6 +809,7 @@ mysql_query($s1);
 		p_m_partyfname = '".s_for($_POST["p_m_partyfname"])."',
     p_m_partymname = '".s_for($_POST["p_m_partymname"])."',
     p_m_partylname = '".s_for($_POST["p_m_partylname"])."',  
+		p_m_gender = '".s_for($_POST["p_m_gender"])."',
 		p_m_relation = '".s_for($_POST["p_m_relation"])."', 
 		p_m_other = '".s_for($_POST["p_m_other"])."', 
 		p_m_employer = '".s_for($_POST["p_m_employer"])."', 
@@ -808,6 +821,7 @@ mysql_query($s1);
 		s_m_partyfname = '".s_for($_POST["s_m_partyfname"])."',
     s_m_partymname = '".s_for($_POST["s_m_partymname"])."',
     s_m_partylname = '".s_for($_POST["s_m_partylname"])."',  
+		s_m_gender = '".s_for($_POST["s_m_gender"])."',
 		s_m_relation = '".s_for($_POST["s_m_relation"])."', 
 		s_m_other = '".s_for($_POST["s_m_other"])."', 
 		s_m_employer = '".s_for($_POST["s_m_employer"])."', 
@@ -817,6 +831,16 @@ mysql_query($s1);
     s_m_ins_grp = '".s_for($_POST["s_m_ins_grp"])."',
     p_m_dss_file = '".s_for($_POST["p_m_dss_file"])."',
     s_m_dss_file = '".s_for($_POST["s_m_dss_file"])."',
+    p_m_same_address = '".s_for($_POST["p_m_same_address"])."',
+    s_m_same_address = '".s_for($_POST["s_m_same_address"])."',
+    p_m_address = '".s_for($_POST["p_m_address"])."',
+    p_m_city = '".s_for($_POST["p_m_city"])."',
+    p_m_state = '".s_for($_POST["p_m_state"])."',
+    p_m_zip = '".s_for($_POST["p_m_zip"])."',
+    s_m_address = '".s_for($_POST["s_m_address"])."',
+    s_m_city = '".s_for($_POST["s_m_city"])."',
+    s_m_state = '".s_for($_POST["s_m_state"])."',
+    s_m_zip = '".s_for($_POST["s_m_zip"])."',
     p_m_ins_type = '".s_for($_POST["p_m_ins_type"])."',
     s_m_ins_type = '".s_for($_POST["s_m_ins_type"])."',
     p_m_ins_ass = '".s_for($_POST["p_m_ins_ass"])."',
@@ -1006,6 +1030,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$p_m_partyfname = $_POST["p_m_partyfname"];
     $p_m_partymname = $_POST["p_m_partymname"];
 		$p_m_partylname = $_POST["p_m_partylname"]; 
+		$p_m_gender = $_POST['p_m_gender'];
 		$p_m_relation = $_POST["p_m_relation"];
 		$p_m_other = $_POST["p_m_other"];
 		$p_m_employer = $_POST["p_m_employer"];
@@ -1016,6 +1041,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$s_m_partyfname = $_POST["s_m_partyfname"];
     $s_m_partymname = $_POST["s_m_partymname"];
 		$s_m_partylname = $_POST["s_m_partylname"];  
+		$s_m_gender = $_POST['s_m_gender'];
 		$s_m_relation = $_POST["s_m_relation"];
 		$s_m_other = $_POST["s_m_other"];
 		$s_m_employer = $_POST["s_m_employer"];
@@ -1025,6 +1051,16 @@ $pending_vob_status = $vob_myarray['status'];
     $s_m_ins_grp = $_POST["s_m_ins_grp"];
     $p_m_dss_file = $_POST["p_m_dss_file"];
     $s_m_dss_file = $_POST["s_m_dss_file"];
+    $p_m_same_address = $_POST["p_m_same_address"];
+    $s_m_same_address = $_POST["s_m_same_address"];
+    $p_m_address = $_POST["p_m_address"];
+    $p_m_city = $_POST["p_m_city"];
+    $p_m_state = $_POST["p_m_state"];
+    $p_m_zip = $_POST["p_m_zip"];
+    $s_m_address = $_POST["s_m_address"];
+    $s_m_city = $_POST["s_m_city"];
+    $s_m_state = $_POST["s_m_state"];
+    $s_m_zip = $_POST["s_m_zip"];
     $p_m_ins_type = $_POST["p_m_ins_type"];
     $s_m_ins_type = $_POST["s_m_ins_type"];
     $p_m_ins_ass = $_POST["p_m_ins_ass"];
@@ -1117,6 +1153,7 @@ $pending_vob_status = $vob_myarray['status'];
     $p_m_partymname = st($themyarray["p_m_partymname"]);
 		$p_m_partylname = st($themyarray["p_m_partylname"]);
 		$p_m_relation = st($themyarray["p_m_relation"]);
+		$p_m_gender = st($themyarray["p_m_gender"]);
 		$p_m_other = st($themyarray["p_m_other"]);
 		$p_m_employer = st($themyarray["p_m_employer"]);
 		$p_m_ins_co = st($themyarray["p_m_ins_co"]);
@@ -1127,6 +1164,7 @@ $pending_vob_status = $vob_myarray['status'];
 		$s_m_partyfname = st($themyarray["s_m_partyfname"]);
     $s_m_partymname = st($themyarray["s_m_partymname"]);
 		$s_m_partylname = st($themyarray["s_m_partylname"]);
+		$s_m_gender = st($themyarray["s_m_gender"]);
 		$s_m_relation = st($themyarray["s_m_relation"]);
 		$s_m_other = st($themyarray["s_m_other"]);
 		$s_m_employer = st($themyarray["s_m_employer"]);
@@ -1136,6 +1174,16 @@ $pending_vob_status = $vob_myarray['status'];
     $s_m_ins_grp = st($themyarray["s_m_ins_grp"]);
     $p_m_dss_file = st($themyarray["p_m_dss_file"]);
     $s_m_dss_file = st($themyarray["s_m_dss_file"]);
+    $p_m_same_address = st($themyarray["p_m_same_address"]);
+    $s_m_same_address = st($themyarray["s_m_same_address"]);
+    $p_m_address = st($themyarray["p_m_address"]);
+    $p_m_city = st($themyarray["p_m_city"]);
+    $p_m_state = st($themyarray["p_m_state"]);
+    $p_m_zip = st($themyarray["p_m_zip"]);
+    $s_m_address = st($themyarray["s_m_address"]);
+    $s_m_city = st($themyarray["s_m_city"]);
+    $s_m_state = st($themyarray["s_m_state"]);
+    $s_m_zip = st($themyarray["s_m_zip"]);
     $p_m_ins_type = st($themyarray["p_m_ins_type"]);
     $s_m_ins_type = st($themyarray["s_m_ins_type"]);
     $p_m_ins_ass = st($themyarray["p_m_ins_ass"]);
@@ -1175,72 +1223,72 @@ $pending_vob_status = $vob_myarray['status'];
 	
 		$docpcp = st($themyarray["docpcp"]);
 		if($docpcp){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docpcp;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docpcp_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docpcp_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docpcp_name = "";
 		}
 
 		$docdentist = st($themyarray["docdentist"]);
 		if($docdentist){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docdentist;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docdentist_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docdentist_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docdentist_name = "";
 		}
 
 		$docent = st($themyarray["docent"]);
 		if($docent){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docent;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docent_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docent_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docent_name = "";
 		}
 
 		$docmdother = st($themyarray["docmdother"]);
 		if($docmdother){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
 				LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
 			WHERE contactid=".$docmdother;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother_name = "";
 		}
 
                 $docmdother2 = st($themyarray["docmdother2"]);
 		if($docmdother2){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother2;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother2_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother2_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother2_name = "";
 		}
 
                 $docmdother3 = st($themyarray["docmdother3"]);
 		if($docmdother3){
-                  $dsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $dsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
                                 LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
                         WHERE contactid=".$docmdother3;
                   $dq = mysql_query($dsql);
                   $d = mysql_fetch_assoc($dq);
-                  $docmdother3_name = $d['lastname'].", ".$d['firstname'].(($d['contacttype']!='')?' - '.$d['contacttype']:'');
+                  $docmdother3_name = $d['lastname'].", ".$d['firstname']. " ". $d['middlename'] .(($d['contacttype']!='')?' - '.$d['contacttype']:'');
 		}else{
 		  $docmdother3_name = "";
 		}
@@ -1254,17 +1302,17 @@ $pending_vob_status = $vob_myarray['status'];
 		$referred_by = st($themyarray["referred_by"]);
 		$referred_notes = st($themyarray["referred_notes"]);
 		if($referred_source==DSS_REFERRED_PATIENT){
-		  $rsql = "SELECT lastname, firstname FROM dental_patients WHERE patientid=".$referred_by;
+		  $rsql = "SELECT lastname, firstname, middlename FROM dental_patients WHERE patientid=".$referred_by;
 		  $rq = mysql_query($rsql);
 		  $r = mysql_fetch_assoc($rq);
-		  $referred_name = $r['lastname'].", ".$r['firstname'] . " - Patient";
+		  $referred_name = $r['lastname'].", ".$r['firstname'] . " ". $r['middlename'] . " - Patient";
 		}elseif($referred_source==DSS_REFERRED_PHYSICIAN){
-                  $rsql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
+                  $rsql = "SELECT dc.lastname, dc.firstname, dc.middlename, dct.contacttype FROM dental_contact dc
 			LEFT JOIN dental_contacttype dct on dc.contacttypeid=dct.contacttypeid
 			WHERE contactid=".$referred_by;
                   $rq = mysql_query($rsql);
                   $r = mysql_fetch_assoc($rq);
-                  $referred_name = $r['lastname'].", ".$r['firstname'];
+                  $referred_name = $r['lastname'].", ".$r['firstname']. " ". $r['middlename'];
 		  if($r['contacttype'] != ''){
     			$referred_name .= " - " . $r['contacttype'];
 		  }
@@ -1626,7 +1674,7 @@ $num_face = mysql_num_rows($itype_my);
 </a>
 <?php }else{ 
 while($image = mysql_fetch_array($itype_my)){
-echo "<img src='q_file/".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
+echo "<img src='display_file.php?f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
 }
 
 } ?>
@@ -2159,12 +2207,29 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
 		</td></tr>	
 <?php } ?>
+
+
+<?php
+  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_q = mysql_query($b_sql);
+  if(mysql_num_rows($b_q)>0){
+    $b_r = mysql_fetch_assoc($b_q);
+    $cname = $b_r['name'];
+  }else{
+    $cname = "DSS";
+  }
+?> 
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="p_m_dss_file_yes" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Insured Address same as Pt. address?
+			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
+			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if($p_m_same_address == '2') echo "checked='checked'";?>> No
+
                         </label>
                         <div>
                             <span>
@@ -2186,31 +2251,49 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                                 <input id="ins_dob" name="ins_dob" type="text" class="field text addr tbox calendar" value="<?=$ins_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins_dob');" />
                                 <label for="ins_dob">Insured Date of Birth</label>
                             </span>
-			    <span>
-<?php
-  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
-				        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
-                + Add Insurance Card Image
-        </button>
-<?php }else{
-$image = mysql_fetch_assoc($itype_my);
- ?>
-
-                                        <button id="p_m_ins_card" onclick="window.open('q_file/<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
-                View Insurance Card Image
-        </button>
-
-<?php } ?>
-			    </span>
-						</div>
-						<div>
-                            
+                                               <span>
+                        <select name="p_m_gender" id="p_m_gender" class="field text addr tbox" style="width:100px;" >
+                                <option value="">Select</option>
+                            <option value="Male" <? if($p_m_gender == 'Male') echo " selected";?>>Male</option>
+                            <option value="Female" <? if($p_m_gender == 'Female') echo " selected";?>>Female</option>
+                        </select><span id="req_0" class="req">*</span>
+                        <label for="gender">Insured Gender</label>
+                    </span>
+			</div>
+			<div>
+ 
 						</div>
                     </li>
 				</ul>
+
+
+                <ul id="p_m_address_fields" <?= ($p_m_same_address == "1")?'style="display:none;"':''; ?>>
+                        <li id="foli8" class="complex">
+
+                <div>
+                    <span>
+                        <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?=$p_m_address?>" style="width:225px;"  maxlength="255"/>
+                        <label for="add">Address</label>
+                    </span>
+                    <span>
+                        <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?=$p_m_city?>" style="width:200px;" maxlength="255" />
+                        <label for="city">City</label>
+                    </span>
+                    <span>
+                        <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?=$p_m_state?>"  style="width:80px;" maxlength="255" />
+                        <label for="state">State</label>
+                    </span>
+                    <span>
+                        <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?=$p_m_zip?>" style="width:80px;" maxlength="255" />
+                        <label for="zip">Zip Code </label>
+                    </span>
+                </div>
+                        <div>
+
+                                                </div>
+                    </li>                                </ul>
+
+
                 <ul>
                         <li id="foli8" class="complex">
 
@@ -2229,7 +2312,26 @@ $image = mysql_fetch_assoc($itype_my);
                                 <label for="home_phone">Insurance Type</label>
                             </span>
                             <span>
-                                                                            <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                                                                            <input class="p_m_ins_ass" id="p_m_ins_ass_yes" type="radio" name="p_m_ins_ass" value="Yes" <?php if($p_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input class="p_m_ins_ass pay_to_patient_radio" id="p_m_ins_ass_no" type="radio" name="p_m_ins_ass" value="No" <?php if($p_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+ <span style="float:right">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=10 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+                                        <button id="p_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+
+                                        <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
                             </span>
 
                                                 </div>
@@ -2345,7 +2447,12 @@ $image = mysql_fetch_assoc($itype_my);
 
 		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DSS filing insurance?<input id="s_m_dss_file_yes" type="radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Insured Address same as Pt. address?
+                        <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <? if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
+                        <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <? if($s_m_same_address == '2') echo "checked='checked'";?>> No
+
                         </label>
                         <div class="s_m_ins_div" <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                             <span>
@@ -2366,32 +2473,49 @@ $image = mysql_fetch_assoc($itype_my);
                                 <input id="ins2_dob" name="ins2_dob" type="text" class="field text addr tbox calendar" value="<?=$ins2_dob?>" maxlength="255" style="width:150px;" onChange="validateDate('ins2_dob');" />
                                 <label for="ins2_dob">Insured Date of Birth</label>
                             </span>
-			    <span>
-<?php
-  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
-  $itype_my = mysql_query($itype_sql);
-$num_face = mysql_num_rows($itype_my);
-if($num_face == 0){ ?>
 
-                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
-                + Add Insurance Card Image
-        </button>
-<?php }else{
-$image = mysql_fetch_assoc($itype_my);
- ?>
-                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
-                View Insurance Card Image
-        </button>
+                                                                           <span>
+                        <select name="s_m_gender" id="s_m_gender" class="field text addr tbox" style="width:100px;" >
+                                <option value="">Select</option>
+                            <option value="Male" <? if($s_m_gender == 'Male') echo " selected";?>>Male</option>
+                            <option value="Female" <? if($s_m_gender == 'Female') echo " selected";?>>Female</option>
+                        </select><span id="req_0" class="req">*</span>
+                        <label for="gender">Insured Gender</label>
+                    </span>
+                                                </div>                                                <div>
 
-<?php } ?>
 
-			    </span>
-						</div>
-						<div>
-                            
 						</div>
                     </li>
 				</ul>
+
+                <ul id="s_m_address_fields" <?= ($s_m_same_address == "1")?'style="display:none;"':''; ?>>
+                        <li id="foli8" class="complex">
+
+                <div>
+                    <span>
+                        <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?=$s_m_address?>" style="width:225px;"  maxlength="255"/>
+                        <label for="add">Address</label>
+                    </span>
+                    <span>
+                        <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?=$s_m_city?>" style="width:200px;" maxlength="255" />
+                        <label for="city">City</label>
+                    </span>
+                    <span>
+                        <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?=$s_m_state?>"  style="width:80px;" maxlength="255" />
+                        <label for="state">State</label>
+                    </span>
+                    <span>
+                        <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?=$s_m_zip?>" style="width:80px;" maxlength="255" />
+                        <label for="zip">Zip Code </label>
+                    </span>
+                </div>
+                        <div>
+
+                                                </div>
+                    </li>                                </ul>
+
+
                 <ul>
                         <li id="foli8" class="complex">
 
@@ -2410,7 +2534,27 @@ $image = mysql_fetch_assoc($itype_my);
                                 <label for="s_m_ins_type">Insurance Type</label>
                             </span>
                             <span>
-                                                                            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                                                                            <input id="s_m_ins_ass_yes" type="radio" name="s_m_ins_ass" value="Yes" <?php if($s_m_ins_ass == 'Yes'){ echo " checked='checked'";} ?>>Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_ins_ass_no pay_to_patient_radio" type="radio" name="s_m_ins_ass" value="No" <?php if($s_m_ins_ass == 'No'){ echo " checked='checked'";} ?>>Payment to Patient
+                            </span>
+                            <span style="float:right">
+<?php
+  $itype_sql = "select * from dental_q_image where imagetypeid=12 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+  $itype_my = mysql_query($itype_sql);
+$num_face = mysql_num_rows($itype_my);
+if($num_face == 0){ ?>
+
+                                        <button id="s_m_ins_card" onclick="Javascript: loadPopup('add_image.php?pid=<?=$_GET['pid'];?>&sh=<?=(isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;" class="addButton">
+                + Add Insurance Card Image
+        </button>
+<?php }else{
+$image = mysql_fetch_assoc($itype_my);
+ ?>
+                                        <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?= $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                View Insurance Card Image
+        </button>
+
+<?php } ?>
+
                             </span>
 
                                                 </div>
@@ -2934,7 +3078,7 @@ if(inField=="referredby_name"){
 }
 
 function updateProfileImage(img){
-	$('#profile_image').html("<img src='q_file/"+img+"' height='150' style='float:right;' />");
+	$('#profile_image').html("<img src='display_file.php?f="+img+"' height='150' style='float:right;' />");
 }
 
 function updateInsCard(img, field){
@@ -2989,6 +3133,23 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
   });
 </script>
 <?php } ?>
+<script type="text/javascript">
+  $('.dss_file_radio').click(function(){
 
+    if($('#p_m_dss_file_no').is(':checked') && $('#s_m_dss_file_yes').is(':checked')){
+	alert('<?=$cname;?> must file Primary Insurance in order to file Secondary Insurance.');
+        return false;
+    } 
+    if($('#p_m_dss_file_yes').is(':checked') && $('#s_m_dss_file_no').is(':checked')){
+        return confirm("Are you sure you do not want <?=$cname;?> to file secondary insurance claims? Normally patients expect this; please select 'Yes' unless you are sure of your choice.");
+    } 
+
+
+  });
+  $('.pay_to_patient_radio').click(function(){
+
+    return confirm('Selecting "Payment to Patient" means NO payment will go to your office (payment will be mailed to patient). Select "Accept Assignment of Benefits" to have the insurance check go to your office instead. "Accept Assignment" is recommended in nearly all cases, so make sure you choose correctly.');
+  });
+</script>
 </body>
 </html>

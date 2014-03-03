@@ -35,12 +35,29 @@ function claim_errors( $pid, $medicare = false ){
     array_push($errors, "Missing doctor");
   }
 
-  $sql = "SELECT p_m_dss_file FROM dental_patients p WHERE p.patientid=".$pid;
+  $sql = "SELECT * FROM dental_patients p WHERE p.patientid=".$pid;
   $my = mysql_query($sql);
-  $m = mysql_fetch_row($my);
-  if( $m[0]!=1 && $_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE ){
+  $m = mysql_fetch_array($my);
+  if( $m['p_m_dss_file']!=1 && $_SESSION['user_type'] != DSS_USER_TYPE_SOFTWARE ){
     array_push($errors, "Primary DSS filing insurance not selected - Patient Info");
   }
+
+  if($m['p_m_relation']=='' ||
+	$m['p_m_partyfname'] == "" ||
+        $m['p_m_partylname'] == "" ||
+        $m['p_m_relation'] == "" ||
+        $m['ins_dob'] == "" ||
+        $m['p_m_gender'] == "" ||
+        $m['p_m_ins_co'] == "" ||
+        $m['p_m_ins_grp'] == "" ||
+        ($m['p_m_ins_plan'] == "" && $m['p_m_ins_type'] != 1) || 
+        $m['p_m_ins_type'] == ''
+
+	){
+
+    array_push($errors, "Primary insurance not completed - Patient Info");
+  }
+
 
   $sql = "SELECT * FROM dental_patients p JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' WHERE p.patientid=".$pid;
   $my = mysql_query($sql);

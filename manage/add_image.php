@@ -44,12 +44,26 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        $uploaded = uploadImage($_FILES['ss_file'], "q_file/".$banner1);
+                        $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+			if($uploaded){
+                                        $ins_sql = " insert into dental_q_image set 
+                                        patientid = '".s_for($_GET['pid'])."',
+                                        title = '".$sleeptesttype." ".$date."',
+                                        imagetypeid = '1',
+                                        image_file = '".s_for($banner1)."',
+                                        userid = '".s_for($_SESSION['userid'])."',
+                                        docid = '".s_for($_SESSION['docid'])."',
+                                        adddate = now(),
+                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
 
+                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
+					$image_id = mysql_insert_id();
+			}
                 }
                 else
                 {
                         $banner1 = '';
+			$image_id = '';
                 }
   $q = "INSERT INTO `dental_summ_sleeplab` (
 `id` ,
@@ -71,26 +85,17 @@ if(isset($_POST['submitnewsleeplabsumm'])){
 `notes`,
 `testnumber`,
 `sleeplab`,
-`patiendid`
+`patiendid`,
+`image_id`
 )
-VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."')";
-  $run_q = mysql_query($q);
+VALUES (NULL,'".$date."','".$sleeptesttype."','".$place."','".$diagnosising_doc."','".$diagnosising_npi."','".$ahi."','".$ahisupine."','".$rdi."','".$rdisupine."','".$o2nadir."','".$t9002."','".$dentaldevice."','".$devicesetting."','".$diagnosis."','".$banner1."', '".$notes."', '".$testnumber."', '".$sleeplab."', '".$patientid."', '".$image_id."')";
+error_log($q);
+  $run_q = mysql_query($q) or die(mysql_error());
   if(!$run_q){
    echo "Could not add sleep lab... Please try again.";
   }else{
         if($uploaded){
                 $ins_id = mysql_insert_id();
-                                        $ins_sql = " insert into dental_q_image set 
-                                        patientid = '".s_for($_GET['pid'])."',
-                                        title = '".$sleeptesttype." ".$date."',
-                                        imagetypeid = '1',
-                                        image_file = '".s_for($banner1)."',
-                                        userid = '".s_for($_SESSION['userid'])."',
-                                        docid = '".s_for($_SESSION['docid'])."',
-                                        adddate = now(),
-                                        ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-
-                                        mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 }
    $msg = "Successfully added sleep lab". $uploaded;
 ?>
@@ -176,17 +181,17 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         switch(strtolower($extension)){
                           case 'jpg':
                           case 'jpeg':
-                		imagejpeg($thumb, "q_file/".$banner1);
+                		imagejpeg($thumb, "../../../shared/q_file/".$banner1);
                                 break;
                           case 'gif':
-                                imagegif($thumb, "q_file/".$banner1);                               
+                                imagegif($thumb, "../../../shared/q_file/".$banner1);                               
                                 break;
                           case 'png':
-                                imagepng($thumb, "q_file/".$banner1);
+                                imagepng($thumb, "../../../shared/q_file/".$banner1);
                                 break;
                         }
 
-		@chmod("q_file/".$banner1,0777);
+		@chmod("../../../shared/q_file/".$banner1,0777);
 		// Free up memory
 		//imagedestroy($thumb);
 		$uploaded = true;
@@ -207,10 +212,10 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         $banner1 = str_replace("'","_",$banner1);
 			$banner1 .= ".".$extension;
 			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
-			$uploaded = uploadImage($_FILES['image_file'], "q_file/".$banner1, $profile);
+			$uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);
 			if($_POST['image_file_old'] <> '')
 			{
-				@unlink("q_file/".$_POST['image_file_old']);
+				@unlink("../../../shared/q_file/".$_POST['image_file_old']);
 			}
 		}
 		else
@@ -543,7 +548,7 @@ if($rl_r['rxlomn_imgid']!=''){
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<? if($image_file <> '') {?>
-                                <a href="q_file/<?=$image_file?>" target="_blank">
+                                <a href="display_file.php?f=<?=$image_file?>" target="_blank">
                                     <b>Preview</b></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             <? }?>

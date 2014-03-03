@@ -317,6 +317,116 @@ if(mysql_num_rows($q) == 0){
 			<input class="" name="ein" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ein" type="checkbox" value="1" <?= ($p['ein']==1)?'checked="checked"':''; ?> /> EIN
 			<input class="" name="ssn" onclick="$('#register_form').validate().element('#tax_id_or_ssn');" id="ssn" type="checkbox" value="1" <?= ($p['ssn']==1)?'checked="checked"':''; ?> /> SSN
                 </div>
+                <div class="sepH_b half">
+                        <label class="lbl_a"><strong>6.</strong> Do you use a separate NPI number for Service Facility (CMS1500 box 32) and Billing Provider (CMS1500 box 33) items when filing claims?</label>
+			<input class="" name="use_service_npi" onclick="show_service_info();" id="use_service_npi" type="radio" value="1" <?= ($p['use_service_npi']=='1')?'checked="checked"':''; ?> /> Yes 
+			<input class="" name="use_service_npi" onclick="$('.service_info').hide();" id="use_service_npi" type="radio" value="0" <?= ($p['use_service_npi']=='0')?'checked="checked"':''; ?> /> No
+                </div>
+                <div class="sepH_b half clear service_info">
+                        <label class="lbl_a"><strong>7.</strong> Service Facility Name: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_name" name="service_name" value="<?= $p['service_name']; ?>" />
+                </div>
+                <div class="sepH_b half service_info">
+                        <label class="lbl_a"><strong>8.</strong> Service Facility Address: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_address" name="service_address" value="<?= $p['service_address']; ?>" />
+                </div>
+                <div class="sepH_b third clear service_info">
+                        <label class="lbl_a"><strong>9.</strong> Service Facility City: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_city" name="service_city" value="<?= $p['service_city']; ?>" />
+                </div>
+                <div class="sepH_b third service_info">
+                        <?php $s = $p['service_state']; ?>
+                        <label class="lbl_a"><strong>10.</strong> Service Facility State: <span class="req">*</span></label>
+        <select  data-placeholder="Choose a state..." style="width:200px;" class="chzn-select validate" id="service_state" name="service_state">
+                                <option value=""></option>
+                                <option <?= ($s=='AK')?'selected="selected"':'' ?> value="AK">AK - Alaska</option>
+                                <option <?= ($s=='AL')?'selected="selected"':'' ?> value="AL">AL - Alabama</option>
+                                <option <?= ($s=='AR')?'selected="selected"':'' ?> value="AR">AR - Arkansas</option>
+                                <option <?= ($s=='AZ')?'selected="selected"':'' ?> value="AZ">AZ - Arizona</option>
+                                <option <?= ($s=='CA')?'selected="selected"':'' ?> value="CA">CA - California</option>
+                                <option <?= ($s=='CO')?'selected="selected"':'' ?> value="CO">CO - Colorado</option>
+                                <option <?= ($s=='CT')?'selected="selected"':'' ?> value="CT">CT - Connecticut</option>
+                                <option <?= ($s=='DC')?'selected="selected"':'' ?> value="DC">DC - District of Columbia</option>
+                                <option <?= ($s=='DE')?'selected="selected"':'' ?> value="DE">DE - Delaware</option>
+                                <option <?= ($s=='FL')?'selected="selected"':'' ?> value="FL">FL - Florida</option>
+                                <option <?= ($s=='GA')?'selected="selected"':'' ?> value="GA">GA - Georgia</option>
+                                <option <?= ($s=='HI')?'selected="selected"':'' ?> value="HI">HI - Hawaii</option>
+                                <option <?= ($s=='IA')?'selected="selected"':'' ?> value="IA">IA - Iowa</option>
+                                <option <?= ($s=='ID')?'selected="selected"':'' ?> value="ID">ID - Idaho</option>
+                                <option <?= ($s=='IL')?'selected="selected"':'' ?> value="IL">IL - Illinois</option>
+                                <option <?= ($s=='IN')?'selected="selected"':'' ?> value="IN">IN - Indiana</option>
+                                <option <?= ($s=='KS')?'selected="selected"':'' ?> value="KS">KS - Kansas</option>
+                                <option <?= ($s=='KY')?'selected="selected"':'' ?> value="KY">KY - Kentucky</option>
+                                <option <?= ($s=='LA')?'selected="selected"':'' ?> value="LA">LA - Louisiana</option>
+                                <option <?= ($s=='MA')?'selected="selected"':'' ?> value="MA">MA - Massachusetts</option>
+                                <option <?= ($s=='MD')?'selected="selected"':'' ?> value="MD">MD - Maryland</option>
+                                <option <?= ($s=='ME')?'selected="selected"':'' ?> value="ME">ME - Maine</option>
+                                <option <?= ($s=='MI')?'selected="selected"':'' ?> value="MI">MI - Michigan</option>
+                                <option <?= ($s=='MN')?'selected="selected"':'' ?> value="MN">MN - Minnesota</option>
+                                <option <?= ($s=='MO')?'selected="selected"':'' ?> value="MO">MO - Missouri</option>
+                                <option <?= ($s=='MS')?'selected="selected"':'' ?> value="MS">MS - Mississippi</option>
+                                <option <?= ($s=='MT')?'selected="selected"':'' ?> value="MT">MT - Montana</option>
+                                <option <?= ($s=='NC')?'selected="selected"':'' ?> value="NC">NC - North Carolina</option>
+                                <option <?= ($s=='ND')?'selected="selected"':'' ?> value="ND">ND - North Dakota</option>
+                                <option <?= ($s=='NE')?'selected="selected"':'' ?> value="NE">NE - Nebraska</option>
+                                <option <?= ($s=='NH')?'selected="selected"':'' ?> value="NH">NH - New Hampshire</option>
+                                <option <?= ($s=='NJ')?'selected="selected"':'' ?> value="NJ">NJ - New Jersey</option>
+                                <option <?= ($s=='NM')?'selected="selected"':'' ?> value="NM">NM - New Mexico</option>
+                                <option <?= ($s=='NV')?'selected="selected"':'' ?> value="NV">NV - Nevada</option>
+                                <option <?= ($s=='NY')?'selected="selected"':'' ?> value="NY">NY - New York</option>
+                                <option <?= ($s=='OH')?'selected="selected"':'' ?> value="OH">OH - Ohio</option>
+                                <option <?= ($s=='OK')?'selected="selected"':'' ?> value="OK">OK - Oklahoma</option>
+                                <option <?= ($s=='OR')?'selected="selected"':'' ?> value="OR">OR - Oregon</option>
+                                <option <?= ($s=='PA')?'selected="selected"':'' ?> value="PA">PA - Pennsylvania</option>
+                                <option <?= ($s=='RI')?'selected="selected"':'' ?> value="RI">RI - Rhode Island</option>
+                                <option <?= ($s=='SC')?'selected="selected"':'' ?> value="SC">SC - South Carolina</option>
+                                <option <?= ($s=='SD')?'selected="selected"':'' ?> value="SD">SD - South Dakota</option>
+                                <option <?= ($s=='TN')?'selected="selected"':'' ?> value="TN">TN - Tennessee</option>
+                                <option <?= ($s=='TX')?'selected="selected"':'' ?> value="TX">TX - Texas</option>
+                                <option <?= ($s=='UT')?'selected="selected"':'' ?> value="UT">UT - Utah</option>
+                                <option <?= ($s=='VA')?'selected="selected"':'' ?> value="VA">VA - Virginia</option>
+                                <option <?= ($s=='VT')?'selected="selected"':'' ?> value="VT">VT - Vermont</option>
+                                <option <?= ($s=='WA')?'selected="selected"':'' ?> value="WA">WA - Washington</option>
+                                <option <?= ($s=='WI')?'selected="selected"':'' ?> value="WI">WI - Wisconsin</option>
+                                <option <?= ($s=='WV')?'selected="selected"':'' ?> value="WV">WV - West Virginia</option>
+                                <option <?= ($s=='WY')?'selected="selected"':'' ?> value="WY">WY - Wyoming</option>
+                        </select>
+
+                </div>
+                <div class="sepH_b third service_info">
+                        <label class="lbl_a"><strong>11.</strong> Service Facility Zip: <span class="req">*</span></label><input class="inpt_a validate" type="text" id="service_zip" name="service_zip" value="<?= $p['service_zip']; ?>" />
+                </div>
+                <div class="sepH_b half clear service_info">
+                        <label class="lbl_a"><strong>12.</strong> Service Facility Phone: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_phone" name="service_phone" value="<?= $p['service_phone']; ?>" />
+                </div>
+                <div class="sepH_b half service_info">
+                        <label class="lbl_a"><strong>13.</strong> Service Facility Fax: <span class="req">*</span></label><input class="inpt_a validate phonemask" type="text" id="service_fax" name="service_fax" value="<?= $p['service_fax']; ?>" />
+                </div>
+
+                <div class="sepH_b half service_info">
+                        <label class="lbl_a"><strong>14.</strong> Service Facility NPI Number:</label><input class="inpt_a validate" id="service_npi" name="service_npi" type="text" value="<?=$p['service_npi']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b half service_info">
+                        <label class="lbl_a"><strong>15.</strong> Service Facility Medicare Provider (NPI/DME) Number:</label><input class="inpt_a validate" id="service_medicare_npi" name="service_medicare_npi" type="text" value="<?=$p['service_medicare_npi']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b half clear service_info">
+                        <label class="lbl_a"><strong>16.</strong> Service Facility Medicare PTAN Number:</label><input class="inpt_a" id="service_medicare_ptan" name="service_medicare_ptan" type="text" value="<?=$p['service_medicare_ptan']?>" maxlength="255" />
+                </div>
+
+                <div class="sepH_b half service_info">
+                        <label class="lbl_a"><strong>17.</strong> Service Facility Tax ID or SSN:</label><input class="inpt_a validate" id="service_tax_id_or_ssn" name="service_tax_id_or_ssn" type="text" value="<?=$p['service_tax_id_or_ssn']?>" maxlength="255" />
+                </div>
+                <div class="sepH_b half clear service_info">
+                        <label class="lbl_a"><strong>18.</strong> Is box 10 your service facility  EIN or SSN?</label>
+                        <input class="" name="service_ein" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ein" type="checkbox" value="1" <?= ($p['service_ein']==1)?'checked="checked"':''; ?> /> EIN
+                        <input class="" name="service_ssn" onclick="$('#register_form').validate().element('#service_tax_id_or_ssn');" id="service_ssn" type="checkbox" value="1" <?= ($p['service_ssn']==1)?'checked="checked"':''; ?> /> SSN
+                </div>
+<script type="text/javascript">
+  $('.service_info').hide();
+
+	function show_service_info(){
+	$('.service_info').show();
+                          $("#register").animate({ height : 600 }, 300);
+                          $("#main_section").animate({ height : 680 }, 300);
+	}
+</script>
                                                                                                                 <div class="cf clear">
 															<a href="javascript:void(0)" class="fl prev btn btn_aL">&laquo; Back</a>
 <a href="javascript:void(0)" class="fr next btn btn_dL">Proceed &raquo;</a>

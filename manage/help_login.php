@@ -13,7 +13,7 @@ include("includes/sescheck.php");
   mysql_query($login_sql, $help_con);
 
 ?><script type="text/javascript"><?php
-if($_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
+if($_SERVER['HTTP_HOST']=='www.dentalsleepsolutions.com'){
 ?>  window.location='http://help.dentalsleepsolutions.com/?un=<?= $username; ?>&dsswpkey=<?= $key; ?>&dssup=<?= $pass; ?>'; <?php
                 }else{
 ?>  window.location='http://help.dss-rh.xforty.com/?un=<?= $username; ?>&dsswpkey=<?= $key; ?>&dssup=<?= $pass; ?>'; <?php

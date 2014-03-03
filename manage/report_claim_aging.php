@@ -1,16 +1,25 @@
 <? 
 include "includes/top.htm";
 ?><link rel="stylesheet" href="css/ledger.css" /><?php
-
+//COALESCE(CONVERT(REPLACE(total_charge,',',''),DECIMAL(11,2)),0) as total_charge, insuranceid FROM dental_insurance
 $sql = "SELECT p.firstname, p.lastname,
 		p.patientid
 		FROM dental_patients p
 	WHERE p.docid='".$_SESSION['docid']."'
+	AND (SELECT (SUM(COALESCE(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2)),0)) -
+	COALESCE((SELECT sum(dlp.amount) paid_amount FROM dental_ledger dl
+                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid=dl.ledgerid
+                WHERE dl.primary_claim_id=i.insuranceid), 0)
+	)
+	 FROM dental_insurance i 
+WHERE i.patientid=p.patientid AND i.mailed_date IS NOT NULL) > 0
 	ORDER BY p.lastname ASC, p.firstname ASC
 	";
+
+
 //(SELECT COALESCE(SUM(CONVERT(REPLACE(i.total_charge,',',''),DECIMAL(11,2))),0) FROM dental_insurance i WHERE i.patientid=p.patientid AND i.adddate > DATE_SUB(CURDATE(), INTERVAL 830 DAY)) as total_029
 
-$my = mysql_query($sql);
+$my = mysql_query($sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 
 //echo $sql; 

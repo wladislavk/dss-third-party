@@ -368,11 +368,16 @@ $insqry = mysql_query($sqlinsertqry2);
 <?php 
 
 function create_claim($pid, $prod){
-             $pat_sql = "select * from dental_patients where patientid='".s_for($pid)."'";
+             $pat_sql = "select p.*, u.billing_company_id from dental_patients p 
+		JOIN dental_users u ON u.userid=p.docid
+		where p.patientid='".s_for($pid)."'";
              $pat_my = mysql_query($pat_sql);
              $pat_myarray = mysql_fetch_array($pat_my);
+$p_m_dss_file = $pat_myarray['p_m_dss_file'];
+$p_m_billing_id = $pat_myarray['billing_company_id'];
 $name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
 $insurancetype = st($pat_myarray['p_m_ins_type']);
+$other_insurancetype = st($pat_myarray['s_m_ins_type']);
 $insured_firstname = st($pat_myarray['p_m_partyfname']);
 $insured_lastname = st($pat_myarray['p_m_partylname']);
 $insured_middle = st($pat_myarray['p_m_partymname']);
@@ -390,7 +395,8 @@ $other_insured_policy_group_feca = st($pat_myarray['s_m_ins_grp']);
 $referredby = st($pat_myarray['referred_by']);
 $referred_source = st($pat_myarray['referred_source']);
 $docid = $pat_myarray['docid'];
-$insured_sex = $pat_myarray['gender'];
+$insured_sex = $pat_myarray['p_m_gender'];
+$other_insured_sex = $pat_myarray['s_m_gender'];
 $patient_firstname = $pat_myarray['firstname'];
 $patient_lastname = $pat_myarray['lastname'];
 $patient_middle = $pat_myarray['middlename'];
@@ -413,15 +419,36 @@ $patient_dob = $pat_myarray['dob'];
         $patient_status = $pat_myarray['marital_status'];
         $insured_id_number = $pat_myarray['p_m_ins_id'];
         //$insured_firstname = $pat_myarray['p_d_party'];
-        $insured_address = $pat_myarray['add1'];
-        $insured_city = $pat_myarray['city'];
-        $insured_state = $pat_myarray['state'];
-        $insured_zip = $pat_myarray['zip'];
+	if($pat_myarray['p_m_same_address']=='1'){
+          $insured_address = $pat_myarray['add1'];
+          $insured_city = $pat_myarray['city'];
+          $insured_state = $pat_myarray['state'];
+          $insured_zip = $pat_myarray['zip'];
+	}else{
+          $insured_address = $pat_myarray['p_m_address'];
+          $insured_city = $pat_myarray['p_m_city'];
+          $insured_state = $pat_myarray['p_m_state'];
+          $insured_zip = $pat_myarray['p_m_zip'];
+	}
+	if($pat_myarray['s_m_same_address']=='1'){
+          $other_insured_address = $pat_myarray['add1'];
+          $other_insured_city = $pat_myarray['city'];
+          $other_insured_state = $pat_myarray['state'];
+          $other_insured_zip = $pat_myarray['zip'];
+	}else{
+          $other_insured_address = $pat_myarray['s_m_address'];
+          $other_insured_city = $pat_myarray['s_m_city'];
+          $other_insured_state = $pat_myarray['s_m_state'];
+          $other_insured_zip = $pat_myarray['s_m_zip'];
+	}
+
+
         $insured_dob = $pat_myarray['ins_dob'];
         $patient_relation_insured = $pat_myarray['p_m_relation'];
+        $patient_relation_other_insured = $pat_myarray['s_m_relation'];
         $insured_employer_school_name = $pat_myarray['employer'];
-        $insured_policy_group_feca = $pat_myarray['group_number'];
-        $insured_insurance_plan = $pat_myarray['plan_name'];
+        //$insured_policy_group_feca = $pat_myarray['group_number'];
+        //$insured_insurance_plan = $pat_myarray['plan_name'];
   $p_m_eligible_payer_id = $pat_myarray['p_m_eligible_payer_id'];
   $p_m_eligible_payer_name = $pat_myarray['p_m_eligible_payer_name'];
 $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss                                 
@@ -478,6 +505,7 @@ if (empty($prior_authorization_number)) {
 		pica2 = '".s_for($pica2)."',
 		pica3 = '".s_for($pica3)."',
 		insurance_type = '".s_for($insurancetype)."',
+		other_insurance_type = '".s_for($other_insurancetype)."',
 		insured_id_number = '".s_for($insured_id_number)."',
 		patient_lastname = '".s_for($patient_lastname)."',
 		patient_firstname = '".s_for($patient_firstname)."',
@@ -489,16 +517,21 @@ if (empty($prior_authorization_number)) {
 		insured_middle = '".s_for($insured_middle)."',
 		patient_address = '".s_for($patient_address)."',
 		patient_relation_insured = '".s_for($patient_relation_insured)."',
-		insured_address = '".s_for($insured_address)."',
+		patient_relation_other_insured = '".s_for($patient_relation_other_insured)."',
 		patient_city = '".s_for($patient_city)."',
 		patient_state = '".s_for($patient_state)."',
 		patient_status = '".s_for($patient_status_arr)."',
+		insured_address = '".s_for($insured_address)."',
 		insured_city = '".s_for($insured_city)."',
 		insured_state = '".s_for($insured_state)."',
+		insured_zip = '".s_for($insured_zip)."',
+		other_insured_address = '".s_for($other_insured_address)."',
+		other_insured_city = '".s_for($other_insured_city)."',
+		other_insured_state = '".s_for($other_insured_state)."',
+		other_insured_zip = '".s_for($other_insured_zip)."',
 		patient_zip = '".s_for($patient_zip)."',
 		patient_phone_code = '".s_for($patient_phone_code)."',
 		patient_phone = '".s_for($patient_phone)."',
-		insured_zip = '".s_for($insured_zip)."',
 		insured_phone_code = '".s_for($insured_phone_code)."',
 		insured_phone = '".s_for($insured_phone)."',
 		other_insured_firstname = '".s_for($other_insured_firstname)."',
@@ -669,6 +702,8 @@ if (empty($prior_authorization_number)) {
                 userid = '".s_for($_SESSION['userid'])."',
                 docid = '".s_for($_SESSION['docid'])."',
 		producer = '".s_for($prod)."',
+		p_m_billing_id='".s_for($p_m_billing_id)."',
+		p_m_dss_file='".s_for($p_m_dss_file)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());

@@ -1,0 +1,14 @@
+ALTER TABLE dental_users ADD COLUMN use_service_npi tinyint(1) default 0;
+ALTER TABLE dental_users ADD COLUMN service_name varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_address varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_city varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_state varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_zip varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_phone varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_fax varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_npi varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_medicare_npi varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_medicare_ptan varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_tax_id_or_ssn varchar(100);
+ALTER TABLE dental_users ADD COLUMN service_ssn tinyint(1);
+ALTER TABLE dental_users ADD COLUMN service_ein tinyint(1);

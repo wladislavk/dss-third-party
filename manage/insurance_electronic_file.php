@@ -131,6 +131,63 @@ $insured_sex = st($myarray['insured_sex']);
 $other_insured_sex = st($myarray['other_insured_sex']);
 $insured_employer_school_name = strtoupper(st($myarray['insured_employer_school_name']));
 $other_insured_employer_school_name = strtoupper(st($myarray['other_insured_employer_school_name']));
+
+
+if($_GET['type']=='secondary'){
+  $insurancetype = st($myarray['other_insurance_type']);
+  $other_insurancetype = $myarray['insurance_type'];
+  $other_insured_firstname = st($myarray['insured_firstname']);
+  $other_insured_lastname = st($myarray['insured_lastname']);
+  $other_insured_middle = st($myarray['insured_middle']);
+  $other_insured_dob = st($myarray['insured_dob']);
+  $other_insured_sex = st($myarray['insured_sex']);
+  $other_insured_insurance_plan = st($myarray['insured_insurance_plan']);
+  $other_insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+  $insured_id_number = st($myarray['other_insured_id_number']);
+  $insured_firstname = st($myarray['other_insured_firstname']);
+  $insured_middle = st($myarray['other_insured_middle']);
+  $insured_lastname = st($myarray['other_insured_lastname']);
+  $insured_dob = st($myarray['other_insured_dob']);
+  $insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+  $insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
+  $insured_address = st($myarray['other_insured_address']);
+  $insured_city = st($myarray['other_insured_city']);
+  $insured_state = st($myarray['other_insured_state']);
+  $insured_zip = st($myarray['other_insured_zip']);
+  $insured_phone_code = st($myarray['insured_phone_code']);
+  $insured_phone = st($myarray['insured_phone']);
+  $insured_sex = st($myarray['other_insured_sex']);
+}else{
+  $insurancetype = st($myarray['insurance_type']);
+  $other_insurancetype = $myarray['other_insurance_type'];
+  $other_insured_firstname = st($myarray['other_insured_firstname']);
+  $other_insured_lastname = st($myarray['other_insured_lastname']);
+  $other_insured_middle = st($myarray['other_insured_middle']);
+  $other_insured_dob = st($myarray['other_insured_dob']);
+  $other_insured_sex = st($myarray['other_insured_sex']);
+  $other_insured_insurance_plan = st($myarray['other_insured_insurance_plan']);
+  $other_insured_policy_group_feca = st($myarray['other_insured_policy_group_feca']);
+  $insured_id_number = st($myarray['insured_id_number']);
+  $insured_firstname = st($myarray['insured_firstname']);
+  $insured_middle = st($myarray['insured_middle']);
+  $insured_lastname = st($myarray['insured_lastname']);
+  $insured_dob = st($myarray['insured_dob']);
+  $insured_insurance_plan = st($myarray['insured_insurance_plan']);
+  $insured_policy_group_feca = st($myarray['insured_policy_group_feca']);
+  $insured_address = st($myarray['insured_address']);
+  $insured_city = st($myarray['insured_city']);
+  $insured_state = st($myarray['insured_state']);
+  $insured_zip = st($myarray['insured_zip']);
+  $insured_phone_code = st($myarray['insured_phone_code']);
+  $insured_phone = st($myarray['insured_phone']);
+  $insured_sex = st($myarray['insured_sex']);
+}
+
+
+
+
+
+
 $reserved_local_use = strtoupper(st($myarray['reserved_local_use']));
 $another_plan = strtoupper(st($myarray['another_plan']));
 if($pat_myarray['p_m_ins_type']!=1 && $pat_myarray['has_s_m_ins'] == 'Yes' && $pat_myarray['p_m_dss_file'] == 1 && $pat_myarray['s_m_dss_file'] ==1){

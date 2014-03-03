@@ -30,11 +30,22 @@ function show_section_completed($pid){
 		WHERE p.patientid='".mysql_real_escape_string($_SESSION['pid'])."'";
     $q = mysql_query($s);
     $r = mysql_fetch_assoc($q);
-    echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page. If you need to make changes to the questionnaire please contact ".$r['name']." at ".$r['phone']."</p>";
+    echo "<p>All sections of questionnaire has been completed. Please <a href=\"index.php\">click here</a> to return to the home page. If you need to make changes to the questionnaire please contact ".$r['name']." at ".format_phone($r['phone'])."</p>";
   }else{
     echo $links_title . $links;
   }
 
+}
+
+function format_phone($data){
+if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
+{
+    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+    if($matches[4]!=''){
+      $result .= ' x'.$matches[4];
+    }
+    return $result;
+}
 }
 
 ?>

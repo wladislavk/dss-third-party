@@ -59,7 +59,7 @@ if (preg_match_all('/DENTAL_DEVICE_SETTING\s+([^,]+)/m', $out, $matches)) {
                         $banner1 = str_replace("'","_",$banner1);
                         $banner1 .= ".".$extension;
 
-                        $uploaded = uploadImage($_FILES['pdf_file'], "q_file/".$banner1);
+                        $uploaded = uploadImage($_FILES['pdf_file'], "../../../shared/q_file/".$banner1);
 
                 }
                 else

@@ -63,7 +63,7 @@
 
                                         //@move_uploaded_file($file["tmp_name"],"q_file/".$banner1);
                                         //@chmod("q_file/".$banner1,0777);
-                                        uploadImage($file, 'q_file/'.$banner1);
+                                        uploadImage($file, '../../../shared/q_file/'.$banner1);
 
                                         $ins_sql = " insert into dental_q_image set 
                                         patientid = '".s_for($_GET['pid'])."',
@@ -93,6 +93,7 @@ $flow = mysql_fetch_assoc($flowresult);
 if(mysql_num_rows($flowresult) <= 0){
   $rx = false;
   $lomn = false;
+  $rxlomn = false;
 }else{
     $rx = ($flow['rxrec']!='');
     $lomn = ($flow['lomnrec']!='');
@@ -117,7 +118,19 @@ if ($patient_info) {
   $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$_GET['pid']."'";
   $pat_q = mysql_query($pat_sql);
   $pat_r = mysql_fetch_assoc($pat_q);
-  if($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
+  if($pat_r['p_m_relation']=='' ||
+        $pat_r['p_m_partyfname'] == "" ||
+        $pat_r['p_m_partylname'] == "" ||
+        $pat_r['p_m_relation'] == "" ||
+        $pat_r['ins_dob'] == "" ||
+        $pat_r['p_m_gender'] == "" ||
+        $pat_r['p_m_ins_co'] == "" ||
+        $pat_r['p_m_ins_grp'] == "" ||
+        ($pat_r['p_m_ins_plan'] == "" && $pat_r['p_m_ins_type'] != 1) ||
+        $pat_r['p_m_ins_type'] == ''
+        ){
+    $ins_error = true;
+  }elseif($pat_r['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $ins_error = false;
   }elseif($pat_r['p_m_dss_file']!=1){
     $ins_error = true;
@@ -202,7 +215,7 @@ Verification CANNOT be requested*
 File<br />
 Insurance Claim
 <?php
-if($ins_error || $study_error || !$rx || !$lomn){
+if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){
 ?>
 <span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
 <?php
@@ -211,7 +224,7 @@ if($ins_error || $study_error || !$rx || !$lomn){
 
 </div>
 <?php
-if(!$ins_error && !$study_error && $rx && $lomn){ ?>
+if(!$ins_error && !$study_error && (($rx && $lomn) || $rxlomn)){ ?>
 <?php include 'patient_claims.php'; ?>
 <?php }else{ ?>
 <a href="add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>#p_m_ins" class="vob_item
@@ -238,7 +251,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 <span>Sleep Study w/ Diagnosis</span>
 </a>
 
-<?php if(!$rx & !$lomn){ ?>
+<?php if(!$rx && !$lomn){ ?>
 <div id="combined_div">
 <a id="rxlomn_item" onclick="loadPopup('add_image.php?pid=<?= $_GET['pid'];?>&sh=14&itro=1');" class="vob_item
 <?php
@@ -292,7 +305,7 @@ if(!$ins_error && !$study_error && $rx && $lomn){ ?>
 </form>
 </div>
 <?php
-if($ins_error || $study_error || !$rx || !$lomn){
+if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){
 ?>
 <span class="sub_note">*Insurance Claims can be filed after<br />the items above are completed</span>
 <div class="clear"></div>

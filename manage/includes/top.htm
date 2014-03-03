@@ -1186,7 +1186,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
      $logo_q = mysql_query($logo_sql);
      $logo_r = mysql_fetch_assoc($logo_q);
      if($logo_r['logo'] != ''){ ?>
-   <div style="float:right;margin:13px 15px 0 0;"><img src="q_file/<?=$logo_r['logo']; ?>" /></div> 
+   <div style="float:right;margin:13px 15px 0 0;"><img src="display_file.php?f=<?=$logo_r['logo']; ?>" /></div> 
      <?php } ?>
      <div style="clear:both;"></div>
   </div>

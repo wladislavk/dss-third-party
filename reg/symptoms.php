@@ -16,10 +16,6 @@ if($_POST['q_page1sub'] == 1)
   if($s_r['questionnaire_status']==0 || $s_r['questionnaire_status']==1){
 
 
-	$feet = $_POST['feet'];
-	$inches = $_POST['inches'];
-	$weight = $_POST['weight'];
-	$bmi = $_POST['bmi'];
 	$ess = $_POST['ess'];
 	$tss = $_POST['tss'];
         $chief_complaint_text = $_POST['chief_complaint_text'];	
@@ -76,10 +72,6 @@ if($_POST['q_page1sub'] == 1)
 	{
 		$ins_sql = " insert into dental_q_page1 set 
 		patientid = '".s_for($_SESSION['pid'])."',
-		feet = '".s_for($feet)."',
-		inches = '".s_for($inches)."',
-		weight = '".s_for($weight)."',
-		bmi = '".s_for($bmi)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		sleep_qual = '".s_for($sleep_qual)."',
 		complaintid = '".s_for($comp_arr)."',
@@ -117,10 +109,6 @@ if($_POST['q_page1sub'] == 1)
 	else
 	{
 		$ed_sql = " update dental_q_page1 set 
-		feet = '".s_for($feet)."',
-		inches = '".s_for($inches)."',
-		weight = '".s_for($weight)."',
-		bmi = '".s_for($bmi)."',
 		chief_complaint_text = '".s_for($chief_complaint_text)."',
 		complaintid = '".s_for($comp_arr)."',
 		sleep_qual = '".s_for($sleep_qual)."',
@@ -192,10 +180,6 @@ $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
 
 $q_page1id = st($myarray['q_page1id']);
-$feet = st($myarray['feet']);
-$inches = st($myarray['inches']);
-$weight = st($myarray['weight']);
-$bmi = st($myarray['bmi']);
 $chief_complaint_text = st($myarray['chief_complaint_text']);
 $complaintid = st($myarray['complaintid']);
 $other_complaint = st($myarray['other_complaint']);
@@ -275,69 +259,6 @@ if($complaintid <> '')
 <input type="hidden" name="ed" value="<?=$q_page1id;?>" />
 <input type="hidden" id="goto_p" name="goto_p" value="sleep.php" />
 <div class="formEl_a">
-        	<script type="text/javascript">
-				function cal_bmi()
-				{
-					fa = document.q_page1frm;
-					if(fa.feet.value != 0 && fa.inches.value != -1 && fa.weight.value != 0)
-					{
-						var inc = (parseInt(fa.feet.value) * 12) + parseInt(fa.inches.value);
-						//alert(inc);
-						
-						var inc_sqr = parseInt(inc) * parseInt(inc);
-						var wei = parseInt(fa.weight.value) * 703;
-						var bmi = parseInt(wei) / parseInt(inc_sqr);
-						
-						//alert("BMI " + bmi.toFixed(2));
-						fa.bmi.value = bmi.toFixed(1);
-					}
-					else
-					{
-						fa.bmi.value = '';
-					}
-				}
-			</script>
-  	<h3>Body Mass Index Calculation</h3>
-	<div class="sepH_b fifth">
-		<label class="lbl_a">Feet</label>
-                            <select name="feet" id="feet" class="inpt_a" tabindex="5" onchange="cal_bmi();" >
-                            	<option value="0">Feet</option>
-                            	<? for($i=1;$i<9;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($feet == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-  	</div>
-	<div class="sepH_b fifth">
-		<label class="lbl_a">Inches</label>
-                <select name="inches" id="inches" class="inpt_a" tabindex="6" onchange="cal_bmi();">
-                            	<option value="-1">Inches</option>
-                            	<? for($i=0;$i<12;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($inches!='' && $inches == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-   	</div>
-	<div class="sepH_b fifth">                     
-		<label class="lbl_a">Weight</label>
-                <select name="weight" id="weight" class="inpt_a" tabindex="7" onchange="cal_bmi();">
-                            	<option value="0">Weight</option>
-                            	<? for($i=80;$i<=500;$i++)
-								{
-								?>
-									<option value="<?=$i?>" <? if($weight == $i) echo " selected";?>><?=$i?></option>
-								<?
-								}?>
-                            </select>
-     	</div> 
-	<div class="sepH_b fifth">
-		<label class="lbl_a">BMI</label>
-                <input id="bmi" name="bmi" type="text" class="inpt_a" value="<?=$bmi?>" tabindex="8" maxlength="255" readonly="readonly" />
-	</div>
 	<div class="sepH_b clear">
                     <label class="lbl_a">
                         What is the main reason you are seeking treatment?
@@ -480,6 +401,9 @@ function in_array(needle, haystack)
                                             </option>
                                             <option value="Sometimes" <? if($told_you_snore == 'Sometimes') echo " selected";?>>
                                                 Sometimes
+                                            </option>
+                                            <option value="Sometimes" <? if($told_you_snore == "Don't know") echo " selected";?>>
+                                                Don't know
                                             </option>
                                         </select>
 		</div>

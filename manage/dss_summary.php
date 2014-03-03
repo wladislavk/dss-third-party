@@ -932,7 +932,7 @@ $ep_date_1 = st($q2_myarray['sleep_study_on']);
 		<td valign="top">
 			<? if($patient_photo <> '') {?>
 				<div align="right">
-					<img src="q_file/<?=$patient_photo?>" width="150" border="0" />
+					<img src="display_file.php?f=<?=$patient_photo?>" width="150" border="0" />
 					&nbsp;&nbsp;&nbsp;
 					<br />&nbsp;
 				</div>

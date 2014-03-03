@@ -76,7 +76,7 @@ if($_POST["devicesub"] == 1)
                         $extension = substr($fname,$lastdot+1);
                         $banner1 = 'dental_device_'.$_POST['ed'];
                         $banner1 .= ".".$extension;
-                        $uploaded = uploadImage($_FILES['image'], "../q_file/".$banner1, 'device');
+                        $uploaded = uploadImage($_FILES['image'], "../../../../shared/q_file/".$banner1, 'device');
                 }
                 else
                 {
@@ -291,7 +291,7 @@ if(!$uploaded){
             <td valign="top" class="frmdata">
                   <input id="image" type="file" name="image" class="form-control" />
  		  <?php if($image_path != ''){ ?>
-    		    <img src="../q_file/<?= $image_path; ?>" />
+    		    <img src="display_file.php?f=<?= $image_path; ?>" />
 		  <?php } ?>
             </td>
         </tr>

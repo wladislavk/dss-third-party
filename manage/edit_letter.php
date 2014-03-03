@@ -204,6 +204,8 @@ if($_REQUEST['goto']!=''){
                                         $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
+                                }elseif($_REQUEST['goto']=='faxes'){
+                                        $page = 'manage_faxes.php';
                                 }
 
 ?> <a href="<?=$page; ?>" class="editlink" title="Pending Letters"><?php
@@ -219,7 +221,7 @@ if($_REQUEST['goto']!=''){
   $f_q = mysql_query($f_sql);
   while($f_r = mysql_fetch_assoc($f_q)){
     ?>
-	<div class="warning" id="fax_alert_<?=$f_r['id']; ?>">This letter failed to send via digital fax to <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= $f_r['to_name']; ?></a> at <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= format_phone($f_r['to_number']); ?></a> Please check fax number and retry. Click <a href="manage_vobs.php?status=3&viewed=0#fax">here</a> to view full failure details. </div>
+	<div class="warning" id="fax_alert_<?=$f_r['id']; ?>">This letter failed to send via digital fax to <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= $f_r['to_name']; ?></a> at <a href="#" onclick="loadPopup('add_contact.php?ed=<?=$f_r['contactid'];?>');return false;"><?= format_phone($f_r['to_number']); ?></a> Please check fax number and retry. Click <a href="manage_faxes.php?status=3&viewed=0#fax">here</a> to view full failure details. </div>
 	<br /><br />
     <?php
 
@@ -1026,7 +1028,7 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 		$search[] = "%patient_photo%";
 		if($patient_photo!=''){
-			$replace[] = "<img align=\"right\" src=\"q_file/".$patient_photo."\" />";
+			$replace[] = "<img align=\"right\" src=\"display_file.php?f=".$patient_photo."\" />";
 		}else{
 			$replace[] = "";
 		}
@@ -1485,7 +1487,7 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . strtolower($patient_info['gender']) . "</strong>";
 	$search[] = "%patient_photo%";
                 if($patient_photo!=''){
-                        $replace[] = "<img style=\"float:right;\" src=\"q_file/".$patient_photo."\" />";
+                        $replace[] = "<img style=\"float:right;\" src=\"display_file.php?f=".$patient_photo."\" />";
                 }else{
                         $replace[] = "";
                 }
@@ -1991,6 +1993,8 @@ loadPopup("letter_approve.php?id=<?=$saveletterid; ?>&pid=<?= $_GET['pid']; ?>&b
                                         $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
+                                }elseif($_REQUEST['goto']=='faxes'){
+                                        $page = 'manage_faxes.php';
                                 }
 
                         ?>
@@ -2026,6 +2030,8 @@ if(isset($_REQUEST['goto']) && $_REQUEST['goto']!=''){
                                         $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='letter'){
                                         $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
+                                }elseif($_REQUEST['goto']=='faxes'){
+                                        $page = 'manage_faxes.php';
                                 }
 
                         ?>

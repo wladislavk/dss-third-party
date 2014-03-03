@@ -55,7 +55,7 @@ while($unsigned_r = mysql_fetch_assoc($unsigned_res)){
   <td class="patient_header">
     <h3><a href="dss_summ.php?pid=<?= $p_r['patientid']; ?>&addtopat=1&sect=notes"><?= $p_r['firstname'] . " " . $p_r['lastname']; ?> - click to view patient chart</a></h3>
 	<div class="tooltip">
-		<img src="q_file/<?= $patient_photo; ?>" style="float:left;" />
+		<img src="display_file.php?f=<?= $patient_photo; ?>" style="float:left;" />
 		<div style="float:left;padding-left:10px;"> <?= $p_r['firstname'] . " " . $p_r['lastname']; ?> - <?= $p_r['dob']; ?><br />
 		REASON FOR SEEKING TX: <?= $p_r['chief_complaint_text']; ?><br />
 		<?=$p_r['add1'];?><br />

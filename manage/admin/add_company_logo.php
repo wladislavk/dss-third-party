@@ -16,7 +16,7 @@ if($_POST["compsub"] == 1)
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
   $file_name = "company_logo_".$_POST["ed"].".".$extension; 
-  $file_path = "../q_file/".$file_name;
+  $file_path = "../../../q_file/".$file_name;
   $max_width = 230;
   $max_height = 50;
   list($width,$height)=getimagesize($uploadedfile);
@@ -145,7 +145,7 @@ if($_POST["compsub"] == 1)
     </div>
     <? }?>
                <? if($logo <> "") {?>
-                        <img src="../q_file/<?=$logo;?>" />
+                        <img src="display_file.php?f=<?=$logo;?>" />
                <? }?>
     <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" enctype="multipart/form-data">
     <table class="table table-bordered table-hover">

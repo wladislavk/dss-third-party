@@ -344,6 +344,12 @@ if(isset($_GET['msg'])){
     <input type="submit" value="Filter List"/>
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
+<?php
+  if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 
+?>
+<a style="float:right;"  href="report_claim_aging.php" class="button"> Claim Aging </a>
+<?php } ?>
+<div style="clear:both;"></div>
 </div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
@@ -452,7 +458,7 @@ if(isset($_GET['msg'])){
 					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
 					$eobq = mysql_query($eobsql);
 					while($eobr = mysql_fetch_assoc($eobq)){
-						?><br /><a href="../q_file/<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
+						?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";

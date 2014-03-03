@@ -494,6 +494,10 @@ function patientabc(fa)
 			alert("Insured Date of Birth is a Required Field");
 			fa.ins_dob.focus();
 			return false;
+                } else if(trim(fa.p_m_gender.value) == "") {
+                        alert("Insured Gender is a Required Field");
+                        fa.p_m_gender.focus();
+                        return false;
 		} else if(trim(fa.p_m_ins_co.value) == "") {
 			alert("Insurance Company is a Required Field");
 			fa.p_m_ins_co.focus();
@@ -532,6 +536,10 @@ function patientabc(fa)
                 } else if(trim(fa.ins2_dob.value) == "") {
                         alert("Secondary Insured Date of Birth is a Required Field");
                         fa.ins2_dob.focus();
+                        return false;
+                } else if(trim(fa.s_m_gender.value) == "") {
+                        alert("Secondary Insured Gender is a Required Field");
+                        fa.s_m_gender.focus();
                         return false;
                 } else if(trim(fa.s_m_ins_co.value) == "") {
                         alert("Secondary Insurance Company is a Required Field");
@@ -1174,6 +1182,51 @@ function ledgerabc(fa)
     	    }
 	}
 	return true;
+}
+
+
+function addledgerabc(fa)
+{
+        if(trim(fa.service_date.value) == "")
+        {
+                alert("Service Date is Required");
+                fa.service_date.focus();
+                return false;
+        }
+
+        if(! is_date(trim(fa.service_date.value)))
+        {
+                alert("Invalid Date Format For Service Date");
+                fa.service_date.focus();
+                return false;
+        }
+
+        if(trim(fa.entry_date.value) == "")
+        {
+                alert("Entry Date is Required");
+                fa.entry_date.focus();
+                return false;
+        }
+
+        if(! is_date(trim(fa.entry_date.value)))
+        {
+                alert("Invalid Date Format for Entry Date");
+                fa.entry_date.focus();
+                return false;
+        }
+        if(trim(fa.transaction_type.value) == "0")
+        {
+                alert("Transaction Type is Required");
+                fa.transaction_type.focus();
+                return false;
+        }
+        if(trim(fa.proccode.value) == "0")
+        {
+                alert("Procedure Code is Required");
+                fa.proccode.focus();
+                return false;
+        }
+  return true;
 }
 
 function dailyabc(fa)

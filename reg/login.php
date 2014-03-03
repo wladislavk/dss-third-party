@@ -10,7 +10,7 @@
 <?php
 $e = '';
 if(isset($_POST['loginbut'])){
-        $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['login'])."'";
+        $salt_sql = "SELECT salt FROM dental_patients WHERE email='".mysql_real_escape_string($_POST['login'])."' AND (parent_patientid IS NULL OR parent_patientid=0 OR parent_patientid='')";
         $salt_q = mysql_query($salt_sql);
         $salt_row = mysql_fetch_assoc($salt_q);
         $pass = gen_password($_POST['password'], $salt_row['salt']);

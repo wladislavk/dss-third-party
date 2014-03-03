@@ -66,7 +66,7 @@ $filename = 'user_pin_'.$pat['patientid'].'.pdf';
   create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);
   $e = $pat['email'];
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
-    $logo = "/manage/q_file/".$ur['logo'];
+    $logo = "../../../shared/q_file/".$ur['logo'];
   }else{
     $logo = "/reg/images/email/reg_logo.gif";
   }

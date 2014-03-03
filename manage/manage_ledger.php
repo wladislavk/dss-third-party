@@ -182,7 +182,7 @@ $sql = "select
  		dl.description,
 		dl.amount,
 		'' as paid_amount,
-		dl.status,
+		di.status,
 		dl.primary_claim_id,
 		'' as payer,
 		'' as payment_type,
@@ -596,9 +596,9 @@ return s;
                                 <?php if($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING){ echo 'onclick="window.location=\'manage_insurance.php?pid='.$_GET['pid'].'&addtopat=1\'"'; } ?>
                                 >
           <?php
-		if($myarray[0]=='ledger' || $myarray[0] == 'ledger_paid'){
+		if($myarray[0] == 'ledger_paid'){
 	          	echo $dss_trxn_status_labels[$myarray["status"]]; 
-		}elseif($myarray[0]=='claim'){
+		}elseif($myarray[0]=='claim' || $myarray[0] == 'ledger'){
 			echo $dss_claim_status_labels[$myarray["status"]];
 		}
           //if($myarray["status"] == '0'){echo "Pend.";}

@@ -1,6 +1,8 @@
 #register_form .large{ font-size:13px; }
+.fifth{ width:19%; float:left; display:block;}
 .third{ width:32%; float:left;  display:block;}
 .half{width:49%; float:left; display:block;}
+.fifth .inpt_a{ width:150px; }
 .third .inpt_a{ width:180px; }
 .half .inpt_a{ width: 260px; }
 

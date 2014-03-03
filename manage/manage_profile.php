@@ -85,6 +85,20 @@ if(isset($_POST["practice_submit"]))
         zip='".mysql_real_escape_string($_POST['zip'])."',
         phone='".mysql_real_escape_string($_POST['phone'])."',
 	fax='".mysql_real_escape_string($_POST['fax'])."',
+        use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
+        service_name = '".mysql_real_escape_string($_POST['service_name'])."',
+        service_address = '".mysql_real_escape_string($_POST['service_address'])."',
+        service_city = '".mysql_real_escape_string($_POST['service_city'])."',
+        service_state = '".mysql_real_escape_string($_POST['service_state'])."',
+        service_zip = '".mysql_real_escape_string($_POST['service_zip'])."',
+        service_phone = '".mysql_real_escape_string($_POST['service_phone'])."',
+        service_fax = '".mysql_real_escape_string($_POST['service_fax'])."',
+        service_npi = '".mysql_real_escape_string($_POST['service_npi'])."',
+        service_medicare_npi = '".mysql_real_escape_string($_POST['service_medicare_npi'])."',
+        service_medicare_ptan = '".mysql_real_escape_string($_POST['service_medicare_ptan'])."',
+        service_tax_id_or_ssn = '".mysql_real_escape_string($_POST['service_tax_id_or_ssn'])."',
+        service_ssn = '".mysql_real_escape_string($_POST['service_ssn'])."',
+        service_ein = '".mysql_real_escape_string($_POST['service_ein'])."',
 	updated_at=now()
         WHERE userid='".$_SESSION['docid']."'";
   mysql_query($in_sql);
@@ -346,7 +360,7 @@ $num_custom=mysql_num_rows($my);
   <h4>Practice Logo</h4>
    <?php
                if($practice['logo'] <> "") {?>
-                        <img src="./q_file/<?=$practice['logo'];?>" />
+			<img src="display_file.php?f=<?=$practice['logo'];?>" />
                <? }?>
 
                                         <a href="Javascript:;"  onclick="Javascript: loadPopup('add_user_logo.php');" class="editlink" title="EDIT">
@@ -456,6 +470,66 @@ $num_custom=mysql_num_rows($my);
     <label>Mailing Fax:</label>
     <input class="value phonemask" name="mailing_fax" value="<?= $practice['mailing_fax']; ?>" />
   </div>
+  <div class="detail">
+    <label>Do you use a separate NPI number for Service Facility (CMS1500 box 32) and Billing Provider (CMS1500 box 33) items when filing claims?:</label>
+    <input type="radio" class="value" name="use_service_npi" value="1" <?= ($practice['use_service_npi'])?'checked="checked"':''; ?> /> Yes
+    <input type="radio" class="value" name="use_service_npi" value="0" <?= (!$practice['use_service_npi'])?'checked="checked"':''; ?> /> No
+  </div>
+  <div class="detail service_info">
+    <label>Service Name:</label>
+    <input class="value" name="service_name" value="<?= $practice['service_name']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service Address:</label>
+    <input class="value" name="service_address" value="<?= $practice['service_address']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service City:</label>
+    <input class="value" name="service_city" value="<?= $practice['service_city']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service State:</label>
+    <input class="value" name="service_state" value="<?= $practice['service_state']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service Zip:</label>
+    <input class="value" name="service_zip" value="<?= $practice['service_zip']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service NPI:</label>
+    <input class="value" name="service_npi" value="<?= $practice['service_npi']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service Medicare NPI:</label>
+    <input class="value" name="service_medicare_npi" value="<?= $practice['service_medicare_npi']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service Medicare PTAN:</label>
+    <input class="value" name="service_medicare_ptan" value="<?= $practice['service_medicare_ptan']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service Tax ID or SSN:</label>
+    <input class="value" name="service_tax_id_or_ssn" value="<?= $practice['service_tax_id_or_ssn']; ?>" />
+  </div>
+  <div class="detail service_info">
+    <label>Service EIN or SSN:</label>
+    <span class="value"><input type="checkbox" name="service_ein" value="1" <?= ($practice['service_ein']==1)?'checked="checked"':""; ?> /> EIN
+                <input type="checkbox" name="service_ssn" value="1" <?= ($practice['service_ssn']==1)?'checked="checked"':""; ?> />SSN</span>
+
+  </div>
+<script type="text/javascript">
+$('input[name="use_service_npi"]').click(function(){
+  check_service();
+});
+function check_service(){
+  if($('input[name="use_service_npi"]:checked').val()==1){
+    $('.service_info').show();
+  }else{
+    $('.service_info').hide();
+  }
+}
+check_service();
+</script>
 
   <div class="detail">
     <label>&nbsp;</label>

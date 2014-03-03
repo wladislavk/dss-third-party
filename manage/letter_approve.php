@@ -66,6 +66,8 @@ if($_REQUEST['goto']!=''){
                                         $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
                                 }elseif($_REQUEST['goto']=='new_letter'){
                                         $page = 'new_letter.php?pid='.$_GET['pid'];
+                                }elseif($_REQUEST['goto']=='faxes'){
+                                        $page = 'manage_faxes.php';
                                 }
 ?>
                                 parent.window.location = '<?= $page ?>';

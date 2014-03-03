@@ -33,7 +33,7 @@ while($user = mysql_fetch_assoc($u_q)){
   }
 ?>
 <input type="hidden" name="id" value="<?= $_REQUEST['id']; ?>" />
-<input type="submit" name="user_sub" value="Update" />
+<input type="submit" name="user_sub" value="Update" class="btn btn-primary">
 </form>
 
 

@@ -56,47 +56,25 @@ $message .= DSS_EMAIL_FOOTER;
 
 <?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
 
-<table width="980" align="center"  border="0" cellpadding="0" cellspacing="0" class="main_bor">
-  <tr bgcolor="#FFFFFF">
-    <td colspan="2" class="header_bg"> 
-		DENTAL SLEEP SOLUTIONS
-	</td>
-  </tr>
-  <tr bgcolor="#FFFFFF">
-    <td height="351" valign="middle" align="center">
-    	
-        <? if($_GET['msg']!="")
-			{
-		 	?> 
-                <span class="red">
-                    <b><?=$_GET['msg'];?></b>
-                </span>
-		 <? }?>
-		<FORM NAME="loginfrm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)";>
-      		<table width="50%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-			<tr bgcolor="#FFFFFF">
-			  <td colspan="2" class="cat_head">
-				<B>Admin Forgot Password</B>			 
-              </td>
-			</tr>
-			<tr bgcolor="#FFFFFF">
-			  	<td class="frmhead">
-					Email	
-				</td>
-			  	<td class="frmdata">
-			  		<input type="text" name="email" class="tbox">
-				</td>
-			</tr>
-			<tr bgcolor="#FFFFFF">
-				<td colspan="2" align="center">
-					<input type="hidden" name="emailsub" value="1">
-					<input type="submit" name="btnsubmit" value=" Recover Password " class="button">
-				</td>
-			</tr>
-		  </table>
-    	</FORM>
-	</td>
-  </tr>
-</table>
+<div class="page-header">
+    <h2>Password Recovery</h2>
+</div>
 
+<div class="row">
+    <? if($_GET['msg'] != '') {?>
+    <div class="alert alert-danger text-center">
+        <? echo $_GET['msg'];?>
+    </div>
+    <? } ?>
+    <div class="col-md-6 col-md-push-3">
+        <div class="well">
+            <form name="loginfrm" method="post" action="<?=$_SERVER['PHP_SELF']?>" onsubmit="return loginabc(this)" class="form-inline text-center">
+                Email:
+                <input type="email" name="email" placeholder="Confirm your email" class="form-control">
+                <input type="hidden" name="emailsub" value="1">
+                <input type="submit" name="btnsubmit" value="Recover Password" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
 <?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

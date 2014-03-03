@@ -341,8 +341,8 @@ if(isset($_GET['msg'])){
     
     <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
     <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
-    <input type="submit" value="Filter List"/>
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+    <input type="submit" value="Filter List" class="btn btn-primary">
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 <?php
   if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 

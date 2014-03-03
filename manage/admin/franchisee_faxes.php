@@ -69,14 +69,16 @@ $num_users=mysql_num_rows($my);
 <br />
 
 
-<div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+<? if($_GET['msg'] != '') {?>
+<div class="alert alert-danger text-center">
+    <? echo $_GET['msg'];?>
 </div>
+<? } ?>
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="sort_table table table-bordered table-hover" id="fax_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="fax_table">
 <thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head" width="14%">

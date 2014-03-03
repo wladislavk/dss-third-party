@@ -35,7 +35,7 @@ if(isset($_GET['bounce'])){
 </div>
 <form action="email_bounce.php" method="post">
  Email: <input type="text" name="email" value="<?= $_REQUEST['email']; ?>" />
-<input type="submit" value="Search" />
+<input type="submit" value="Search" class="btn btn-primary">
 
 </form>
 
@@ -61,7 +61,7 @@ if(isset($_REQUEST['email'])){
 	if(mysql_num_rows($q)==0){
 		?><h3>NO RESULTS</h3><?php
 	}else{
-	?><table width="80%">
+	?><table class="table table-bordered table-hover">
 		<tr>
 			<th>Name</th>
 			<th>Email</th>

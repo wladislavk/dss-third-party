@@ -68,9 +68,9 @@ if(isset($_POST["margins_reset"]))
   </div>
   <div class="detail">
     <label>&nbsp;</label>
-        <input type="submit" name="margins_submit" value="Update Margins" />
-        <input type="submit" name="margins_reset" value="Reset Margins" />
-        <input type="submit" name="margins_test" value="Print Test Claim" />
+        <input type="submit" name="margins_submit" value="Update Margins" class="btn btn-primary">
+        <input type="submit" name="margins_reset" value="Reset Margins" class="btn btn-primary">
+        <input type="submit" name="margins_test" value="Print Test Claim" class="btn btn-primary">
   </div>
   </form>
 </div>

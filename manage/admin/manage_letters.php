@@ -537,8 +537,8 @@ color: white;
     <?php } ?>
     <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
     <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
-    <input type="submit" value="Filter List"/>
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
+    <input type="submit" value="Filter List" class="btn btn-primary">
+    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
   </form>
 </div>
 <div class="letters-tryptych2">
@@ -549,21 +549,21 @@ color: white;
 <?php if ($status == "pending"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/admin/manage_letters.php?status=sent&sort=delivery_date&sortdir=DESC">
-  	<input class="addButton" type="submit" value="Sent Letters">
+  	<input class="btn btn-success" type="submit" value="Sent Letters">
   	</form>
   </div>
 <?php endif; ?>
 <?php if ($status == "sent"): ?>
   <div style="float:right;margin-right: 10px;">
   	<form method="post" action="/manage/admin/manage_letters.php?status=pending">
-  	<input class="addButton" type="submit" value="Pending Letters">
+  	<input class="btn btn-success" type="submit" value="Pending Letters">
   	</form>
   </div>
 <?php endif; ?>
 </div>
 <div class="letters-pager">Page(s): <?php paging($num_pages,$page,"status=$status&filter=$filter&sort=$sort&sortdir=$sortdir"); ?></div>
 <div style="clear:both;">
-<table cellpadding="3px" id="letters-table" width="97%" style="margin: 0 auto;">
+<table id="letters-table" class="table table-bordered table-hover">
   <tr class="tr_bg_h">
     <td class="col_head <?= ($_REQUEST['sort'] == 'franchisee')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=franchisee&sortdir=<?php echo ($_REQUEST['sort']=='franchisee'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Account</a></td>
     <td class="col_head <?= ($_REQUEST['sort'] == 'user')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>"><a href="manage_letters.php?status=<?=$status;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=user&sortdir=<?php echo ($_REQUEST['sort']=='user'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Username</a></td>

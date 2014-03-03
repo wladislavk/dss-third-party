@@ -695,8 +695,8 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                         <a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel btn btn-danger pull-right" title="REJECT">Reject</a>
                         <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
                                 <label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
-                                <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
-				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel" />
+                                <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" class="btn btn-primary">
+				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel"  class="btn btn-primary">
                         </div>
 <br />
 		<?php } ?>

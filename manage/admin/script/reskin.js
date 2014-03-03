@@ -47,8 +47,6 @@ $(function(){
         click = $this.attr('onclick'),
         popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i,'$2');
         
-        console.log(popup);
-        
         $this.removeAttr('onclick');
         $this.data('legend',legend);
         $this.data('popup',popup);
@@ -75,6 +73,19 @@ $(function(){
      * Datepicker
      */
     $('.date').datepicker();
+    
+    /**
+     * File input
+     */
+    $(':file').filestyle({
+        classButton: 'btn btn-primary',
+        classIcon: 'glyphicon glyphicon-folder-open'
+    });
+    
+    /**
+     * Tooltips
+     */
+    $('[title]').tooltip();
     
     /**
      * Append dropdown to change skin

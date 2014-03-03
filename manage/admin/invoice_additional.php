@@ -287,309 +287,392 @@ if(mysql_num_rows($doc_q) == 0){
         - <?= $doc['company_name']; ?>
         - Plan: <?= $doc['plan_name']; ?>
 </small></h2></div>
-<br />
 
-
-<div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+<? if($_GET['msg'] != '') {?>
+<div class="alert alert-danger text-center">
+    <? echo $_GET['msg'];?>
 </div>
-<br /><br />
-<div style=" margin:0 10px;border: solid 1px #000;">
-<h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
+<? } ?>
 
-<form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
-<input type="hidden" name="docid" value="<?=$user["userid"];?>" />
-<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Patient Name		
-		</td>
-		<td valign="top" class="col_head" width="40%">
-			Service Date	
-		</td>
-                <td valign="top" class="col_head" width="10%">
-                </td>
-		<td valign="top" class="col_head" width="20%">
-			Amount		
-		</td>
-	</tr>
-                        <tr id="month_row">
-                                <td valign="top">
-                                        MONTHLY FEE 
-                                </td>
-                                <td valign="top">
-                                        <input type="text" id="monthly_date" name="monthly_date" class="calendar" value="<?=$monthly_date;?>" />
-                                </td>
-                                <td valign="top">
-                                        <a href="#" onclick="$('#month_row').remove(); calcTotal();">Remove</a>
-                                </td>
-                                <td valign="top">
-                                            $<input type="text" class="amount" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>" />
-                                </td>
-                        </tr>
-<?php
-		while($case = mysql_fetch_array($case_q))
-		{
-		?>
-			<tr id="case_row_<?= $case['ledgerid'] ?>">
-				<td valign="top">
-					<input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" />
-				</td>
-				<td valign="top">
-					<input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="calendar" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
-				</td>
-                                <td valign="top">
-                                        <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();">Remove</a>
-                                </td>
-				<td valign="top">
-         				    $<input type="text" class="amount" name="amount_<?= $case['ledgerid'] ?>" value="195.00" />
-				</td>
-			</tr>
-	<? 	}
-		?>
-
-<?php
-	if($doc['user_type']==DSS_USER_TYPE_SOFTWARE){
-                while($vob = mysql_fetch_array($vob_q))
-                {
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
+        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
+            <input type="hidden" name="docid" value="<?=$user["userid"];?>">
+            <table id="invoice_table" class="table table-bordered table-hover">
+                <tr>
+                    <th></th>
+            		<th width="40%">
+            			Patient Name		
+            		</th>
+            		<th width="27%">
+            			Service Date	
+            		</th>
+            		<th width="27%">
+            			Amount		
+            		</th>
+            	</tr>
+                <tr id="model-row" class="hidden">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="extra_name_{row}" placeholder="Service Name" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?= date('m/d/Y') ?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="extra_amount_{row}" value="195.00">
+                        </div>
+                    </td>
+                </tr>
+                <tr id="month_row">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <th>
+                        MONTHLY FEE
+                    </th>
+                    <td>
+                        <div class="input-group date">
+                            <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=$monthly_date;?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="amount_monthly" value="<?= $doc['monthly_fee']; ?>">
+                        </div>
+                    </td>
+                </tr>
+                <?php while ($case = mysql_fetch_array($case_q)) { ?>
+                <tr id="case_row_<?= $case['ledgerid'] ?>">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <input type="text" id="service_date_<?= $case['ledgerid'] ?>" class="form-control text-center" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="amount_<?= $case['ledgerid'] ?>" value="195.00">
+                        </div>
+                    </td>
+                </tr>
+	           <? } ?>
+            <?php if ($doc['user_type']==DSS_USER_TYPE_SOFTWARE) { ?>
+                <?php while ($vob = mysql_fetch_array($vob_q)) { ?>
+                <tr id="vob_row_<?= $vob['id'] ?>">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <td>
+                        Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?>
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="form-control text-center" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>">
+                        </div>
+                    </td>
+                </tr>
+                <? } ?>
+            <?php } ?>
+            
+            <?php if ($fax['total_faxes'] > 0) { ?>
+                <?php
+                
+                $bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
+                
+                if ($doc['free_fax'] > $fax['total_faxes']) {
+                    $free_fax = $fax['total_faxes'];
+                }
+                else {
+                    $free_fax = $doc['free_fax'];
+                }
+                
                 ?>
-                        <tr id="vob_row_<?= $vob['id'] ?>">
-                                <td valign="top">
-					Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?> 
-                                </td>
-                                <td valign="top">
-                                        <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" id="vob_date_completed_<?= $vob['id'] ?>" class="calendar" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
-                                </td>
-                                <td valign="top">
-                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();">Remove</a>
-                                </td>
-                                <td valign="top">
-                                            $<input type="text" class="amount" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
-                                </td>
-                        </tr>
-        <?      }
-	}
-
-
-			if($fax['total_faxes'] > 0){
-			$bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
-			if($doc['free_fax'] > $fax['total_faxes']){
-			  $free_fax = $fax['total_faxes'];
-			}else{
-			  $free_fax = $doc['free_fax'];
-			} ?>
-                        <tr id="free_fax_row">
-                                <td valign="top">
-                                        <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" />
-                                </td>
-                                <td valign="top">
-                                        <input type="text" id="free_fax_start_date" class="calendar" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
-to
-                                        <input type="text" id="free_fax_end_date" class="calendar" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
-                                </td>
-                                <td valign="top">
-                                        <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();">Remove</a>
-                                </td>
-                                <td valign="top">
-                                            $<input type="text" class="amount" name="free_fax_amount" value="0.00" />
-                                </td>
-                        </tr>
-
-
-		<?php
-			if($bill_faxes > 0){
-                ?>
-                        <tr id="fax_row">
-                                <td valign="top">
-                                        <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" style="width:100%;" />
-                                </td>
-                                <td valign="top">
-                                        <input type="text" id="fax_start_date" class="calendar" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
-to
-                                        <input type="text" id="fax_end_date" class="calendar" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
-                                </td>
-                                <td valign="top">
-                                        <a href="#" onclick="$('#fax_row').remove(); calcTotal();">Remove</a>
-                                </td>
-                                <td valign="top">
-                                            $<input type="text" class="amount" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>" />
-                                </td>
-                        </tr>
-			<?php } ?>
-		<?php } ?>
-
-		<tr id="total_row">
-			<td valign="top" colspan="2">&nbsp;
-			Total: <span id="total" style="font-weight:bold;">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></span>	
-			<input type="hidden" name="extra_total" id="extra_total" value="0" />
-			</td>
-                        <td>
-                                <a href="#" onclick="add_row()" style="padding:3px 5px;" class="button">Add Entry</a>
-                        </td>
-
-			<td valign="top" class="col_head">
-				<input type="submit" name="submit" value=" Create Invoice " class="button" />
-				<a href="manage_monthly_invoice.php" style="margin-left:20px;color:#c33;">Cancel</a>
-				<a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" style="margin-left:20px;color:#c33;">Skip</a>
-			</td>
-		</tr>
-</table>
-</form>
+                <tr id="free_fax_row">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" id="free_fax_start_date" class="date form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" id="free_fax_end_date" class="date form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="free_fax_amount" value="0.00">
+                        </div>
+                    </td>
+                </tr>
+                <?php if ($bill_faxes > 0) { ?>
+                <tr id="fax_row">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" id="fax_start_date" class="date form-control text-center" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" id="fax_end_date" class="date form-control text-center" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>">
+                        </div>
+                    </td>
+                </tr>
+                <?php } ?>
+            <?php } ?>
+                <tr id="total_row">
+                    <td>
+                        <a href="#" class="btn btn-success" title="Add Entry">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </td>
+                    <td valign="top" colspan="2">
+                        <strong class="pull-right">Total</strong>
+                    </td>
+                    <td class="text-center">
+                        <input type="hidden" name="extra_total" id="extra_total" value="0">
+                        <strong id="total">$<?= number_format((mysql_num_rows($case_q)*195)+695,2); ?></strong>
+                    </td>
+                </tr>
+            </table>
+            <div class="text-center">
+                <a href="manage_monthly_invoice.php" class="btn btn-danger">Cancel</a>
+                <a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" class="btn btn-default">Skip</a>
+                <input type="submit" name="submit" value="Create Invoice" class="btn btn-success pull-right">
+            </div>
+        </form>
+    </div>
 </div>
 <script type="text/javascript">
-
-var row_count = 1;
-function add_row(){
-
-var row = '<tr id="extra_row_'+row_count+'">';
-row += '<td valign="top">';
-row += '<input type="text" name="extra_name_'+row_count+'" value="" />';
-row += '</td><td valign="top">';
-row += '<input type="text" name="extra_service_date_'+row_count+'" value="<?=date('m/d/Y');?>" />';
-row += '</td><td valign="top">';
-row += '<a href="#" onclick="$(\'#extra_row_'+row_count+'\').remove(); calcTotal();">Remove</a>';
-row += '</td><td valign="top">';
-row += '$<input type="text" class="amount" name="extra_amount_'+row_count+'" value="195.00" />';
-row += '</td></tr>';
-
-
-$('#extra_total').val(row_count);
-
-$(row).insertBefore('#total_row');
-
-row_count++;
-setupAmount();
-calcTotal();
-}
-
-function calcTotal(){
-a = 0;
-  $('.amount').each(function(){
-    a += Number($(this).val());
-  });
-a = a.toFixed(2);
-$('#total').html('$'+a);
-}
-
-function setupAmount(){
-$('.amount').keyup(function(){
-  calcTotal();
+$(document).ready(function(){
+    var row_count = 1;
+    
+    $('#invoice_table').on('mouseenter', 'tr', function() {
+        $(this).find('.btn.btn-danger').removeClass('hidden');
+    });
+    $('#invoice_table').on('mouseleave', 'tr', function() {
+        $(this).find('.btn.btn-danger').addClass('hidden');
+    });
+    
+    $('#invoice_table').on('click', '.btn.btn-danger', function(e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
+        calcTotal();
+        return false;
+    });
+    
+    $('#invoice_table').on('change keyup', '.amount', function() {
+        calcTotal();
+    });
+    
+    $('#invoice_table .btn.btn-success').on('click', function(e) {
+        e.preventDefault();
+        
+        var row = '<tr id="extra_row_{row}">' + $('#model-row').html() + '</tr>';
+        
+        row = $(row.replace(/\{row\}/g, row_count));
+        row.insertBefore('#total_row');
+        row.find('.date').datepicker();
+        
+        $('#extra_total').val(row_count);
+        row_count++;
+        calcTotal();
+        
+        return false;
+    });
 });
+
+function calcTotal () {
+    var a = 0;
+    
+    $('.amount').each(function(){
+        a += Number($(this).val());
+    });
+    
+    a = a.toFixed(2);
+    
+    $('#total').html('$' + a);
 }
 
-setupAmount();
 calcTotal();
 
 //START OF FEATURE TO CHECK AND MAKE SURE ITEMS HAVENT ALREADY BEEN BILLED
-function check_billed(){
- f = $('#invoice').serialize();
- $.ajax({
-   url: "includes/check_billed.php",
-   type: "post",
-   data: f,
-   success: function(data){
-     alert(data);
-     var r = $.parseJSON(data);
-     if(r.error){
-     }else{
-     }
-   },
-   failure: function(data){
-     //alert('fail');
-   }
- });
- return false;
+function check_billed () {
+    var f = $('#invoice').serialize();
+    
+    $.ajax({
+        url: '/manage/includes/check_billed.php',
+        type: 'post',
+        data: f,
+        success: function(data){
+            alert(data);
+            var r = $.parseJSON(data);
+            
+            if (r.error) {}
+            else {}
+        },
+        error: function(data){
+            //alert('fail');
+        }
+    });
+    
+    return false;
 }
-
-
-
-
-
-
 </script>
-
-<br /><br />	
 <? include "includes/bottom.htm";?>
 
 
 <?php
-function bill_card($customerID, $amount, $userid, $invoiceid){
-$key_sql = "SELECT stripe_secret_key FROM companies c 
-                JOIN dental_user_company uc
-                        ON c.id = uc.companyid
-                 WHERE uc.userid='".mysql_real_escape_string($userid)."'";
-$key_q = mysql_query($key_sql);
-$key_r= mysql_fetch_assoc($key_q);
-Stripe::setApiKey($key_r['stripe_secret_key']);
-$status = 1;
-try{
-    $charge = Stripe_Charge::create(array(
-      "amount" => ($amount*100), # $15.00 this time
-      "currency" => "usd",
-      "customer" => $customerID)
-    );
-} catch(Stripe_CardError $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
-} catch (Stripe_InvalidRequestError $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
-} catch (Stripe_AuthenticationError $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
-} catch (Stripe_ApiConnectionError $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
-} catch (Stripe_Error $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
-} catch (Exception $e) {
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=2
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  $status = 2;
+
+function bill_card ($customerID, $amount, $userid, $invoiceid) {
+    $key_sql = "SELECT stripe_secret_key FROM companies c
+        JOIN dental_user_company uc
+        ON c.id = uc.companyid
+        WHERE uc.userid='".mysql_real_escape_string($userid)."'";
+    
+    $key_q = mysql_query($key_sql);
+    $key_r= mysql_fetch_assoc($key_q);
+    
+    Stripe::setApiKey($key_r['stripe_secret_key']);
+    $status = 1;
+    
+    try{
+        $charge = Stripe_Charge::create(array(
+            "amount" => ($amount*100), # $15.00 this time
+            "currency" => "usd",
+            "customer" => $customerID
+        ));
+    }
+    catch (Stripe_CardError $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+    catch (Stripe_InvalidRequestError $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+    catch (Stripe_AuthenticationError $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+    catch (Stripe_ApiConnectionError $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+    catch (Stripe_Error $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+    catch (Exception $e) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=2
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+        $status = 2;
+    }
+
+    $stripe_charge = $charge->id;
+    $stripe_customer = $charge->customer;
+    $stripe_card_fingerprint = $charge->card->fingerprint;
+    $charge_sql = "INSERT INTO dental_charge SET
+        amount='".mysql_real_escape_string(str_replace(',','',$amount))."',
+        userid='".mysql_real_escape_string($userid)."',
+        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
+        charge_date=NOW(),
+        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
+        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
+        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
+        status='".mysql_real_escape_string($status)."',
+        adddate=NOW(),
+        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+    
+    mysql_query($charge_sql);
+    
+    if ($status == 1) {
+        $invoice_sql = "UPDATE dental_percase_invoice SET
+            status=1
+            WHERE id='".mysql_real_escape_string($invoiceid)."'";
+        
+        mysql_query($invoice_sql);
+    }
+    
+    return true;
 }
-
-  $stripe_charge = $charge->id;
-  $stripe_customer = $charge->customer;
-  $stripe_card_fingerprint = $charge->card->fingerprint;
-  $charge_sql = "INSERT INTO dental_charge SET
-                        amount='".mysql_real_escape_string(str_replace(',','',$amount))."',
-                        userid='".mysql_real_escape_string($userid)."',
-                        adminid='".mysql_real_escape_string($_SESSION['adminuserid'])."',
-                        charge_date=NOW(),
-                        stripe_customer='".mysql_real_escape_string($stripe_customer)."',
-                        stripe_charge='".mysql_real_escape_string($stripe_charge)."',
-                        stripe_card_fingerprint='".mysql_real_escape_string($stripe_card_fingerprint)."',
-			status='".mysql_real_escape_string($status)."',
-                        adddate=NOW(),
-                        ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
-        mysql_query($charge_sql);
-  if($status == 1){
-  $invoice_sql = "UPDATE dental_percase_invoice SET
-                        status=1
-                        WHERE id='".mysql_real_escape_string($invoiceid)."'";
-  mysql_query($invoice_sql);
-  }
-  return true;
-
-}
-
-
-

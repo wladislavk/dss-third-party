@@ -68,7 +68,7 @@ if(isset($_POST['add_doc'])){
   <?php } ?>
 
 <label>File:</label> <input type="file" name="attachment" />
-<input type="submit" name="add_doc" value="Add" />
+<input type="submit" name="add_doc" value="Add" class="btn btn-success">
 </form>
 <?php } ?>
 
@@ -108,9 +108,15 @@ if(isset($_POST['add_doc'])){
 		<?php } ?>
                 <td>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
-                        <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" />Edit</a>
+                        <a href="manage_docs_edit.php?doc=<?= $doc['documentid']; ?>" class="btn btn-primary btn-xs">
+                          <span class="glyphicon glyphicon-pencil"></span>
+                          Edit
+                        </a>
 			<?php } ?>
-                        <a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>">View</a>
+                        <a target="_blank" href="display_file.php?f=<?= $doc['filename']; ?>" class="btn btn-default btn-xs">
+                          <span class="glyphicon glyphicon-eye-open"></span>
+                          View
+                        </a>
                 </td>
         </tr>
 

@@ -75,7 +75,7 @@ echo $memo_array['memo'];
     <i class="glyphicon glyphicon-calendar"></i>
   </span>
 </div>
-<input type="submit" name="submit" value="Update Memo">
+<input type="submit" name="submit" value="Update Memo" class="btn btn-primary">
       </form>
 <br /><br />
 <?php } ?>

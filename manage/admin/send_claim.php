@@ -68,7 +68,7 @@ $(document).ready(function(){
 
 <input type="checkbox" name="test" value="1" /> Test
 <br />
-<input type="submit" name="submit" value="Send Electronic Claim" />
+<input type="submit" name="submit" value="Send Electronic Claim" class="btn btn-primary">
 </form>
 
 

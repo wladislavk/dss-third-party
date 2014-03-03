@@ -277,7 +277,7 @@ $num_users=mysql_num_rows($my);
     <td><?= $mf_r['monthly_fee']; ?></td>
     <td><?= $mf_r['fax_fee']; ?></td>
     <td><?= $mf_r['free_fax']; ?></td>
-    <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="button" style="padding:3px 5px;">Edit</a></td>
+    <td><a href="#" onclick="loadPopup('monthly_fee_edit.php?ed=<?=$mf_r['id']; ?>'); return false;" class="btn btn-primary" style="padding:3px 5px;">Edit</a></td>
   </tr>
 
 

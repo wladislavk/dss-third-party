@@ -110,73 +110,74 @@ $fax_footer_imgname = $my['fax_footer'];
 </script>
 
 <div class="page-header">
-	Update Letterhead for <?= $docname ?>
+	<h1>Update Letterhead for <?= $docname ?></h1>
 </div>
 
-<div><?php print $msg; ?></div>
+<?php if ($msg != '') { ?>
+<div class="alert alert-success text-center">
+    <?= $msg ?>
+</div>
+<?php } ?>
 
-<form name="letterhead" action="<?=$_SERVER['PHP_SELF'];?>?uid=<?=$_GET['uid'];?>" method="post" enctype="multipart/form-data">
-<input type="hidden" name="uid" value="<?=$_GET['uid'];?>" />
-<table>
-<tr>
-	<td colspan="2"><h2>Email Images</h2></td>
-</tr>
-<tr>
-	<td><h3>Email Header</h3></td>
-	<td>
-		<?php if (empty($email_header_imgname)): ?>
-		<input id="emailheaderimg" name="emailheaderimg" type="file" size="4" />
-		<?php else: ?>
-		<input type="button" id="email_header_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $email_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="emailheader" value="Edit" title="Edit" />
-		<input id="emailheaderimg" style="display:none;" name="emailheaderimg" type="file" size="4" />
-		<?php endif; ?>
-	</td>
-<tr>
-	<td><h3>Email Footer</h3></td>
-	<td>
-		<?php if (empty($email_footer_imgname)): ?>
-		<input id="emailfooterimg" name="emailfooterimg" type="file" size="4" />
-		<?php else: ?>
-		<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="emailfooter" value="Edit" title="Edit" />
-		<input id="emailfooterimg" style="display:none;" name="emailfooterimg" type="file" size="4" />
-		<?php endif; ?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2"><h2>Fax Images</h2></td>
-</tr>
-<tr>
-	<td><h3>Fax Header</h3></td>
-	<td>
-		<?php if (empty($fax_header_imgname)): ?>
-		<input id="faxheaderimg" name="faxheaderimg" type="file" size="4" />
-		<?php else: ?>
-		<input type="button" id="fax_header_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $fax_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="faxheader" value="Edit" title="Edit" />
-		<input id="faxheaderimg" style="display:none;" name="faxheaderimg" type="file" size="4" />
-		<?php endif; ?>
-	</td>
-</tr>
-<tr>
-	<td><h3>Fax Footer</h3></td>
-	<td>
-		<?php if (empty($fax_footer_imgname)): ?>
-		<input id="faxfooterimg" name="faxfooterimg" type="file" size="4" />
-		<?php else: ?>
-		<input type="button" id="fax_footer_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $fax_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" />
-		<input type="button" class="toggle_but" id="faxfooter" value="Edit" title="Edit" />
-		<input id="faxfooterimg" style="display:none;" name="faxfooterimg" type="file" size="4" />
-		<?php endif; ?>
-	</td>
-</tr>
-<tr>
-	<td><input name="submit_letterhead" type="submit" value="Submit" /></td>
-</tr>
-</table>
+<form name="letterhead" action="<?=$_SERVER['PHP_SELF'];?>?uid=<?=$_GET['uid'];?>" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<input type="hidden" name="uid" value="<?=$_GET['uid'];?>">
+	
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Email</th>
+				<th>Fax</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Header</th>
+				<td>
+					<?php if (empty($email_header_imgname)): ?>
+						<input id="emailheaderimg" name="emailheaderimg" type="file" class="form-control">
+					<?php else: ?>
+						<input id="emailheaderimg" style="display:none;" name="emailheaderimg" type="file" class="form-control">
+						<input type="button" id="email_header_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $email_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" class="btn btn-default">
+						<input type="button" id="emailheader" value="Edit" title="Edit"  class="btn btn-info toggle_but">
+					<?php endif; ?>
+				</td>
+				<td>
+					<?php if (empty($fax_header_imgname)): ?>
+						<input id="faxheaderimg" name="faxheaderimg" type="file" size="4" />
+					<?php else: ?>
+						<input id="faxheaderimg" style="display:none;" name="faxheaderimg" type="file" class="form-control">
+						<input type="button" id="fax_header_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $fax_header_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" class="btn btn-default">
+						<input type="button" id="faxheader" value="Edit" title="Edit"  class="btn btn-info toggle_but">
+					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<th>Footer</th>
+				<td>
+					<?php if (empty($email_footer_imgname)): ?>
+						<input id="emailfooterimg" name="emailfooterimg" type="file" class="form-control">
+					<?php else: ?>
+						<input id="emailfooterimg" style="display:none;" name="emailfooterimg" type="file" class="form-control">
+						<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('display_file.php?f=<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" class="btn btn-default">
+						<input type="button" id="emailfooter" value="Edit" title="Edit"  class="btn btn-info toggle_but">
+					<?php endif; ?>
+				</td>
+				<td>
+					<?php if (empty($email_footer_imgname)): ?>
+						<input id="emailfooterimg" name="emailfooterimg" type="file" class="form-control">
+					<?php else: ?>
+						<input id="emailfooterimg" style="display:none;" name="emailfooterimg" type="file" class="form-control">
+						<input type="button" id="email_footer_view" value="View" title="View" onClick="window.open('display_file.php?f<?= $email_footer_imgname ?>','windowname1','width=860, height=790,scrollbars=yes');return false;" class="btn btn-default">
+						<input type="button" id="emailfooter" value="Edit" title="Edit"  class="btn btn-info toggle_but">
+					<?php endif; ?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="text-center">
+		<input name="submit_letterhead" type="submit" value="Submit" class="btn btn-success">
+	</p>
 </form>
 
-<?php
-include "includes/bottom.htm";
-?>
+<?php include "includes/bottom.htm"; ?>

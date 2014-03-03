@@ -78,18 +78,39 @@ $num_users=mysql_num_rows($my);
 </div>
 <br />
 
-<form method="post">
-Start Date: <input type="text" id="start_date" name="start_date" class="calendar" value="<?= date('m/d/Y', strtotime($start_date)); ?>" />
-End Date: <input type="text" id="end_date" name="end_date" class="calendar" value="<?= date('m/d/Y', strtotime($end_date)); ?>" />
-<input type="submit" value="Filter" />
+<form method="post" class="form-inline">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group date" id="start_date" data-date="<?= date('m/d/Y', strtotime($start_date)); ?>" data-date-format="mm/dd/yyyy">
+                <span class="input-group-addon">Start date:</span>
+                <input class="form-control text-center" type="text" name="start_date" value="<?= date('m/d/Y', strtotime($start_date)); ?>">
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group date" id="end_date" data-date="<?= date('m/d/Y', strtotime($end_date)); ?>" data-date-format="mm/dd/yyyy">
+                <span class="input-group-addon">End date:</span>
+                <input class="form-control text-center" type="text" name="end_date" value="<?= date('m/d/Y', strtotime($end_date)); ?>">
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <input type="submit" value="Filter" class="btn btn-primary">
+    </div>
 </form>
-<div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+
+<? if($_GET['msg'] != '') {?>
+<div class="alert alert-danger text-center">
+    <? echo $_GET['msg'];?>
 </div>
+<? } ?>
 
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
-<table class="sort_table table table-bordered table-hover" id="monthly_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table table table-bordered table-hover" id="monthly_table">
 <thead>
 	<tr class="tr_bg_h">
 		<th valign="top" class="col_head">

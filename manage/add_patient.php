@@ -33,7 +33,14 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
-
+  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_q = mysql_query($b_sql);
+  if(mysql_num_rows($b_q)>0){
+    $b_r = mysql_fetch_assoc($b_q);
+    $billing_co = $b_r['name'];
+  }else{
+    $billing_co = "DSS";
+  }
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
@@ -1530,14 +1537,14 @@ if(document.getElementById('p_m_dss_file_yes').checked || document.getElementByI
         $('#p_m_ins_plan').val()!='' ||
         $('#p_m_ins_type').val()!=''){
 
-  alert('Is DSS filing insurance?  Please select Yes or No.');
+  alert('Is <?= $billing_co; ?> filing insurance?  Please select Yes or No.');
   return false;
   }
 }
 
 }
 if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
-  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
+  alert('<?= $billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
   return false;
 }
 
@@ -2209,22 +2216,12 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
 <?php } ?>
 
 
-<?php
-  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $b_q = mysql_query($b_sql);
-  if(mysql_num_rows($b_q)>0){
-    $b_r = mysql_fetch_assoc($b_q);
-    $cname = $b_r['name'];
-  }else{
-    $cname = "DSS";
-  }
-?> 
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $billing_co; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		Insured Address same as Pt. address?
 			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
@@ -2447,7 +2444,7 @@ $image = mysql_fetch_assoc($itype_my);
 
 		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $billing_co; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 Insured Address same as Pt. address?
                         <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <? if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
@@ -3137,11 +3134,11 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
   $('.dss_file_radio').click(function(){
 
     if($('#p_m_dss_file_no').is(':checked') && $('#s_m_dss_file_yes').is(':checked')){
-	alert('<?=$cname;?> must file Primary Insurance in order to file Secondary Insurance.');
+	alert('<?=$billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
         return false;
     } 
     if($('#p_m_dss_file_yes').is(':checked') && $('#s_m_dss_file_no').is(':checked')){
-        return confirm("Are you sure you do not want <?=$cname;?> to file secondary insurance claims? Normally patients expect this; please select 'Yes' unless you are sure of your choice.");
+        return confirm("Are you sure you do not want <?=$billing_co;?> to file secondary insurance claims? Normally patients expect this; please select 'Yes' unless you are sure of your choice.");
     } 
 
 

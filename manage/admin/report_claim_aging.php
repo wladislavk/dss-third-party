@@ -76,15 +76,10 @@ $total_rec = mysql_num_rows($my);
 <span class="admin_head">
 	Claim Aging Report
 </span>
-<div>
-&nbsp;&nbsp;
-<a href="ledger.php" class="editlink" title="EDIT">
-	<b>&lt;&lt;Back</b></a>
-</div>
 <?php
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 ?>
-  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
+  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get" style="width:60%; float:left; margin-left:10px;">
     Account:
     <select name="fid">
       <option value="">Any</option>
@@ -99,7 +94,13 @@ $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
     <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'"/>
   </form>
 
+<div style="float:right; margin-right:20px;">
+  <a href="?nbc=1" class="button">No Billing Company</a>
+  <a href="?bc=1" class="button">Billing Company</a>
+  <a href="?all" class="button">All</a>
 
+
+</div>
 
 <style>
 #contentMain tr:hover{

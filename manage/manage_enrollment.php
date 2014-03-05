@@ -33,23 +33,27 @@ include "includes/top.htm";
       <th>Payer</th>
       <th>Status</th>
       <th>Response</th>	  
+      <th>Get Form</th>
   </thead>
 		<?php
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
 			<tr class="<?=$tr_class;?>">
-				<td valign="top" width="20%">
+				<td valign="top">
 					<?=$myarray['payer_id']?>
 				</td>
-				<td valign="top" width="25%">
-					<?=st($myarray["status"]);?>
+				<td valign="top">
+					<?=st($dss_enrollment_labels[$myarray["status"]]);?>
 				</td>
-				<td valign="top" width="10%">
+				<td valign="top">
 					<a href="#" onclick="$('#response_<?= $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>
 					<span id="response_<?= $myarray['id']; ?>" style="display:none;">
                    			  <?= $myarray["response"]; ?> 
 					</span>
+				</td>
+				<td valign="top">
+					<a href="https://gds.eligibleapi.com/v1.3/payers/<?=$myarray['payer_id']; ?>/enrollment_form?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4&transaction_type=837P" target="_blank">PDF</a>
 				</td>
 			</tr>
 	<? 	}

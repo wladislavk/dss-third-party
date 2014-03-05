@@ -20,7 +20,7 @@ require_once('includes/patient_changes.php');
 <link href="css/top.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="js/masks.js"></script>
+   <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
 <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
@@ -2208,7 +2208,7 @@ if($api_r['use_eligible_api']==1){
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json', 'ins_payer');
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 'ins_payer');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

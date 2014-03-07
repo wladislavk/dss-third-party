@@ -1,21 +1,21 @@
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
         <tr class="tr_bg_h">
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'imagetypeid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                <th valign="top" class="col_head <?= ($_REQUEST['sort'] == 'imagetypeid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
                         <a href="<?= $_SERVER['PHP_SELF']; ?>?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=imagetypeid&sortdir=<?php echo ($_REQUEST['sort']=='imagetypeid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Image Type</a>
-                </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                </th>
+                <th valign="top" class="col_head <?= ($_REQUEST['sort'] == 'title')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
                         <a href="<?= $_SERVER['PHP_SELF']; ?>?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=title&sortdir=<?php echo ($_REQUEST['sort']=='title'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Title</a>
-                </td>
-                <td valign="top" class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+                </th>
+                <th valign="top" class="col_head <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
                         <a href="<?= $_SERVER['PHP_SELF']; ?>?<?= isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Add Date</a>
-                </td>
-                <td valign="top" class="col_head" width="10%">
+                </th>
+                <th valign="top" class="col_head" width="10%">
                         Preview
-                </td>
+                </th>
 		<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
-                <td valign="top" class="col_head" width="20%">
-                        Action
-                </td>
+                <th valign="top" class="col_head" width="20%">
+                        Actions
+                </th>
 		<?php } ?>
         </tr>
         <? if(mysql_num_rows($my) == 0)
@@ -60,18 +60,21 @@
                                         <?=date('M d, Y H:i', strtotime(st($myarray["adddate"])));?>
                                 </td>
                                 <td valign="top">
-                                                <a href="display_file.php?f=<?=addslashes($myarray["image_file"]);?>" target="_blank">
-                                                Preview</a>
+                                    <a href="display_file.php?f=<?=addslashes($myarray["image_file"]);?>" target="_blank" class="btn btn-default btn-sm">
+                                        Preview
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
                                 </td>
 				<?php if($office_type == DSS_OFFICE_TYPE_FRONT){ ?>
                                 <td valign="top">
-                                        <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink" title="EDIT">
-                                                Edit 
-                                        </a>
-
-                    <a href="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&delid=<?=$myarray["imageid"];?>&sh=<?=$_GET['sh'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
-                                                 Delete 
-                                        </a>
+                                    <a href="Javascript:;"  onclick="Javascript: loadPopupRefer('add_image.php?ed=<?=$myarray["imageid"];?>&pid=<?=$_GET['pid'];?>&sh=<?=$_GET['sh'];?>');" class="editlink btn btn-primary btn-sm" title="EDIT">
+                                        Edit
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="<?=$_SERVER['PHP_SELF']?>?pid=<?=$_GET['pid'];?>&delid=<?=$myarray["imageid"];?>&sh=<?=$_GET['sh'];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink btn btn-danger btn-sm" title="DELETE">
+                                        Delete
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
                                 </td>
 				<?php } ?>
                         </tr>

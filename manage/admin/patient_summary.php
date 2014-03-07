@@ -40,16 +40,16 @@ if($_GET['sect']!=''){
 ?>
   <div id="sections" class="tab-content">
         <div class="tab-pane fade in active" id="sect_summ">
-                <?php include 'patient_summ_summ.php'; ?>
+            <?php include 'patient_summ_summ.php'; ?>
         </div>
         <div class="tab-pane fade" id="sect_notes">
-                <?php include 'patient_summ_notes.php'; ?>
+            <?php include 'patient_summ_notes.php'; ?>
         </div>
         <div class="tab-pane fade" id="sect_treatment">
-                <?php include 'patient_summ_treatment.php'; ?>
+            <?php include 'patient_summ_treatment.php'; ?>
         </div>
         <div class="tab-pane fade" id="sect_health">
-                <?php include 'patient_summ_health.php'; ?>
+            <?php include 'patient_summ_health.php'; ?>
         </div>
         <div class="tab-pane fade" id="sect_letters">
                 <?php include 'patient_summ_letters.php'; ?>

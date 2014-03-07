@@ -1,10 +1,10 @@
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" class="table table-bordered table-hover">
         <? if(mysql_num_rows($my) == 0)
         { ?>
                 <tr class="tr_bg">
-                        <td valign="top" class="col_head" colspan="10" align="center">
+                        <th valign="top" class="col_head" colspan="10" align="center">
                                 No Records
-                        </td>
+                        </th>
                 </tr>
         <?
         }

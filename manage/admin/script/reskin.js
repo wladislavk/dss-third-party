@@ -88,6 +88,22 @@ $(function(){
     $('[title]').tooltip();
     
     /**
+     * Remember (and navigate) tabs
+     */
+    if (location.hash.substr(0,1) == "#") {
+        $("a[href$='#" + location.hash.substr(1) + "']").tab("show");
+    }
+    
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+        if (history.pushState) {
+            history.pushState(null, null, '#' + $(e.target).attr('href').substr(1));
+        }
+        else {
+            location.hash = '#'+$(e.target).attr('href').substr(1);
+        }
+    });
+    
+    /**
      * Append dropdown to change skin
      */
     $('body').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');

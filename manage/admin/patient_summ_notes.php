@@ -1,6 +1,7 @@
 <div class="clear"></div>
 
 <?php
+
 $sql = "select n.*, u.name signed_name from dental_notes n
         LEFT JOIN dental_users u on u.userid=n.signed_id
 where n.patientid='".s_for($_GET['pid'])."' ";
@@ -17,6 +18,5 @@ $sql = "select n.*, u.name signed_name, p.adddate as parent_adddate from
 $my=mysql_query($sql) or die(mysql_error());
 
 include '../partials/patient_notes.php';
+
 ?>
-
-

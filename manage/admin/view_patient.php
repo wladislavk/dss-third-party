@@ -6,30 +6,6 @@ require_once('includes/password.php');
 
 
 include "includes/similar.php";
-/*function trigger_letter20($pid) {
-  $letterid = '20';
-  $md_list = get_mdcontactids($pid);
-	$pt_referral_list = get_ptreferralids($pid);
-  $letter = create_letter($letterid, $pid, '', '', $md_list, $pt_referral_list);
-  if (!is_numeric($letter)) {
-    print "Can't send letter 20: " . $letter;
-    die();
-  } else {
-    return $letter;
-  }
-}
-
-// Trigger Letter 20 Thankyou
-$pt_referralid = get_ptreferralids($_GET['pid']);
-if ($pt_referralid) {
-	$sql = "SELECT letterid FROM dental_letters WHERE patientid = '".s_for($_GET['pid'])."' AND templateid = '20' AND md_referral_list = '".s_for($pt_referralid)."';";
-	$result = mysql_query($sql);
-	$numrows = mysql_num_rows($result);
-	if ($numrows == 0) {
-		trigger_letter20($_GET['pid']);
-	}
-}
-*/
 
 ?>
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
@@ -1141,11 +1117,11 @@ $doc_username = $docr['username'];
 
 	?>
 	
-	<? if(isset($msg) && $msg != '') {?>
-    <div align="center" class="red">
-        <? echo $msg;?>
-    </div>
-    <? }?>
+<?php if ($msg != '') { ?>
+<div class="alert alert-success text-center">
+    <?= $msg ?>
+</div>
+<?php } ?>
 
 <script type="text/javascript">
 var clickedBut;
@@ -1348,7 +1324,7 @@ function remove_notification(id){
    
 <?php include 'includes/patient_nav.php'; ?> 
     
-    <table width="98%" style="margin-left:11px;" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+    <table class="table table-bordered table-hover">
 	<tr>
               <td >
             <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION - <?= $firstname." ".$lastname; ?> - <?= $doc_username; ?></font>

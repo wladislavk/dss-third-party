@@ -75,7 +75,7 @@ $optimum_echovision_ver = $myarrays['optimum_echovision_ver'];
 $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
 
 ?>
-<div style="margin-bottom:6px">
+<h2>
     <?php
     
     if ($r['preferred_name']!='') {
@@ -83,29 +83,38 @@ $optimum_echovision_hor = $myarrays['optimum_echovision_hor'];
     }
     else {
         echo $r['firstname'] ." - ";
-    }
-    
-    $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
-    $years = floor($diff / (365*60*60*24));
-    
-    echo $years ." years old";
-    
-    ?>
-    <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
-</div>
+    } ?>
+    <small>
+        <?php
+        
+        $diff = abs(strtotime(date('Y-m-d')) - strtotime($r['dob']));
+        $years = floor($diff / (365*60*60*24));
+        
+        echo $years . " years old";
+        
+        ?>
+    </small>
+</h2>
 
-<strong>Device</strong>
-<select id="dental_device" name="dentaldevice" style="width:250px">
-    <option value=""></option>
-    <?php
-    
-    $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
-    $device_my = mysql_query($device_sql);
-    
-    while ($device_myarray = mysql_fetch_array($device_my)) { ?>
-        <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
-    <?php } ?>
-</select>
+<div class="row">
+    <div class="col-md-6">
+        <strong>DOB:</strong> <?= ($r['dob']!='')?date('m/d/Y', strtotime($r['dob'])):'';?>
+    </div>
+    <div class="col-md-6">
+        <strong>Device</strong>
+        <select id="dental_device" name="dentaldevice" style="width:250px">
+            <option value=""></option>
+            <?php
+            
+            $device_sql = "select deviceid, device from dental_device where status=1 order by sortby;";
+            $device_my = mysql_query($device_sql);
+            
+            while ($device_myarray = mysql_fetch_array($device_my)) { ?>
+                <option <?= ($device_myarray['deviceid']==$dentaldevice)?'selected="selected"':''; ?>value="<?=st($device_myarray['deviceid'])?>"><?=st($device_myarray['device']);?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
 
 <?php
 

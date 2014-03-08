@@ -168,7 +168,7 @@
 function delete_segment (id) {
     if (confirm('Are you sure you want to delete this appointment?')) {
         $.ajax({
-            url: "includes/delete_appt.php",
+            url: "/manage/includes/delete_appt.php",
             type: "post",
             data: {
                 id: id,
@@ -202,7 +202,7 @@ function update_completed_date (cid) {
     comp_date = $('#completed_date_'+id).val();
     
     $.ajax({
-        url: "includes/update_appt.php",
+        url: "/manage/includes/update_appt.php",
         type: "post",
         data: {
             id: id,
@@ -234,7 +234,7 @@ $(document).delegate('.delay_reason', "change", function(){
     }
     
     $.ajax({
-        url: "includes/flow_delay_reason_update.php",
+        url: "/manage/includes/flow_delay_reason_update.php",
         type: "post",
         data: {
             id: id,
@@ -274,7 +274,7 @@ $(document).delegate('.noncomp_reason', "change", function () {
     }
     
     $.ajax({
-        url: "includes/flow_noncomp_reason_update.php",
+        url: "/manage/includes/flow_noncomp_reason_update.php",
         type: "post",
         data: {
             id: id,
@@ -305,7 +305,7 @@ $(document).delegate('.dentaldevice', "change", function () {
     id = $(this).attr('id').substring(13);
     device = $(this).val();
     $.ajax({
-        url: "includes/flow_device_update.php",
+        url: "/manage/includes/flow_device_update.php",
         type: "post",
         data: {
             id: id,
@@ -327,7 +327,7 @@ $(document).delegate('.study_type', "change", function () {
     id = $(this).attr('id').substring(11);
     type = $(this).val();
     $.ajax({
-        url: "includes/flow_study_type_update.php",
+        url: "/manage/includes/flow_study_type_update.php",
         type: "post",
         data: {
             id: id,

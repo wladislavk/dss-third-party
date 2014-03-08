@@ -105,6 +105,21 @@ $(function(){
     });
     
     /**
+     * Table with fixed column
+     */
+    $('.table-responsive table.table').each(function() {
+        var $table = $(this),
+        $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
+        
+        $fixedColumn.removeAttr('id');
+        $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
+        
+        $fixedColumn.find('tr').each(function (i, elem) {
+            $(this).height($table.find('tr:eq(' + i + ')').height());
+        });
+    });
+    
+    /**
      * Append dropdown to change skin
      */
     $('body').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');

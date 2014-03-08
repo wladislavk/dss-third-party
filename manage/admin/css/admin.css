@@ -66,3 +66,20 @@ body.loading-new-theme:before {
 #go-to-sleep.fade.in {
     background-color: #000;
 }
+
+.table-responsive > .table {
+    width: auto;
+}
+
+.table-responsive > .fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+    border-right: 1px solid #ddd;
+}
+
+@media(min-width:768px) {
+    .table-responsive > .fixed-column {
+        display: none;
+    }
+}

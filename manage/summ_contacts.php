@@ -83,7 +83,7 @@
                   $docmdother3_phone = $d['phone1'];
                   $docmdother3_fax = $d['fax'];
 ?>
-<table width="100%">
+<table width="100%" class="table table-striped">
   <tr>
     <th>Type</th>
     <th>Name</th>

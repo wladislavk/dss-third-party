@@ -3,10 +3,11 @@
         <th>Date</th>
         <th>Treatment</th>
         <th style="width: 80px">Letters</th>
+        <th></th>
     </tr>
     <tr id="completed_row_temp" style="display:none;">
         <td>
-            <input class="completed_date flow_comp_calendar" id="completed_date_" type="text" value="" />
+            <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_" type="text" value="" />
         </td>
         <td>
             <span class="title">Test</span>
@@ -47,7 +48,7 @@
         if ($datecomp !='') { ?>
     <tr id="completed_row_<?= $id; ?>">
         <td>
-            <input class="completed_date flow_comp_calendar" id="completed_date_<?= $id; ?>" type="text" value="<?= $datecomp; ?>" />
+            <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_<?= $id; ?>" type="text" value="<?= $datecomp; ?>" />
         </td>
         <td>
             <span class="title"><?= $segments[$row['segmentid']]; ?></span>

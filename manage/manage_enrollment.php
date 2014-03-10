@@ -30,7 +30,8 @@ include "includes/top.htm";
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
   <thead>
     <tr class="tr_bg_h">
-      <th>Payer</th>
+      <th>Payer ID</th>
+      <th>Payer Name</th>
       <th>Status</th>
       <th>Response</th>	  
       <th>Get Form</th>
@@ -44,7 +45,20 @@ include "includes/top.htm";
 					<?=$myarray['payer_id']?>
 				</td>
 				<td valign="top">
+					<?=$myarray['payer_name']?>
+				</td>
+				<td valign="top">
 					<?=st($dss_enrollment_labels[$myarray["status"]]);?>
+					<?php
+						$w_sql = "SELECT * from dental_eligible_response where reference_id='".mysql_real_escape_string($myarray['reference_id'])."' ORDER BY adddate DESC LIMIT 1";
+						$w_q = mysql_query($w_sql);
+						$w_r = mysql_fetch_assoc($w_q);
+						if($w_r['adddate'] !=''){
+							echo " - ".date('m/d/Y h:i a', strtotime($w_r['adddate']));
+						}else{	
+							echo " - ".date('m/d/Y h:i a', strtotime($myarray['adddate']));
+						}
+					?>
 				</td>
 				<td valign="top">
 					<a href="#" onclick="$('#response_<?= $myarray['id']; ?>').toggle();return false;" style="display:block;">View</a>

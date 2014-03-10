@@ -19,7 +19,8 @@ if(isset($_GET['vobdel'])){
   $api_q = mysql_query($api_sql);
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1){
-    include 'eligible_api.php';
+    //include 'eligible_api.php';
+    include 'eligible_check/eligible_check.php';
   }
 include 'includes/bottom.htm';
 ?>

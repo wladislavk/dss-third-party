@@ -33,6 +33,7 @@ if(isset($_POST["enroll_but"]))
   $q = mysql_query($sql);
   $r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
+$payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 $data = array();
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
 $data['enrollment_npi'] = array(
@@ -84,6 +85,7 @@ if(isset($json_response->{"error"})){
   $up_sql = "INSERT INTO dental_eligible_enrollment SET 
 	user_id = '".mysql_real_escape_string($_SESSION['docid'])."',
         payer_id = '".mysql_real_escape_string($payer_id)."',
+        payer_name = '".mysql_real_escape_string($payer_name)."',
         reference_id = '".mysql_real_escape_string($ref_id)."',
         response='".mysql_real_escape_string($result)."',
 	status='0',

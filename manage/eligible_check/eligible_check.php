@@ -53,7 +53,19 @@
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_id">
+        <input type="text" class="form-control" id="payer_name">
+<br />
+<div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+        <ul id="ins_payer_list" class="search_list">
+                <li class="template" style="display:none"></li>
+        </ul>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 'ins_payer', '', true);
+});
+</script>
+<input type="hidden" name="payer_id" id="payer_id" />
       </div>
     </div>
 

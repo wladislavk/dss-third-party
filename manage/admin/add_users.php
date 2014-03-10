@@ -123,7 +123,7 @@ if($_POST["usersub"] == 1)
 			mysql_query($loc_sql);
                         edx_user_update($_POST['ed']);
 			help_user_update($_POST['ed'], $help_con);
-			form_update_all($_POST['ed']);
+			form_update_all($_POST['ed'], true);
 
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];

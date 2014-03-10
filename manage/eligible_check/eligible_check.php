@@ -62,7 +62,7 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 'ins_payer', '', true);
+setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '', true);
 });
 </script>
 <input type="hidden" name="payer_id" id="payer_id" />

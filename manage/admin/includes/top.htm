@@ -352,10 +352,12 @@ $num_pending_claims = mysql_num_rows($pending_q);
                                                 <li><a href="/manage/admin/manage_doctor_transaction_code_list.php">User Codes (Individual)</a></li>                                        </ul>
                                 </li>
 				<?php if(!is_billing($_SESSION['admin_access'])){ ?>
-                                <li class="dir">Progress Note Text
+                                <li class="dir">Note Text
                                         <ul>
-                                                <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
-                                                <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>                                        </ul>
+                                                <li><a href="/manage/admin/manage_custom_text.php">Progress Default Text (Global)</a></li>
+                                                <li><a href="/manage/admin/manage_doctor_custom_text_list.php">Progress User Text (Individual)</a></li>                                        
+                                                <li><a href="/manage/admin/manage_claim_text.php">Claim Text</a></li>       
+					</ul>
                                 </li>
 				<?php } ?>
                                 <li class="dir">Password

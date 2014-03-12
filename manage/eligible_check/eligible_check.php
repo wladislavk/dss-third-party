@@ -1,14 +1,14 @@
-  <link href="eligible_check/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link href="eligible_check/css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
-  <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
+  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
+  <link href="css/sample_1.css" rel="stylesheet" media="screen">
 
-  <script src="eligible_check/js/lib/jquery-1.10.2.min.js"></script>
-  <script src="eligible_check/js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="js/lib/jquery-1.10.2.min.js"></script>
+  <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
 
-  <script src="eligible_check/js/eligible.js"></script>
-  <script src="eligible_check/js/sample_1.js"></script>
+  <script src="js/eligible.js"></script>
+  <script src="js/sample_1.js"></script>
 
-<div class="container">
+<div class="container eligible_check">
 
   <form role="form" class="form-horizontal form-coverage">
 

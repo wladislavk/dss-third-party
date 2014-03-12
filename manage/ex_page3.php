@@ -68,7 +68,7 @@ if($_POST['ex_page3sub'] == 1)
 	$soft_palate_arr = '';
 	if(is_array($soft_palate))
 	{
-		foreach($mandible as $val)
+		foreach($soft_palate as $val)
 		{
 			if(trim($val) <> '')
 				$soft_palate_arr .= trim($val).'~';

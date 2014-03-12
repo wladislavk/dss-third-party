@@ -1633,7 +1633,7 @@ $(document).ready(function(){
 						Patient's Address 
 						<span class="small_cap">(No. Street)</span>
 						<br />
-						<input type="text" value="<?=$patient_address?>" name="patient_address" class="inbox_line3" size="28"  />
+						<input type="text" value="<?=$insured_address?>" name="patient_address" class="inbox_line3" size="28"  />
 					</td>
 					<td align="left" valign="top">
 						<span class="num">6.</span> 
@@ -1673,12 +1673,12 @@ $(document).ready(function(){
 							<tr>
 								<td width="115" align="left" valign="top">
 									City<br />
-									<input value="<?=$patient_city?>" name="patient_city" type="text" class="inbox_line3" size="28"/>
+									<input value="<?=$insured_city?>" name="patient_city" type="text" class="inbox_line3" size="28"/>
 								</td>
 								<td width="13" align="left" valign="top" class="b_line"></td>
 								<td width="196" align="left" valign="top" style="padding-left:4px;">
 									State<br />
-									<input value="<?=$patient_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
+									<input value="<?=$insured_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
 								</td>
 							</tr>
 						</table>
@@ -1746,7 +1746,7 @@ $(document).ready(function(){
 								<td width="115" align="left" valign="top">
 									Zip Code
 									<br />
-									<input value="<?=$patient_zip?>" name="patient_zip" type="text" class="inbox_line3" size="13"  />
+									<input value="<?=$insured_zip?>" name="patient_zip" type="text" class="inbox_line3" size="13"  />
 								</td>
 								<td width="13" align="left" valign="top" class="b_line"></td>
 								<td width="196" align="left" valign="top" style="padding-left:4px;">

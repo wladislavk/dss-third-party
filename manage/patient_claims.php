@@ -59,7 +59,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                     <?=$dss_claim_status_labels[$myarray['status']];?>
                                 </td>
                                 <td valign="top">
-                                        <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="EDIT">
+                                        <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
                                                 View 
                                         </a>
 
@@ -131,7 +131,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                     <?=$dss_claim_status_labels[$myarray['status']];?>
                                 </td>
                                 <td valign="top">
-					<a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="EDIT">
+					<a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
                                                 View 
                                         </a>
 

@@ -42,6 +42,7 @@ if(isset($_POST['submitnewsleeplabsumm'])){
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
@@ -135,6 +136,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
 
 		// Get new sizes
@@ -175,6 +177,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
 
 		// Output
@@ -210,6 +213,7 @@ if($_FILES['image_file']['error'] == 4 && $_FILES['image_file1']['error'] == 4 )
 			$banner1 = str_replace(" ","_",$banner1);
 			$banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
 			$banner1 .= ".".$extension;
 			$profile = ($_POST['imagetypeid']==4)?'profile':'general';
 			$uploaded = uploadImage($_FILES['image_file'], "../../../shared/q_file/".$banner1, $profile);

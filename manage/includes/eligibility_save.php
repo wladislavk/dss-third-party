@@ -11,6 +11,10 @@ $s = "INSERT INTO dental_eligibility SET
 	patientid='".mysql_real_escape_string($pid)."',
 	userid='".mysql_real_escape_string($_SESSION['userid'])."',
 	eligible_id='".mysql_real_escape_string($d['eligible_id'])."',
+	adddate=now(),
+        ip_address='".$_SERVER['REMOTE_ADDR']."',
+	response='".$_REQUEST['response']."'";
+/*
 	pi_name='".mysql_real_escape_string($pi['name'])."',
         pi_id='".mysql_real_escape_string($pi['id'])."',
         pi_group_name='".mysql_real_escape_string($pi['group_name'])."',
@@ -97,7 +101,7 @@ if($section_data){
         .$sect."_additional_insurance_comments='".mysql_real_escape_string($sect_data['additional_insurance']['comments'])."'";
 }
 }
-
+*/
 //$s = "UPDATE dental_task SET status = 1
 	//WHERE id='".mysql_real_escape_string($id)."'";
 if(mysql_query($s)){

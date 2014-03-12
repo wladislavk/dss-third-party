@@ -20,7 +20,7 @@ require_once('includes/patient_changes.php');
 <link href="css/top.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="js/masks.js"></script>
+   <script type="text/javascript" src="js/masks.js"></script>
 <script type="text/javascript" src="script/logout_timer.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
 <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
@@ -33,7 +33,14 @@ require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
-
+  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $b_q = mysql_query($b_sql);
+  if(mysql_num_rows($b_q)>0){
+    $b_r = mysql_fetch_assoc($b_q);
+    $billing_co = $b_r['name'];
+  }else{
+    $billing_co = "DSS";
+  }
 $docsql = "SELECT use_patient_portal FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
 $docq = mysql_query($docsql);
 $docr = mysql_fetch_assoc($docq);
@@ -1530,14 +1537,14 @@ if(document.getElementById('p_m_dss_file_yes').checked || document.getElementByI
         $('#p_m_ins_plan').val()!='' ||
         $('#p_m_ins_type').val()!=''){
 
-  alert('Is DSS filing insurance?  Please select Yes or No.');
+  alert('Is <?= $billing_co; ?> filing insurance?  Please select Yes or No.');
   return false;
   }
 }
 
 }
 if(document.getElementById('s_m_dss_file_yes').checked && !document.getElementById('p_m_dss_file_yes').checked){
-  alert('DSS must file Primary Insurance in order to file Secondary Insurance.');
+  alert('<?= $billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
   return false;
 }
 
@@ -2201,7 +2208,7 @@ if($api_r['use_eligible_api']==1){
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/claims-payer.json', 'ins_payer');
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 'ins_payer');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />
@@ -2209,24 +2216,14 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
 <?php } ?>
 
 
-<?php
-  $b_sql = "SELECT c.name FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $b_q = mysql_query($b_sql);
-  if(mysql_num_rows($b_q)>0){
-    $b_r = mysql_fetch_assoc($b_q);
-    $cname = $b_r['name'];
-  }else{
-    $cname = "DSS";
-  }
-?> 
 		<tr> 
         	<td valign="top" colspan="2" class="frmhead">
             	<ul>
             		<li id="foli8" class="complex">	
                     	<label class="desc" id="title0" for="Field0">
-                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="p_m_dss_file_yes" class="dss_file_radio" type="radio" name="p_m_dss_file" value="1" <? if($p_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input  id="p_m_dss_file_no" type="radio" class="dss_file_radio" name="p_m_dss_file" value="2" <? if($p_m_dss_file == '2') echo "checked='checked'";?>>No
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		Insured Address same as Pt. address?
+		<a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
 			<input type="radio" onclick="$('#p_m_address_fields').hide();" name="p_m_same_address" value="1" <? if($p_m_same_address == '1') echo "checked='checked'";?>> Yes
 			<input type="radio" onclick="$('#p_m_address_fields').show();" name="p_m_same_address" value="2" <? if($p_m_same_address == '2') echo "checked='checked'";?>> No
 
@@ -2273,19 +2270,19 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_paye
                 <div>
                     <span>
                         <input id="p_m_address" name="p_m_address" type="text" class="field text addr tbox" value="<?=$p_m_address?>" style="width:225px;"  maxlength="255"/>
-                        <label for="add">Address</label>
+                        <label for="add">Insured Address</label>
                     </span>
                     <span>
                         <input id="p_m_city" name="p_m_city" type="text" class="field text addr tbox" value="<?=$p_m_city?>" style="width:200px;" maxlength="255" />
-                        <label for="city">City</label>
+                        <label for="city">Insured City</label>
                     </span>
                     <span>
                         <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?=$p_m_state?>"  style="width:80px;" maxlength="255" />
-                        <label for="state">State</label>
+                        <label for="state">Insured State</label>
                     </span>
                     <span>
                         <input id="p_m_zip" name="p_m_zip" type="text" class="field text addr tbox" value="<?=$p_m_zip?>" style="width:80px;" maxlength="255" />
-                        <label for="zip">Zip Code </label>
+                        <label for="zip">Insured Zip Code </label>
                     </span>
                 </div>
                         <div>
@@ -2447,9 +2444,9 @@ $image = mysql_fetch_assoc($itype_my);
 
 		</script>
                     	<label class="desc s_m_ins_div" id="title0" for="Field0"  <?= ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
-                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $cname; ?> filing insurance?<input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
+                            Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="return false;" class="plain" title="Select YES if you would like <?= $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."><?= $billing_co; ?> filing insurance?</a><input id="s_m_dss_file_yes" type="radio" class="dss_file_radio" name="s_m_dss_file" value="1" <? if($s_m_dss_file == '1') echo "checked='checked'";?>>Yes&nbsp;&nbsp;&nbsp;&nbsp;<input id="s_m_dss_file_no" type="radio" class="dss_file_radio" name="s_m_dss_file" value="2" <? if($s_m_dss_file == '2') echo "checked='checked'";?>>No
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Insured Address same as Pt. address?
+                <a onclick="return false" class="plain" title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO.">Insured Address same as Pt. address?</a>
                         <input type="radio" onclick="$('#s_m_address_fields').hide();" name="s_m_same_address" value="1" <? if($s_m_same_address == '1') echo "checked='checked'";?>> Yes
                         <input type="radio" onclick="$('#s_m_address_fields').show();" name="s_m_same_address" value="2" <? if($s_m_same_address == '2') echo "checked='checked'";?>> No
 
@@ -2495,19 +2492,19 @@ $image = mysql_fetch_assoc($itype_my);
                 <div>
                     <span>
                         <input id="s_m_address" name="s_m_address" type="text" class="field text addr tbox" value="<?=$s_m_address?>" style="width:225px;"  maxlength="255"/>
-                        <label for="add">Address</label>
+                        <label for="add">Insured Address</label>
                     </span>
                     <span>
                         <input id="s_m_city" name="s_m_city" type="text" class="field text addr tbox" value="<?=$s_m_city?>" style="width:200px;" maxlength="255" />
-                        <label for="city">City</label>
+                        <label for="city">Insured City</label>
                     </span>
                     <span>
                         <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?=$s_m_state?>"  style="width:80px;" maxlength="255" />
-                        <label for="state">State</label>
+                        <label for="state">Insured State</label>
                     </span>
                     <span>
                         <input id="s_m_zip" name="s_m_zip" type="text" class="field text addr tbox" value="<?=$s_m_zip?>" style="width:80px;" maxlength="255" />
-                        <label for="zip">Zip Code </label>
+                        <label for="zip">Insured Zip Code </label>
                     </span>
                 </div>
                         <div>
@@ -3137,11 +3134,11 @@ var cal4 = new calendar2(document.getElementById('copyreqdate'));
   $('.dss_file_radio').click(function(){
 
     if($('#p_m_dss_file_no').is(':checked') && $('#s_m_dss_file_yes').is(':checked')){
-	alert('<?=$cname;?> must file Primary Insurance in order to file Secondary Insurance.');
+	alert('<?=$billing_co;?> must file Primary Insurance in order to file Secondary Insurance.');
         return false;
     } 
     if($('#p_m_dss_file_yes').is(':checked') && $('#s_m_dss_file_no').is(':checked')){
-        return confirm("Are you sure you do not want <?=$cname;?> to file secondary insurance claims? Normally patients expect this; please select 'Yes' unless you are sure of your choice.");
+        return confirm('You indicated that <?=$billing_co;?> will file Primary insurance claims but NOT Secondary insurance claims. Normally patients expect claims to be filed in both cases; please select "Yes" for Secondary unless you are sure of your choice.');
     } 
 
 

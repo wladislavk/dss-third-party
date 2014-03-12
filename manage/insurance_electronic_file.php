@@ -648,11 +648,11 @@ $data['subscriber'] = array(
 	"group_name" => $insured_insurance_plan,
         "gender" => $pat_gender,
         "address" => array(
-                "street_line_1" => $patient_address,
+                "street_line_1" => $insured_address,
                 "street_line_2" => "",
-                "city" => $patient_city,
-                "state" => $patient_state,
-                "zip" => $patient_zip),
+                "city" => $insured_city,
+                "state" => $insured_state,
+                "zip" => $insured_zip),
 	"dob" => $claim_ins_dob);
   $ins_contact_qry = "SELECT * FROM `dental_contact` WHERE contactid='".mysql_real_escape_string($pat_myarray['p_m_ins_co'])."' AND contacttypeid = '11' AND docid='".$pat_myarray['docid']."'";
   $ins_contact_qry_run = mysql_query($ins_contact_qry);
@@ -676,11 +676,11 @@ $data['dependent'] = array(
 	"dob" => $pat_dob,
 	"gender" => $pat_gender,
         "address" => array(
-                "street_line_1" => $patient_address,
+                "street_line_1" => $insured_address,
                 "street_line_2" => "",
-                "city" => $patient_city,
-                "state" => $patient_state,
-                "zip" => $patient_zip)
+                "city" => $insured_city,
+                "state" => $insured_state,
+                "zip" => $insured_zip)
         );
 }
 $diagnosis_pointer = array();

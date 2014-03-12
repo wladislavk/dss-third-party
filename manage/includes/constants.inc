@@ -349,3 +349,13 @@ $dss_user_status_labels[DSS_USER_STATUS_SUSPENDED] = 'Suspended';
 
 define('DSS_OFFICE_TYPE_BACK', 0);
 define('DSS_OFFICE_TYPE_FRONT', 1);
+
+
+define('DSS_ENROLLMENT_SUBMITTED', 0);
+define('DSS_ENROLLMENT_ACCEPTED', 1);
+define('DSS_ENROLLMENT_REJECTED', 2);
+
+$dss_enrollment_labels = array();
+$dss_enrollment_labels[DSS_ENROLLMENT_SUBMITTED] = 'Submitted';
+$dss_enrollment_labels[DSS_ENROLLMENT_ACCEPTED] = 'Accepted';
+$dss_enrollment_labels[DSS_ENROLLMENT_REJECTED] = 'Rejected';

@@ -145,6 +145,7 @@ $sql = "SELECT f.*,
 	l.templateid,
         l.pdf_path,
         l.status as letter_status,
+	l.deleted as letter_deleted,
 	CASE l.template_type
 		WHEN '0' THEN t.name
 		WHEN '1' THEN tc.name
@@ -155,6 +156,16 @@ $sql = "SELECT f.*,
 	LEFT JOIN dental_letter_templates t ON t.id=l.templateid
 	LEFT JOIN dental_letter_templates_custom tc ON tc.id=l.templateid
 	WHERE f.docid='".mysql_real_escape_string($_SESSION['docid'])."' ";
+if(isset($_REQUEST['filter'])){
+  if($_REQUEST['filter'] == 'success'){
+    $sql .= " AND f.sfax_status='1' ";
+  }elseif($_REQUEST['filter'] == 'fail'){
+    $sql .= " AND f.sfax_status='2' and l.deleted!='1' ";
+  }elseif($_REQUEST['filter'] == 'deleted'){
+    $sql .= " AND l.deleted='1' ";
+  }
+
+}
 
 if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'adddate';
@@ -163,7 +174,7 @@ if(!isset($_REQUEST['sort'])){
 
   if ($_REQUEST['sort'] == 'lastname') {
         $sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
-  } else {
+  } elseif($_REQUEST['sort']!='') {
           $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
         }
 
@@ -182,18 +193,35 @@ if(mysql_num_rows($my)){
 <br />
 <br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-<? if($total_rec > $rec_disp) {?>
         <TR bgColor="#ffffff">
-                <TD  align="right" colspan="15" class="bp">
+                <TD  colspan="3" class="bp">
+<label style="margin-left:20px;">Filter by status</label>
+<select onchange="updateFaxes(this.value)">
+<option value="all"  <?= ($_GET['filter']== 'all')?'selected="selected"':''; ?>>All</option>
+<option value="success" <?= ($_GET['filter']== 'success')?'selected="selected"':''; ?>>Success</option>
+<option value="fail" <?= ($_GET['filter']== 'fail')?'selected="selected"':''; ?>>Fail</option>
+<option value="deleted" <?= ($_GET['filter']== 'deleted')?'selected="selected"':''; ?>>Deleted</option>
+</select>
+<script type="text/javascript">
+
+function updateFaxes(v){
+
+window.location="?filter="+v+"&sort=<?= $_GET['sort']; ?>&sortdir=<?=$_GET['sortdir']; ?>";
+
+}
+</script>
+</td>
+                <TD  align="right" colspan="2" class="bp">
+
+<? if($total_rec > $rec_disp) {?>
                         Pages:
                         <?
                                  paging($no_pages,$index_val,"");
                         ?>
-                </TD>
-        </TR>
         <? }?>
-
+</td></tr>
         <tr class="tr_bg_h">
                 <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'adddate')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="15%">
 			<a href="manage_faxes.php?sort=adddate&sortdir=<?php echo ($_REQUEST['sort']=='adddate'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Date Sent</a>
@@ -226,7 +254,7 @@ if(mysql_num_rows($my)){
                 {
 
                 ?>
-                        <tr <?= ($myarray['sfax_status'] == '2' && $myarray['viewed']=='0')?'class="current_alert""':'';?>>
+                        <tr <?= ($myarray['letter_deleted']==1)?'class="row_deleted"':''; ?> <?= ($myarray['sfax_status'] == '2' && $myarray['viewed']=='0')?'class="current_alert""':'';?>>
                                 <td valign="top">
                                         <?=date('m/d/y h:i a', strtotime($myarray["sent_date"]));?>&nbsp;
                                 </td>
@@ -248,6 +276,8 @@ if(mysql_num_rows($my)){
 						Pending
 					<?php }elseif($myarray['sfax_status']=='1'){ ?>
 						Success
+					<?php }elseif($myarray['sfax_status']=='2' && $myarray['letter_deleted']=='1'){ ?>
+						<a href="#" onclick="loadPopup('fax_errors.php?id=<?=$myarray['id'];?>');return false;">Deleted</a>
 					<?php }elseif($myarray['sfax_status']=='2' && $myarray['sfax_status'] == '2' && $myarray['viewed']=='0'){ ?>
 						<a href="edit_letter.php?pid=<?=$myarray['patientid'];?>&lid=<?= $myarray['letterid']; ?>">Fail (click to view)</a>
 					<?php }elseif($myarray['sfax_status']=='2'){ ?>

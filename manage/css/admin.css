@@ -1417,3 +1417,12 @@ th.headerSortDown {
     background-position: right 10px;
 }
 
+
+a.plain{
+  text-decoration:none;
+  color:#000;
+  }
+
+tr.row_deleted td{
+  text-decoration:line-through;
+  }

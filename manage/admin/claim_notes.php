@@ -53,7 +53,14 @@ $c = mysql_fetch_assoc($c_q);
  while($r = mysql_fetch_assoc($n_q)){
 ?>
 
-   <div class="response_type_<?= $r['create_type']; ?>" >
+   <div class="panel <?= ($r['create_type']==0)?"panel-info":"panel-success"; ?>" >
+	<div class="panel-heading"><?= $r['creator_name']; ?> on <?= $r['adddate']; ?>
+   <?php
+        if($r['create_type']=='0' && $r['creator_id']==$_SESSION['adminuserid']){ ?>    <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?=$_GET['id'];?>&pid=<?=$_GET['pid'];?>&nid=<?=$r['id'];?>');return false;" class="btn btn-default">Edit Note <span class="glyphicon glyphicon-pencil"></span>
+</a>
+        <?php } ?>
+</div>
+	<div class="panel-body">
      <?= $r['note']; ?>
 <?php
         $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysql_real_escape_string($r['id'])."'";
@@ -62,12 +69,7 @@ $c = mysql_fetch_assoc($c_q);
         ?> | <a href="display_file.php?f=<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
         }
 ?>
-    <div class="sub"><?= $r['creator_name']; ?> on <?= $r['adddate']; ?></div>
-   <?php
-        if($r['create_type']=='0' && $r['creator_id']==$_SESSION['adminuserid']){ ?>
-    <a href="#" onclick="loadPopup('add_claim_note.php?claim_id=<?=$_GET['id'];?>&pid=<?=$_GET['pid'];?>&nid=<?=$r['id'];?>');return false;" class="button">Edit Note</a>
-        <?php } ?>
-
+    </div>
   </div>
 
 

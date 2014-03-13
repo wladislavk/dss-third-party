@@ -33,7 +33,11 @@ if(!isset($_REQUEST['sort']) || $_REQUEST['sort'] == ''){
   $_REQUEST['sortdir'] = 'ASC';
 }
 
-$sql = "SELECT "
+$sql = '';
+
+$sql_sort = "SELECT p.patientid FROM dental_patients p "; 
+
+$sql_d = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
      . "  s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, "
 		 . "  pg2.date_scheduled as next_scheduled, "
@@ -51,31 +55,31 @@ $sql = "SELECT "
 		"
 		 . " studies.num_studies, ";
   if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
-	                $sql .= " CASE 
+	                $sql_d .= " CASE 
                                 WHEN p.p_m_dss_file != '' AND p.p_m_dss_file IS NOT NULL THEN 0
                                 ELSE 1 
                            END as ins_error, ";
   }else{
-		$sql .= " CASE 
+		$sql_d .= " CASE 
 				WHEN p.p_m_dss_file != 1 THEN 1
 				ELSE 0 
 			   END as ins_error, ";
   }
 
   if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE){
-                        $sql .= " CASE 
+                        $sql_d .= " CASE 
                                 WHEN p.p_m_dss_file != '' AND p.p_m_dss_file IS NOT NULL AND studies.num_studies> 0 THEN 1
                                 ELSE 0 
                            END as ready, ";
   }else{
-                $sql .= " CASE 
+                $sql_d .= " CASE 
                                 WHEN p.p_m_dss_file = 1 AND studies.num_studies > 0 THEN 1
                                 ELSE 0 
                            END as ready, ";
   }
 
 
-                 $sql .= " 
+                 $sql_d .= " 
 		CASE  
 			WHEN la.amount IS NOT NULL THEN la.amount
 			ELSE 0
@@ -130,8 +134,8 @@ LEFT JOIN (SELECT count(*) num_studies, patiendid FROM dental_summ_sleeplab ss
 
 
 
-"
-		 . "WHERE "
+";
+		 $sql .= "WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
 {
@@ -163,12 +167,12 @@ if(isset($_REQUEST['sort'])){
 	}
 }
 
-$my = mysql_query($sql);
+$my = mysql_query($sql_sort . $sql) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
-$my=mysql_query($sql) or die(mysql_error());
+$sql .= " limit ". $i_val.",".$rec_disp;
+$my=mysql_query($sql_d . $sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>

@@ -1,9 +1,14 @@
+<?php
+session_start();
+require_once '../admin/includes/main_include.php';
+?>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
   <link href="css/sample_1.css" rel="stylesheet" media="screen">
 
   <script src="js/lib/jquery-1.10.2.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="../script/autocomplete_local.js"></script>
 
   <script src="js/eligible.js"></script>
   <script src="js/sample_1.js"></script>

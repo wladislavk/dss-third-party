@@ -12,7 +12,7 @@ if (!Array.prototype.indexOf) {
 
 // Endpoints object for eligible
 var EligibleEndpoints = {
-  coverage: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
+  coverage: "https://gds.eligibleapi.com/v1.3/coverage/medicare.json",
   demographics: "https://gds.eligibleapi.com/v1.3/demographics/all.json"
 }
 
@@ -70,22 +70,6 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
           errorCallback(null, null, err);
         }
         if (jsonData)
-	var pid = $('#pid').val();
-                                      $.ajax({
-                                        url: "includes/eligibility_save.php",
-                                        type: "post",
-                                        data: {response: data, pid:pid},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-
           successCallback(jsonData);
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -616,9 +600,13 @@ function CoveragePlugin(coverage, coverageSection) {
   var that = this;
 
   // Builds a twitter bootstrap panel, with the title and content provided
-  this.buildPanelUI = function (title, content) {
+  this.buildPanelUI = function (title, content, subtitle) {
     var panel = $('<div class="panel panel-default">');
-    panel.append($('<div class="panel-heading"><h4>' + title + '</h4></div>'));
+    if (subtitle) {
+      panel.append($('<div class="panel-heading"><h4>' + title + '</h4>' + subtitle + '</div>'));
+    } else {
+      panel.append($('<div class="panel-heading"><h4>' + title + '</h4></div>'));
+    }
     var contentPanel = $('<div class="panel-body"></div>');
     contentPanel.append(content);
     panel.append(contentPanel);
@@ -1128,11 +1116,16 @@ function CoveragePlugin(coverage, coverageSection) {
             div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
           }
           if (service['financials'] && service['financials']['coinsurance']) {
-            div.append(that.buildPanelUI(service['type_label'], that.buildGenericFinancials(service['financials'])));
+            div.append(that.buildPanelUI(service['type_label'], that.buildGenericFinancials(service['financials']), service['coverage_status_label']));
           }
           if (service['facility'] && service['facility']['coinsurance']) {
-            div.append(that.buildPanelUI(service['type_label'], that.buildGenericFinancials(service['facility'])));
+            div.append(that.buildPanelUI(service['type_label'], that.buildGenericFinancials(service['facility']), service['coverage_status_label']));
           }
+        } else {
+          if (div.children().length == columns) {
+            div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
+          }
+          div.append(that.buildPanelUI(service['type_label'], '', service['coverage_status_label']));
         }
       });
     }
@@ -1224,7 +1217,7 @@ function CoveragePlugin(coverage, coverageSection) {
 
     $("<th/>", {text: "Member Type"}).appendTo(rowHead);
     if (demographics['dependent'] && demographics['dependent']['first_name']) {
-      $("<td/>", {text: "Dependent"}).appendTo(row);
+      $("<td/>", {text: "Dependent" + " - " + demographics['dependent']['relationship']}).appendTo(row);
     } else if (demographics['subscriber'] && demographics['subscriber']['first_name']) {
       $("<td/>", {text: "Subscriber"}).appendTo(row);
     } else {

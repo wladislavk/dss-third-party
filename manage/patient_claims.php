@@ -1,6 +1,9 @@
 <?php
 
-$sql = "select * from dental_insurance where (status=".DSS_CLAIM_PENDING." OR status=".DSS_CLAIM_SEC_PENDING.") AND docid='".$_SESSION['docid']."' and patientid='".s_for($_GET['pid'])."' order by adddate DESC";
+$sql = "select i.*,
+     (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid) num_notes,
+     (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') num_fo_notes 
+	 from dental_insurance i where (i.status=".DSS_CLAIM_PENDING." OR i.status=".DSS_CLAIM_SEC_PENDING.") AND i.docid='".$_SESSION['docid']."' and i.patientid='".s_for($_GET['pid'])."' order by i.adddate DESC";
 $my=mysql_query($sql) or die(mysql_error());
 
 ?>
@@ -60,7 +63,7 @@ $my=mysql_query($sql) or die(mysql_error());
                                 </td>
                                 <td valign="top">
                                         <a href="view_claim.php?claimid=<?=$myarray["insuranceid"];?>&pid=<?= $_GET['pid']; ?>" class="editlink" title="View Claim and Notes">
-                                                View 
+                                                View <?= ($myarray['num_notes'] > 0)?"- Notes (".$myarray['num_notes'].")":''; ?>
                                         </a>
 
                                 </td>

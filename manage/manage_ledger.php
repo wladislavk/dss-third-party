@@ -187,7 +187,9 @@ $sql = "select
 		'' as payer,
 		'' as payment_type,
 		di.status as claim_status,
-		'' as filename
+		'' as filename,
+                '' as num_notes,
+                '' as num_fo_notes
 	from dental_ledger dl 
 		LEFT JOIN dental_users p ON dl.producerid=p.userid 
 		LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
@@ -210,7 +212,9 @@ $sql = "select
 		dlp.payer,
 		dlp.payment_type,
 		'',
-		''
+		'',
+                '',
+                ''
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
@@ -231,6 +235,8 @@ $sql = "select
 		tc.type,
 		'',
 		'',
+                '',
+                '',
                 ''	
         from dental_ledger dl 
                 LEFT JOIN dental_users p ON dl.producerid=p.userid 
@@ -253,6 +259,8 @@ $sql = "select
 		'',
 		'',
 		'',
+                '',
+                '',
                 ''	
 	from dental_ledger_note n
 		JOIN dental_users p on n.producerid=p.userid
@@ -272,7 +280,9 @@ $sql = "select
                 '',
                 '',
                 '',
-		s.filename      
+		s.filename,
+                '',
+                ''
         from dental_ledger_statement s
                 JOIN dental_users p on s.producerid=p.userid
                         where s.patientid='".s_for($_GET['pid'])."'
@@ -291,7 +301,9 @@ $sql = "select
                 '',
                 '',
                 '',
-                ''      
+                '',
+		'',
+		''      
         from dental_ledger_note n
                 JOIN admin p on n.admin_producerid=p.adminid
                         where n.patientid='".s_for($_GET['pid'])."'       
@@ -313,7 +325,9 @@ $sql = "select
 		'',
 		'',
 		'',
-                ''
+                '',
+     		(SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid), 
+     		(SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1') 
 	from dental_insurance i
 		LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
 		LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
@@ -553,6 +567,7 @@ return s;
                         <?= (($myarray[0] == 'ledger_paid'))?$dss_trxn_type_labels[$myarray['payer']]." - ":''; ?>
                 	<?= $myarray["description"]; ?>
 			<?= (($myarray[0] == 'ledger' || $myarray[0] =='claim') && $myarray['primary_claim_id'])?"(".$myarray['primary_claim_id'].") ":''; ?>
+			<?= (($myarray[0] =='claim') && $myarray['num_notes'] > 0)?" - Notes (".$myarray['num_notes'].") ":''; ?>
 			<?= ($myarray[0]=='ledger' && !$myarray['primary_claim_id'] && $myarray['status'] == DSS_TRXN_PENDING)?' (Click to file)':''; ?>
 			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
 			<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>

@@ -157,6 +157,7 @@ if(!isset($_GET['sh']))
 if(isset($_GET['letter'])){
   $sql .= " AND p.lastname LIKE '".mysql_real_escape_string($_GET['letter'])."%' ";
 }
+ $sql_sort .= $sql;
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
@@ -167,7 +168,7 @@ if(isset($_REQUEST['sort'])){
 	}
 }
 
-$my = mysql_query($sql_sort . $sql) or die(mysql_error());
+$my = mysql_query($sql_sort ) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 

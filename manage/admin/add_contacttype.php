@@ -61,7 +61,7 @@ if($_POST["contacttypesub"] == 1)
 		
 		if($_POST["ed"] != "")
 		{
-			$ed_sql = "update dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where contacttypeid='".$_POST["ed"]."'";
+			$ed_sql = "update dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', corporate='".s_for($_POST['corporate'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."' where contacttypeid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
 			
 			//echo $ed_sql.mysql_error();
@@ -76,7 +76,7 @@ if($_POST["contacttypesub"] == 1)
 		}
 		else
 		{
-			$ins_sql = "insert into dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+			$ins_sql = "insert into dental_contacttype set contacttype = '".s_for($_POST["contacttype"])."', physician='".s_for($_POST['physician'])."', corporate='".s_for($_POST['corporate'])."', sortby = '".s_for($sby)."', status = '".s_for($_POST["status"])."', description = '".s_for($_POST["description"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
 			
 			$msg = "Added Successfully";
@@ -104,6 +104,7 @@ if($_POST["contacttypesub"] == 1)
 	{
 		$contacttype = $_POST['contacttype'];
 		$physician = $_POST['physician'];
+		$corporate = $_POST['corporate'];
 		$sortby = $_POST['sortby'];
 		$status = $_POST['status'];
 		$description = $_POST['description'];
@@ -112,6 +113,7 @@ if($_POST["contacttypesub"] == 1)
 	{
 		$contacttype = st($themyarray['contacttype']);
 		$physician = st($themyarray['physician']);
+		$corporate = st($themyarray['corporate']);
 		$sortby = st($themyarray['sortby']);
 		$status = st($themyarray['status']);
 		$description = st($themyarray['description']);
@@ -160,6 +162,14 @@ if($_POST["contacttypesub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" name="physician" value="1" <?= ($physician)?'checked="checked"':''; ?> class="form-control" style="width:30px"/>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Corporate 
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="checkbox" name="corporate" value="1" <?= ($corporate)?'checked="checked"':''; ?> class="form-control" style="width:30px"/>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

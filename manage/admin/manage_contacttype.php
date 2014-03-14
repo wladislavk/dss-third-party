@@ -103,6 +103,9 @@ if($_POST['sortsub'] == 1)
 			Physician
 		</td>
 		<td valign="top" class="col_head" width="10%">
+			Corporate
+		</td>
+		<td valign="top" class="col_head" width="10%">
 			Sort By 
 		</td>
 		<td valign="top" class="col_head" width="20%">
@@ -139,6 +142,9 @@ if($_POST['sortsub'] == 1)
 					<?= ($myarray['physician'])?'X':''; ?>
 				</td>		
 				<td valign="top" align="center">
+					<?= ($myarray['corporate'])?'X':''; ?>
+				</td>		
+				<td valign="top" align="center">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
 					<input type="text" name="sortby[]" value="<?=st($myarray['sortby'])?>" class="form-control text-center" style="width:5em"/>
 					<?php }else{ ?>
@@ -157,7 +163,7 @@ if($_POST['sortsub'] == 1)
 	<? 	}
 		?>
 		<tr>
-			<td valign="top" class="col_head" colspan="2">&nbsp;
+			<td valign="top" class="col_head" colspan="3">&nbsp;
 				
 			</td>
 			<td valign="top" class="col_head" colspan="4">

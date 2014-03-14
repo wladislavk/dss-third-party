@@ -332,12 +332,9 @@ if($_POST["contactsub"] == 1)
                 
                 $ctid = mysql_fetch_array($ctype_myquerymyarray);
                 
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }else{
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
                 }
+                $ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
+                $ctype_my = mysql_query($ctype_sql);
                 ?>
                             	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
                                 	 

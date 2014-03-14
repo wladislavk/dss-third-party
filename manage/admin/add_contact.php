@@ -14,36 +14,32 @@ if($_POST["contactsub"] == 1)
         ?>
         <script type="text/javascript">
             //alert("<?=$msg;?>");
-            parent.window.location='manage_contact.php?msg=<?=$msg;?>';
+	    <?php if($_POST['corp']=='1'){ ?>
+              parent.window.location='manage_fcontact.php?msg=<?=$msg;?>';
+	    <?php }else{ ?>
+              parent.window.location='manage_contact.php?msg=<?=$msg;?>';
+	    <?php } ?>
         </script>
         <?
         die();
     }
     else
     {
-        $ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
+        $ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."',corporate='".s_for($_POST['corp'])."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
         mysql_query($ins_sql) or die($ins_sql.mysql_error());
         
         $msg = "Added Successfully";
         
-        if(isset($_GET['activePat'])){
-        ?>
-    <script type="text/javascript">
-            //alert("<?=$msg;?>");
-            <?php
-      echo("window.location.href='add_patient.php?ed=".$_GET['activePat']."'");
-      ?>
-      // -->
-        </script>
-        <?php
-    }else{
         ?>
         <script type="text/javascript">
             //alert("<?=$msg;?>");
-            parent.window.location='manage_contact.php?msg=<?=$msg;?>';
+            <?php if($_POST['corp']=='1'){ ?>
+              parent.window.location='manage_fcontact.php?msg=<?=$msg;?>';
+            <?php }else{ ?>
+              parent.window.location='manage_contact.php?msg=<?=$msg;?>';
+            <?php } ?>
         </script>
         <?
-        }
         die();
     }
 }
@@ -290,13 +286,14 @@ if($_POST["contactsub"] == 1)
     $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
     
     $ctid = mysql_fetch_array($ctype_myquerymyarray);
+   } 
     
-    $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-    $ctype_my = mysql_query($ctype_sql);
-    }else{
-    $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-    $ctype_my = mysql_query($ctype_sql);
+    $ctype_sql = "select * from dental_contacttype where status=1 ";
+    if(!isset($_REQUEST['corp']) || $_REQUEST['corp'] != '1'){
+ 	$ctype_sql .= " AND corporate='0' ";
     }
+    $ctype_sql .= " order by sortby";
+    $ctype_my = mysql_query($ctype_sql);
     ?>
                     <select id="contacttypeid" name="contacttypeid" class="form-control">
                          
@@ -330,6 +327,7 @@ if($_POST["contactsub"] == 1)
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="contactsub" value="1">
                     <input type="hidden" name="ed" value="<?= $themyarray["contactid"] ?>">
+		    <input type="hidden" name="corp" value="<?= (isset($_REQUEST['corp']) && $_REQUEST['corp']=='1')?"1":"0"; ?>" />
                     <input type="submit" value="<?= $but_text ?> Contact" class="btn btn-primary">
                 <?php if ($themyarray["contactid"] != '') { ?>
                     <a class="btn btn-danger pull-right" href="javascript:parent.window.location='manage_contact.php?delid=<?= $themyarray["contactid"] ?>&amp;docid=<?= $_GET['docid'] ?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" title="DELETE">

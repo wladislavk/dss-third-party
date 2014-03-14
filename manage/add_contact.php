@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
+//include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
 include_once "includes/constants.inc";
 //include "includes/top.htm";
@@ -268,13 +268,9 @@ if($let_r['use_letters'] && $let_r['intro_letters']){
                 $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
 
                 $ctid = mysql_fetch_array($ctype_myquerymyarray);
-
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+		}
+                $ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
                 $ctype_my = mysql_query($ctype_sql);
-                }else{
-                $ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
-                $ctype_my = mysql_query($ctype_sql);
-                }
                 ?>
                                 <select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">
                                 <option value="">Select a contact type</option>

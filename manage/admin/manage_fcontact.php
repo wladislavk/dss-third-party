@@ -24,7 +24,7 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_fcontact order by lastname";
+$sql = "select * from dental_contact where corporate=1 order by lastname, company";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -45,7 +45,7 @@ $num_contact=mysql_num_rows($my);
 &nbsp;
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <div align="right">
-	<button onclick="loadPopup('add_fcontact.php?corp=1');" class="btn btn-success">
+	<button onclick="loadPopup('add_contact.php?corp=1');" class="btn btn-success">
 		Add Corporate Contact
 		<span class="glyphicon glyphicon-plus">
 	</button>
@@ -114,7 +114,7 @@ $num_contact=mysql_num_rows($my);
 				</td>
 				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_fcontact.php?ed=<?=$myarray["contactid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="Edit" class="btn btn-primary btn-sm">
 						Edit 
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>

@@ -96,7 +96,7 @@ while ($row = mysql_fetch_assoc($result)) {
 
 <div style="margin-left:10px;margin-right:10px;">
 <?php 
-$ctype_sql = "select * from dental_contacttype where status=1 order by sortby";
+$ctype_sql = "select * from dental_contacttype where status=1 AND corporate='0' order by sortby";
 $ctype_my = mysql_query($ctype_sql);
 ?>
 <style>

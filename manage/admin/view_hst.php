@@ -78,6 +78,7 @@ if($_POST['status'] == DSS_HST_COMPLETE){
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "../../../../shared/q_file/".$banner1);

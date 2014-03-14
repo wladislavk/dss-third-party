@@ -85,19 +85,8 @@ $t = mysql_fetch_assoc($my);
 <h3 style="margin-left:15px;">User: <?= $t['user']; ?> - Account: <?= $t['account']; ?> - Company: <?= $t['company']; ?></h3>
 <br />
 <br />
-    <div class="response_type_<?=($t['create_type']!='')?$t['create_type']:'1';?>">
-	<?= $t['body']; ?>
-      <?php if($t['attachment']){
-        ?> | <a href="display_file.php?f=<?= $t['attachment']; ?>" target="_blank">View Attachment</a><?php
-      } 
-        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".mysql_real_escape_string($t['id'])."'";
-        $a_q = mysql_query($a_sql);
-        while($a=mysql_fetch_assoc($a_q)){
-        ?> | <a href="display_file.php?f=<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
-        }
-
-	?>
-    <div class="info">
+    <div class="panel <?=($t['create_type']==0)?"panel-info":"panel-success";?>">
+	<div class="panel-heading">
       <?php
         if($t['create_type']=='0'){
           $u_sql = "SELECT username name FROM admin WHERE adminid='".mysql_real_escape_string($t['creator_id'])."'";
@@ -114,7 +103,18 @@ $t = mysql_fetch_assoc($my);
       ?>
       <?= date('m/d/Y h:i:s a', strtotime($t['adddate'])); ?>
     </div>
+     <div class="panel-body">
+	<?= $t['body']; ?>
+      <?php if($t['attachment']){
+        ?> | <a href="display_file.php?f=<?= $t['attachment']; ?>" target="_blank">View Attachment</a><?php
+      } 
+        $a_sql = "SELECT * FROM dental_support_attachment WHERE response_id IS NULL AND ticket_id='".mysql_real_escape_string($t['id'])."'";
+        $a_q = mysql_query($a_sql);
+        while($a=mysql_fetch_assoc($a_q)){
+        ?> | <a href="display_file.php?f=<?= $a['filename']; ?>" target="_blank">View Attachment</a><?php
+        }
 
+	?>
     </div>
 </div>
 <div id="support_responses">
@@ -124,7 +124,25 @@ $t = mysql_fetch_assoc($my);
   $r_q = mysql_query($r_sql);
   while($r = mysql_fetch_assoc($r_q)){
     ?>
-    <div class="response_type_<?= $r['response_type']; ?>">
+    <div class="panel <?= ($r['response_type']==0)?"panel-info":"panel-success"; ?>">
+	<div class="panel-heading">
+      <?php
+        if($r['response_type']=='0'){
+          $u_sql = "SELECT username name FROM admin WHERE adminid='".mysql_real_escape_string($r['responder_id'])."'";
+          $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          ?>Support - <?= $u_r['name'];
+        }elseif($r['response_type']=='1'){
+          $u_sql = "SELECT name FROM dental_users WHERE userid='".mysql_real_escape_string($r['responder_id'])."'";
+          $u_q = mysql_query($u_sql);
+          $u_r = mysql_fetch_assoc($u_q);
+          echo $u_r['name'];
+        }
+
+      ?>
+      <?= date('m/d/Y h:i:s a', strtotime($r['adddate'])); ?>
+    </div>
+    <div class="panel-body">
     <?php
     echo $r['body'];
       if($r['attachment']){
@@ -138,22 +156,6 @@ $t = mysql_fetch_assoc($my);
     if($r['response_type']==0){
       ?> | <a href="#" onclick="loadPopup('edit_support_response.php?ed=<?= $_GET['ed']; ?>&id=<?= $r['id']; ?>'); return false;">Edit</a><?php
     } ?>
-    <div class="info">
-      <?php
-	if($r['response_type']=='0'){
-	  $u_sql = "SELECT username name FROM admin WHERE adminid='".mysql_real_escape_string($r['responder_id'])."'";
-	  $u_q = mysql_query($u_sql);
-          $u_r = mysql_fetch_assoc($u_q);
-          ?>Support - <?= $u_r['name']; 
-        }elseif($r['response_type']=='1'){
-	  $u_sql = "SELECT name FROM dental_users WHERE userid='".mysql_real_escape_string($r['responder_id'])."'";
-          $u_q = mysql_query($u_sql);
-          $u_r = mysql_fetch_assoc($u_q);
-          echo $u_r['name'];
-	}
-        
-      ?>
-      <?= date('m/d/Y h:i:s a', strtotime($r['adddate'])); ?>
     </div>  
     </div><?php
   }

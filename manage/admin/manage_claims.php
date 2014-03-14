@@ -166,7 +166,9 @@ $sql = "SELECT "
                 WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
                 WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
                 WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
-       END AS status_order "
+       END AS status_order, "
+     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid) num_notes, "
+     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid AND create_type='1') num_fo_notes "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
@@ -378,10 +380,10 @@ if(isset($_GET['msg'])){
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="15%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="15%">
 			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
 		</td>
 		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
@@ -389,6 +391,9 @@ if(isset($_GET['msg'])){
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
+		</td>
+		<td valign="top" class="col_head" width="15%">
+			Notes	
 		</td>
 		<td valign="top" class="col_head" width="15%">
 			Mailed
@@ -487,6 +492,9 @@ if(isset($_GET['msg'])){
            } ?>
 
 				</td>
+	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'style="background:#ccf;"':''; ?>>
+		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)</a>
+	</td>
 <td>
 <?php
   if($myarray['status'] == DSS_CLAIM_SENT || $myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PAID_INSURANCE || $myarray['status'] == DSS_CLAIM_PENDING || $myarray['status'] == DSS_CLAIM_PAID_PATIENT || $myarray['status'] == DSS_CLAIM_REJECTED || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE ){

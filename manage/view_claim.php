@@ -488,6 +488,8 @@ return s;
 $_GET['cid'] = $_GET['claimid'];
 include 'claim_history_data.php'; 
 }
+
+include 'claim_notes.php';
 ?>
 
 

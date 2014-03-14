@@ -92,10 +92,10 @@ tinyMCE.init({
                         mode : "textareas",
                         theme : "modern",
                         menubar: false,
-                        toolbar1: "undo redo | italic | bullist numlist outdent indent",
+                        toolbar1: "undo redo | italic | bullist numlist outdent indent | table",
                         gecko_spellcheck : true,
-                        plugins: "paste, save",
-                        valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br",
+                        plugins: "paste, save, table",
+                        valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
                         valid_styles: {
                                 "*": "",
                         },

@@ -563,20 +563,20 @@ $fdf = "
   << /T(".$field_path.".pt_sex_m_chkbox[0]) /V(".(($patient_sex == "M" || $patient_sex == "Male")?1:'').") >>
   << /T(".$field_path.".pt_sex_f_chkbox[0]) /V(".(($patient_sex == "F" || $patient_sex == "Female")?1:'').") >>
   << /T(".$field_path.".insured_name_ln_fn_mi_fill[0]) /V(".$insured_lastname.", ".$insured_firstname.((trim($insured_middle)!='')?", ".$insured_middle:'').") >>
-  << /T(".$field_path.".pt_address_fill[0]) /V(".$patient_address.") >>
+  << /T(".$field_path.".pt_address_fill[0]) /V(".$insured_address.") >>
   << /T(".$field_path.".pt_relation_self_chkbox[0]) /V(".(($patient_relation_insured == "Self")?1:'').") >>
   << /T(".$field_path.".pt_relation_spouse_chkbox[0]) /V(".(($patient_relation_insured == "Spouse")?1:'').") >>
   << /T(".$field_path.".pt_relation_child_chkbox[0]) /V(".(($patient_relation_insured == "Child")?1:'').") >>
   << /T(".$field_path.".pt_relation_other_chkbox[0]) /V(".(($patient_relation_insured == "Others")?1:'').") >>
   << /T(".$field_path.".insured_address_fill[0]) /V(".$insured_address.") >>
-  << /T(".$field_path.".pt_city_fill[0]) /V(".$patient_city.") >>
-  << /T(".$field_path.".pt_state_fill[0]) /V(".$patient_state.") >>
+  << /T(".$field_path.".pt_city_fill[0]) /V(".$insured_city.") >>
+  << /T(".$field_path.".pt_state_fill[0]) /V(".$insured_state.") >>
   << /T(".$field_path.".pt_status_single_chkbox[0]) /V(".((in_array("Single", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".pt_status_married_chkbox[0]) /V(".((in_array("Married", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".pt_status_other_chkbox[0]) /V(".((in_array("Others", $patient_status_array))?1:'').") >>
   << /T(".$field_path.".insured_city_fill[0]) /V(".$insured_city.") >>
   << /T(".$field_path.".insured_state_fill[0]) /V(".$insured_state.") >>
-  << /T(".$field_path.".pt_zipcode_fill[0]) /V(".$patient_zip.") >>
+  << /T(".$field_path.".pt_zipcode_fill[0]) /V(".$insured_zip.") >>
   << /T(".$field_path.".pt_phone_areacode_fill[0]) /V(".$patient_phone_code.") >>
   << /T(".$field_path.".pt_phone_number_fill[0]) /V(".$patient_phone.") >>
   << /T(".$field_path.".pt_status_employed_chkbox[0]) /V(".((in_array("Employed", $patient_status_array))?1:'').") >>

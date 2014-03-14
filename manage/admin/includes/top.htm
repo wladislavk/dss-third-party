@@ -337,10 +337,11 @@ $num_pending_claims = mysql_num_rows($pending_q);
                     </li>
                     <?php if (!is_billing($_SESSION['admin_access'])) { ?>
                     <li class="dropdown-submenu">
-                        <a href="#">Progress Note Text</a>
+                        <a href="#">Note Text</a>
                         <ul class="dropdown-menu">
-                            <li><a href="/manage/admin/manage_custom_text.php">Default Text (Global)</a></li>
-                            <li><a href="/manage/admin/manage_doctor_custom_text_list.php">User Text (Individual)</a></li>
+                            <li><a href="/manage/admin/manage_custom_text.php">Progress Default Text (Global)</a></li>
+                            <li><a href="/manage/admin/manage_doctor_custom_text_list.php">Progress User Text (Individual)</a></li>
+                            <li><a href="/manage/admin/manage_claim_text.php">Claim Text</a></li>
                         </ul>
                     </li>
                     <?php } ?>

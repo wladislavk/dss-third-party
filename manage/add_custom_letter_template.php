@@ -20,7 +20,7 @@ if(isset($_POST['update_btn'])){
     mysql_query($s);
   }
 
-    error_log($s);
+    //error_log($s);
     ?>
 	<script type="text/javascript">
 	  window.location = "manage_custom_letters.php";

@@ -1,9 +1,8 @@
 <?php
 
+function update_financial_agreement_medicare_form($id, $backoffice){
 
-function update_financial_agreement_medicare_form($id){
-
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
@@ -138,14 +137,14 @@ Solutions</small></span></p>
         $title = "Financial Agreement Medicare";
         $filename = "financial_agreement_medicare_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
-function update_home_care_instructions_form($id, $locid = null){
+function update_home_care_instructions_form($id, $locid = null, $backoffice = false){
 
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
@@ -317,14 +316,14 @@ Solutions</small></span></p>
           $filename = "home_care_instructions_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
-function update_non_dentist_of_record_release_form($id, $locid = null){
+function update_non_dentist_of_record_release_form($id, $locid = null, $backoffice=false){
 
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
@@ -528,13 +527,13 @@ Solutions</small></span></p>
           $filename = "non_dentist_of_record_release_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
-function update_sleep_recorder_release_form($id, $locid = null){
+function update_sleep_recorder_release_form($id, $locid = null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 $s = "SELECT * from dental_users WHERE userid='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
@@ -700,14 +699,14 @@ Solutions</small></span></p>
           $filename = "sleep_recorder_release_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
-function update_custom_release_form($id, $locid = null){
+function update_custom_release_form($id, $locid = null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 if($locid){
   $loc_sql = "SELECT * FROM dental_locations WHERE docid='".mysql_real_escape_string($id)."' AND id='".mysql_real_escape_string($locid)."'";
@@ -865,15 +864,15 @@ you in advance.</span></p></div></body></html>';
 	}else{
 	  $filename = "user_record_release_".$id.".pdf";
 	}
-	create_form_pdf($html, $filename, $title);
+	create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_affidavit_for_cpap_intolerance_form($id){
+function update_affidavit_for_cpap_intolerance_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
 
 $html = '
@@ -1028,14 +1027,14 @@ Solutions</small></span></p>
         $title = "Affidavit for CPAP Intolerance";
         $filename = "affidavit_for_cpap_intolerance_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
-function update_device_titration_ema_form($id){
+function update_device_titration_ema_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
         
 $html = '
 <html>
@@ -1367,16 +1366,16 @@ Solutions</small></span></p>
         $title = "Device Titration (EMA)";
         $filename = "device_titration_ema_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_device_titration_form($id){
+function update_device_titration_form($id, $backoffice){
 
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
         
 $html = '
@@ -1676,15 +1675,15 @@ Solutions</small></span></p></div>
         $title = "Device Titration";
         $filename = "device_titration_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_ess_tss_form($id){
+function update_ess_tss_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
         
 $html = '
@@ -2149,15 +2148,15 @@ Solutions</small></span></p></div></body>
         $title = "ESS TSS Form";
         $filename = "ess_tss_form_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_financial_agreement_form($id){
+function update_financial_agreement_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
         
 $html = '
@@ -2294,15 +2293,15 @@ Solutions</small></span></p>
         $title = "Financial Agreement";
         $filename = "financial_agreement_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_informed_consent_form($id){
+function update_informed_consent_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
         
 $html = '
 <html>
@@ -2479,15 +2478,15 @@ Solutions</small></span></p></div>
         $title = "Informed Consent";
         $filename = "informed_consent_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_lomn_rx_form($id){
+function update_lomn_rx_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
 
         
 $html = '
@@ -2633,15 +2632,15 @@ font-family:"Arial","sans-serif"\'>                      �
         $title = "LOMN Rx";
         $filename = "lomn_rx_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_medical_hx_update_form($id){
+function update_medical_hx_update_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
         
 $html = '
 <html>
@@ -2772,15 +2771,15 @@ Solutions</small></span></p></div>
         $title = "Medical Hx Update";
         $filename = "medical_hx_update_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
 
-function update_the_dss_experience_form($id){
+function update_the_dss_experience_form($id, $backoffice){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
         
 $html = '
 <html>
@@ -3201,13 +3200,13 @@ replacement.</span><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif
         $title = "The DSS Experience";
         $filename = "the_dss_experience_".$id.".pdf";
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
-function update_patient_notices_form($id, $locid = null){
+function update_patient_notices_form($id, $locid = null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);
   $l_r = mysql_fetch_assoc($l_q);
@@ -3406,12 +3405,12 @@ _____________________________________________ <b>Date</b>: _______________</span
           $filename = "patient_notices_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
 
-function create_form_pdf($html, $filename, $title, $fontsize = 10, $cellheight=1.25){
+function create_form_pdf($html, $filename, $title, $backoffice, $fontsize = 10, $cellheight=1.25){
 
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -3448,15 +3447,19 @@ function create_form_pdf($html, $filename, $title, $fontsize = 10, $cellheight=1
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
         //Close and output PDF document
-
-        $pdf->Output('../../../shared/q_file/' . $filename, 'F');
-	@chmod('../../../shared/q_file/' . $filename,0777);
+	if($backoffice){
+          $pdf->Output('../../../../shared/q_file/' . $filename, 'F');
+	  @chmod('../../../../shared/q_file/'. $filename,0777);
+        }else{
+          $pdf->Output('../../../shared/q_file/' . $filename, 'F');
+	  @chmod('../../../shared/q_file/'. $filename,0777);
+        }
 }
 
 
-function update_new_patient_form($id, $locid=null){
+function update_new_patient_form($id, $locid=null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);
   $l_r = mysql_fetch_assoc($l_q);
@@ -3804,16 +3807,16 @@ Date:______</span></b>
         }else{
           $filename = "new_patient_".$id.".pdf";
         }
-        create_form_pdf($html, $filename, $title, 8, 1);
+        create_form_pdf($html, $filename, $title, $backoffice, 8, 1);
 
 }
 
 
 
 
-function update_patient_questionnaire_form($id, $locid = null){
+function update_patient_questionnaire_form($id, $locid = null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);
   $l_r = mysql_fetch_assoc($l_q);
@@ -4015,14 +4018,14 @@ hspace=12>
           $filename = "patient_questionnaire_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 
 }
 
-function update_patient_questionnaire_form_old($id, $locid = null){
+function update_patient_questionnaire_form_old($id, $locid = null, $backoffice=false){
 
-$logo = get_logo($id);
+$logo = get_logo($id, $backoffice);
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);
   $l_r = mysql_fetch_assoc($l_q);
@@ -4673,7 +4676,7 @@ Date: _________________</p>
           $filename = "patient_questionnaire_".$id.".pdf";
         }
 
-        create_form_pdf($html, $filename, $title);
+        create_form_pdf($html, $filename, $title, $backoffice);
 
 }
 
@@ -4683,40 +4686,44 @@ Date: _________________</p>
 
 
 
-function form_update_all($docid){
+function form_update_all($docid, $backoffice = false){
 
 	$sql = "SELECT id FROM dental_locations where docid='".mysql_real_escape_string($docid)."' AND default_location=1";
 	$q = mysql_query($sql);
 	while($r = mysql_fetch_assoc($q)){
-      		update_custom_release_form($docid, $r['id']);
-      		update_patient_notices_form($docid, $r['id']);
-      		update_new_patient_form($docid, $r['id']);
-      		update_patient_questionnaire_form($docid, $r['id']);
-      		update_home_care_instructions_form($docid, $r['id']);
-      		update_non_dentist_of_record_release_form($docid, $r['id']);
-      		update_sleep_recorder_release_form($docid, $r['id']);
+      		update_custom_release_form($docid, $r['id'], $backoffice);
+      		update_patient_notices_form($docid, $r['id'], $backoffice);
+      		update_new_patient_form($docid, $r['id'], $backoffice);
+      		update_patient_questionnaire_form($docid, $r['id'], $backoffice);
+      		update_home_care_instructions_form($docid, $r['id'], $backoffice);
+      		update_non_dentist_of_record_release_form($docid, $r['id'], $backoffice);
+      		update_sleep_recorder_release_form($docid, $r['id'], $backoffice);
 	}
-      update_financial_agreement_medicare_form($docid);
-      update_affidavit_for_cpap_intolerance_form($docid);
-      update_device_titration_ema_form($docid);
-      update_device_titration_form($docid);
-      update_ess_tss_form($docid);
-      update_financial_agreement_form($docid);
-      update_informed_consent_form($docid);
-      update_lomn_rx_form($docid);
-      update_medical_hx_update_form($docid);
-      update_the_dss_experience_form($docid);
+      update_financial_agreement_medicare_form($docid, $backoffice);
+      update_affidavit_for_cpap_intolerance_form($docid, $backoffice);
+      update_device_titration_ema_form($docid, $backoffice);
+      update_device_titration_form($docid, $backoffice);
+      update_ess_tss_form($docid, $backoffice);
+      update_financial_agreement_form($docid, $backoffice);
+      update_informed_consent_form($docid, $backoffice);
+      update_lomn_rx_form($docid, $backoffice);
+      update_medical_hx_update_form($docid, $backoffice);
+      update_the_dss_experience_form($docid, $backoffice);
 }
 
 
-function get_logo($id){
+function get_logo($id, $backoffice){
 
   $l_sql = "SELECT logo, user_type FROM dental_users where userid=".mysql_real_escape_string($id);
   $l_q = mysql_query($l_sql);
   $l_r = mysql_fetch_assoc($l_q);
   if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
     if($l_r['logo']!=''){
-      $logo = '<img src="../../../shared/q_file/'.$l_r['logo'].'" />';
+      if($backoffice){
+        $logo = '<img src="../../../../shared/q_file/'.$l_r['logo'].'" />';
+      }else{
+        $logo = '<img src="../../../shared/q_file/'.$l_r['logo'].'" />';
+      }
     }else{
       $logo = "";
     }

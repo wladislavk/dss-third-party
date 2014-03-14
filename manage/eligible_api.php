@@ -42,7 +42,7 @@ function clear_payer_name(f){
 }
 
 $(document).ready(function(){
-  setup_autocomplete_local('payer_name', 'payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/claims-payer.json', 'eligibility');
+  setup_autocomplete_local('payer_name', 'payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'eligibility');
 });
 
 </script>
@@ -108,9 +108,11 @@ $(document).ready(function(){
 
 <?php
   if(isset($_POST['api_submit'])){
+$payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $data = array();
+$data['test'] = "true";
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
-$data['payer_id'] =  $_POST['payer_id'];
+$data['payer_id'] =  $payer_id;
 $data['service_provider_first_name'] =  $_POST['provider_first_name'];
 $data['service_provider_last_name'] =  $_POST['provider_last_name'];
 $data['provider_npi'] =  $_POST['provider_npi'];
@@ -125,7 +127,7 @@ $data_string = json_encode($data);
 echo $data_string."<br /><br />"; 
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.1/coverage/all.json');
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                              
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                  
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                      
@@ -190,7 +192,7 @@ echo $result;
 */
 					//API - 33b2e3a5-8642-1285-d573-07a22f8a15b4
                                   $.ajax({
-                                        url: "https://gds.eligibleapi.com/v1.1/coverage/all.json",
+                                        url: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
                                         type: "get",
                                         data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
                                                 payer_id: $('#payer_id').val(),

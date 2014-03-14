@@ -377,8 +377,8 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
 		$values .= ", '".mysql_real_escape_string($status)."'";
 	}
   if (isset($deleted)) {
-		$columns .= ", deleted";
-		$values .= ", '".mysql_real_escape_string($deleted)."'";
+		$columns .= ", deleted, deleted_by, deleted_on ";
+		$values .= ", '".mysql_real_escape_string($deleted)."', '".$_SESSION['userid']."', now() ";
 	}
   if (isset($template_type)) {
                 $columns .= ", template_type";
@@ -1392,6 +1392,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 	// add a page
 	$pdf->AddPage();
 
+	//fix to allow signature to show for both html and pdf
+	$html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
 	// output the HTML content
 	$pdf->writeHTML($html, true, false, true, false, '');
         //Close and output PDF document
@@ -1474,7 +1476,7 @@ $rval = '';
   if (!isset($letterid)) {
 		return false;
   } elseif ( $total_contacts == 1) {
-		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1' WHERE letterid='".$letterid."';";
+		$letter_query = "UPDATE dental_letters SET parentid=null, deleted='1', deleted_by='".$_SESSION['userid']."', deleted_on=now() WHERE letterid='".$letterid."';";
 		$letter_result = mysql_query($letter_query);
 		$fax_query = "UPDATE dental_faxes SET viewed='1' WHERE letterid='".mysql_real_escape_string($letterid)."'";
 		$fax_result = mysql_query($fax_query);

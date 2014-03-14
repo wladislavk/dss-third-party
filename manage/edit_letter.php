@@ -687,6 +687,12 @@ while ($row = mysql_fetch_assoc($reason_result)) {
 $noncomp['description'] = $noncomp['description'];
 
 
+$sign_sql = "SELECT * FROM dental_user_signatures WHERE user_id='".mysql_real_escape_string($_SESSION['userid'])."' ORDER BY adddate DESC LIMIT 1";
+$sign_q = mysql_query($sign_sql);
+$sign = mysql_fetch_assoc($sign_q);
+$signature_file = 'signature_'.$_SESSION['userid'].'_'.$sign['id'].'.png';
+
+
 // Load $template
   if($template_type == '0'){
     $letter_sql = "SELECT body FROM dental_letter_templates WHERE companyid='".mysql_real_escape_string($companyid)."' AND triggerid='".mysql_real_escape_string($templateid)."'";
@@ -1006,6 +1012,8 @@ if ($_POST != array()) {
 		$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
                 $search[] = "%doctor_addr%";
                 $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
+                $search[] = "%signature_image%";
+                $replace[] = "<img src=\"display_file.php?f=".$signature_file."\" />";
 		$search[] = "%patient_fullname%";
 		$replace[] = "<strong>" . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
                 $search[] = "%patient_titlefullname%";
@@ -1461,6 +1469,8 @@ foreach ($letter_contacts as $key => $contact) {
 	$replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
         $search[] = "%doctor_phone%";
         $replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
+        $search[] = "%signature_image%";
+        $replace[] = "<img src=\"display_file.php?f=".$signature_file."\" />";
 	$search[] = "%franchisee_addr%";
 	$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
         $search[] = "%doctor_addr%";

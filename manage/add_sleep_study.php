@@ -105,6 +105,7 @@ function autoselect(selectedOption, f) {
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
                         $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
 			if($image_id != ''){
@@ -201,6 +202,7 @@ WHERE id='".$id."'
                         $banner1 = str_replace(" ","_",$banner1);
                         $banner1 = str_replace(".","_",$banner1);
                         $banner1 = str_replace("'","_",$banner1);
+                        $banner1 = str_replace("&","amp",$banner1);
                         $banner1 .= ".".$extension;
 
                         $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);

@@ -3,7 +3,7 @@
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
 	var local_data = "";
-	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid){
+	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only){
 		$.getJSON(file).done(function(data){
 			local_data = new Array();
 			var cpl = data;
@@ -25,7 +25,7 @@
                                         $('#'+hint).css('display', 'none');
                                 } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
                                         $('#'+hint).css("display", "inline");
-                                        sendValueRef_local($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid);
+                                        sendValueRef_local($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid, id_only);
                                         if ($(this).val() > 2) {
                                                 window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                                         }
@@ -34,14 +34,18 @@
 	}
 
 
-        function sendValueRef_local(partial_name, in_field, hint, id_field, source, file, hinttype, pid) {
+        function sendValueRef_local(partial_name, in_field, hint, id_field, source, file, hinttype, pid, id_only) {
 //alert(local_data[0].payer_name);
 		data = [];
 		r = 0
 		for(var i=0;i<local_data.length;i++){
 			if(local_data[i].payer_name.toLowerCase().indexOf(partial_name.toLowerCase()) != -1){
 				data[r] = [];
-				data[r][0] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[i].payer_name.replace(/(\r\n|\n|\r)/gm,"");
+				if(id_only){
+				  data[r][0] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"");
+				}else{
+				  data[r][0] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"")+"-"+local_data[i].payer_name.replace(/(\r\n|\n|\r)/gm,"");
+				}
 				data[r][1] = local_data[i].payer_id.replace(/(\r\n|\n|\r)/gm,"")+" - "+local_data[i].payer_name.replace(/(\r\n|\n|\r)/gm,"");
 				r++;
 			}

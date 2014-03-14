@@ -72,28 +72,6 @@ $clinch_grind_text  = $myarray['clinch_grind_text'];
 $future_dental_det = $myarray['future_dental_det'];
 $drymouth_text = $myarray['drymouth_text'];
 
-$sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
-$my = mysql_query($sql);
-$myarray = mysql_fetch_array($my);
-
-$ex_page4id = st($myarray['ex_page4id']);
-$exam_teeth = st($myarray['exam_teeth']);
-$other_exam_teeth = st($myarray['other_exam_teeth']);
-$caries = st($myarray['caries']);
-$where_facets = st($myarray['where_facets']);
-$missing = st($myarray['missing']);
-$cracked_fractured = st($myarray['cracked_fractured']);
-$old_worn_inadequate_restorations = st($myarray['old_worn_inadequate_restorations']);
-$dental_class_right = st($myarray['dental_class_right']);
-$dental_division_right = st($myarray['dental_division_right']);
-$dental_class_left = st($myarray['dental_class_left']);
-$dental_division_left = st($myarray['dental_division_left']);
-$additional_paragraph = st($myarray['additional_paragraph']);
-$initial_tooth = st($myarray['initial_tooth']);
-$open_proximal = st($myarray['open_proximal']);
-$deistema = st($myarray['deistema']);
-$crossbite = st($myarray['crossbite']);
-
 ?>
 
 <div class="row">
@@ -421,11 +399,32 @@ $crossbite = st($myarray['crossbite']);
                 </div>
             </li>
         </ul>
-    </div>
-    <div class="col-md-6">
+        
         <h4>Examination of Teeth Revealed</h4>
         <ul class="list-group">
             <?
+            
+            $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
+            $my = mysql_query($sql);
+            $myarray = mysql_fetch_array($my);
+
+            $ex_page4id = st($myarray['ex_page4id']);
+            $exam_teeth = st($myarray['exam_teeth']);
+            $other_exam_teeth = st($myarray['other_exam_teeth']);
+            $caries = st($myarray['caries']);
+            $where_facets = st($myarray['where_facets']);
+            $missing = st($myarray['missing']);
+            $cracked_fractured = st($myarray['cracked_fractured']);
+            $old_worn_inadequate_restorations = st($myarray['old_worn_inadequate_restorations']);
+            $dental_class_right = st($myarray['dental_class_right']);
+            $dental_division_right = st($myarray['dental_division_right']);
+            $dental_class_left = st($myarray['dental_class_left']);
+            $dental_division_left = st($myarray['dental_division_left']);
+            $additional_paragraph = st($myarray['additional_paragraph']);
+            $initial_tooth = st($myarray['initial_tooth']);
+            $open_proximal = st($myarray['open_proximal']);
+            $deistema = st($myarray['deistema']);
+            $crossbite = st($myarray['crossbite']);
             
             $exam_teeth_sql = "select * from dental_exam_teeth where status=1 order by sortby";
             $exam_teeth_my = mysql_query($exam_teeth_sql);
@@ -470,6 +469,47 @@ $crossbite = st($myarray['crossbite']);
                 <li class="list-group-item">
                     <strong>Old, Worn or Inadequate Restorations Tooth #: </strong>
                     <?= $old_worn_inadequate_restorations ?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($additional_paragraph) { ?>
+                <li class="list-group-item">
+                    <p>
+                        <strong>Other information: </strong>
+                    </p>
+                    <p><?= $additional_paragraph ?></p>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h4>Tooth Contact prior to Oral Appliance</h4>
+        <ul class="list-group">
+            <?php if ($crossbite != '') { ?>
+                <li class="list-group-item">
+                    <strong>Teeth in Crossbite:</strong>
+                    <?=$crossbite;?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($initial_tooth != '') { ?>
+                <li class="list-group-item">
+                    <strong>The initial tooth contact was between:</strong>
+                    <?=$initial_tooth;?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($open_proximal != '') { ?>
+                <li class="list-group-item">
+                    <strong>Open proximal contact(s) present between teeth numbers:</strong>
+                    <?=$open_proximal;?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($deistema != '') { ?>
+                <li class="list-group-item">
+                    <strong>Diastema(s) present between teeth numbers:</strong>
+                    <?=$deistema;?>
                 </li>
             <?php } ?>
         </ul>
@@ -531,156 +571,123 @@ $crossbite = st($myarray['crossbite']);
     </div>
 <?php } ?>
 
+<?php
+
+$sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
+$my = mysql_query($sql);
+$myarray = mysql_fetch_array($my);
+
+$ex_page1id = st($myarray['ex_page1id']);
+$blood_pressure = st($myarray['blood_pressure']);
+$pulse = st($myarray['pulse']);
+$neck_measurement = st($myarray['neck_measurement']);
+//$bmi = st($myarray['bmi']);
+$additional_paragraph = st($myarray['additional_paragraph']);
+$tongue = st($myarray['tongue']);
+
+$bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
+$bmi_my = mysql_query($bmi_sql);
+$bmi_myarray = mysql_fetch_array($bmi_my);
+$bmi = st($bmi_myarray['bmi']);
+$feet = st($bmi_myarray['feet']);
+$inches = st($bmi_myarray['inches']);
+$weight = st($bmi_myarray['weight']);
+
+?>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Vital Data</h4>
+        <ul class="list-group">
+            <?php if ($blood_pressure != '') { ?>
+                <li class="list-group-item">
+                    <strong>Blood Pressure:</strong>
+                    <?=$blood_pressure;?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($pulse != '') { ?>
+                <li class="list-group-item">
+                    <strong>Pulse:</strong>
+                    <?= $pulse;?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($neck_measurement != '') { ?>
+                <li class="list-group-item">
+                    <strong>Neck Measurement:</strong>
+                    <?= $neck_measurement;?> inches
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+    
+    <div class="col-md-6">
+        <h4>Height/Weight</h4>
+        <ul class="list-group">
+            <?php if ($feet != '') { ?>
+                <li class="list-group-item">
+                    <strong>Height:</strong>
+                    <?= $feet ;?>
+                    feet
+                    <?= intval($inches) ?>
+                    inches
+                </li>
+            <?php } ?>
+            
+            <?php if ($weight != '') { ?>
+                <li class="list-group-item">
+                    <strong>Weight:</strong>
+                    <?= floatval($weight) ?>
+                    pounds
+                </li>
+            <?php } ?>
+            
+            <?php if ($bmi != '') { ?>
+                <li class="list-group-item">
+                    <p>
+                        <strong>BMI</strong>
+                    </p>
+                    <table class="table text-center">
+                        <tr>
+                            <th class="text-center">
+                                Underweight<br>
+                                <small>&lt; 18.5</small>
+                            </th>
+                            <th class="text-center">
+                                Normal<br>
+                                <small>18.5 - 24.9</small>
+                            </th>
+                            <th class="text-center">
+                                Overweight<br>
+                                <small>25 - 29.9</small>
+                            </th>
+                            <th class="text-center">
+                                Obese<br>
+                                <small>&gt; 30</small>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="<?= ($bmi < 18.5 ? 'bg-info' : '') ?>">
+                                <?= ($bmi < 18.5 ? $bmi : '') ?>
+                            </td>
+                            <td class="<?= ($bmi >= 18.5 && $bmi < 25 ? 'bg-success' : '') ?>">
+                                <?= ($bmi >= 18.5 && $bmi < 25 ? $bmi : '') ?>
+                            </td>
+                            <td class="<?= ($bmi >= 25 && $bmi < 30 ? 'bg-warning' : '') ?>">
+                                <?= ($bmi >= 25 && $bmi < 30 ? $bmi : '') ?>
+                            </td>
+                            <td class="<?= ($bmi > 30 ? 'bg-alert' : '') ?>">
+                                <?= ($bmi > 30 ? $bmi : '') ?>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+
 <div class="box">
-    <?php if ($additional_paragraph != '') { ?>
-        <h4>Other Items:</h4>
-        
-        <div>
-            <span>
-                <?=$additional_paragraph;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <h4>Tooth Contact prior to Oral Appliance</h4>
-    
-    <?php if ($crossbite != '') { ?>
-        <div>
-            <span>
-                <label class="exam_label">Teeth in Crossbite</label>
-                <?=$crossbite;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($initial_tooth != '') { ?>
-        <div>
-            <span>
-                <label class="exam_label">The initial tooth contact was between</label>
-                <?=$initial_tooth;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($open_proximal != '') { ?>
-        <div>
-            <span>
-                <label class="exam_label">Open proximal contact(s) present between teeth numbers</label>
-                <?=$open_proximal;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($deistema != '') { ?>
-        <div>
-            <span>
-                <label class="exam_label">Diastema(s) present between teeth numbers</label>
-                <?=$deistema;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php
-    
-    $sql = "select * from dental_ex_page1 where patientid='".$_GET['pid']."'";
-    $my = mysql_query($sql);
-    $myarray = mysql_fetch_array($my);
-    
-    $ex_page1id = st($myarray['ex_page1id']);
-    $blood_pressure = st($myarray['blood_pressure']);
-    $pulse = st($myarray['pulse']);
-    $neck_measurement = st($myarray['neck_measurement']);
-    //$bmi = st($myarray['bmi']);
-    $additional_paragraph = st($myarray['additional_paragraph']);
-    $tongue = st($myarray['tongue']);
-    
-    $bmi_sql = "select * from dental_patients where patientid='".$_GET['pid']."'";
-    $bmi_my = mysql_query($bmi_sql);
-    $bmi_myarray = mysql_fetch_array($bmi_my);
-    $bmi = st($bmi_myarray['bmi']);
-    $feet = st($bmi_myarray['feet']);
-    $inches = st($bmi_myarray['inches']);
-    $weight = st($bmi_myarray['weight']);
-    
-    ?>
-    
-    <h4>Vital Data</h4>
-    
-    <?php if ($blood_pressure != '') { ?>
-        <div>
-            <span>
-                Blood Pressure
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;
-                <?=$blood_pressure;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($pulse != '') { ?>
-        <div>
-            <span>
-                Pulse
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;
-                <?= $pulse;?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($neck_measurement != '') { ?>
-        <div>
-            <span>
-                Neck Measurement
-                &nbsp;&nbsp;&nbsp;
-                <?= $neck_measurement;?> inches
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <h4>Height/Weight</h4>
-    
-    <?php if ($feet != '') { ?>
-        <?= $feet;?>
-        <label for="feet">Feet</label>
-    <?php } ?>
-    
-    <?php if ($inches != '') { ?>
-        <?= $inches;?>
-        <label for="inches">Inches</label>
-    <?php } ?>
-    
-    <?php if ($weight != '') { ?>
-        <?= $weight;?>
-        <label for="inches">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
-    <?php } ?>
-    
-    <?php if ($bmi != '') { ?>
-        <span style="color:#000000; padding-top:2px;">BMI</span>
-        <?=$bmi?>
-        <label for="inches">
-            &lt; 18.5 is Underweight
-            <br />
-            &nbsp;&nbsp;&nbsp;
-            18.5 - 24.9 is Normal
-            <br />
-            &nbsp;&nbsp;&nbsp;
-            25 - 29.9 is Overweight
-            <br />
-            &gt; 30 is Obese
-        </label>
-    <?php } ?>
-    
     <?php if ($tongue != "" || $additional_paragraph!= "") { ?>
         <h4>Airway Evaluation
             <br />

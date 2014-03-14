@@ -1319,8 +1319,6 @@ function remove_notification(id){
     <form name="patientfrm" id="patientfrm" action="<?=$_SERVER['PHP_SELF'];?>?pid=<?= $_GET['pid']; ?>&add=1" method="post" onSubmit="return validate_add_patient(this);">
 
     
-    <script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
    
 <?php include 'includes/patient_nav.php'; ?> 
     
@@ -1351,7 +1349,7 @@ $num_face = mysql_num_rows($itype_my);
         </a>
 <?php }else{ 
   while($image = mysql_fetch_array($itype_my)){
-   echo "<img src='display_file.php?f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
+   echo "<img src='/manage/admin/display_file.php?type=image&f=".$image['image_file']."' style='max-height:150px;max-width:200px;' style='float:right;' />";
   }
 
 } ?>

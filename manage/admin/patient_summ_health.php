@@ -72,293 +72,6 @@ $clinch_grind_text  = $myarray['clinch_grind_text'];
 $future_dental_det = $myarray['future_dental_det'];
 $drymouth_text = $myarray['drymouth_text'];
 
-?>
-
-<h3 class="sect_header">Medications / Allergies</h3>
-<div class="box">
-    <?php if ($premedcheck!='') { ?>
-        <label class="desc" id="title0" for="Field0" style="width:90%;">
-            Premedication
-            <span id="req_0" class="req">*</span>
-            <?= ($premedcheck)?"- Yes":"- No";?>
-        </label>
-        
-        <div>
-            <?php if ($premeddet != '') { ?>
-                <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
-                    <?=$premeddet;?>
-                </span>
-            <?php } ?>
-        </div>
-    <?php } ?>
-    
-    <?php if ($allergenscheck != '') { ?>
-        <label class="desc" id="title0" for="Field0" style="width:90%">
-            Allergens <?= ($allergenscheck)?"- Yes":"- No"; ?>
-        </label>
-        
-        <div>
-            <span>
-                <?php if ($other_allergens != '') { ?>
-                    <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
-                        <?=$other_allergens;?>
-                    </span>
-                <?php } ?>
-            </span>
-        </div>
-    <?php } ?>
-    
-    <?php if ($medicationscheck != '') { ?>
-        <label class="desc" id="title0" for="Field0" style="width:90%">
-            Current Medications <?= ($medicationscheck)?"- Yes":"- No"; ?>
-        </label>
-        
-        <div>
-            <span>
-                <?php if ($other_medications != '') { ?>
-                    <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
-                        <?=$other_medications;?>
-                    </span>
-                <?php } ?>
-            </span>
-        </div>
-    <?php } ?>
-</div>
-
-<h3 class="sect_header">Health History</h3>
-<div class="box">
-    <?php if ($other_history != '') { ?>
-        <label class="desc" id="title0" for="Field0" style="width:90%;">
-            Medical History
-        </label>
-        
-        <div>
-            <span>
-                <span id="h_det" >
-                    <?=$other_history;?>
-                </span>
-            </span>
-        </div>
-    <?php } ?>
-    
-    <br />
-    
-    <label class="desc" id="title0" for="Field0">
-        Dental History
-    </label>
-    
-    <table class="table table-bordered table-hover">
-        <?php if ($dental_health != '') { ?>
-            <tr>
-                <td>How would you describe your dental health?</td>
-                <td><?= $dental_health;?></td>
-                <td></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($wisdom_extraction == 'Yes' || $wisdom_extraction_text != '') { ?>
-            <tr>
-                <td>Have you ever had teeth extracted?</td>
-                <td><?= $wisdom_extraction;?></td>
-                <td id="wisdom_extraction_extra">Please describe: <?= $wisdom_extraction_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($removable == 'Yes' || $removable_text != '') { ?>
-            <tr>
-                <td>Do you wear removable partials?</td>
-                <td><?= $removable;?></td>
-                <td id="removable_extra">Please describe: <?= $removable_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($dentures == 'Yes' || $dentures_text != '') { ?>
-            <tr>
-                <td>Do you wear dentures?</td>
-                <td><?= $dentures; ?></td>
-                <td id="dentures_extra">Please describe: <?= $dentures_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($orthodontics == 'Yes' || $year_completed != '') { ?>
-            <tr>
-                <td>Have you worn orthodontics (braces)?</td>
-                <td><?= $orthodontics;?></td>
-                <td id="orthodontics_extra">Year completed: <?=$year_completed;?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($tmj_cp == 'Yes' || $tmj_cp_text != '') { ?>
-            <tr>
-                <td>Does your TMJ (jaw joint) click or pop?</td>
-                <td><?= $tmj_cp;?></td>
-                <td id="tmj_cp_extra">Please describe: <?= $tmj_cp_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($tmj_pain == 'Yes' || $tmj_pain_text != '') { ?>
-            <tr>
-                <td>Do you have pain in this joint?</td>
-                <td><?= $tmj_pain;?></td>
-                <td id="tmj_pain_extra">Please describe: <?= $tmj_pain_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($tmj_surgery == 'Yes' || $tmj_surgery_text != '') { ?>
-            <tr>
-                <td>Have you had TMJ (jaw joint) surgery?</td>
-                <td><?= $tmj_surgery;?></td>
-                <td id="tmj_surgery_extra">Please describe: <?= $tmj_surgery_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($gum_prob == 'Yes' || $gum_prob_text != '') { ?>
-            <tr>
-                <td>Have you ever had gum problems?</td>
-                <td><?= $gum_prob;?></td>
-                <td id="gum_prob_extra">Please describe: <?= $gum_prob_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($gum_surgery == 'Yes' || $gum_surgery_text != '') { ?>
-            <tr>
-                <td>Have you ever had gum surgery?</td>
-                <td><?= $gum_surgery; ?></td>
-                <td id="gum_surgery_extra">Please describe: <?= $gum_surgery_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($drymouth == 'Yes' || $drymouth_text != '') { ?>
-            <tr>
-                <td>Do you have morning dry mouth?</td>
-                <td><?= $drymouth;?></td>
-                <td id="drymouth_extra">Please describe: <?= $drymouth_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($injury == 'Yes' || $injury_text != '') { ?>
-            <tr>
-                <td>Have you ever had injury to your head, face, neck, mouth, or teeth?</td>
-                <td><?= $injury; ?></td>
-                <td id="injury_extra">Please describe: <?= $injury_text; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($completed_future == 'Yes' || $future_dental_det != '') { ?>
-            <tr>
-                <td>Are you planning to have dental work done in the near future?</td>
-                <td><?=$completed_future;?></td>
-                <td id="completed_future_extra">Please describe: <?= $future_dental_det; ?></td>
-            </tr>
-        <?php } ?>
-        
-        <?php if ($clinch_teeth == 'Yes' || $clinch_grind_text != '') { ?>
-            <tr>
-                <td>Do you clinch or grind your teeth?</td>
-                <td><?= $clinch_grind; ?></td>
-                <td id="clinch_grind_extra">Please describe: <?= $clinch_grind_text; ?></td>
-            </tr>
-        <?php } ?>
-    </table>
-    
-    <label class="desc" id="title0" for="Field0">
-        Family History
-    </label>
-    
-    <?php if ($family_hd == 'Yes') { ?>
-        <div>
-            <span class="full">
-                <label>Have genetic members of your family had Heart Disease?</label>
-                <?= $family_hd; ?>
-            </span>
-        </div>
-    <?php } ?>
-    
-    <?php if ($family_bp == 'Yes') { ?>
-        <div>
-            <span>
-                <label>High Blood Pressure?</label>
-                <?= $family_bp; ?>
-            </span>
-        </div>
-    <?php } ?>
-    
-    <?php if ($family_dia == 'Yes') { ?>
-        <div>
-            <span>
-                <label>Diabetes?</label>
-                <?= $family_dia; ?> 
-            </span>
-        </div>
-    <?php } ?>
-    
-    <?php if ($family_sd == 'Yes') { ?>
-        <div>
-            <span>
-                <label>Have any genetic members of your family been diagnosed or treated for a sleep disorder?</label>
-                <?= $family_sd; ?>
-            </span>
-        </div>
-    <?php } ?>
-    
-    <label class="desc" id="title0" for="Field0">
-        SOCIAL HISTORY
-    </label>
-    
-    <?php if ($alcohol != '') { ?>
-        Alcohol consumption: How often do you consume alcohol within 2-3 hours of bedtime?
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <?= $alcohol;?>
-        <br /><br />
-    <?php } ?>
-    
-    <?php if ($sedative != '') { ?>
-        Sedative Consumption: How often do you take sedatives within 2-3 hours of bedtime?
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <?= $sedative;?>
-        <br /><br />
-    <?php } ?>
-    
-    <?php if ($caffeine != '') { ?>
-        Caffeine consumption: How often do you consume caffeine within 2-3 hours of bedtime?
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <?= $caffeine;?>
-        <br /><br />
-    <?php } ?>
-    
-    <?php if ($smoke != '') { ?>
-        Do you Smoke?
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <?= $smoke;?>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        
-        <div id="smoke">
-            If Yes, number of packs per day
-            <?=$smoke_packs?>
-        </div>
-        
-        <br /><br />
-    <?php } ?>
-    
-    <?php if ($tobacco != '') { ?>
-        Do you use Chewing Tobacco?
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <?= $tobacco;?>
-        <br /><br />
-    <?php } ?>
-    
-    <?php if ($additional_paragraph != '') { ?>
-        <div>
-            <span>
-                Additional Paragraph
-            </span>
-            <textarea name="additional_paragraph" class="field text addr tbox form-control"><?=$additional_paragraph;?></textarea>
-        </div>
-    <?php } ?>
-</div>
-
-<?php
-
 $sql = "select * from dental_ex_page4 where patientid='".$_GET['pid']."'";
 $my = mysql_query($sql);
 $myarray = mysql_fetch_array($my);
@@ -383,37 +96,335 @@ $crossbite = st($myarray['crossbite']);
 
 ?>
 
-<h3 class="sect_header">Unnamed Section</h3>
-<div class="box">
-    <label class="desc" id="title0" for="Field0">
-        Dental Screening
-    </label>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Medications / Allergies</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <?php if ($premeddet != '') { ?>
+                    <p>
+                <?php } ?>
+                
+                <strong>Premedication:</strong>
+                <?= ($premedcheck)?"Yes":"No";?>
+                
+                <?php if ($premeddet != '') { ?>
+                    </p>
+                    <p>
+                        <span id="pm_det" <?php if($premedcheck == 0 && (!$showEdits || $premedcheck==$dpp_row['premedcheck'])){ echo 'style="display:none;"';} ?>>
+                            <?=$premeddet;?>
+                        </span>
+                    </p>
+                <?php } ?>
+            </li>
+            <li class="list-group-item">
+                <?php if ($other_allergens != '') { ?>
+                    <p>
+                <?php } ?>
+                
+                <strong>Allergens:</strong>
+                <?= ($allergenscheck)?"Yes":"No"; ?>
+                
+                <?php if ($other_allergens != '') { ?>
+                    </p>
+                    <p>
+                        <span id="a_det" <?php if($allergenscheck == 0 && (!$showEdits || $allergenscheck==$dpp_row['allergenscheck'])){ echo 'style="display:none;"';} ?>>
+                            <?=$other_allergens;?>
+                        </span>
+                    </p>
+                <?php } ?>
+            </li>
+            <li class="list-group-item">
+                <?php if ($other_medications != '') { ?>
+                    <p>
+                <?php } ?>
+                
+                <strong>Current Medications:</strong>
+                <?= ($medicationscheck)?"Yes":"No"; ?>
+                
+                <?php if ($other_medications != '') { ?>
+                    </p>
+                    <p>
+                        <span id="m_det" <?php if($medicationscheck == 0 && (!$showEdits || $medicationscheck==$dpp_row['medicationscheck'])){ echo 'style="display:none;"';} ?>>
+                            <?=$other_medications;?>
+                        </span>
+                    </p>
+                <?php } ?>
+            </li>
+        </ul>
+        
+        <h4>Health History</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <p>
+                    <strong>Medical History</strong>
+                </p>
+                <p><?= $other_history ?></p>
+            </li>
+        </ul>
+    </div>
     
-    <?php if ($missing != '') { ?>
-        <div>
-            <span style="color:#000000;">
-                Missing Tooth #
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <?=$missing?>
-                <button onclick="Javascript: $('#perio_chart').toggle('slow'); return false;">Perio Chart</button>
-            </span>
-        </div>
-        <div id="perio_chart" style="display:none;">
-            <iframe name="perio_iframe" id="perio_iframe" src="missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="920" height="840"></iframe>
-        </div>
-        <br />
+    <div class="col-md-6">
+        <h4>Social History</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Have genetic members of your family had Heart Disease?:</strong>
+                <?= $family_hd == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+            <li class="list-group-item">
+                <strong>High blood pressure?:</strong>
+                <?= $family_bp == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+            <li class="list-group-item">
+                <strong>Diabetes?:</strong>
+                <?= $family_dia == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+            <li class="list-group-item">
+                <strong>Have any genetic members of your family been diagnosed or treated for a sleep disorder?:</strong>
+                <?= $family_sd == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+        </ul>
+        
+        <h4>Family History</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>How often do you consume alcohol within 2-3 hours of bedtime?:</strong>
+                <?= $alcohol ?>
+            </li>
+            <li class="list-group-item">
+                <strong>How often do you take sedatives within 2-3 hours of bedtime?:</strong>
+                <?= $sedative ?>
+            </li>
+            <li class="list-group-item">
+                <strong>How often do you consume caffeine within 2-3 hours of bedtime?:</strong>
+                <?= $caffeine ?>
+            </li>
+            <li class="list-group-item">
+                <strong>Do you smoke?:</strong>
+                <?= $smoke == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+            <?php if ($smoke == 'Yes') { ?>
+                <li class="list-group-item">
+                    <strong>Number of packs per day:</strong>
+                    <?= intval($smoke_packs) ?>
+                </li>
+            <?php } ?>
+            <li class="list-group-item">
+                <strong>Do you use chewing tobacco?:</strong>
+                <?= $tobacco == 'Yes' ? 'Yes' : 'No' ?>
+            </li>
+            <?php if ($additional_paragraph) { ?>
+                <li class="list-group-item">
+                    <p>
+                        <strong>Additional details</strong>
+                    </p>
+                    <p>
+                        <textarea name="additional_paragraph" class="field text addr tbox form-control" rows="3"><?=$additional_paragraph;?></textarea>
+                    </p>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>
+
+<h4>Dental History</h4>
+<table class="table table-bordered">
+    <?php if ($dental_health != '') { ?>
+        <tr>
+            <th>
+                How would you describe your dental health?:</strong>
+            </td>
+            <td colspan="2">
+                <?= $dental_health;?>
+            </td>
+        </tr>
     <?php } ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Examination of Teeth Revealed
-    </label>
+    <?php if ($wisdom_extraction == 'Yes' || $wisdom_extraction_text != '') { ?>
+        <tr>
+            <th>
+                Have you ever had teeth extracted?:
+            </th>
+            <td>
+                <?= $wisdom_extraction;?>
+            </td>
+            <td>Please describe: <?= $wisdom_extraction_text; ?></td>
+        </tr>
+    <?php } ?>
     
-    <div>
-        <span>
+    <?php if ($removable == 'Yes' || $removable_text != '') { ?>
+        <tr>
+            <th>
+                Do you wear removable partials?:
+            </th>
+            <td>
+                <?= $removable;?>
+            </td>
+            <td>Please describe: <?= $removable_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($dentures == 'Yes' || $dentures_text != '') { ?>
+        <tr>
+            <th>
+                Do you wear dentures?:
+            </th>
+            <td>
+                <?= $dentures; ?>
+            </td>
+            <td>Please describe: <?= $dentures_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($orthodontics == 'Yes' || $year_completed != '') { ?>
+        <tr>
+            <th>
+                Have you worn orthodontics (braces)?:
+            </th>
+            <td>
+                <?= $orthodontics;?>
+            </td>
+            <td>Year completed: <?=$year_completed;?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($tmj_cp == 'Yes' || $tmj_cp_text != '') { ?>
+        <tr>
+            <th>
+                Does your TMJ (jaw joint) click or pop?:
+            </th>
+            <td>
+                <?= $tmj_cp;?>
+            </td>
+            <td>Please describe: <?= $tmj_cp_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($tmj_pain == 'Yes' || $tmj_pain_text != '') { ?>
+        <tr>
+            <th>
+                Do you have pain in this joint?:
+            </th>
+            <td>
+                <?= $tmj_pain;?>
+            </td>
+            <td>Please describe: <?= $tmj_pain_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($tmj_surgery == 'Yes' || $tmj_surgery_text != '') { ?>
+        <tr>
+            <th>
+                Have you had TMJ (jaw joint) surgery?:
+            </th>
+            <td>
+                <?= $tmj_surgery;?>
+            </td>
+            <td>Please describe: <?= $tmj_surgery_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($gum_prob == 'Yes' || $gum_prob_text != '') { ?>
+        <tr>
+            <th>
+                Have you ever had gum problems?:
+            </th>
+            <td>
+                <?= $gum_prob;?>
+            </td>
+            <td>Please describe: <?= $gum_prob_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($gum_surgery == 'Yes' || $gum_surgery_text != '') { ?>
+        <tr>
+            <th>
+                Have you ever had gum surgery?:
+            </th>
+            <td>
+                <?= $gum_surgery; ?>
+            </td>
+            <td>Please describe: <?= $gum_surgery_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($drymouth == 'Yes' || $drymouth_text != '') { ?>
+        <tr>
+            <th>
+                Do you have morning dry mouth?:
+            </th>
+            <td>
+                <?= $drymouth;?>
+            </td>
+            <td>Please describe: <?= $drymouth_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($injury == 'Yes' || $injury_text != '') { ?>
+        <tr>
+            <th>
+                Have you ever had injury to your head, face, neck, mouth, or teeth?:
+            </th>
+            <td>
+                <?= $injury; ?>
+            </td>
+            <td>Please describe: <?= $injury_text; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($completed_future == 'Yes' || $future_dental_det != '') { ?>
+        <tr>
+            <th>
+                Are you planning to have dental work done in the near future?:
+            </th>
+            <td>
+                <?=$completed_future;?>
+            </td>
+            <td>Please describe: <?= $future_dental_det; ?></td>
+        </tr>
+    <?php } ?>
+    
+    <?php if ($clinch_teeth == 'Yes' || $clinch_grind_text != '') { ?>
+        <tr>
+            <th>
+                Do you clinch or grind your teeth?:
+            </th>
+            <td>
+                <?= $clinch_grind; ?>
+            </td>
+            <td>Please describe: <?= $clinch_grind_text; ?></td>
+        </tr>
+    <?php } ?>
+</table>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Dental Screening</h4>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Missing Tooth #:</strong>
+                <?= $missing ?>
+                <button class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#perio-chart">
+                    Perio Chart
+                    <span class="glyphicon glyphicon-th"></span>
+                </button>
+                <div id="perio-chart" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="perio-chart" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Perio Chart</h4>
+                            </div>
+                            <iframe src="/manage/missing_teeth_form.php?pid=<?=$_GET['pid']?>&mt=<?= $missing ?>" width="100%" height="840" border="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h4>Examination of Teeth Revealed</h4>
+        <ul class="list-group">
             <?
             
             $exam_teeth_sql = "select * from dental_exam_teeth where status=1 order by sortby";
@@ -421,125 +432,108 @@ $crossbite = st($myarray['crossbite']);
             
             while ($exam_teeth_myarray = mysql_fetch_array($exam_teeth_my)) {
                 if (!strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) { ?>
-                    <?=st($exam_teeth_myarray['exam_teeth']);?><br />
+                    <li class="list-group-item">
+                        <?=st($exam_teeth_myarray['exam_teeth']);?>
+                    </li>
                 <? }
             } ?>
-        </span>
+            
+            <?php if ($other_exam_teeth) { ?>
+                <li class="list-group-item">
+                    <strong>Other Items: </strong>
+                    <?= $other_exam_teeth ?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($caries) { ?>
+                <li class="list-group-item">
+                    <strong>Caries Tooth #: </strong>
+                    <?= $caries ?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($where_facets) { ?>
+                <li class="list-group-item">
+                    <strong>Wear Facets Tooth #: </strong>
+                    <?= $where_facets ?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($cracked_fractured) { ?>
+                <li class="list-group-item">
+                    <strong>Cracked or Fractured Tooth #: </strong>
+                    <?= $cracked_fractured ?>
+                </li>
+            <?php } ?>
+            
+            <?php if ($old_worn_inadequate_restorations) { ?>
+                <li class="list-group-item">
+                    <strong>Old, Worn or Inadequate Restorations Tooth #: </strong>
+                    <?= $old_worn_inadequate_restorations ?>
+                </li>
+            <?php } ?>
+        </ul>
     </div>
+</div>
+
+<?php if ($dental_class_right != "" || $dental_division_right != "" || $dental_class_left != "" || $dental_division_left != "") { ?>
+    <h4>Dental Relationship</h4>
     
-    <?php if ($other_exam_teeth != '') { ?>
-        <div>
-            <span>
-                <span style="color:#000000; padding-top:0px;">
-                    Other Items<br />
-                </span>
-                <?=$other_exam_teeth;?>
-            </span>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th colspan="2" class="text-center">
+                        Left
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" width="60%">
+                        <u>Class</u>
+                    </td>
+                    <td valign="top" width="40%">
+                        <u>Division</u>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <?= $dental_class_left;?>
+                    </td>
+                    <td valign="top">
+                        <?=$dental_division_left;?>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($caries != '') { ?>
-        <div>
-            <span style="color:#000000;">
-                <label class="exam_label">Caries Tooth #</label>
-                <?=$caries?>
-            </span>
+        <div class="col-md-6">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th colspan="2" class="text-center">Right</th>
+                </tr>
+                <tr>
+                    <td valign="top" width="60%">
+                        <u>Class</u>
+                    </td>
+                    <td valign="top" width="40%">
+                        <u>Division</u>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <?= $dental_class_right;?>
+                    </td>
+                    <td valign="top">
+                        <?= $dental_division_right;?>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($where_facets != '') { ?>
-        <div>
-            <span style="color:#000000;">
-                <label class="exam_label">Wear Facets Tooth #</label>
-                <?=$where_facets?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($cracked_fractured != '') { ?>
-        <div>
-            <span style="color:#000000;">
-                <label class="exam_label">Cracked or Fractured Tooth #</label>
-                <?=$cracked_fractured?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($old_worn_inadequate_restorations != '') { ?>
-        <div>
-            <span style="color:#000000;">
-                <label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label>
-                <?=$old_worn_inadequate_restorations?>
-            </span>
-        </div>
-        <br />
-    <?php } ?>
-    
-    <?php if ($dental_class_right != "" || $dental_division_right != "" || $dental_class_left != "" || $dental_division_left != "") { ?>
-        <label class="desc" id="title0" for="Field0">
-            Dental Relationship
-        </label>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th colspan="2" class="text-center">
-                            Left
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top" width="60%">
-                            <u>Class</u>
-                        </td>
-                        <td valign="top" width="40%">
-                            <u>Division</u>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <?= $dental_class_left;?>
-                        </td>
-                        <td valign="top">
-                            <?=$dental_division_left;?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th colspan="2" class="text-center">Right</th>
-                    </tr>
-                    <tr>
-                        <td valign="top" width="60%">
-                            <u>Class</u>
-                        </td>
-                        <td valign="top" width="40%">
-                            <u>Division</u>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <?= $dental_class_right;?>
-                        </td>
-                        <td valign="top">
-                            <?= $dental_division_right;?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    <?php } ?>
-    
+    </div>
+<?php } ?>
+
+<div class="box">
     <?php if ($additional_paragraph != '') { ?>
-        <label class="desc clear" id="title0" for="Field0">
-            Other Items:
-        </label>
+        <h4>Other Items:</h4>
         
         <div>
             <span>
@@ -549,9 +543,7 @@ $crossbite = st($myarray['crossbite']);
         <br />
     <?php } ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Tooth Contact prior to Oral Appliance
-    </label>
+    <h4>Tooth Contact prior to Oral Appliance</h4>
     
     <?php if ($crossbite != '') { ?>
         <div>
@@ -617,9 +609,7 @@ $crossbite = st($myarray['crossbite']);
     
     ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Vital Data
-    </label>
+    <h4>Vital Data</h4>
     
     <?php if ($blood_pressure != '') { ?>
         <div>
@@ -658,9 +648,7 @@ $crossbite = st($myarray['crossbite']);
         <br />
     <?php } ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Height/Weight
-    </label>
+    <h4>Height/Weight</h4>
     
     <?php if ($feet != '') { ?>
         <?= $feet;?>
@@ -694,15 +682,13 @@ $crossbite = st($myarray['crossbite']);
     <?php } ?>
     
     <?php if ($tongue != "" || $additional_paragraph!= "") { ?>
-        <label class="desc" id="title0" for="Field0">
-            Airway Evaluation
+        <h4>Airway Evaluation
             <br />
             
             <?php if ($tongue != "") { ?>
                 <span class="form_info">Tongue</span>
                 <br />
-            <?php } ?>
-        </label>
+            <?php } ?></h4>
         
         <?php if ($tongue != "") { ?>
             <div>
@@ -723,9 +709,7 @@ $crossbite = st($myarray['crossbite']);
         <?php } ?>
         
         <?php if ($additional_paragraph != '') { ?>
-            <label class="desc" id="title0" for="Field0">
-                Additional Paragraph
-            </label>
+            <h4>Additional Paragraph</h4>
             <div>
                 <span>
                     <?=$additional_paragraph;?>
@@ -749,12 +733,10 @@ $crossbite = st($myarray['crossbite']);
     <div class="row">
         <div class="col-md-6">
             <?php if ($mallampati != '') { ?>
-                <label class="desc" id="title0" for="Field0">
-                    Airway Evaluation (continued)
+                <h4>Airway Evaluation (continued)
                     <br />
                     <span class="form_info">Mallampati Classification</span>
-                    <br />
-                </label>
+                    <br /></h4>
                 
                 <table class="table table-bordered table-hover">
                     <tr>
@@ -788,9 +770,7 @@ $crossbite = st($myarray['crossbite']);
             <?php } ?>
         </div>
         <div class="col-md-6">
-            <label class="desc" id="title0" for="Field0">
-                Tonsils
-            </label>
+            <h4>Tonsils</h4>
             
             <?php if ($tonsils != '') { ?>
                 <div>
@@ -887,16 +867,12 @@ $crossbite = st($myarray['crossbite']);
     $other_nasal_passages = st($myarray['other_nasal_passages']);
     
     ?>
-    <label class="desc" id="title0" for="Field0">
-        <span class="form_info">
+    <h4><span class="form_info">
             Other Airway Items
-        </span>
-    </label>
+        </span></h4>
     
     <?php if ($maxilla != "" || $other_maxilla !="") { ?>
-        <label class="desc" id="title0" for="Field0">
-            Maxilla
-        </label>
+        <h4>Maxilla</h4>
         
         <div>
             <span>
@@ -924,9 +900,7 @@ $crossbite = st($myarray['crossbite']);
     <?php } ?>
     
     <?php if ($mandible!='' || $other_mandible !='') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Mandible
-        </label>
+        <h4>Mandible</h4>
         
         <div>
             <span>
@@ -955,9 +929,7 @@ $crossbite = st($myarray['crossbite']);
     <?php } ?>
     
     <?php if ($soft_palate!='' || $other_soft_palate!='') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Soft Palate
-        </label>
+        <h4>Soft Palate</h4>
         
         <div>
             <span>
@@ -986,9 +958,7 @@ $crossbite = st($myarray['crossbite']);
     
     
     <?php if ($uvula!='' || $other_uvula!='') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Uvula
-        </label>
+        <h4>Uvula</h4>
 
         <div>
             <span>
@@ -1016,9 +986,7 @@ $crossbite = st($myarray['crossbite']);
     <? } ?>
     
     <?php if ($gag_reflex!='' || $other_gag_reflex!='') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Gag Reflex
-        </label>
+        <h4>Gag Reflex</h4>
         
         <div>
             <span>
@@ -1046,9 +1014,7 @@ $crossbite = st($myarray['crossbite']);
     <?php } ?>
     
     <?php if ($nasal_passages!=''||$other_nasal_passages!='') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Nasal Passages
-        </label>
+        <h4>Nasal Passages</h4>
         
         <div class="cb_half">
             <span>
@@ -1146,9 +1112,7 @@ $crossbite = st($myarray['crossbite']);
     
     ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Muscles & Manual Palpation
-    </label>
+    <h4>Muscles & Manual Palpation</h4>
     <br />
     
     <div align="right" style="text-align:right; float:right;">
@@ -1224,9 +1188,7 @@ $crossbite = st($myarray['crossbite']);
     <br />
     
     <?php if ($additional_paragraph_pal != '') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Additional Paragraph
-        </label>
+        <h4>Additional Paragraph</h4>
         <div>
             <span>
                 <?=$additional_paragraph_pal;?>
@@ -1235,9 +1197,7 @@ $crossbite = st($myarray['crossbite']);
         <br />
     <?php } ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Joint Sounds
-    </label>
+    <h4>Joint Sounds</h4>
     <div>
         <span >
             Examination Type:
@@ -1294,9 +1254,7 @@ $crossbite = st($myarray['crossbite']);
         </table>
     </div>
     
-    <label class="desc" id="title0" for="Field0">
-        Range Of Motion
-    </label>
+    <h4>Range Of Motion</h4>
     <div>
         <table class="table table-bordered table-hover">
             <?php if ($i_opening_from != '') { ?>
@@ -1415,9 +1373,7 @@ $crossbite = st($myarray['crossbite']);
     <br />
     
     <?php if ($additional_paragraph_rm != '') { ?>
-        <label class="desc" id="title0" for="Field0">
-            Additional Paragraph
-        </label>
+        <h4>Additional Paragraph</h4>
         <div>
             <span>
                 <?=$additional_paragraph_rm;?>
@@ -1426,9 +1382,7 @@ $crossbite = st($myarray['crossbite']);
         <br />
     <?php } ?>
     
-    <label class="desc" id="title0" for="Field0">
-        Craniomandibular Screening
-    </label>
+    <h4>Craniomandibular Screening</h4>
     <div>
         <span>
             <? if ($screening_aware == 1) { ?>

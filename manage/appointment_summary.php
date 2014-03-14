@@ -13,10 +13,10 @@
             <span class="title">Test</span>
         </td>
         <td class="letters">
-            <a href="dss_summ.php?sect=leters&pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+            <a href="dss_summ.php?sect=leters&pid=<?= $_GET['pid']; ?>" class="btn btn-info btn-sm"><?= $letter_count; ?> Letters</a>
         </td>
         <td>
-            <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>
+            <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
         </td>
     </tr>
     <?php
@@ -50,14 +50,14 @@
         <td>
             <input class="completed_date flow_comp_calendar form-control date text-center" id="completed_date_<?= $id; ?>" type="text" value="<?= $datecomp; ?>" />
         </td>
-        <td>
+        <td class="form-inline">
             <span class="title"><?= $segments[$row['segmentid']]; ?></span>
             <?php
             
             switch ($row['segmentid']) {
                 case 3: //sleep study ?>
             <br />
-            <select class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
+            <select class="study_type form-control" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
                 <option value="">Select Type</option>
                 <option value="HST Titration" <?= ($row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
                 <option value="PSG Titration" <?= ($row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
@@ -68,7 +68,7 @@
                 
                 case 15: //sleep study ?>
             <br />
-            <select class="study_type" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
+            <select class="study_type form-control" id="study_type_<?php echo $id; ?>" name="data[<?php echo $id; ?>][study_type]" style="width:150px;">
                 <option value="">Select Type</option>
                 <option value="HST Baseline" <?= ($row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
                 <option value="PSG Baseline" <?= ($row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
@@ -79,7 +79,7 @@
                 
                 case 5: //Delay ?>
             <input type="hidden" value="<?= $row['delay_reason']; ?>" id="old_delay_reason_<?= $id; ?>" />
-            <select class="delay_reason" onfocus="$('#old_delay_reason_<?= $id; ?>').val(this.value);" id="delay_reason_<?php echo $id; ?>" name="data[<?php echo $id; ?>][delay_reason]" style="width:94px;">
+            <select class="delay_reason form-control" onfocus="$('#old_delay_reason_<?= $id; ?>').val(this.value);" id="delay_reason_<?php echo $id; ?>" name="data[<?php echo $id; ?>][delay_reason]" style="width:94px;">
                 <option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
                 <option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
                 <option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
@@ -95,7 +95,7 @@
                 case 9: // ?>
             <br />
             <input type="hidden" value="<?= $row['noncomp_reason']; ?>" id="old_noncomp_reason_<?= $id; ?>" />
-            <select class="noncomp_reason" onfocus="$('#old_noncomp_reason_<?= $id; ?>').val(this.value);" id="noncomp_reason<?php echo $id; ?>" name="data[<?php echo $id; ?>][noncomp_reason]" style="width:94px;">
+            <select class="noncomp_reason form-control" onfocus="$('#old_noncomp_reason_<?= $id; ?>').val(this.value);" id="noncomp_reason<?php echo $id; ?>" name="data[<?php echo $id; ?>][noncomp_reason]" style="width:94px;">
                 <option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
                 <option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
                 <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
@@ -109,7 +109,7 @@
                 
                 case 4:
                 case 7: ?>
-            <select class="dentaldevice" id="dentaldevice_<?php echo $id; ?>" style="width:150px">
+            <select class="dentaldevice form-control" id="dentaldevice_<?php echo $id; ?>" style="width:150px">
                 <option value=""></option>
                 <?php
                 
@@ -145,9 +145,9 @@
             }
             
             if ($letter_count > 0) { ?>
-                <a href="dss_summ.php?sect=letters&pid=<?= $_GET['pid']; ?>"><?= $letter_count; ?> Letters</a>
+                <a href="dss_summ.php?sect=letters&pid=<?= $_GET['pid']; ?>" class="btn btn-info btn-sm"><?= $letter_count; ?> Letters</a>
             <?php } else { ?>
-                0 Letters
+                <a class="btn btn-info btn-sm" disabled>0 Letters</a>
             <?php } ?>
         </td>
         <td>
@@ -155,9 +155,9 @@
             
             if ($row['segmentid']!=1) { ?>
                 <?php if ($sent) { ?>
-                    <a href="#" onclick="alert('Letters have been sent. Unable to delete step.');" class="addButton deleteButton">Delete</a>
+                    <a href="#" onclick="alert('Letters have been sent. Unable to delete step.');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
                 <?php } else { ?>
-                    <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton">Delete</a>
+                    <a href="#" onclick="return delete_segment('<?= $id; ?>');" class="addButton deleteButton btn btn-danger btn-sm">Delete</a>
                 <?php } ?>
             <?php } ?>
         </td>
@@ -349,7 +349,7 @@ $(document).delegate('.study_type', "change", function () {
 
 <div id="delay_reason_tmp" style="display:none;">
     <input type="hidden" class="old_delay_reason" id="old_delay_reason_" />
-    <select class="delay_reason" id="delay_reason_" style="width:94px;">
+    <select class="delay_reason form-control" id="delay_reason_" style="width:94px;">
         <option <?php print ($row['delay_reason'] == "insurance") ? "selected " : ""; ?>value="insurance">Insurance</option>
         <option <?php print ($row['delay_reason'] == "dental work") ? "selected " : ""; ?>value="dental work">Dental Work</option>
         <option <?php print ($row['delay_reason'] == "deciding") ? "selected " : ""; ?>value="deciding">Deciding</option>
@@ -362,7 +362,7 @@ $(document).delegate('.study_type', "change", function () {
 
 <div id="noncomp_reason_tmp" style="display:none;">
     <input type="hidden" class="old_noncomp_reason" id="old_noncomp_reason_" />
-    <select class="noncomp_reason" id="noncomp_reason_" style="width:94px;">
+    <select class="noncomp_reason form-control" id="noncomp_reason_" style="width:94px;">
         <option <?php print ($row['noncomp_reason'] == "pain/discomfort") ? "selected " : ""; ?>value="pain/discomfort">Pain/Discomfort</option>
         <option <?php print ($row['noncomp_reason'] == "lost device") ? "selected " : ""; ?>value="lost device">Lost Device</option>
         <option <?php print ($row['noncomp_reason'] == "device not working") ? "selected " : ""; ?>value="device not working">Device Not Working</option>
@@ -373,7 +373,7 @@ $(document).delegate('.study_type', "change", function () {
 </div>
 
 <div id="sleep_study_titration_tmp" style="display:none;">
-    <select class="study_type" id="study_type_" style="width:150px;">
+    <select class="study_type form-control" id="study_type_" style="width:150px;">
         <option value="">Select Type</option>
         <option value="HST Titration" <?= ($row['study_type']=="HST Titration")?'selected="selected"':''; ?>>HST Titration</option>
         <option value="PSG Titration" <?= ($row['study_type']=="PSG Titration")?'selected="selected"':''; ?>>PSG Titration</option>
@@ -381,7 +381,7 @@ $(document).delegate('.study_type', "change", function () {
 </div>
 
 <div id="sleep_study_baseline_tmp" style="display:none;">
-    <select class="study_type" id="study_type_" style="width:150px;">
+    <select class="study_type form-control" id="study_type_" style="width:150px;">
         <option value="">Select Type</option>
         <option value="HST Baseline" <?= ($row['study_type']=="HST Baseline")?'selected="selected"':''; ?>>HST Baseline</option>
         <option value="PSG Baseline" <?= ($row['study_type']=="PSG Baseline")?'selected="selected"':''; ?>>PSG Baseline</option>
@@ -389,7 +389,7 @@ $(document).delegate('.study_type', "change", function () {
 </div>
 
 <div id="dentaldevice_tmp" style="display:none;">
-    <select class="dentaldevice" id="dentaldevice_" style="width:150px">
+    <select class="dentaldevice form-control" id="dentaldevice_" style="width:150px">
         <option value=""></option>
         <?php
         

@@ -72,7 +72,7 @@ $(function(){
     /**
      * Datepicker
      */
-    $('.date').datepicker();
+    $('.date, .calendar').datepicker();
     
     /**
      * File input
@@ -86,6 +86,11 @@ $(function(){
      * Tooltips
      */
     $('[title]').tooltip();
+    
+    /**
+     * Empty lists
+     */
+    $('ul:not(:has(li))').append('<li class="list-group-item text-center">Empty list</li>');
     
     /**
      * Remember (and navigate) tabs
@@ -118,6 +123,11 @@ $(function(){
             $(this).height($table.find('tr:eq(' + i + ')').height());
         });
     });
+    
+    /**
+     * Tablesorter
+     */
+    $('.sort_table').tablesorter();
     
     /**
      * Append dropdown to change skin

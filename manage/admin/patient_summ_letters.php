@@ -252,14 +252,14 @@ foreach ($dental_letters as $key => $letter) {
     else {
         // Patient: Salutation Lastname, Firstname
         $dental_letters[$key]['sentto'] = '';
-        $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+        $dental_letters[$key]['sentto'] .= (isset($contacts['patient'][0])) ? ($contacts['patient'][0]['salutation'] . " " . $contacts['patient'][0]['lastname'] . ", " . $contacts['patient'][0]['firstname']. (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'patient', '".$contacts['patient'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
         // MD: Salutation Lastname, Firstname - Contact Type
-        $dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+        $dental_letters[$key]['sentto'] .= (isset($contacts['mds'][0])) ? ($contacts['mds'][0]['lastname'] . ", " . $contacts['mds'][0]['salutation'] . " " . $contacts['mds'][0]['firstname'] . (($contacts['mds']['contacttype']) ? (" - " . $contacts['mds']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md', '".$contacts['mds'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
         // MD Referral: Salutation Lastname, Firstname - Contact Type
-        $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+        $dental_letters[$key]['sentto'] .= (isset($contacts['md_referrals'][0])) ? ($contacts['md_referrals'][0]['lastname'] . ", " . $contacts['md_referrals'][0]['salutation'] . " " . $contacts['md_referrals'][0]['firstname'] . (($contacts['md_referrals']['contacttype']) ? (" - " . $contacts['md_referrals']['contacttype']) : ("")). (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'md_referral', '".$contacts['md_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
         
         // Pat Referral: Salutation Lastname, Firstname - Contact Type
-        $dental_letters[$key]['sentto'] .= (isset($contacts['pat_referrals'][0])) ? ($contacts['pat_referrals'][0]['lastname'] . ", " . $contacts['pat_referrals'][0]['salutation'] . " " . $contacts['pat_referrals'][0]['firstname'] .    (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'pat_referral', '".$contacts['pat_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
+        $dental_letters[$key]['sentto'] .= (isset($contacts['pat_referrals'][0])) ? ($contacts['pat_referrals'][0]['lastname'] . ", " . $contacts['pat_referrals'][0]['salutation'] . " " . $contacts['pat_referrals'][0]['firstname'] .    (($dental_letters[$key]['mailed_once']==0)?"<a class=\"delete_letter btn btn-default btn-sm pull-right\" href=\"#\" onclick=\"delete_pending_letter('".$letter['letterid']."', 'pat_referral', '".$contacts['pat_referrals'][0]['id']."', 1)\" />Delete</a>":"")) : ("");
     }
     
     // Determine if letter is older than 7 days
@@ -392,7 +392,7 @@ if ($f_num > 0) { ?>
     <input type="hidden" name="sect" value="letters">
     <input type="hidden" name="addtopat" value="1">
     Show letter type:
-    <select name="filter" onchange="document.filter_letters.submit();">
+    <select name="filter" class="form-control" onchange="document.filter_letters.submit();">
         <option value="%"></option>
         <?php
         $templates = "SELECT t.id, t.name, ct.triggerid FROM dental_letter_templates t 
@@ -412,22 +412,22 @@ if ($f_num > 0) { ?>
 
 <h2>
     Pending Letters
-    <small>Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page2); ?></small>
+    <small>Page(s): <?php paging1($num_pages1,$page1,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters#sect_letters",$page2); ?></small>
 </h2>
 
 <table id="letters-table" class="table table-bordered table-hover">
     <tr class="tr_bg_h">
         <!--<th class="col_head <?= ($_REQUEST['sort'] == 'userid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">User ID</a>
+            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sortdir=<?php echo ($_REQUEST['sort']=='userid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a>
         </th>-->
         <th class="col_head <?= ($_REQUEST['sort'] == 'subject')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a>
+            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=subject&sortdir=<?php echo ($_REQUEST['sort']=='subject'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondance</a>
         </th>
         <th class="col_head <?= ($_REQUEST['sort'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a>
+            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sentto&sortdir=<?php echo ($_REQUEST['sort']=='sentto'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Sent To</a>
         </th>
         <th class="col_head <?= ($_REQUEST['sort'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>">
-            <a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a>
+            <a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=generated_date&sortdir=<?php echo ($_REQUEST['sort']=='generated_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Generated On</a>
         </th>
     </tr>
     <?php
@@ -465,30 +465,37 @@ if ($f_num > 0) { ?>
                 <?php
                 
                 if ($total_contacts > 1) { ?>
-                    <a href="#" onclick="$('#contacts_<?= $id; ?>').toggle();"><?= $sentto; ?></a>
+                    <a href="#" class="btn btn-default btn-sm contacts-toggler">
+                        <?= $sentto; ?>
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
                     <div style="display:none;" id="contacts_<?= $id; ?>">
                         <?php foreach($pending_letters[$i]['patient'] as $pat) { ?>
-                            <br />
-                            <?= $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
-                            <a href="#" class="delete_letter" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" />Delete</a>
+                            <p>
+                                <?= $pat['salutation']." ".$pat['firstname']." ".$pat['lastname']; ?>
+                                <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'patient', '<?= $pat['id']; ?>', 0)" />Delete</a>
+                            </p>
                         <?php }
                         
                         foreach ($pending_letters[$i]['mds'] as $md) { ?>
-                            <br />
-                            <?= $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
-                            <a href="#" class="delete_letter" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" />Delete</a>
+                            <p>
+                                <?= $md['salutation']." ".$md['firstname']." ".$md['lastname']; ?>
+                                <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md', '<?= $md['id']; ?>', 0)" />Delete</a>
+                            </p>
                         <?php }
                         
                         foreach ($pending_letters[$i]['md_referrals'] as $md_referral) { ?>
-                            <br />
-                            <?= $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
-                            <a href="#" class="delete_letter" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" />Delete</a>
+                            <p>
+                                <?= $md_referral['salutation']." ".$md_referral['firstname']." ".$md_referral['lastname']; ?>
+                                <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'md_referral', '<?= $md_referral['id']; ?>', 0)" />Delete</a>
+                            </p>
                         <?php }
                         
                         foreach ($pending_letters[$i]['pat_referrals'] as $md_referral) { ?>
-                            <br />
-                            <?= $pat_referral['salutation']." ".$pat_referral['firstname']." ".$pat_referral['lastname']; ?>
-                            <a href="#" class="delete_letter" onclick="delete_pending_letter('<?= $id; ?>', 'pat_referral', '<?= $pat_referral['id']; ?>', 0)" />Delete</a>
+                            <p>
+                                <?= $pat_referral['salutation']." ".$pat_referral['firstname']." ".$pat_referral['lastname']; ?>
+                                <a href="#" class="delete_letter btn btn-default btn-sm pull-right" onclick="delete_pending_letter('<?= $id; ?>', 'pat_referral', '<?= $pat_referral['id']; ?>', 0)" />Delete</a>
+                            </p>
                         <?php } ?>
                     </div>
                 <?php }
@@ -529,18 +536,18 @@ function delete_pending_letter (lid, type, rid, par) {
 
 <h2>
     Sent Letters
-    <small>Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters",$page1); ?></small>
+    <small>Page(s): <?php paging2($num_pages2,$page2,"pid=$patientid&filter=$filter&sort=$sort&sortdir=$sortdir&sect=letters#sect_letters",$page1); ?></small>
 </h2>
 
 <table class="table table-bordered table-hover">
     <tr class="tr_bg_h">
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">User ID</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'subject')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=subject&sort2dir=<?php echo ($_REQUEST['sort2']=='subject'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Correspondance</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sent2to&sort2dir=<?php echo ($_REQUEST['sort2']=='sentto'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Sent To</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'method')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=method&sort2dir=<?php echo ($_REQUEST['sort2']=='method'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Method</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=generated_date&sort2dir=<?php echo ($_REQUEST['sort2']=='generated_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Generated On</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=delivery_date&sort2dir=<?php echo ($_REQUEST['sort2']=='delivery_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>">Delivered On</a></th>
-        <th class="col_head <?= ($_REQUEST['sort2'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="patient_letters.php?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Mailed</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'userid')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=userid&sort2dir=<?php echo ($_REQUEST['sort2']=='userid'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">User ID</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'subject')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=subject&sort2dir=<?php echo ($_REQUEST['sort2']=='subject'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Correspondance</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'sentto')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=sent2to&sort2dir=<?php echo ($_REQUEST['sort2']=='sentto'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Sent To</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'method')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=method&sort2dir=<?php echo ($_REQUEST['sort2']=='method'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Method</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'generated_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=generated_date&sort2dir=<?php echo ($_REQUEST['sort2']=='generated_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Generated On</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort2=delivery_date&sort2dir=<?php echo ($_REQUEST['sort2']=='delivery_date'&&$_REQUEST['sort2dir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Delivered On</a></th>
+        <th class="col_head <?= ($_REQUEST['sort2'] == 'mailed')?'arrow_'.strtolower($_REQUEST['sort2dir']):''; ?>"><a href="?pid=<?=$patientid;?>&page=<?=$page;?>&filter=<?=$filter;?>&sort=mailed&sortdir=<?php echo ($_REQUEST['sort']=='mailed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>#sect_letters">Mailed</a></th>
     </tr>
     <?php
     
@@ -590,8 +597,22 @@ function delete_pending_letter (lid, type, rid, par) {
         $i++;
     } ?>
 </table>
-
 <script type="text/javascript">
+$(document).ready(function(){
+    $('.contacts-toggler').on('click',function(e){
+        e.preventDefault();
+        
+        var $this = $(this);
+        
+        $this.next().toggle();
+        $this.find('.glyphicon')
+        .toggleClass('glyphicon-chevron-up')
+        .toggleClass('glyphicon-chevron-down')
+        
+        return false;
+    });
+});
+
 $('.mailed_chk').click( function(){
     lid = $(this).val();
     c = $(this).is(':checked');

@@ -67,6 +67,18 @@ body.loading-new-theme:before {
     background-color: #000;
 }
 
+td.header, th.header {
+    background: transparent url(../images/arrow-both.gif) no-repeat 100% 5px;
+}
+
+.header.headerSortUp {
+    background-image: url(../images/arrow-desc.gif);
+}
+
+.header.headerSortDown {
+    background-image: url(../images/arrow-asc.gif);
+}
+
 .table-responsive > .table {
     width: auto;
 }

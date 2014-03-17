@@ -10,13 +10,17 @@
     <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script>
+    function calendar2(){}
+    
     $(document).ready(function(){
         $('.date').datepicker();
         $(':file').filestyle({
             classButton: 'btn btn-primary',
             classIcon: 'glyphicon glyphicon-folder-open'
         });
+        $('.sort_table').tablesorter();
     });
     </script>
 </head>

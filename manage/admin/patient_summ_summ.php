@@ -11,7 +11,7 @@ $num_face = mysql_num_rows($itype_my);
 
 if ($num_face!=0) {
     while($image = mysql_fetch_array($itype_my)) {
-        echo "<img src='display_file.php?f=".$image['image_file']."' width='150' style='float:right;' />";
+        echo "<img src='/manage/admin/display_file.php?type=image&f=".$image['image_file']."' width='150' style='float:right;' />";
     }
 }
 
@@ -486,7 +486,7 @@ $last_r = mysql_fetch_assoc($last_q);
                 <strong>Type:</strong>
                 <?= $baseline_sleepstudy['sleeptesttype']; ?>
 	            <?php if ($baseline_sleepstudy['filename'] != '') { ?>
-	                - <a href="display_file.php?f=<?= $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
+	                - <a href="/manage/admin/display_file.php?f=<?= $baseline_sleepstudy['filename'];?>" target="_blank">View Study</a>
 	           <?php } ?>
 	        </li>
             <li class="list-group-item">
@@ -563,7 +563,7 @@ $last_r = mysql_fetch_assoc($last_q);
                 <strong>Type:</strong>
                 <?= $sleepstudy['sleeptesttype']; ?>
                 <?php if ($sleepstudy['filename']!='') { ?>
-                    - <a href="display_file.php?f=<?= $sleepstudy['filename'];?>" target="_blank">View Study</a>
+                    - <a href="/manage/admin/display_file.php?f=<?= $sleepstudy['filename'];?>" target="_blank">View Study</a>
                 <?php } ?>
             </li>
             <li class="list-group-item">

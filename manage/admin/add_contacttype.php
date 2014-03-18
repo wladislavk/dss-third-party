@@ -158,7 +158,7 @@ if($_POST["contacttypesub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Physician 
+                <span title="Setting the contact as a Physician contact type allows this type to receive letters and be associated with patients.">Physician</span> 
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" name="physician" value="1" <?= ($physician)?'checked="checked"':''; ?> class="form-control" style="width:30px"/>
@@ -166,7 +166,7 @@ if($_POST["contacttypesub"] == 1)
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
-                Corporate 
+                <span title="Corporate contact types can be seen by both front and backoffice, but only backoffice can use/add them.">Corporate</span> 
             </td>
             <td valign="top" class="frmdata">
                 <input type="checkbox" name="corporate" value="1" <?= ($corporate)?'checked="checked"':''; ?> class="form-control" style="width:30px"/>

@@ -3,7 +3,7 @@ session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once('admin/includes/password.php');
-include('includes/general_functions.php');
+//include('includes/general_functions.php');
 
 ?>
   <link href="eligible_check/css/bootstrap.min.css" rel="stylesheet" media="screen">

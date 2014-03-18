@@ -52,8 +52,8 @@ if(isset($_POST['add_doc'])){
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
 <strong>Add Document</strong> 
-<form action="#" method="post" enctype="multipart/form-data">
-<label>Name:</label> <input type="text" name="name" />
+<form action="#" method="post" enctype="multipart/form-data" onsubmit="return check_add()">
+<label>Name:</label> <input type="text" name="name" id="name" />
  <?php
   if(isset($_GET['cat'])){ ?>
     <input type="hidden" name="category" value="<?= $_GET['cat']; ?>" />
@@ -67,9 +67,21 @@ if(isset($_POST['add_doc'])){
     </select>
   <?php } ?>
 
-<label>File:</label> <input type="file" name="attachment" />
+<label>File:</label> <input type="file" id="attachment" name="attachment" />
 <input type="submit" name="add_doc" value="Add" class="btn btn-success">
 </form>
+
+<script type="text/javascript">
+  function check_add(){
+    if($("#name").val()=="" || $("#attachment").val()==""){
+      alert("Name and File are required.");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+
 <?php } ?>
 
 <table class="table table-bordered table-hover">

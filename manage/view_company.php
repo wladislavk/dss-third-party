@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-//include "includes/general_functions.php";
+include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
 //include "includes/top.htm";
 ?>
@@ -24,45 +24,23 @@ include_once "admin/includes/general.htm";
 <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
 
-    $psql = "select * from dental_contacttype WHERE physician=1";
-    $pq = mysql_query($psql);
-    $physician_array = array();
-    while($pr = mysql_fetch_assoc($pq)){
-      array_push($physician_array, $pr['contacttypeid']);
-    }
-    $physician_types = implode(',', $physician_array);
-
-    $thesql = "select c.*, ct.contacttype from dental_contact c 
-		LEFT JOIN dental_contacttype ct ON ct.contacttypeid = c.contacttypeid
-		where c.contactid='".$_REQUEST["ed"]."'";
+    $thesql = "select c.* from companies c 
+		where c.id='".$_REQUEST["id"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
-		$salutation = st($themyarray['salutation']);
-		$firstname = st($themyarray['firstname']);
-		$middlename = st($themyarray['middlename']);
-		$lastname = st($themyarray['lastname']);
-		$company = st($themyarray['company']);
-		$contacttype = st($themyarray['contacttype']);
+		$name = st($themyarray['name']);
 		$add1 = st($themyarray['add1']);
 		$add2 = st($themyarray['add2']);
 		$city = st($themyarray['city']);
 		$state = st($themyarray['state']);
 		$zip = st($themyarray['zip']);
-		$phone1 = st($themyarray['phone1']);
-		$phone2 = st($themyarray['phone2']);
+		$phone = st($themyarray['phone']);
 		$fax = st($themyarray['fax']);
 		$email = st($themyarray['email']);
-		$national_provider_id = st($themyarray['national_provider_id']);
-		$qualifier = st($themyarray['qualifier']);
-		$qualifierid = st($themyarray['qualifierid']);
-		$greeting = st($themyarray['greeting']);
-		$sincerely = st($themyarray['sincerely']);
-		$contacttypeid = st($themyarray['contacttypeid']);
-		$notes = st($themyarray['notes']);
-		$preferredcontact = st($themyarray['preferredcontact']);
-		$name = st($themyarray['firstname'])." ".st($themyarray['middlename'])." ".st($themyarray['lastname']);
-		$status = st($themyarray['status']);
+		$contact_person = st($themyarray['contact_person']);
+		$shipping_label = st($themyarray['shipping_label']);
+		$turnaround_time = st($themyarray['turnaround_time']);
 	
 ?>
 <style type="text/css">
@@ -83,13 +61,10 @@ include_once "admin/includes/general.htm";
 </style>
 <div style="padding-top:10px;background: #fff; width: 98%; height:380px; margin-left: 1%;">
 <div class="info">
-	<label>Name:</label> <span class="value"><?= $salutation." ".$firstname." ".$middlename." ".$lastname; ?></span>
+	<label>Name:</label> <span class="value"><?= $name; ?></span>
 </div>
 <div class="info">
-	<label>Company:</label> <span class="value"><?= $company; ?> </span>
-</div>
-<div class="info">
-        <label>Contact Type:</label> <span class="value"><?= $contacttype; ?> </span>
+	<label>Contact Person:</label> <span class="value"><?= $contact_person; ?> </span>
 </div>
 <div class="info">
 <label>Address:</label> <span class="value"><?= $add1; ?></span>
@@ -101,10 +76,7 @@ include_once "admin/includes/general.htm";
         <label>&nbsp;</label> <span class="value"><?= $city." ".$state." ".$zip; ?></span>
 </div>
 <div class="info">
-        <label>Phone:</label> <span class="value"><?= format_phone($phone1); ?></span>
-</div>
-<div class="info">
-        <label>Phone 2:</label> <span class="value"><?= format_phone($phone2); ?></span>
+        <label>Phone:</label> <span class="value"><?= format_phone($phone); ?></span>
 </div>
 <div class="info">
         <label>Fax:</label> <span class="value"><?= format_phone($fax); ?></span>
@@ -113,14 +85,8 @@ include_once "admin/includes/general.htm";
         <label>Email:</label> <span class="value"><?= $email; ?></span>
 </div>
 <div class="info">
-        <label>Notes:</label> <span class="value"><?= $notes; ?></span>
+        <label>Turnaround Time:</label> <span class="value"><?= $turnaround_time; ?> Days</span>
 </div>
-<?php
-  if($themyarray['corporate']=='1'){ ?>
-<a href="view_fcontact.php?ed=<?= $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">View Full</a>
-<?php }else{ ?>
-<a href="add_contact.php?ed=<?= $_REQUEST['ed'];?>" style="margin-right:10px;float:right;">Edit</a>
-<?php } ?>
 </div>
 
 </body>

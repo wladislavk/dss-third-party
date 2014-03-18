@@ -140,6 +140,40 @@ if($_POST["contactsub"] == 1)
             </h1>
         </div>
         <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&amp;activePat=<?php echo $_GET['activePat']; ?>" method="post" onSubmit="return contactabc(this)" class="form-horizontal">
+            <div class="form-group">
+                <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
+                <div class="col-md-9">
+                    <?
+
+                    if(isset($_GET['ed'])){
+    $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
+    $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
+
+    $ctid = mysql_fetch_array($ctype_myquerymyarray);
+   }
+
+    $ctype_sql = "select * from dental_contacttype where status=1 ";
+    if(!isset($_REQUEST['corp']) || $_REQUEST['corp'] != '1'){
+        $ctype_sql .= " AND corporate='0' ";
+    }
+    $ctype_sql .= " order by sortby";
+    $ctype_my = mysql_query($ctype_sql);
+    ?>
+                    <select id="contacttypeid" name="contacttypeid" class="form-control">
+
+                        <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
+      ?>
+
+      <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>">
+
+                                <?=st($ctype_myarray['contacttype']);?>
+ 				<?= ($ctype_myarray['corporate']=='1')?" - Only avail. in Corp. contacts":""; ?>
+                            </option>
+                        <? }?>
+                    </select>
+                </div>
+            </div>
+
             <div class="page-header">
                 <strong>Name</strong>
             </div>
@@ -223,19 +257,19 @@ if($_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="phone1" class="col-md-3 control-label">Phone (main)</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="phone1" id="phone1" placeholder="Phone number" value="<?= $phone1 ?>">
+                    <input type="text" class="form-control extphonemask" name="phone1" id="phone1" placeholder="Phone number" value="<?= $phone1 ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="phone2" class="col-md-3 control-label">Phone (alternative)</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="phone2" id="phone2" placeholder="Phone number" value="<?= $phone2 ?>">
+                    <input type="text" class="form-control extphonemask" name="phone2" id="phone2" placeholder="Phone number" value="<?= $phone2 ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                    <input type="text" class="form-control" name="fax" id="fax234" placeholder="Fax number" value="<?= $fax ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -271,38 +305,6 @@ if($_POST["contactsub"] == 1)
                         {?>
                             <option value="<?=st($qualifier_myarray['qualifierid']);?>">
                                 <?=st($qualifier_myarray['qualifier']);?>
-                            </option>
-                        <? }?>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="contacttype" class="col-md-3 control-label">Contact Type</label>
-                <div class="col-md-9">
-                    <? 
-                    
-                    if(isset($_GET['ed'])){
-    $ctype_sqlmy = "select * from dental_contact where contactid='".$_GET['ed']."' LIMIT 1;";
-    $ctype_myquerymyarray = mysql_query($ctype_sqlmy);
-    
-    $ctid = mysql_fetch_array($ctype_myquerymyarray);
-   } 
-    
-    $ctype_sql = "select * from dental_contacttype where status=1 ";
-    if(!isset($_REQUEST['corp']) || $_REQUEST['corp'] != '1'){
- 	$ctype_sql .= " AND corporate='0' ";
-    }
-    $ctype_sql .= " order by sortby";
-    $ctype_my = mysql_query($ctype_sql);
-    ?>
-                    <select id="contacttypeid" name="contacttypeid" class="form-control">
-                         
-                        <? while($ctype_myarray = mysql_fetch_array($ctype_my)){
-      ?>
-      
-      <option <?php if($ctype_myarray['contacttypeid'] == $ctid['contacttypeid']){ echo " selected='selected'";} ?> <?php if($ctype_myarray['contacttypeid'] == $_GET['type']){ echo " selected='selected'";} ?> <?php if(isset($_GET['ctypeeq']) && $ctype_myarray['contacttypeid'] == '11'){ echo " selected='selected'";} ?> value="<?=st($ctype_myarray['contacttypeid']);?>"> 
-
-                                <?=st($ctype_myarray['contacttype']);?>
                             </option>
                         <? }?>
                     </select>

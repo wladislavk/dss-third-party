@@ -352,8 +352,10 @@ foreach ($dental_letters as $key => $letter) {
   $correspondance = mysql_fetch_assoc($template_res);
 	if (!empty($letter['pdf_path'])) {
     $dental_letters[$key]['url'] = "/manage/letterpdfs/" . $letter['pdf_path'];
+    $dental_letters[$key]['url_target'] = "_blank";
   } else { 
   	$dental_letters[$key]['url'] = "/manage/edit_letter.php?fid=" . $letter['patientid'] . "&pid=" . $letter['patientid'] . "&lid=" . $letter['letterid'] . "&backoffice=1";
+    $dental_letters[$key]['url_target'] = "_self";
 	}
   $dental_letters[$key]['subject'] = $correspondance['name'];
   if($letter['templateid']==99){
@@ -586,6 +588,7 @@ color: white;
     $received = (isset( $dental_letters[$i]['date_sent']))?date('m/d/Y', $dental_letters[$i]['date_sent']):'';
     $name = $dental_letters[$i]['lastname'] . " " . $dental_letters[$i]['middlename'] . ", " . $dental_letters[$i]['firstname'];
     $url = $dental_letters[$i]['url'];
+    $url_target = $dental_letters[$i]['url_target'];
     $subject = $dental_letters[$i]['subject'];
     $sentto = $dental_letters[$i]['sentto'];
     $id = $dental_letters[$i]['id'];
@@ -600,7 +603,7 @@ color: white;
       $bgcolor = null;
     }
     
-    print "<tr><td>$franchisee</td><td>$username</td>"."<td$bgcolor>$received</td><td$bgcolor>$delivered</td><td>$name</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>";
+    print "<tr><td>$franchisee</td><td>$username</td>"."<td$bgcolor>$received</td><td$bgcolor>$delivered</td><td>$name</td><td><a href=\"$url\" target=\"$url_target\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td>";
 ?><td><?php
     if($delivered || $mailed != ''){ ?>
       <input type="checkbox" class="mailed_chk" value="<?= $id; ?>" <?= ($mailed !='')?'checked="checked"':''; ?> />

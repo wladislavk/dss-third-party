@@ -24,7 +24,9 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_contact where corporate=1 order by lastname, company";
+$sql = "select c.*, ct.contacttype  from dental_contact c
+	LEFT JOIN dental_contacttype ct ON c.contacttypeid=ct.contacttypeid
+	 where c.corporate=1 order by c.company";
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
@@ -71,11 +73,14 @@ $num_contact=mysql_num_rows($my);
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
-			Name
-		</td>
-		<td valign="top" class="col_head" width="70%">
+		<td valign="top" class="col_head" width="30%">
 			Company
+		</td>
+		<td valign="top" class="col_head" width="20%">
+			Type	
+		</td>
+		<td valign="top" class="col_head" width="30%">
+			Name
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
@@ -107,15 +112,21 @@ $num_contact=mysql_num_rows($my);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
-					<?=$name;?>
-				</td>
-				<td valign="top">
 					<?=st($myarray["company"]);?>
 				</td>
 				<td valign="top">
+					<?=st($myarray["contacttype"]);?>
+				</td>
+				<td valign="top">
+					<?=$name;?>
+				</td>
+				<td valign="top">
 					<?php if(is_super($_SESSION['admin_access'])){ ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="Edit" class="btn btn-primary btn-sm">
-						Edit 
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="Quick View" class="btn btn-primary btn-sm">
+                                                Quick View
+                                         <span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" title="View Full" class="btn btn-primary btn-sm">
+						View Full 
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     			<?php } ?>
 				</td>

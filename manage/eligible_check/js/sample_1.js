@@ -162,7 +162,7 @@ buildError = function (error) {
   } else {
     var h1 = $("<h1/>", {text: error['reject_reason_description']}).appendTo(coverageSection);
   }
-  var body = $('#coverage_container');
+  var body = $('body');
   coverageSection.appendTo(body);
 }
 
@@ -194,5 +194,5 @@ buildCoverageHTML = function(coverage) {
   plugin.addGenericServices();
   plugin.addLimitations();
 
-  $('#coverage_container').append(plugin.coverageSection);
+  $('body').append(plugin.coverageSection);
 }

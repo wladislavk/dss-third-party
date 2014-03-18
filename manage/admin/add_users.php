@@ -679,13 +679,13 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <label for="phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
+                    <input type="text" class="form-control extphonemask" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
+                    <input type="text" class="form-control phonemask" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
                 </div>
             </div>
             
@@ -743,13 +743,13 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <label for="mailing_phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?= $mailing_phone ?>">
+                    <input type="text" class="form-control extphonemask" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?= $mailing_phone ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="mailing_fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?= $mailing_fax ?>">
+                    <input type="text" class="form-control phonemask" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?= $mailing_fax ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -792,13 +792,13 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Phone</label>
                 <div class="col-md-9">
-                <input id="service_phone" class="form-control" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
+                <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
                 <div class="col-md-9">
-                <input id="service_fax" class="form-control" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
+                <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
                 </div>
             </div>
             <div class="form-group">

@@ -360,7 +360,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Franchisee's NPI Number
+                Client's NPI Number
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="doc_npi" value="<?=$preauth['doc_npi']?>" class="tbox readonly" readonly /> 
@@ -369,7 +369,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Franchisee's Medicare NPI Number
+                Client's Medicare NPI Number
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="doc_medicare_npi" value="<?=$preauth['doc_medicare_npi']?>" class="tbox readonly" readonly /> 
@@ -378,7 +378,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Franchisee's Tax ID or SSN
+                Client's Tax ID or SSN
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="doc_tax_id_or_ssn" value="<?=$preauth['doc_tax_id_or_ssn']?>" class="tbox readonly" readonly /> 

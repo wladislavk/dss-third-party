@@ -214,7 +214,7 @@ $<?php
                                         </a><br /><br />
                                         <?php } ?>
 					<?php if(is_admin($_SESSION['admin_access'])){ ?>
-					  <a href="manage_payment_errors.php?did=<?=$myarray["id"];?>" class="btn btn-primary" onclick="confirm('This will remove the failed charge from this list and you will no longer be able to access it. Are you sure?');" style="padding:3px 5px;">Delete</a>
+					  <a href="manage_payment_errors.php?did=<?=$myarray["id"];?>" class="btn btn-primary" onclick="return confirm('This will remove the failed charge from this list and you will no longer be able to access it. Are you sure?');" style="padding:3px 5px;">Delete</a>
 					<?php } ?>
 				</td>			
 			</tr>

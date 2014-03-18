@@ -130,7 +130,7 @@ if($_POST["setsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -146,6 +146,7 @@ if($_POST["setsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input id="name" type="text" name="name" value="<?=$name;?>" class="form-control" /> 
+		<span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -249,6 +250,15 @@ if($_POST["setsub"] == 1)
   $(document).ready(function(){
     update_option_labels();
   });
+
+  function check_add(){
+    if($('#name').val()==""){
+      alert('Name is required');
+      return false;
+    }
+    return true;
+  }
+
 </script>
 </body>
 </html>

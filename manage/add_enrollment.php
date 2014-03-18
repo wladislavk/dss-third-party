@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
+//include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
 include_once "includes/constants.inc";
 //include "includes/top.htm";
@@ -34,11 +34,15 @@ if(isset($_POST["enroll_but"]))
   $r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
+	$t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
+        $t_q = mysql_query($t_sql);
+	$t_r = mysql_fetch_assoc($t_q);
 $data = array();
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
+$data['test'] = "true";
 $data['enrollment_npi'] = array(
 	"payer_id" => $payer_id,
-	"transaction_type" => '835',
+	"transaction_type" => $t_r['transaction_type'],
 	"facility_name" => $r['practice'],
 	"provider_name" => $r['first_name'].' '.$r['last_name'],
 	"tax_id" => $r['tax_id_or_ssn'],
@@ -56,8 +60,8 @@ $data['enrollment_npi'] = array(
 		)
 	);
 
-
 $data_string = json_encode($data);
+error_log($data_string);
 //echo $data_string."<br /><br />";
 //$ch = curl_init('https://v1.eligibleapi.net/claim/submit.json?api_key=33b2e3a5-8642-1285-d573-07a22f8a15b4');                                                                      
 $ch = curl_init('https://gds.eligibleapi.com/v1.3/enrollment_npis');
@@ -92,7 +96,7 @@ if(isset($json_response->{"error"})){
         adddate=now(),
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
-  mysql_query($up_sql);
+  mysql_query($up_sql) or die(mysql_error());
   ?>
   <script type="text/javascript">
     parent.window.location = "manage_enrollment.php";
@@ -118,9 +122,18 @@ if(isset($json_response->{"error"})){
 
 
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
+  <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type ORDER BY transaction_type ASC";
+        $t_q = mysql_query($t_sql);
+  ?>
+        <select id="transaction_type" name="transaction_type" onchange="update_list()">
+            <?php while($t = mysql_fetch_assoc($t_q)){ ?>
+                <option value="<?= $t['id']; ?>"><?= $t['transaction_type']; ?> - <?= $t['description']; ?></option>
+            <?php } ?>
+        </select>
+<br />
 
 		<input type="hidden" name="payer_id" id="payer_id">
-                                <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
+                                <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="Type insurance payer name" style="width:300px;" />
 <br />
 <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
         <ul id="ins_payer_list" class="search_list">
@@ -129,12 +142,32 @@ if(isset($json_response->{"error"})){
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/medical/enrollment.json', 'ins_payer');
+setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer');
 });
 </script>
+<br />
                 <input type="submit" value=" Enroll " name="enroll_but" class="button" />
     </form>
 
+<script type="text/javascript">
+
+function update_list(){
+  var t = $('#transaction_type').val();
+  if(t == '1'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer');
+  }else if(t == '2'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/payment/status.json', 'ins_payer');
+  }else if(t == '4'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/era.json', 'ins_payer');
+  }else if(t == '5'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
+  }else if(t == '6'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/dental.json', 'ins_payer');
+  }else if(t == '7'){
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
+  }
+}
+</script>
 
 </body>
 </html>

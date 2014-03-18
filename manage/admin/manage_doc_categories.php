@@ -38,12 +38,22 @@ if(isset($_POST['add_cat'])){
 <div class="page-header">Categories</div>
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
-<strong>Add Category</strong>
-<form action="#" method="post">
-<label>Name:</label> <input type="text" name="name" />
+<strong>Add a Category to the File Structure</strong>
+<form action="#" method="post" onsubmit="return check_add();">
+<label>Name:</label> <input type="text" id="name" name="name" />
 <label>Active:</label> <input type="checkbox" name="status" value="1" checked="checked" />
 <input type="submit" name="add_cat" value="Add" class="btn btn-success">
 </form>
+
+<script type="text/javascript">
+  function check_add(){
+    if($("#name").val()==""){
+      alert("Name is required.");
+      return false;
+    }
+    return true;
+  }
+</script>
 <?php } ?>
 
 <table class="table table-bordered table-hover">

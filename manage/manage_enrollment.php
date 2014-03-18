@@ -27,14 +27,14 @@ include "includes/top.htm";
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
   <thead>
     <tr class="tr_bg_h">
-      <th>Payer ID</th>
-      <th>Payer Name</th>
-      <th>Status</th>
-      <th>Response</th>	  
-      <th>Get Form</th>
+      <th class="col_head">Payer ID</th>
+      <th class="col_head">Payer Name</th>
+      <th class="col_head">Status</th>
+      <th class="col_head">Response</th>	  
+      <th class="col_head">Get Form</th>
   </thead>
 		<?php
 		while($myarray = mysql_fetch_array($my))

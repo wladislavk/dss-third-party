@@ -24,14 +24,16 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select * from dental_fcontact ";
+$sql = "select c.*, ct.contacttype from dental_contact c
+	LEFT JOIN dental_contacttype ct ON ct.contacttypeid=c.contacttypeid
+	WHERE c.corporate=1 ";
 
 switch($_GET['sort']){
   case 'company':
     $sql .= " ORDER BY company ".$_GET['sortdir'];
     break;
   case 'type':
-    $sql .= " ORDER BY dct.contacttype ".$_GET['sortdir'];
+    $sql .= " ORDER BY ct.contacttype ".$_GET['sortdir'];
     break;
   default:
     $sql .= " ORDER BY lastname ".$_GET['sortdir'].", firstname ".$_GET['sortdir'];
@@ -87,19 +89,19 @@ background:#999999;
 	</TR>
 	<? }?>
 	<tr class="tr_bg_h">
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
-                        <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
-		</td>
-                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="70%">
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
                         <a href="manage_fcontact.php?sort=company&sortdir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
+		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'type')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="20%">
+                        <a href="manage_fcontact.php?sort=type&sortdir=<?php echo ($_REQUEST['sort']=='type'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Type</a>
+		</td>
+                <td valign="top" class="col_head  <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="30%">
+                        <a href="manage_fcontact.php?sort=name&sortdir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
 		</td>
 		<td valign="top" class="col_head" width="20%">
 			Action
 		</td>
 		</tr>
-	 </table>
-	<div style="overflow:auto; height:400px; overflow-x:hidden; overflow-y:scroll;">
-<table width="100%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="margin-left: 10px;" >
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -125,15 +127,22 @@ background:#999999;
 			$name = st($myarray['lastname'])." ".st($myarray['middlename']).", ".st($myarray['firstname']);
 		?>
 			<tr class="<?=$tr_class;?>">
-                		<td valign="top" width="20%">
-					<?=$name;?>
-				</td>
-                		<td valign="top" width="70%">
+                		<td valign="top" >
 					<?=st($myarray["company"]);?>
 				</td>
-				<td valign="top" width="20%">
+                		<td valign="top" >
+					<?=st($myarray["contacttype"]);?>
+				</td>
+                		<td valign="top">
+					<?=$name;?>
+				</td>
+				<td valign="top">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_contact.php?ed=<?=$myarray["contactid"];?>&corp=1');" class="editlink" title="EDIT">
+						Quick View 
+					</a>
+					|
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('view_fcontact.php?ed=<?=$myarray["contactid"];?>');" class="editlink" title="EDIT">
-						View Contact 
+						View Full 
 					</a>
                     
                   
@@ -142,7 +151,6 @@ background:#999999;
 	<? 	}
 	}?>
 </table>
-</div>
 </form>
 
 

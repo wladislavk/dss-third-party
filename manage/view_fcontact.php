@@ -94,7 +94,7 @@ if($_POST["contactsub"] == 1)
 <body onload="check();">
 
     <?
-    $thesql = "select * from dental_fcontact where contactid='".$_REQUEST["ed"]."'";
+    $thesql = "select * from dental_contact where contactid='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
 	$themyarray = mysql_fetch_array($themy);
 	
@@ -312,7 +312,7 @@ if($_POST["contactsub"] == 1)
                             
                             <span>
                             	<? 
-								$ctype_sql = "select * from dental_fcontacttype order by sortby";
+								$ctype_sql = "select * from dental_contacttype order by sortby";
 								$ctype_my = mysql_query($ctype_sql);
 								?>            
                             	<select id="contacttypeid" name="contacttypeid" class="field text addr tbox" tabindex="20">

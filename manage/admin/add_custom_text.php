@@ -81,7 +81,7 @@ if($_POST["custom_textsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -96,7 +96,7 @@ if($_POST["custom_textsub"] == 1)
                 Title
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="title" value="<?=$title?>" class="form-control" /> 
+                <input type="text" id="title" name="title" value="<?=$title?>" class="form-control" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -126,6 +126,14 @@ if($_POST["custom_textsub"] == 1)
         </tr>
     </table>
     </form>
-  
+<script type="text/javascript">
+  function check_add(){
+    if($('#title').val()==""){
+      alert('Title is required');
+      return false;
+    }
+    return true;
+  }
+</script>  
 </body>
 </html>

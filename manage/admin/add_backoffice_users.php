@@ -157,7 +157,7 @@ if($_POST["usersub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -172,7 +172,7 @@ if($_POST["usersub"] == 1)
                 Username
             </td>
             <td valign="top" class="frmdata">
-                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control" /> 
+                <input id="username" type="text" name="username" value="<?=$username?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -182,7 +182,7 @@ if($_POST["usersub"] == 1)
                 Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control" />
+                <input id="password" type="password" name="password" value="<?=$password;?>" class="form-control validate" />
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -191,7 +191,7 @@ if($_POST["usersub"] == 1)
                 Re-type Password
             </td>
             <td valign="top" class="frmdata">
-                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control" />
+                <input id="password2" type="password" name="password2" value="<?=$password;?>" class="form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -201,7 +201,7 @@ if($_POST["usersub"] == 1)
                 First Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control" /> 
+                <input id="first_name" type="text" name="first_name" value="<?=$first_name;?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -210,7 +210,7 @@ if($_POST["usersub"] == 1)
                 Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control" />
+                <input id="last_name" type="text" name="last_name" value="<?=$last_name;?>" class="form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -219,7 +219,7 @@ if($_POST["usersub"] == 1)
                 Email
             </td>
             <td valign="top" class="frmdata">
-                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control" /> 
+                <input id="email" type="text" name="email" value="<?=$email;?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -230,7 +230,7 @@ if($_POST["usersub"] == 1)
                Company
             </td>
             <td valign="top" class="frmdata">
-                <select id="companyid" name="companyid" class="form-control" onchange="update_access()">
+                <select id="companyid" name="companyid" class="form-control validate" onchange="update_access()">
 			<option value="">Select Company</option>
                         <?php
                         $c_sql = "SELECT * FROM companies ORDER BY name asc";
@@ -247,7 +247,7 @@ if($_POST["usersub"] == 1)
                 Access Level
             </td>
             <td valign="top" class="frmdata">
-                <select id="admin_access" name="admin_access" class="form-control">
+                <select id="admin_access" name="admin_access" class="form-control validate">
 			<option value="">Select Access</option>
 			<?php if(is_super($_SESSION['admin_access'])){ ?>
                         <option value="<?= DSS_ADMIN_ACCESS_SUPER; ?>" <? if($admin_access == DSS_ADMIN_ACCESS_SUPER) echo " selected";?>>Super</option>
@@ -319,6 +319,18 @@ $(document).ready(function(){
 update_access();
 selected_company = '<?= $companyid; ?>';
 });
+
+
+function check_add(){
+  $('.validate').each( function(){
+    if($(this).val()==''){
+      alert('All fields are required.');
+      return false;
+    }
+  });
+  return true;
+}
+
 </script>
 
 </body>

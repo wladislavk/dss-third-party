@@ -96,7 +96,7 @@ if($_POST["plansub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return planabc(this)">
+    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return check_add()">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -111,7 +111,7 @@ if($_POST["plansub"] == 1)
                 Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="name" value="<?=$name?>" class="form-control" /> 
+                <input type="text" name="name" value="<?=$name?>" class="form-control validate" /> 
                 <span class="red">*</span>				
             </td>
         </tr>
@@ -120,7 +120,7 @@ if($_POST["plansub"] == 1)
                 Monthly Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="monthly_fee" value="<?=$monthly_fee?>" class="form-control" />          
+                <input type="text" name="monthly_fee" value="<?=$monthly_fee?>" class="form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -129,7 +129,7 @@ if($_POST["plansub"] == 1)
                 Trial Period (days)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="trial_period" value="<?=$trial_period?>" class="form-control" />          
+                <input type="text" name="trial_period" value="<?=$trial_period?>" class="form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -138,7 +138,7 @@ if($_POST["plansub"] == 1)
                 Fax Fee
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="fax_fee" value="<?=$fax_fee?>" class="form-control" />          
+                <input type="text" name="fax_fee" value="<?=$fax_fee?>" class="form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -147,7 +147,7 @@ if($_POST["plansub"] == 1)
                 Free Fax
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_fax" value="<?=$free_fax?>" class="form-control" />          
+                <input type="text" name="free_fax" value="<?=$free_fax?>" class="form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -157,7 +157,7 @@ if($_POST["plansub"] == 1)
                 Status
             </td>
             <td valign="top" class="frmdata">
-            	<select name="status" class="form-control">
+            	<select name="status" class="form-control validate">
                 	<option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                 	<option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                 </select>
@@ -180,6 +180,17 @@ if($_POST["plansub"] == 1)
         </tr>
     </table>
     </form>
+<script type="text/javascript">
+function check_add(){
+  $('.validate').each( function(){
+    if($(this).val()==''){
+      alert('All fields are required.');
+      return false;
+    }
+  });
+  return true;
+}
+</script>
     
 </body>
 </html>

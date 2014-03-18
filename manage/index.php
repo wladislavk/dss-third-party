@@ -138,6 +138,18 @@ $r = mysql_fetch_assoc($q);
 		</ul></li>
 			<li><a href="manage_locations.php">Manage Locations</a></li>
 			<li><a href="data_import.php" onclick="return confirm('Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.');">Data Import</a></li>
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+    //include 'eligible_api.php';
+    ?>
+			<li><a href="manage_enrollment.php">Enrollments</a></li>
+    <?php
+  }
+?>
           	</ul>
 	     </li>
 	<li><a href="/screener/auto_login.php">Pt. Screener App</a></li>
@@ -158,7 +170,7 @@ $r = mysql_fetch_assoc($q);
 
         <li><a href="videos.php">Watch Videos</a></li> 
 
-        <li><a href="course.php">Get C.E.</a></li>
+        <li><a href="edx_login.php" target="_blank">Get C.E.</a></li>
 	
 	<li><a href="edx_certificate.php">Certificates</a></li>
 	</ul>

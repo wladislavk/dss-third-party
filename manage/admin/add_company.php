@@ -158,7 +158,7 @@ if($_POST["compsub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
+    <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -192,7 +192,6 @@ if($_POST["compsub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input id="add2" type="text" name="add2" value="<?=$add2;?>" class="form-control" />
-                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -227,7 +226,7 @@ if($_POST["compsub"] == 1)
                 Phone
             </td>
             <td valign="top" class="frmdata">
-                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control" />
+                <input id="phone" type="text" name="phone" value="<?=$phone;?>" class="form-control extphonemask" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -235,7 +234,7 @@ if($_POST["compsub"] == 1)
                 Fax
             </td>
             <td valign="top" class="frmdata">
-                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="form-control" />
+                <input id="fax" type="text" name="fax" value="<?=$fax;?>" class="form-control phonemask" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -343,5 +342,19 @@ if($_POST["compsub"] == 1)
         </tr>
     </table>
     </form>
+<script type="text/javascript">
+
+  function check_add(){
+    if($('#name').val()=="" ||
+	$('#add1').val() == "" ||
+	$('#city').val() == "" ||
+	$('#state').val() == "" ||
+	$('#zip').val() == ""){
+	alert('Please enter all required fields.');
+	return false;
+     }
+    return true;
+  }
+</script>
 </body>
 </html>

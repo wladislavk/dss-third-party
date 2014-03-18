@@ -1130,7 +1130,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
   $course_q = mysql_query($course_sql);
   $course_r = mysql_fetch_assoc($course_q);
   if($course_r['use_course']==1){
-    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" >EdX</a>
+    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" >Online CE</a>
 <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank">Help</a>
 
 <?php
@@ -1142,7 +1142,7 @@ if($_SESSION['docid']==$_SESSION['userid']){
   $course_q = mysql_query($course_sql);
   $course_r = mysql_fetch_assoc($course_q);
   if($course_r['use_course']==1 && $course_r['use_course_staff']==1){
-    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank">EdX</a>
+    ?><a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank">Online CE</a>
 <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank">Help</a>
 
 <?php

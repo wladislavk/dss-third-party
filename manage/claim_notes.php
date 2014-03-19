@@ -3,7 +3,8 @@
 $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
 		FROM dental_insurance i
 		JOIN dental_patients p ON i.patientid=p.patientid
-		JOIN dental_users u ON u.userid=p.docid";
+		JOIN dental_users u ON u.userid=p.docid
+		WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
 $c_q = mysql_query($c_sql) or die(mysql_error());
 $c = mysql_fetch_assoc($c_q);
 

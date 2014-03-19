@@ -87,6 +87,7 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
                                   });
 
           successCallback(jsonData);
+	  parent.autoResize('eligible');
       },
       error: function (xhr, textStatus, errorThrown) {
         if (this.debug)

@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
+//include "includes/general_functions.php";
 //include "includes/top.htm";
 
 if(isset($_POST['merge_but'])){

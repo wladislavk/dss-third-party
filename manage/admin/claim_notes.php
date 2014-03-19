@@ -28,9 +28,9 @@ $c = mysql_fetch_assoc($c_q);
  $n_sql = "SELECT n.*,
 	CASE
 	  WHEN create_type='0'
-	    THEN CONCAT (a.first_name, ' ', a.last_name)
+	    THEN CONCAT(a.first_name, ' ', a.last_name)
 	  ELSE
-	    CONCAT (u.first_name, ' ', u.last_name)
+	    CONCAT(u.first_name, ' ', u.last_name)
 	  END as creator_name
 	 FROM dental_claim_notes n 
 	left join dental_users u ON n.creator_id = u.userid

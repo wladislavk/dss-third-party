@@ -338,7 +338,7 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -363,7 +363,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($case = mysql_fetch_array($case_q)) { ?>
                 <tr id="case_row_<?= $case['ledgerid'] ?>">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -390,7 +390,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($vob = mysql_fetch_array($vob_q)) { ?>
                 <tr id="vob_row_<?= $vob['id'] ?>">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -430,7 +430,7 @@ if(mysql_num_rows($doc_q) == 0){
                 ?>
                 <tr id="free_fax_row">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
@@ -506,9 +506,11 @@ $(document).ready(function(){
     
     $('#invoice_table').on('mouseenter', 'tr', function() {
         $(this).find('.btn.btn-danger').removeClass('hidden');
+	//$(this).find('.btn.btn-danger').trigger('mouseenter');
     });
     $('#invoice_table').on('mouseleave', 'tr', function() {
         $(this).find('.btn.btn-danger').addClass('hidden');
+	//$(this).find('.btn.btn-danger').trigger('mouseleave');
     });
     
     $('#invoice_table').on('click', '.btn.btn-danger', function(e) {

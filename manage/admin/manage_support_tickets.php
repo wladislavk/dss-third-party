@@ -45,14 +45,10 @@ $total_rec = mysql_num_rows($my);
 <div class="page-header">
 	Manage Support Tickets
 </div>
-<br />
-<br />
-<div align="right">
-<button onclick="loadPopup('add_ticket.php'); return false;" class="btn btn-success">
+<button onclick="loadPopup('add_ticket.php'); return false;" class="btn btn-success pull-right">
     Add Ticket
     <span class="glyphicon glyphicon-plus"></span>
 </button>
-</div>
 <br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
@@ -108,7 +104,7 @@ else
   }
 		$latest = ($myarray['last_response']!='')?$myarray['last_response']:$myarray['adddate'];
 		?>
-			<tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"unviewed":""; ?>">
+			<tr class="<?= (($myarray["viewed"]=='0' && $myarray["create_type"]=="1") || $myarray["response_viewed"]=='0')?"info":""; ?>">
 			<td valign="top">
 			<?=st($myarray["title"]);?>
             <?php if($myarray['attachment']!='' || $myarray['response_attachment'] !='' || $myarray['ticket_attachment'] !=''){ ?>
@@ -134,12 +130,12 @@ else
 				<?= $dss_ticket_status_labels[$myarray['status']]; ?>	
 			</td>
 			<td valign="top">
-			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
+			<a href="view_support_ticket.php?ed=<?=$myarray["id"];?>" title="View Ticket" class="btn btn-primary btn-sm">
 			View
 			 <span class="glyphicon glyphicon-pencil"></span></a>
         <?php if(($ticket_read && $myarray["response_viewed"]!='0') || $myarray['response_viewed'] == '1' ){ ?>
 						<a href="?rid=<?= $myarray['id']; ?>" class="btn btn-default btn-sm">
-                            Unread
+                            Mark Unread
                             <span class="glyphicon glyphicon-eye-close"></span>
                         </a>
 							<?php } ?>

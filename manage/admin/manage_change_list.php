@@ -16,8 +16,6 @@ if($_POST['clsub'] == 1)
 		<?
 }
 ?>
-<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js"></script>
 <span class="admin_head">
 	Change List
 <?php
@@ -36,36 +34,27 @@ if($_POST['clsub'] == 1)
 <form name="passfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post" >
 <textarea name="content" style="width:98%; height:300px;"><?= $a_r['content']; ?></textarea>
 			<input type="hidden" name="clsub" value="1" />
-			<input type="submit" value=" Update Change List " class="button" />
+			<input type="submit" value=" Update Change List " class="btn btn-primary" />
 </form>
 
 
 <script type="text/javascript">
-tinyMCE.init({
-                        mode : "textareas",
-                        theme : "modern",
-                        menubar: false,
-                        toolbar1: "undo redo | italic | bullist numlist outdent indent",
-                        gecko_spellcheck : true,
-                        plugins: "paste, save",
-                        entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
-                        setup : function(ed) {
-                                ed.on('keyDown', function(e) {
-                                        if(e.shiftKey && e.keyCode==188){
-                                                e.preventDefault();
-                                                ed.execCommand('mceInsertContent', false, "≤");
-                                        }
-                                        if(e.shiftKey && e.keyCode==190){
-                                                e.preventDefault();
-                                                ed.execCommand('mceInsertContent', false, "≥");
-                                        }
-                                });
-                        },
-        paste_preprocess : function(pl, o) {
-            o.content = o.content.replace(/&lt;/g, "≤");
-            o.content = o.content.replace(/&gt;/g, "≥");
-        }
-                });
-
+$(document).ready(function(){
+    
+    tinyMCE.init({
+        mode : "textareas",
+        theme : "advanced",
+        theme_advanced_buttons1 : "bold,italic,underline, separator, bullist ,numlist, separator,justifyleft, justifycenter,justifyright,  justifyfull, separator,help",
+        theme_advanced_buttons2 : "",
+        theme_advanced_buttons3 : "",
+        gecko_spellcheck : true,
+        theme_advanced_toolbar_location : "top",
+        theme_advanced_toolbar_align : "left"
+    });
+    
+    $('ul.list-group')
+        .css({ 'overflow-y': 'auto' })
+        .height($('textarea').height());
+});
 </script>
 <? include 'includes/bottom.htm';?>

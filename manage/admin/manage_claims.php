@@ -287,11 +287,6 @@ $my=mysql_query($sql) or die(mysql_error());
 <div class="page-header">
 	Manage Claims
 </div>
-<br />
-<br />
-&nbsp;
-
-<br />
 <?php
 if(isset($_GET['msg'])){
 ?>
@@ -417,10 +412,9 @@ if(isset($_GET['msg'])){
 				<td valign="top">
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
-				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "yellow" : "green"; ?>
-				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
-				<?php $status_text = ($myarray["status"] == DSS_CLAIM_PENDING) ? "black" : "white"; ?>
-				<td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?>">
+				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
+				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+				<td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?> <?= $status_color;?>">
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">
@@ -492,7 +486,7 @@ if(isset($_GET['msg'])){
            } ?>
 
 				</td>
-	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'style="background:#ccf;"':''; ?>>
+	<td valign="top" <?= ($myarray['num_fo_notes']>0)?'class="info"':''; ?>>
 		<a href="claim_notes.php?id=<?= $myarray['insuranceid']; ?>&pid=<?=$myarray['patientid'];?>">View (<?= $myarray['num_notes'];?>)</a>
 	</td>
 <td>

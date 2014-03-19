@@ -141,8 +141,8 @@ $num_users=mysql_num_rows($my);
                                         <?=($myarray["last_login"])?date('m/d/Y h:i:s', strtotime($myarray["last_login"])):'';?>
                                 </td>	
 				<td valign="top">
-				<a href="Javascript:;"  onclick="Javascript: loadPopup('log.php?led=<?=$myarray["userid"];?>');" class="editlink" title="EDIT" title="View">
-						<img src="images/b_browse.png" width="16" height="16" border="0" align="View"/>
+				<a href="Javascript:;"  onclick="Javascript: loadPopup('log.php?led=<?=$myarray["userid"];?>');" class="btn btn-info" title="View Logs">
+					View Logs
 					</a>
                     
 				</td>

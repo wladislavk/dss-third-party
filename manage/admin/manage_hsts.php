@@ -288,10 +288,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
-				<?php $status_color = ($myarray["status"] == DSS_HST_PENDING ) ? "yellow" : "green"; ?>
-				<?php $status_color = (($myarray["status"] == DSS_HST_PENDING) && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
-				<?php $status_text = ($myarray["status"] == DSS_HST_PENDING ) ? "black" : "white"; ?>
-				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
+				<?php $status_color = ($myarray["status"] == DSS_HST_PENDING ) ? "warning" : "success"; ?>
+				<?php $status_color = (($myarray["status"] == DSS_HST_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+				<td valign="top" class="<?= $status_color ?>">
 					<?=st($dss_hst_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
                                 <td valign="top">

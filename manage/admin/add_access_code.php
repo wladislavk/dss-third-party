@@ -175,15 +175,15 @@ if(isset($_POST["accesscodesub"]))
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" name="accesscodesub" value=" <?=$but_text?> Access Code" class="btn brn-primary" />
+                <input type="submit" name="accesscodesub" value=" <?=$but_text?> Access Code" class="btn btn-primary" />
 		<?php		
 		if($themyarray['id']!=''){  
 		$c_sql = "SELECT * FROM dental_users WHERE access_code_id='".$themyarray["id"]."'";
 		$c_q = mysql_query($c_sql);
 		if(mysql_num_rows($c_q)==0){ ?>
-		<input type="submit" name="accesscodedelete" value="Delete" class="btn btn-primary" />
+		<input type="submit" name="accesscodedelete" value="Delete" class="btn btn-danger" />
 		<?php }else{ ?>
-		<input type="submit" onclick="alert('Error! There are users associated with this access code. You must reassign these users. Only access codes with no users may be deleted.');return false;" value="Delete" class="btn btn-primary">
+		<input type="submit" onclick="alert('Error! There are users associated with this access code. You must reassign these users. Only access codes with no users may be deleted.');return false;" value="Delete" class="btn btn-danger">
 		<?php } 
 		}
 		?>

@@ -411,10 +411,10 @@ foreach ($dental_letters as $key => $letter) {
   // Determine Delivery Status
   if ($status == "pending") {
 		$age_in_days = floor((time() - $letter['date_sent']) / $seconds_per_day);
-		if ($age_in_days > 7) $dental_letters[$key]['bg'] = "redbg";
-    if ($age_in_days <= 7) $dental_letters[$key]['bg'] = "yellowbg";
+		if ($age_in_days > 7) $dental_letters[$key]['bg'] = "danger";
+    if ($age_in_days <= 7) $dental_letters[$key]['bg'] = "warning";
   } elseif ($status == "sent") {
-		$dental_letters[$key]['bg'] = "greenbg";
+		$dental_letters[$key]['bg'] = "success";
   }
 }
 

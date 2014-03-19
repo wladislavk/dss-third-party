@@ -44,12 +44,10 @@ $num_users=mysql_num_rows($my);
 <br />
 
 <?php if(is_super($_SESSION['admin_access'])){ ?>
-<div align="right">
-	<button onclick="Javascript: loadPopup('add_claim_text.php');" class="addButton">
+	<button onclick="Javascript: loadPopup('add_claim_text.php');" class="pull-right btn btn-primary">
 		Add New Claim Text
 	</button>
 	&nbsp;&nbsp;
-</div>
 <?php } ?>
 <br />
 <div align="center" class="red">
@@ -59,7 +57,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+<table class="table table-bordered table-hover" >
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">

@@ -225,11 +225,6 @@ $my=mysql_query($sql) or die(mysql_error());
 <div class="page-header">
 	Manage Verification of Benefits
 </div>
-<br />
-<br />
-&nbsp;
-
-<br />
 <div align="center" class="red">
 	<b><? echo $_GET['msg'];?></b>
 </div>
@@ -338,10 +333,9 @@ $my=mysql_query($sql) or die(mysql_error());
 				<td valign="top">
 					<?=st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
-				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "yellow" : "green"; ?>
-				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "red" : $status_color; ?>
-				<?php $status_text = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "black" : "white"; ?>
-				<td valign="top" style="background-color:<?= $status_color ?>; color: <?= $status_text ?>;">
+				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "warning" : "success"; ?>
+				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+				<td valign="top" class="<?= $status_color; ?>">
 					<?=st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
 				<td valign="top">

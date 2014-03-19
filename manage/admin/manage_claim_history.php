@@ -147,7 +147,7 @@ $num_users=mysql_num_rows($my);
 						View
 					 <span class="glyphicon glyphicon-pencil"></span></a>
 
-					<a href="../insurance_check_status.php?id=<?= $myarray['id']; ?>" class="editlink" title="payment status">
+					<a href="../insurance_check_status.php?id=<?= $myarray['id']; ?>" class="btn btn-info" title="payment status">
 						Payment Status
 					</a>
                     

@@ -122,11 +122,11 @@ if($_POST['sortsub'] == 1)
 		{
 			if($myarray["status"] == 1)
 			{
-				$tr_class = "tr_active";
+				$tr_class = "";
 			}
 			else
 			{
-				$tr_class = "tr_inactive";
+				$tr_class = "warning";
 			}
 		?>
 			<tr class="<?=$tr_class;?>">

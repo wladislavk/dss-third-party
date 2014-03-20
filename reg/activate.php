@@ -305,14 +305,3 @@ if(p1!=p2){
 }
 
 </script>
-<?php
-function format_phone($num, $a){
-        $num = ereg_replace("[^0-9]", "", $num);
-        preg_match('/([0-1]*)(.*)/',$num, $m);
-        $num = $m[2];
-
-	$ret_num = "(".substr($num, 0, 3).") ".substr($num, 3, 3)."-".substr($num, 6);
-return $ret_num;
-}
-
-?>

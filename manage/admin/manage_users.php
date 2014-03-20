@@ -222,19 +222,19 @@ $num_users=mysql_num_rows($my);
 			
 			if($myarray["status"] == 1)
 			{
-				$tr_class = "tr_active";
+				$tr_class = "";
 			}
 			elseif($myarray["status"] == 2)
 			{
-				$tr_class = "tr_unregistered";
+				$tr_class = "info";
 			}
                         elseif($myarray["status"] == 3)
                         {
-                                $tr_class = "tr_suspended";
+                                $tr_class = "warning";
                         }
 			else
 			{
-				$tr_class = "tr_inactive";
+				$tr_class = "info";
 			}
 		?>
 			<tr class="<?=$tr_class;?>">

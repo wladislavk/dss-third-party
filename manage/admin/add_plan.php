@@ -96,7 +96,7 @@ if($_POST["plansub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onSubmit="return check_add()">
+    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -182,12 +182,10 @@ if($_POST["plansub"] == 1)
     </form>
 <script type="text/javascript">
 function check_add(){
-  $('.validate').each( function(){
-    if($(this).val()==''){
+  if($('.validate[value=""]').length>0){
       alert('All fields are required.');
-      return false;
-    }
-  });
+    return false;
+  }
   return true;
 }
 </script>

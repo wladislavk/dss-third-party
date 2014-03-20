@@ -10,7 +10,6 @@ $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
 $path = 'http://'.$_SERVER['HTTP_HOST'].'/manage/';
 }
-
 $fdf_file=time().'.fdf';
 
             // need to know what file the data will go into
@@ -844,11 +843,11 @@ mysql_query($sql);
 
             // write the file out
             //echo  $fdf;
-	$handle = fopen("../../../shared/q_file/".$file, 'x+');
+	  $handle = fopen("../../../shared/q_file/".$file, 'x+');
 	fwrite($handle, $fdf);
 	fclose($handle);
 
-$xfdf_file_path = '../../../shared/q_file/'.$file;
+		$xfdf_file_path = '../../../shared/q_file/'.$file;
 $pdf_template_path = 'claim.pdf';
 $pdftk = '/usr/bin/pdftk';
 $pdf_name = substr( $xfdf_file_path, 0, -4 ) . '.pdf';
@@ -925,17 +924,6 @@ function fill_cents($v){
   }
 }
 
-function format_phone($num, $a){
-        $num = ereg_replace("[^0-9]", "", $num);
-        preg_match('/([0-1]*)(.*)/',$num, $m);
-        $num = $m[2];
-  if($a){
-        return substr($num, 0, 3);
-  }else{
-        return substr($num,3);
-  }
-  return $num;
-}
 
 ?>
 

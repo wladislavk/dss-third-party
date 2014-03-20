@@ -7,6 +7,7 @@ require_once('../includes/dental_patient_summary.php');
 require_once('../includes/general_functions.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+<script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
 <?php
 // Get patient id for updating patient summary table
 $sql = "SELECT "

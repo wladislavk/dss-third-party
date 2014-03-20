@@ -6,6 +6,7 @@ require_once "includes/general.htm";
 if(is_super($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
+     . "  CONCAT(p.firstname, ' ', p.lastname) pat_name, "
      . "  claim.adddate, claim.status, CONCAT(users.first_name,' ',users.last_name) as doc_name, CONCAT(users2.first_name,' ', users2.last_name) as user_name, "
      . "  claim.primary_fdf, claim.secondary_fdf, "
      . "  claim.mailed_date, claim.sec_mailed_date, "
@@ -98,7 +99,12 @@ $sql .= " AND
    END = '1'
 ";
 //print $sql;
+$sort_dir = (isset($_REQUEST['sort_dir']))?strtolower($_REQUEST['sort_dir']):'';
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
+$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : 'adddate';
+$sort_by_sql = $sort_by ." ".$sort_dir;
+$sql .= " ORDER BY ".$sort_by_sql;
 $my=mysql_query($sql) or die(mysql_error());
 ?>
 
@@ -140,23 +146,23 @@ if(isset($_GET['msg'])){
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s";
     ?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_DATE, $sort_dir) ?>" width="15%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_DATE, get_sort_dir($sort_by, SORT_BY_DATE, $sort_dir))?>">Added</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'adddate', $sort_dir) ?>" width="15%">
+			<a href="<?=sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">Added</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_STATUS, $sort_dir) ?>" width="10%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_STATUS, get_sort_dir($sort_by, SORT_BY_STATUS, $sort_dir))?>">Status</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="10%">
+			<a href="<?=sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">Status</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_PATIENT, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_PATIENT, get_sort_dir($sort_by, SORT_BY_PATIENT, $sort_dir))?>">Patient Name</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'pat_name', $sort_dir) ?>" width="20%">
+			<a href="<?=sprintf($sort_qs, 'pat_name', get_sort_dir($sort_by, 'pat_name', $sort_dir))?>">Patient Name</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_FRANCHISEE, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_FRANCHISEE, get_sort_dir($sort_by, SORT_BY_FRANCHISEE, $sort_dir))?>">Account</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'doc_name', $sort_dir) ?>" width="20%">
+			<a href="<?=sprintf($sort_qs, 'doc_name', get_sort_dir($sort_by, 'doc_name', $sort_dir))?>">Account</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_USER, $sort_dir) ?>" width="20%">
-			<a href="<?=sprintf($sort_qs, SORT_BY_USER, get_sort_dir($sort_by, SORT_BY_USER, $sort_dir))?>">User</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'user_name', $sort_dir) ?>" width="20%">
+			<a href="<?=sprintf($sort_qs, 'user_name', get_sort_dir($sort_by, 'user_name', $sort_dir))?>">User</a>
 		</td>
-		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, SORT_BY_BC, $sort_dir) ?>" width="20%">
-                        <a href="<?=sprintf($sort_qs, SORT_BY_BC, get_sort_dir($sort_by, SORT_BY_BC, $sort_dir))?>">Billing Company</a>
+		<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'billing_name', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'billing_name', get_sort_dir($sort_by, 'billing_name', $sort_dir))?>">Billing Company</a>
                 </td>
 		<td valign="top" class="col_head" width="15%">
 			Select	

@@ -112,7 +112,7 @@ $num_users=mysql_num_rows($my);
 		{
 
 		?>
-			<tr>
+			<tr <?= ($myarray['status']==2)?'class="warning"':''; ?>>
 				<td valign="top">
 					<?=st($myarray["name"]);?>
 				</td>

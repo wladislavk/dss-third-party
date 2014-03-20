@@ -19,6 +19,7 @@ ln -fs /srv/dss/shared/config/site_config.php ./$release_dir/admin/includes/conf
 chmod 777 ./$release_dir/manage/3rdParty/tcpdf/cache
 rm ./$release_dir/build.sh
 tar -czf $release_tag.tar.gz ./$release_dir
+echo "tar created"
 rm -r ./$release_dir
 #scp ./$release_dir.tar.gz dss-rh:/srv/dss/tar
 #ssh dss-rh "mkdir /srv/dss/releases/$release_dir; cd /srv/dss/releases/$release_dir; tar xvfz ../../tar/$release_dir.tar.gz; ln -s /srv/dss/shared/q_file ./manage/q_file; ln -s /srv/dss/shared/config/config.php ./manage/admin/includes/config.php; ln -s /srv/dss/shared/config/site_config.php ./admin/includes/config.php" 

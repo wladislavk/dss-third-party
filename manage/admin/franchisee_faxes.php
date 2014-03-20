@@ -177,7 +177,6 @@ $fax30_q = mysql_query($fax30_sql);
 <script type="text/javascript">
 $(document).ready(function() 
     { 
-        $('#fax_table').tablesorter(); 
     } 
 ); 
 </script>

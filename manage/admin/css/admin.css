@@ -99,3 +99,16 @@ td.header, th.header {
 .page-header{
   margin-top:0px;
   }
+
+
+.arrow_asc{
+  background-image: url(../../images/arrow-black-up.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+.arrow_desc{
+  background-image: url(../../images/arrow-black-down.gif);
+  background-repeat: no-repeat;
+  background-position: right 11px;
+}
+

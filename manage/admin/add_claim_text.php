@@ -45,15 +45,7 @@ if($_POST["custom_textsub"] == 1)
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-</head>
-<body>
-
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
     <?
     $thesql = "select * from dental_claim_text where id='".$_REQUEST["ed"]."'";
 	$themy = mysql_query($thesql);
@@ -81,57 +73,47 @@ if($_POST["custom_textsub"] == 1)
 	}
 	?>
 	
-	<br /><br />
-	
+        <div class="page-header">
+            <h1>
+               <?=$but_text?> Custom Text
+               <? if($title <> "") {?>
+                        &quot;<?=$title;?>&quot;
+               <? }?>
+	    </h1>
+        </div>
+
 	<? if($msg != '') {?>
     <div align="center" class="red">
         <? echo $msg;?>
     </div>
     <? }?>
     <form name="transaction_codefrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" >
-    <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
-        <tr>
-            <td colspan="2" class="cat_head">
-               <?=$but_text?> Custom Text 
-               <? if($title <> "") {?>
-               		&quot;<?=$title;?>&quot;
-               <? }?>
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead" width="30%">
-                Title
-            </td>
-            <td valign="top" class="frmdata">
+
+            <div class="form-group">
+                <label for="npi" class="col-md-3 control-label">Title</label>
+                <div class="col-md-9">
                 <input type="text" name="title" value="<?=$title?>" class="tbox" /> 
                 <span class="red">*</span>				
-            </td>
-        </tr>
-        <tr bgcolor="#FFFFFF">
-            <td valign="top" class="frmhead">
-                Description
-            </td>
-            <td valign="top" class="frmdata">
+		</div>
+	     </div>
+            <div class="form-group">
+                <label for="npi" class="col-md-3 control-label">Description</label>
+                <div class="col-md-9">
             	<textarea class="tbox" name="description" style="width:100%;"><?=$description;?></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td  colspan="2" align="center">
+		</div>
+	    </div>
                 <span class="red">
                     * Required Fields					
                 </span><br />
                 <input type="hidden" name="custom_textsub" value="1" />
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
-                <input type="submit" value=" <?=$but_text?> Claim Text" class="button" />
+                <input type="submit" value=" <?=$but_text?> Claim Text" class="btn btn-primary" />
 		<?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_claim_text.php?delid=<?=$themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel dellink" title="DELETE">
+                    <a href="manage_claim_text.php?delid=<?=$themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="btn btn-danger" title="DELETE">
                                                 Delete
                                         </a>
 		<?php } ?>
 
-            </td>
-        </tr>
-    </table>
     </form>
   
 </body>

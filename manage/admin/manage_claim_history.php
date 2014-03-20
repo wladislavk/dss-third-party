@@ -1,6 +1,12 @@
 <? 
 include "includes/top.htm";
 
+$sort_dir = strtolower($_REQUEST['sort_dir']);
+$sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
+
+$sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : 'insuranceid';
+$sort_by_sql = '';
+$sort_by_sql .= " ". $sort_by." ".$sort_dir." ";
 $rec_disp = 20;
 
 if($_REQUEST["page"] != "")
@@ -22,14 +28,14 @@ $sql = "select e.*,
 	  LEFT JOIN dental_patients p ON p.patientid=i.patientid
 	  LEFT JOIN dental_user_company uc ON uc.userid=i.docid
 	  LEFT JOIN companies c ON uc.companyid=c.id
-	  order by e.adddate DESC";
+	  order by ". $sort_by_sql;
 }elseif(is_billing($_SESSION['admin_access'])){
   $sql = "SELECT e.*
 		FROM dental_claim_electronic e
 		INNER JOIN dental_user_company uc ON uc.userid = e.userid
 		INNER JOIN companies c ON c.id=uc.companyid
 		WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
-		ORDER BY username";
+		ORDER BY ".$sort_by_sql;
 $sql = "select e.*,
         CONCAT(p.firstname, ' ', p.lastname) AS pat_name,
         CONCAT(u.first_name, ' ', u.last_name) AS account_name,
@@ -43,7 +49,7 @@ $sql = "select e.*,
           LEFT JOIN dental_user_company uc ON uc.userid=i.docid
           LEFT JOIN companies c ON uc.companyid=c.id
 	  WHERE u.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
-          order by e.adddate DESC";
+          order by ".$sort_by_sql;
 }
 
 $my = mysql_query($sql);
@@ -74,31 +80,41 @@ $num_users=mysql_num_rows($my);
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"");
+				 paging($no_pages,$index_val,"sort_by=".$sort_by."&sort_dir=".$sort_dir);
 			?>
 		</TD>        
 	</TR>
 	<? }?>
+<?php
+    $sort_qs = $_SERVER['PHP_SELF'] . "?sort_by=%s&sort_dir=%s";
+?>
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="10%">
-			Claim ID
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'insuranceid', $sort_dir) ?>" width="10%">
+                        <a href="<?=sprintf($sort_qs, 'insuranceid', get_sort_dir($sort_by, 'insuranceid', $sort_dir))?>">
+			Claim ID</a>
 		</td>
-		<td valign="top" class="col_head" width="20%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'adddate', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'adddate', get_sort_dir($sort_by, 'adddate', $sort_dir))?>">
 			Added
 		</td>
-		<td valign="top" class="col_head" width="20%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'last_action', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'last_action', get_sort_dir($sort_by, 'last_action', $sort_dir))?>">
 			Last Action
 		</td>
-		<td valign="top" class="col_head" width="20%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'status', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'status', get_sort_dir($sort_by, 'status', $sort_dir))?>">
 			Status	
 		</td>       
-		<td valign="top" class="col_head" width="10%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'pat_name', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'pat_name', get_sort_dir($sort_by, 'pat_name', $sort_dir))?>">
 			Patient Name
 		</td>
-                <td valign="top" class="col_head" width="10%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'account_name', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'account_name', get_sort_dir($sort_by, 'account_name', $sort_dir))?>">
                         Account 
                 </td>
-		<td valign="top" class="col_head" width="10%">
+<td valign="top" class="col_head <?= get_sort_arrow_class($sort_by, 'company_name', $sort_dir) ?>" width="20%">
+                        <a href="<?=sprintf($sort_qs, 'company_name', get_sort_dir($sort_by, 'company_name', $sort_dir))?>">
 			Company		
 		</td>
 		<td valign="top" class="col_head" width="10%">

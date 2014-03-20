@@ -562,40 +562,40 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </h1>
         </div>
         <form name="userfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal">
-            <div class="page-header">
+            <div class="page-header expanded">
                 <strong>ID and Access Details</strong>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="username" class="col-md-3 control-label">Username</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?= $username ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="npi" class="col-md-3 control-label">NPI Number</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="npi" id="npi" placeholder="NPI Number" value="<?= $npi ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="medicare_npi" class="col-md-3 control-label">Medicare Provider (NPI/DME) Number</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="medicare_npi" id="medicare_npi" placeholder="Medicare Provider (NPI/DME) Number" value="<?= $medicare_npi ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="medicare_ptan" class="col-md-3 control-label">Medicare PTAN Number</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="medicare_ptan" id="medicare_ptan" placeholder="Medicare PTAN Number" value="<?= $medicare_ptan ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="tax_id_or_ssn" class="col-md-3 control-label">Tax ID or SSN</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="tax_id_or_ssn" id="tax_id_or_ssn" placeholder="Tax ID/SSN" value="<?= $tax_id_or_ssn ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label class="col-md-3 control-label">EIN or SSN required</label>
                 <div class="col-md-2 col-md-push-3 checkbox">
                     <label>
@@ -610,20 +610,20 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     </label>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="practice" class="col-md-3 control-label">Practice</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="practice" id="practice" placeholder="Practice" value="<?= $practice ?>">
                 </div>
             </div>
             <?php if (!isset($_REQUEST['ed'])) { ?>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="password" class="col-md-3 control-label">Password</label>
                 <div class="col-md-9">
                     <input type="password" class="form-control" name="password" id="password" placeholder="Your password">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="password2" class="col-md-3 control-label">Confirm your password</label>
                 <div class="col-md-9">
                     <input type="password" class="form-control" name="password2" id="password2" placeholder="Confirm your password">
@@ -635,15 +635,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <strong>Personal Details</strong>
             </div>
             <div class="form-group">
-                <label for="firstname" class="col-md-3 control-label">First Name</label>
+                <label for="first_name" class="col-md-3 control-label">First Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" value="<?= $firstname ?>">
+                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First name" value="<?= $first_name ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="lastname" class="col-md-3 control-label">Last Name</label>
+                <label for="last_name" class="col-md-3 control-label">Last Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Last name" value="<?= $lastname ?>">
+                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last name" value="<?= $last_name ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -652,25 +652,25 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="<?= $email ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="address" class="col-md-3 control-label">Address</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="address" id="address" placeholder="Address" value="<?= $address ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="city" class="col-md-3 control-label">City</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="city" id="city" placeholder="City" value="<?= $city ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?= $state ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="zip" class="col-md-3 control-label">Zip/Postal Code</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip/Postal Code" value="<?= $zip ?>">
@@ -682,150 +682,150 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     <input type="text" class="form-control extphonemask" name="phone" id="phone" placeholder="Phone number" value="<?= $phone ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control phonemask" name="fax" id="fax" placeholder="Fax number" value="<?= $fax ?>">
                 </div>
             </div>
             
-            <div class="page-header">
+            <div class="page-header expanded">
                 <strong>Mailing Details</strong>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_practice" class="col-md-3 control-label">Practice</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_practice" id="mailing_practice" placeholder="Practice" value="<?= $mailing_practice ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_firstname" class="col-md-3 control-label">First Name</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_firstname" id="mailing_firstname" placeholder="First name" value="<?= $mailing_firstname ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_lastname" class="col-md-3 control-label">Last Name</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_lastname" id="mailing_lastname" placeholder="Last name" value="<?= $mailing_lastname ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_email" class="col-md-3 control-label">Email</label>
                 <div class="col-md-9">
                     <input type="email" class="form-control" name="mailing_email" id="mailing_email" placeholder="Email" value="<?= $mailing_email ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_address" class="col-md-3 control-label">Address</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_address" id="mailing_address" placeholder="Address" value="<?= $mailing_address ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_city" class="col-md-3 control-label">City</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_city" id="mailing_city" placeholder="City" value="<?= $mailing_city ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_state" id="mailing_state" placeholder="State" value="<?= $mailing_state ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_zip" class="col-md-3 control-label">Zip/Postal Code</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control" name="mailing_zip" id="mailing_zip" placeholder="Zip/Postal Code" value="<?= $mailing_zip ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_phone" class="col-md-3 control-label">Phone</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control extphonemask" name="mailing_phone" id="mailing_phone" placeholder="Phone number" value="<?= $mailing_phone ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="mailing_fax" class="col-md-3 control-label">Fax</label>
                 <div class="col-md-9">
                     <input type="text" class="form-control phonemask" name="mailing_fax" id="mailing_fax" placeholder="Fax number" value="<?= $mailing_fax ?>">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Use Service NPI?</label>
            	<div class="col-md-9">
                      <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
 		</div>
 	    </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Name</label>
                 <div class="col-md-9">
 
                 <input id="service_name" class="form-control" type="text" name="service_name" value="<?=$service_name;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Address</label>
                 <div class="col-md-9">
                 <input id="service_address" class="form-control" type="text" name="service_address" value="<?=$service_address;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service City</label>
                 <div class="col-md-9">
                 <input id="service_city" class="form-control" type="text" name="service_city" value="<?=$service_city;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service State</label>
                 <div class="col-md-9">
                 <input id="service_state" class="form-control" type="text" name="service_state" value="<?=$service_state;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Zip</label>
                 <div class="col-md-9">
                 <input id="service_zip" class="form-control" type="text" name="service_zip" value="<?=$service_zip;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Phone</label>
                 <div class="col-md-9">
                 <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
                 <div class="col-md-9">
                 <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service NPI</label>
                 <div class="col-md-9">
                 <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?=$service_npi;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare NPI</label>
                 <div class="col-md-9">
                 <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?=$service_medicare_npi;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare PTAN</label>
                 <div class="col-md-9">
                 <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?=$service_medicare_ptan;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Tax ID or SSN</label>
                 <div class="col-md-9">
                 <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?=$service_tax_id_or_ssn;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label for="use_service_npi" class="col-md-3 control-label">Service EIN or SSN</label>
                 <div class="col-md-9">
                 <input id="service_ein" type="checkbox" name="service_ein" value="1" <?= ($service_ein)?'checked="checked"':''; ?> class="tbox" />
@@ -884,7 +884,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     </label>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group expanded">
                 <label class="col-md-3 control-label">Visuals to use</label>
                 <div class="col-md-9">
                     <label class="col-md-4">
@@ -968,7 +968,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label">HTS Company</label>
+                <label class="col-md-3 control-label">HST Company</label>
                 <div class="col-md-9">
                     <?php
                     
@@ -1044,6 +1044,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
     <?php if(!isset($_GET['ed'])){ ?>
     <script type="text/javascript">
     var hide_expanded = true;
+	$('.expanded').hide();
     </script>
     <?php } ?>
     <script>

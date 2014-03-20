@@ -13,7 +13,7 @@ Subjective Tests:
 -->
 
 <style>
-        #hideshow2section2 input        { width:20px; }
+        #hideshow2section2 input        { width:40px; }
         .followup-datatable                     { margin: 0; padding: 0; border: 0; }
         .followup-datatable tr          { height: 25px; }
         .followup-datatable tr td       { padding: 0 4px; }

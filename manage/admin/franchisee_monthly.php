@@ -303,11 +303,4 @@ $ins_paid = mysql_fetch_assoc($ins_paid_q);
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<script type="text/javascript">
-$(document).ready(function() 
-    { 
-        $('#monthly_table').tablesorter(); 
-    } 
-); 
-</script>
 <? include "includes/bottom.htm";?>

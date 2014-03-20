@@ -7,13 +7,9 @@ include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
 ?>
-  <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-    <script type="text/javascript" src="../js/masks.js"></script>
-    <script type="text/javascript" src="../3rdParty/jquery.formatCurrency-1.4.0.pack.js"></script>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <?php
 require_once '../3rdParty/stripe/lib/Stripe.php';
-?><br /><br /><br /><?php
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users
 	WHERE userid='".mysql_real_escape_string($id)."'";
@@ -44,14 +40,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_InvalidRequestError $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_AuthenticationError $e) {
   // Authentication with Stripe's API failed
@@ -59,14 +55,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo "Authentication Error. Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_ApiConnectionError $e) {
   // Network communication with Stripe failed
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_Error $e) {
   // Display a very generic error to the user, and maybe send
@@ -74,14 +70,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
   die();
 
 }
@@ -106,11 +102,11 @@ try{
     mysql_query($i_sql);
   }
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
-     ?><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+     ?><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
 	die();
   }else{
     ?><h3>Not entered in Stripe.</h3><?php
-     ?><button onclick="parent.disablePopupClean()" class="btn btn-success">Close</button><?php
+     ?><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
         die();
 
   }
@@ -147,20 +143,26 @@ $total_charge += $case_r['percase_amount'];
     $total_charge= "";
   }
 ?>
+        <div class="page-header">
+            <h1>Bill <?= $r['first_name']; ?> <?=$r['last_name'];?></h1>
+	</div> 
+
 <form action="#" method="post" onsubmit="return confirm_charge();">
 <?php  if(isset($_GET['invoice']) && $_GET['invoice']!=''){
   ?><input type="hidden" name="invoice" value="<?= $_GET['invoice']; ?>" /><?php
 }
 ?>
-Amount to charge credit card for <?= $r['first_name']; ?> <?=$r['last_name'];?> $<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
+            <div class="form-group">
+                <label for="npi" class="col-md-3 control-label">Amount to charge credit card</label>
+                <div class="col-md-9">
+			$<input type="text" id="amount" name="amount" value="<?=$total_charge;?>" />
+		</div>
+	    </div>
 <span id="amount_notification" style="color:#c33; font-size:12px;"></span>
-<br /><br />
 
 <input type="submit" id="bill_submit" name="bill_submit"  value="Bill Credit Card" class="btn btn-primary">
 <div id="loading_image" style="display:none;"><img src="../images/DSS-ajax-animated_loading-gif.gif" /></div>
 </form>
-
-
 <script type="text/javascript">
   function confirm_charge(){
     $('#bill_submit').hide();

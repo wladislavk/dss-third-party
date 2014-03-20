@@ -103,7 +103,7 @@ $num_users=mysql_num_rows($my);
 &nbsp;
 <b>Total Records: <?=$total_rec;?></b>
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
-<table class="table table-bordered table-hover">
+<table class=" sort_table table table-bordered table-hover">
 	<? if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
@@ -114,28 +114,29 @@ $num_users=mysql_num_rows($my);
 		</TD>        
 	</TR>
 	<? }?>
+<thead>
 	<tr class="tr_bg_h">
-                <td class="col_head <?= ($_REQUEST['sort'] == 'username')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="14%">
-			<a href="manage_payment_errors.php?sort=username&sort_dir=<?php echo ($_REQUEST['sort']=='username'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Username</a>		
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'company')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="20%">
-                        <a href="manage_payment_errors.php?sort=company&sort_dir=<?php echo ($_REQUEST['sort']=='company'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Company</a>
-                </td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'name')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
-                        <a href="manage_payment_errors.php?sort=name&sort_dir=<?php echo ($_REQUEST['sort']=='name'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Name</a>		
-		</td>
-                <td class="col_head <?= ($_REQUEST['sort'] == 'invoice')?'arrow_'.strtolower($_REQUEST['sort_dir']):''; ?>" width="10%">
-                        <a href="manage_payment_errors.php?sort=invoice&sort_dir=<?php echo ($_REQUEST['sort']=='invoice'&&$_REQUEST['sort_dir']=='ASC')?'DESC':'ASC'; ?>">Amount</a>
-                </td>
-		<td class="col_head">
+                <th class="col_head" width="14%">
+			Username
+		</th>
+                <th class="col_head" width="20%">
+			Company
+                </th>
+                <th class="col_head" width="10%">
+			Name
+		</th>
+                <th class="col_head" width="10%">
+			Amount
+                </th>
+		<th class="col_head">
 			Invoice Date
-		</td>
-		<td class="col_head">
+		</th>
+		<th class="col_head">
 			Last Bill Date
-		</td>
-		<td class="col_head">
+		</th>
+		<th class="col_head">
 			Bill Attempts
-		</td>
+		</th>
 		<td valign="top" class="col_head" width="10%">
 			History
 		</td>
@@ -144,6 +145,8 @@ $num_users=mysql_num_rows($my);
                 </td>
 
 	</tr>
+</thead>
+<tbody>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
 		<tr class="tr_bg">
@@ -221,6 +224,7 @@ $<?php
 	<? 	}
 
 	}?>
+</tbody>
 </table>
 </form>
 

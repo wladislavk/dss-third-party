@@ -315,3 +315,7 @@ $(document).ready(function(){
 	});
 
 });
+
+window.closeModal = function(){
+    $('#popup-window').modal('hide');
+};

@@ -6,7 +6,7 @@ require dirname(__FILE__) . '/includes/sescheck.php';
 $basepath = dirname(__FILE__) . '/../../../../shared/q_file';
 
 $filename = $_GET['f'];
-$filename = preg_replace('@[\./\\]+@','_',$filename);
+//$filename = preg_replace('@[\./\\]+@','_',$filename);
 $filetype = mime_content_type($basepath . '/' . $filename);
 
 if (!file_exists($basepath . '/' . $filename) && $_GET['type'] === 'image') {

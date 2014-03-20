@@ -412,8 +412,31 @@ if(isset($_GET['msg'])){
 				<td valign="top">
 					<?=st($myarray["adddate"]);?>&nbsp;
 				</td>
-				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
-				<?php $status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+				<?php 
+				switch($myarray['status']){
+					case 0:
+					case 2:
+					case 6:
+					case 8:
+					case 10:
+					case 12:
+						if($myarray['days_pending']>7){
+						  $status_color = "danger";
+						}else{
+						  $status_color = "warning";
+						}
+						break;
+					case 4:
+					case 13:
+						$status_color = "danger";
+						break;
+					default:
+						$status_color = "success";
+						break;
+				}
+		
+		//$status_color = ($myarray["status"] == DSS_CLAIM_PENDING) ? "warning" : "success"; ?>
+				<?php //$status_color = ($myarray["status"] == DSS_CLAIM_PENDING && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
 				<td valign="top" class="claim_<?= $myarray["status"]; ?> <?= ($myarray['days_pending']>7)?'old':''; ?> <?= $status_color;?>">
 					<?=st($dss_claim_status_labels[$myarray["status"]]);?>&nbsp;
 				</td>
@@ -507,7 +530,6 @@ if(isset($_GET['msg'])){
 </form>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
 <?php
 if(isset($_GET['sendins'])&&$_GET['sendins']==1){
   include '../insurance_electronic_file.php';
@@ -528,7 +550,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   } */
   ?>
   <script type="text/javascript">
-    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
+    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>&bo=1";
   </script>
   <?php
 }
@@ -578,3 +600,5 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   });
 
 </script>
+
+<? include "includes/bottom.htm";?>

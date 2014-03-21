@@ -369,7 +369,7 @@ include 'includes/completed.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
                                                                                                         <h3 class="sepH_a">Medical Insurance</h3>
-                                                                                                        <p class="s_color small">Please complete all fields on this page to allow Dental Sleep Solutions to verify your medical insurance coverage.  Failure to accurately complete these fields may result in insurance delays and even denial of coverage.  Refer to your medical insurance card for this information.</p>
+                                                                                                        <p class="s_color small">Please complete all fields on this page to allow us to verify your medical insurance coverage.  Failure to accurately complete these fields may result in insurance delays and even denial of coverage.  Refer to your medical insurance card for this information.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>
@@ -527,7 +527,7 @@ include 'includes/completed.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
                                                                                                         <h3 class="sepH_a">Secondary Insurance</h3>
-                                                                                                        <p class="s_color small">Do you have additional insurance in addition to primary insurance coverage?  If so, please accurately complete all fields on this page to help Dental Sleep Solutions maximize your potential insurance coverage.  Refer to your medical insurance card for this information.</p>
+                                                                                                        <p class="s_color small">Do you have additional insurance in addition to primary insurance coverage?  If so, please accurately complete all fields on this page to help us maximize your potential insurance coverage.  Refer to your medical insurance card for this information.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>
@@ -790,7 +790,7 @@ include 'includes/completed.php';
                                                                                         <div class="cf">
                                                                                                 <div class="dp25">
                                                                                                         <h3 class="sepH_a">Medical Contacts</h3>
-                                                                                                        <p class="s_color small">Dental Sleep Solutions cares about providing the best possible treatment to you.  We regularly contact your other medical providers to make them aware of your progress throughout treatment.  This helps ensure all your medical providers coordinate care to maximize the effectiveness of your treatment.  Please list your other healthcare providers here.</p>
+                                                                                                        <p class="s_color small">We care about providing the best possible treatment to you.  We regularly contact your other medical providers to make them aware of your progress throughout treatment.  This helps ensure all your medical providers coordinate care to maximize the effectiveness of your treatment.  Please list your other healthcare providers here.</p>
                                                                                                 </div>
                                                                                                 <div class="dp75">
                                                                                                         <div>
@@ -901,7 +901,7 @@ $(document).ready(function(){
                                                                                                 if(!$questionnaire_completed){
                                                                                                 ?>
 
-												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next Dental Sleep Solutions visit!</p>
+												<p class="sepH_b">Please click the 'Start Questionnaire' button below to answer a few questions about your medical history so we can better treat you.  After completing the Questionnaire, you will be ready for your next visit!</p>
 <?php } ?>
 											</div>
 

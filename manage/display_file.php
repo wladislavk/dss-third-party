@@ -3,8 +3,8 @@ session_start();
 require 'includes/sescheck.php';
 $f = $_GET['f'];
 $ft =  mime_content_type('../../../shared/q_file/'.$f);
-if($ft == 'application/pdf'){
-  header('Content-type: application/pdf');
+if($ft == 'application/pdf' || $ft == 'application/vnd.ms-office' || $ft == 'application/msword' || $ft == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $ft == 'application/vnd.ms-excel' || $ft == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+  header('Content-type: '.$ft);
   header('Content-Disposition: inline; filename="'.$f.'"');
   readfile('../../../shared/q_file/'.$f);
 }else{

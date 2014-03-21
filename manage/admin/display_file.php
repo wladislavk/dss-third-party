@@ -15,7 +15,12 @@ if (!file_exists($basepath . '/' . $filename) && $_GET['type'] === 'image') {
 
 switch ($filetype) {
     case 'application/pdf':
-        header('Content-type: application/pdf');
+    case 'application/vnd.ms-office':
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        header('Content-type: '.$filetype);
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         readfile($basepath . '/' . $filename);
         break;
@@ -35,6 +40,6 @@ switch ($filetype) {
         }
         break;
     default:
-        header('Content-Type: ' . $filename);
+        header('Content-Type: ' . $filetype);
         readfile($basepath . '/' . $filename);
 }

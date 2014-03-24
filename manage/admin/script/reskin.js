@@ -73,6 +73,9 @@ $(function(){
      * Datepicker
      */
     $('.date, .calendar').datepicker();
+    $('.date, .calendar').keypress( function(){
+	return false;
+    });
     
     /**
      * File input

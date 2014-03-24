@@ -758,74 +758,74 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                      <input type="checkbox" name="use_service_npi" id="use_service_npi" value="1" <? if($use_service_npi == 1) echo " checked='checked'";?> />
 		</div>
 	    </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Name</label>
                 <div class="col-md-9">
 
                 <input id="service_name" class="form-control" type="text" name="service_name" value="<?=$service_name;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Address</label>
                 <div class="col-md-9">
                 <input id="service_address" class="form-control" type="text" name="service_address" value="<?=$service_address;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service City</label>
                 <div class="col-md-9">
                 <input id="service_city" class="form-control" type="text" name="service_city" value="<?=$service_city;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service State</label>
                 <div class="col-md-9">
                 <input id="service_state" class="form-control" type="text" name="service_state" value="<?=$service_state;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Zip</label>
                 <div class="col-md-9">
                 <input id="service_zip" class="form-control" type="text" name="service_zip" value="<?=$service_zip;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Phone</label>
                 <div class="col-md-9">
                 <input id="service_phone" class="form-control extphonemask" type="text" name="service_phone" value="<?=$service_phone;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Fax</label>
                 <div class="col-md-9">
                 <input id="service_fax" class="form-control phonemask" type="text" name="service_fax" value="<?=$service_fax;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service NPI</label>
                 <div class="col-md-9">
                 <input id="service_npi" class="form-control" type="text" name="service_npi" value="<?=$service_npi;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare NPI</label>
                 <div class="col-md-9">
                 <input id="service_medicare_npi" class="form-control" type="text" name="service_medicare_npi" value="<?=$service_medicare_npi;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Medicare PTAN</label>
                 <div class="col-md-9">
                 <input id="service_medicare_ptan" class="form-control" type="text" name="service_medicare_ptan" value="<?=$service_medicare_ptan;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service Tax ID or SSN</label>
                 <div class="col-md-9">
                 <input id="service_tax_id_or_ssn" class="form-control" type="text" name="service_tax_id_or_ssn" value="<?=$service_tax_id_or_ssn;?>" class="tbox" />
                 </div>
             </div>
-            <div class="form-group expanded">
+            <div class="form-group expanded service_field">
                 <label for="use_service_npi" class="col-md-3 control-label">Service EIN or SSN</label>
                 <div class="col-md-9">
                 <input id="service_ein" type="checkbox" name="service_ein" value="1" <?= ($service_ein)?'checked="checked"':''; ?> class="tbox" />
@@ -895,26 +895,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <input type="checkbox" name="use_letter_header" value="1" <? if($use_letter_header == 1) echo " checked='checked'";?>>
                         Letter Header 
                     </label>
-                </div>
-            </div>
-            
-            <div class="page-header">
-                <strong>Status Details</strong>
-            </div>
-            <div class="form-group">
-                <label for="status" class="col-md-3 control-label">Status</label>
-                <div class="col-md-9">
-                    <select id="status" name="status" class="form-control">
-                        <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
-                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
-                        <option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group hidden">
-                <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
-                <div class="col-md-9">
-                    <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?= $suspended_reason ?></textarea>
                 </div>
             </div>
             
@@ -1015,6 +995,26 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     </select>
                 </div>
             </div>
+            <div class="page-header">
+                <strong>Status Details</strong>
+            </div>
+            <div class="form-group">
+                <label for="status" class="col-md-3 control-label">Status</label>
+                <div class="col-md-9">
+                    <select id="status" name="status" class="form-control">
+                        <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
+                        <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
+                        <option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
+                    </select>
+                </div>
+            </div>
+            <div id="suspended_reason" class="form-group hidden">
+                <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
+                <div class="col-md-9">
+                    <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?= $suspended_reason ?></textarea>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="usersub" value="1">

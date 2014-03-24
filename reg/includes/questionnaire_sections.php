@@ -37,15 +37,4 @@ function show_section_completed($pid){
 
 }
 
-function format_phone($data){
-if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
-{
-    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
-    if($matches[4]!=''){
-      $result .= ' x'.$matches[4];
-    }
-    return $result;
-}
-}
-
 ?>

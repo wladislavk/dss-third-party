@@ -13,7 +13,10 @@ include "includes/top.htm";
 &nbsp;
 
 <?php
-  $sql = "SELECT * FROM dental_eligible_enrollment WHERE user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
+  $sql = "SELECT e.*, CONCAT(t.transaction_type,' - ',t.description) as transaction_type 
+	FROM dental_eligible_enrollment e
+	LEFT JOIN dental_enrollment_transaction_type t ON e.transaction_type_id = t.id
+	WHERE e.user_id = '".mysql_real_escape_string($_SESSION['docid'])."'";
   $my = mysql_query($sql);
 ?>
 <div style="margin-left:10px;margin-right:10px;">
@@ -31,6 +34,7 @@ include "includes/top.htm";
   <thead>
     <tr class="tr_bg_h">
       <th class="col_head">Payer ID</th>
+      <th class="col_head">Service Type</th>
       <th class="col_head">Payer Name</th>
       <th class="col_head">Status</th>
       <th class="col_head">Response</th>	  
@@ -43,6 +47,9 @@ include "includes/top.htm";
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
 					<?=$myarray['payer_id']?>
+				</td>
+				<td valign="top">
+					<?= $myarray['transaction_type']; ?>
 				</td>
 				<td valign="top">
 					<?=$myarray['payer_name']?>

@@ -92,6 +92,7 @@ if(isset($json_response->{"error"})){
         payer_name = '".mysql_real_escape_string($payer_name)."',
         reference_id = '".mysql_real_escape_string($ref_id)."',
         response='".mysql_real_escape_string($result)."',
+	transaction_type_id='".mysql_real_escape_string($_POST['transaction_type'])."',
 	status='0',
         adddate=now(),
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'

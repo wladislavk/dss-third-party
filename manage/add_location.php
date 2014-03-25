@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
+//include "includes/general_functions.php";
 ?>
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>

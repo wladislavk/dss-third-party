@@ -170,8 +170,28 @@ $r = mysql_fetch_assoc($q);
 
         <li><a href="videos.php">Watch Videos</a></li> 
 
+<?php
+if($_SESSION['docid']==$_SESSION['userid']){
+  $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+  $course_q = mysql_query($course_sql);
+  $course_r = mysql_fetch_assoc($course_q);
+  if($course_r['use_course']==1){
+?>
         <li><a href="edx_login.php" target="_blank">Get C.E.</a></li>
-	
+<?php } 
+}else{
+  $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
+                JOIN dental_users d ON d.userid = s.docid
+                WHERE s.userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+  $course_q = mysql_query($course_sql);
+  $course_r = mysql_fetch_assoc($course_q);
+  if($course_r['use_course']==1 && $course_r['use_course_staff']==1){
+    ?>
+        <li><a href="edx_login.php" target="_blank">Get C.E.</a></li>
+<?php
+  }
+}
+?>
 	<li><a href="edx_certificate.php">Certificates</a></li>
 	</ul>
     </li>

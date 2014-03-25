@@ -8,6 +8,12 @@ if(isset($_GET['rid'])){
   $u_sql = "UPDATE dental_support_responses SET viewed=0 WHERE ticket_id='".mysql_real_escape_string($_GET['rid'])."' AND response_type=0 ";
   mysql_query($u_sql);
 }
+if(isset($_GET['urid'])){
+  $u_sql = "UPDATE dental_support_tickets SET viewed=1 WHERE id='".mysql_real_escape_string($_GET['urid'])."' AND create_type=0 ";
+  mysql_query($u_sql);
+  $u_sql = "UPDATE dental_support_responses SET viewed=1 WHERE ticket_id='".mysql_real_escape_string($_GET['urid'])."' AND response_type=0 ";
+  mysql_query($u_sql);
+}
 ?>
 <link rel="stylesheet" type="text/css" href="admin/css/support.css" />
 <?php
@@ -79,6 +85,14 @@ $latest = ($r['last_response']!='')?$r['last_response']:$r['adddate'];
 	<?php if(($ticket_read && $r["response_viewed"]!='0') || $r['response_viewed'] == '1' ){ ?>
 	  | <a href="?rid=<?= $r['id']; ?>">Mark Unread</a>
 	<?php } ?>
+	<?php
+	  //ticket type is 0 and not viewed || response_type =0 and is not viewed
+	  if(($r['create_type']=="0" && $r['viewed'] != "1") || $r['response_viewed'] == "0"){
+	    ?>
+	      | <a href="?urid=<?= $r['id']; ?>">Mark Read</a>
+	    <?php
+	  }
+	?>
 	</td>
   </tr>
 

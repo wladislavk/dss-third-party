@@ -9,7 +9,6 @@ require_once('3rdParty/tcpdf/tcpdf.php');
 
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
 require_once('includes/dental_patient_summary.php');
 include_once 'includes/constants.inc';
 $docsql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";

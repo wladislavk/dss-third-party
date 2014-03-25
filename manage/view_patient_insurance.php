@@ -2,7 +2,7 @@
 session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
-include "includes/general_functions.php";
+//include "includes/general_functions.php";
 //include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

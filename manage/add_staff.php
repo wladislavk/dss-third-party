@@ -3,7 +3,7 @@ session_start();
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include_once('admin/includes/password.php');
-include('includes/general_functions.php');
+//include('includes/general_functions.php');
 include('includes/edx_functions.php');
 include_once 'includes/help_functions.php';
 $sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";

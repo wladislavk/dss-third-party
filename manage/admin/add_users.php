@@ -1001,14 +1001,24 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             <div class="form-group">
                 <label for="status" class="col-md-3 control-label">Status</label>
                 <div class="col-md-9">
-                    <select id="status" name="status" class="form-control">
+                    <select id="status" name="status" class="form-control" onchange="showSuspended();">
                         <option value="1" <? if($status == 1) echo " selected";?>>Active</option>
                         <option value="2" <? if($status == 2) echo " selected";?>>In-Active</option>
                         <option value="3" <? if($status == 3) echo " selected";?>>Suspended</option>
                     </select>
                 </div>
             </div>
-            <div id="suspended_reason" class="form-group hidden">
+<script type="text/javascript">
+  function showSuspended(){
+    if($('#status').val()==3){
+      $('#suspended_reason').show();
+    }else{
+      $('#suspended_reason').hide();
+    }
+  }
+</script>
+
+            <div id="suspended_reason" class="form-group" <?= ($status!=3)?'style="display:none;"':''; ?>>
                 <label for="suspended_reason" class="col-md-3 control-label">Suspended Reason</label>
                 <div class="col-md-9">
                     <textarea name="suspended_reason" id="suspended_reason" class="form-control"><?= $suspended_reason ?></textarea>

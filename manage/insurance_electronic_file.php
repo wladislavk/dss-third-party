@@ -965,17 +965,6 @@ function fill_cents($v){
   }
 }
 
-function format_phone($num, $a){
-        $num = ereg_replace("[^0-9]", "", $num);
-        preg_match('/([0-1]*)(.*)/',$num, $m);
-        $num = $m[2];
-  if($a){
-        return substr($num, 0, 3);
-  }else{
-        return substr($num,3);
-  }
-  return $num;
-}
 
 ?>
 

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eligible Coverage Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
+  <link href="css/sample_1.css" rel="stylesheet" media="screen">
+
+  <script src="js/lib/jquery-1.10.2.min.js"></script>
+  <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+
+  <script src="js/eligible.js"></script>
+  <script src="js/sample_1.js"></script>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="js/lib/html5shiv.js"></script>
+  <script src="js/lib/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<div class="container">
+
+  <div style="text-align: center;margin-top: 20px;">
+    <p>
+      <a href="https://www.eligibleapi.com/users/sign_up" class="btn btn-primary btn">Sign up to get an Eligible API Key.</a>
+    </p>
+  </div>
+
+  <form role="form" class="form-horizontal form-coverage">
+
+    <div class="form-group">
+      <label for="member_dob" class="col-lg-2 control-label">Test?</label>
+
+      <div class="col-lg-10">
+        <input type="radio" name="test" id="test_yes" value="true" checked="checked"> Yes
+        <input type="radio" name="test" id="test_no" value="false"> No
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="api_key" class="col-lg-2 control-label">API Key</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="api_key">
+      </div>
+    </div>
+
+    <div class="form-group test-param">
+      <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
+
+      <div class="col-lg-10">
+        <select class="form-control" id="test_member_id">
+          <option value="AETNA1234">AETNA - AETNA1234</option>
+          <option value="BCBSTN81790">BCBS Tennessee - BCBSTN81790</option>
+          <option value="GOLD00144">Golden Rule - GOLD00144</option>
+          <option value="HUMAN123">HUMANA - HUMAN123</option>
+          <option value="INDEP1234">Independence - INDEP1234</option>
+          <option value="NEB8176176">BCBS Nebraska - NEB8176176</option>
+          <option value="PREM010611">Premera Washington - PREM010611</option>
+          <option value="TRIC98620">Tricare - TRIC98620</option>
+          <option value="WELL56AD4089">BCIAC - WELL56AD4089</option>
+          <option value="BCBSF203551">BCBSF - BCBSF203551</option>
+          <option value="CIGNA6801">CIGNA - CIGNA6801</option>
+          <option value="HARV68426">Harvard - HARV68426</option>
+          <option value="ILLIN21331">BCBS Illinois - ILLIN21331</option>
+          <option value="MASS84030341">BCBS Massachusetts - MASS84030341</option>
+          <option value="PAMC11111">Pennsylvania Medicaid - PAMC11111</option>
+          <option value="RHOD2006181">BCBS Rhode Island - RHOD2006181</option>
+          <option value="UNITE36963">UNITED - UNITE36963</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="payer_id">
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="internal_id" class="col-lg-2 control-label">Internal ID</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="internal_id">
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="cascade" class="col-lg-2 control-label">Cascade</label>
+
+      <div class="col-lg-10">
+        <select class="form-control" id="cascade">
+          <option value="false" selected="selected">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="date" class="col-lg-2 control-label">Date</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="date">
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="from_date" class="col-lg-2 control-label">From Date</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="from_date">
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="to_date" class="col-lg-2 control-label">To Date</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="to_date">
+      </div>
+    </div>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="service_type" class="col-lg-2 control-label">Service Type</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="service_type" value="30">
+      </div>
+    </div>
+
+    <fieldset class="real-param" style="display: none;">
+      <legend>Service Provider</legend>
+
+      <div class="form-group real-param">
+        <label for="provider_npi" class="col-lg-2 control-label">NPI</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_npi">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_last_name" class="col-lg-2 control-label">Last Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_last_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_first_name" class="col-lg-2 control-label">First Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_first_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_organization_name" class="col-lg-2 control-label">Organization Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_organization_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_tax_id" class="col-lg-2 control-label">Tax ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_tax_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_taxonomy_code" class="col-lg-2 control-label">Taxonomy Code</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_taxonomy_code">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_submitter_id" class="col-lg-2 control-label">Submitter ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_submitter_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_street_line_1" class="col-lg-2 control-label">Street Line 1</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_street_line_1">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_street_line_2" class="col-lg-2 control-label">Street Line 2</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_street_line_2">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_city" class="col-lg-2 control-label">City</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_city">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_state" class="col-lg-2 control-label">State</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_state">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="provider_zip" class="col-lg-2 control-label">ZIP</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="provider_zip">
+        </div>
+      </div>
+
+
+    </fieldset>
+
+    <fieldset class="real-param" style="display: none;">
+      <legend>Subscriber</legend>
+
+      <div class="form-group real-param">
+        <label for="member_id" class="col-lg-2 control-label">ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_last_name" class="col-lg-2 control-label">Last Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_last_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_first_name" class="col-lg-2 control-label">First Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_first_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_dob" class="col-lg-2 control-label">DOB</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_dob">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_ssn" class="col-lg-2 control-label">SSN</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_ssn">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_employee_id" class="col-lg-2 control-label">Employee ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_employee_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_gender" class="col-lg-2 control-label">Gender</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_gender">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_group_id" class="col-lg-2 control-label">Group ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_group_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_state" class="col-lg-2 control-label">State</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_state">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_city" class="col-lg-2 control-label">City</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_city">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="member_zip" class="col-lg-2 control-label">ZIP</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="member_zip">
+        </div>
+      </div>
+
+    </fieldset>
+
+    <fieldset class="real-param" style="display: none;">
+      <legend>Dependent</legend>
+
+      <div class="form-group real-param">
+        <label for="dependent_id" class="col-lg-2 control-label">ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_last_name" class="col-lg-2 control-label">Last Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_last_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_first_name" class="col-lg-2 control-label">First Name</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_first_name">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_dob" class="col-lg-2 control-label">DOB</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_dob">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_ssn" class="col-lg-2 control-label">SSN</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_ssn">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_employee_id" class="col-lg-2 control-label">Employee ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_employee_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_gender" class="col-lg-2 control-label">Gender</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_gender">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_group_id" class="col-lg-2 control-label">Group ID</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_group_id">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_state" class="col-lg-2 control-label">State</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_state">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_city" class="col-lg-2 control-label">City</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_city">
+        </div>
+      </div>
+
+      <div class="form-group real-param">
+        <label for="dependent_zip" class="col-lg-2 control-label">ZIP</label>
+
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="dependent_zip">
+        </div>
+      </div>
+
+    </fieldset>
+
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-10">
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+
+</body>
+</html>

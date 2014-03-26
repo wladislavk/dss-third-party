@@ -44,7 +44,7 @@ include "includes/top.htm";
 		while($myarray = mysql_fetch_array($my))
 		{
 		?>
-			<tr class="<?=$tr_class;?>">
+			<tr >
 				<td valign="top">
 					<?=$myarray['payer_id']?>
 				</td>

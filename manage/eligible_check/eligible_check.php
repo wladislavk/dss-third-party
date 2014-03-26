@@ -17,6 +17,13 @@ require_once '../admin/includes/main_include.php';
 
   <form role="form" class="form-horizontal form-coverage">
 
+        <?php
+                $s = "SELECT eligible_test FROM dental_users where userid='".$_SESSION['docid']."'";
+                $q = mysql_query($s);
+                $r = mysql_fetch_assoc($q);
+                if($r['eligible_test']=="1"){
+        ?>
+
     <div class="form-group">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
 
@@ -25,6 +32,20 @@ require_once '../admin/includes/main_include.php';
         <input type="radio" name="test" id="test_no" value="false"> No
       </div>
     </div>
+
+	<?php }else{ ?>
+
+    <div class="form-group hidden">
+      <label for="member_dob" class="col-lg-2 control-label">Test?</label>
+		
+      <div class="col-lg-10">
+        <input type="radio" name="test" id="test_yes" value="true"> Yes
+        <input type="radio" name="test" id="test_no" value="false" checked="checked"> No
+      </div>
+    </div>
+
+
+	<?php } ?>
 
         <input type="hidden" class="form-control" id="api_key" value="33b2e3a5-8642-1285-d573-07a22f8a15b4">
 
@@ -67,7 +88,7 @@ require_once '../admin/includes/main_include.php';
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '', true);
+setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'ins_payer', '', true, false);
 });
 </script>
 <input type="hidden" name="payer_id" id="payer_id" />

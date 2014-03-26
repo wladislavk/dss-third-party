@@ -76,6 +76,7 @@ if($_POST["usersub"] == 1)
 				tracker_letters = '".s_for($_POST['tracker_letters'])."',
 				intro_letters = '".s_for($_POST['intro_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
+				eligible_test = '".s_for($_POST['eligible_test'])."',
 				use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
@@ -222,6 +223,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                                 tracker_letters = '".s_for($_POST['tracker_letters'])."',
                                 intro_letters = '".s_for($_POST['intro_letters'])."',
 				use_eligible_api = '".s_for($_POST['use_eligible_api'])."',
+				eligible_test = '".s_for($_POST['eligible_test'])."',
                                 use_course = '".s_for($_POST['use_course'])."',
                                 use_course_staff = '".s_for($_POST['use_course_staff'])."',
                                 homepage = '".s_for($_POST['homepage'])."',
@@ -418,6 +420,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$tracker_letters = $_POST['tracker_letters'];
 		$intro_letters = $_POST['intro_letters'];
 		$use_eligible_api = $_POST['use_eligible_api'];
+		$eligible_test = $_POST['eligible_test'];
 		$use_course = $_POST['use_course'];
 		$use_course_staff = $_POST['use_course_staff'];
 		$use_letter_header = $_POST['use_letter_header'];
@@ -484,6 +487,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$tracker_letters = st($themyarray['tracker_letters']);
 		$intro_letters = st($themyarray['intro_letters']);
 		$use_eligible_api = st($themyarray['use_eligible_api']);
+		$eligible_test = st($themyarray['eligible_test']);
                 $use_course = st($themyarray['use_course']);
                 $use_course_staff = st($themyarray['use_course_staff']);
 		$use_letter_header = st($themyarray['use_letter_header']);
@@ -871,6 +875,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-push-3">
+                    <label class="col-md-4">
+                        <input type="checkbox" name="eligible_test" value="1" <? if($eligible_test == 1) echo " checked='checked'";?>>
+                        Eligible Test?
+                    </label>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-md-3 control-label">Automated services</label>
                 <div class="col-md-9">

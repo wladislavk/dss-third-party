@@ -39,7 +39,9 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 	$t_r = mysql_fetch_assoc($t_q);
 $data = array();
 $data['api_key'] = "33b2e3a5-8642-1285-d573-07a22f8a15b4";
-$data['test'] = "true";
+if(isset($_POST['test']) && $_POST['test'] == "1"){
+  $data['test'] = "true";
+}
 $data['enrollment_npi'] = array(
 	"payer_id" => $payer_id,
 	"transaction_type" => $t_r['transaction_type'],
@@ -126,6 +128,17 @@ if(isset($json_response->{"error"})){
   <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type ORDER BY transaction_type ASC";
         $t_q = mysql_query($t_sql);
   ?>
+
+	<?php
+		$s = "SELECT eligible_test FROM dental_users where userid='".$_SESSION['docid']."'";
+		$q = mysql_query($s);
+		$r = mysql_fetch_assoc($q);
+		if($r['eligible_test']=="1"){
+	?>
+	<label style="color:#fff;">Test?</label> <input type="checkbox" value="1" name="test" /><br/>
+	<?php } ?>
+
+
         <select id="transaction_type" name="transaction_type" onchange="update_list()">
             <?php while($t = mysql_fetch_assoc($t_q)){ ?>
                 <option value="<?= $t['id']; ?>"><?= $t['transaction_type']; ?> - <?= $t['description']; ?></option>

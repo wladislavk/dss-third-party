@@ -114,7 +114,7 @@
                 return li;
         }
 function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment){
-  if(enrollment=='true' && check_enrollment){
+  if(enrollment=='true' && check_enrollment=='true'){
 	npi = '12321';
                                       $.ajax({
                                         url: "includes/check_enrollment.php",

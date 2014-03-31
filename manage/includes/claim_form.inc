@@ -1371,7 +1371,7 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
         <?php } ?>
 
 		<?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-               <?php if(($is_pending || $is_rejected) && $p_m_dss_file == '2'){ ?>
+               <?php if(($is_pending || $is_disputed || $is_rejected) && $p_m_dss_file == '2'){ ?>
           Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SENT?>" checked="checked" />
                         <input type="hidden" name="status" value="<?=DSS_CLAIM_SENT?>" />
         <?php if (!$is_sent) {  ?>

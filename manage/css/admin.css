@@ -1259,6 +1259,10 @@ float:left;
   background: #fcc;
 }
 
+.status_2 td, .status_8, .status_10, .status_12, .status_13{
+  background: #ffb;
+}
+
 .statement td{
   color: #099;
   }

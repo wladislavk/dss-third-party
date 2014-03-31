@@ -310,6 +310,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                         <?php } ?>
                             <li><a href="/manage/admin/manage_users.php">User Accounts</a></li>
                             <li><a href="/manage/admin/export_users.php">Export Users</a></li>
+                            <li><a href="/manage/admin/export_users_emails.php">Export Active User Emails</a></li>
                             <li><a href="/manage/admin/insurance_officeally_select.php">Export Pending Office Ally Claims</a></li>
                         <?php if(!is_billing($_SESSION['admin_access'])){ ?>
                             <li><a href="/manage/admin/manage_access_codes.php">Access Codes</a></li>

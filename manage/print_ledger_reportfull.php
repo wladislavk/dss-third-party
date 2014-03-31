@@ -1,5 +1,6 @@
 <? 
 include "admin/includes/main_include.php";
+include "includes/constants.inc";
 $rec_disp = 200;
 
 if($_REQUEST["page"] != "")
@@ -13,6 +14,54 @@ $i_val = $index_val * $rec_disp;
 $sql = "select * from dental_ledger where docid='".$_SESSION['docid']."' order by service_date limit 0, 10;";
         if($_POST['dailysub'] != 1 && $_POST['monthlysub'] != 1){
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."' AND dl.service_date=CURDATE() order by dl.service_date;";
+
+$sql = "
+select 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                p.name, 
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                '' as payer,
+                '' as payment_type
+        from dental_ledger dl 
+                JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users as p ON dl.producerid=p.userid 
+        where dl.docid='".$_SESSION['docid']."' 
+        AND dl.service_date=CURDATE()
+ UNION
+        select 
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                p.name,
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                dlp.payer,
+                dlp.payment_type
+        from dental_ledger dl 
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0
+                        AND dlp.payment_date=CURDATE()
+";
+
+
         }
 $my = mysql_query($sql);
 /*
@@ -144,10 +193,13 @@ background:#999999;
                 	<?=st($name);?>
 				</td>
 				<td valign="top" width="10%">
-                	<?=st($myarray["producer"]);?>
+                	<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top" width="30%">
-                	<?=st($myarray["description"]);?>
+<?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_payer_labels[$myarray['payer']]." Payment - ":''; ?>
+                        <?= (($myarray[0] == 'ledger_payment'))?$dss_trxn_pymt_type_labels[$myarray['payment_type']]." ":''; ?>
+                        <?= (($myarray[0] == 'ledger'))?$myarray["description"]:'';?>
+
 				</td>
 				<td valign="top" align="right" width="10%">
           <?php

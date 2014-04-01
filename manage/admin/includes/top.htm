@@ -26,6 +26,19 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     <script type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery.inputmask.js"></script>
     <script type="text/javascript" src="/manage/admin/script/masks.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+	modal_change = false;
+    $('#popup-window').on('shown.bs.modal', function (e) {
+      modal_change = false;
+    });
+    $('#popup-window').on('hide.bs.modal', function (e) {
+      if(modal_change){
+        return confirm('Are you sure you want to close this popup?');
+      }
+    });
+    });
+  </script>
 
     <script>
     function calendar2(){}

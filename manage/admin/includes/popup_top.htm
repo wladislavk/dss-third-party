@@ -11,9 +11,16 @@
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery.formatter.min.js"></script>
-
+    <script type="text/javascript">
+      $(document).ready( function (){
+      $('input, select, textarea').change( function(){
+        parent.modal_change = true;
+      });
+      });
+    </script>
     <script>
     function calendar2(){}
     

@@ -557,8 +557,20 @@ while($od_r = mysql_fetch_assoc($lat_q)){
 <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
 
 </div>
+<br /><br />
+<h3>Messages</h3>
+<div class="task_menu index_task">
+  <ul>
+  <?php
+    $m_sql = "SELECT * FROM memo_admin WHERE off_date <= CURDATE()";
+    $m_q = mysql_query($m_sql);
+    while($m_r = mysql_fetch_assoc($m_q)){
+      ?>
+      <li><?= $m_r['memo']; ?></li>
+    <?php } ?>
+ </ul>
 
-
+</div>
 
 </div>
 

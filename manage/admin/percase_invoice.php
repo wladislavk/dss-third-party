@@ -172,27 +172,39 @@ if(mysql_num_rows($doc_q) == 0){
 <br /><br />
 <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <input type="hidden" name="docid" value="<?=$_GET["docid"];?>" />
-<span style="float:right;">Invoice Due Date: <input type="text" name="due_date" id="due_date" class="calendar" value="<?=  date('m/d/Y', strtotime("+7 day")); ?>" /></span>
-<table id="invoice_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" style="clear:both;">
-	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="20%">
+<div class="input-group date pull-right">
+Invoice Due Date: 
+<input type="text" name="due_date" id="due_date" class="form-control text-center" value="<?=  date('m/d/Y', strtotime("+7 day")); ?>" />
+			    <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+</div>
+<div class="clearfix"></div>
+<table id="invoice_table" class="table table-bordered table-hover">
+	<tr>
+		<th width="20%">
 			Patient Name		
-		</td>
-		<td valign="top" class="col_head" width="40%">
+		</th>
+		<th width="40%">
 			Service Date	
-		</td>
-                <td valign="top" class="col_head" width="10%">
-                </td>
-		<td valign="top" class="col_head" width="20%">
+		</th>
+                <th width="10%">
+                </th>
+		<th width="20%">
 			Amount		
-		</td>
+		</th>
 	</tr>
                         <tr id="month_row">
                                 <td valign="top">
                                         MONTHLY FEE 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" id="monthly_date" name="monthly_date" class="calendar" value="<?=date('m/d/Y');?>" />
+					<div class="input-group date">
+                                        <input type="text" id="monthly_date" name="monthly_date" class="form-control text-center" value="<?=date('m/d/Y');?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#month_row').remove(); calcTotal();" class="btn btn-danger">
@@ -213,7 +225,12 @@ if(mysql_num_rows($doc_q) == 0){
 					<input type="text" name="name_<?= $case['ledgerid'] ?>" value="<?=st($case["firstname"]." ".$case["lastname"]);?>" />
 				</td>
 				<td valign="top">
-					<input type="text" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
+					<div class="input-group date">
+					<input type="text" class="form-control text-center" name="service_date_<?= $case['ledgerid'] ?>" value="<?=date('m/d/Y', strtotime(st($case["service_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
 				</td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#case_row_<?= $case['ledgerid'] ?>').remove(); calcTotal();" class="btn btn-danger">
@@ -238,10 +255,15 @@ if(mysql_num_rows($doc_q) == 0){
 					Insurance Verification Services – <?= $vob['patient_firstname']." ".$vob['patient_lastname']; ?> 
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="vob_date_completed_<?= $vob['id'] ?>" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
+					<div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="vob_date_completed_<?= $vob['id'] ?>" value="<?=date('m/d/Y', strtotime(st($vob["date_completed"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
                                 </td>
                                 <td valign="top">
-                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();" class="btn btn-remove">
+                                        <a href="#" onclick="$('#vob_row_<?= $vob['id'] ?>').remove(); calcTotal();" class="btn btn-danger">
                                             Remove
                                             <span class="glyphicon glyphicon-remove"></span>
                                         </a>
@@ -266,9 +288,19 @@ if(mysql_num_rows($doc_q) == 0){
                                         <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" />
                                 </td>
                                 <td valign="top">
-                                        <input type="text" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
-to
-                                        <input type="text" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
+					<div class="input-group date"> 
+                                        <input type="text" class="form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+					</div>
+<div class="text-center">to</div>
+				<div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
                                 </td>
                                 <td valign="top">
                                         <a href="#" onclick="$('#free_fax_row').remove(); calcTotal();" class="btn btn-danger">

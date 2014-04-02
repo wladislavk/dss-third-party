@@ -544,7 +544,7 @@ $(document).ready(function(){
 function calcTotal () {
     var a = 0;
     
-    $('.amount').each(function(){
+    $('.amount:visible').each(function(){
         a += Number($(this).val());
     });
     

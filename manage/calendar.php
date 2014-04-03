@@ -353,7 +353,7 @@ require_once('includes/formatters.php');
 				text: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
 				title: "<?= str_replace("\n", " ", addslashes($r['description'])); ?>",
 				rec_type: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
-				rec_pattern: "<?= str_replace("\n", " ", addslashes($r['rec_type'])); ?>",
+				rec_pattern: "<?= str_replace("\n", " ", addslashes($r['rec_pattern'])); ?>",
 				event_length: "<?= $r['event_length']; ?>",
 				event_pid: "<?= $r['event_pid']; ?>",
 				category: "<?= $r['category']; ?>",
@@ -412,10 +412,9 @@ require_once('includes/formatters.php');
                     var cat = event_object.category;
 		    var pi = event_object.producer;
 		    var pid = event_object.patient;
-
 			var ri = event_object.resource;
-
 			var rec_type = event_object.rec_type;
+			var rec_pattern = event_object.rec_pattern;
 			var elength = event_object.event_length;
 			var epid = event_object.event_pid;
 
@@ -424,7 +423,7 @@ require_once('includes/formatters.php');
                                   $.ajax({
                                         url: "includes/calendar_add_event.php",
                                         type: "post",
-                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
+                                        data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, rec_pattern: rec_pattern, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
 						_lookup_ptname(r.eventid, _add_event_ptname)
@@ -465,6 +464,7 @@ require_once('includes/formatters.php');
 			var ri = event_object.resource;
 
 			var rec_type = event_object.rec_type;
+			var rec_pattern = event_object.rec_pattern;
 			var elength = event_object.event_length;
 			var epid = event_object.event_pid;
 
@@ -473,7 +473,7 @@ require_once('includes/formatters.php');
                                   $.ajax({
                                         url: "includes/calendar_update_event.php",
                                         type: "post",
-                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, epid: epid, elength: elength, resource: ri},
+                                        data: {e_id: e_id, t_id: t_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, rec_pattern: rec_pattern, epid: epid, elength: elength, resource: ri},
                                         success: function(data){
                                                 var r = $.parseJSON(data);
 						_lookup_ptname(r.eventid, _add_event_ptname);

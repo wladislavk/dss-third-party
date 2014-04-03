@@ -13,6 +13,7 @@ $t_id = $_POST['t_id'];
 $res = $_POST['resource'];
 
 $r_type = $_POST['rec_type'];
+$r_pattern = $_POST['rec_pattern'];
 $e_length = empty($_POST['elength']) ? "''" : $_POST['elength'];
 $e_pid = empty($_POST['epid']) ? "''" : $_POST['epid'];
 
@@ -30,6 +31,7 @@ $s = "UPDATE dental_calendar SET
 	producer_id=".$pi.",
 	res_id=".$res.",
 	rec_type='".$r_type."',
+        rec_pattern='".$r_pattern."',
 	event_length=".$e_length.",
 	event_pid=".$e_pid.",
 	patientid=".$pid."

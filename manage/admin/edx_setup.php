@@ -1,6 +1,6 @@
 <?php
   include 'includes/main_include.php';
-  include '../includes/edx_functions.php';
+  include 'includes/edx_functions.php';
 
   $u_sql = "SELECT * FROM dental_users";
   $u_q = mysql_query($u_sql);

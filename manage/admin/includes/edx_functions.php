@@ -16,13 +16,13 @@ function edx_user_update($id){
     $name = $r['first_name']. ' '.$r['last_name'];
     $pass = sha1($r['username'].'ed&$s8e'.$r['email'].rand());
     $username = ($r['username'])?$r['username']:'tempusername_'.$id; 
-    $edx_id = shell_exec('sh edx_scripts/edxNewUser.sh '. urlencode($username) .' '.urlencode($r['email']).' "'.urlencode($pass).'" "'.urlencode($name).'"');
+    $edx_id = shell_exec('sh ../edx_scripts/edxNewUser.sh '. urlencode($username) .' '.urlencode($r['email']).' "'.urlencode($pass).'" "'.urlencode($name).'"');
     $u_sql = "UPDATE dental_users SET edx_id='".mysql_real_escape_string($edx_id)."' WHERE userid='".mysql_real_escape_string($id)."'";
     mysql_query($u_sql);
   }else{
     $name = $r['first_name']. ' '.$r['last_name'];
     $pass = sha1($r['username'].'ed&$s8e'.$r['email'].rand());
-    $edx_id = shell_exec('sh edx_scripts/edxEditUser.sh '.urlencode($edx_id).' "'.urlencode($r['username']).'" '.urlencode($r['email']).' '.urlencode($pass).' "'.urlencode($name).'"');
+    $edx_id = shell_exec('sh ../edx_scripts/edxEditUser.sh '.urlencode($edx_id).' "'.urlencode($r['username']).'" '.urlencode($r['email']).' '.urlencode($pass).' "'.urlencode($name).'"');
   }
 
 
@@ -31,7 +31,7 @@ function edx_user_update($id){
 
 function edx_user_delete($edx_id){
   if($edx_id != '' && $edx_id != '0'){
-    $ed_id = shell_exec('sh edx_scripts/edxDeleteUser.sh '.urlencode($edx_id));
+    $ed_id = shell_exec('sh ../edx_scripts/edxDeleteUser.sh '.urlencode($edx_id));
   }
 }
 

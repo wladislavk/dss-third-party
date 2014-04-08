@@ -87,7 +87,7 @@ if($_POST["staffsub"] == 1)
 				}
 				$ed_sql .= " sign_notes=".$n."  where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
-			edx_user_update($_POST['ed'], $edx_con);
+			edx_user_update($_POST['ed']);
 			help_user_update($_POST['ed'] ,$help_con);	
 			//echo $ed_sql.mysql_error();
 			$msg = "Edited Successfully";
@@ -148,7 +148,7 @@ if($_POST["staffsub"] == 1)
                         $cid = $co_r['id'];
                         $cname = $co_r['name'];
 
-			edx_user_update($userid, $edx_con);
+			edx_user_update($userid);
 			help_user_update($userid, $help_con);
 		
 			$msg = "Added Successfully";
@@ -446,7 +446,11 @@ Fields left blank below will default to the standard billing settings for your o
                 <input type="checkbox" <?= ($use_course==1)?'checked="checked"':''; ?> value="1" name="use_course" />
             </td>
         </tr>
-<?php if($_SESSION['docid']==$_SESSION['userid']){ ?>
+<?php
+$sql = "SELECT manage_staff FROM dental_users WHERE userid='".mysql_real_escape_string($_SESSION['userid'])."'";
+$q = mysql_query($sql);
+$r = mysql_fetch_assoc($q);
+ if($_SESSION['docid']==$_SESSION['userid'] || $r['manage_staff']==1){ ?>
         <tr>
 <td valign="top" class="frmhead">
                 Manage Staff/Codes? <div id="ms_info" class="info_but"></div>

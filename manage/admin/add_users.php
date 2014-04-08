@@ -7,7 +7,7 @@ include_once '../includes/general_functions.php';
 require_once '../includes/constants.inc';
 require_once 'includes/access.php';
 require_once 'includes/form_updates.php';
-require_once '../includes/edx_functions.php';
+require_once 'includes/edx_functions.php';
 include_once '../includes/help_functions.php';
 include_once 'includes/javascript_includes.php';
 if($_POST["usersub"] == 1)

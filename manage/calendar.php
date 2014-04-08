@@ -256,7 +256,7 @@ require_once('includes/formatters.php');
 		];
 		var patient = [
                         <?php
-                        $p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid'];
+                        $p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid']." AND status=1";
                         $p_query = mysql_query($p_sql);
                         while($p = mysql_fetch_array($p_query)){
                                 ?>{ key: '<?= $p['patientid']; ?>', label: '<?= addslashes($p['firstname'])." ".addslashes($p['lastname']); ?>'},<?php

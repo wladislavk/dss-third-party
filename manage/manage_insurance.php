@@ -58,7 +58,7 @@ if(isset($_GET['sendins'])&&$_GET['sendins']==1){
 if(isset($_GET['showins'])&&$_GET['showins']==1){
   ?>
   <script type="text/javascript">
-    window.location = "insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
+    window.location = "insurance_fdf_v2.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>";
   </script>
   <?php
 }

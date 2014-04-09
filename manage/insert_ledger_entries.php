@@ -456,11 +456,16 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
                 WHERE                                 
                         (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
                         (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.completed = 'Yes' AND ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
+                        ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
+
+  $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     $diagnosis_a = $ins_diag['ins_diagnosis'];
 
 $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
@@ -573,6 +578,18 @@ if (empty($prior_authorization_number)) {
                 diagnosis_2 = '".s_for($diagnosis_2)."',
                 diagnosis_3 = '".s_for($diagnosis_3)."',
                 diagnosis_4 = '".s_for($diagnosis_4)."',
+                diagnosis_a = '".s_for($diagnosis_a)."',
+                diagnosis_b = '".s_for($diagnosis_b)."',
+                diagnosis_c = '".s_for($diagnosis_c)."',
+                diagnosis_d = '".s_for($diagnosis_d)."',
+                diagnosis_e = '".s_for($diagnosis_e)."',
+                diagnosis_f = '".s_for($diagnosis_f)."',
+                diagnosis_g = '".s_for($diagnosis_g)."',
+                diagnosis_h = '".s_for($diagnosis_h)."',
+                diagnosis_i = '".s_for($diagnosis_i)."',
+                diagnosis_j = '".s_for($diagnosis_j)."',
+                diagnosis_k = '".s_for($diagnosis_k)."',
+                diagnosis_l = '".s_for($diagnosis_l)."',
                 medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
                 original_ref_no = '".s_for($original_ref_no)."',
                 prior_authorization_number = '".s_for($prior_authorization_number)."',

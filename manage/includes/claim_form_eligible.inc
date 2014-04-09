@@ -1328,6 +1328,52 @@ if(!$r['reference_id'] || !$w_r['response']){
 }
 
 
+ $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+
+                        if($docinfo['use_service_npi']==1){
+                          $service_npi = $docinfo['service_npi'];
+                          $service_practice = $docinfo['service_name'];
+                          $service_address = $docinfo['service_address'];
+                          $service_city = $docinfo['service_city'];
+                          $service_state = $docinfo['service_state'];
+                          $service_zip = $docinfo['service_zip'];
+                          $service_medicare_npi = $docinfo['service_medicare_npi'];
+                        }else{
+                          $service_npi = $npi;
+                          $service_practice = $practice;
+                          $service_address = $address;
+                          $service_city = $city;
+                          $service_state = $state;
+                          $service_zip = $zip;
+                          $service_medicare_npi = $medicare_npi;
+                        }
 
 
 
@@ -1441,999 +1487,140 @@ $(document).ready(function(){
 
 
 <?php } ?>
-<table width="1185" border="0" align="center" cellpadding="0" cellspacing="0">
-	<tr>
-		<td align="left" valign="top" width="50%">
-			<span><div class="box_bg">1500</div></span>
-			<span class="heading1">Health Insurance Claim Form</span><br />
-			<span>Approved By National Uniform Claim Committee 08/05</span><br /><br />
-			<span>
-				<input value="<?=$pica1;?>" name="pica1" type="text"  class="inbox_line1" maxlength="1"/>
-				<input value="<?=$pica2;?>" name="pica2" type="text"  class="inbox_line1" maxlength="1"/>
-				<input value="<?=$pica1;?>" name="pica3" type="text"  class="inbox_line1" maxlength="1"/>
-				PICA
-			</span>
-		</td>
-		<td width="50%">
-		  <table>
-		  		  <?php 
-	if(isset($_GET['instype']) && $_GET['instype']==2){
-	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'"; 
-	}else{
-	  $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'"; 
-	}
-        $inscoarray = mysql_query($inscoquery);
-        $inscoinfo = mysql_fetch_array($inscoarray);
-      ?>
-		  <tr>
-		      <td>
-		      Ins. Co:
-		      </td>
-		      <td>
-		       <?php echo $inscoinfo['company']; ?>
-		      </td>
-		  </tr>
-		     <td valign="top">
-		      Address:
-		      </td>
-		      <td valign="top">
-		       <?php echo $inscoinfo['add1']; ?><br />
-		   <?php echo $inscoinfo['add2']; ?>
-		      </td>
-		  <tr>
-		      <td>
-		      
-		      </td>
-		      <td>
-		      <?php echo $inscoinfo['city']; ?>&nbsp;&nbsp;
-		       <?php echo $inscoinfo['state']; ?>&nbsp;,
 
-		       <?php echo $inscoinfo['zip']; ?><br />
-		      </td>
-		  </tr>
-       </table>
-		   <br />
-		   <br />
-		    
-		     
-		      
-		</td>
-		
-		<td align="left" valign="top">
-			<span></span>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" align="left" valign="top">
-			<table width="1185" border="1" cellspacing="0" cellpadding="2" bordercolor="#333333">
-				<tr>
-					<td colspan="2" align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td align="center" valign="top">
-									<span class="num">1.</span> 
-									Medicare
-								</td>
-								<td align="center" valign="top">
-									MediCaID
-								</td>
-								<td align="center" valign="top">
-									Tricare Champus
-								</td>
-								<td align="center" valign="top">
-									Chmapva
-								</td>
-								<td align="center" valign="top">
-									Group Health Plan
-								</td>
-								<td align="center" valign="top">
-									Feca blklung
-								</td>
-								<td align="center" valign="top">
-									Other 
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="1" <? if($insurancetype == '1') {echo " checked";}?> />
-									<span class="small_cap">(Medicare #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="2" <? if($insurancetype == '2') {echo " checked";}?> />
-									<span class="small_cap">(Medicaid #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="3" <? if($insurancetype == '3') {echo " checked";}?> />
-									<span class="small_cap">(Sponsor's SSN)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="4" <? if($insurancetype == '4') {echo " checked";}?> />
-									<span class="small_cap">(Member ID #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="5" <? if($insurancetype == '5') {echo " checked";}?> />
-									<span class="small_cap">(SSN or ID)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="6" <? if($insurancetype == '6') {echo " checked";}?> />
-									<span class="small_cap">(SSN)</span>
-								</td>
-                                                                <td align="left" valign="top">
-                                                                        <input name="insurance_type" type="radio" value="7" <? if($insurancetype == '7') {echo " checked";}?> />
-                                                                        <span class="small_cap">(ID)</span>
-                                                                </td>								
-							</tr>
-						</table>
-						<input type="hidden" name="other_insurance_type" value="<?= $other_insurancetype; ?>" />
-					</td>
-					<td width="448" align="left" valign="top">
-						<span class="num_a">1a.</span>
-						Insured's ID Number 
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<span class="small_cap">(For Program in item 1)</span>
-						<br />
-						<input type="text" value="<?=$insured_id_number?>" name="insured_id_number" value="" size="60" />
-					</td>
-				</tr>
-				<tr>
-					<td width="429" align="left" valign="top">
-						<span class="num">2.</span>
-						Patient Name 
-						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
-						<br />
-						<div style="padding-top:7px;">
-							<input type="text" value="<?=$patient_lastname?>" name="patient_lastname" class="inbox_line3" size="18" width="60" />
-							&nbsp;
-							<input type="text" value="<?=$patient_firstname?>" name="patient_firstname" class="inbox_line3" size="18" />
-							&nbsp;
-							<input type="text" value="<?=$patient_middle?>" name="patient_middle" class="inbox_line3" size="3" width="30" />
-						</div>
-					</td>
-					<td width="300" align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="58%" align="left" valign="top">
-									<span class="num">3.</span> 
-									Patient's Birth Date
-									<br />
-									&nbsp;&nbsp;
-									<?php if($patient_dob!=''){ //$patient_dob = date('m-d-Y', strtotime($patient_dob)); 
-} ?>
-									<input type="text" value="<?=$patient_dob?>" name="patient_dob" class="inbox_line3 datealtfullmask" size="10"/>
-									mm-dd-yyyy
-								</td>
-								<td width="42%" align="center" valign="top">
-									Sex
-									<br />
-									M 
-									<input type="radio" name="patient_sex" value="M" <? if($patient_sex == "M" || $patient_sex == "Male") echo " checked";?> />
-									&nbsp;&nbsp;F 
-									<input type="radio" name="patient_sex" value="F" <? if($patient_sex == "F" || $patient_sex == "Female") echo " checked";?> />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<span class="num">4.</span> 
-						Insured's Name &nbsp;
-						<span class="small_cap">(Last Name, First Name, Middle Initial)</span>
-						<br />
-						<div style="padding-top:7px;">
-                                                        <input type="text" value="<?=$insured_lastname?>" name="insured_lastname" class="inbox_line3" size="18" width="60" />
-                                                        &nbsp;
-							<input type="text" value="<?=$insured_firstname?>" name="insured_firstname" class="inbox_line3" size="18" />
-							&nbsp;
-							<input type="text" value="<?=$insured_middle?>" name="insured_middle" class="inbox_line3" size="3" width="30" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<span class="num">5.</span> 
-						Patient's Address 
-						<span class="small_cap">(No. Street)</span>
-						<br />
-						<input type="text" value="<?=$insured_address?>" name="patient_address" class="inbox_line3" size="28"  />
-					</td>
-					<td align="left" valign="top">
-						<span class="num">6.</span> 
-						Patient Relationship To Insured
-						<table width="80%" border="0" align="center" cellpadding="0" cellspacing="0">
-							<tr>
-								<td align="left" valign="top">
-									<span class="small_cap">Self</span>
-									<input name="patient_relation_insured" type="radio" value="Self" <? if($patient_relation_insured == "Self") echo " checked";?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Spouse</span>
-									<input name="patient_relation_insured" type="radio" value="Spouse" <? if($patient_relation_insured == "Spouse") echo " checked";?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Child</span>
-									<input name="patient_relation_insured" type="radio" value="Child" <? if($patient_relation_insured == "Child") echo " checked";?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Others</span>
-									<input name="patient_relation_insured" type="radio" value="Other" <? if($patient_relation_insured == "Other") echo " checked";?> />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<span class="num">7.</span>
-						Insured's Address 
-						<span class="small_cap">(No. Street)</span>
-						<br />
-						<input value="<?=$insured_address?>" name="insured_address" type="text" class="inbox_line3" size="28" />
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="115" align="left" valign="top">
-									City<br />
-									<input value="<?=$insured_city?>" name="patient_city" type="text" class="inbox_line3" size="28"/>
-								</td>
-								<td width="13" align="left" valign="top" class="b_line"></td>
-								<td width="196" align="left" valign="top" style="padding-left:4px;">
-									State<br />
-									<input value="<?=$insured_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td rowspan="2" align="left" valign="top">
-						<span class="num">8.</span> 
-						Patient Status<br />
-						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-							<tr>
-								<td width="25%" align="left" valign="top">
-									<span class="small_cap">Single</span>
-									<br />
-									<input name="patient_status" type="radio" value="Single" <? if(in_array("Single", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td width="40%" align="left" valign="top">
-									<span class="small_cap">Married</span>
-									<br />
-									<input name="patient_status" type="radio" value="Married" <? if(in_array("Married", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td width="35%" align="left" valign="top">
-									<span class="small_cap">Others</span>
-									<br />
-									<input name="patient_status" type="radio" value="Others" <? if(in_array("Others",$patient_status_array)) { echo " checked";}?> />
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top">
-									<span class="small_cap">Employed</span>
-									<br />
-									<input name="work_status" type="radio" value="Employed" <? if(in_array("Employed", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Full Time Student</span>
-									<br />
-									<input name="work_status" type="radio" value="Full Time Student" <? if(in_array("Full Time Student", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Part Time Student</span>
-									<br />
-									<input name="work_status" type="radio" value="Part Time Student" <?if(in_array("Part Time Student", $patient_status_array)) { echo " checked";}?> />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="115" align="left" valign="top">
-									City<br />
-									<input value="<?=$insured_city?>" name="insured_city" type="text" class="inbox_line3" size="28"/>
-								</td>
-								<td width="13" align="left" valign="top" class="b_line"></td>
-								<td width="196" align="left" valign="top" style="padding-left:4px;">
-									State<br />
-									<input value="<?=$insured_state?>" name="insured_state" type="text" class="inbox_line3" size="3" width="30" />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="115" align="left" valign="top">
-									Zip Code
-									<br />
-									<input value="<?=$insured_zip?>" name="patient_zip" type="text" class="inbox_line3" size="13"  />
-								</td>
-								<td width="13" align="left" valign="top" class="b_line"></td>
-								<td width="196" align="left" valign="top" style="padding-left:4px;">
-									Telephone 
-									<span class="small_cap">(Include Area Code)</span>
-									<br />
-									<span class="style1">(
-									<input type="text" value="<?= $patient_phone_code; ?>" name="patient_phone_code" size="3" class="inbox_line3" />
-									)</span>
-									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?=$patient_phone?>" name="patient_phone" class="inbox_line3" size="13"  />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="115" align="left" valign="top">
-									Zip Code
-									<br />
-									<input value="<?=$insured_zip?>" name="insured_zip" type="text" class="inbox_line3" size="13"  />
-								</td>
-								<td width="13" align="left" valign="top" class="b_line"></td>
-								<td width="196" align="left" valign="top" style="padding-left:4px;">
-									Telephone 
-									<span class="small_cap">(Include Area Code)</span>
-									<br />
-									<span class="style1">(
-									<input type="text" value="<?=$insured_phone_code?>" name="insured_phone_code" size="3" class="inbox_line3" />
-									)</span>
-									&nbsp;&nbsp;&nbsp;
-									<input type="text" value="<?=$insured_phone?>" name="insured_phone" class="inbox_line3" size="13"  />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<span class="num">9.</span>
-						Other Insured's Name 
-						<span class="small_cap">(Last Name, first, Middle Initial)</span>
-						<br />
-						<div style="padding-top:7px;">
-							<input type="text" value="<?=$other_insured_lastname?>" name="other_insured_lastname" class="inbox_line3" size="18" />
-							&nbsp;
-							<input type="text" value="<?=$other_insured_firstname?>" name="other_insured_firstname" class="inbox_line3" size="18" width="60" />
-							&nbsp;
-							<input type="text" value="<?=$other_insured_middle?>" name="other_insured_middle" class="inbox_line3" size="3" width="30" />
-						</div>
-					</td>
-					<td rowspan="4" align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td align="left" valign="top" style="line-height:33px;">
-									<span class="num">10.</span>
-									Is patient's Condition Related To :
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top" style="line-height:25px;">
-									<span class="num_a">a.</span> 
-									Employment? 
-									<span class="small_cap">(current Or Previous)</span>
-									<br />
-									<input type="radio" name="employment" value="YES" <? if($employment == "YES") echo " checked";?> />
-									Yes
-									&nbsp;&nbsp;
-									<input type="radio" name="employment" value="NO" <? if($employment == "NO") echo " checked";?> />
-									NO
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top" style="line-height:25px;">
-									<span class="num_a">b.</span> 
-									Auto Accident? 
-									<br />
-									<input type="radio" name="auto_accident" value="YES" <? if($auto_accident == "YES") echo " checked";?> />
-									Yes
-									&nbsp;&nbsp;
-									<input type="radio" name="auto_accident" value="NO" <? if($auto_accident == "NO") echo " checked";?> />
-									NO
-									&nbsp;&nbsp;
-									Place<span class="small_cap">(State)</span>
-									<input type="text" value="<?=$auto_accident_place?>" class="inbox_line3" size="10" name="auto_accident_place" />
-								</td>
-							</tr>
-							<tr>
-								<td align="left" valign="top" style="line-height:25px;">
-									<span class="num_a">c.</span> 
-									Other Accident? 
-									<br />
-									<input type="radio" name="other_accident" value="YES" <? if($other_accident == "YES") echo " checked";?> />
-									Yes
-									&nbsp;&nbsp;
-									<input type="radio" name="other_accident" value="NO" <? if($other_accident == "NO") echo " checked";?> />
-									NO
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<span class="num">11.</span>
-						Insured's Policy Group or FECA Number
-						<br />
-						<input value="<?=$insured_policy_group_feca?>" name="insured_policy_group_feca" type="text" class="inbox_line3" size="28"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<span class="num_a">a.</span>
-						Other Insured's policy Or Group Number
-						<br />
-						<input value="<?=$other_insured_policy_group_feca?>" name="other_insured_policy_group_feca" type="text" class="inbox_line3" size="28"  />
-					</td>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="58%" align="left" valign="top">
-									<span class="num_a">a.</span> 
-									Insured's Birth Date
-									<br />
-									&nbsp;&nbsp;
-									<?php if($insured_dob!=''){ //$insured_dob = date('m-d-Y', strtotime($insured_dob)); 
-} ?>
-									<input type="text" value="<?=$insured_dob?>" name="insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
-									mm-dd-yyyy
-								</td>
-								<td width="42%" align="center" valign="top">
-									Sex
-									<br />
-									M 
-									<input type="radio" name="insured_sex" value="M" <? if($insured_sex == "M" || $insured_sex == "Male") echo " checked";?> />
-									&nbsp;&nbsp;F 
-									<input type="radio" name="insured_sex" value="F" <? if($insured_sex == "F" || $insured_sex == "Female") echo " checked";?> />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="58%" align="left" valign="top">
-									<span class="num_a">b.</span> 
-									Other Insured's Birth Date
-									<br />
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
-									mm-dd-yyyy
-								</td>
-								<td width="42%" align="center" valign="top">
-									Sex
-									<br />
-									M 
-									<input type="radio" name="other_insured_sex" value="M" <? if($other_insured_sex == "M" || $other_insured_sex == "Male") echo " checked";?> />
-									&nbsp;&nbsp;F 
-									<input type="radio" name="other_insured_sex" value="F" <? if($other_insured_sex == "F" || $other_insured_sex == "Female") echo " checked";?> />
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td align="left" valign="top">
-						<span class="num_a">b.</span>
-						Employer's Name or School Name
-						<br />
-						<input value="<?=$insured_employer_school_name?>" name="insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<span class="num_a">c.</span>
-						Employer's Name or School Name
-						<br />
-						<input value="<?=$other_insured_employer_school_name?>" name="other_insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
-					</td>
-					<td align="left" valign="top">
-						<span class="num_a">c.</span>
-						Insurance Plan Name or Program Name
-						<br />
-						<input value="<?=$insured_insurance_plan?>" name="insured_insurance_plan" type="text" class="inbox_line3" size="28"  />
-					</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">
-						<span class="num_a">d.</span>
-						Insurance Plan Name or Program Name
-						<br />
-						<input value="<?=$other_insured_insurance_plan?>" name="other_insured_insurance_plan" type="text" class="inbox_line3" size="28"  />
-					</td>
-					<td align="left" valign="top">
-						<span class="num_a">10d.</span>
-						Reserved For local use
-						<br />
-						<input value="<?=$reserved_local_use?>" name="reserved_local_use" type="text" class="inbox_line3" size="28"  />
-					</td>
-					<td align="left" valign="top">
-						<span class="num_a">d.</span> 
-						Is there another health benefit Plan?
-						<br />
-						<input type="radio" name="another_plan" value="YES" <? if($another_plan == "YES") echo " checked";?> />YES
-						&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="another_plan" value="NO" <? if($another_plan == "NO") echo " checked";?> />NO
-						&nbsp;&nbsp;
-						<span class="small_cap"><i>if yes, return to and complete item 9 a-d</i></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="left" valign="top">
-						<center style="text-align:center; font-weight:bold">
-							Read Back of Form Before Completing & Signing This Form
-						</center>
-						<span class="num">12.</span>
-						Patient's or Authorized Person's Signature
-						<span class="small_cap"> I authorize the release of any medical or other information neccessary to process this claim. I also reuest payment of government benefits either to myself or th the party who accepts assignment below.</span>
-						<br /><br /><br />
-						
-						<input type="checkbox" name="patient_signature" value="1" <? if($patient_signature == "1") echo " checked";?> />
-						Signature on File
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						Date:
-						<input type="text" value="<?= $patient_signed_date?>" name="patient_signed_date" size="10" class="inbox_line3 datealtoptfullmask" />
-					</td>
-					<td align="left" valign="top">
-						<span class="num">13.</span>
-						Insured's or Authorized person's Signature
-						<span class="small_cap"> I authorize payment of medical benefits to the undersigned physician or supplier for services described below</span>
-						<br /><br /><br />
-						
-						<?php
-            $patient_signature = st($myarray['patient_signature']);
-            echo "<center>SIGNATURE ON FILE: <input type='checkbox' name='insured_signature' value='1' ";
-            if($insured_signature){ echo "checked"; }
-	    echo " /></center>";
-            ?>
-						
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td width="58%" align="left" valign="top">
-									<span class="num">14.</span> 
-									Date of Current
-									<br />
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
-								</td>
-								<td width="2%" align="left" valign="top">
-									<font size="7"><b>&lt;</b></font>
-								</td>
-								<td width="40%" align="left" valign="middle">
-									Illness
-									<span class="small_cap"> (First sympton)</span>
-									OR
-									<br />
-									Injury
-									<span class="small_cap"> (Accident)</span>
-									OR
-									<br />
-									Pregnancy
-									<span class="small_cap"> (LMP)</span>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top">
-						<span class="num">15.</span> 
-						If Patient has had same or similar Illness. Give First Date
-						<br />
-						&nbsp;&nbsp;
-						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3 datealtmask" size="10"/>
-						mm-dd-yy
-					</td>
-					<td valign="top">
-						<span class="num">16.</span> 
-						Dates Patient unable to work in Current Occupation
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td valign="middle" width="10%">
-									From 
-								</td>
-								<td valign="top" width="40%">
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_from?>" name="unable_date_from" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
-								</td>
-								
-								<td valign="middle" align="right" width="10%">
-									To
-								</td>
-								<td valign="top" width="40%">
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$unable_date_to?>" name="unable_date_to" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<span class="num">17.</span> 
-						Name of Referring Provider or Other Source
-								<input type="text" value="<?= $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
-								
-					</td>
-					<td valign="top">
-						<table width="100%" cellpadding="0" cellspacing="0" border="0">
-							<tr>
-								<td valign="top" width="10%" style="border-bottom: 1px #000000 dashed;">
-									<span class="num">17<span class="num_a">a.</span></span> 
-								</td>
-								<td valign="top" width="10%" style="border-bottom: 1px #000000 dashed;">
-									<select name="field_17a_dd" class="inbox_line3" style="width:40px;">
-										<option value=""></option>
-										<?
-										$qua_my = mysql_query($qua_sql);
-										while($qua_myarray = mysql_fetch_array($qua_my))
-										{?>
-											<option value="<?=st($qua_myarray['qualifierid']);?>" <? if($field_17a_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-												<?=st($qua_myarray['qualifier']);?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-								<td valign="top" width="80%" style="border-bottom: 1px #000000 dashed; padding-bottom:3px;">
-									<input type="text" value="<?=$field_17a?>" name="field_17a" class="inbox_line3" size="30"/>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<span class="num">17<span class="num_a">b.</span></span> 
-								<?php
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
-        $prod_q = mysql_query($prod_s);
-        $prod_r = mysql_fetch_assoc($prod_q);
-        $claim_producer = $prod_r['producer'];
 
-		      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
-                      $userquery = mysql_query($getuserinfo);
-                      if($userinfo = mysql_fetch_array($userquery)){
-			$phone = $userinfo['phone'];
-			$practice = $userinfo['practice'];
-			$address = $userinfo['address'];
-			$city = $userinfo['city'];
-			$state = $userinfo['state'];
-			$zip = $userinfo['zip'];
-			$npi = $userinfo['npi'];
-			$medicare_npi = $userinfo['medicare_npi'];
-		      }
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
-			if($phone == ""){ $phone = $docinfo['phone']; }
-			if($practice == ""){ $practice = $docinfo['practice']; }
-                        if($address == ""){ $address = $docinfo['address']; }
-                        if($city == ""){ $city = $docinfo['city']; }
-                        if($state == ""){ $state = $docinfo['state']; }
-                        if($zip == ""){ $zip = $docinfo['zip']; }
-			if($npi == ""){ $npi = $docinfo['npi']; }
-			if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
 
-			if($docinfo['use_service_npi']==1){
-			  $service_npi = $docinfo['service_npi'];
-			  $service_practice = $docinfo['service_name'];
-			  $service_address = $docinfo['service_address'];
-			  $service_city = $docinfo['service_city'];
-			  $service_state = $docinfo['service_state'];
-			  $service_zip = $docinfo['service_zip'];
-			  $service_medicare_npi = $docinfo['service_medicare_npi'];
-			}else{
-                          $service_npi = $npi;
-                          $service_practice = $practice;
-                          $service_address = $address;
-                          $service_city = $city;
-                          $service_state = $state;
-                          $service_zip = $zip;
-                          $service_medicare_npi = $medicare_npi;
-			}
 
-                      ?> 
 
-		      
-								<td valign="top">
-									NPI
-								</td>
-								<td valign="top" style="padding-top:3px;">
-									<input type="text" value="<?= $diagnosising_npi; ?>" name="field_17b" class="inbox_line3" size="30"/>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top">
-						<span class="num">18.</span> 
-						Hospitalization Dates Related to Current Services
-						
-						<table width="100%" border="0" cellspacing="0" cellpadding="0">
-							<tr>
-								<td valign="middle" width="10%">
-									From 
-								</td>
-								<td valign="top" width="40%">
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_from?>" name="hospitalization_date_from" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
-									
-								</td>
-								
-								<td valign="middle" align="right" width="10%">
-									To
-								</td>
-								<td valign="top" width="40%">
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$hospitalization_date_to?>" name="hospitalization_date_to" class="inbox_line3 datealtmask" size="10"/>
-									mm-dd-yy
-									
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2">
-						<span class="num">19.</span> 
-						Reserved for Local Use<br />
-						<input type="text" value="<?=$reserved_local_use1?>" name="reserved_local_use1" class="inbox_line3" size="100" />
-					</td>
-					<td valign="top">
-						<table width="100%" cellpadding="0" cellspacing="0" border="0">
-							<tr>
-								<td valign="top" width="40%">
-									<span class="num">20.</span> 
-									Outside Lab?
-									<br />
-									<input type="radio" name="outside_lab" value="YES"  <? if($outside_lab == "YES") echo " checked";?>/>
-									YES
-									&nbsp;&nbsp;
-									<input type="radio" name="outside_lab" value="NO" <? if($outside_lab == "NO") echo " checked";?> />
-									NO
-								</td>
-								<td valign="top" width="60%">
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									S Charges
-									<br />
-									<input type="text" value="<?=$s_charges?>" name="s_charges" class="inbox_line3" size="30" />
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2" rowspan="2">
-						<span class="num">21.</span> 
-						Diagnosis or Nature of Illness or Injury 
-						<span class="small_cap">
-							(Relate Items 1, 2, 3, 4 to Item 24E by line)
-						</span>
-						
-						<table width="100%" cellpadding="3" cellspacing="5" border="0">
-							<tr>
-								<td valign="top" width="50%">
-									<b>1.</b>
-									<select name="diagnosis_1" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_1 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-								<td valign="top" width="50%">
-									<b>3.</b>
-									<select name="diagnosis_3" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_3 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td valign="top">
-									<b>2.</b>
-									<select name="diagnosis_2" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_2 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-								<td valign="top">
-									<b>4.</b>
-									<select name="diagnosis_4" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_4 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top">
-						<span class="num">22.</span> 
-						Medicaid Resubmission Code
-						<input type="text" value="<?=$medicaid_resubmission_code?>" name="medicaid_resubmission_code" class="inbox_line3" size="30" />
-						<br />
-						Original Ref. No.
-						<input type="text" value="<?=$original_ref_no?>" name="original_ref_no" class="inbox_line3" size="30" />
-					</td>
-				</tr>
-				<tr>
-					<td valign="top">
-						<span class="num">23.</span> 
-						Prior Authorization Number
-						<br />
-						<input type="text" value="<?=$prior_authorization_number?>" name="prior_authorization_number" class="inbox_line3" size="60" />
-					</td>
-				</tr>
-<!-- START BOX 24 -->				
-				<tr>
-					<td valign="top" colspan="3">
-						<a name="procedure"></a>
-						<span class="num">24.</span> 
-						<table width="100%" cellpadding="3" cellspacing="1" border="0" bgcolor="#000000" >
-							<tr bgcolor="#FFFFFF">
-								<td valign="top" rowspan="2" align="center">&nbsp;
-									
-								</td>
-								<td valign="top" colspan="2" align="center">
-									<span class="num_a">A.</span> 
-									Date(s) of service
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">B.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">C.</span>
-								</td>
-								<td valign="top" colspan="5" align="center">
-									<span class="num_a">D.</span>
-									Procedures, Services or Supplies
-									<br /> 
-									<span class="small_cap">
-										(Explain Unusual Circumstances)
-									</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">E.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">F.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">G.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">H.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">I.</span>
-								</td>
-								<td valign="top" align="center">
-									<span class="num_a">J.</span>
-								</td>
-							</tr>
-							
-							<tr bgcolor="#FFFFFF">
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										From
-										<br />
-										MM
-										&nbsp;&nbsp;&nbsp;
-										DD
-										&nbsp;&nbsp;&nbsp;
-										YY
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										To
-										<br />
-										MM
-										&nbsp;&nbsp;&nbsp;
-										DD
-										&nbsp;&nbsp;&nbsp;
-										YY
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										PLACE OF <br />SERVICE
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										EMG
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										CPT/HCPCS
-									</span>
-								</td>
-								<td valign="bottom" align="center" colspan="4">
-									<span class="small_cap">
-										MODIFIER
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										DIAGNOSIS <br />POINTER
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										$ CHARGES
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										DAYS <br />OR <br />UNITS
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										EPSDT <br />Family <br />Plan
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										ID. <br />QUAL.
-									</span>
-								</td>
-								<td valign="bottom" align="center">
-									<span class="small_cap">
-										RENDERING <br />PROVIDER ID. #
-									</span>
-								</td>
-							</tr>
-						</table>
-<!-- START LEDGER TRXNS -->
+        <!-- Jquery -->
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+        <!-- Jquery UI-->
+
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+
+        <script src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js"></script>
+
+        <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
+
+        <script type="text/javascript"> window.eligiblePublicKey="-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-"</script>
+
+    </head>
+
+    <body>
+
+    <form action="claim_handler.php" method="POST">
+
+        <div id="eligibleapi-claim-1500-form"></div>
+
+    </form>
+
+
+<script type="text/javascript">
+  $(document).ready( function(){
+
+    $('input[name="subscriber[id]"]').val("<?= $insured_id_number;?>");
+
+    $('input[name="dependent[last_name]"]').val("<?= $patient_lastname;?>");
+    $('input[name="dependent[first_name]"]').val("<?= $patient_firstname;?>");
+    $('input[name="dependent[middle_name]"]').val("<?= $patient_middle;?>");
+    $('input[name="dependent[dob]"]').val("<?= $patient_dob;?>");
+    $('input[name="dependent[gender]"][value="<?= $patient_sex; ?>"]').attr("checked", "checked");
+    $('input[name="dependent[address][street_line_1]"]').val("<?= $patient_address;?>");
+    $('input[name="dependent[address][city]"]').val("<?= $patient_city;?>");
+    $('input[name="dependent[address][state]"]').val("<?= $patient_state;?>");
+    $('input[name="dependent[address][zip]"]').val("<?= $patient_zip;?>");
+    $('input[name="dependent[phone_number]"]').val("<?= $patient_phone;?>");
+
+    $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
+    $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
+    $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
+    $('input[name="subscriber[dob]"]').val("<?= $insured_dob;?>");
+    $('input[name="subscriber[gender]"][value="<?= $insured_sex; ?>"]').attr("checked", "checked");
+    $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
+    $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");
+    $('input[name="subscriber[address][state]"]').val("<?= $insured_state;?>");
+    $('input[name="subscriber[address][zip]"]').val("<?= $insured_zip;?>");
+    $('input[name="subscriber[phone_number]"]').val("<?= $insured_phone;?>");
+    $('input[name="subscriber[group_id]"]').val("<?= $insured_policy_group_feca;?>");
+    $('input[name="subscriber[group_name]"]').val("<?= $insured_insurance_plan;?>");
+
+    $('input[name="other_payers[0][subscriber][last_name]"]').val("<?= $other_insured_lastname;?>");
+    $('input[name="other_payers[0][subscriber][first_name]"]').val("<?= $other_insured_firstname;?>");
+    $('input[name="other_payers[0][subscriber][middle_name]"]').val("<?= $other_insured_middle;?>");
+    $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
+    $('input[name="other_payers[0][subscriber][group_name]"]').val("<?= $other_insured_insurance_plan;?>");
+
+    <?php if($employment == "YES"){ ?>
+      $('input[name="claim[related_to_employment]"][value="true"]').attr("checked", "checked");
+    <?php }elseif($employment == "NO"){ ?>
+      $('input[name="claim[related_to_employment]"][value="false"]').attr("checked", "checked");
+    <?php } ?>
+    <?php if($auto_accident == "YES"){ ?>
+      $('input[name="claim[auto_accident]"][value="true"]').attr("checked", "checked");
+    <?php }elseif($auto_accident == "NO"){ ?>
+      $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
+    <?php } ?>
+    <?php if($other_accident == "YES"){ ?>
+      $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
+    <?php }elseif($other_accident == "NO"){ ?>
+      $('input[name="claim[other_accident]"][value="false"]').attr("checked", "checked");
+    <?php } ?>
+
+    <?php if($another_plan == "YES"){ ?>
+      $('input[name="claim[other_payer]"][value="true"]').attr("checked", "checked");
+    <?php }elseif($another_plan == "NO"){ ?>
+      $('input[name="claim[other_payer]"][value="false"]').attr("checked", "checked");
+    <?php } ?>
+
+
+
+    $('input[name="claim[last_worked_date]"]').val("<?= $unable_date_from; ?>");
+    $('input[name="claim[work_return_date]"]').val("<?= $unable_date_to; ?>");
+    $('input[name="claim[admission_date]"]').val("<?= $hospitalization_date_from; ?>");
+    $('input[name="claim[discharge_date]"]').val("<?= $hospitalization_date_to; ?>");
+
+    $('input[name="referring_provider[secondary_id]"]').val("<?= $field_17a; ?>");
+
+    <?php if($outside_lab == "YES"){ ?>
+      $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
+    <?php }elseif($outside_lab == "NO"){ ?>
+      $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
+    <?php } ?>
+
+    $('input[name="claim[frequency]"]').val("<?= $medicaid_resubmission_code; ?>");
+    $('input[name="claim[original_ref_number]"]').val("<?= $original_ref_no; ?>");
+    $('input[name="claim[prior_authorization_number]"]').val("<?= $prior_authorization_number; ?>");
+   <?php
+$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+   ?>
+    $('input[name="claim[diagnosis_codes][1]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
+   <?php
+$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_2)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+   ?>
+    $('input[name="claim[diagnosis_codes][2]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
+   <?php
+$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_3)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+   ?>
+    $('input[name="claim[diagnosis_codes][3]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
+   <?php
+$ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_4)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+   ?>
+    $('input[name="claim[diagnosis_codes][4]"]').val("<?= $ins_diag['ins_diagnosis']; ?>");
+
+
+
 <?php
 // Get modifier codes
 $mod_sql = "SELECT * FROM dental_modifier_code";
@@ -2474,9 +1661,9 @@ if($is_pending){
   $sql .= "trxn_code.modifier_code_1 as modcode, trxn_code.modifier_code_2 as modcode2, trxn_code.days_units as daysorunits, ";
 }
 if($insurancetype == '1'){
-	$sql .= " user.medicare_npi ";
+        $sql .= " user.medicare_npi ";
 }else{
-	$sql .= " user.npi ";
+        $sql .= " user.npi ";
 }
   $sql .= "  as 'provider_id', ps.place_service as 'place', ps2.description AS place_description "
        . "FROM "
@@ -2496,166 +1683,70 @@ if($insurancetype == '1'){
 }
 $query = mysql_query($sql);
 // Display ledger trxns
-if (!$query) {
-  print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There was a database error when selecting ledger transactions.</font><br/><br/>" . mysql_errno() . ": " . mysql_error() . "</center><br />";
-} else if (mysql_num_rows($query) == 0) {
-  print "<br /><center><font style='color:#ff0000; font-weight:bold;'>There are currently no ledger entries to be submitted.</font></center><br />";
-} else {
 ?>
   <?php $li = 0; ?>
-  <input type="hidden" name="ledgercount" value="<?php echo mysql_num_rows($query); ?>">
   <?php while ($array = mysql_fetch_array($query)) { ?>
-    <table style="margin-left:39px;">
-      <tr>
-        <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="106"><?php echo date('m-d-Y', strtotime($array['service_date'])); ?></td>
-        <td width="91">
-<?= $pos; ?>
-		<select style="width:76px" name="placeofservice<?=$li;?>">
-			<option value=''>Select One</option>
-			<?php 
-				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
-				$sql = "SELECT * FROM dental_place_service ps WHERE status=1";
-				$q = mysql_query($sql);
-				while($psr = mysql_fetch_assoc($q)){
-				?><option value="<?= $psr['place_service']; ?>" <?= ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?= $psr['place_service']." ".$psr['description']; ?></option>
-			<?php
-				}
-			?>
-	</td>
-        <td width="41"><input  style="width:26px;"type="text" name="emg<?=$li;?>" value="<?php echo $array['emg']; ?>"></td>
-        <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
-        <td width="191">
-          <select name="modifiercode<?=$li;?>" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
-              <?php $selected = ($array['modcode'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="modifiercode2_<?=$li;?>" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
-              <?php $selected = ($array['modcode2'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="modifiercode3_<?=$li;?>" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
-              <?php $selected = ($array['modcode3'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="modifiercode4_<?=$li;?>" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($mod_array); $i++) { ?>
-              <?php $selected = ($array['modcode4'] == $mod_array[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?=$mod_array[$i]['modifier_code']?>" <?=$selected;?>><?=$mod_array[$i]['modifier_code']." ".$mod_array[$i]['description']?></option>
-            <?php } ?>
-          </select>
+  <?php  $pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place']; ?>
+  <?php $dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1; ?>
+    $('input[name="claim[service_lines][<?=$li;?>][service_date_from]"]').val("<?= date('Y-m-d', strtotime($array['service_date'])); ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][service_date_to]"]').val("<?= date('Y-m-d', strtotime($array['service_date'])) ?>");
+    $('select[name="claim[service_lines][<?=$li;?>][place_of_service]"]').val("<?= $pos; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][emergency]"]').val("<?= $x; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][procedure_code]"]').val("<?php echo $array['transaction_code']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][0]"]').val("<?= $array['modcode']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][1]"]').val("<?= $array['modcode2']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][2]"]').val("<?= $array['modcode3']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][3]"]').val("<?= $array['modcode4']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][diagnosis_code_pointers][<?=$dp-1; ?>]"]').attr("checked","checked");
+    $('input[name="claim[service_lines][<?=$li;?>][charge_amount]"]').val("<?= number_format($array['amount'], 2); ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][units]"]').val("<?= $array['daysorunits']; ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][rendering_provider][npi]"]').val("<?= $array['provider_id']; ?>");
+	
 
 
-        </td>
-        <td width="92">
-		<select name="diagnosispointer<?=$li;?>">
-			<?php for($i=1;$i<=4;$i++){ ?>
-				<option value="<?= $i; ?>" <?= ($i==$array['diagnosispointer'])?'selected="selected"':''; ?>><?= $i; ?></option>
-			<?php } ?>
-			</select>
-        <td width="100" align="right" style="padding-right:15px;">$<?= number_format($array['amount'], 2); ?></td>
-        <td width="54"><input style="width:39px;" type="text" name="daysorunits<?=$li;?>" value="<?php echo $array['daysorunits']; ?>"></td>
-        <td width="60"><input style="width:45px;" type="text" name="epsdt<?=$li;?>" value="<?php echo $array['epsdt']; ?>"></td>
-        <td width="52"><input style="width:37px;" type="text" name="idqual<?=$li;?>" value="<?php echo $array['idqual']; ?>"></td>
-        <input type="hidden" name="ledgerid<?=$li;?>" value="<?php echo $array['ledgerid']; ?>">
-	<input type="hidden" name="service_date<?=$li;?>" value="<?php echo $array['service_date']; ?>">
-	<input type="hidden" name="entry_date<?=$li;?>" value="<?php echo $array['entry_date']; ?>">
-	<input type="hidden" name="transaction_code<?=$li;?>" value="<?php echo $array['transaction_code']; ?>">
-	<input type="hidden" name="amount<?=$li;?>" value="<?php echo $array['amount']; ?>">
-        <td width="122"><?=$array['provider_id']?></td>
-      </tr>
-    </table>
     <?php $li++; ?>
-  <?php } ?>
-<?php } ?>
-<!-- /END LEDGER TRXNS -->
+  <?php } 
 
-					</td>
-				</tr>
-<!-- /END BOX 24 -->
-				<tr>
-					<td valign="top" colspan="2">
-					
-						<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-							<tr bgcolor="#FFFFFF">
-								<td valign="top" width="40%">
-									<table width="100%" cellpadding="0" cellspacing="0" border="0">
-										<tr>
-											<td valign="top" width="80%">
-												<span class="num">25.</span> 
-												Federal Tax I.D.Number
-												<br />
-												<?php
-												  
-												  if($userinfo['tax_id_or_ssn'] != ''){
-													$tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
-												  }else{
+                                                                                                  if($userinfo['tax_id_or_ssn'] != ''){
+                                                                                                        $tax_id_or_ssn = $userinfo['tax_id_or_ssn'];
+                                                                                                  }else{
                                                                                                         $tax_id_or_ssn = $docinfo['tax_id_or_ssn'];
-												  }
-												  
-												?>
-												<input disabled="disabled" type="text" value="<?=$tax_id_or_ssn;?>" name="federal_tax_id_number" size="20" class="inbox_line3" />
-											</td>
-											<td valign="top" width="10%" align="center">
-												SSN
-												<br />
-                                                                                                <?php
+                                                                                                  }
                                                                                                   if($userinfo['ssn'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ssn = $userinfo['ssn'];
                                                                                                   }else{
                                                                                                         $ssn = $docinfo['ssn'];
                                                                                                   }
-                                                                                                ?>
-												<input type="radio" disabled="disabled" name="ssnein" value="ssn" <? if($ssn == "1") echo " checked";?> />
-											</td>
-											<td valign="top" width="10%" align="center">
-												EIN
-												<br />
-                                                                                                <?php
                                                                                                   if($userinfo['ein'] != '' && $userinfo['producer_files']==1){
                                                                                                         $ein = $userinfo['ein'];
-                                                                                                  }else{                                                                                          
+                                                                                                  }else{         
                                                                                                         $ein = $docinfo['ein'];
                                                                                                   }
-                                                                                                ?>
-												<input type="radio" disabled="disabled" name="ssnein" value="ein" <? if($ein == "1") echo " checked";?> />
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td valign="top" width="30%">
-									<span class="num">26.</span> 
-									Patient Account No.
-									<br />
-									<input type="text" value="<?=$patient_account_no?>" name="patient_account_no" class="inbox_line3" size="20" />
-								</td>
-								<td valign="top" width="30%">
-									<span class="num">27.</span> 
-									Accept Assignment?
-									<br />
-									<span class="small_cap">(For govt. claims, see back)</span>
-									<br />
-									<input type="radio" name="accept_assignment" value="Yes" <? if($accept_assignment == "Yes") echo " checked";?> />
-									YES
-									&nbsp;&nbsp;&nbsp;
-									<input type="radio" name="accept_assignment" value="No" <? if($accept_assignment == "No") echo " checked";?> />
-									NO
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td valign="top" colspan="2">
-					
+
+	?>
+
+    $('input[name="billing_provider[tax_id]"]').val("<?= $tax_id_or_ssn; ?>"); 
+    <? if($ssn=="1"){ ?>
+    $('input[name="billing_provider[tax_id_type]"][value="SY"]').attr("checked", "checked"); 
+    <?php }elseif($ein=="1"){ ?>
+    $('input[name="billing_provider[tax_id_type]"][value="EI"]').attr("checked", "checked"); 
+    <?php } ?>
+    $('input[name="service_facility[name]"]').val("<?= $service_practice; ?>");
+    $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_address; ?>");
+    $('input[name="service_facility[address][city]"]').val("<?= $service_city; ?>");
+    $('input[name="service_facility[address][state]"]').val("<?= $service_state; ?>");
+    $('input[name="service_facility[address][zip]"]').val("<?= $service_zip; ?>");
+    $('input[name="service_facility[npi]"]').val("<?= ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>");
+ 
+    $('input[name="billing_provider[phone_number]"]').val("<?= $phone; ?>");
+    $('input[name="billing_provider[organization_name]"]').val("<?= $practice; ?>");
+    $('input[name="billing_provider[address][street_line_1]"]').val("<?= $address; ?>");
+    $('input[name="billing_provider[address][city]"]').val("<?= $city; ?>");
+    $('input[name="billing_provider[address][state]"]').val("<?= $state; ?>");
+    $('input[name="billing_provider[address][zip]"]').val("<?= $zip; ?>");
+    $('input[name="billing_provider[npi]"]').val("<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
+
+
 <?php
 $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
 $amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
@@ -2703,24 +1794,23 @@ if ($is_pending) {
   if($_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
     $sql = "SELECT
                 sum(dlp.amount) as amount_paid
-        from dental_ledger dl 
-                LEFT JOIN dental_users p ON dl.producerid=p.userid 
+        from dental_ledger dl
+                LEFT JOIN dental_users p ON dl.producerid=p.userid
                 LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."' 
-                        AND primary_claim_id=".$_GET['insid']." 
+                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
+                        AND primary_claim_id=".$_GET['insid']."
                         AND dlp.amount != 0
-			AND dlp.payer = 0
-	";
+                        AND dlp.payer = 0
+        ";
   }
   $paid_my = mysql_query($sql);
   if ($paid_my && (mysql_num_rows($paid_my) > 0)) {
     $paid_row = mysql_fetch_array($paid_my);
     $amount_paid = $paid_row['amount_paid'];
   }
- 
+
   // re-calculate balance due
   $balance_due = $total_charge - $amount_paid;
-  
   // format calculations
   $total_charge = number_format($total_charge, 2, '.','');
   $amount_paid = number_format($amount_paid, 2, '.','');
@@ -2729,280 +1819,13 @@ if ($is_pending) {
 }
 ?>
 
-<!-- START DOLLAR BOXES 28,29,30 -->
-<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-  <tr bgcolor="#FFFFFF">
-    <td valign="top" width="33%">
-      <span class="num">28.</span> Total Charge<br/>
-      $ <input type="text" value="<?=$total_charge;?>" name="total_charge" class="inbox_line3 number_field" size="15" />
-    </td>
-    <td valign="top" width="33%">
-      <span class="num">29.</span> Amount Paid<br/>
-      $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
-    </td>
-    <td valign="top" width="33%">
-      <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3 number_field" size="15" />
-      <br/>
-      <span class="small_cap">&nbsp;</span>
-    </td>
-  </tr>
-</table>
-<!-- END DOLLAR BOXES 28,29,30 -->
 
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2">
-						<table width="100%" cellpadding="1" cellspacing="1" border="0" bgcolor="#000000">
-							<tr bgcolor="#FFFFFF">
-								<td valign="top" width="50%">
-									<span class="num">31.</span> 
-									Signature of Physician or Supplier Including Degrees or Credentals
-									<span class="small_cap">
-										(I certify that the statements on the reverse apply to this bill and are made a part thereof.)
-									</span>
-									<br />
-									<input type="text" value="<?=$signature_physician?>" class="inbox_line3" size="40" name="signature_physician" />
-									<br /><br />
-									Signed
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									Date: 
-									<input type="text" value="<?=$physician_signed_date?>" name="physician_signed_date" class="inbox_line3 datealtoptfullmask" size="10" />
-								</td>
-								<td valign="top" width="50%">
-									<span class="num">32.</span> 
-									Service Facility Location Information
-									<table width="100%" cellpadding="1" cellspacing="1" border="0">
-										<tr>
-											<td valign="top" width="10%">
-												<span class="small_cap">Name:</span>		
-											</td>
-											                
-											<td valign="top" width="90%">
-												<input disabled="disabled" type="text" value="<?php echo $service_practice;?>" name="service_facility_info_name" class="inbox_line3" size="40" />
-											</td>
-										</tr>
-										<tr>
-											<td valign="top" width="10%">
-												<span class="small_cap">Address:</span>		
-											</td>
-											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $service_address;?>" name="service_facility_info_address" class="inbox_line3" size="40" />
-											</td>
-										</tr>
-										<tr>
-											<td valign="top" width="10%">
-												<span class="small_cap">City/State/Zip:</span>		
-											</td>
-											<td valign="top" width="90%">
-												<input type="text" disabled="disabled" value="<?php echo $service_city;?>, <?php echo $service_state;?> <?php echo $service_zip;?>" name="service_facility_info_city" class="inbox_line3" size="40" />
-											</td>
-										</tr>
-									</table>
-									<span class="num_a">
-										a.
-									</span>
-									<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$service_medicare_npi:$service_npi; ?>" name="service_info_a" class="inbox_line3" size="15" />
-									
-									<span class="num_a">
-										b.
-									</span>
-									<select name="service_info_dd" class="inbox_line3" style="width:50px;">
-										<option value=""></option>
-										<?
-										$qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-										$qua_my = mysql_query($qua_sql);
-										while($qua_myarray = mysql_fetch_array($qua_my))
-										{?>
-											<option value="<?=st($qua_myarray['qualifierid']);?>" <? if($service_info_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-												<?=st($qua_myarray['qualifier']);?>
-											</option>
-										<?
-										}?>
-									</select>
-									<input type="text" value="<?=$service_info_b_other?>" name="service_info_b_other" class="inbox_line3" size="15" />
-								</td>
-							</tr>
-						</table>
-					</td>
-					
-					<td valign="top" >
-					
-					
-						<span class="num">33.</span> 
-						Billing Provider Info & Ph#
-						<?php 
-							if($billing_provider_phone_code=='')
-								$billing_provider_phone_code = split_phone($phone, true);
+    $('input[name="claim[total_charge]"]').val("<?= $total_charge; ?>");
+    $('input[name="claim[patient_amount_paid]"]').val("<?= $amount_paid; ?>");
 
-                                                        if($billing_provider_phone=='')
-                                                                $billing_provider_phone = split_phone($phone, false);
+  });
 
-						?>
-						<span class="style1">(
-						<input type="text" value="<?= $billing_provider_phone_code; ?>" name="billing_provider_phone_code" size="3" class="inbox_line3" />
-						)</span>
-						&nbsp;&nbsp;&nbsp;
-						<input type="text" value="<?= $billing_provider_phone; ?>" name="billing_provider_phone" class="inbox_line3" size="13"  />
-						<table width="100%" cellpadding="1" cellspacing="1" border="0">
-							<tr>
-								<td valign="top" width="10%">
-									<span class="small_cap">Name:</span>		
-								</td>
-								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $practice;?>" name="billing_provider_name" class="inbox_line3" size="40" />
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" width="10%">
-									<span class="small_cap">Address:</span>		
-								</td>
-								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $address;?>" name="billing_provider_address" class="inbox_line3" size="40" />
-								</td>
-							</tr>
-							<tr>
-								<td valign="top" width="10%">
-									<span class="small_cap">City/State/Zip:</span>		
-								</td>
-								<td valign="top" width="90%">
-									<input type="text" disabled="disabled" value="<?php echo $city;?>, <?php echo $state;?> <?php echo $zip;?>" name="billing_provider_city" class="inbox_line3" size="40" />
-								</td>
-							</tr>
-						</table>
-						<span class="num_a">
-							a.
-						</span>
-						<input type="text" disabled="disabled" value="<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>" name="billing_provider_a" class="inbox_line3" size="15" />
-						
-						<span class="num_a">
-							b.
-						</span>
-						<select name="billing_provider_dd" class="inbox_line3" style="width:50px;">
-							<option value=""></option>
-							<?
-							$qua_sql = "select * from dental_qualifier where status=1 order by sortby";
-							$qua_my = mysql_query($qua_sql);
-							while($qua_myarray = mysql_fetch_array($qua_my))
-							{?>
-								<option value="<?=st($qua_myarray['qualifierid']);?>" <? if($billing_provider_dd == st($qua_myarray['qualifierid'])) echo " selected";?>>
-									<?=st($qua_myarray['qualifier']);?>
-								</option>
-							<?
-							}?>
-						</select>
-						<input type="text" value="<?=$billing_provider_b_other?>" name="billing_provider_b_other" class="inbox_line3" size="15" />
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-                                <?php if($status==DSS_CLAIM_PENDING || $status==DSS_CLAIM_REJECTED){ ?>
-			<?php if($_SERVER['PHP_SELF'] == "/manage/admin/insurance_claim.php"){ ?>
-				<? if( $_SESSION['admin_access']==1){ ?>
-                    <a href="manage_claims.php?delid=<?=$insuranceid;?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:right; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
-                                                Delete
-                                        </a>
-				<? } ?> 
-			<!--
-			<a href="#" onclick="$('#reject_reason_div').show(); return false;" style="color:#f00; font-decoration:none;" class="editdel dellink" title="REJECT">Reject</a>
-			<div id="reject_reason_div" <?= ($myarray['status']==DSS_CLAIM_REJECTED)?'':'style="display:none;"'; ?> >
-				<label>VOB will be REJECTED and franchisee will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $reject_reason; ?></textarea>
-				<input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" />
-			</div>
-			-->
-			<?php }else{ ?>
-                    <a href="manage_insurance.php?delid=<?=$insuranceid;?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
-                                                Delete
-                                        </a>
-        <?php if (!$is_sent) { 
-		if($is_back_office){ ?>
-          <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
-		<?php } ?>
-        <?php } ?>
-
-			<?php } ?>
-                                <?php } ?>
-</form>
-<br /><br /><br /><br /><br /><br />
-
-
-<div id="popupContact" style="width:750px;">
-    <a id="popupContactClose"><button>X</button></a>
-    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-</div>
-<div id="backgroundPopup"></div>
-
-<br /><br />
-</body>
-</html>
-
-<script type="text/javascript">
-
-$(".date_field").keydown(function(e){
-var key = e.charCode || e.keyCode || 0;
-
-            // allow backspace, tab, delete, arrows, numbers and keypad numbers ONLY
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 46 ||
-		key == 189 ||
-		key == 191 ||
-                (key >= 37 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
-});
-$(".number_field").keydown(function(e){
-var key = e.charCode || e.keyCode || 0;
-
-            // allow backspace, tab, delete, numbers and keypad numbers ONLY
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 46 ||
-		key == 110 ||
-		key == 190 ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
-});
-
-function file_reject_claim(){
-  if($('#p_m_ins_payer_id').val()==""){
-    alert('Insurance payer must be selected to electronically file claim.');
-    return false;
-  }
-  c = confirm('You are about to resubmit a rejected claim. Please make sure you have corrected all errors, then click OK to resend the claim.');
-  return c;
-}
-function file_claim(){
-  if($('#p_m_ins_payer_id').val()==""){
-    alert('Insurance payer must be selected to electronically file claim.');
-    return false;
-  }
-  c = confirm('You are about to electronically submit this claim, are you sure?');
-  return c;
-/*
-                                  $.ajax({
-                                        url: "https://v1.eligibleapi.net/plan/all.json",
-                                        type: "get",
-                                        dataType: 'json',
-                                        data: {api_key: '33b2e3a5-8642-1285-d573-07a22f8a15b4',
-                                                payer_name: $('#payer_name').val(),
-                                                payer_id: $('#payer_id').val(),
-                                                provider_first_name: $('#provider_first_name').val(),
-                                                service_provider_last_name: $('#provider_last_name').val(),
-                                                service_provider_npi: $('#provider_npi').val(),
-                                                subscriber_id: $('#patient_member_id').val(),
-                                                subscriber_first_name: $('#patient_first_name').val(),
-                                                subscriber_last_name: $('#patient_last_name').val(),
-                                                subscriber_dob: $('#patient_dob').val(),
-                                                service_type_code: 30
-                                                },
-                                        complete: function(data){
-
-*/
-}
 </script>
+
+
+

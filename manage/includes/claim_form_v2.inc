@@ -227,6 +227,7 @@ die();
 	$date_same_illness = $_POST['date_same_illness'];
 	$unable_date_from = $_POST['unable_date_from'];
 	$unable_date_to = $_POST['unable_date_to'];
+	$name_referring_provider_qualifier = $_POST['name_referring_provider_qualifier'];
 	$referring_provider = $_POST['referring_provider'];
 	$field_17a_dd = $_POST['field_17a_dd'];
 	$field_17a = $_POST['field_17a'];
@@ -240,6 +241,19 @@ die();
 	$diagnosis_2 = $_POST['diagnosis_2'];
 	$diagnosis_3 = $_POST['diagnosis_3'];
 	$diagnosis_4 = $_POST['diagnosis_4'];
+	$icd_ind = $_POST['icd_ind'];
+	$diagnosis_a = $_POST['diagnosis_a'];
+	$diagnosis_b = $_POST['diagnosis_b'];
+	$diagnosis_c = $_POST['diagnosis_c'];
+	$diagnosis_d = $_POST['diagnosis_d'];
+	$diagnosis_e = $_POST['diagnosis_e'];
+	$diagnosis_f = $_POST['diagnosis_f'];
+	$diagnosis_g = $_POST['diagnosis_g'];
+	$diagnosis_h = $_POST['diagnosis_h'];
+	$diagnosis_i = $_POST['diagnosis_i'];
+	$diagnosis_j = $_POST['diagnosis_j'];
+	$diagnosis_k = $_POST['diagnosis_k'];
+	$diagnosis_l = $_POST['diagnosis_l'];
 	$medicaid_resubmission_code = $_POST['medicaid_resubmission_code'];
 	$original_ref_no = $_POST['original_ref_no'];
 	$prior_authorization_number = $_POST['prior_authorization_number'];
@@ -364,6 +378,13 @@ die();
 	$billing_provider_dd = $_POST['billing_provider_dd'];
 	$billing_provider_b_other = $_POST['billing_provider_b_other'];
 	$reject_reason = $_POST['reject_reason'];
+	$nucc_8a = $_POST['nucc_8a'];
+	$nucc_8b = $_POST['nucc_8b'];
+	$nucc_9a = $_POST['nucc_9a'];
+	$nucc_9b = $_POST['nucc_9b'];
+	$claim_codes = $_POST['claim_codes'];
+	$other_claim_id = $_POST['other_claim_id'];
+	$nucc_30 = $_POST['nucc_30'];
 	if(isset($_POST['reject_but'])){
 		$status = DSS_CLAIM_REJECTED;
 	}else{
@@ -443,6 +464,7 @@ die();
 		date_same_illness = '".s_for($date_same_illness)."',
 		unable_date_from = '".s_for($unable_date_from)."',
 		unable_date_to = '".s_for($unable_date_to)."',
+		name_referring_provider_qualifier = '".s_for($name_referring_provider_qualifier)."',
 		referring_provider = '".s_for($referring_provider)."',
 		field_17a_dd = '".s_for($field_17a_dd)."',
 		field_17a = '".s_for($field_17a)."',
@@ -456,6 +478,19 @@ die();
 		diagnosis_2 = '".s_for($diagnosis_2)."',
 		diagnosis_3 = '".s_for($diagnosis_3)."',
 		diagnosis_4 = '".s_for($diagnosis_4)."',
+		icd_ind = '".s_for($icd_ind)."',
+		diagnosis_a = '".s_for($diagnosis_a)."',
+		diagnosis_b = '".s_for($diagnosis_b)."',
+		diagnosis_c = '".s_for($diagnosis_c)."',
+		diagnosis_d = '".s_for($diagnosis_d)."',
+		diagnosis_e = '".s_for($diagnosis_e)."',
+		diagnosis_f = '".s_for($diagnosis_f)."',
+		diagnosis_g = '".s_for($diagnosis_g)."',
+		diagnosis_h = '".s_for($diagnosis_h)."',
+		diagnosis_i = '".s_for($diagnosis_i)."',
+		diagnosis_j = '".s_for($diagnosis_j)."',
+		diagnosis_k = '".s_for($diagnosis_k)."',
+		diagnosis_l = '".s_for($diagnosis_l)."',
 		medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
 		original_ref_no = '".s_for($original_ref_no)."',
 		prior_authorization_number = '".s_for($prior_authorization_number)."',
@@ -563,6 +598,13 @@ die();
 		total_charge = '".s_for($total_charge)."',
 		amount_paid = '".s_for($amount_paid)."',
 		balance_due = '".s_for($balance_due)."',
+		nucc_8a = '".s_for($nucc_8a)."',
+		nucc_8b = '".s_for($nucc_8b)."',
+		nucc_9a = '".s_for($nucc_9a)."',
+		nucc_9b = '".s_for($nucc_9b)."',
+		claim_codes = '".s_for($claim_codes)."',
+		other_claim_id = '".s_for($other_claim_id)."',
+		nucc_30 = '".s_for($nucc_30)."',
 		signature_physician = '".s_for($signature_physician)."',
 		physician_signed_date = '".s_for($physician_signed_date)."',
 		service_facility_info_name = '".s_for($service_facility_info_name)."',
@@ -660,6 +702,7 @@ die();
 		date_same_illness = '".s_for($date_same_illness)."',
 		unable_date_from = '".s_for($unable_date_from)."',
 		unable_date_to = '".s_for($unable_date_to)."',
+		name_referring_provider_qualifier = '".s_for($name_referring_provider_qualifier)."',
 		referring_provider = '".s_for($referring_provider)."',
 		field_17a_dd = '".s_for($field_17a_dd)."',
 		field_17a = '".s_for($field_17a)."',
@@ -673,6 +716,19 @@ die();
 		diagnosis_2 = '".s_for($diagnosis_2)."',
 		diagnosis_3 = '".s_for($diagnosis_3)."',
 		diagnosis_4 = '".s_for($diagnosis_4)."',
+		icd_ind = '".s_for($icd_ind)."',
+                diagnosis_a = '".s_for($diagnosis_a)."',
+                diagnosis_b = '".s_for($diagnosis_b)."',
+                diagnosis_c = '".s_for($diagnosis_c)."',
+                diagnosis_d = '".s_for($diagnosis_d)."',
+                diagnosis_e = '".s_for($diagnosis_e)."',
+                diagnosis_f = '".s_for($diagnosis_f)."',
+                diagnosis_g = '".s_for($diagnosis_g)."',
+                diagnosis_h = '".s_for($diagnosis_h)."',
+                diagnosis_i = '".s_for($diagnosis_i)."',
+                diagnosis_j = '".s_for($diagnosis_j)."',
+                diagnosis_k = '".s_for($diagnosis_k)."',
+                diagnosis_l = '".s_for($diagnosis_l)."',
 		medicaid_resubmission_code = '".s_for($medicaid_resubmission_code)."',
 		original_ref_no = '".s_for($original_ref_no)."',
 		prior_authorization_number = '".s_for($prior_authorization_number)."',
@@ -780,6 +836,13 @@ die();
 		total_charge = '".s_for($total_charge)."',
 		amount_paid = '".s_for($amount_paid)."',
 		balance_due = '".s_for($balance_due)."',
+                nucc_8a = '".s_for($nucc_8a)."',
+                nucc_8b = '".s_for($nucc_8b)."',
+                nucc_9a = '".s_for($nucc_9a)."',
+                nucc_9b = '".s_for($nucc_9b)."',
+                claim_codes = '".s_for($claim_codes)."',
+                other_claim_id = '".s_for($other_claim_id)."',
+                nucc_30 = '".s_for($nucc_30)."',
 		signature_physician = '".s_for($signature_physician)."',
 		physician_signed_date = '".s_for($physician_signed_date)."',
 		service_facility_info_name = '".s_for($service_facility_info_name)."',
@@ -997,6 +1060,7 @@ $date_current = st($myarray['date_current']);
 $date_same_illness = st($myarray['date_same_illness']);
 $unable_date_from = st($myarray['unable_date_from']);
 $unable_date_to = st($myarray['unable_date_to']);
+$name_referring_provider_qualifier = st($myarray['name_referring_provider_qualifier']);
 $referring_provider = st($myarray['referring_provider']);
 $field_17a_dd = st($myarray['field_17a_dd']);
 $field_17a = st($myarray['field_17a']);
@@ -1011,6 +1075,19 @@ $diagnosis_1 = st($myarray['diagnosis_1']);
 $diagnosis_2 = st($myarray['diagnosis_2']);
 $diagnosis_3 = st($myarray['diagnosis_3']);
 $diagnosis_4 = st($myarray['diagnosis_4']);
+$icd_ind = st($myarray['icd_ind']);
+$diagnosis_a = st($myarray['diagnosis_a']);
+$diagnosis_b = st($myarray['diagnosis_b']);
+$diagnosis_c = st($myarray['diagnosis_c']);
+$diagnosis_d = st($myarray['diagnosis_d']);
+$diagnosis_e = st($myarray['diagnosis_e']);
+$diagnosis_f = st($myarray['diagnosis_f']);
+$diagnosis_g = st($myarray['diagnosis_g']);
+$diagnosis_h = st($myarray['diagnosis_h']);
+$diagnosis_i = st($myarray['diagnosis_i']);
+$diagnosis_j = st($myarray['diagnosis_j']);
+$diagnosis_k = st($myarray['diagnosis_k']);
+$diagnosis_l = st($myarray['diagnosis_l']);
 $medicaid_resubmission_code = st($myarray['medicaid_resubmission_code']);
 $original_ref_no = st($myarray['original_ref_no']);
 $prior_authorization_number = st($myarray['prior_authorization_number']);
@@ -1118,6 +1195,13 @@ $accept_assignment = st($myarray['accept_assignment']);
 $total_charge = st($myarray['total_charge']);
 $amount_paid = st($myarray['amount_paid']);
 $balance_due = st($myarray['balance_due']);
+$nucc_8a = st($myarray['nucc_8a']);
+$nucc_8b = st($myarray['nucc_8b']);
+$nucc_9a = st($myarray['nucc_9a']);
+$nucc_9b = st($myarray['nucc_9b']);
+$claim_codes = st($myarray['claim_codes']);
+$other_claim_id = st($myarray['other_claim_id']);
+$nucc_30 = st($myarray['nucc_30']);
 $signature_physician = st($myarray['signature_physician']);
 $physician_signed_date = st(($myarray['physician_signed_date']!='')?$myarray['physician_signed_date']:date('m/d/Y'));
 $service_facility_info_name = st($myarray['service_facility_info_name']);
@@ -1193,6 +1277,10 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
   $result = mysql_query($sleepstudies);
   $d = mysql_fetch_assoc($result);
   $diagnosis_1 = $d['diagnosis'];
+  $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysql_real_escape_string($diagnosis_1)."'";
+     $ins_diag_q = mysql_query($ins_diag_sql);
+     $ins_diag = mysql_fetch_assoc($ins_diag_q);
+     $diagnosis_a = $ins_diag['ins_diagnosis'];
 
 $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
@@ -1512,55 +1600,19 @@ $(document).ready(function(){
 							<tr>
 								<td align="center" valign="top">
 									<span class="num">1.</span> 
-									Medicare
-								</td>
-								<td align="center" valign="top">
-									MediCaID
-								</td>
-								<td align="center" valign="top">
-									Tricare Champus
-								</td>
-								<td align="center" valign="top">
-									Chmapva
-								</td>
-								<td align="center" valign="top">
-									Group Health Plan
-								</td>
-								<td align="center" valign="top">
-									Feca blklung
-								</td>
-								<td align="center" valign="top">
-									Other 
+									Payer		
+
+									<input type="text" name="payer_id" style="width:120px" />
+									<input type="text" name="payer_name" />
+									<input type="text" name="payer_add1" />
+									<input type="text" name="payer_add2" />
 								</td>
 							</tr>
 							<tr>
 								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="1" <? if($insurancetype == '1') {echo " checked";}?> />
-									<span class="small_cap">(Medicare #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="2" <? if($insurancetype == '2') {echo " checked";}?> />
-									<span class="small_cap">(Medicaid #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="3" <? if($insurancetype == '3') {echo " checked";}?> />
-									<span class="small_cap">(Sponsor's SSN)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="4" <? if($insurancetype == '4') {echo " checked";}?> />
-									<span class="small_cap">(Member ID #)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="5" <? if($insurancetype == '5') {echo " checked";}?> />
-									<span class="small_cap">(SSN or ID)</span>
-								</td>
-								<td align="left" valign="top">
-									<input name="insurance_type" type="radio" value="6" <? if($insurancetype == '6') {echo " checked";}?> />
-									<span class="small_cap">(SSN)</span>
-								</td>
-                                                                <td align="left" valign="top">
-                                                                        <input name="insurance_type" type="radio" value="7" <? if($insurancetype == '7') {echo " checked";}?> />
-                                                                        <span class="small_cap">(ID)</span>
+									<input type="text" name="payer_city" />
+									<input type="text" name="payer_state" />
+									<input type="text" name="payer_zip" />
                                                                 </td>								
 							</tr>
 						</table>
@@ -1685,40 +1737,12 @@ $(document).ready(function(){
 					</td>
 					<td rowspan="2" align="left" valign="top">
 						<span class="num">8.</span> 
-						Patient Status<br />
+						Reserved for NUCC Use<br />
 						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 							<tr>
-								<td width="25%" align="left" valign="top">
-									<span class="small_cap">Single</span>
-									<br />
-									<input name="patient_status" type="radio" value="Single" <? if(in_array("Single", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td width="40%" align="left" valign="top">
-									<span class="small_cap">Married</span>
-									<br />
-									<input name="patient_status" type="radio" value="Married" <? if(in_array("Married", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td width="35%" align="left" valign="top">
-									<span class="small_cap">Others</span>
-									<br />
-									<input name="patient_status" type="radio" value="Others" <? if(in_array("Others",$patient_status_array)) { echo " checked";}?> />
-								</td>
-							</tr>
-							<tr>
 								<td align="left" valign="top">
-									<span class="small_cap">Employed</span>
-									<br />
-									<input name="work_status" type="radio" value="Employed" <? if(in_array("Employed", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Full Time Student</span>
-									<br />
-									<input name="work_status" type="radio" value="Full Time Student" <? if(in_array("Full Time Student", $patient_status_array)) { echo " checked";}?> />
-								</td>
-								<td align="left" valign="top">
-									<span class="small_cap">Part Time Student</span>
-									<br />
-									<input name="work_status" type="radio" value="Part Time Student" <?if(in_array("Part Time Student", $patient_status_array)) { echo " checked";}?> />
+									<input name="nucc_8a" value="<?= $nucc_8a; ?>" type="text" />
+									<input name="nucc_8b" value="<?= $nucc_8b; ?>" type="text" />
 								</td>
 							</tr>
 						</table>
@@ -1892,38 +1916,28 @@ $(document).ready(function(){
 					<td align="left" valign="top">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
-								<td width="58%" align="left" valign="top">
+								<td align="left" valign="top">
 									<span class="num_a">b.</span> 
-									Other Insured's Birth Date
+									Reserved for NUCC Use
 									<br />
-									&nbsp;&nbsp;
-									<input type="text" value="<?=$other_insured_dob?>" name="other_insured_dob" class="inbox_line3 datealtfullmask" size="10"/>
-									mm-dd-yyyy
-								</td>
-								<td width="42%" align="center" valign="top">
-									Sex
-									<br />
-									M 
-									<input type="radio" name="other_insured_sex" value="M" <? if($other_insured_sex == "M" || $other_insured_sex == "Male") echo " checked";?> />
-									&nbsp;&nbsp;F 
-									<input type="radio" name="other_insured_sex" value="F" <? if($other_insured_sex == "F" || $other_insured_sex == "Female") echo " checked";?> />
+									<input type="text" name="nucc_9b" value="<?= $nucc_9b; ?>" class="inbox_line3" size="28"/>
 								</td>
 							</tr>
 						</table>
 					</td>
 					<td align="left" valign="top">
 						<span class="num_a">b.</span>
-						Employer's Name or School Name
+						Other Claim ID (Designated by NUCC)	
 						<br />
-						<input value="<?=$insured_employer_school_name?>" name="insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
+						<input name="other_claim_id" value="<?= $other_claim_id; ?>" type="text" class="inbox_line3" size="28"  />
 					</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">
 						<span class="num_a">c.</span>
-						Employer's Name or School Name
+						Reserved for NUCC Use
 						<br />
-						<input value="<?=$other_insured_employer_school_name?>" name="other_insured_employer_school_name" type="text" class="inbox_line3" size="28"  />
+						<input name="nucc_9c" value="<?= $nucc_9c; ?>" type="text" class="inbox_line3" size="28"  />
 					</td>
 					<td align="left" valign="top">
 						<span class="num_a">c.</span>
@@ -1941,9 +1955,9 @@ $(document).ready(function(){
 					</td>
 					<td align="left" valign="top">
 						<span class="num_a">10d.</span>
-						Reserved For local use
+						Claim Codes (Designated by NUCC)
 						<br />
-						<input value="<?=$reserved_local_use?>" name="reserved_local_use" type="text" class="inbox_line3" size="28"  />
+						<input value="<?=$claim_codes?>" name="claim_codes" type="text" class="inbox_line3" size="28"  />
 					</td>
 					<td align="left" valign="top">
 						<span class="num_a">d.</span> 
@@ -1999,34 +2013,23 @@ $(document).ready(function(){
 							<tr>
 								<td width="58%" align="left" valign="top">
 									<span class="num">14.</span> 
-									Date of Current
+DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 									<br />
 									&nbsp;&nbsp;
 									<input type="text" value="<?=$date_current?>" name="date_current" class="inbox_line3 datealtmask" size="10"/>
 									mm-dd-yy
-								</td>
-								<td width="2%" align="left" valign="top">
-									<font size="7"><b>&lt;</b></font>
-								</td>
-								<td width="40%" align="left" valign="middle">
-									Illness
-									<span class="small_cap"> (First sympton)</span>
-									OR
-									<br />
-									Injury
-									<span class="small_cap"> (Accident)</span>
-									OR
-									<br />
-									Pregnancy
-									<span class="small_cap"> (LMP)</span>
+									<span class="small_cap"> QUAL. </span>
+									<input type="text" name="qual" class="inbox_line3" size="10"/>
 								</td>
 							</tr>
 						</table>
 					</td>
 					<td valign="top">
 						<span class="num">15.</span> 
-						If Patient has had same or similar Illness. Give First Date
+						Other Date
 						<br />
+						<span class="small_cap">QUAL.</span>
+									<input type="text" name="qual_2" class="inbox_line3" size="10"/>
 						&nbsp;&nbsp;
 						<input type="text" value="<?=$date_same_illness?>" name="date_same_illness" class="inbox_line3 datealtmask" size="10"/>
 						mm-dd-yy
@@ -2061,6 +2064,11 @@ $(document).ready(function(){
 					<td valign="top">
 						<span class="num">17.</span> 
 						Name of Referring Provider or Other Source
+				<select name="name_referring_provider_qualifier">
+					<option value="DN" <?= ($name_referring_provider_qualifier=="DN")?'checked="checked"':''; ?>>DN - Referring Provider</option>
+					<option value="DK" <?= ($name_referring_provider_qualifier=="DK")?'checked="checked"':''; ?>>DK - Ordering Provider</option>
+					<option value="DQ" <?= ($name_referring_provider_qualifier=="DQ")?'checked="checked"':''; ?>>DQ - Supervising Provider</option>
+				</select>
 								<input type="text" value="<?= $referring_provider; ?>" name="referring_provider" class="inbox_line3" size="20" />
 								
 					</td>
@@ -2183,7 +2191,7 @@ $(document).ready(function(){
 				<tr>
 					<td valign="top" colspan="2">
 						<span class="num">19.</span> 
-						Reserved for Local Use<br />
+						Additional Claim Information (DESIGNATED BY NUCC)<br />
 						<input type="text" value="<?=$reserved_local_use1?>" name="reserved_local_use1" class="inbox_line3" size="100" />
 					</td>
 					<td valign="top">
@@ -2215,88 +2223,83 @@ $(document).ready(function(){
 						<span class="num">21.</span> 
 						Diagnosis or Nature of Illness or Injury 
 						<span class="small_cap">
-							(Relate Items 1, 2, 3, 4 to Item 24E by line)
+							(Relate A-L to service line below (24E))
 						</span>
+                                ICD IND. <select name="icd_ind">
+                                        <option value="9" <?= ($icd_ind=="9")?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
+                                        <option value="0" <?= ($icd_ind=="0")?'selected="selected"':''; ?>ICD-10-CM - 0</option>
+                                </select>
+
 						
-						<table width="100%" cellpadding="3" cellspacing="5" border="0">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0">
 							<tr>
-								<td valign="top" width="50%">
-									<b>1.</b>
-									<select name="diagnosis_1" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_1 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
+								<td valign="top" width="23%">
+									<b>A.</b>
+									<input type="text" name="diagnosis_a" class="inbox_line3" size="20" value="<?= $diagnosis_a; ?>" />
 								</td>
-								<td valign="top" width="50%">
-									<b>3.</b>
-									<select name="diagnosis_3" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_3 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
+								<td valign="top" width="23%">
+									<b>B.</b>
+                                                                        <input type="text" name="diagnosis_b" class="inbox_line3" size="20" value="<?= $diagnosis_b; ?>" />
 								</td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>C.</b>
+                                                                        <input type="text" name="diagnosis_c" class="inbox_line3" size="20" value="<?= $diagnosis_c; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>D.</b>
+                                                                        <input type="text" name="diagnosis_d" class="inbox_line3" size="20" value="<?= $diagnosis_d; ?>" />
+                                                                </td>
+
 							</tr>
-							<tr>
-								<td valign="top">
-									<b>2.</b>
-									<select name="diagnosis_2" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_2 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-								<td valign="top">
-									<b>4.</b>
-									<select name="diagnosis_4" style="width:300px;" >
-										<option value=""></option>
-										<? 
-										$ins_diag_my = mysql_query($ins_diag_sql);
-										
-										while($ins_diag_myarray = mysql_fetch_array($ins_diag_my))
-										{
-										?>
-											<option value="<?=st($ins_diag_myarray['ins_diagnosisid'])?>" <? if($diagnosis_4 == st($ins_diag_myarray['ins_diagnosisid'])) echo " selected";?>>
-												<?=st($ins_diag_myarray['ins_diagnosis'])." ".$ins_diag_myarray['description'];?>
-											</option>
-										<?
-										}?>
-									</select>
-								</td>
-							</tr>
+                                                        <tr>
+                                                                <td valign="top" width="23%">
+                                                                        <b>E.</b>
+                                                                        <input type="text" name="diagnosis_e" class="inbox_line3" size="20" value="<?= $diagnosis_e; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>F.</b>
+                                                                        <input type="text" name="diagnosis_f" class="inbox_line3" size="20" value="<?= $diagnosis_f; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>G.</b>
+                                                                        <input type="text" name="diagnosis_g" class="inbox_line3" size="20" value="<?= $diagnosis_g; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>H.</b>
+                                                                        <input type="text" name="diagnosis_h" class="inbox_line3" size="20" value="<?= $diagnosis_h; ?>" />
+                                                                </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                                <td valign="top" width="23%">
+                                                                        <b>I.</b>
+                                                                        <input type="text" name="diagnosis_i" class="inbox_line3" size="20" value="<?= $diagnosis_i; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>J.</b>
+                                                                        <input type="text" name="diagnosis_j" class="inbox_line3" size="20" value="<?= $diagnosis_j; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>K.</b>
+                                                                        <input type="text" name="diagnosis_k" class="inbox_line3" size="20" value="<?= $diagnosis_k; ?>" />
+                                                                </td>
+                                                                <td valign="top" width="23%">
+                                                                        <b>L.</b>
+                                                                        <input type="text" name="diagnosis_l" class="inbox_line3" size="20" value="<?= $diagnosis_l; ?>" />
+                                                                </td>
+
+                                                        </tr>
+
 						</table>
 					</td>
 					<td valign="top">
 						<span class="num">22.</span> 
-						Medicaid Resubmission Code
-						<input type="text" value="<?=$medicaid_resubmission_code?>" name="medicaid_resubmission_code" class="inbox_line3" size="30" />
+						Resubmission Code
+                                <select name="resubmission_code_fill">
+                                        <option value="">New Claim</option>
+                                        <option value="7">Resubmitted Claim</option>
+                                        <option value="8">Void/Cancel Prior Claim</option>
+                                </select>
 						<br />
 						Original Ref. No.
 						<input type="text" value="<?=$original_ref_no?>" name="original_ref_no" class="inbox_line3" size="30" />
@@ -2515,6 +2518,8 @@ if (!$query) {
 			<option value=''>Select One</option>
 			<?php 
 				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
+  				$dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1; 
+
 				$sql = "SELECT * FROM dental_place_service ps WHERE status=1";
 				$q = mysql_query($sql);
 				while($psr = mysql_fetch_assoc($q)){
@@ -2558,11 +2563,22 @@ if (!$query) {
 
         </td>
         <td width="92">
-		<select name="diagnosispointer<?=$li;?>">
-			<?php for($i=1;$i<=4;$i++){ ?>
-				<option value="<?= $i; ?>" <?= ($i==$array['diagnosispointer'])?'selected="selected"':''; ?>><?= $i; ?></option>
-			<?php } ?>
-			</select>
+		<!--diagnosispointer<?=$li;?>-->
+<table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="1" <?= ($dp=="1")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">A</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="2" <?= ($dp=="2")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">B</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="3" <?= ($dp=="3")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">C</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="4" <?= ($dp=="4")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="5" <?= ($dp=="5")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">E</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="6" <?= ($dp=="6")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">F</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="7" <?= ($dp=="7")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">G</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="8" <?= ($dp=="8")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="9" <?= ($dp=="9")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">I</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="10" <?= ($dp=="10")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">J</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="11" <?= ($dp=="11")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">K</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="12" <?= ($dp=="12")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">L</td>
+</tr></tbody></table>
+	</td>
         <td width="100" align="right" style="padding-right:15px;">$<?= number_format($array['amount'], 2); ?></td>
         <td width="54"><input style="width:39px;" type="text" name="daysorunits<?=$li;?>" value="<?php echo $array['daysorunits']; ?>"></td>
         <td width="60"><input style="width:45px;" type="text" name="epsdt<?=$li;?>" value="<?php echo $array['epsdt']; ?>"></td>
@@ -2741,8 +2757,8 @@ if ($is_pending) {
       $ <input type="text" value="<?=$amount_paid;?>" name="amount_paid" class="inbox_line3 number_field" size="15"/>
     </td>
     <td valign="top" width="33%">
-      <span class="num">30.</span> Balance Due<br/>
-      $ <input type="text" value="<?=$balance_due;?>" name="balance_due" class="inbox_line3 number_field" size="15" />
+      <span class="num">30.</span> RSVD for NUCC Use<br/>
+      <input type="text" name="nucc_30" value="<?= $nucc_30; ?>" class="inbox_line3 " size="15" />
       <br/>
       <span class="small_cap">&nbsp;</span>
     </td>

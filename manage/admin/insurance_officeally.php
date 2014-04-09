@@ -48,6 +48,7 @@ if($insurancetype!=1){
   $diagnosising_npi = '';
 }
 
+$row[] = "9"; //New ICD field for new cms 1500 form
 $ins_sql = "SELECT * FROM dental_contact where contactid='".$pat['p_m_ins_co']."'";
 $ins_q = mysql_query($ins_sql);
 $ins_co = mysql_fetch_assoc($ins_q);
@@ -341,6 +342,10 @@ $row[] = "";
 $row[] = "";
 $row[] = "";
 $row[] = "";
+$row[] = ""; //Extra diagnosis codes for new CMS 1500 form
+$row[] = "";
+$row[] = "";
+$row[] = "";
 
 $row[] = $claim['medicaid_resubmission_code'];
 $row[] = $claim['original_ref_no'];
@@ -592,7 +597,7 @@ $row[] = "";
 $row[] = $phone;
 $row[] = (($insurancetype == '1')?$medicare_npi:$npi);
 $row[] = $pat['p_m_ins_grp'];
-
+$row[] = ""; //New Billing Taxonomy field for new cms 1500 form
 $data[] = $row;
 }
 }

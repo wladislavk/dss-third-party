@@ -166,9 +166,10 @@ $t = mysql_fetch_assoc($my);
 <div id="respond">
 <h4 style="clear:both;">Respond</h4>
 <form action="<?= $_SERVER['PHP_SELF']; ?>?ed=<?= $_REQUEST['ed']; ?>" method="post" enctype="multipart/form-data">
-  <textarea name="body" style="width: 400px; height:100px;"></textarea><br />
+  <textarea id="body" name="body" style="width: 400px; height:100px;"></textarea><br />
   <input type="submit" name="respond" value="Submit Response"  style="float:left;" class="btn btn-primary">
-  <div style=" width:300px;">
+  <a href="#" onclick="mark_unread(); return false;" class="pull-right btn btn-primary">Mark Unread</a>
+  <div style=" width:300px;" class="clearfix">
         <div id="attachments">
                                 <span><input type="file" name="attachment[]" id="attachment1" class="attachment" onchange="$('#add_attachment_but').show()" style="height:auto;width:auto;" /> <a href="#" onclick="$(this).parent().remove();$('#add_attachment_but').show();return false;">Remove</a></span>
 
@@ -185,6 +186,23 @@ $t = mysql_fetch_assoc($my);
 </div>
 </form>
                 <script type="text/javascript">
+	function mark_unread(){
+	  var check = false;
+	  if($('#body').val()!=''){
+	    check = true;
+	  }
+	  $(".attachment").each( function(){
+	    if($(this).val()!=''){
+	      check = true; 
+	    }
+	  });
+	  if(check){
+	    if(!confirm("You have added items to this ticket but have not submitted your response. Click 'Cancel' to stay on the page and submit your response, or click 'OK' to leave without saving.")){
+              return false;
+            }
+	  }
+	  window.location = "manage_support_tickets.php?rid=<?= $_REQUEST['ed']; ?>";
+	}
                         function add_attachment(){
                                 var blank = $(".attachment").filter(function() {
     return !this.value;}).length;

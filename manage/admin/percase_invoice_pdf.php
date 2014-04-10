@@ -514,9 +514,9 @@ $title = "test";
 
         // output the HTML content
         $pdf->writeHTML($html, true, false, true, false, '');
-
-        $filename = '../../../../shared/q_file/percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
-        $pdf->Output($filename, 'F');
+	
+        $filename = 'percase_invoice_'.$invoice['docid'].'_'.$_GET['invoice_id'].'.pdf';
+        $pdf->Output('../../../../shared/q_file/'.$filename, 'F');
 //$pdf->Output('example_001.pdf', 'I');
 if(!isset($redirect) || $redirect){
 ?>

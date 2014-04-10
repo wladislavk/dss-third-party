@@ -29,7 +29,32 @@ $doc = mysql_fetch_assoc($doc_q);
 <div align="center" class="red" style="clear:both;">
         <b><? echo $_GET['msg'];?></b>
 </div>
-
+<?php $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
+$q = mysql_query($sql);
+$myarray = mysql_fetch_assoc($q);
+?>
+<div class="pull-right">
+                                  <?php if($myarray["status"]==1){ ?>
+                                        <a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="btn btn-primary" title="Create Invoice" style="padding:3px 5px;">
+                                                Create
+                                        </a>
+                                        <?php if($myarray['cc_id']!=''){ ?>
+                                        <a href="#" onclick="loadPopup('percase_bill.php?docid=<?=$myarray["userid"];?>'); return false;" class="btn btn-primary" title="Bill Credit Card" style="padding:3px 5px;">
+                                                Bill Card
+                                        </a>
+                                        <?php } ?>
+                                  <?php }else{ ?>
+                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="Create Invoice" style="padding:3px 5px;">
+                                                Create
+                                        </a>
+                                        <?php if($myarray['cc_id']!=''){ ?>
+                                        <a href="#" onclick="alert('Error! This user is INACTIVE. You can only bill and invoice invoice active users.'); return false;" class="btn btn-primary" title="Bill Credit Card" style="padding:3px 5px;">
+                                                Bill Card
+                                        </a>
+                                        <?php } ?>
+                                  <?php } ?>
+</div>
+<div class="clearfix"></div>
 <?php
   $charge_sql = "SELECT * FROM dental_charge
 			WHERE userid='".mysql_real_escape_string($_GET['docid'])."'";

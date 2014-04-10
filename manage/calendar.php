@@ -173,7 +173,7 @@ require_once('includes/formatters.php');
                         	$p_query = mysql_query($p_sql);
                         	while($p = mysql_fetch_array($p_query)){
                                 	?>case '<?= $p['userid']; ?>':
-						prod = '<?= addslashes($p['name']); ?>';
+						prod = '<?= addslashes($p['first_name']." ".$p['last_name']); ?>';
 						break;
 					<?php
                         	}
@@ -239,7 +239,7 @@ require_once('includes/formatters.php');
 			$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
 			$p_query = mysql_query($p_sql);
 			while($p = mysql_fetch_array($p_query)){
-				?>{ key: '<?= $p['userid']; ?>', label: '<?= $p['name']; ?>'},<?php
+				?>{ key: '<?= $p['userid']; ?>', label: '<?= $p['first_name'].' '.$p['last_name']; ?>'},<?php
 			}
 
 			?>

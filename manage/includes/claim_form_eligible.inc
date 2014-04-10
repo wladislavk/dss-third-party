@@ -1,4 +1,18 @@
 <?php
+$status_sql = "SELECT status FROM dental_insurance
+                WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
+                        AND patientid='".mysql_real_escape_string($_GET['pid'])."'";
+$status_q = mysql_query($status_sql);
+$status_r = mysql_fetch_assoc($status_q);
+$status = $status_r['status'];
+$is_sent = ($status == DSS_CLAIM_SENT || $status == DSS_CLAIM_SEC_SENT) ? true : false;
+$is_pending = ($status == DSS_CLAIM_PENDING || $status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_pri_pending = ($status == DSS_CLAIM_PENDING) ? true : false;
+$is_sec_pending = ($status == DSS_CLAIM_SEC_PENDING) ? true : false;
+$is_disputed = ($status == DSS_CLAIM_DISPUTE || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_PATIENT_DISPUTE || $status == DSS_CLAIM_SEC_PATIENT_DISPUTE) ? true : false;
+$is_rejected = ($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED) ? true : false;
+$is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SENT || $status == DSS_CLAIM_SEC_DISPUTE || $status == DSS_CLAIM_SEC_REJECTED);
+
 $pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
 $pat_my = mysql_query($pat_sql);
 $pat_myarray = mysql_fetch_array($pat_my);
@@ -452,7 +466,7 @@ if (empty($prior_authorization_number)) {
 
     <body>
 
-    <form action="claim_handler.php" method="POST">
+    <form action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>" method="POST">
 
         <div id="eligibleapi-claim-1500-form"></div>
 
@@ -504,6 +518,7 @@ if (empty($prior_authorization_number)) {
     <?php }elseif($auto_accident == "NO"){ ?>
       $('input[name="claim[auto_accident]"][value="false"]').attr("checked", "checked");
     <?php } ?>
+    $('input[name="claim[auto_accident_state]"]').val("<?= $auto_accident_place;?>");
     <?php if($other_accident == "YES"){ ?>
       $('input[name="claim[other_accident]"][value="true"]').attr("checked", "checked");
     <?php }elseif($other_accident == "NO"){ ?>

@@ -1600,7 +1600,59 @@ $(document).ready(function(){
 							<tr>
 								<td align="center" valign="top">
 									<span class="num">1.</span> 
-									Payer		
+Medicare
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        MediCaID
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        Tricare Champus
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        Chmapva
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        Group Health Plan
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        Feca blklung
+                                                                </td>
+                                                                <td align="center" valign="top">
+                                                                        Other
+                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="1" <? if($insurancetype == '1') {echo " checked";}?> />
+                                                                        <span class="small_cap">(Medicare #)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="2" <? if($insurancetype == '2') {echo " checked";}?> />
+                                                                        <span class="small_cap">(Medicaid #)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="3" <? if($insurancetype == '3') {echo " checked";}?> />
+                                                                        <span class="small_cap">(Sponsor's SSN)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="4" <? if($insurancetype == '4') {echo " checked";}?> />
+                                                                        <span class="small_cap">(Member ID #)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="5" <? if($insurancetype == '5') {echo " checked";}?> />
+                                                                        <span class="small_cap">(SSN or ID)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="6" <? if($insurancetype == '6') {echo " checked";}?> />
+                                                                        <span class="small_cap">(SSN)</span>
+                                                                </td>
+                                                                <td align="left" valign="top">
+                                                                        <input name="insurance_type" type="radio" value="7" <? if($insurancetype == '7') {echo " checked";}?> />
+                                                                        <span class="small_cap">(ID)</span>
+                                                                </td>  
+
+
+									<!--Payer		
 
 									<input type="text" name="payer_id" style="width:120px" />
 									<input type="text" name="payer_name" />
@@ -1614,7 +1666,8 @@ $(document).ready(function(){
 									<input type="text" name="payer_state" />
 									<input type="text" name="payer_zip" />
                                                                 </td>								
-							</tr>
+									-->
+							</tr>	
 						</table>
 						<input type="hidden" name="other_insurance_type" value="<?= $other_insurancetype; ?>" />
 					</td>

@@ -65,14 +65,14 @@ $sql = "select u.*, c.id as company_id, c.name as company_name, p.name as plan_n
 if(isset($_GET['cid'])){
   $sql .= " AND c.id='".mysql_real_escape_string($_GET['cid'])."' ";
 }
-	 $sql .= " order by u.username";
+	 $sql .= " order by u.last_name, u.first_name";
 }elseif(is_admin($_SESSION['admin_access'])){
   $sql = "SELECT u.*, c.id as company_id, c.name AS company_name, p.name as plan_name FROM dental_users u 
 		INNER JOIN dental_user_company uc ON uc.userid = u.userid
 		INNER JOIN companies c ON c.id=uc.companyid
 		LEFT JOIN dental_plans p ON p.id=u.plan_id
 		WHERE u.user_access=2 AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'
-		ORDER BY username";
+		ORDER BY u.last_name, u.first_name";
 }elseif(is_billing($_SESSION['admin_access'])){
   $a_sql = "SELECT ac.companyid FROM admin_company ac
 			JOIN admin a ON a.adminid = ac.adminid
@@ -84,7 +84,7 @@ if(isset($_GET['cid'])){
                 INNER JOIN companies c ON c.id=uc.companyid
         	LEFT JOIN dental_plans p ON p.id=u.plan_id
                 WHERE u.user_access=2 AND u.billing_company_id='".mysql_real_escape_string($admin['companyid'])."'
-                ORDER BY username";
+                ORDER BY u.last_name, u.first_name";
 }
 $my = mysql_query($sql);
 $total_rec = mysql_num_rows($my);
@@ -152,10 +152,10 @@ $num_users=mysql_num_rows($my);
 	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="20%">
-			Username	
+			Name
 		</td>
 		<td valign="top" class="col_head" width="20%">
-			Name
+			Username	
 		</td>
 		<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="20%">
@@ -165,17 +165,20 @@ $num_users=mysql_num_rows($my);
 			Login As
 		</td>
 		<?php } ?>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="8%">
 			Locations
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="8%">
 			Contact
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="8%">
 			Staff
 		</td>
-		<td valign="top" class="col_head" width="10%">
+		<td valign="top" class="col_head" width="8%">
 		 	Patients	
+		</td>
+		<td valign="top" class="col_head" width="8%">
+		 	Invoices	
 		</td>
 		<?php if(is_super($_SESSION['admin_access'])){ ?>
 		<td valign="top" class="col_head" width="10%">
@@ -219,6 +222,10 @@ $num_users=mysql_num_rows($my);
                         $pat_sql = "select count(patientid) as pat_count from dental_patients where docid='".st($myarray['userid'])."' ";
                         $pat_my = mysql_query($pat_sql) or die(mysql_error()." | ".$pat_sql);
                         $pat_myarray = mysql_fetch_array($pat_my);
+
+                        $inv_sql = "select count(id) as inv_count from dental_percase_invoice where docid='".st($myarray['userid'])."' ";
+                        $inv_my = mysql_query($inv_sql) or die(mysql_error()." | ".$inv_sql);
+                        $inv_myarray = mysql_fetch_array($inv_my);
 			
 			if($myarray["status"] == 1)
 			{
@@ -239,6 +246,9 @@ $num_users=mysql_num_rows($my);
 		?>
 			<tr class="<?=$tr_class;?>">
 				<td valign="top">
+					<?=st($myarray["first_name"]. " " .$myarray["last_name"]);?>
+				</td>
+				<td valign="top">
 					<?php if($myarray["status"] == 2){
 					  echo "Registration emailed: ".(($myarray["registration_email_date"]!='')?date('m/d/Y H:i a', strtotime($myarray["registration_email_date"])):'');
 					}else{ ?>
@@ -252,9 +262,6 @@ $num_users=mysql_num_rows($my);
 					<br />
 					Suspended Reason: <?= $myarray['suspended_reason']; ?>
 				<?php } ?>
-				</td>
-				<td valign="top">
-					<?=st($myarray["first_name"]. " " .$myarray["last_name"]);?>
 				</td>
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
@@ -288,6 +295,9 @@ $num_users=mysql_num_rows($my);
 				</td>	
                                 <td valign="top" align="center">
                         <?=st($pat_myarray['pat_count']);?>
+                                </td>
+                                <td valign="top" align="center">
+                        <a href="manage_percase_invoice_history.php?docid=<?= $myarray["userid"]; ?>"><?=st($inv_myarray['inv_count']);?></a>
                                 </td>
 
 				<?php if(is_super($_SESSION['admin_access'])){ ?>

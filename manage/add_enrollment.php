@@ -45,19 +45,19 @@ if(isset($_POST['test']) && $_POST['test'] == "1"){
 $data['enrollment_npi'] = array(
 	"payer_id" => $payer_id,
 	"transaction_type" => $t_r['transaction_type'],
-	"facility_name" => $r['practice'],
-	"provider_name" => $r['first_name'].' '.$r['last_name'],
-	"tax_id" => $r['tax_id_or_ssn'],
-	"address" => $r['address'],
-	"city" => $r['city'],
-	"state" => $r['state'],
-	"zip" => $r['zip'],
-	"npi" => $r['npi'],
+	"facility_name" => $_POST['facility_name'],
+	"provider_name" => $_POST['provide_name'],
+	"tax_id" => $_POST['tax_id'],
+	"address" => $_POST['address'],
+	"city" => $_POST['city'],
+	"state" => $_POST['state'],
+	"zip" => $_POST['zip'],
+	"npi" => $_POST['npi'],
 	"authorized_signer" => array(
-		"first_name" => $r['first_name'],
-		"last_name" => $r['last_name'],
-		"contact_number" => $r['phone'],
-		"email" => $r['email'],
+		"first_name" => $_POST['first_name'],
+		"last_name" => $_POST['last_name'],
+		"contact_number" => $_POST['phone'],
+		"email" => $_POST['email'],
 		"signature" => array("coordinates" => $r['signature_json'])
 		)
 	);
@@ -160,6 +160,66 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
 });
 </script>
 <br />
+<?php
+  $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $q = mysql_query($sql);
+  $r = mysql_fetch_assoc($q);
+$payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
+$payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
+        $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
+        $t_q = mysql_query($t_sql);
+        $t_r = mysql_fetch_assoc($t_q);
+?>
+<div>
+	<label>Facility Name</label>
+	<input type="text" name="facility_name" value="<?= $r['practice']; ?>" />
+</div>
+<div>
+        <label>Provider Name</label> 
+	<input type="text" name="provider_name" value="<?=$r['first_name'].' '.$r['last_name']; ?>" />
+</div>
+<div>
+        <label>Tax ID</label>
+	<input type="text" name="tax_id" value="<?= $r['tax_id_or_ssn']; ?>" />
+</div>
+<div>
+        <label>Address</label>
+	<input type="text" name="address" value="<?= $r['address']; ?>" />
+<div>
+<div>
+        <label>City</label>
+	<input type="text" name="city" value="<?= $r['city']; ?>" />
+</div>
+<div>
+        <label>State</label>
+	<input type="text" name="state" value="<?= $r['state']; ?>" />
+</div>
+<div>
+        <label>Zip</label>
+	<input type="text" name="zip" value="<?= $r['zip']; ?>" />
+</div>
+<div>
+        <label>NPI</label>
+	<input type="text" name="npi" value="<?= $r['npi']; ?>" />
+</div>
+<div>
+        <label>First Name</label>
+	<input type="text" name="first_name" value="<?= $r['first_name']; ?>" />
+</div>
+<div>
+        <label>Last Name</label>
+	<input type="text" name="last_name" value="<?= $r['last_name']; ?>" />
+</div>
+<div>
+        <label>Contact Number</label>
+	<input type="text" name="contact_number" value="<?= $r['phone']; ?>" />
+</div>
+<div>
+        <label>Email</label>
+	<input type="text" name="email" value="<?= $r['email']; ?>" />
+</div>
+
+
                 <input type="submit" value=" Enroll " name="enroll_but" class="button" />
     </form>
 

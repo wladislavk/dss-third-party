@@ -1783,7 +1783,7 @@ Medicare
 								<td width="13" align="left" valign="top" class="b_line"></td>
 								<td width="196" align="left" valign="top" style="padding-left:4px;">
 									State<br />
-									<input value="<?=$insured_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
+									<input value="<?=$patient_state?>" name="patient_state" type="text" class="inbox_line3" size="3" width="30" />
 								</td>
 							</tr>
 						</table>
@@ -2280,7 +2280,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)`
 						</span>
                                 ICD IND. <select name="icd_ind">
                                         <option value="9" <?= ($icd_ind=="9")?'selected="selected"':''; ?>>ICD-9-CM - 9</option>
-                                        <option value="0" <?= ($icd_ind=="0")?'selected="selected"':''; ?>ICD-10-CM - 0</option>
+                                        <option value="0" <?= ($icd_ind=="0")?'selected="selected"':''; ?>>ICD-10-CM - 0</option>
                                 </select>
 
 						

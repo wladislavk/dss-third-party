@@ -382,7 +382,6 @@ if (empty($prior_authorization_number)) {
          . "LIMIT 1";
     $my = mysql_query($sql);
     $num_rows = mysql_num_rows($my);
-    
     if ($num_rows > 0) {
         $myarray = mysql_fetch_array($my);
         $prior_authorization_number = $myarray['pre_auth_num'];
@@ -475,6 +474,22 @@ if (empty($prior_authorization_number)) {
 
 <script type="text/javascript">
   $(document).ready( function(){
+                                  <?php
+        if(isset($_GET['instype']) && $_GET['instype']==2){
+          $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['s_m_ins_co'])."'";
+        }else{
+          $inscoquery = "SELECT * FROM dental_contact WHERE contactid ='".st($pat_myarray['p_m_ins_co'])."'";
+        }
+        $inscoarray = mysql_query($inscoquery);
+        $inscoinfo = mysql_fetch_array($inscoarray);
+      ?>
+
+
+    $('input[name="payer[address][street_line_1]"]').val("<?= $inscoinfo['add1'];?>");
+    $('input[name="payer[address][street_line_2]"]').val("<?= $inscoinfo['add2'];?>");
+    $('input[name="payer[address][city]"]').val("<?= $inscoinfo['city'];?>");
+    $('input[name="payer[address][state]"]').val("<?= $inscoinfo['state'];?>");
+    $('input[name="payer[address][zip]"]').val("<?= $inscoinfo['zip'];?>");
 
     $('input[name="subscriber[id]"]').val("<?= $insured_id_number;?>");
 
@@ -482,7 +497,7 @@ if (empty($prior_authorization_number)) {
     $('input[name="dependent[first_name]"]').val("<?= $patient_firstname;?>");
     $('input[name="dependent[middle_name]"]').val("<?= $patient_middle;?>");
     $('input[name="dependent[dob]"]').val("<?= $patient_dob;?>");
-    $('input[name="dependent[gender]"][value="<?= $patient_sex; ?>"]').attr("checked", "checked");
+    $('input[name="dependent[gender]"][value="<?= substr($patient_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="dependent[address][street_line_1]"]').val("<?= $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?= $patient_city;?>");
     $('input[name="dependent[address][state]"]').val("<?= $patient_state;?>");
@@ -493,7 +508,7 @@ if (empty($prior_authorization_number)) {
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
     $('input[name="subscriber[dob]"]').val("<?= $insured_dob;?>");
-    $('input[name="subscriber[gender]"][value="<?= $insured_sex; ?>"]').attr("checked", "checked");
+    $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");
     $('input[name="subscriber[address][state]"]').val("<?= $insured_state;?>");
@@ -538,7 +553,10 @@ if (empty($prior_authorization_number)) {
     $('input[name="claim[admission_date]"]').val("<?= $hospitalization_date_from; ?>");
     $('input[name="claim[discharge_date]"]').val("<?= $hospitalization_date_to; ?>");
 
+    $('input[name="referring_provider[first_name]"]').val("<?= substr($referring_provider, 0, strpos($referring_provider,' ')); ?>");
+    $('input[name="referring_provider[last_name]"]').val("<?= substr($referring_provider, strpos($referring_provider,' ')); ?>");
     $('input[name="referring_provider[secondary_id]"]').val("<?= $field_17a; ?>");
+    $('input[name="referring_provider[npi]"]').val("<?= $diagnosising_npi; ?>");
 
     <?php if($outside_lab == "YES"){ ?>
       $('input[name="claim[outside_lab]"][value="true"]').attr("checked", "checked");
@@ -777,6 +795,11 @@ if ($is_pending) {
 
     $('input[name="claim[total_charge]"]').val("<?= $total_charge; ?>");
     $('input[name="claim[patient_amount_paid]"]').val("<?= $amount_paid; ?>");
+
+
+    $('input').each( function(){
+      $(this).val($(this).val().toUpperCase());
+    });
 
   });
 

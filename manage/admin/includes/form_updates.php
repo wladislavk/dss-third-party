@@ -4719,10 +4719,12 @@ function get_logo($id, $backoffice){
   $l_r = mysql_fetch_assoc($l_q);
   if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
     if($l_r['logo']!=''){
-      if($backoffice){
+      if($backoffice && file_exists("../../../../shared/q_file/".$l_r['logo'])){
         $logo = '<img src="../../../../shared/q_file/'.$l_r['logo'].'" />';
-      }else{
+      }elseif(file_exists("../../../shared/q_file/".$l_r['logo'])){
         $logo = '<img src="../../../shared/q_file/'.$l_r['logo'].'" />';
+      }else{
+        $logo = "";
       }
     }else{
       $logo = "";

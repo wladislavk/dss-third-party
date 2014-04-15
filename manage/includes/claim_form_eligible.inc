@@ -488,7 +488,7 @@ if (empty($prior_authorization_number)) {
     $('input[name="payer[address][street_line_1]"]').val("<?= $inscoinfo['add1'];?>");
     $('input[name="payer[address][street_line_2]"]').val("<?= $inscoinfo['add2'];?>");
     $('input[name="payer[address][city]"]').val("<?= $inscoinfo['city'];?>");
-    $('input[name="payer[address][state]"]').val("<?= $inscoinfo['state'];?>");
+    $('input[name="payer[address][state]"]').val("<?= trim($inscoinfo['state']);?>");
     $('input[name="payer[address][zip]"]').val("<?= $inscoinfo['zip'];?>");
 
     $('input[name="subscriber[id]"]').val("<?= $insured_id_number;?>");
@@ -671,7 +671,7 @@ $query = mysql_query($sql);
     $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][2]"]').val("<?= $array['modcode3']; ?>");
     $('input[name="claim[service_lines][<?=$li;?>][procedure_modifiers][3]"]').val("<?= $array['modcode4']; ?>");
     $('input[name="claim[service_lines][<?=$li;?>][diagnosis_code_pointers][<?=$dp-1; ?>]"]').attr("checked","checked");
-    $('input[name="claim[service_lines][<?=$li;?>][charge_amount]"]').val("<?= number_format($array['amount'], 2); ?>");
+    $('input[name="claim[service_lines][<?=$li;?>][charge_amount]"]').val("<?= number_format($array['amount'], 2,'.',''); ?>");
     $('input[name="claim[service_lines][<?=$li;?>][units]"]').val("<?= $array['daysorunits']; ?>");
     $('input[name="claim[service_lines][<?=$li;?>][rendering_provider][npi]"]').val("<?= $array['provider_id']; ?>");
 	
@@ -704,6 +704,7 @@ $query = mysql_query($sql);
     <?php }elseif($ein=="1"){ ?>
     $('input[name="billing_provider[tax_id_type]"][value="EI"]').attr("checked", "checked"); 
     <?php } ?>
+    $('input[name="billing_provider[entity]"][value="false"]').attr("checked", "checked"); 
     $('input[name="service_facility[name]"]').val("<?= $service_practice; ?>");
     $('input[name="service_facility[address][street_line_1]"]').val("<?= $service_address; ?>");
     $('input[name="service_facility[address][city]"]').val("<?= $service_city; ?>");
@@ -718,6 +719,8 @@ $query = mysql_query($sql);
     $('input[name="billing_provider[address][state]"]').val("<?= $state; ?>");
     $('input[name="billing_provider[address][zip]"]').val("<?= $zip; ?>");
     $('input[name="billing_provider[npi]"]').val("<?= ($insurancetype == '1')?$medicare_npi:$npi; ?>"); 
+    $('input[name="billing_provider[taxonomy_code]"]').val("332B00000X");
+	//<?= $billing_provider_b_other; ?>"); 
 
 
 <?php
@@ -798,7 +801,7 @@ if ($is_pending) {
 
 
     $('input').each( function(){
-      $(this).val($(this).val().toUpperCase());
+//      $(this).val($(this).val().toUpperCase());
     });
 
   });

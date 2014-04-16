@@ -564,7 +564,6 @@ if (empty($prior_authorization_number)) {
       $('input[name="claim[outside_lab]"][value="false"]').attr("checked", "checked");
     <?php } ?>
 
-    $('input[name="claim[frequency]"]').val("<?= $medicaid_resubmission_code; ?>");
     $('input[name="claim[original_ref_number]"]').val("<?= $original_ref_no; ?>");
     $('input[name="claim[prior_authorization_number]"]').val("<?= $prior_authorization_number; ?>");
    <?php

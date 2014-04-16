@@ -76,6 +76,7 @@ $total_rec = mysql_num_rows($my);
 <span class="admin_head">
 	Claim Aging Report
 </span>
+<div class="clearfix"></div>
 <?php
 $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
 ?>
@@ -95,9 +96,9 @@ $fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
   </form>
 
 <div style="float:right; margin-right:20px;">
-  <a href="?nbc=1" class="button">No Billing Company</a>
-  <a href="?bc=1" class="button">Billing Company</a>
-  <a href="?all" class="button">All</a>
+  <a href="?nbc=1" class="btn btn-primary">No Billing Company</a>
+  <a href="?bc=1" class="btn btn-primary">Billing Company</a>
+  <a href="?all" class="btn btn-primary">All</a>
 
 
 </div>

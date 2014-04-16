@@ -8,7 +8,7 @@ require_once 'admin/includes/form_updates.php';
 if($_POST["compsub"] == 1)
 {
 ?>
-  <img src="images/DSS-ajax-animated_loading-gif.gif" />
+  <img  id="loading_gif" src="images/DSS-ajax-animated_loading-gif.gif" />
 <?php
   $image = $_FILES['logo'];
   $uploadedfile = $image['tmp_name'];
@@ -17,6 +17,14 @@ if($_POST["compsub"] == 1)
   $name = substr($fname,0,$lastdot);
   $filesize = $image["size"];
   $extension = substr($fname,$lastdot+1);
+  if(strtolower($extension) != 'png' && strtolower($extension) != 'gif' && strtolower($extension) !='jpg' && strtolower($extension) != 'jpeg'){
+    ?>
+    <script type="text/javascript">
+    alert('Logo must be a png, jpg or gif');
+    document.getElementById('loading_gif').remove();
+    </script>
+    <?php
+  }else{
   $file_name = "user_logo_".$_SESSION["docid"].".".$extension; 
   $file_path = "../../../shared/q_file/".$file_name;
   $max_width = 120;
@@ -140,6 +148,7 @@ switch (strtolower($extension))
 			</script>
 			<?
 			die();
+  }
 }
 
 ?>

@@ -344,7 +344,7 @@ if(isset($_GET['msg'])){
 <?php
   if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 
 ?>
-<a style="float:right;"  href="report_claim_aging.php" class="button"> Claim Aging </a>
+<a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
 <?php } ?>
 <div style="clear:both;"></div>
 </div>

@@ -319,3 +319,7 @@ $(document).ready(function(){
 window.closeModal = function(){
     $('#popup-window').modal('hide');
 };
+
+window.refreshParent = function(){
+  window.location = window.location;
+}

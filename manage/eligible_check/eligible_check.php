@@ -74,6 +74,26 @@ require_once '../admin/includes/main_include.php';
         </select>
       </div>
     </div>
+<?php
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
+         LEFT JOIN dental_users u ON u.userid = p.docid
+         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+  $doc_name = $r['doc_name'];
+  $doc_array = explode(' ',$doc_name);
+  $doc_first_name = $doc_array[0];
+  $doc_last_name = $doc_array[1];
+?>
+
+    <div class="form-group real-param" style="display: none;">
+      <label for="date" class="col-lg-2 control-label">Patient Insurance</label>
+
+      <div class="col-lg-10">
+	<?= $r['company']; ?>
+      </div>
+    </div>
 
     <div class="form-group real-param" style="display: none;">
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
@@ -119,20 +139,6 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       </div>
     </div>
 
-
-
-<?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
-         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
-         LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
-  $doc_name = $r['doc_name'];
-  $doc_array = explode(' ',$doc_name);
-  $doc_first_name = $doc_array[0];
-  $doc_last_name = $doc_array[1];
-?>
 
 
     <fieldset class="real-param" style="display: none;">

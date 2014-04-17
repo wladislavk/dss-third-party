@@ -1,7 +1,9 @@
-<? 
+<?
 include "includes/top.htm";
-require_once('../includes/constants.inc');
-require_once "includes/general.htm";
+
+include 'includes/patient_nav.php';
+
+
 
 if(isset($_GET['upstatus'])){
   $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
@@ -232,39 +234,9 @@ $sql = "SELECT "
 // . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
 
 // filter based on select lists above table
-if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
-    $sql .= "WHERE "; 
-    if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-	if($_REQUEST['status'] == '0' ){
-		//echo DSS_CLAIM_PENDING;
-	   	$sql .= " (
-			(claim.mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SENT." OR claim.status=".DSS_CLAIM_PAID_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_PATIENT." ))
-			OR (claim.sec_mailed_date IS NULL AND (claim.status=".DSS_CLAIM_SEC_SENT." OR claim.status=".DSS_CLAIM_PAID_SEC_INSURANCE." OR claim.status=".DSS_CLAIM_PAID_SEC_PATIENT." ))
-			 OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
-	}elseif($_REQUEST['status'] == '1'){
-		$sql .= " ((claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")) OR
-				(claim.mailed_date IS NOT NULL AND claim.status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_SEC_PATIENT.")))";
-        }elseif($_REQUEST['status'] == 'unpaid21'){
-                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 21 day)";
-        }elseif($_REQUEST['status'] == 'unpaid45'){
-                $sql .= " claim.status NOT IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_SEC_PENDING.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_SEC_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.",".DSS_CLAIM_PAID_SEC_PATIENT.") AND claim.adddate < DATE_SUB(NOW(), INTERVAL 45 day)";
-        }else{
-        	$sql .= "  claim.status = " . $_REQUEST['status'] . " ";
-	}
-    }
-    
-    if (!empty($_REQUEST['fid'])) {
-        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-            $sql .= "  AND ";
-        }
-        $sql .= "  users.userid = " . $_REQUEST['fid'] . " ";
-    }
-    
-    if (!empty($_REQUEST['pid'])) {
-        $sql .= "AND claim.patientid = " . $_REQUEST['pid'] . " ";
-    }
 
-}
+    $sql .= "WHERE "; 
+        $sql .= " claim.patientid = " . $_REQUEST['pid'] . " ";
 
 $sql .= " AND 
   CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
@@ -294,60 +266,6 @@ if(isset($_GET['msg'])){
 	<b><? echo $_GET['msg'];?></b>
 </div>
 <?php } ?>
-<div style="width:98%;margin:auto;">
-  <form name="sortfrm" action="<?=$_SERVER['PHP_SELF']?>" method="get">
-    Status:
-    <select name="status">
-      <?php $pending_selected = ($status == DSS_CLAIM_PENDING) ? 'selected' : ''; ?>
-      <?php $sent_selected = ($status == DSS_CLAIM_SENT) ? 'selected' : ''; ?>
-      <?php $unpaid21_selected = ($status == 'unpaid21') ? 'selected' : ''; ?>
-      <?php $unpaid45_selected = ($status == 'unpaid45') ? 'selected' : ''; ?>
-      <?php $rejected_selected = ($status == DSS_CLAIM_REJECTED) ? 'selected' : ''; ?>
-      <option value="">Any</option>
-      <option value="<?=DSS_CLAIM_PENDING?>" <?=$pending_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_PENDING]?></option>
-      <option value="<?=DSS_CLAIM_SENT?>" <?=$sent_selected?>><?=$dss_claim_status_labels[DSS_CLAIM_SENT]?></option>
-      <option value="unpaid21" <?= $unpaid45_selected; ?>>Unpaid 21+ Days</option>
-      <option value="unpaid45" <?= $unpaid45_selected; ?>>Unpaid 45+ Days</option>
-      <option value="<?=DSS_CLAIM_REJECTED?>" <?=$rejected_selected;?>><?=$dss_claim_status_labels[DSS_CLAIM_REJECTED];?></option>
-    </select>
-    &nbsp;&nbsp;&nbsp;
-
-    Account:
-    <select name="fid">
-      <option value="">Any</option>
-      <?php $franchisees = (is_billing($_SESSION['admin_access']))?get_billing_franchisees():get_franchisees(); ?>
-      <?php while ($row = mysql_fetch_array($franchisees)) { ?>
-        <?php $selected = ($row['userid'] == $fid) ? 'selected' : ''; ?>
-        <option value="<?= $row['userid'] ?>" <?= $selected ?>>[<?= $row['userid'] ?>] <?= $row['first_name'] ?> <?= $row['last_name'] ?></option>
-      <?php } ?>
-    </select>
-    &nbsp;&nbsp;&nbsp;
-
-    <?php if (!empty($_REQUEST['fid'])) { ?>
-      Patients:
-      <select name="pid">
-        <option value="">Any</option>
-        <?php $patients = get_patients($_REQUEST['fid']); ?>
-        <?php while ($row = mysql_fetch_array($patients)) { ?>
-          <?php $selected = ($row['patientid'] == $_REQUEST['pid']) ? 'selected' : ''; ?>
-          <option value="<?= $row['patientid'] ?>" <?= $selected ?>>[<?= $row['patientid'] ?>] <?= $row['lastname'] ?>, <?= $row['firstname'] ?></option>
-        <?php } ?>
-      </select>
-      &nbsp;&nbsp;&nbsp;
-    <?php } ?>
-    
-    <input type="hidden" name="sort_by" value="<?=$sort_by?>"/>
-    <input type="hidden" name="sort_dir" value="<?=$sort_dir?>"/>
-    <input type="submit" value="Filter List" class="btn btn-primary">
-    <input type="button" value="Reset" onclick="window.location='<?=$_SERVER['PHP_SELF']?>'" class="btn btn-primary">
-  </form>
-<?php
-  if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){ 
-?>
-<a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
-<?php } ?>
-<div style="clear:both;"></div>
-</div>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
@@ -601,4 +519,12 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
 
 </script>
 
-<? include "includes/bottom.htm";?>
+
+
+
+
+
+
+
+
+<?php include "includes/bottom.htm"; ?>

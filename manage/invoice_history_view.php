@@ -33,6 +33,15 @@ $case_sql = "SELECT
         FROM dental_fax_invoice f
         WHERE 
                 f.invoice_id = '".$_REQUEST['invoice_id']."'
+    UNION
+	SELECT 
+	CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), 
+	invoice_date, 
+	invoice_amount 
+	FROM dental_insurance_preauth
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+
 
 ";
 $case_q = mysql_query($case_sql);
@@ -118,6 +127,13 @@ $case_q = mysql_query($case_sql);
         FROM dental_fax_invoice f
         WHERE 
                 f.invoice_id = '".$_REQUEST['invoice_id']."'
+    UNION ALL
+	SELECT 
+	invoice_amount
+	FROM dental_insurance_preauth
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+
 		) t1
 	";
   $total_q = mysql_query($total_sql);

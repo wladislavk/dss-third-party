@@ -40,14 +40,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_InvalidRequestError $e) {
   // Invalid parameters were supplied to Stripe's API
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_AuthenticationError $e) {
   // Authentication with Stripe's API failed
@@ -55,14 +55,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo "Authentication Error. Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_ApiConnectionError $e) {
   // Network communication with Stripe failed
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Stripe_Error $e) {
   // Display a very generic error to the user, and maybe send
@@ -70,14 +70,14 @@ try{
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 } catch (Exception $e) {
   // Something else happened, completely unrelated to Stripe
   $body = $e->getJsonBody();
   $err  = $body['error'];
   echo $err['message'].". Please contact your Credit Card billing administrator to resolve this issue.";
-    ?><br /><br /><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+    ?><br /><br /><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
   die();
 
 }
@@ -102,11 +102,11 @@ try{
     mysql_query($i_sql);
   }
     ?><h3><?= $r['first_name']; ?> <?= $r['last_name']; ?> billed <?= $_POST['amount']; ?>.</h3><?php
-     ?><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+     ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
 	die();
   }else{
     ?><h3>Not entered in Stripe.</h3><?php
-     ?><button onclick="window.parent.closeModal();" class="btn btn-success">Close</button><?php
+     ?><button onclick="window.parent.refreshParent();" class="btn btn-success">Close</button><?php
         die();
 
   }

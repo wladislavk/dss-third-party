@@ -496,7 +496,7 @@ if (empty($prior_authorization_number)) {
     $('input[name="dependent[last_name]"]').val("<?= $patient_lastname;?>");
     $('input[name="dependent[first_name]"]').val("<?= $patient_firstname;?>");
     $('input[name="dependent[middle_name]"]').val("<?= $patient_middle;?>");
-    $('input[name="dependent[dob]"]').val("<?= $patient_dob;?>");
+    $('input[name="dependent[dob]"]').val("<?= date('m-d-Y', strtotime($patient_dob));?>");
     $('input[name="dependent[gender]"][value="<?= substr($patient_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="dependent[address][street_line_1]"]').val("<?= $patient_address;?>");
     $('input[name="dependent[address][city]"]').val("<?= $patient_city;?>");
@@ -507,7 +507,7 @@ if (empty($prior_authorization_number)) {
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
-    $('input[name="subscriber[dob]"]').val("<?= $insured_dob;?>");
+    $('input[name="subscriber[dob]"]').val("<?= date('m-d-Y', strtotime($insured_dob));?>");
     $('input[name="subscriber[gender]"][value="<?= substr($insured_sex,0,1); ?>"]').attr("checked", "checked");
     $('input[name="subscriber[address][street_line_1]"]').val("<?= $insured_address;?>");
     $('input[name="subscriber[address][city]"]').val("<?= $insured_city;?>");

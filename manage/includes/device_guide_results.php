@@ -35,7 +35,7 @@ require_once('../includes/general_functions.php');
     $a['name'] = $d['name'];
     $a['id'] = $d['id'];
     $a['value'] = $tot;
-    $a['image_path'] = ($d['image_path'])?"../../../../shared/q_file/".$d['image_path']:'';
+    $a['image_path'] = ($d['image_path'])?"../display_file.php?f=".$d['image_path']:'';
     array_push($d_array, $a);
     }
   }

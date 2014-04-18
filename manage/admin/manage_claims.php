@@ -550,7 +550,7 @@ if(isset($_GET['showins'])&&$_GET['showins']==1){
   } */
   ?>
   <script type="text/javascript">
-    window.location = "../insurance_fdf.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>&bo=1";
+    window.location = "../insurance_fdf_v2.php?insid=<?= $_GET['insid']; ?>&type=<?=$_GET['type'];?>&pid=<?= $_GET['pid'];?>&bo=1";
   </script>
   <?php
 }

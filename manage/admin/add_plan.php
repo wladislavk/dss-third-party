@@ -13,6 +13,14 @@ if($_POST["plansub"] == 1)
                                 trial_period = '".mysql_real_escape_string($_POST['trial_period'])."',
                                 fax_fee = '".mysql_real_escape_string($_POST['fax_fee'])."',
                                 free_fax = '".mysql_real_escape_string($_POST['free_fax'])."',
+                		eligibility_fee = '".mysql_real_escape_string($_POST['eligibility_fee'])."',
+                		free_eligibility = '".mysql_real_escape_string($_POST['free_eligibility'])."',
+               	 		enrollment_fee = '".mysql_real_escape_string($_POST['enrollment_fee'])."',
+                		free_enrollment = '".mysql_real_escape_string($_POST['free_enrollment'])."',
+                		claim_fee = '".mysql_real_escape_string($_POST['claim_fee'])."',
+                		free_claim = '".mysql_real_escape_string($_POST['free_claim'])."',
+                		vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
+                		free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."'
 				WHERE id = '".mysql_real_escape_string($_POST['ed'])."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -35,6 +43,14 @@ if($_POST["plansub"] == 1)
                                 trial_period = '".mysql_real_escape_string($_POST['trial_period'])."',
                                 fax_fee = '".mysql_real_escape_string($_POST['fax_fee'])."',
                                 free_fax = '".mysql_real_escape_string($_POST['free_fax'])."',
+                                eligibility_fee = '".mysql_real_escape_string($_POST['eligibility_fee'])."',
+                                free_eligibility = '".mysql_real_escape_string($_POST['free_eligibility'])."',
+                                enrollment_fee = '".mysql_real_escape_string($_POST['enrollment_fee'])."',
+                                free_enrollment = '".mysql_real_escape_string($_POST['free_enrollment'])."',
+                                claim_fee = '".mysql_real_escape_string($_POST['claim_fee'])."',
+                                free_claim = '".mysql_real_escape_string($_POST['free_claim'])."',
+                                vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
+                                free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 			mysql_query($ins_sql) or die($ins_sql.mysql_error());
@@ -66,6 +82,14 @@ if($_POST["plansub"] == 1)
 		$trial_period = $_POST['trial_period'];
 		$fax_fee = $_POST['fax_fee'];
 		$free_fax = $_POST['free_fax'];
+		$eligibility_fee = $_POST['eligibility_fee'];
+		$free_eligibility = $_POST['free_eligibility'];
+		$enrollment_fee = $_POST['enrollment_fee'];
+		$free_enrollment = $_POST['free_enrollment'];
+		$claim_fee = $_POST['claim_fee'];
+		$free_claim = $_POST['free_claim'];
+		$vob_fee = $_POST['vob_fee'];
+		$free_vob = $_POST['free_vob'];
 		$status = $_POST['status'];
 	}
 	else
@@ -75,6 +99,14 @@ if($_POST["plansub"] == 1)
                 $trial_period = st($themyarray['trial_period']);
                 $fax_fee = st($themyarray['fax_fee']);
                 $free_fax = st($themyarray['free_fax']);
+                $eligibility_fee = $themyarray['eligibility_fee'];
+                $free_eligibility = $themyarray['free_eligibility'];
+                $enrollment_fee = $themyarray['enrollment_fee'];
+                $free_enrollment = $themyarray['free_enrollment'];
+                $claim_fee = $themyarray['claim_fee'];
+                $free_claim = $themyarray['free_claim'];
+                $vob_fee = $themyarray['vob_fee'];
+                $free_vob = $themyarray['free_vob'];
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
 	}
@@ -151,6 +183,79 @@ if($_POST["plansub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Eligibility Check Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="eligibility_fee" value="<?=$eligibility_fee?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Free Eligibility Checks
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="free_eligibility" value="<?=$free_eligibility?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Enrollment Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="enrollment_fee" value="<?=$enrollment_fee?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Free Enrollments
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="free_enrollment" value="<?=$free_enrollment?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Claim E-File Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="claim_fee" value="<?=$claim_fee?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Free Claims (Lifetime)
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="free_claim" value="<?=$free_claim?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                VOB Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="vob_fee" value="<?=$vob_fee?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Free VOBs (Lifetime)
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="free_vob" value="<?=$free_vob?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+
 
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">

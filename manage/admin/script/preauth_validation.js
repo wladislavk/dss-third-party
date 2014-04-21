@@ -27,7 +27,6 @@ function validateDate(dtControl) {
 
 function validatePreAuthForm(form) {
   var errorMsg = '';
-  
   if (form.complete.checked) {
     if (trim(form.ins_co.value) == "") {
       errorMsg += "- Missing Patient's Insurance Company\n";

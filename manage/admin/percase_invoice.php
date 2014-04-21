@@ -10,6 +10,16 @@ $case_sql = "SELECT * FROM dental_ledger dl
 ";
 $case_q = mysql_query($case_sql);
 
+$efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate FROM 
+		dental_claim_electronic e
+		JOIN dental_insurance i ON i.insuranceid=e.claimid
+                JOIN dental_patients dp ON i.patientid=dp.patientid
+        WHERE 
+                i.docid='".$_REQUEST['docid']."' 
+";
+$efile_q = mysql_query($efile_sql);
+
+
 $vob_sql = "SELECT * FROM dental_insurance_preauth p
                 JOIN dental_patients dp ON p.patient_id=dp.patientid
         WHERE 
@@ -26,6 +36,21 @@ $fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(se
 ";
 $fax_q = mysql_query($fax_sql);
 $fax = mysql_fetch_assoc($fax_q);
+
+
+$ec_sql = "SELECT count(*) as total_ec, MIN(adddate) as start_date, MAX(adddate) as end_date FROM dental_eligibility e
+        WHERE 
+                e.userid='".$_REQUEST['docid']."'
+";
+$ec_q = mysql_query($ec_sql);
+$ec = mysql_fetch_assoc($ec_q);
+
+$enroll_sql = "SELECT count(*) as total_enrollments, MIN(adddate) as start_date, MAX(adddate) as end_date FROM dental_eligible_enrollment e
+        WHERE 
+                e.user_id='".$_REQUEST['docid']."'
+";
+$enroll_q = mysql_query($enroll_sql);
+$enroll = mysql_fetch_assoc($enroll_q);
 
 if(isset($_POST['submit'])){
     if(isset($_POST['amount_monthly'])){
@@ -47,6 +72,20 @@ if(isset($_POST['submit'])){
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."' " .
         " WHERE ledgerid = '".$id."'";
+      mysql_query($up_sql);
+    }
+  }
+
+  while($efile = mysql_fetch_assoc($efile_q)){
+    $id = $efile['id'];
+    if(isset($_POST['adddate_'.$id])){
+      $up_sql = "UPDATE dental_claim_electronic SET " .
+        " percase_date = '".date('Y-m-d', strtotime($_POST['adddate_'.$id]))."', " .
+        " percase_name = '".mysql_real_escape_string($_POST['name_'.$id])."', " .
+        " percase_amount = '".mysql_real_escape_string($_POST['amount_'.$id])."', " .
+        " percase_status = '".DSS_PERCASE_INVOICED."', " .
+        " percase_invoice = '".$invoiceid."' " .
+        " WHERE id = '".$id."'";
       mysql_query($up_sql);
     }
   }
@@ -108,6 +147,97 @@ if(isset($_POST['submit'])){
     mysql_query($up_sql);
   }
 
+
+  if(isset($_POST['free_ec_desc'])){
+    $ec_start_date = ($_POST['free_ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+    $ec_end_date = ($_POST['free_ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+
+    $in_sql = "INSERT INTO dental_eligibility_invoice SET
+                invoice_id = '".mysql_real_escape_string($invoiceid)."',
+                description = '".mysql_real_escape_string($_POST['free_ec_desc'])."',
+                start_date = '".mysql_real_escape_string($free_ec_start_date)."',
+                end_date = '".mysql_real_escape_string($free_ec_end_date)."',
+                amount = '".mysql_real_escape_string($_POST['free_ec_amount'])."',
+                adddate = now(),
+                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($in_sql);
+    $ec_invoice_id = mysql_insert_id();
+
+    $up_sql = "UPDATE dental_eligibility SET
+                eligibility_invoice_id = '".$ec_invoice_id."' 
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+    mysql_query($up_sql);
+  }
+
+  if(isset($_POST['ec_desc'])){
+    $ec_start_date = ($_POST['ec_start_date'])?date('Y-m-d', strtotime($_POST['ec_start_date'])):'';
+    $ec_end_date = ($_POST['ec_end_date'])?date('Y-m-d', strtotime($_POST['ec_end_date'])):'';
+
+    $in_sql = "INSERT INTO dental_eligibility_invoice SET
+                invoice_id = '".mysql_real_escape_string($invoiceid)."',
+                description = '".mysql_real_escape_string($_POST['ec_desc'])."',
+                start_date = '".mysql_real_escape_string($ec_start_date)."',
+                end_date = '".mysql_real_escape_string($ec_end_date)."',
+                amount = '".mysql_real_escape_string($_POST['ec_amount'])."',
+                adddate = now(),
+                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($in_sql);
+    $ec_invoice_id = mysql_insert_id();
+
+    $up_sql = "UPDATE dental_eligibility SET
+                eligibility_invoice_id = '".$ec_invoice_id."' 
+                WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
+    mysql_query($up_sql);
+  }
+
+
+
+
+
+  if(isset($_POST['free_enrollment_desc'])){
+    $enrollment_start_date = ($_POST['free_enrollment_start_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_start_date'])):'';
+    $enrollment_end_date = ($_POST['free_enrollment_end_date'])?date('Y-m-d', strtotime($_POST['free_enrollment_end_date'])):'';
+
+    $in_sql = "INSERT INTO dental_enrollment_invoice SET
+                invoice_id = '".mysql_real_escape_string($invoiceid)."',
+                description = '".mysql_real_escape_string($_POST['free_enrollment_desc'])."',
+                start_date = '".mysql_real_escape_string($free_enrollment_start_date)."',
+                end_date = '".mysql_real_escape_string($free_enrollment_end_date)."',
+                amount = '".mysql_real_escape_string($_POST['free_enrollment_amount'])."',
+                adddate = now(),
+                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($in_sql);
+    $enrollment_invoice_id = mysql_insert_id();
+
+    $up_sql = "UPDATE dental_eligible_enrollment SET
+                fax_invoice_id = '".$enrollment_invoice_id."' 
+                WHERE enrollment_invoice_id IS NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
+    mysql_query($up_sql);
+  }
+
+  if(isset($_POST['enrollment_desc'])){
+    $enrollment_start_date = ($_POST['enrollment_start_date'])?date('Y-m-d', strtotime($_POST['enrollment_start_date'])):'';
+    $enrollment_end_date = ($_POST['enrollment_end_date'])?date('Y-m-d', strtotime($_POST['enrollment_end_date'])):'';
+
+    $in_sql = "INSERT INTO dental_enrollment_invoice SET
+                invoice_id = '".mysql_real_escape_string($invoiceid)."',
+                description = '".mysql_real_escape_string($_POST['enrollment_desc'])."',
+                start_date = '".mysql_real_escape_string($enrollment_start_date)."',
+                end_date = '".mysql_real_escape_string($enrollment_end_date)."',
+                amount = '".mysql_real_escape_string($_POST['enrollment_amount'])."',
+                adddate = now(),
+                ip_address = '".$_SERVER['REMOTE_ADDR']."'";
+    mysql_query($in_sql);
+    $enrollment_invoice_id = mysql_insert_id();
+
+    $up_sql = "UPDATE dental_eligible_enrollment SET
+                enrollment_invoice_id = '".$enrollment_invoice_id."' 
+                WHERE enrollment_invoice_id is NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
+    mysql_query($up_sql);
+  }
+
+
+
   $num_extra = $_POST['extra_total'];
   for($i=1;$i<=$num_extra;$i++){
     if(isset($_POST['extra_name_'.$i])){
@@ -139,7 +269,7 @@ if(isset($_POST['submit'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, concat(u.first_name,' ',u.last_name) name, u.user_type
+  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, concat(u.first_name,' ',u.last_name) name, u.user_type
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -159,7 +289,7 @@ if(mysql_num_rows($doc_q) == 0){
   $doc = mysql_fetch_assoc($doc_q);
 
 
-?>
+?>	
 <div class="page-header">
 	<h2>Invoicing <small>- <?= $doc['name']; ?>	
 </small></h2></div>
@@ -245,6 +375,38 @@ Invoice Due Date:
 	<? 	}
 		?>
 
+
+
+<?php
+///// E File
+                while($efile = mysql_fetch_array($efile_q))
+                {
+                ?>
+                        <tr id="efile_row_<?= $efile['id'] ?>">
+                                <td valign="top">
+                                        <input type="text" name="name_<?= $efile['id'] ?>" value="E-File: <?=st($efile["firstname"]." ".$efile["lastname"]);?>" />
+                                </td>
+                                <td valign="top">
+                                        <div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="adddate_<?= $efile['id'] ?>" value="<?=date('m/d/Y', strtotime(st($efile["adddate"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#efile_row_<?= $efile['id'] ?>').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="amount_<?= $efile['id'] ?>" value="<?= $doc['claim_fee']; ?>" />
+                                </td>
+                        </tr>
+        <?      }
+                ?>
+
 <?php
 	if($doc['user_type']==DSS_USER_TYPE_SOFTWARE){
                 while($vob = mysql_fetch_array($vob_q))
@@ -269,11 +431,14 @@ Invoice Due Date:
                                         </a>
                                 </td>
                                 <td valign="top">
-                                            $<input type="text" class="amount" name="vob_amount_<?= $vob['id'] ?>" value="<?= $vob['invoice_amount']; ?>" />
+                                            $<input type="text" class="amount" name="vob_amount_<?= $vob['id'] ?>" value="<?= $doc['vob_fee']; ?>" />
                                 </td>
                         </tr>
         <?      }
 	}
+
+
+
 
 
 			if($fax['total_faxes'] > 0){
@@ -338,6 +503,160 @@ to
                         </tr>
 			<?php } ?>
 		<?php } ?>
+
+<?php
+                        if($ec['total_ec'] > 0){
+                        $bill_ec = intval($ec['total_ec']) - intval($doc['free_eligibility']);
+                        if($doc['free_eligibility'] > $ec['total_ec']){
+                          $free_ec = $ec['total_ec'];
+                        }else{
+                          $free_ec = $doc['free_eligibility'];
+                        } ?>
+                        <tr id="free_ec_row">
+                                <td valign="top">
+                                        <input type="text" name="free_ec_desc" value="Free Eligibility – <?= $free_ec." at $0.00 each "; ?>" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+                                        <div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="free_ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                                        </div>
+<div class="text-center">to</div>
+                                <div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="free_ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#free_ec_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="free_ec_amount" value="0.00" />
+                                </td>
+                        </tr>
+
+                <?php
+                        if($bill_ec > 0){
+                ?>
+                        <tr id="ec_row">
+                                <td valign="top">
+                                        <input type="text" name="ec_desc" value="Eligibility Checks – <?= $bill_ec." at $".$doc['eligibility_fee']." each "; ?>" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+				<div class="input-group date">	
+                                        <input type="text" class="form-control text-center" name="ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+<div class="text-center">to</div>
+				<div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#ec_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="ec_amount" value="<?= $bill_ec*$doc['eligibility_fee']; ?>" />
+                                </td>
+                        </tr>
+                        <?php } ?>
+                <?php } ?>
+
+
+<?php
+                        if($enroll['total_enrollments'] > 0){
+                        $bill_en = intval($enroll['total_enrollments']) - intval($doc['free_enrollments']);
+                        if($doc['free_enrollments'] > $enroll['total_enrollments']){
+                          $free_en = $enroll['total_enrollments'];
+                        }else{
+                          $free_en = $doc['free_enrollments'];
+                        } ?>
+                        <tr id="free_enrollment_row">
+                                <td valign="top">
+                                        <input type="text" name="free_enrollment_desc" value="Free Enrollments – <?= $free_en." at $0.00 each "; ?>" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+                                        <div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="free_enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                                        </div>
+<div class="text-center">to</div>
+                                <div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="free_enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#free_enrollment_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="free_enrollment_amount" value="0.00" />
+                                </td>
+                        </tr>
+
+
+                <?php
+                        if($bill_en > 0){
+                ?>
+                        <tr id="enrollment_row">
+                                <td valign="top">
+                                        <input type="text" name="enrollment_desc" value="Enrollments – <?= $bill_en." at $".$doc['enrollment_fee']." each "; ?>" style="width:100%;" />
+                                </td>
+                                <td valign="top">
+				<div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>" />
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+<div class="text-center">to</div>
+				<div class="input-group date">
+                                        <input type="text" class="form-control text-center" name="enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>" />
+			    <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                                </td>
+                                <td valign="top">
+                                        <a href="#" onclick="$('#enrollment_row').remove(); calcTotal();" class="btn btn-danger">
+                                            Remove
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                </td>
+                                <td valign="top">
+                                            $<input type="text" class="amount" name="enrollment_amount" value="<?= $bill_en*$doc['enrollment_fee']; ?>" />
+                                </td>
+                        </tr>
+                        <?php } ?>
+                <?php } ?>
+
+
+
+
+
+
 
 		<tr id="total_row">
 			<td valign="top" colspan="2">&nbsp;

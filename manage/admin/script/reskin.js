@@ -11,7 +11,7 @@ $(function(){
     /**
      * Add breadcrumb
      */
-    var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
+    /*var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
     $breadcrumb = $container.find('ol'),
     path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     
@@ -36,7 +36,7 @@ $(function(){
         
         $this.text($this.text());
     }).addClass('active');
-    $container.insertAfter('.nav:first');
+    $container.insertAfter('.nav:first');*/
     
     /**
      * Popup
@@ -135,7 +135,7 @@ $(function(){
     /**
      * Append dropdown to change skin
      */
-    $('body').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');
+    $('.container').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');
     
     $.each(
         ['amelia','cerulean','cosmo','cyborg','flatly','journal','readable','simplex','slate','spacelab','united','yeti'],

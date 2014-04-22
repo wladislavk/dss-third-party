@@ -1,5 +1,5 @@
 body {
-    font-family: Tahoma, Verdana;	
+    font-family: 'Open Sans',sans-serif;	
 }
 
 .logout {
@@ -9,7 +9,7 @@ body {
     margin-top:-25px;
     margin-right: 5px;
 }
-
+.page-container{margin-top:42px;}
 /**
  * Submenus for Bootstrap >= 3.0
  */

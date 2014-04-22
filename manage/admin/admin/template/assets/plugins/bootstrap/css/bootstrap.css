@@ -11,7 +11,7 @@ html {
       -ms-text-size-adjust: 100%;
 }
 body {
-  margin: 0;
+  margin: 0;font-family:'Open Sans',sans-serif;
 }
 article,
 aside,
@@ -115,7 +115,9 @@ textarea {
   margin: 0;
   font: inherit;
   color: inherit;
+  
 }
+
 button {
   overflow: visible;
 }
@@ -5670,6 +5672,7 @@ button.close {
 .affix {
   position: fixed;
 }
+
 @-ms-viewport {
   width: device-width;
 }

@@ -580,11 +580,11 @@ to
 
 <?php
                         if($enroll['total_enrollments'] > 0){
-                        $bill_en = intval($enroll['total_enrollments']) - intval($doc['free_enrollments']);
-                        if($doc['free_enrollments'] > $enroll['total_enrollments']){
+                        $bill_en = intval($enroll['total_enrollments']) - intval($doc['free_enrollment']);
+                        if($doc['free_enrollment'] > $enroll['total_enrollments']){
                           $free_en = $enroll['total_enrollments'];
                         }else{
-                          $free_en = $doc['free_enrollments'];
+                          $free_en = $doc['free_enrollment'];
                         } ?>
                         <tr id="free_enrollment_row">
                                 <td valign="top">

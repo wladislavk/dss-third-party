@@ -176,6 +176,10 @@ $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, pe
                 dl.docid='".$invoice['docid']."' AND
 		dl.percase_invoice='".$invoice['id']."'
 	UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_claim_electronic e 
+        WHERE 
+                e.percase_invoice='".$invoice['id']."'
+        UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl 
         WHERE 
                 dl.percase_invoice='".$invoice['id']."'
@@ -189,6 +193,17 @@ SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice
         WHERE
                 invoice_id='".$invoice['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_eligibility_invoice
+        WHERE
+                invoice_id='".$invoice['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_enrollment_invoice
+        WHERE
+                invoice_id='".$invoice['id']."'
+
 ";
 $case_q = mysql_query($case_sql);
 $num_case = mysql_num_rows($case_q);

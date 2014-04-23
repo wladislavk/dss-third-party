@@ -59,7 +59,7 @@ if(isset($_POST['submit'])){
     }else{
       $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, due_date, adddate, ip_address) " .
                 " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['due_date'])))."', NOW(), '".$_SERVER['REMOTE_ADDR']."')";
-    }
+    };
     mysql_query($in_sql);
     $invoiceid = mysql_insert_id();
   while($case = mysql_fetch_assoc($case_q)){
@@ -247,8 +247,8 @@ if(isset($_POST['submit'])){
 	$amount = $_POST['extra_amount_'.$i];
 	$sql = "INSERT INTO dental_percase_invoice_extra SET" .
         " percase_date = '".$service_date."', " .
-        " percase_name = '".$name."', " .
-        " percase_amount = '".$amount."', " .
+        " percase_name = '".mysql_real_escape_string($name)."', " .
+        " percase_amount = '".mysql_real_escape_string($amount)."', " .
         " percase_status = '".DSS_PERCASE_INVOICED."', " .
         " percase_invoice = '".$invoiceid."', " .
 	" adddate = NOW(), " .

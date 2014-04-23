@@ -72,8 +72,70 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 <body class="lpage-header-fixed">
 
         <div class="header navbar navbar-fixed-top">
-            <h1 class="pull-left" style="color:#ffffff;font-size:20px; margin:9px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
-            <a class="btn pull-right" href="logout.php" class="logout">Logout</a>
+            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+           
+           <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+		<div class="sidebar-toggler hidden-phone">
+		</div>
+		<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<img src="admin/template/assets/img/menu-toggler.png" alt=""/>
+		</a>
+		<!-- END RESPONSIVE MENU TOGGLER -->
+		<!-- BEGIN TOP NAVIGATION MENU -->
+		<ul class="nav navbar-nav pull-right">
+		
+			<!-- BEGIN USER LOGIN DROPDOWN -->
+			<li class="dropdown user">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+					<img alt="" src="admin/template/assets/img/avatar1_small.jpg"/>
+					<span class="username">
+						 Nathan Drake
+					</span>
+					<i class="fa fa-angle-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="extra_profile.html">
+							<i class="fa fa-user"></i> My Profile
+						</a>
+					</li>
+					
+					<li>
+						<a href="#">
+							<i class="fa fa-tasks"></i> My Tasks
+							<span class="badge badge-success">
+								 7
+							</span>
+						</a>
+					</li>
+					<li class="divider">
+					</li>
+					<li>
+						<a href="javascript:;" id="trigger_fullscreen">
+							<i class="fa fa-arrows"></i> Full Screen
+						</a>
+					</li>
+					<li>
+						<a href="extra_lock.html">
+							<i class="fa fa-lock"></i> Lock Screen
+						</a>
+					</li>
+					<li>
+						<a href="logout.php">
+							<i class="fa fa-key"></i> Log Out
+						</a>
+					</li>
+				</ul>
+			</li>
+			<!-- END USER LOGIN DROPDOWN -->
+		</ul>
+		<!-- END TOP NAVIGATION MENU -->
+	</div>
+	<!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
 	        <div class="clearfix"></div>
         </div>
 <?php
@@ -330,12 +392,6 @@ $num_pending_claims = mysql_num_rows($pending_q);
 			<!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
 			<!-- BEGIN SIDEBAR MENU -->
 			<ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
-				<li class="sidebar-toggler-wrapper">
-					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-					<div class="sidebar-toggler hidden-phone">
-					</div>
-					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-				</li>
 				<li class="sidebar-search-wrapper">
 					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
 					<form method="POST" action="extra_search.html" class="sidebar-search">
@@ -353,20 +409,24 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				<li class="start active ">
 					<a href="/manage/admin/manage_letters.php">
-						<i class="fa fa-home"></i>
+						<i class="fa fa-envelope"></i>
 						<span class="title">
-							LETTERS (<?= $pending_letters; ?>)
-						</span>
+							LETTERS 
+							</span>
+							<span class="badge badge-warning"><?= $pending_letters; ?></span>
+						
 						<span class="selected">
 						</span>
 					</a>
 				</li>
 				<li>
 					<a href="/manage/admin/manage_vobs.php?status=0">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-hospital-o"></i>
 						<span class="title">
-							VOBs (<?= $num_pending_preauth; ?>)
-						</span>
+							VOBs 
+							</span>
+						<span class="badge badge-warning"><?= $num_pending_preauth; ?></span>
+						
 						<span class="arrow ">
 						</span>
 					</a>
@@ -376,10 +436,12 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				<? } ?>
 				<li>
 					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-user-md"></i>
 						<span class="title">
-							HSTs (<?= $num_pending_hst; ?>)
-						</span>
+							HSTs 
+							</span>
+							<span class="badge badge-warning"><?= $num_pending_hst; ?></span>
+						
 						<span class="arrow ">
 						</span>
 					</a>
@@ -388,17 +450,18 @@ $num_pending_claims = mysql_num_rows($pending_q);
 				
 				<li>
 					<a href="/manage/admin/manage_claims.php?status=0">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-medkit"></i>
 						<span class="title">
-							CLAIMS (<?= $num_pending_claims; ?>)
-						</span>
+							CLAIMS </span>
+							<span class="badge badge-warning"><?= $num_pending_claims; ?></span>
+						
 						<span class="arrow ">
 						</span>
 					</a>
 				</li>
-					<li>
+				<li>
 					<a href="/manage/admin/manage_new_patient_calls.php">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-male"></i>
 						<span class="title">
 							NEW PATIENT CALLS
 						</span>
@@ -406,9 +469,10 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
+				
 				<li>
 					<a href="javascript:;">
-						<i class="fa fa-folder-open"></i>
+						<i class="fa fa-user"></i>
 						<span class="title">
 							Users
 						</span>
@@ -417,173 +481,687 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					</a>
 					<ul class="sub-menu">
 						<li>
-							<a href="#">
-								<i class="fa fa-cogs"> </i>Accounts
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Accounts
 								<span class="arrow">
 								</span>
 							</a>
 							<ul class="sub-menu">
+								 <?php if (is_super($_SESSION['admin_access'])) { ?>
 								<li>
-									<?php if (is_super($_SESSION['admin_access'])) { ?>
 									<a href="/manage/admin/manage_companies.php">
 										<i class="fa fa-user"></i>Companies
-										
-										<span class="arrow">
-										</span>
 									</a>
-									<?php } ?>
-									
 								</li>
-								<li>
+								<?php } ?>
 								 <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
-
+								<li>
 									<a href="/manage/admin/manage_backoffice.php">
 										<i class="fa fa-user"></i> Backoffice Accounts
 									</a>
-									<?php }  ?>
 								</li>
-							
+								<?php } ?>
 								<li>
 									<a href="/manage/admin/manage_users.php">
-										<i class="fa fa-external-link"></i>User Accounts
+										<i class="fa fa-external-link"></i> User Accounts
 									</a>
 								</li>
 								<li>
 									<a href="/manage/admin/export_users.php">
-										<i class="fa fa-external-link"></i>Export Users
+										<i class="fa fa-bell"></i> Export Users
 									</a>
 								</li>
+								
 								<li>
 									<a href="/manage/admin/export_users_emails.php">
-										<i class="fa fa-external-link"></i>Export Active User Emails
+										<i class="fa fa-bell"></i>Export Active User Emails
 									</a>
 								</li>
 								<li>
 									<a href="/manage/admin/insurance_officeally_select.php">
-										<i class="fa fa-external-link"></i>Export Pending Office Ally Claims
+										<i class="fa fa-bell"></i>Export Pending Office Ally Claims
 									</a>
 								</li>
+								<?php if(!is_billing($_SESSION['admin_access'])){ ?>
 								<li>
-									 <?php if(!is_billing($_SESSION['admin_access'])){ ?>
 									<a href="/manage/admin/manage_access_codes.php">
-										<i class="fa fa-external-link"></i>Access Codes
+										<i class="fa fa-bell"></i>Access Codes
 									</a>
-									<?php  }  ?>
 								</li>
-								
 								<li>
 									<a href="/manage/admin/manage_plans.php">
-										<i class="fa fa-external-link">Plans</i>
+										<i class="fa fa-bell"></i>Plans
 									</a>
 								</li>
-								
+								<?php } ?>
 							</ul>
 						</li>
 						<li>
-							<a href="#">
-								<i class="fa fa-globe"></i> Item 2
+							<a href="/manage/admin/manage_patient.php">
+								<i class="fa fa-folder-open"></i>
+								Patient List (All)
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Account Analysis
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<?php if (!is_billing($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_percase_invoice.php">
+										<i class="fa fa-user"></i>Invoicing
+									</a>
+								</li>
+								
+								
+								<li>
+									<a href="/manage/admin/manage_monthly_invoice.php">
+										<i class="fa fa-external-link"></i> Monthly Invoicing
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_payment_errors.php">
+										<i class="fa fa-bell"></i> Invoicing Payment Errors
+									</a>
+								</li>
+								
+								<li>
+									<a href="/manage/admin/franchisee_faxes.php">
+										<i class="fa fa-bell"></i>Fax Report
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/client_tracking.php">
+										<i class="fa fa-bell"></i>Client Tracking
+									</a>
+								</li>
+								<?php } ?>
+								
+								<li>
+									<a href="/manage/admin/franchisee_monthly.php">
+										<i class="fa fa-bell"></i>Monthly Report
+									</a>
+								</li>
+																
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Insurance Codes
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<?php if (!is_billing($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_transaction_code.php">
+										<i class="fa fa-user"></i>Default Codes (Global)
+									</a>
+								</li>
+								<?php } ?>
+								<li>
+									<a href="/manage/admin/manage_doctor_transaction_code_list.php">
+										<i class="fa fa-bell"></i>User Codes (Individual)
+									</a>
+								</li>
+														
+							</ul>
+						</li>
+						  <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Note Text
 								<span class="arrow">
 								</span>
 							</a>
 							<ul class="sub-menu">
 								<li>
-									<a href="#">
-										<i class="fa fa-user"></i> Sample Link 1
+									<a href="/manage/admin/manage_custom_text.php">
+										<i class="fa fa-user"></i>Progress Default Text (Global)
 									</a>
 								</li>
+								
 								<li>
-									<a href="#">
-										<i class="fa fa-external-link"></i> Sample Link 1
+									<a href="/manage/admin/manage_doctor_custom_text_list.php">
+										<i class="fa fa-bell"></i>Progress User Text (Individual)
 									</a>
 								</li>
+
 								<li>
-									<a href="#">
-										<i class="fa fa-bell"></i> Sample Link 1
+									<a href="/manage/admin/manage_claim_text.php">
+										<i class="fa fa-bell"></i>Claim Text
 									</a>
 								</li>
 							</ul>
 						</li>
+						<?php } ?>
 						<li>
-							<a href="#">
-								<i class="fa fa-folder-open"></i>
-								Item 3
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Password
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/changepassword.php">
+										<i class="fa fa-user"></i>Change My Password
+									</a>
+								</li>
+							</ul>
+						</li>
+						 <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Security
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_log.php">
+										<i class="fa fa-user"></i>Login Data
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_pages.php">
+										<i class="fa fa-user"></i>Custom Pages
+									</a>
+								</li>
+								
+							</ul>
+						</li>
+						<li>
+							<a href="/manage/admin/email_bounce.php">
+								<i class="fa fa-cogs"></i> Email Bounces
+								<span class="arrow">
+								</span>
 							</a>
 						</li>
+						<?php } ?>
+							
 					</ul>
 				</li>
-				
-				
-				
-				<? } ?>
-				
-				
-				
+					
 				<li>
-					<a href="/manage/admin/manage_vobs.php?status=0">
-						<i class="fa fa-shopping-cart"></i>
+					<a href="javascript:;">
+						<i class="fa  fa-desktop"></i>
 						<span class="title">
-							VOBs (<?= $num_pending_preauth; ?>)
+							SOFTWARE
 						</span>
 						<span class="arrow ">
 						</span>
 					</a>
 					<ul class="sub-menu">
+					<?php if (!is_billing($_SESSION['admin_access'])) { ?>	
 						<li>
-							<a href="ecommerce_index.html">
-								<i class="fa fa-bullhorn"></i>
-								Dashboard
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Questionnaire Edits
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Bmi/Symptoms
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_complaint.php">
+												<i class="fa fa-remove"></i> Chief Complaint
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Sleepiness test
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_epworth.php">
+												<i class="fa fa-remove"></i> Epworth
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Sleep Study / Cpap
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_intolerance.php">
+												<i class="fa fa-remove"></i> Cpap Intolerance
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Medical Hx
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_allergens.php">
+												<i class="fa fa-remove"></i> Allergens
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_medications.php">
+												<i class="fa fa-remove"></i> Medications
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_history.php">
+												<i class="fa fa-remove"></i> Medical Hx
+											</a>
+										</li>
+									</ul>
+								</li>
+								
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Clinical Exam Edits
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Dental Exam
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_exam_teeth.php">
+												<i class="fa fa-remove"></i> Teeth Examination
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Vital Data / Tongue
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_tongue.php">
+												<i class="fa fa-remove"></i> Tongue Evaluation
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Airway Evaluation
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_maxilla.php">
+												<i class="fa fa-remove"></i> Maxilla
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_mandible.php">
+												<i class="fa fa-remove"></i> Mandible 
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_soft_palate.php">
+												<i class="fa fa-remove"></i> Soft Palate
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_uvula.php">
+												<i class="fa fa-remove"></i> Uvula
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_gag_reflex.php">
+												<i class="fa fa-remove"></i> Gag Reflex
+											</a>
+										</li>
+										<li>
+										<li><a href="/manage/admin/manage_nasal_passages.php">
+												<i class="fa fa-remove"></i> Nasal Passages
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										TMJ / ROM
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_palpation.php">
+												<i class="fa fa-remove"></i> Muscles & Palpation
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_joint_exam.php">
+												<i class="fa fa-remove"></i> Joint Exam Type
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_joint.php">
+												<i class="fa fa-remove"></i> Joint Exam
+											</a>
+										</li>
+									</ul>
+								</li>
+								
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Contacts (Global List And Type)
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_contacttype.php">
+										<i class="fa fa-user"></i> Contact Types
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_fcontact.php">
+										<i class="fa fa-external-link"></i> Corporate Contacts (Global List)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_lab.php">
+										<i class="fa fa-bell"></i> Dental Appliance Labs (Global List)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_insurance.php">
+										<i class="fa fa-bell"></i> Insurance Info (Global List)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Images
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_imagetype.php">
+										<i class="fa fa-user"></i> Image Type (Global List)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Letters
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_default_letters.php">
+										<i class="fa fa-user"></i> Default Letters
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Home Page
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_change_list.php">
+										<i class="fa fa-user"></i> Change List
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_welcome.php">
+										<i class="fa fa-external-link"></i> Welcome Screen Message (Global)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_memos.php">
+										<i class="fa fa-bell"></i> Memos
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Insurance Claim
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_ins_diagnosis.php">
+										<i class="fa fa-user"></i> Insurance Diagnosis
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_place_service.php">
+										<i class="fa fa-external-link"></i> Place Of Service
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_type_service.php">
+										<i class="fa fa-bell"></i> Type Of Service
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_cpt_code.php">
+										<i class="fa fa-bell"></i> Cpt Code
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_modifier_code.php">
+										<i class="fa fa-bell"></i> Modifier Code
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Files
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_doc_categories.php">
+										<i class="fa fa-user"></i> Dss Files For Franchisees (Global)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Additional Items
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_ins_type.php">
+										<i class="fa fa-user"></i> Insurance Type
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_diagnostic.php">
+										<i class="fa fa-external-link"></i> Diagnostic Test
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_assessment.php">
+										<i class="fa fa-bell"></i> Assessment
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_assess_addition.php">
+										<i class="fa fa-bell"></i> Assessment Addition
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_consultation.php">
+										<i class="fa fa-bell"></i> Consultation
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_evaluation_new.php">
+										<i class="fa fa-bell"></i> Evaluation New
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_evaluation_est.php">
+										<i class="fa fa-bell"></i> Evaluation Established
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_plan_text.php">
+										<i class="fa fa-bell"></i> Plan / Progress Text
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Flowsheet
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_flowsheet_steps.php">
+										<i class="fa fa-user"></i> Steps
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Dental Devices
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_device.php">
+										<i class="fa fa-user"></i> Dental Device List
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_device_guide_settings.php">
+										<i class="fa fa-user"></i> Settings
+									</a>
+								</li>
+							</ul>
+						</li>
+					<?php } ?>
+						
+					
+						<li>
+						<a href="/manage/admin/manage_claim_settings.php">
+								<i class="fa fa-folder-open"></i>Claim Settings
 							</a>
 						</li>
 						<li>
-							<a href="ecommerce_orders.html">
-								<i class="fa fa-shopping-cart"></i>
-								Orders
-							</a>
-						</li>
-						<li>
-							<a href="ecommerce_orders_view.html">
-								<i class="fa fa-tags"></i>
-								Order View
-							</a>
-						</li>
-						<li>
-							<a href="ecommerce_products.html">
-								<i class="fa fa-sitemap"></i>
-								Products
-							</a>
-						</li>
-						<li>
-							<a href="ecommerce_products_edit.html">
-								<i class="fa fa-file-o"></i>
-								Product Edit
+						<a href="/manage/admin/manage_claim_history.php">
+								<i class="fa fa-folder-open"></i>Electronic Claim History
 							</a>
 						</li>
 					</ul>
 				</li>
-			
-
 				
-				<li class="last ">
-					<a href="charts.html">
-						<i class="fa fa-bar-chart-o"></i>
-						<span class="title">
-							Visual Charts
-						</span>
-					</a>
-				</li>
+				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
+                <?php
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $t_sql = "SELECT t.* FROM dental_support_tickets t
+        JOIN dental_users u ON u.userid=t.userid
+                WHERE (t.status=0 OR t.status=1)
+            AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
+  } else {
+    $t_sql = "SELECT * FROM dental_support_tickets
+        WHERE status=0 OR status=1;";
+  }
+  $t_q = mysql_query($t_sql);
+  $num_open_tickets = mysql_num_rows($t_q);
+                ?>
+				
+				
+			<li>
+				<a href="javascript:;">
+					<i class="fa  fa-question"></i> 
+					TICKETS <span class="badge badge-warning"><?= $num_open_tickets; ?></span>
+					<span class="arrow">
+					</span>
+				</a>
+				<ul class="sub-menu">
+					<li>
+						<a href="/manage/admin/manage_support_tickets.php">
+							<i class="fa fa-user"></i> Tickets
+						</a>
+					</li>
+					<li>
+						<a href="/manage/admin/manage_support_categories.php">
+							<i class="fa fa-user"></i> Categories
+						</a>
+					</li>
+				</ul>
+			</li>
+				
+			 <? } ?>	
 			</ul>
 			<!-- END SIDEBAR MENU -->
 		</div>
 	</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

@@ -964,7 +964,7 @@ Sidebar toggler(show/hide)
   float: left;
   display: inline-block;
   margin-top: 6px;
-  margin-left: -42px;
+  margin-left: 0px;
 }
 
 /***

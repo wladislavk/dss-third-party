@@ -56,53 +56,85 @@ if (isset($_POST["loginsub"])) {
 
 ?>
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
-    <div class="container">
-        <div class="well">
-            <h1>Dental Sleep Solutions</h1>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <?php if (isset($_GET['msg'])) { ?>
-                <div class="alert alert-danger text-center">
-                    <strong><?= $_GET['msg'] ?></strong>
-                </div>
-                <?php } ?>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">Admin login</div>
-                    <div class="panel-body">
-                        <form name="loginfrm" method="post" action="<?= $_SERVER['PHP_SELF'] ?>" onsubmit="return loginabc(this)" class="form-horizontal">
-                            <div class="form-group">
-                                <label for="username" class="col-md-3 control-label">Username</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" name="username" id="username" placeholder="username">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="col-md-3 control-label">Password</label>
-                                <div class="col-md-9">
-                                    <input type="password" class="form-control" name="password" id="password" placeholder="password">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3">
-                                    <img src="../CaptchaSecurityImages.php?width=100&amp;height=40&amp;characters=5" width="100" height="40" alt="If you cannot see the captcha, reload the page please">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="captcha" class="col-md-3 control-label">Captcha</label>
-                                <div class="col-md-9 text-center">
-                                    <input type="text" class="form-control" name="security_code" id="captcha" placeholder="write the characters in the image">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3 ">
-                                    <input type="submit" name="loginsub" value="Login" class="btn btn-success">
-                                    <a href="/manage/admin/forgot_password.php" class="btn btn-default">Forgot Password</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-<?php require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>
+		<!-- BEGIN LOGO -->
+<div class="logo">
+	<h1  style="color:#ffffff;font-size:20px; margin:9px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+</div>
+<!-- END LOGO -->
+
+<div class="content">
+	<!-- BEGIN LOGIN FORM -->
+	<form method="post" action="<?= $_SERVER['PHP_SELF'] ?>" class="login-form"  onsubmit="return loginabc(this)" novalidate="novalidate">
+		<?php if (isset($_GET['msg'])) { ?>
+		<div class="alert alert-danger text-center">
+			<strong><?= $_GET['msg'] ?></strong>
+		</div>
+	
+	
+     <?php } ?>
+		<h3 class="form-title">Login to your account</h3>
+		
+		<div class="form-group">
+			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+			<!--<label class="control-label visible-ie8 visible-ie9">Username</label>-->
+			<div class="input-icon">
+				<i class="fa fa-user"></i>
+				<input type="text" name="username" placeholder="Username" autocomplete="off" id="username" class="form-control placeholder-no-fix">
+			</div>
+		</div>
+		<div class="form-group">
+			<!--<label class="control-label visible-ie8 visible-ie9">Password</label>-->
+			<div class="input-icon">
+				<i class="fa fa-lock"></i>
+				<input type="password" name="password" placeholder="Password" id="password" autocomplete="off" class="form-control placeholder-no-fix">
+			</div>
+		</div>
+		<div class="form-group">
+			
+			<div class="input-icon">
+				<img src="../CaptchaSecurityImages.php?width=100&amp;height=40&amp;characters=5" style="margin-bottom:5px;" width="100" height="40" alt="If you cannot see the captcha, reload the page please">
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<!--<label for="captcha" class="col-md-3 control-label">Captcha</label>-->
+			<div class="input-icon">
+				<i class="fa fa-user"></i>
+				<input type="text" class="form-control" name="security_code" id="captcha" placeholder="write the characters in the image">
+			</div>
+		</div>
+		<div class="form-actions" style="margin-left:-9px;">
+			<label class="checkbox">
+			<div class="checker"><span><input type="checkbox" value="1" name="remember"></span></div> Remember me </label>
+			<button type="submit" class="btn blue pull-right" name="loginsub" >Login
+			<i class="m-icon-swapright m-icon-white"></i>
+		</div>
+		
+		<div class="forget-password">
+			<h4>Forgot your password ?</h4>
+			<p>
+				 no worries, click
+				<a id="forget-password" href="/manage/admin/forgot_password.php">
+					 here
+				</a>
+				 to reset your password.
+			</p>
+		</div>
+		<div class="create-account">
+			<p>
+				 Don't have an account yet ?&nbsp;
+				<a id="register-btn" href="javascript:;">
+					 Create an account
+				</a>
+			</p>
+		</div>
+	</form>
+</div>	
+			
+		
+	<!-- END LOGIN FORM -->
+		
+	<div class="copyright">
+	 2014 &copy; dentalsleepsolutions.com
+</div>  
+<?php //require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

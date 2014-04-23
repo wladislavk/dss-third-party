@@ -210,7 +210,7 @@ $num_case = mysql_num_rows($case_q);
 
 if($num_case_e0486 > 0){
 $html .= '<tr>
-                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case.'</td>
+                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case_e0486.'</td>
                                                                         <td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">PER-CASE FEES</td>
 
                                                                         <!-- table column with item number-->

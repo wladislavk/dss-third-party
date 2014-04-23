@@ -20,7 +20,7 @@ $no_pages = $total_rec/$rec_disp;
 $my=mysql_query($sql) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
-$doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($_GET['docid']);
+$doc_sql = "SELECT * from dental_users WHERE userid=".mysql_real_escape_string($_SESSION['docid']);
 $doc_q = mysql_query($doc_sql);
 $doc = mysql_fetch_assoc($doc_q);
 

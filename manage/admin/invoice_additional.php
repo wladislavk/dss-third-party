@@ -3,7 +3,7 @@ include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 
-  $sql = "SELECT du.*, c.name AS company_name, c.free_fax, 
+  $sql = "SELECT du.*, c.name AS company_name, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period,
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
                 FROM dental_users du 
@@ -40,7 +40,15 @@ AND
                 (SELECT count(*) as total_faxes FROM dental_faxes f
                         WHERE 
                 f.docid='".$_REQUEST['docid']."' AND
-                f.status = '0') >  c.free_fax OR
+                f.status = '0') >  plan.free_fax OR
+(SELECT count(*) as total_eligibility FROM dental_eligibility f
+                        WHERE 
+                f.userid='".$_REQUEST['docid']."' AND
+                f.eligibility_invoice_id IS NULL) > plan.free_eligibility OR
+(SELECT count(*) as total_enrollment FROM dental_eligible_enrollment f
+                        WHERE 
+                f.user_id='".$_REQUEST['docid']."' AND
+                f.enrollment_invoice_id IS NULL) >  plan.free_enrollment OR
                 (SELECT COUNT(*) FROM dental_insurance_preauth p
                 JOIN dental_patients dp ON p.patient_id=dp.patientid
                         WHERE 
@@ -108,7 +116,7 @@ $fax = mysql_fetch_assoc($fax_q);
 $ec_sql = "SELECT count(*) as total_ec, MIN(adddate) as start_date, MAX(adddate) as end_date FROM dental_eligibility e
         WHERE 
                 e.userid='".$user['userid']."'
-		and e.percase_invoice IS NULL
+		and e.eligibility_invoice_id IS NULL
 ";
 $ec_q = mysql_query($ec_sql);
 $ec = mysql_fetch_assoc($ec_q);
@@ -116,7 +124,7 @@ $ec = mysql_fetch_assoc($ec_q);
 $enroll_sql = "SELECT count(*) as total_enrollments, MIN(adddate) as start_date, MAX(adddate) as end_date FROM dental_eligible_enrollment e
         WHERE 
                 e.user_id='".$user['userid']."'
-		AND e.percase_invoice IS NULL
+		AND e.enrollment_invoice_id IS NULL
 ";
 $enroll_q = mysql_query($enroll_sql);
 $enroll = mysql_fetch_assoc($enroll_q);
@@ -707,7 +715,7 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="fax_amount" value="<?= $bill_ec*$doc['eligibility_fee']; ?>">
+                            <input type="text" class="amount form-control" name="ec_amount" value="<?= $bill_ec*$doc['eligibility_fee']; ?>">
                         </div>
                     </td>
                 </tr>

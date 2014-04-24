@@ -95,12 +95,27 @@ $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, pe
                 dl.transaction_code='E0486' AND
                 dl.docid='".$myarray['docid']."' AND                dl.percase_invoice='".$myarray['id']."'
         UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_claim_electronic e 
+        WHERE 
+                e.percase_invoice='".$myarray['id']."'
+        UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl         WHERE 
                 dl.percase_invoice='".$myarray['id']."'
         UNION
 SELECT CONCAT('Insurance Verification Services – ', patient_firstname, ' ', patient_lastname), invoice_date, '', invoice_amount, id FROM dental_insurance_preauth
         WHERE
                 invoice_id='".$myarray['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_eligibility_invoice
+        WHERE
+                invoice_id='".$myarray['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_enrollment_invoice
+        WHERE
+                invoice_id='".$myarray['id']."'
+
         UNION
 SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice        WHERE

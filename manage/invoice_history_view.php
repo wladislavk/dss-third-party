@@ -17,6 +17,10 @@ $case_sql = "SELECT
 		dl.transaction_code='E0486' AND
 		dl.docid='".$_SESSION['docid']."' AND
 		dl.percase_invoice = '".$_REQUEST['invoice_id']."'
+        UNION ALL
+SELECT percase_name, percase_date, percase_amount FROM dental_claim_electronic e 
+        WHERE 
+                e.percase_invoice='".$_REQUEST['invoice_id']."'
     UNION ALL
 	SELECT
         e.percase_name,
@@ -41,6 +45,17 @@ $case_sql = "SELECT
 	FROM dental_insurance_preauth
         WHERE
                 invoice_id='".$_REQUEST['invoice_id']."'
+        UNION
+SELECT description,
+start_date, amount FROM dental_eligibility_invoice
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+        UNION
+SELECT description,
+start_date, amount FROM dental_enrollment_invoice
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+
 
 
 ";
@@ -115,6 +130,11 @@ $case_q = mysql_query($case_sql);
                 dl.transaction_code='E0486' AND
                 dl.docid='".$_SESSION['docid']."' AND
                 dl.percase_invoice = '".$_REQUEST['invoice_id']."'
+        UNION ALL
+SELECT  percase_amount FROM dental_claim_electronic e 
+        WHERE 
+                e.percase_invoice='".$_REQUEST['invoice_id']."'
+
     UNION ALL
         SELECT
         e.percase_amount
@@ -133,6 +153,17 @@ $case_q = mysql_query($case_sql);
 	FROM dental_insurance_preauth
         WHERE
                 invoice_id='".$_REQUEST['invoice_id']."'
+        UNION
+SELECT 
+ amount FROM dental_eligibility_invoice
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+        UNION
+SELECT 
+amount FROM dental_enrollment_invoice
+        WHERE
+                invoice_id='".$_REQUEST['invoice_id']."'
+
 
 		) t1
 	";

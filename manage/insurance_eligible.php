@@ -5,6 +5,7 @@ require_once('includes/constants.inc');
 require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 include('includes/claim_create.php');
+include('includes/claim_functions.php');
 //include('includes/general_functions.php');
 
 $is_front_office = true;

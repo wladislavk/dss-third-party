@@ -1,6 +1,7 @@
 <?php
 require_once '../admin/includes/main_include.php';
 require_once '../admin/includes/general.htm';
+require_once 'claim_functions.php';
 
 $lid = $_REQUEST['lid'];
 $mailed = $_REQUEST['mailed'];

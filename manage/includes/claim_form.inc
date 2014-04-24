@@ -1,6 +1,5 @@
   <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
   <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>
-
 <?php
 $status_sql = "SELECT status FROM dental_insurance 
 		WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'
@@ -594,7 +593,7 @@ die();
 		
 		// update the ledger trxns passed in with the form
 		update_ledger_trxns($primary_claim_id, DSS_TRXN_PROCESSING);
-		
+	        claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);	
 		$msg = "Added Successfully";
 		
 	    print '<script type="text/javascript">';
@@ -848,7 +847,7 @@ die();
 		  mysql_query($pat_sql);
 		}
 
-
+claim_history_update($_POST['ed'], $_SESSION['userid'], $_SESSION['adminuserid']);
 		$msg = "Edited Successfully";
 		
 	    print '<script type="text/javascript">';

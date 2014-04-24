@@ -465,7 +465,7 @@ if (empty($prior_authorization_number)) {
 
     <body>
 
-    <form action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>" method="POST">
+    <form action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>&pid=<?= $_REQUEST['pid']; ?>" method="POST">
 
         <div id="eligibleapi-claim-1500-form"></div>
 

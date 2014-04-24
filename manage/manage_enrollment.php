@@ -81,8 +81,9 @@ include "includes/top.htm";
 	?>
 </table>
 </form>
-
-
+<div class="fullwidth">
+<?php include 'eligible_enrollment/index.php'; ?>
+</div>
 <div id="popupContact" style="width:750px;">
     <a id="popupContactClose"><button>X</button></a>
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>

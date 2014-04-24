@@ -703,15 +703,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </div>
             </div>
             <div class="form-group expanded">
-                <label for="mailing_firstname" class="col-md-3 control-label">First Name</label>
+                <label for="mailing_name" class="col-md-3 control-label">Name</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_firstname" id="mailing_firstname" placeholder="First name" value="<?= $mailing_firstname ?>">
-                </div>
-            </div>
-            <div class="form-group expanded">
-                <label for="mailing_lastname" class="col-md-3 control-label">Last Name</label>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" name="mailing_lastname" id="mailing_lastname" placeholder="Last name" value="<?= $mailing_lastname ?>">
+                    <input type="text" class="form-control" name="mailing_name" id="mailing_name" placeholder="Name" value="<?= $mailing_name ?>">
                 </div>
             </div>
             <div class="form-group expanded">

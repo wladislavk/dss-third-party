@@ -13,7 +13,8 @@ if (!Array.prototype.indexOf) {
 // Endpoints object for eligible
 var EligibleEndpoints = {
   coverage: "https://gds.eligibleapi.com/v1.3/coverage/all.json",
-  demographics: "https://gds.eligibleapi.com/v1.3/demographics/all.json"
+  demographics: "https://gds.eligibleapi.com/v1.3/demographics/all.json",
+  medicare: "https://gds.eligibleapi.com/v1.3/coverage/medicare.json"
 }
 
 var levels = [
@@ -49,6 +50,7 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
   // Do an api request to eligible
   this.request = function (params) {
     this.parameters = this.objectToUrlParameters(params);
+    this.parameters += "&bypass_enrollment=true";
 
     this.options = {
       data: this.parameters,
@@ -70,24 +72,7 @@ function EligibleRequest(endpoint, successCallback, errorCallback, debug) {
           errorCallback(null, null, err);
         }
         if (jsonData)
-        var pid = $('#pid').val();
-                                      $.ajax({
-                                        url: "../includes/eligibility_save.php",
-                                        type: "post",
-                                        data: {response: data, pid:pid},
-                                        success: function(data){
-                                                var r = $.parseJSON(data);
-                                                if(r.error){
-                                                }else{
-                                                }
-                                        },
-                                        failure: function(data){
-                                                //alert('fail');
-                                        }
-                                  });
-
           successCallback(jsonData);
-	  parent.autoResize('eligible');
       },
       error: function (xhr, textStatus, errorThrown) {
         if (this.debug)
@@ -384,6 +369,140 @@ function Coverage(json) {
     return(this.json['00030']);
   }
 
+  ///////////////////////////////////
+  // Medicare functions below
+  ///////////////////////////////////
+
+  // Check if the medicare answer has an address
+  this.hasAddress = function() {
+    return(this.json['address'] && json['address']['street_line_1']);
+  }
+
+  // Return the address for the medicare answer
+  this.getAddress = function() {
+    if (!this.hasAddress()) return null;
+    return(this.json['address']);
+  }
+
+  // Check if the medicare answer has eligibility dates
+  this.hasEligibilityDates = function() {
+    return(this.json['eligibilty_dates'] && this.json['eligibilty_dates']['start']);
+  }
+
+  // Return the eligibility dates for the medicare answer
+  this.getEligibilityDates = function() {
+    if (!this.hasEligibilityDates()) return null;
+    return(this.json['eligibilty_dates']);
+  }
+
+  // Check if the medicare answer has inactivity dates
+  this.hasInactivityDates = function() {
+    return(this.json['inactivity_dates'] && this.json['inactivity_dates']['start']);
+  }
+
+  // Return the inactivity dates for the medicare answer
+  this.getInactivityDates = function() {
+    if (!this.hasInactivityDates()) return null;
+    return(this.json['inactivity_dates']);
+  }
+
+  // Check if the medicare answer has plan types
+  this.hasPlanTypes = function() {
+    return(this.json['plan_types'] && Object.keys(this.json['plan_types']));
+  }
+
+  // Return the plan types for the medicare answer
+  this.getPlanTypes = function() {
+    if (!this.hasPlanTypes()) return null;
+    return(this.json['plan_types']);
+  }
+
+  // Check if the medicare answer has plan details
+  this.hasPlanDetails = function() {
+    return(this.json['plan_details'] && Object.keys(this.json['plan_details']));
+  }
+
+  // Return the plan details for the medicare answer
+  this.getPlanDetails = function () {
+    if (!this.hasPlanDetails()) return null;
+    return(this.json['plan_details']);
+  }
+
+  // Check if the medicare answer has a primary payer (other than medicare)
+  this.hasMedicarePrimaryPayer = function() {
+    return(this.json['plan_details'] && this.json['plan_details']['PR'] && this.json['plan_details']['PR']['active'] == true);
+  }
+
+  // Get the primary payer for a medicare answer
+  this.getMedicarePrimaryPayer = function() {
+    if (!this.hasMedicarePrimaryPayer()) return null;
+    return(this.json['plan_details']['PR']);
+  }
+
+  // Check if the medicare answer has a part A
+  this.hasMedicarePartA = function() {
+    return(this.json['plan_details'] && this.json['plan_details']['MA']);
+  }
+
+  // Gets the medicare part A section
+  this.getMedicarePartA = function() {
+    if (!this.hasMedicarePartA()) return null;
+    return(this.json['plan_details']['MA']);
+  }
+
+  // Check if the medicare answer has a part B
+  this.hasMedicarePartB = function() {
+    return(this.json['plan_details'] && this.json['plan_details']['MB']);
+  }
+
+  // Gets the medicare part B section
+  this.getMedicarePartB = function() {
+    if (!this.hasMedicarePartB()) return null;
+    return(this.json['plan_details']['MB']);
+  }
+
+  // Check if the medicare answer has a part C
+  this.hasMedicarePartC = function() {
+    return(this.json['plan_details'] && this.json['plan_details']['MC']);
+  }
+
+  // Gets the medicare part C section
+  this.getMedicarePartC = function() {
+    if (!this.hasMedicarePartC()) return null;
+    return(this.json['plan_details']['MC']);
+  }
+
+  // Check if the medicare answer has a part D
+  this.hasMedicarePartD = function() {
+    return(this.json['plan_details'] && this.json['plan_details']['MD']);
+  }
+
+  // Gets the medicare part D section
+  this.getMedicarePartD = function() {
+    if (!this.hasMedicarePartD()) return null;
+    return(this.json['plan_details']['MD']);
+  }
+
+  // Check if the medicare answer has requested_service_types
+  this.hasMedicareRequestedServiceTypes = function() {
+    return(this.json['requested_service_types'] && this.json['requested_service_types'].length > 0);
+  }
+
+  // Return the requested service types for the medicare answer
+  this.getMedicareRequestedServiceTypes = function() {
+    return(this.json['requested_service_types']);
+  }
+
+  // Check if the medicare answer has requested_procedure_codes
+  this.hasMedicareRequestedProcedureCodes = function() {
+    return(this.json['requested_procedure_codes'] && this.json['requested_procedure_codes'].length > 0);
+  }
+
+  // Return the requested procedure codes for the medicare answer
+  this.getMedicareRequestedProcedureCodes = function() {
+    return(this.json['requested_procedure_codes']);
+  }
+
 
   ///////////////////////////////////
   // Utility parsing functions below
@@ -531,13 +650,31 @@ function Coverage(json) {
     var start;
     var end;
     $.each(dates, function (index, date) {
-      if (date.date_type == type || date.date_type == type + "_begin") {
+      if (date.date_type == type || date.date_type == type + "_begin" || date.date_type == type + "_start") {
         start = date.date_value;
       } else if (date.date_type == type + "_end") {
         end = date.date_value;
       }
     });
     return(this.formatDates(start, end));
+  }
+
+  // Parses the dates for medicare
+  this.parseMedicareDates = function(dates) {
+    var start;
+    var end;
+    if (dates['start']) start = dates['start'];
+    if (dates['end']) end = dates['end'];
+
+    if (start && end) {
+      return(start + " to " + end);
+    } else if (start) {
+      return("Starts on " + start);
+    } else if (end) {
+      return("Ends on " + end);
+    } else {
+      return(null);
+    }
   }
 
   // Format two dates in a single string
@@ -566,10 +703,15 @@ function Coverage(json) {
 
   // Parses an amount by returning decimals if there is not period on the string
   this.parseAmount = function (amount) {
-    if (amount.indexOf(".")) {
-      return("$ " + amount);
+    if ((amount === undefined) || (amount === null) || (amount.length == 0)) return "";
+    if (typeof(amount) == "number") {
+      return("$ " + amount.toFixed(2));
     } else {
-      return("$ " + amount + ".00");
+      if (amount.indexOf(".")) {
+        return("$ " + amount);
+      } else {
+        return("$ " + amount + ".00");
+      }
     }
   }
 
@@ -595,7 +737,7 @@ function Coverage(json) {
 
   // Checks if there is a value on the variable
   this.isPresent = function (object) {
-    if (object == undefined || object == null || object == "") {
+    if (object === undefined || object === null || object === "") {
       return false;
     } else {
       return true;
@@ -630,6 +772,23 @@ function CoveragePlugin(coverage, coverageSection) {
 
     panel.addClass(title.replace(/ /g, '-').toLowerCase());
     return panel;
+  }
+
+  // Check if the answer is a medicare answer
+  this.isMedicareCoverage = function() {
+    if (that.coverage.hasPlanTypes()) {
+      return(true);
+    } else {
+      return(false);
+    }
+  }
+
+  // Check if the answer is a coverage answer
+  this.isGeneralCoverage = function() {
+    if (that.coverage.hasDemographics())
+      return(true);
+    else
+      return(false);
   }
 
   ///////////////////////////////////////////////////
@@ -852,6 +1011,71 @@ function CoveragePlugin(coverage, coverageSection) {
         that.buildPanelUI('Nursing Home',
           that.getMedicaidNursingHome()));
     }
+  }
+
+  //////////////////////////////////////////////////////////////
+  // Functions that adds content for medicare below
+  //////////////////////////////////////////////////////////////
+
+  // Adds medicare demographics section
+  this.addMedicareDemographicsSection = function (container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI('Patient', that.getMedicareDemographicsSection()));
+  }
+
+  // Adds medicare primary payer
+  this.addMedicarePrimaryPayer = function(container) {
+    container = container || this.coverageSection;
+    if (that.coverage.hasMedicarePrimaryPayer())
+      container.append(that.buildPanelUI('Primary Payer', that.getMedicarePrimaryPayerSection()));
+  }
+
+  // Adds medicare plan section
+  this.addMedicarePlan = function(container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI("Medicare", that.getMedicarePlanSection()));
+  }
+
+  // Adds medicare part A
+  this.addMedicarePartA = function(container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI("Medicare Part A (Hospital)", that.getMedicarePartASection()));
+  }
+
+  // Adds medicare part B
+  this.addMedicarePartB = function(container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI("Medicare Part B (Professional Services)", that.getMedicarePartBSection()));
+  }
+
+  // Adds medicare part C
+  this.addMedicarePartC = function(container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI("Medicare Part C (Advantage)", that.getMedicarePartCSection()));
+  }
+
+  // Adds medicare part D
+  this.addMedicarePartD = function(container) {
+    container = container || this.coverageSection;
+    container.append(that.buildPanelUI("Medicare Part D (Prescription drugs)", that.getMedicarePartDSection()));
+  }
+
+  // Adds medicare STC
+  this.addMedicareSTC = function(container, columns) {
+    container = container || this.coverageSection;
+    var columns = columns || 2;
+
+    if (that.coverage.hasMedicareRequestedServiceTypes())
+      container.append(that.getRequestedServiceTypes(that.coverage.getMedicareRequestedServiceTypes(), columns));
+  }
+
+  // Adds medicare procedures codes
+  this.addMedicareProcedureCodes = function(container) {
+    container = container || this.coverageSection;
+    var columns = columns || 2;
+
+    if (that.coverage.hasMedicareRequestedProcedureCodes())
+      container.append(that.getRequestedProcedureCodes(that.coverage.getMedicareRequestedProcedureCodes(), columns));
   }
 
   //////////////////////////////////////////////////////////////
@@ -1078,7 +1302,7 @@ function CoveragePlugin(coverage, coverageSection) {
 
   // Gets links to the additional insurance links
   this.getAdditionalInsuranceLinks = function () {
-    var links = []
+    var links = [];
 
     if (that.coverage.hasAdditionalInsurancePolicies()) {
       $.each(that.coverage.getAdditionalInsurancePolicies(), function (index, policy) {
@@ -1149,6 +1373,80 @@ function CoveragePlugin(coverage, coverageSection) {
     return(master_div);
   }
 
+  // Gets all the medicare requested service types with generic table format
+  this.getRequestedServiceTypes = function(service_types, columns) {
+    columns = columns || 2;
+
+    var master_div = $("<div/>");
+    var div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
+
+    if (that.coverage.hasMedicareRequestedServiceTypes()) {
+      $.each(service_types, function(idx, service_type) {
+        if (div.children().length == columns) {
+          div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
+        }
+
+        var title = service_type['type_label'] + " - ";
+        if (service_type['plan_type'] == 'MA')
+          title += "Medicare Part A (Hospital)";
+        else if (service_type['plan_type'] == 'MB')
+          title += "Medicare Part B (Professional Services)";
+        else if (service_type['plan_type'] == 'MC')
+          title += "Medicare Part C (Advantage)";
+        else if (service_type['plan_type'] == 'MD')
+          title += "Medicare Part D (Prescription drugs)";
+        else
+          title += "Primary Payer";
+
+        if (service_type['active'] == true)
+          title += " - Active";
+        else
+          title += " - Inactive";
+
+        div.append(that.buildPanelUI(title, that.buildMedicareServiceType(service_type)));
+      });
+    }
+
+    return(master_div);
+  }
+
+  // Gets all the medicare requested procedure codes with generic table format
+  this.getRequestedProcedureCodes = function(procedure_codes, columns) {
+    columns = columns || 2;
+
+    var master_div = $("<div/>");
+    var div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
+
+    if (that.coverage.hasMedicareRequestedProcedureCodes()) {
+      $.each(procedure_codes, function(idx, procedure_code) {
+        if (div.children().length == columns) {
+          div = $("<div/>").addClass("clearfix").addClass("services-div").appendTo(master_div);
+        }
+
+        var title = procedure_code['procedure_label'] + " - ";
+        if (procedure_code['plan_type'] == 'MA')
+          title += "Medicare Part A (Hospital)";
+        else if (procedure_code['plan_type'] == 'MB')
+          title += "Medicare Part B (Professional Services)";
+        else if (procedure_code['plan_type'] == 'MC')
+          title += "Medicare Part C (Advantage)";
+        else if (procedure_code['plan_type'] == 'MD')
+          title += "Medicare Part D (Prescription drugs)";
+        else
+          title += "Primary Payer";
+
+        if (procedure_code['active'] == true)
+          title += " - Active";
+        else
+          title += " - Inactive";
+
+        div.append(that.buildPanelUI(title, that.buildMedicareProcedureCode(procedure_code)));
+      });
+    }
+
+    return(master_div);
+  }
+
   // Gets the medicaid managed care
   this.getMedicaidManagedCare = function() {
     return(that.buildMedicaidManagedCare(that.coverage.getMedicaidData()));
@@ -1157,6 +1455,62 @@ function CoveragePlugin(coverage, coverageSection) {
   // Gets the medicaid nursing home
   this.getMedicaidNursingHome = function() {
     return(that.buildMedicaidNursingHome(that.coverage.getMedicaidData()));
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+  // Functions that gets the tables with parsed content for medicare below
+  ////////////////////////////////////////////////////////////////////////
+
+  // Gets the demographic section for medicare
+  this.getMedicareDemographicsSection = function () {
+    return(that.buildMedicareDemographics(that.coverage.json));
+  }
+
+  // Gets the medicare primary payer section
+  this.getMedicarePrimaryPayerSection = function() {
+    return(that.buildMedicarePrimaryPayer(that.coverage.getMedicarePrimaryPayer()));
+  }
+
+  // Gets the medicare plan section
+  this.getMedicarePlanSection = function() {
+    return(that.buildMedicarePlan(that.coverage.json));
+  }
+
+  // Gets the medicare part A section
+  this.getMedicarePartASection = function() {
+    return(that.buildMedicarePartA(that.coverage.getMedicarePartA()));
+  }
+
+  // Gets the medicare part B section
+  this.getMedicarePartBSection = function() {
+    return(that.buildMedicarePartB(that.coverage.getMedicarePartB()));
+  }
+
+  // Gets the medicare part C section
+  this.getMedicarePartCSection = function() {
+    return(that.buildMedicarePartC(that.coverage.getMedicarePartC()));
+  }
+
+  // Gets the medicare part D section
+  this.getMedicarePartDSection = function() {
+    return(that.buildMedicarePartD(that.coverage.getMedicarePartD()));
+  }
+
+  // Gets additional payer links for medicare
+  this.getMedicareAdditionalInsuranceLinks = function () {
+    var links = [];
+    var plan_details = that.coverage.json['plan_details'];
+
+    if (plan_details && plan_details['PR'] && plan_details['PR']['active'] === true) {
+      var policy_name = plan_details['PR']['payer_name'];
+      links.push($("<a/>", {href: "#insurance-PR", text: policy_name}));
+    }
+    if (plan_details && plan_details['MC'] && plan_details['MC']['active'] === true) {
+      var policy_name = plan_details['MC']['payer_name'];
+      links.push($("<a/>", {href: "#insurance-MC", text: policy_name}));
+    }
+
+    return(links);
   }
 
   //////////////////////////////////////////////////////////////
@@ -2216,6 +2570,13 @@ function CoveragePlugin(coverage, coverageSection) {
           var additional_information = that.parseFinancialAdditionalInfo(info);
           var period = info['time_period_label'] || "";
 
+          if (info['pos_label'] && info['pos_label'].length > 0) {
+            additional_information.push("POS: " + info['pos_label']);
+          }
+          if (info['quantity_label'] && info['quantity_label'].length > 0) {
+            additional_information.push(info['quantity_label'] + ": " + info['quantity']);
+          }
+
           var col_index = that.getFinancialColIdx(level, financialColStart, 2);
           var row_idx = that.findFinancialRowIdx(rows, text_network, additional_information, col_index);
 
@@ -2317,6 +2678,13 @@ function CoveragePlugin(coverage, coverageSection) {
           var level = info['level'];
           var amount = that.coverage.parseFinancialAmount(info);
           var additional_information = that.parseFinancialAdditionalInfo(info);
+          if (info['pos_label'] && info['pos_label'].length > 0) {
+            additional_information.push("POS: " + info['pos_label']);
+          }
+          if (info['quantity_label'] && info['quantity_label'].length > 0) {
+            additional_information.push(info['quantity_label'] + ": " + info['quantity']);
+          }
+
           var period = info['time_period_label'] || "";
 
           var col_index = that.getFinancialColIdx(level, financialColStart, 2);
@@ -2527,6 +2895,7 @@ function CoveragePlugin(coverage, coverageSection) {
     return(table);
   };
 
+  // Helper to build generic financial rows
   this.buildGenericFinancialRows = function (data, network, level) {
     var rows = new Array();
 
@@ -2554,15 +2923,6 @@ function CoveragePlugin(coverage, coverageSection) {
 
         // Percents
         if (item['percents'] && typeof(item['percents']) === 'object') {
-          // Remainings
-          if (item['percents'][network] && item['percents'][network].length > 0) {
-            $.each(item['percents'][network], function (idx, info) {
-              if (info['level'].toLowerCase() == level) {
-                rows.push(that.buildGenericFinancialRow(network, level, key, 'Remain', '-', info));
-              }
-            });
-          }
-          // Totals
           if (item['percents'][network] && item['percents'][network].length > 0) {
             $.each(item['percents'][network], function (idx, info) {
               if (info['level'].toLowerCase() == level) {
@@ -2574,15 +2934,6 @@ function CoveragePlugin(coverage, coverageSection) {
 
         // Amounts
         if (item['amounts'] && typeof(item['amounts']) === 'object') {
-          // Remainings
-          if (item['amounts'][network] && item['amounts'][network].length > 0) {
-            $.each(item['amounts'][network], function (idx, info) {
-              if (info['level'].toLowerCase() == level) {
-                rows.push(that.buildGenericFinancialRow(network, level, key, 'Remain', '-', info));
-              }
-            });
-          }
-          // Totals
           if (item['amounts'][network] && item['amounts'][network].length > 0) {
             $.each(item['amounts'][network], function (idx, info) {
               if (info['level'].toLowerCase() == level) {
@@ -2591,12 +2942,15 @@ function CoveragePlugin(coverage, coverageSection) {
             });
           }
         }
+
       }
     });
 
     return(rows);
   };
 
+
+  // Helper to build a single generic financial row
   this.buildGenericFinancialRow = function (network, level, type, period, authorization, item) {
     var row = $("<tr/>");
     $("<td/>").appendTo(row);
@@ -2612,11 +2966,18 @@ function CoveragePlugin(coverage, coverageSection) {
     else
       $("<td/>", {text: 'No'}).appendTo(row);
     var additional_information = that.parseFinancialAdditionalInfo(item);
+    if (item['pos_label'] && item['pos_label'].length > 0) {
+      additional_information.push("POS: " + item['pos_label']);
+    }
+    if (item['quantity_label'] && item['quantity_label'].length > 0) {
+      additional_information.push(item['quantity_label'] + ": " + item['quantity']);
+    }
     $("<td/>", {html: additional_information.join("</br>")}).appendTo(row);
 
     return(row);
   };
 
+  // Builds a medicaid managed care table
   this.buildMedicaidManagedCare = function(medicaidData) {
     var table = $("<table class=\"table table-hover\"/>");
     var tableHead = $("<thead></thead>").appendTo(table);
@@ -2663,6 +3024,7 @@ function CoveragePlugin(coverage, coverageSection) {
     return(table);
   }
 
+  // Builds a medicaid nursing at home table
   this.buildMedicaidNursingHome = function(medicaidData) {
     var table = $("<table class=\"table table-hover\"/>");
     var tableHead = $("<thead></thead>").appendTo(table);
@@ -2680,6 +3042,503 @@ function CoveragePlugin(coverage, coverageSection) {
       $("<td/>", {text: nursingHome['coverage_description']}).appendTo(row);
       $("<td/>", {text: that.coverage.parseAmount(nursingHome['patient_liability'])}).appendTo(row);
     });
+
+    return(table);
+  }
+
+  // Build the medicare demographics section
+  this.buildMedicareDemographics = function (json) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Name / Address"}).appendTo(rowHead);
+    $("<td/>", {html: that.coverage.parseNameAndAddress(json).join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Date of Birth"}).appendTo(rowHead);
+    $("<td/>", {text: json['dob'] || ""}).appendTo(row);
+
+    if (json['date_of_death']) {
+      $("<th/>", {text: "Date of Death"}).appendTo(rowHead);
+      $("<td/>", {text: json['date_of_death'] || ""}).appendTo(row);
+    }
+
+    $("<th/>", {text: "Gender"}).appendTo(rowHead);
+    $("<td/>", {text: that.coverage.parseGender(json['gender'])}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare primary payer section
+  this.buildMedicarePrimaryPayer = function(primary_payer) {
+    var table = $("<table id=\"insurance-PR\" class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Name"}).appendTo(rowHead);
+    $("<td/>", {text: primary_payer['payer_name'] || ""}).appendTo(row);
+
+    $("<th/>", {text: "Policy"}).appendTo(rowHead);
+    $("<td/>", {text: primary_payer['policy_number'] || ""}).appendTo(row);
+
+    var dates = new Array();
+    if (primary_payer['effective_date']) dates.push("Effective Date: " + primary_payer['effective_date']);
+    if (primary_payer['termination_date']) dates.push("Termination Date: " + primary_payer['termination_date']);
+    if (dates.length > 0) {
+      $("<th/>", {text: "Dates"}).appendTo(rowHead);
+      $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+    }
+
+    $("<th/>", {text: "Contacts"}).appendTo(rowHead);
+    var contacts = that.coverage.parseContacts(primary_payer['contacts']);
+    $("<td/>", {html: contacts.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Address"}).appendTo(rowHead);
+    var address = that.coverage.parseAddress(primary_payer['address']);
+    $("<td/>", {html: address.join("<br/>")}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare plan section
+  this.buildMedicarePlan = function(json) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Coverage"}).appendTo(rowHead);
+    var active_coverage = (json['plan_details'] && ((json['plan_details']['MA'] && json['plan_details']['MA']['active'] == true) ||
+      (json['plan_details']['MB'] && json['plan_details']['MB']['active'] == true) ||
+      (json['plan_details']['MC'] && json['plan_details']['MC']['active'] == true) ||
+      (json['plan_details']['MD'] && json['plan_details']['MD']['active'] == true)))
+    if (active_coverage)
+      $("<td/>", {text: "Active"}).appendTo(row);
+    else
+      $("<td/>", {text: "Inactive"}).appendTo(row);
+
+
+    $("<th/>", {text: "Member ID"}).appendTo(rowHead);
+    $("<td/>", {text: json['member_id']}).appendTo(row);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    var dates = new Array();
+
+    var eligibleDates = that.coverage.parseMedicareDates(json['eligibilty_dates']);
+    var planDates = that.coverage.parseMedicareDates(json['inactivity_dates']);
+
+    if (eligibleDates && eligibleDates.length > 0) dates.push("Eligible: " + eligibleDates);
+    if (planDates && planDates.length > 0) dates.push("Plan: " + planDates);
+
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Group Name"}).appendTo(rowHead);
+    $("<td/>", {text: json['group_name']}).appendTo(row);
+
+    $("<th/>", {text: "Group ID"}).appendTo(rowHead);
+    $("<td/>", {text: json['group_id']}).appendTo(row);
+
+    $("<th/>", {text: "Plan Number"}).appendTo(rowHead);
+    $("<td/>", {text: json['plan_number']}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare part A section
+  this.buildMedicarePartA = function(partA) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Active"}).appendTo(rowHead);
+    if (partA['active'] == true)
+      $("<td/>", {text: "Yes"}).appendTo(row);
+    else
+      $("<td/>", {text: "No"}).appendTo(row);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    var dates = new Array();
+    if (partA['start_date'] && partA['start_date'].length > 0) dates.push("Start Date: " + partA['start_date']);
+    if (partA['end_date'] && partA['end_date'].length > 0) dates.push("End Date: " + partA['end_date']);
+    if (partA['info_valid_till'] && partA['info_valid_till'].length > 0) dates.push("Info Valid Until: " + partA['info_valid_till']);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Deductible"}).appendTo(rowHead);
+    var deductible = new Array();
+    if (that.coverage.isPresent(partA['deductible'])) deductible.push("Deductible: " + that.coverage.parseAmount(partA['deductible']))
+    if (that.coverage.isPresent(partA['deductible_remaining'])) deductible.push("Remaining: " + that.coverage.parseAmount(partA['deductible_remaining']))
+    $("<td/>", {html: deductible.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Coinsurance"}).appendTo(rowHead);
+    if (that.coverage.isPresent(partA['coinsurance_percent']))
+      $("<td/>", {text: "% " + partA['coinsurance_percent']}).appendTo(row);
+    else
+      $("<td/>", {html: "&nbsp;"}).appendTo(row);
+
+    $("<th/>", {text: "Copayment"}).appendTo(rowHead);
+    $("<td/>", {text: that.coverage.parseAmount(partA['copayment'])}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare part B section
+  this.buildMedicarePartB = function(partB) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Active"}).appendTo(rowHead);
+    if (partB['active'] == true)
+      $("<td/>", {text: "Yes"}).appendTo(row);
+    else
+      $("<td/>", {text: "No"}).appendTo(row);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    var dates = new Array();
+    if (partB['start_date'] && partB['start_date'].length > 0) dates.push("Start Date: " + partB['start_date']);
+    if (partB['end_date'] && partB['end_date'].length > 0) dates.push("End Date: " + partB['end_date']);
+    if (partB['info_valid_till'] && partB['info_valid_till'].length > 0) dates.push("Info Valid Until: " + partB['info_valid_till']);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Deductible"}).appendTo(rowHead);
+    var deductible = new Array();
+    if (that.coverage.isPresent(partB['deductible'])) deductible.push("Deductible: " + that.coverage.parseAmount(partB['deductible']))
+    if (that.coverage.isPresent(partB['deductible_remaining'])) deductible.push("Remaining: " + that.coverage.parseAmount(partB['deductible_remaining']))
+    $("<td/>", {html: deductible.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Coinsurance"}).appendTo(rowHead);
+    if (that.coverage.isPresent(partB['coinsurance_percent']))
+      $("<td/>", {text: "% " + partB['coinsurance_percent']}).appendTo(row);
+    else
+      $("<td/>", {html: "&nbsp;"}).appendTo(row);
+
+    $("<th/>", {text: "Copayment"}).appendTo(rowHead);
+    $("<td/>", {text: that.coverage.parseAmount(partB['copayment'])}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare part C section
+  this.buildMedicarePartC = function(partC) {
+    var table = $("<table  id=\"insurance-MC\" class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Active"}).appendTo(rowHead);
+    if (partC['active'] == true)
+      $("<td/>", {text: "Yes"}).appendTo(row);
+    else
+      $("<td/>", {text: "No"}).appendTo(row);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    var dates = new Array();
+    if (partC['effective_date'] && partC['effective_date'].length > 0) dates.push("Effective Date: " + partC['effective_date']);
+    if (partC['termination_date'] && partC['termination_date'].length > 0) dates.push("Termination Date: " + partC['termination_date']);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Payer"}).appendTo(rowHead);
+    $("<td/>", {text: partC['payer_name']}).appendTo(row);
+
+    $("<th/>", {text: "Insurance Type"}).appendTo(rowHead);
+    $("<td/>", {text: partC['insurance_type_label']}).appendTo(row);
+
+    $("<th/>", {text: "Policy"}).appendTo(rowHead);
+    $("<td/>", {text: partC['policy_number']}).appendTo(row);
+
+    $("<th/>", {text: "Bill Option"}).appendTo(rowHead);
+    $("<td/>", {text: partC['mco_bill_option_label']}).appendTo(row);
+
+    $("<th/>", {text: "Locked?"}).appendTo(rowHead);
+    if (partC['locked'])
+      $("<td/>", {text: "Yes"}).appendTo(row);
+    else
+      $("<td/>", {text: "No"}).appendTo(row);
+
+    $("<th/>", {text: "Contacts"}).appendTo(rowHead);
+    if (partC['contacts'])
+      $("<td/>", {html: that.coverage.parseContacts(partC['contacts']).join("<br/>")}).appendTo(row);
+    else
+      $("<td/>", {html: '&nbsp;'}).appendTo(row);
+
+    $("<th/>", {text: "Address"}).appendTo(rowHead);
+    if (partC['address'])
+      $("<td/>", {html: that.coverage.parseAddress(partC['address']).join("<br/>")}).appendTo(row);
+    else
+      $("<td/>", {html: '&nbsp;'}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds the medicare part D section
+  this.buildMedicarePartD = function(partD) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    $("<th/>", {text: "Active"}).appendTo(rowHead);
+    if (partD['active'] == true)
+      $("<td/>", {text: "Yes"}).appendTo(row);
+    else
+      $("<td/>", {text: "No"}).appendTo(row);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    var dates = new Array();
+    if (partD['effective_date'] && partD['effective_date'].length > 0) dates.push("Effective Date: " + partD['effective_date']);
+    if (partD['termination_date'] && partD['termination_date'].length > 0) dates.push("Termination Date: " + partD['termination_date']);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Payer"}).appendTo(rowHead);
+    $("<td/>", {text: partD['payer_name']}).appendTo(row);
+
+    $("<th/>", {text: "Policy"}).appendTo(rowHead);
+    $("<td/>", {text: partD['policy_number']}).appendTo(row);
+
+    $("<th/>", {text: "Contacts"}).appendTo(rowHead);
+    if (partD['contacts'])
+      $("<td/>", {html: that.coverage.parseContacts(partD['contacts']).join("<br/>")}).appendTo(row);
+    else
+      $("<td/>", {html: '&nbsp;'}).appendTo(row);
+
+    $("<th/>", {text: "Address"}).appendTo(rowHead);
+    if (partD['address'])
+      $("<td/>", {html: that.coverage.parseAddress(partD['address']).join("<br/>")}).appendTo(row);
+    else
+      $("<td/>", {html: '&nbsp;'}).appendTo(row);
+
+    return(table);
+  }
+
+  // Builds medicare service type
+  this.buildMedicareServiceType = function(service_type) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    var dates = new Array();
+    if (that.coverage.isPresent(service_type['start_date'])) dates.push("Start Date: " + service_type['start_date']);
+    if (that.coverage.isPresent(service_type['end_date'])) dates.push("End Date: " + service_type['end_date']);
+    if (that.coverage.isPresent(service_type['info_valid_till'])) dates.push("Info Valid Until: " + service_type['info_valid_till']);
+    if (that.coverage.isPresent(service_type['dialysis_method_start_date'])) dates.push("Dialysis Method Start: " + service_type['dialysis_method_start_date']);
+    if (that.coverage.isPresent(service_type['kidney_transplant_hospital_discharge_date'])) dates.push("Kidney Transplant Hospital Discharge: " + service_type['kidney_transplant_hospital_discharge_date']);
+    if (that.coverage.isPresent(service_type['earliest_claim'])) dates.push("Earliest Claim: " + service_type['earliest_claim']);
+    if (that.coverage.isPresent(service_type['latest_claim'])) dates.push("Latest Claim: " + service_type['latest_claim']);
+    if (that.coverage.isPresent(service_type['certification_date'])) dates.push("Certification Date: " + service_type['certification_date']);
+    if (that.coverage.isPresent(service_type['recertification_date'])) dates.push("Re-Certification Date: " + service_type['recertification_date']);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Deductible"}).appendTo(rowHead);
+    var deductible = new Array();
+    if (that.coverage.isPresent(service_type['deductible'])) deductible.push("Deductible: " + that.coverage.parseAmount(service_type['deductible']))
+
+    if (that.coverage.isPresent(service_type['deductible_remaining'])) deductible.push("Remaining: " + that.coverage.parseAmount(service_type['deductible_remaining']))
+    $("<td/>", {html: deductible.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Coinsurance"}).appendTo(rowHead);
+    if (that.coverage.isPresent(service_type['coinsurance_percent']))
+      $("<td/>", {text: "% " + service_type['coinsurance_percent']}).appendTo(row);
+    else
+      $("<td/>", {html: "&nbsp;"}).appendTo(row);
+
+    $("<th/>", {text: "Copayment"}).appendTo(rowHead);
+    $("<td/>", {text: that.coverage.parseAmount(service_type['copayment'])}).appendTo(row);
+
+    // STC 10
+    if (service_type['blood_units_deductible']) {
+      $("<th/>", {text: "Blood Units"}).appendTo(rowHead);
+
+      var data = new Array();
+      if (that.coverage.isPresent(service_type['blood_units_deductible']['excluded']))
+        data.push("Excluded: " + service_type['blood_units_deductible']['excluded']);
+      if (that.coverage.isPresent(service_type['blood_units_deductible']['remaining']))
+        data.push("Remaining: " + service_type['blood_units_deductible']['remaining']);
+
+      if (that.coverage.isPresent(['blood_units_deductible']['start_date'])) data.push("Start Date: " + service_type['blood_units_deductible']['start_date']);
+      if (that.coverage.isPresent(service_type['blood_units_deductible']['end_date'])) data.push("End Date: " + service_type['blood_units_deductible']['end_date']);
+
+      $("<td/>", {html: data.join("<br/>")}).appendTo(row);
+    }
+
+    // STC 42
+    if (that.coverage.isPresent(service_type['contractor'])) {
+      $("<th/>", {text: "Contractor"}).appendTo(rowHead);
+      $("<td/>", {text: service_type['contractor']}).appendTo(row);
+    }
+    // STC 42, STC45
+    if (that.coverage.isPresent(service_type['npi'])) {
+      $("<th/>", {text: "NPI"}).appendTo(rowHead);
+      $("<td/>", {text: service_type['npi']}).appendTo(row);
+    }
+
+    // STC 45
+    if (service_type.hasOwnProperty('revoked')) {
+      $("<th/>", {text: "Revoked"}).appendTo(rowHead);
+      var data = 'No';
+      if (service_type['revoked'] == true) data = 'Yes';
+      if (that.coverage.isPresent(service_type['revocation_label']))
+        data += service_type['revocation_label'];
+      $("<td/>", {text: data}).appendTo(row);
+    }
+
+    // STC AD, AE
+    if (that.coverage.isPresent(service_type['monetary_amount_used'])) {
+      $("<th/>", {text: "Monetary Amount Used"}).appendTo(rowHead);
+      var data = new Array();
+      $.each(service_type['monetary_amount_used'], function(idx, item) {
+        if (item['start_date'] && item['end_date']) {
+          data.push(item['start_date'] + ' to ' + item['end_date'] + ': ' + that.coverage.parseAmount(item['amount']));
+        } else if (item['start_date']) {
+          data.push('From ' + item['start_date'] + ': ' + that.coverage.parseAmount(item['amount']));
+        } else if (item['end_date']) {
+          data.push('Until ' + item['end_date'] + ': ' + that.coverage.parseAmount(item['amount']));
+        } else {
+          data.push('Amount: ' + that.coverage.parseAmount(item['amount']));
+        }
+      });
+      $("<td/>", {html: data.join("<br/>")}).appendTo(row);
+    }
+
+    // STC BG, BF, 67
+    if (service_type['visits']) {
+      $("<th/>", {text: "Visits"}).appendTo(rowHead);
+      var data = new Array();
+      $.each(service_type['visits'], function(idx, item) {
+        if (item.hasOwnProperty('used')) {
+          data.push("Used: " + (item['used'] || '0') + " - Type: " + item['type']);
+        } else if (item.hasOwnProperty('base')) {
+          var value = "Base: " + (item['base'] || '0') + " - Remaining: " + (item['remaining'] || '0');
+          if (item['next_eligible_date']) value += " - Next Eligible: " + item['next_eligible_date'];
+          data.push(value);
+        } else if (item.hasOwnProperty('remaining')) {
+          data.push("Remaining: " + (item['remaining'] || '0') + " - Type: " + item['type']);
+        }
+      });
+      $("<td/>", {html: data.join("<br/>")}).appendTo(row);
+    }
+
+    // This is extra information for other service type codes
+    if (service_type.hasOwnProperty('spell_in_progress')) {
+      var rowHead2 = $("<tr></tr>").appendTo(tableBody);
+      var row2 = $("<tr></tr>").appendTo(tableBody);
+
+      // STC 47,48,49, AG
+      if (service_type.hasOwnProperty('spell_in_progress')) {
+        $("<th/>", {text: "Spell In Progress"}).appendTo(rowHead2);
+        if (service_type['spell_in_progress'] == true)
+          $("<td/>", {text: "Yes"}).appendTo(row2);
+        else
+          $("<td/>", {text: "No"}).appendTo(row2);
+      }
+
+      // STC 47,48,49
+      if (service_type['copayment_up_to_60_days_per_spell']) {
+        $("<th/>", {text: "Copayment 0 to 60 Days Per Spell"}).appendTo(rowHead2);
+        var data = new Array();
+        if (that.coverage.isPresent(service_type['copayment_up_to_60_days_per_spell']['monetary_amount']))
+          data.push("Amount: " + that.coverage.parseAmount(service_type['copayment_up_to_60_days_per_spell']['monetary_amount']));
+        if (that.coverage.isPresent(service_type['copayment_up_to_60_days_per_spell']['remaining_days']))
+          data.push("Remaining Days: " + service_type['copayment_up_to_60_days_per_spell']['remaining_days']);
+        $("<td/>", {html: data.join("<br/>")}).appendTo(row2);
+      }
+
+      // STC 47,48,49
+      if (service_type['copayment_60_thru_90_days_per_spell']) {
+        $("<th/>", {text: "Copayment 60 to 90 Days Per Spell"}).appendTo(rowHead2);
+        var data = new Array();
+        if (that.coverage.isPresent(service_type['copayment_60_thru_90_days_per_spell']['monetary_amount']))
+          data.push("Amount: " + that.coverage.parseAmount(service_type['copayment_60_thru_90_days_per_spell']['monetary_amount']));
+        if (that.coverage.isPresent(service_type['copayment_60_thru_90_days_per_spell']['remaining_days']))
+          data.push("Remaining Days: " + service_type['copayment_60_thru_90_days_per_spell']['remaining_days']);
+        $("<td/>", {html: data.join("<br/>")}).appendTo(row2);
+      }
+
+      // STC 47,48,49
+      if (service_type['lifetime_reserve']) {
+        $("<th/>", {text: "Lifetime Reserve"}).appendTo(rowHead2);
+        var data = new Array();
+        if (that.coverage.isPresent(service_type['lifetime_reserve']['monetary_amount']))
+          data.push("Amount: " + that.coverage.parseAmount(service_type['lifetime_reserve']['monetary_amount']));
+        if (that.coverage.isPresent(service_type['lifetime_reserve']['total_days']))
+          data.push("Total Days: " + service_type['lifetime_reserve']['total_days']);
+        if (that.coverage.isPresent(service_type['lifetime_reserve']['remaining_days']))
+          data.push("Remaining Days: " + service_type['lifetime_reserve']['remaining_days']);
+        $("<td/>", {html: data.join("<br/>")}).appendTo(row2);
+      }
+
+      // STC AG
+      if (service_type['copayment_up_to_20_days_per_spell']) {
+        $("<th/>", {text: "Copayment 0 to 20 Days Per Spell"}).appendTo(rowHead2);
+        var data = new Array();
+        if (that.coverage.isPresent(service_type['copayment_up_to_20_days_per_spell']['monetary_amount']))
+          data.push("Amount: " + that.coverage.parseAmount(service_type['copayment_up_to_20_days_per_spell']['monetary_amount']));
+        if (that.coverage.isPresent(service_type['copayment_up_to_20_days_per_spell']['remaining_days']))
+          data.push("Remaining Days: " + service_type['copayment_up_to_20_days_per_spell']['remaining_days']);
+        $("<td/>", {html: data.join("<br/>")}).appendTo(row2);
+      }
+
+      // STC AG
+      if (service_type['copayment_21_thru_100_days_per_spell']) {
+        $("<th/>", {text: "Copayment 21 to 100 Days Per Spell"}).appendTo(rowHead2);
+        var data = new Array();
+        if (that.coverage.isPresent(service_type['copayment_21_thru_100_days_per_spell']['monetary_amount']))
+          data.push("Amount: " + that.coverage.parseAmount(service_type['copayment_21_thru_100_days_per_spell']['monetary_amount']));
+        if (that.coverage.isPresent(service_type['copayment_21_thru_100_days_per_spell']['remaining_days']))
+          data.push("Remaining Days: " + service_type['copayment_21_thru_100_days_per_spell']['remaining_days']);
+        $("<td/>", {html: data.join("<br/>")}).appendTo(row2);
+      }
+    }
+
+    return(table);
+  }
+
+  // Builds medicare requested procedure type
+  this.buildMedicareProcedureCode = function(procedure_code) {
+    var table = $("<table class=\"table table-hover\"/>");
+    var tableHead = $("<thead></thead>").appendTo(table);
+    var rowHead = $("<tr></tr>").appendTo(tableHead);
+    var tableBody = $("<tbody/>").appendTo(table);
+    var row = $("<tr></tr>").appendTo(tableBody);
+
+    var dates = new Array();
+    if (procedure_code['info_valid_till']) dates.push("Info Valid Until: " + procedure_code['info_valid_till']);
+    if (procedure_code['next_eligible_date'] && procedure_code['next_eligible_date']['professional'])
+      dates.push("Next Eligible Professional: " + procedure_code['next_eligible_date']['professional']);
+    if (procedure_code['next_eligible_date'] && procedure_code['next_eligible_date']['technical'])
+      dates.push("Next Eligible Technical: " + procedure_code['next_eligible_date']['technical']);
+
+    $("<th/>", {text: "Dates"}).appendTo(rowHead);
+    $("<td/>", {html: dates.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Deductible"}).appendTo(rowHead);
+    var deductible = new Array();
+    if (that.coverage.isPresent(procedure_code['deductible'])) deductible.push("Deductible: " + that.coverage.parseAmount(procedure_code['deductible']))
+    if (that.coverage.isPresent(procedure_code['deductible_remaining'])) deductible.push("Remaining: " + that.coverage.parseAmount(procedure_code['deductible_remaining']))
+    $("<td/>", {html: deductible.join("<br/>")}).appendTo(row);
+
+    $("<th/>", {text: "Coinsurance"}).appendTo(rowHead);
+    if (that.coverage.isPresent(procedure_code['coinsurance_percent']))
+      $("<td/>", {text: "% " + procedure_code['coinsurance_percent']}).appendTo(row);
+    else
+      $("<td/>", {html: "&nbsp;"}).appendTo(row);
+
+    $("<th/>", {text: "Copayment"}).appendTo(rowHead);
+    $("<td/>", {text: that.coverage.parseAmount(procedure_code['copayment'])}).appendTo(row);
 
     return(table);
   }

@@ -636,7 +636,7 @@ die();
 		
 		// update the ledger trxns passed in with the form
 		update_ledger_trxns($primary_claim_id, DSS_TRXN_PROCESSING);
-		
+	claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);	
 		$msg = "Added Successfully";
 		
 	    print '<script type="text/javascript">';
@@ -911,6 +911,7 @@ die();
 		  mysql_query($pat_sql);
 		}
 
+claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuserid']);
 
 		$msg = "Edited Successfully";
 		

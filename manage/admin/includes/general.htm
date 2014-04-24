@@ -1456,6 +1456,7 @@ function mail_claim($claimid, $mailed = true, $type = 'pri') {
     $s = "UPDATE dental_insurance set sec_mailed_date = null where insuranceid='".mysql_real_escape_string($claimid)."'";
   }
   }
+  claim_history_update($claimid, $_SESSION['userid'], $_SESSION['adminuserid']);
   return mysql_query($s);
 }
 

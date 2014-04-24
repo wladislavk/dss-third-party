@@ -139,6 +139,13 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       </div>
     </div>
 
+    <div class="form-group real-param" style="display: none;">
+      <label for="procedure_code" class="col-lg-2 control-label">Procedure Code (Medicare)</label>
+
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="procedure_code">
+      </div>
+    </div>
 
 
     <fieldset class="real-param" style="display: none;">
@@ -535,3 +542,6 @@ function view_coverage(response){
   }
 }
 </script>
+
+
+<?php //include 'new.php'; ?> 

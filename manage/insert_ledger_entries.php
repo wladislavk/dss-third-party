@@ -4,6 +4,7 @@ require_once('admin/includes/main_include.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/authorization_functions.php');
+require_once('includes/claim_functions.php');
 ?>
 <html>
 <head>
@@ -726,7 +727,7 @@ if (empty($prior_authorization_number)) {
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 
 	$primary_claim_id = mysql_insert_id();
-
+	claim_history_update($primary_claim_id, $_SESSION['userid'], '');
 	return $primary_claim_id;
 }
 

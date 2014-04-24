@@ -57,6 +57,7 @@ var fetchCoverage = function () {
       from_date: $("#from_date").val(),
       to_date: $("#to_date").val(),
       service_type: $("#service_type").val(),
+      procedure_code: $("#procedure_code").val(),
 
       provider_npi: $("#provider_npi").val(),
       provider_last_name: $("#provider_last_name").val(),
@@ -95,7 +96,7 @@ var fetchCoverage = function () {
       dependent_city: $("#dependent_city").val(),
       dependent_zip: $("#dependent_zip").val(),
 
-      test: "true"
+      test: "false"
     }
   };
 
@@ -125,7 +126,16 @@ var fetchCoverage = function () {
 
 // Perform the api request
 var coverageRequest = function (params) {
-  var coverageRequest = new EligibleRequest(EligibleEndpoints.coverage, successCallback, errorCallback, true);
+  if (params['member_id'].match(/MEDICARE-(.*)/)) {
+    params['payer_id'] = '00431';
+    params['member_id'] = params['member_id'].match(/MEDICARE-(.*)/)[1];
+  }
+
+  if (params['payer_id'] == '00431') {
+    var coverageRequest = new EligibleRequest(EligibleEndpoints.medicare, successCallback, errorCallback, true);
+  } else {
+    var coverageRequest = new EligibleRequest(EligibleEndpoints.coverage, successCallback, errorCallback, true);
+  }
   coverageRequest.request(params);
 }
 
@@ -172,27 +182,39 @@ buildCoverageHTML = function(coverage) {
 
   var plugin = new CoveragePlugin(coverage);
 
-  // Adds the demographic section
+  // Check if its a general answer or a coverage answer
   plugin.addEligibleMetadataSection();
-  plugin.addDemographicsSection();
-  plugin.addInsuranceSection1();
-  plugin.addInsuranceSection2();
-  plugin.addInsuranceSection3();
-  plugin.addInsuranceSection4();
-  if (plugin.coverage.hasMedicaidManagedCare()) {
-    plugin.addMedicaidManagedCare();
+  if (plugin.isGeneralCoverage()) {
+    plugin.addDemographicsSection();
+    plugin.addInsuranceSection1();
+    plugin.addInsuranceSection2();
+    plugin.addInsuranceSection3();
+    plugin.addInsuranceSection4();
+    if (plugin.coverage.hasMedicaidManagedCare()) {
+      plugin.addMedicaidManagedCare();
+    }
+    if (plugin.coverage.hasMedicaidNursingHome()) {
+      plugin.addMedicaidNursingHome();
+    }
+    plugin.addPlanMaximumMinimumDeductibles();
+    plugin.addPlanCoinsurance();
+    plugin.addPlanCopayment();
+    plugin.addPlanDisclaimer();
+    plugin.addAdditionalInsurancePolicies();
+    plugin.addNonCovered();
+    plugin.addGenericServices();
+    plugin.addLimitations();
+  } else {
+    plugin.addMedicareDemographicsSection();
+    plugin.addMedicarePrimaryPayer();
+    plugin.addMedicarePlan();
+    plugin.addMedicarePartA();
+    plugin.addMedicarePartB();
+    plugin.addMedicarePartC();
+    plugin.addMedicarePartD();
+    plugin.addMedicareSTC();
+    plugin.addMedicareProcedureCodes();
   }
-  if (plugin.coverage.hasMedicaidNursingHome()) {
-    plugin.addMedicaidNursingHome();
-  }
-  plugin.addPlanMaximumMinimumDeductibles();
-  plugin.addPlanCoinsurance();
-  plugin.addPlanCopayment();
-  plugin.addPlanDisclaimer();
-  plugin.addAdditionalInsurancePolicies();
-  plugin.addNonCovered();
-  plugin.addGenericServices();
-  plugin.addLimitations();
 
   $('body').append(plugin.coverageSection);
 }

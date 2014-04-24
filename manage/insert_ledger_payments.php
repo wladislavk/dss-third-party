@@ -311,6 +311,7 @@ alert('Could not add ledger payments, please close this window and contact your 
 <?= $sqlinsertqry; ?>
 <?php
 }else{
+claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuserid']);
 ?>
 <script type="text/javascript">
 alert('<?= $msg; ?>');

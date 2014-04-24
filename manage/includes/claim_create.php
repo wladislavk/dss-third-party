@@ -308,7 +308,7 @@ if (empty($prior_authorization_number)) {
                 mysql_query($ins_sql) or die($ins_sql." | ".mysql_error());
 
         $primary_claim_id = mysql_insert_id();
-
+	claim_history_update($primary_claim_id, $_SESSION['userid'], null);
         return $primary_claim_id;
 }
 ?>

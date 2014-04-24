@@ -12,4 +12,4 @@ $manage_path = "../";
 $admin_path = "";
 $called_from = "manage_claims.php";
 
-include_once("../includes/claim_form.inc");
+include_once("../includes/claim_form_v2.inc");

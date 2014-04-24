@@ -57,6 +57,7 @@ if(isset($_GET['unpaid'])){
 }
 
 if(isset($_GET['unmailed'])){
+  $sql .= " AND i.mailed_date IS NULL AND i.sec_mailed_date is NULL ";
 }
 if(isset($_GET['sort2'])){
   if($_GET['sort2']=='patient'){
@@ -67,6 +68,7 @@ if(isset($_GET['sort2'])){
 
 }
 $sql .= " ORDER BY " . mysql_real_escape_string($sort);
+ 
 $my=mysql_query($sql) or die(mysql_error());
 
 ?>

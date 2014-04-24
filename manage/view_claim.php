@@ -209,7 +209,7 @@ return s;
 </script>
 <br />
 <div style="float:left; margin-left:20px;">
-  <?php if( isset($claim['mailed_date']) && date('Y-m-d H:i:s', strtotime($claim['mailed_date'])) < date('Y-m-d H:i:s',mktime(0,0,0,1,4,2014))){ ?>
+  <?php if( $claim['primary_claim_version'] == "1"){ ?>
         <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
                 View Primary 1500
         </button>
@@ -221,7 +221,7 @@ return s;
 </div>
 <?php if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_SENT ||$claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED){ ?>
 <div style="float:left; margin-left:20px;">
-  <?php if( isset($claim['sec_mailed_date']) && date('Y-m-d H:i:s', strtotime($claim['sec_mailed_date'])) < date('Y-m-d H:i:s',mktime(0,0,0,1,4,2014))){ ?>
+  <?php if( $claim['secondary_claim_version'] == "1"){ ?>
         <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>&instype=2';" class="addButton">
                 View Secondary 1500
         </button>

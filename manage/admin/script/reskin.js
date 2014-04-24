@@ -11,11 +11,11 @@ $(function(){
     /**
      * Add breadcrumb
      */
-    /*var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
+    var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
     $breadcrumb = $container.find('ol'),
     path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     
-    $('.nav').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
+    $('.page-sidebar-menu').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
         var $this = $(this);
         
         if ($this.is('[href$="#"]')) {
@@ -36,7 +36,7 @@ $(function(){
         
         $this.text($this.text());
     }).addClass('active');
-    $container.insertAfter('.nav:first');*/
+    $container.insertAfter('.row');
     
     /**
      * Popup

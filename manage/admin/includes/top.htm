@@ -89,7 +89,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 			<!-- BEGIN USER LOGIN DROPDOWN -->
 			<li class="dropdown user">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-					<img alt="" src="admin/template/assets/img/avatar1_small.jpg"/>
+					<!--<img alt="" src="admin/template/assets/img/avatar1_small.jpg"/>--->
+					<i class="fa fa-user"></i>
 					<span class="username">
 						 Nathan Drake
 					</span>
@@ -407,13 +408,13 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
 				</li>
 				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
-				<li class="start active ">
+				<li class="start ">
 					<a href="/manage/admin/manage_letters.php">
 						<i class="fa fa-envelope"></i>
 						<span class="title">
 							LETTERS 
 							</span>
-							<span class="badge badge-warning"><?= $pending_letters; ?></span>
+							<span class="badge badge-danger"><?= $pending_letters; ?></span>
 						
 						<span class="selected">
 						</span>
@@ -425,7 +426,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<span class="title">
 							VOBs 
 							</span>
-						<span class="badge badge-warning"><?= $num_pending_preauth; ?></span>
+						<span class="badge badge-danger"><?= $num_pending_preauth; ?></span>
 						
 						<span class="arrow ">
 						</span>
@@ -440,7 +441,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<span class="title">
 							HSTs 
 							</span>
-							<span class="badge badge-warning"><?= $num_pending_hst; ?></span>
+							<span class="badge badge-danger"><?= $num_pending_hst; ?></span>
 						
 						<span class="arrow ">
 						</span>
@@ -453,7 +454,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						<i class="fa fa-medkit"></i>
 						<span class="title">
 							CLAIMS </span>
-							<span class="badge badge-warning"><?= $num_pending_claims; ?></span>
+							<span class="badge badge-danger"><?= $num_pending_claims; ?></span>
 						
 						<span class="arrow ">
 						</span>
@@ -1139,7 +1140,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 			<li>
 				<a href="javascript:;">
 					<i class="fa  fa-question"></i> 
-					TICKETS <span class="badge badge-warning"><?= $num_open_tickets; ?></span>
+					TICKETS <span class="badge badge-danger"><?= $num_open_tickets; ?></span>
 					<span class="arrow">
 					</span>
 				</a>
@@ -1163,51 +1164,9 @@ $num_pending_claims = mysql_num_rows($pending_q);
 		</div>
 	</div>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-     
    <div class="page-content-wrapper">
        <div class="page-content">  
      	
 <?php $office_type = DSS_OFFICE_TYPE_BACK; ?> 
-<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
-					<h3 class="page-title">
-					Dashboard <small>statistics and more</small>
-					</h3>
-					<ul class="page-breadcrumb breadcrumb">
-						<li>
-							<i class="fa fa-home"></i>
-							<a href="#">
-								Home
-							</a>
-							<i class="fa fa-angle-right"></i>
-						</li>
-						<li>
-							<a href="#">
-								
-							</a>
-						</li>
-						<li class="pull-right">
-							<div id="dashboard-report-range" class="dashboard-date-range tooltips" data-placement="top" data-original-title="Change dashboard date range">
-								<i class="fa fa-calendar"></i>
-								<span>
-								</span>
-								<i class="fa fa-angle-down"></i>
-							</div>
-						</li>
-					</ul>
-					<!-- END PAGE TITLE & BREADCRUMB-->
-				</div>
-			</div>
+<div class="row">  </div>

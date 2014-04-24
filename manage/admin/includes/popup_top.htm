@@ -3,6 +3,66 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>Admin popup</title>
+    <!--------------css for login --------------->
+			<!-- BEGIN GLOBAL MANDATORY STYLES -->
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+		<!-- END GLOBAL MANDATORY STYLES -->
+		<!-- BEGIN PAGE LEVEL STYLES -->
+		<link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2.css"/>
+		<link rel="stylesheet" type="text/css" href="/manage/admin/admin/template/assets/plugins/select2/select2-metronic.css"/>
+		<!-- END PAGE LEVEL SCRIPTS -->
+		<!-- BEGIN THEME STYLES -->
+		<link href="/manage/admin/admin/template/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/css/style.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+		<link href="/manage/admin/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
+		<link href="/manage/admin/admin/template/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+    <!--------------------------css for login ------------------------------------------->
+    
+    
+    <!-----------------------------------------------------scripts for login-------------------------------->
+    
+				<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+			<!-- BEGIN CORE PLUGINS -->
+			<!--[if lt IE 9]>
+				<script src="assets/plugins/respond.min.js"></script>
+				<script src="assets/plugins/excanvas.min.js"></script> 
+				<![endif]-->
+			
+			<script src="/manage/admin/admin/template/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+			<!-- END CORE PLUGINS -->
+			<!-- BEGIN PAGE LEVEL PLUGINS -->
+			<script type="text/javascript" src="/manage/admin/admin/template/assets/plugins/select2/select2.min.js"></script>
+			<script src="/manage/admin/admin/template/assets/scripts/custom/login-soft.js" type="text/javascript"></script>
+			<script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
+			<!-- END PAGE LEVEL PLUGINS -->
+			<!-- BEGIN PAGE LEVEL SCRIPTS -->
+			<script src="/manage/admin/admin/template/assets/scripts/core/app.js" type="text/javascript"></script>
+			<script src="/manage/admin/script/validation.js" type="text/javascript"></script>
+			<!-- END PAGE LEVEL SCRIPTS --->
+			<script>
+					jQuery(document).ready(function() {     
+					  App.init();
+					  Login.init();
+					});
+				</script>
+			<!-- END JAVASCRIPTS -->
+		
+    <!---------------------------------------------------end--scripts for login-------------------------------->
+    
     <link id="applied-stylesheet" href="/manage/admin/css/bootstrap-default-3.1.0.css" rel="stylesheet" type="text/css">
     <link href="/manage/admin/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css">
     <link href="/manage/admin/admin/template/assets/css/pages/login-soft.css" rel="stylesheet" type="text/css"/>
@@ -11,15 +71,18 @@
     <link href="/manage/admin/admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     
    <!--<link href="/manage/admin/admin/template/assets/css/pages/login.css" rel="stylesheet" type="text/css"/>-->
-    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
+    
+    <!--<script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>-->
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery.formatter.min.js"></script>
+    <script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
+    <!--<script src="/manage/admin/admin/template/assets/plugins/backstretch/jquery.backstretch.js" type="text/javascript"></script>-->
+  
+    <script src="/manage/admin/admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <script type="text/javascript">
       $(document).ready( function (){
       $('input, select, textarea').change( function(){
@@ -38,6 +101,13 @@
         });
         $('.sort_table').tablesorter();
     });
+    
+  /*  jQuery(document).ready(function() {     
+					  App.init();
+					  Login.init();
+					});
+					
+					*/
     </script>
 </head>
 <body class="login">

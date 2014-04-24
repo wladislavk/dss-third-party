@@ -103,7 +103,7 @@ if (isset($_POST["loginsub"])) {
 				<input type="text" class="form-control" name="security_code" id="captcha" placeholder="write the characters in the image">
 			</div>
 		</div>
-		<div class="form-actions" style="margin-left:-9px;">
+		<div class="form-actions" style="margin-left:-35px;">
 			<label class="checkbox">
 			<div class="checker"><span><input type="checkbox" value="1" name="remember"></span></div> Remember me </label>
 			<button type="submit" class="btn blue pull-right" name="loginsub" >Login
@@ -137,4 +137,5 @@ if (isset($_POST["loginsub"])) {
 	<div class="copyright">
 	 2014 &copy; dentalsleepsolutions.com
 </div>  
+
 <?php //require_once dirname(__FILE__) . '/includes/bottom.htm'; ?>

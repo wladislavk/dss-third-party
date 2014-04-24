@@ -176,6 +176,10 @@ $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, pe
                 dl.docid='".$invoice['docid']."' AND
 		dl.percase_invoice='".$invoice['id']."'
 	UNION
+SELECT percase_name, percase_date, '', percase_amount, id FROM dental_claim_electronic e 
+        WHERE 
+                e.percase_invoice='".$invoice['id']."'
+        UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl 
         WHERE 
                 dl.percase_invoice='".$invoice['id']."'
@@ -189,13 +193,24 @@ SELECT description,
 start_date, end_date, amount, id FROM dental_fax_invoice
         WHERE
                 invoice_id='".$invoice['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_eligibility_invoice
+        WHERE
+                invoice_id='".$invoice['id']."'
+        UNION
+SELECT description,
+start_date, end_date, amount, id FROM dental_enrollment_invoice
+        WHERE
+                invoice_id='".$invoice['id']."'
+
 ";
 $case_q = mysql_query($case_sql);
 $num_case = mysql_num_rows($case_q);
 
 if($num_case_e0486 > 0){
 $html .= '<tr>
-                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case.'</td>
+                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">'.$num_case_e0486.'</td>
                                                                         <td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">PER-CASE FEES</td>
 
                                                                         <!-- table column with item number-->

@@ -20,10 +20,24 @@
                                 dl.transaction_code='E0486' AND
                                 dl.docid=du.userid AND
                                 dl.percase_status = '".DSS_PERCASE_PENDING."') = 0 AND
+                (SELECT COUNT(*) AS num_trxn FROM dental_claim_electronic e 
+                        JOIN dental_insurance i ON i.insuranceid=e.claimid
+                        JOIN dental_patients dp ON i.patientid=dp.patientid
+                        WHERE 
+                                i.docid=du.userid AND
+                                e.percase_invoice IS NULL) = 0 AND
 		(SELECT count(*) as total_faxes FROM dental_faxes f
         		WHERE 
                 f.docid='".$_REQUEST['docid']."' AND
                 f.status = '0') <=  c.free_fax AND
+(SELECT count(*) as total_eligibility FROM dental_eligibility f
+                        WHERE 
+                f.docid='".$_REQUEST['docid']."' AND
+                f.eligibility_invoice IS NULL) <= plan.free_eligibility AND
+(SELECT count(*) as total_enrollment FROM dental_eligible_enrollment f
+                        WHERE 
+                f.docid='".$_REQUEST['docid']."' AND
+                f.enrollment_invoice IS NULL) <= plan.free_enrollment AND
 		(SELECT COUNT(*) FROM dental_insurance_preauth p
                 JOIN dental_patients dp ON p.patient_id=dp.patientid
 		        WHERE 

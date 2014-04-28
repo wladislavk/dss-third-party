@@ -249,6 +249,10 @@ return s;
                Make Payment 
         </button>
         &nbsp;&nbsp;
+        <button onclick="Javascript: window.location='ledger_payments_advanced.php?cid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>';" class="addButton">
+               Make Payment Advanced
+        </button>
+        &nbsp;&nbsp;
 
 <button onclick="Javascript: window.location='print_ledger_report.php?<?= (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>';" class="addButton">
                 Print Ledger

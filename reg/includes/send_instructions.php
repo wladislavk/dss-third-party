@@ -45,7 +45,7 @@ from dental_users u inner join dental_patients p on u.userid=p.docid
 }
   $uq = mysql_query($location_query);
   $ur = mysql_fetch_assoc($uq);
-  $n = $ur['mailing_phone'];
+  $n = format_phone($ur['mailing_phone']);
   if($ur['user_type'] == DSS_USER_TYPE_SOFTWARE){
     $logo = "/manage/q_file/".$ur['logo'];
   }else{

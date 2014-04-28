@@ -54,7 +54,7 @@ $message .= DSS_EMAIL_FOOTER;
 
 ?>
 
-<?php require_once dirname(__FILE__) . '/includes/top.htm'; ?>
+<?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 
 <div class="page-header">
     <h2>Password Recovery</h2>

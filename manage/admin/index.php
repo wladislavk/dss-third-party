@@ -18,8 +18,8 @@ if (isset($_POST["loginsub"])) {
             where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
         
         //$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
-        	$con = mysql_connect('localhost', 'root', 'root') or die('connection failure');	
-			$db = mysql_select_db('dentalsl_main_skin');
+        	//$con = mysql_connect('localhost', 'root', 'root') or die('connection failure');	
+			//$db = mysql_select_db('dentalsl_main_skin');
         
         $check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
         

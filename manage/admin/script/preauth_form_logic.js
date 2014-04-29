@@ -1,3 +1,4 @@
+
 $(function() {
   //$('input, select, textarea').each(function() { console.log($(this).attr('name')); });
   $("input[name='has_out_of_network_benefits']").bind('click', function() {
@@ -113,6 +114,7 @@ $(function() {
     var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val();
     var isHmo = $("input[name='is_hmo']:checked").val();
     var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val();
+    var benefits = $("input[name='network_benefits']:checked").val();
     var percentagePaid = 0;
 
     if (debug) { 
@@ -121,18 +123,24 @@ $(function() {
       console.log('isHmo: ' + isHmo);
       console.log('outOfPocketMet: ' + outOfPocketMet);
     }
-    
-    if (hasOutOfNetwork == 1) {
-      // percentage from out_of_network_percentage
-      percentagePaid = $('#out_of_network_percentage').val();
-    } else if (isHmo == 0) {
-      // percentage from in_network_percentage
-      percentagePaid = $('#in_network_percentage').val();
-    } else {
-      // no percentage, set to 0
-      percentagePaid = 0;
+    if (benefits == 1){ //out of network    
+      if (hasOutOfNetwork == 1) {
+        // percentage from out_of_network_percentage
+        percentagePaid = $('#out_of_network_percentage').val();
+      } else if (isHmo == 0) {
+        // percentage from in_network_percentage
+        percentagePaid = $('#in_network_percentage').val();
+      } else {
+        // no percentage, set to 0
+        percentagePaid = 0;
+      }
+    }else{ //in-network
+      if(hasOutOfNetwork == 1){
+        percentagePaid = 0;
+      }else{
+        percentagePaid = $('#in_network_percentage').val();
+      }
     }
-    
     if (debug) { console.log('percentagePaid: ' + percentagePaid); }
 
     if (isNaN(deviceAmount))     { deviceAmount = 0; }
@@ -184,7 +192,7 @@ $(function() {
   $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind("mouseup keyup", function() {
     calc_expected_payments();
   });
-  $("[name='has_out_of_network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
+  $("[name='has_out_of_network_benefits'], [name='network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function() {
     calc_expected_payments();
   });
   

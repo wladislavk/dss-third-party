@@ -90,6 +90,7 @@ require_once('includes/formatters.php');
 		scheduler.config.details_on_dblclick=true;
 		scheduler.config.scroll_hour = 8;
 		scheduler.config.start_on_monday = false;
+		scheduler.config.separate_short_events = true;
 		scheduler.locale.labels.chairs_tab = "Resources"
 		scheduler.locale.labels.timeline_tab = "Timeline"
 		scheduler.locale.labels.section_custom="Producer";

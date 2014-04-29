@@ -171,7 +171,7 @@ document.getElementById('auth_div').style.display = 'block';
 
 <script language="JavaScript" src="calendar1.js"></script>
 <script language="JavaScript" src="calendar2.js"></script>
-<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
+<form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments_advanced.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 
  
 <div style="width:200px; margin:0 auto; text-align:center;">
@@ -284,7 +284,7 @@ while($row = mysql_fetch_assoc($lq)){
 <td><?= $row['description']; ?></td>
 <td>$<?= $row['amount']; ?></td>
 <td><input type="text" name="allowed" value="<?= $row['allowed']; ?>" /></td>
-<td><input type="text" name="allowed" value="<?= $row['ins_paid']; ?>" /></td>
+<td><input type="text" name="ins_paid" value="<?= $row['ins_paid']; ?>" /></td>
 <td><input type="text" name="deductible" value="<?= $row['deductible']; ?>" /></td>
 <td><input type="text" name="copay" value="<?= $row['copay']; ?>" /></td>
 <td><input type="text" name="coins" value="<?= $row['coins']; ?>" /></td>

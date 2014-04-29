@@ -4,6 +4,7 @@ require_once('admin/includes/main_include.php');
 include("includes/sescheck.php");
 //include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
+include_once 'includes/constants.inc';
 //include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -39,7 +40,8 @@ if($_POST["ticketsub"] == 1)
 		mysql_query($ins_sql) or die($ins_sql.mysql_error());
 		$t_id = mysql_insert_id();
 		for($i=0;$i < count($_FILES['attachment']['name']); $i++){
-		if($_FILES['attachment']['tmp_name'][$i]!=''){
+		error_log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'.$_FILES['attachment']['size'][$i]."|".DSS_IMAGE_MAX_SIZE);
+		if($_FILES['attachment']['tmp_name'][$i]!='' && $_FILES['attachment']['size'][$i] <= DSS_IMAGE_MAX_SIZE){
                   $extension = end(explode(".", $_FILES['attachment']["name"][$i]));
 		  $attachment = "support_attachment_".$t_id."_".$_SESSION['docid']."_".rand(1000, 9999).".".$extension;
                   move_uploaded_file($_FILES['attachment']["tmp_name"][$i], "../../../shared/q_file/" . $attachment);

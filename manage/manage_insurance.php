@@ -20,7 +20,7 @@ if(isset($_GET['vobdel'])){
   $api_r = mysql_fetch_assoc($api_q);
   if($api_r['use_eligible_api']==1){
     //include 'eligible_api.php';
-    ?><center><iframe width="98%" onLoad="autoResize('eligible');" id="eligible" class="eligible" src="eligible_check/eligible_check.php?pid=<?=$_GET['pid']; ?>">
+    ?><center><iframe width="98%" onLoad="autoResize('eligible');" id="eligible" class="eligible" src="eligible_check/eligible_check.php?docid=<?=$_SESSION['docid'];?>&pid=<?=$_GET['pid']; ?>">
     </iframe></center><?php
 ?>
 

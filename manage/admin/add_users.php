@@ -993,7 +993,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     <select name="plan_id" id="plan_id" class="form-control">
                         <?php
                         
-                        $p_sql = "SELECT * FROM dental_plans ORDER BY name ASC";
+                        $p_sql = "SELECT * FROM dental_plans WHERE office_type='1' ORDER BY name ASC";
                         $p_q = mysql_query($p_sql);
                         
                         while ($p_r = mysql_fetch_assoc($p_q)) { ?>

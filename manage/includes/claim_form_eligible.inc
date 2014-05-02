@@ -464,7 +464,7 @@ if (empty($prior_authorization_number)) {
     </head>
 
     <body>
-
+<input type="button" onclick="change_form();" value="Paper File" />
     <form action="claim_handler.php?insid=<?= $_REQUEST['insid']; ?>&pid=<?= $_REQUEST['pid']; ?>" method="POST">
 
         <div id="eligibleapi-claim-1500-form"></div>
@@ -805,7 +805,36 @@ if ($is_pending) {
 
   });
 
+function change_form(){
+  if(form_changed){
+    if(confirm('Your changes to this claim will be lost if you change to paper submission. Click \'Ok\' to proceed or \'Cancel\' to return to electronic form.')){
+      window.location = "<?= $v2_form; ?>";
+    }
+  }else{
+    window.location = "<?= $v2_form; ?>";
+  }
+  return false;
+}
+
+$(document).ready(function(){
+  form_changed=false;
+$('input, select').bind('change', function(){
+  form_changed=true;
+});
+
+});
+
 </script>
+
+<div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">
+  <p>MESSAGE</p>
+
+  <input type="button" value="Save" />
+  <input type="button" onclick="window.location='<?= $v2_form; ?>';" value="Don't Save" />
+  <input type="button" onclick="$('#change_confirm').hide();" value="Cancel" />
+
+
+</div>
 
 
 </body>

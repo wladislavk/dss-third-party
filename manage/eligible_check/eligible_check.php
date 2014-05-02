@@ -18,11 +18,91 @@ require_once '../admin/includes/main_include.php';
   <form role="form" class="form-horizontal form-coverage">
 
         <?php
-                $s = "SELECT eligible_test FROM dental_users where userid='".$_SESSION['docid']."'";
+                $s = "SELECT eligible_test FROM dental_users where userid='".$_GET['docid']."'";
                 $q = mysql_query($s);
                 $r = mysql_fetch_assoc($q);
                 if($r['eligible_test']=="1"){
         ?>
+
+<?php
+  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
+         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
+         LEFT JOIN dental_users u ON u.userid = p.docid
+         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
+  $q = mysql_query($s);
+  $r = mysql_fetch_assoc($q);
+  $doc_name = $r['doc_name'];
+  $doc_array = explode(' ',$doc_name);
+  $doc_first_name = $doc_array[0];
+  $doc_last_name = $doc_array[1];
+?>
+<?php
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['docid']."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        $phone = $docinfo['phone'];
+                        $practice = $docinfo['practice'];
+                        $address = $docinfo['address'];
+                        $city = $docinfo['city'];
+                        $state = $docinfo['state'];
+                        $zip = $docinfo['zip'];
+                        $npi = $docinfo['npi'];
+                        $medicare_npi = $docinfo['medicare_npi'];
+
+                        if($docinfo['use_service_npi']==1){
+                          $service_npi = $docinfo['service_npi'];
+                          $service_practice = $docinfo['service_name'];
+                          $service_address = $docinfo['service_address'];
+                          $service_city = $docinfo['service_city'];
+                          $service_state = $docinfo['service_state'];
+                          $service_zip = $docinfo['service_zip'];
+                          $service_medicare_npi = $docinfo['service_medicare_npi'];
+                        }else{
+                          $service_npi = $npi;
+                          $service_practice = $practice;
+                          $service_address = $address;
+                          $service_city = $city;
+                          $service_state = $state;
+                          $service_zip = $zip;
+                          $service_medicare_npi = $medicare_npi;
+                        }
+?>
+      <?php
+        if($r['p_m_same_address']==1){
+          $s_state = $r['state'];
+          $s_city = $r['city'];
+          $s_zip = $r['zip'];
+        }else{
+          $s_state = $r['p_m_state'];
+          $s_city = $r['p_m_city'];
+          $s_zip = $r['p_m_zip'];
+        }
+        ?>
+
+  <?php
+    if($r['p_m_relation'] != 'Self'){
+      $d_last_name = $r['lastname'];
+      $d_first_name = $r['firstname'];
+      $d_dob = $r['dob'];
+      $d_ssn = $r['ssn'];
+      $d_gender = $r['gender'];
+      $d_state = $r['state'];
+      $d_city = $r['city'];
+      $d_zip = $r['zip'];
+    }else{
+      $d_last_name = '';
+      $d_first_name = '';
+      $d_dob = '';
+      $d_ssn = '';
+      $d_gender = '';
+      $d_state = '';
+      $d_city = '';
+      $d_zip = '';
+    }
+  ?>
+
+
+
 
     <div class="form-group">
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
@@ -74,18 +154,6 @@ require_once '../admin/includes/main_include.php';
         </select>
       </div>
     </div>
-<?php
-  $s = "SELECT p.*, c.company, u.last_name as doc_lastname, u.first_name as doc_firstname, u.npi, u.practice, u.tax_id_or_ssn from dental_patients p
-         LEFT JOIN dental_contact c ON c.contactid = p.p_m_ins_co
-         LEFT JOIN dental_users u ON u.userid = p.docid
-         WHERE p.patientid='".mysql_real_escape_string($_GET['pid'])."'";
-  $q = mysql_query($s);
-  $r = mysql_fetch_assoc($q);
-  $doc_name = $r['doc_name'];
-  $doc_array = explode(' ',$doc_name);
-  $doc_first_name = $doc_array[0];
-  $doc_last_name = $doc_array[1];
-?>
 
     <div class="form-group real-param" style="display: none;">
       <label for="date" class="col-lg-2 control-label">Patient Insurance</label>
@@ -206,37 +274,6 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
           <input type="text" class="form-control" id="provider_submitter_id">
         </div>
       </div>
-<?php
-                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$_SESSION['docid']."'";
-                      $docquery = mysql_query($getdocinfo);
-                      $docinfo = mysql_fetch_array($docquery);
-                        $phone = $docinfo['phone']; 
-                        $practice = $docinfo['practice']; 
-                        $address = $docinfo['address']; 
-                        $city = $docinfo['city']; 
-                        $state = $docinfo['state']; 
-                        $zip = $docinfo['zip'];
-                        $npi = $docinfo['npi']; 
-                        $medicare_npi = $docinfo['medicare_npi']; 
-
-                        if($docinfo['use_service_npi']==1){
-                          $service_npi = $docinfo['service_npi'];
-                          $service_practice = $docinfo['service_name'];
-                          $service_address = $docinfo['service_address'];
-                          $service_city = $docinfo['service_city'];
-                          $service_state = $docinfo['service_state'];
-                          $service_zip = $docinfo['service_zip'];
-                          $service_medicare_npi = $docinfo['service_medicare_npi'];
-                        }else{
-                          $service_npi = $npi;
-                          $service_practice = $practice;
-                          $service_address = $address;
-                          $service_city = $city;
-                          $service_state = $state;
-                          $service_zip = $zip;
-                          $service_medicare_npi = $medicare_npi;
-                        }
-?>
       <div class="form-group real-param">
         <label for="provider_street_line_1" class="col-lg-2 control-label">Street Line 1</label>
 
@@ -346,17 +383,6 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
           <input type="text" class="form-control" id="member_group_id" value="<?= $r['p_m_ins_grp']; ?>">
         </div>
       </div>
-      <?php
-	if($r['p_m_same_address']==1){
-	  $s_state = $r['state'];
-	  $s_city = $r['city'];
-	  $s_zip = $r['zip'];
-	}else{
-	  $s_state = $r['p_m_state'];
-	  $s_city = $r['p_m_city'];
-	  $s_zip = $r['p_m_zip'];
-	}
-	?>
 
       <div class="form-group real-param">
         <label for="member_state" class="col-lg-2 control-label">State</label>
@@ -383,28 +409,6 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       </div>
 
     </fieldset>
-
-  <?php
-    if($r['p_m_relation'] != 'Self'){
-      $d_last_name = $r['lastname'];
-      $d_first_name = $r['firstname'];
-      $d_dob = $r['dob'];
-      $d_ssn = $r['ssn'];
-      $d_gender = $r['gender'];
-      $d_state = $r['state'];
-      $d_city = $r['city'];
-      $d_zip = $r['zip'];
-    }else{
-      $d_last_name = '';
-      $d_first_name = '';
-      $d_dob = '';
-      $d_ssn = '';
-      $d_gender = '';
-      $d_state = '';
-      $d_city = '';
-      $d_zip = '';
-    }
-  ?>
 
     <fieldset class="real-param" style="display: none;">
       <legend>Dependent</legend>

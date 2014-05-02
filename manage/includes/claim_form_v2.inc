@@ -657,7 +657,7 @@ die();
                 if($p_m_ins_ass == 'No'){
                    $u_status = DSS_CLAIM_PAID_PATIENT;
                 }else{
-		   if(isset($_POST['ex_pagebtn_elec'])){
+		   if(isset($_POST['ex_pagebtn_elec']) || isset($_POST['elec_save'])){
 		     $u_status = false;	
 		   }else{
                      $u_status = DSS_CLAIM_SENT;
@@ -918,6 +918,8 @@ claim_history_update($primary_claim_id, $_SESSION['userid'], $_SESSION['adminuse
 	    print '<script type="text/javascript">';
 		if(isset($_POST['ex_pagebtn_elec'])){ 
         print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&sendins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
+		}elseif(isset($_POST['elec_save'])){ 
+        print '  window.location="'.$electronic_form.'"';
 		}else{
         print '  window.location="' . $called_from . '?status=0&insid='.$_POST['ed'].'&type='.$fdf_type.'&showins=1&pid=' . $_GET['pid'] . '&msg=' . $msg . '";';
 		}
@@ -1455,8 +1457,9 @@ if(!$r['reference_id'] || !$w_r['response']){
 onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
 		<?php } ?>
 		value="Print Claim" />
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
-
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
+          <input type="button" name="elec" onclick="return change_form();" value="Electronically File Claim" />
+	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
         <?php } ?>
 
 		<?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
@@ -1473,7 +1476,9 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
   if($api_r['use_eligible_api']==1){
   if($is_pending){
 ?>
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
+          <input type="button" name="elec" onclick="return change_form();" value="Electronically File Claim" />
+	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
   <?php }elseif($is_rejected){
 ?>
           <input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />
@@ -3075,4 +3080,23 @@ function file_claim(){
 
 */
 }
+
+function change_form(){
+  if(form_changed){
+    if(confirm('Your changes to this claim will be lost if you change to electronic submission. Click \'Ok\' to proceed or \'Cancel\' to return to paper form.')){
+      window.location = "<?= $electronic_form; ?>";
+    } 
+  }else{
+    window.location = "<?= $electronic_form; ?>";
+  }
+  return false;
+}
+
+
+  form_changed=false;
+$('input, select').bind('change', function(){
+  form_changed=true; 
+});
+
 </script>
+

@@ -26,6 +26,7 @@ if($_POST["compsub"] == 1)
 				sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
 				sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
 				sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
+				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST["status"])."',
 				company_type = '".mysql_real_escape_string($_POST['company_type'])."'
 			where id='".$_POST["ed"]."'";
@@ -67,6 +68,7 @@ if($_POST["compsub"] == 1)
                                 sfax_app_id = '".mysql_real_escape_string($_POST['sfax_app_id'])."',
                                 sfax_app_key = '".mysql_real_escape_string($_POST['sfax_app_key'])."',
                                 sfax_init_vector = '".mysql_real_escape_string($_POST['sfax_init_vector'])."',
+				plan_id = '".mysql_real_escape_string($_POST['plan_id'])."',
 				status = '".mysql_real_escape_string($_POST['status'])."',
                                 company_type = '".mysql_real_escape_string($_POST['company_type'])."',
 				adddate=now(),
@@ -115,6 +117,7 @@ if($_POST["compsub"] == 1)
                 $sfax_app_id = $_POST['sfax_app_id'];
                 $sfax_app_key = $_POST['sfax_app_key'];
                 $sfax_init_vector = $_POST['sfax_init_vector'];
+		$plan_id = $_POST['plan_id'];
 		$status = $_POST['status'];
 		$company_type = $_POST['company_type'];
 	}
@@ -136,6 +139,7 @@ if($_POST["compsub"] == 1)
                 $sfax_app_id = st($themyarray['sfax_app_id']);
                 $sfax_app_key = st($themyarray['sfax_app_key']);
                 $sfax_init_vector = st($themyarray['sfax_init_vector']);
+		$plan_id = st($themyarray['plan_id']);
 		$status = st($themyarray['status']);
 		$company_type = st($themyarray['company_type']);
 		$but_text = "Add ";
@@ -302,6 +306,23 @@ if($_POST["compsub"] == 1)
                 <input id="sfax_init_vector" type="text" name="sfax_init_vector" value="<?=$sfax_init_vector;?>" class="form-control" />
             </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead">
+                Plan
+            </td>
+            <td valign="top" class="frmdata">
+                    <select name="plan_id" id="plan_id" class="form-control">
+                        <?php
+
+                        $p_sql = "SELECT * FROM dental_plans WHERE office_type='2' ORDER BY name ASC";
+                        $p_q = mysql_query($p_sql);
+
+                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
+                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                        <?php } ?>
+                    </select>
+	    </td>
+	</tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead">
                 Status

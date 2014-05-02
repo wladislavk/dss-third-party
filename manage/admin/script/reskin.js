@@ -11,8 +11,8 @@ $(function(){
     /**
      * Add breadcrumb
      */
-    var $container = $('<div><ol class="breadcrumb"><li><a href="/manage/admin/home.php">Home</a></li></ol></div>'),
-    $breadcrumb = $container.find('ol'),
+    var $container = $('<div class="row"><div class="col-md-12"><h3 class="page-title"></h3><ul class="page-breadcrumb breadcrumb"><li><i class="fa fa-home"></i><a href="/manage/admin/home.php">Home</a><i class="fa fa-angle-right"></i></li></ul></div></div>'),
+    $breadcrumb = $container.find('ul'),
     path = window.location.href.replace(/^.*?\/([^\/]+)$/,'$1');
     
     $('.page-sidebar-menu').find('li a[href$="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function(){
@@ -24,7 +24,7 @@ $(function(){
                 .text($this.text().trim());
         }
         else {
-            $breadcrumb.append('<li><a/></li>')
+            $breadcrumb.append('<li><a/><i class="fa fa-angle-right"></i></li>')
                 .find('a:last')
                 .text($this.text().trim())
                 .attr('href',this.href);
@@ -33,10 +33,11 @@ $(function(){
     
     $breadcrumb.find('li:last').each(function(){
         var $this = $(this);
-        
         $this.text($this.text());
-    }).addClass('active');
-    $container.insertAfter('.row');
+        $container.find('.page-title').append($this.text());
+    });
+  
+    $container.insertAfter('.row1');
     
     /**
      * Popup

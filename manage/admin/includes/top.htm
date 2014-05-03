@@ -67,21 +67,12 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
       }
     });
     
-	
-	$('#click_letters_a').click(function(){
-		//alert("test");
-		$('#click_letters').addClass("active");
-		
-	});
-	$('#click_hst_span').click(function(){
-		//alert("test");
-		$('#click_hst').addClass("active");
-		
-	});
 	*/
 	
     });
   </script>
+  	
+
 
     <script>
     function calendar2(){}
@@ -427,8 +418,8 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
 				</li>
 				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
-				<li class="start" id="click_letters">
-					<a href="/manage/admin/manage_letters.php"  id="click_letters_a">
+				<li class="start" >
+					<a href="/manage/admin/manage_letters.php" >
 						<i class="fa fa-envelope"></i>
 						<span class="title" >
 							LETTERS 
@@ -439,58 +430,58 @@ $num_pending_claims = mysql_num_rows($pending_q);
 						</span>
 					</a>
 				</li>
-				<li id="click_VOB">
-					<a href="/manage/admin/manage_vobs.php?status=0" id="click_VOB_a">
+				<li>
+					<a href="/manage/admin/manage_vobs.php?status=0">
 						<i class="fa fa-hospital-o"></i>
 						<span class="title">
 							VOBs 
 							</span>
 						<span class="badge badge-danger"><?= $num_pending_preauth; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
 				
 								
 				<? } ?>
-				<li id="click_hst" >
-					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>" id="click_hst_a">
+				<li  >
+					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>" >
 						<i class="fa fa-user-md"></i>
 						<span class="title" >
 							HSTs 
 							</span>
 							<span class="badge badge-danger"><?= $num_pending_hst; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				
-				<li id="click_claims">
-					<a href="/manage/admin/manage_claims.php?status=0" id="click_claims">
+				<li id="nn" >
+					<a href="/manage/admin/manage_claims.php?status=0">
 						<i class="fa fa-medkit"></i>
 						<span class="title">
 							CLAIMS </span>
 							<span class="badge badge-danger"><?= $num_pending_claims; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
-				<li id="click_new">
+				<li >
 					<a href="/manage/admin/manage_new_patient_calls.php">
 						<i class="fa fa-male"></i>
 						<span class="title">
 							NEW PATIENT CALLS
 						</span>
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
 				
-				<li id="click_users">
+				<li>
 					<a href="javascript:;">
 						<i class="fa fa-user"></i>
 						<span class="title">
@@ -1156,7 +1147,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
                 ?>
 				
 				
-			<li>
+			<li id="active_container">
 				<a href="javascript:;">
 					<i class="fa  fa-question"></i> 
 					<span class="title">

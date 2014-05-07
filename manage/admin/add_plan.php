@@ -182,11 +182,18 @@ if($_POST["plansub"] == 1)
     </form>
 <script type="text/javascript">
 function check_add(){
-  if($('.validate[value=""]').length>0){
-      alert('All fields are required.');
-    return false;
-  }
-  return true;
+        var isValid = true;
+        $('input[type="text"]').each(function() {
+            if ($.trim($(this).val()) == '') {
+                isValid = false;
+            }
+        });
+        if (isValid == false){ 
+	    alert('All fields are required.');
+	    return false;
+        }else{ 
+	    return true;
+	}
 }
 </script>
     

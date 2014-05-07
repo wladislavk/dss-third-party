@@ -8,6 +8,7 @@ if($_GET['backoffice'] == '1') {
 <?php 
 } else {
   include 'includes/top.htm';
+  include 'admin/includes/invoice_functions.php';
 }
 
 if($_GET['lid'] == '' || $_GET['lid'] == '0'){

@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../admin/includes/main_include.php';
+include_once '../includes/constants.inc';
+include_once '../admin/includes/invoice_functions.php';
 $pid = $_REQUEST['pid'];
 $d = json_decode($_REQUEST['response'], true);
 //print_r($d);
@@ -104,7 +106,10 @@ if($section_data){
 */
 //$s = "UPDATE dental_task SET status = 1
 	//WHERE id='".mysql_real_escape_string($id)."'";
-if(mysql_query($s)){
+$q = mysql_query($s);
+$eid = mysql_insert_id();
+invoice_add_eligibility('1', $_SESSION['docid'], $eid);
+if($q){
   echo '{"success":true}';
 }else{
   echo mysql_error();

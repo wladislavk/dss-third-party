@@ -23,6 +23,7 @@ if($_POST["plansub"] == 1)
                 		free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
                 		vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
                 		free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
+				duration = '".mysql_real_escape_string($_POST['duration'])."',
                 		office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."'
 				WHERE id = '".mysql_real_escape_string($_POST['ed'])."'";
@@ -56,6 +57,7 @@ if($_POST["plansub"] == 1)
                                 free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
                                 vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
                                 free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
+				duration = '".mysql_real_escape_string($_POST['duration'])."',
                                 office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."',
 				adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
@@ -99,6 +101,7 @@ if($_POST["plansub"] == 1)
 		$free_efile = $_POST['free_efile'];
 		$vob_fee = $_POST['vob_fee'];
 		$free_vob = $_POST['free_vob'];
+		$duration = $_POST['duration'];
 		$office_type = $_POST['office_type'];
 		$status = $_POST['status'];
 	}
@@ -115,8 +118,11 @@ if($_POST["plansub"] == 1)
                 $free_enrollment = $themyarray['free_enrollment'];
                 $claim_fee = $themyarray['claim_fee'];
                 $free_claim = $themyarray['free_claim'];
+		$efile_fee = $themyarray['efile_fee'];
+		$free_efile = $themyarray['free_efile'];
                 $vob_fee = $themyarray['vob_fee'];
                 $free_vob = $themyarray['free_vob'];
+		$duration = $themyarray['duration'];
                 $office_type = $themyarray['office_type'];
 		$status = st($themyarray['status']);
 		$but_text = "Add ";
@@ -284,6 +290,15 @@ if($_POST["plansub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <input type="text" name="free_vob" value="<?=$free_vob?>" class="form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Duration
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="duration" value="<?=$duration?>" class="form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>

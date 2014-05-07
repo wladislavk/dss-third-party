@@ -14,6 +14,11 @@
 		((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
                 	((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
 			AND
+(SELECT COUNT(*) as num_inv FROM dental_percase_invoice
+                        WHERE docid=du.userid AND 
+                                status = '".DSS_INVOICE_PENDING."') = 0";
+
+/*
 		(SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
                         JOIN dental_patients dp ON dl.patientid=dp.patientid
                         WHERE 
@@ -45,6 +50,7 @@
                 p.status = '".DSS_PREAUTH_COMPLETE."' AND
                 p.invoice_status = '".DSS_PERCASE_PENDING."') = 0
                 ";
+*/
   if(isset($_GET['company']) && $_GET['company'] != ""){
         $sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
   }
@@ -114,7 +120,7 @@ if(mysql_num_rows($doc_q) == 0){
  		  array_push($no_card, $r['first_name']." ".$r['last_name']);
 		}
 	}
-
+/*
 $fax_sql = "SELECT count(*) as total_faxes, MIN(sent_date) as start_date, MAX(sent_date) as end_date FROM dental_faxes f
         WHERE 
                 f.docid='".$r['userid']."' AND
@@ -144,6 +150,7 @@ if($fax['total_faxes'] > 0 ){
                 WHERE status='0' AND docid='".mysql_real_escape_string($r['docid'])."'";
     mysql_query($up_sql);
 }
+*/
 $_GET['invoice_id'] = $invoiceid;
 $redirect = false;
 include 'percase_invoice_pdf.php';

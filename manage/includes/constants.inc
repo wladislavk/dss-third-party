@@ -289,10 +289,11 @@ $dss_admin_access_labels[DSS_ADMIN_ACCESS_HST_BASIC] = "HST Basic User";
 define('DSS_USER_ACCESS_STAFF', 1);
 define('DSS_USER_ACCESS_DOCTOR', 2);
 
-define('DSS_INVOICE_PENDING', 3);
+define('DSS_INVOICE_PENDING', 4);
 define('DSS_INVOICE_INVOICED', 0);
 define('DSS_INVOICE_PAID', 1);
 define('DSS_INVOICE_ERROR', 2);
+define('DSS_INVOICE_PAYMENT_ERROR', 3);
 
 define('DSS_PERCASE_PENDING', 0);
 define('DSS_PERCASE_INVOICED', 1);

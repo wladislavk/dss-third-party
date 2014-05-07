@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../admin/includes/main_include.php';
+include_once '../admin/includes/invoice_functions.php';
 ?>
   <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link href="css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">

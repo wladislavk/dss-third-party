@@ -3,17 +3,15 @@ include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 
-  $sql = "SELECT du.*, c.name AS company_name, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
+  $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period, 
-                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
-                FROM dental_users du 
-                JOIN dental_user_company uc ON uc.userid = du.userid
-                JOIN companies c ON c.id=uc.companyid
-		JOIN dental_plans plan ON plan.id = du.plan_id
-                WHERE du.status=1 AND du.docid=0
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                FROM companies c
+		JOIN dental_plans plan ON plan.id = c.plan_id
+                WHERE c.status=1
 AND 
-                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
-                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(du.adddate, INTERVAL plan.trial_period DAY) < now()))
+                ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) < DATE_SUB(now(), INTERVAL 1 MONTH) OR 
+                        ((SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) IS NULL AND DATE_ADD(c.adddate, INTERVAL plan.trial_period DAY) < now()))
  ";
 /*
         $sql = "SELECT du.*, c.name AS company_name, c.id AS company_id, p.name as plan_name,
@@ -39,21 +37,18 @@ AND
                 JOIN dental_plans p ON p.id=du.plan_id
                 WHERE pi.status='".DSS_INVOICE_PENDING."' ";
 */
-  if(isset($_GET['company']) && $_GET['company'] != ""){
-    	$sql .= " AND c.id='".mysql_real_escape_string($_GET['company'])."' ";
-  }
-  if(isset($_GET['uid']) && $_GET['uid'] != ""){
-        $sql .= " AND du.userid > '".mysql_real_escape_string($_GET['uid'])."' ";
+  if(isset($_GET['cid']) && $_GET['cid'] != ""){
+        $sql .= " AND c.id > '".mysql_real_escape_string($_GET['cid'])."' ";
   }
   if(isset($_GET['show']) && $_GET['show']=='all'){
-   	$sql .= " ORDER BY du.userid ASC ";
+   	$sql .= " ORDER BY c.id ASC ";
   }else{
 	$sql .= " AND 
 		(SELECT COUNT(*) as num_inv FROM dental_percase_invoice
-			WHERE docid=du.userid AND 
+			WHERE companyid=c.id AND 
 				status = '".DSS_INVOICE_PENDING."')
 		!= 0
-		ORDER BY du.userid ASC
+		ORDER BY c.id ASC
 		";
 		/*
                 ((SELECT COUNT(*) AS num_trxn FROM dental_ledger dl 
@@ -101,25 +96,23 @@ $count_current = (isset($_GET['cc']) && $_GET['cc']!='')?$_GET['cc']:1;
 if($num_docs == 0){
   ?>
     <script type="text/javascript">
-      window.location = "manage_monthly_invoice.php";
+      window.location = "manage_monthly_bo_invoice.php";
     </script>
   <?php
 }
 $user = mysql_fetch_assoc($q);
 
-$s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."'";
+$s = "SELECT id FROM dental_percase_invoice WHERE companyid='".$user['id']."' AND status='".DSS_INVOICE_PENDING."'";
 $q = mysql_query($s);
 if(mysql_num_rows($q) > 0){
 $r = mysql_fetch_assoc($q);
 $invoice_id = $r['id'];
-echo $invoice_id;
 $efile_sql = "SELECT dp.firstname, dp.lastname, e.id, e.adddate FROM 
                 dental_claim_electronic e
                 JOIN dental_insurance i ON i.insuranceid=e.claimid
                 JOIN dental_patients dp ON i.patientid=dp.patientid
         WHERE 
-                i.docid='".$user['userid']."' 
-		and e.percase_invoice = '".$invoice_id."'
+		e.percase_invoice = '".$invoice_id."'
 ";
 $efile_q = mysql_query($efile_sql);
 	
@@ -307,12 +300,12 @@ if(isset($_POST['submit'])){
   }
 }else{
     if(isset($_POST['amount_monthly'])){
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, companyid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['companyid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
         $total_amount = $_POST['amount_monthly'];
     }else{
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
+      $in_sql = "INSERT INTO dental_percase_invoice (adminid, companyid, adddate, ip_address) " .
+                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['companyid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
         $total_amount += 0;
     }
     mysql_query($in_sql);
@@ -371,7 +364,7 @@ if(isset($_POST['submit'])){
   include 'percase_invoice_pdf.php';
   ?>
   <script type="text/javascript">
-    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>';
+    window.location = 'invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?>&cid=<?= $user['id']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>';
     //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
   </script>
   <?php
@@ -382,12 +375,10 @@ if(isset($_POST['submit'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
-		FROM dental_users u
-		JOIN dental_user_company uc ON uc.userid = u.userid
-		JOIN companies c ON uc.companyid = c.id
-		JOIN dental_plans p ON p.id=u.plan_id
-		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
+  $doc_sql = "SELECT p.monthly_fee, p.efile_fee, p.free_efile, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, c.name, p.name as plan_name
+		FROM companies c 
+		JOIN dental_plans p ON p.id=c.plan_id
+		WHERE c.id='".mysql_real_escape_string($user['id'])."'";
   $doc_q = mysql_query($doc_sql);
 if(mysql_num_rows($doc_q) == 0){
   //If no plan get company fees
@@ -439,8 +430,8 @@ if(mysql_num_rows($doc_q) == 0){
 <div class="panel panel-default">
     <div class="panel-body">
         <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
-        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
-            <input type="hidden" name="docid" value="<?=$user["userid"];?>">
+        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&bill=<?=$_GET['bill'];?>&cid=<?=$_GET['cid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
+            <input type="hidden" name="companyid" value="<?=$user["id"];?>">
             <table id="invoice_table" class="table table-bordered table-hover">
                 <tr>
                     <th></th>
@@ -551,7 +542,7 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_<?= $efile['id'] ?>" value="<?= $doc['claim_fee']; ?>">
+                            <input type="text" class="amount form-control" name="amount_<?= $efile['id'] ?>" value="<?= $doc['efile_fee']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -816,7 +807,7 @@ if(mysql_num_rows($doc_q) == 0){
             </table>
             <div class="text-center">
                 <a href="manage_monthly_invoice.php" class="btn btn-danger">Cancel</a>
-                <a href="invoice_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?><?= (isset($_GET['company']) && $_GET['company'] != "")?"&company=".$_GET['company']:""; ?>&uid=<?= $user['userid']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" class="btn btn-default">Skip</a>
+                <a href="invoice_bo_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?>&cid=<?= $user['id']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>" class="btn btn-default">Skip</a>
                 <input type="submit" name="submit" value="Create Invoice" class="btn btn-success pull-right">
             </div>
         </form>

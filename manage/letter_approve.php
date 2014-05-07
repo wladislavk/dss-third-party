@@ -1,6 +1,7 @@
 <?php
 require_once 'admin/includes/main_include.php';
 require_once 'includes/general_functions.php';
+require_once 'admin/includes/invoice_functions.php';
 ?>
 
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>

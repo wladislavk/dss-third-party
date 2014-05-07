@@ -159,7 +159,7 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
 	if(xmlhttp.responseText==0){
-		alert('This transaction code has no amount. If you want to use this code, please contact the back office.');
+		alert('This transaction code has no amount. If you want to use this code, please add your fee via Navigation -> Admin -> Transaction Code.');
 		document.getElementById("form["+name.substr(5,1)+"][proccode]").selectedIndex = 0;	
 		document.getElementById("amount_span"+name.substr(5,1)).innerHTML="";
 	}else{

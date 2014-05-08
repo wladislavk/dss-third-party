@@ -152,6 +152,11 @@ $enroll_q = mysql_query($enroll_sql);
 $enroll = mysql_fetch_assoc($enroll_q);
 }
 
+$producer_sql = "SELECT count(*) as total_producers FROM dental_users u
+                WHERE u.docid = '".mysql_real_escape_string($user['id'])."'
+                        and u.status = 1 and u.producer=1";
+$producer_q = mysql_query($producer_sql);
+
 
 if(isset($_POST['submit'])){
 
@@ -164,6 +169,11 @@ if(isset($_POST['submit'])){
 			$in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
 			monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' "; 
 	  $total_amount = $_POST['amount_monthly'];
+        }
+        if(isset($_POST['producer_amount'])){
+                        $in_sql .= ", producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
+                        producer_amount = '".mysql_real_escape_string($_POST['producer_amount'])."' ";
+          $total_amount = $_POST['producer_monthly'];
         }
  	$in_sql .= " WHERE id = '".$invoice_id."'";
     mysql_query($in_sql);
@@ -306,15 +316,23 @@ if(isset($_POST['submit'])){
     mysql_query($up_sql);
   }
 }else{
-    if(isset($_POST['amount_monthly'])){
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address, monthly_fee_date, monthly_fee_amount) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."', '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."', '".mysql_real_escape_string($_POST['amount_monthly'])."')";
-        $total_amount = $_POST['amount_monthly'];
-    }else{
-      $in_sql = "INSERT INTO dental_percase_invoice (adminid, docid, adddate, ip_address) " .
-                " VALUES (".$_SESSION['adminuserid'].", ".$_POST['docid'].", NOW(), '".$_SERVER['REMOTE_ADDR']."')";
-        $total_amount += 0;
-    }
+      $in_sql = "insert into dental_percase_invoice SET
+                        adminid = '".$_SESSION['adminuserid']."',
+                        docid = '".$_POST['docid']."',
+                        status = '0',
+                        adddate = now(),
+                        ip_address = '".$_SERVER['REMOTE_ADDR']."' ";
+        if(isset($_POST['amount_monthly'])){
+                        $in_sql .= ", monthly_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['monthly_date'])))."',
+                        monthly_fee_amount = '".mysql_real_escape_string($_POST['amount_monthly'])."' ";
+          $total_amount = $_POST['amount_monthly'];
+        }
+        if(isset($_POST['producer_amount'])){
+                        $in_sql .= ", producer_fee_desc = '".mysql_real_escape_string($_POST['producer_desc'])."', producer_fee_date = '".mysql_real_escape_string(date('Y-m-d', strtotime($_POST['producer_date'])))."',
+                        producer_fee_amount = '".mysql_real_escape_string($_POST['producer_amount'])."' ";
+          $total_amount += $_POST['producer_amount'];
+        }
+
     mysql_query($in_sql);
     $invoice_id = mysql_insert_id();
 
@@ -382,7 +400,7 @@ if(isset($_POST['submit'])){
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
+  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
@@ -502,6 +520,31 @@ if(mysql_num_rows($doc_q) == 0){
                         </div>
                     </td>
                 </tr>
+
+
+                <?php $producer_r = mysql_fetch_assoc($producer_q); ?>
+                <tr id="user_row">
+                    <td>
+                        <a href="#" class="btn btn-danger hidden">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="producer_desc" value="Producers – <?= $producer_r['total_producers']." at $".$doc['producer_fee']." each "; ?>" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" id="producer_date" class="date form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="producer_amount" value="<?= $users_r['total_producers']*$doc['producer_fee']; ?>">
+                        </div>
+                    </td>
+                </tr>
+
                 <?php while ($case = mysql_fetch_array($case_q)) { ?>
                 <tr id="case_row_<?= $case['ledgerid'] ?>">
                     <td>

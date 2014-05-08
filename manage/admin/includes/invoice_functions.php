@@ -59,7 +59,6 @@ function invoice_find($user_type, $user_id){
 
 function invoice_add_efile($user_type, $user_id, $eid){
   $inv_id = invoice_find($user_type, $user_id);
-error_log('888888888888888888888888888888|||'.$inv_id);
   $sql = "UPDATE dental_claim_electronic SET
     	percase_invoice = '".mysql_real_escape_string($inv_id)."'
 	WHERE id='".mysql_real_escape_string($eid)."'";
@@ -70,7 +69,6 @@ error_log('888888888888888888888888888888|||'.$inv_id);
 // create new eligibility invoice for user and return id
 function invoice_eligibility_create($user_type, $user_id){
 
-  if($user_type == '1'){
     $inv_id = invoice_find($user_type, $user_id);
     $sql = "INSERT INTO dental_eligibility_invoice SET
                 invoice_id = '".mysql_real_escape_string($inv_id)."',
@@ -78,7 +76,6 @@ function invoice_eligibility_create($user_type, $user_id){
                 ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
     $q = mysql_query($sql);
     return mysql_insert_id();
-  }
 }
 
 //find existing pending eligibility
@@ -87,6 +84,18 @@ function invoice_eligibility_find($user_type, $user_id){
     $sql = "SELECT ei.id FROM dental_percase_invoice i
 		JOIN dental_eligibility_invoice ei ON ei.invoice_id=i.id
                 WHERE i.docid='".mysql_real_escape_string($user_id)."'
+                AND i.status = '".DSS_INVOICE_PENDING."'";
+    $q = mysql_query($sql);
+    if(mysql_num_rows($q) > 0){
+        $r = mysql_fetch_assoc($q);
+        return $r['id'];
+    }else{  // if no pending invoice create new
+      return invoice_eligibility_create($user_type, $user_id);
+    }
+  }elseif($user_type == '2'){
+    $sql = "SELECT ei.id FROM dental_percase_invoice i
+                JOIN dental_eligibility_invoice ei ON ei.invoice_id=i.id
+                WHERE i.companyid='".mysql_real_escape_string($user_id)."'
                 AND i.status = '".DSS_INVOICE_PENDING."'";
     $q = mysql_query($sql);
     if(mysql_num_rows($q) > 0){
@@ -121,12 +130,33 @@ function invoice_enrollment_create($user_type, $user_id){
                 ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
     $q = mysql_query($sql);
     return mysql_insert_id();
+  }elseif($user_type == '2'){
+    $inv_id = invoice_find($user_type, $user_id);
+    $sql = "INSERT INTO dental_enrollment_invoice SET
+                invoice_id = '".mysql_real_escape_string($inv_id)."',
+                adddate = now(),
+                ip_address = '".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'";
+    $q = mysql_query($sql);
+    return mysql_insert_id();
   }
+
 }
 
 //find existing pending eligibility
 function invoice_enrollment_find($user_type, $user_id){
   if($user_type == '1'){
+    $sql = "SELECT ei.id FROM dental_percase_invoice i
+                JOIN dental_enrollment_invoice ei ON ei.invoice_id=i.id
+                WHERE i.companyid='".mysql_real_escape_string($user_id)."'
+                AND i.status = '".DSS_INVOICE_PENDING."'";
+    $q = mysql_query($sql);
+    if(mysql_num_rows($q) > 0){
+        $r = mysql_fetch_assoc($q);
+        return $r['id'];
+    }else{  // if no pending invoice create new
+      return invoice_enrollment_create($user_type, $user_id);
+    }
+  }elseif($user_type == '2'){
     $sql = "SELECT ei.id FROM dental_percase_invoice i
                 JOIN dental_enrollment_invoice ei ON ei.invoice_id=i.id
                 WHERE i.docid='".mysql_real_escape_string($user_id)."'
@@ -146,7 +176,6 @@ function invoice_add_enrollment($user_type, $user_id, $eid){
   $sql = "UPDATE dental_eligible_enrollment SET
         enrollment_invoice_id = '".mysql_real_escape_string($inv_id)."'
         WHERE id='".mysql_real_escape_string($eid)."'";
-  error_log($sql);
   return mysql_query($sql);
 }
 

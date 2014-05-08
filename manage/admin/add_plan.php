@@ -23,6 +23,8 @@ if($_POST["plansub"] == 1)
                 		free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
                 		vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
                 		free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
+				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
+				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
 				duration = '".mysql_real_escape_string($_POST['duration'])."',
                 		office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."'
@@ -57,6 +59,8 @@ if($_POST["plansub"] == 1)
                                 free_efile = '".mysql_real_escape_string($_POST['free_efile'])."',
                                 vob_fee = '".mysql_real_escape_string($_POST['vob_fee'])."',
                                 free_vob = '".mysql_real_escape_string($_POST['free_vob'])."',
+				producer_fee = '".mysql_real_escape_string($_POST['producer_fee'])."',
+				user_fee = '".mysql_real_escape_string($_POST['user_fee'])."',
 				duration = '".mysql_real_escape_string($_POST['duration'])."',
                                 office_type = '".mysql_real_escape_string($_POST['office_type'])."',
                                 status = '".mysql_real_escape_string($_POST['status'])."',
@@ -101,6 +105,8 @@ if($_POST["plansub"] == 1)
 		$free_efile = $_POST['free_efile'];
 		$vob_fee = $_POST['vob_fee'];
 		$free_vob = $_POST['free_vob'];
+		$producer_fee = $_POST['producer_fee'];
+		$user_fee = $_POST['user_fee'];
 		$duration = $_POST['duration'];
 		$office_type = $_POST['office_type'];
 		$status = $_POST['status'];
@@ -122,6 +128,8 @@ if($_POST["plansub"] == 1)
 		$free_efile = $themyarray['free_efile'];
                 $vob_fee = $themyarray['vob_fee'];
                 $free_vob = $themyarray['free_vob'];
+		$producer_fee = $themyarray['producer_fee'];
+		$user_fee = $themyarray['user_fee'];
 		$duration = $themyarray['duration'];
                 $office_type = $themyarray['office_type'];
 		$status = st($themyarray['status']);
@@ -302,7 +310,24 @@ if($_POST["plansub"] == 1)
                 <span class="red">*</span>
             </td>
         </tr>
-
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Producer Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="producer_fee" value="<?=$producer_fee?>" class="moneymask form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                User Fee
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="user_fee" value="<?=$user_fee?>" class="moneymask form-control validate" />
+                <span class="red">*</span>
+            </td>
+        </tr>
 	<!-- NEW -->
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
@@ -347,12 +372,18 @@ if($_POST["plansub"] == 1)
     </form>
 <script type="text/javascript">
 function check_add(){
-  if($('.validate[value=""]').length>0){
-	
-      alert('All fields are required.');
-    return false;
-  }
-  return true;
+        var isValid = true;
+        $('input[type="text"]').each(function() {
+            if ($.trim($(this).val()) == '') {
+                isValid = false;
+            }
+        });
+        if (isValid == false){ 
+	    alert('All fields are required.');
+	    return false;
+        }else{ 
+	    return true;
+	}
 }
 </script>
     

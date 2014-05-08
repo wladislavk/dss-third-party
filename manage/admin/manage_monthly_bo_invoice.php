@@ -201,7 +201,7 @@ $num_users=mysql_num_rows($my);
                                         <?=st($myarray["num_invoices"]);?>
                                 </td>
 				<td valign="top" align="center">
-					<a href="manage_percase_invoice_history.php?docid=<?=$myarray["userid"];?>">History</a>
+					<a href="manage_percase_bo_invoice_history.php?companyid=<?=$myarray["id"];?>">History</a>
 				</td>	
 						
 				<td valign="top">

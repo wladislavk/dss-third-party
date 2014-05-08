@@ -108,7 +108,8 @@ if($section_data){
 	//WHERE id='".mysql_real_escape_string($id)."'";
 $q = mysql_query($s);
 $eid = mysql_insert_id();
-invoice_add_eligibility('1', $_SESSION['docid'], $eid);
+$type = (isset($_REQUEST['type']))?$_REQUEST['type']:'1';
+invoice_add_eligibility($type, $_SESSION['admincompanyid'], $eid);
 if($q){
   echo '{"success":true}';
 }else{

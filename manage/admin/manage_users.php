@@ -188,11 +188,9 @@ $num_users=mysql_num_rows($my);
                 <td valign="top" class="col_head" width="10%">
                         Plan
                 </td>
-		<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 		<td valign="top" class="col_head" width="10%">
 			Action
 		</td>
-		<?php } ?>
 	</tr>
 	<? if(mysql_num_rows($my) == 0)
 	{ ?>
@@ -308,14 +306,17 @@ $num_users=mysql_num_rows($my);
                                 <td valign="top" align="center">
                                                 <?= $myarray["plan_name"]; ?>
                                 </td>
-				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 				<td valign="top">
+				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
-				</td>
 				<?php } ?>
+				<a href="manage_enrollments.php?ed=<?=$myarray["userid"];?>" title="Edit" class="btn btn-primary btn-sm">
+                                                Enrollments 
+                                         <span class="glyphicon glyphicon-pencil"></span></a>
+				</td>
 			</tr>
 	<? 	}
 	}?>

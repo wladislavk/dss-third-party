@@ -158,6 +158,21 @@ $html .= '<tr>
                                                                         </tr>';
 
 }
+if($invoice['producer_fee_amount']!=''){
+$total_charge += $invoice['producer_fee_amount'];
+$html .= '<tr>
+                                                                        <td height="30" width="100" align="center" valign="middle" style="text-align: center; font-size:24px; border-bottom: 1px dotted #DDDDDD;">1</td>
+                                                                        <td height="30" width="220" align="left" valign="middle" style="text-align: left; color: #444444; font-size:24px; font-weight: bold; border-bottom: 1px dotted #DDDDDD; padding-left: 10px;">'.$invoice['producer_fee_desc'].'</td>
+
+                                                                        <!-- table column with item number-->
+                                                                        <td height="30" width="100" align="left" valign="middle" style="text-align: left; font-size:24px;border-bottom: 1px dotted #DDDDDD;">'.date('m/d/Y', strtotime($invoice['producer_fee_date'])).'</td>
+                                                                        <!-- table column with item price per pc -->
+                                                                        <td height="30" width="100" align="left" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD;">N/A</td>
+                                                                        <!-- table column with item price -->
+                                                                        <td height="30" width="90" align="right" valign="middle" style="text-align: right; font-size:24px;border-bottom: 1px dotted #DDDDDD; padding-right: 10px;">'.$invoice['producer_fee_amount'].'</td>
+                                                                        </tr>';
+
+}
 
 $case_sql_e0486 = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl 
                 JOIN dental_patients dp ON dl.patientid=dp.patientid

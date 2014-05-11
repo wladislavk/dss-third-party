@@ -1,29 +1,23 @@
-<?php
+<?php 
 //session_start();
 include('includes/main_include.php');
 include_once('includes/password.php');
-       //echo $pass = gen_password('admin', $salt_row['salt']);
 
 if (isset($_POST["loginsub"])) {
 	
     if ($_POST['security_code'] == $_SESSION['security_code']) {
-    //if (1) {
         $salt_sql = "SELECT salt FROM admin WHERE username='".mysql_real_escape_string($_POST['username'])."' AND status=1";
         $salt_q = mysql_query($salt_sql);
         $salt_row = mysql_fetch_assoc($salt_q);
         
-		$pass = gen_password($_POST['password'], $salt_row['salt']);
+        $pass = gen_password($_POST['password'], $salt_row['salt']);
         $check_sql = "SELECT a.*, ac.companyid  FROM admin a
             LEFT JOIN admin_company ac ON a.adminid = ac.adminid
             where username='".mysql_real_escape_string($_POST['username'])."' and password='".$pass."'";
         
-        //$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
-        	//$con = mysql_connect('localhost', 'root', 'root') or die('connection failure');	
-			//$db = mysql_select_db('dentalsl_main_skin');
-        
         $check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
         
-        if (mysql_num_rows($check_my) == 1) { 
+        if (mysql_num_rows($check_my) == 1) {
             $check_myarray = mysql_fetch_array($check_my);
             
             $_SESSION['adminuserid']=$check_myarray['adminid'];
@@ -64,14 +58,16 @@ if (isset($_POST["loginsub"])) {
 
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
-	<form method="post" action="<?= $_SERVER['PHP_SELF'] ?>" class="login-form"  onsubmit="return loginabc(this)" novalidate="novalidate">
-		<?php if (isset($_GET['msg'])) { ?>
+	<?php if (isset($_GET['msg'])) { ?>
 		<div class="alert alert-danger text-center">
 			<strong><?= $_GET['msg'] ?></strong>
 		</div>
 	
 	
      <?php } ?>
+	
+	<form name="loginfrm" method="post" action="<?= $_SERVER['PHP_SELF'] ?>" onsubmit="return loginabc(this)" class="form-horizontal">
+		
 		<h3 class="form-title">Login to your account</h3>
 		
 		<div class="form-group">
@@ -79,7 +75,7 @@ if (isset($_POST["loginsub"])) {
 			<!--<label class="control-label visible-ie8 visible-ie9">Username</label>-->
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input type="text" name="username" placeholder="Username" autocomplete="off" id="username" class="form-control placeholder-no-fix">
+			<input type="text" name="username" placeholder="Username" autocomplete="off" id="username" class="form-control placeholder-no-fix">
 			</div>
 		</div>
 		<div class="form-group">
@@ -100,12 +96,14 @@ if (isset($_POST["loginsub"])) {
 			<!--<label for="captcha" class="col-md-3 control-label">Captcha</label>-->
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input type="text" class="form-control" name="security_code" id="captcha" placeholder="write the characters in the image">
+				<input type="text" class="form-control" name="security_code" id="captcha"  placeholder="write the characters in the image">
 			</div>
 		</div>
+		
 		<div class="form-actions" style="margin-left:-35px;">
-			<label class="checkbox">
-			<div class="checker"><span><input type="checkbox" value="1" name="remember"></span></div> Remember me </label>
+			<!--<label class="checkbox">
+			<div class="checker"><span><input type="checkbox" value="1" name="remember"></span></div> Remember me </label>--->
+			 <!--<input type="submit" name="loginsub" value="Login"  class="btn btn-success btn blue pull-right">-->
 			<button type="submit" class="btn blue pull-right" name="loginsub" >Login
 			<i class="m-icon-swapright m-icon-white"></i>
 		</div>

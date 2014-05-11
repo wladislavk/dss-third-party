@@ -20,7 +20,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
    <!-- END GLOBAL MANDATORY STYLES -->
    
    <!-- BEGIN PAGE LEVEL PLUGIN STYLES --> 
-   <link href="admin/template/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+   <!--<link href="admin/template/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>-->
    <link href="admin/template/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
    <link href="admin/template/assets/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css"/>
    <link href="admin/template/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
@@ -38,8 +38,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
    <!-- END THEME STYLES -->
     <link type="text/css" rel="stylesheet" href="/manage/admin/css/bootstrap-datepicker.css">
     <link type="text/css" rel="stylesheet" href="/manage/admin/css/admin.css">
-    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
+    
     <script type="text/javascript" src="/manage/admin/script/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
     <script type="text/javascript" src="/manage/js/jquery.cookie.js"></script>
     <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
@@ -49,10 +50,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
     <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
     <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery.inputmask.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/masks.js"></script>
-  <script type="text/javascript">
+    <script src="admin/template/assets/plugins/bootstrap-sessiontimeout/jquery.sessionTimeout.min.js" type="text/javascript"></script>
+    <!--     <script type="text/javascript" src="/manage/admin/script/jquery.inputmask.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/masks.js"></script>-->
+	
+	<script type="text/javascript">
     $(document).ready(function(){
+		/*
 	modal_change = false;
     $('#popup-window').on('shown.bs.modal', function (e) {
       modal_change = false;
@@ -62,12 +66,18 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
         return confirm('Are you sure you want to close this popup?');
       }
     });
+    
+	*/
+	
     });
   </script>
+  	
+
 
     <script>
     function calendar2(){}
     </script>
+   
 </head>
 <body class="lpage-header-fixed">
 
@@ -119,7 +129,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php');
 						</a>
 					</li>
 					<li>
-						<a href="extra_lock.html">
+						<a href="extra_lock.php">
 							<i class="fa fa-lock"></i> Lock Screen
 						</a>
 					</li>
@@ -408,10 +418,10 @@ $num_pending_claims = mysql_num_rows($pending_q);
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
 				</li>
 				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
-				<li class="start ">
-					<a href="/manage/admin/manage_letters.php">
+				<li class="start" >
+					<a href="/manage/admin/manage_letters.php" >
 						<i class="fa fa-envelope"></i>
-						<span class="title">
+						<span class="title" >
 							LETTERS 
 							</span>
 							<span class="badge badge-danger"><?= $pending_letters; ?></span>
@@ -428,45 +438,45 @@ $num_pending_claims = mysql_num_rows($pending_q);
 							</span>
 						<span class="badge badge-danger"><?= $num_pending_preauth; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
 				
 								
 				<? } ?>
-				<li>
-					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>">
+				<li  >
+					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>" >
 						<i class="fa fa-user-md"></i>
-						<span class="title">
+						<span class="title" >
 							HSTs 
 							</span>
 							<span class="badge badge-danger"><?= $num_pending_hst; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
 				
-				<li>
+				<li id="nn" >
 					<a href="/manage/admin/manage_claims.php?status=0">
 						<i class="fa fa-medkit"></i>
 						<span class="title">
 							CLAIMS </span>
 							<span class="badge badge-danger"><?= $num_pending_claims; ?></span>
 						
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
-				<li>
+				<li >
 					<a href="/manage/admin/manage_new_patient_calls.php">
 						<i class="fa fa-male"></i>
 						<span class="title">
 							NEW PATIENT CALLS
 						</span>
-						<span class="arrow ">
+						<span class="selected">
 						</span>
 					</a>
 				</li>
@@ -490,7 +500,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 							<ul class="sub-menu">
 								 <?php if (is_super($_SESSION['admin_access'])) { ?>
 								<li>
-									<a href="/manage/admin/manage_companies.php">
+									<a href="/manage/admin/manage_companies.php" id="click_users_a">
 										<i class="fa fa-user"></i>Companies
 									</a>
 								</li>
@@ -1140,10 +1150,13 @@ $num_pending_claims = mysql_num_rows($pending_q);
                 ?>
 				
 				
-			<li>
+			<li id="active_container">
 				<a href="javascript:;">
 					<i class="fa  fa-question"></i> 
-					TICKETS <span class="badge badge-danger"><?= $num_open_tickets; ?></span>
+					<span class="title">
+							TICKETS 
+					</span>
+					<span class="badge badge-danger"><?= $num_open_tickets; ?></span>
 					<span class="arrow">
 					</span>
 				</a>
@@ -1171,5 +1184,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
    <div class="page-content-wrapper">
        <div class="page-content">  
      	
-<?php $office_type = DSS_OFFICE_TYPE_BACK; ?> 
-<div class="row">  </div>
+<?php $office_type = DSS_OFFICE_TYPE_BACK; 
+
+?> 
+<div class="row1">  </div>

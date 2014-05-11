@@ -1,7 +1,6 @@
         </div>
         </div>
-        
-        
+   
         <div class="well text-center">
             &copy; dentalsleepsolutions.com
         </div>
@@ -56,10 +55,12 @@
 	<script src="assets/plugins/respond.min.js"></script>
 	<script src="assets/plugins/excanvas.min.js"></script> 
 	<![endif]-->
-	<script src="admin/template/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+	
+	<!--<script src="admin/template/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>-->
 	<script src="admin/template/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-	<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip 
-	<script src="admin/template/assets/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>-->
+	 <script src="admin/template/assets/scripts/core/app.js" type="text/javascript"></script>
+	<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+	<script src="admin/template/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
@@ -81,22 +82,24 @@
 	<script src="admin/template/assets/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
-	<script src="admin/template/assets/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>
+	<!--<script src="admin/template/assets/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>-->
 	<!-- IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support -->
 	<script src="admin/template/assets/plugins/fullcalendar/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.js" type="text/javascript"></script>
 	<script src="admin/template/assets/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
 	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-	<script src="admin/template/assets/scripts/core/app.js" type="text/javascript"></script>
+	
 	<script src="admin/template/assets/scripts/custom/index.js" type="text/javascript"></script>
 	<script src="admin/template/assets/scripts/custom/tasks.js" type="text/javascript"></script>
+	
 	<!-- END PAGE LEVEL SCRIPTS -->
+
 	<script>
 	jQuery(document).ready(function() {    
-	   App.init(); // initlayout and core plugins
+	   //App.init(); // initlayout and core plugins
 	   Index.init();
-	   Index.initJQVMAP(); // init index page's custom scripts
+	   //Index.initJQVMAP(); // init index page's custom scripts
 	   Index.initCalendar(); // init index page's custom scripts
 	   Index.initCharts(); // init index page's custom scripts
 	   Index.initChat();
@@ -104,8 +107,66 @@
 	   Index.initDashboardDaterange();
 	   Index.initIntro();
 	   Tasks.initDashboardWidget();
+	   
 	});
 	</script>
 	<!-- END JAVASCRIPTS -->
+
+ <?php
+	$address=explode('/',$_SERVER['PHP_SELF']);
+	
+    echo "<script type='text/javascript'>
+    			var userid=".intval($_SESSION['adminuserid'])."
+    		
+	</script>";
+		
+   ?>   
+	<script type="text/javascript">
+						
+	jQuery(document).ready(function() {    
+	   App.init();
+	   var queryst = window.location.search;
+	   var addr="<?php echo $address[3]; ?>";
+	   var path_name=addr+queryst;
+	   //alert(addr);
+	   var redirUrl_path='extra_lock.php?id='+userid+'&&addr='+path_name;
+	  
+	   // initialize session timeout settings
+	   $.sessionTimeout({
+		title: 'Session Timeout Notification',
+		message: 'Your session is about to expire.',
+		keepAliveUrl: 'admin/template/demo/timeout-keep-alive.php',
+		redirUrl:redirUrl_path,
+		logoutUrl: 'index.php',
+		warnAfter: 780000, //warn after 5 seconds
+		redirAfter: 900000//redirect after 10 seconds
+		 
+	   });
+	     
+	});
+	</script>
+
+	<script>
+		jQuery(document).ready(function(){    
+		var path=window.location.pathname;
+		var query = window.location.search;
+		var pathname=path+query;
+			//alert(pathname);
+			$('.page-sidebar-menu').find('li a[href$="' + pathname + '"]').parents('li').addClass('active').each(function(){
+            var $this = $(this);
+          	$this.parents('ul').parents('li').each(function(){
+				   $(this).addClass('active');
+				   $(this).find('a > span.arrow').addClass('open');
+				   $(this).find('a > span.arrow').append('<span class="selected"></span>');
+				   $(this).children().find('a > span.arrow').addClass('open');
+			});
+		
+		});
+	
+	});
+		
+	</script>
+	
+
 </body>
 </html>

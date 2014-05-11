@@ -8,4 +8,5 @@
     <a href="patient_summary.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_summary.php' ? 'active' : '') ?>">Summary Sheet</a>
     <a href="patient_full_summary.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_full_summary.php' ? 'active' : '') ?>">Full Summary</a>
     <a href="patient_claims.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_claims.php' ? 'active' : '') ?>">Claims</a>
+    <a href="patient_eligibility.php?pid=<?= $_GET['pid']; ?>" class="btn btn-default navbar-btn <?= ($file == 'patient_eligibility.php' ? 'active' : '') ?>">Eligibility</a>
 </div>

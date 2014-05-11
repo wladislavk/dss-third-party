@@ -5,6 +5,7 @@ include("includes/sescheck.php");
 //include "includes/general_functions.php";
 include_once "admin/includes/general.htm";
 include_once "includes/constants.inc";
+include_once "admin/includes/invoice_functions.php";
 //include "includes/top.htm";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -100,6 +101,8 @@ if(isset($json_response->{"error"})){
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
   mysql_query($up_sql) or die(mysql_error());
+  $eid = mysql_insert_id();
+  invoice_add_enrollment('1', $_SESSION['docid'], $eid);
   ?>
   <script type="text/javascript">
     parent.window.location = "manage_enrollment.php";

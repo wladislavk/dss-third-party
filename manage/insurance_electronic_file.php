@@ -3,6 +3,7 @@ session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/main_include.php');
 include_once 'admin/includes/claim_functions.php';
+include_once 'admin/includes/invoice_functions.php';
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
 }else{
@@ -778,6 +779,10 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
 mysql_query($up_sql);
+$dce_id = mysql_insert_id();
+invoice_add_efile('1', $_SESSION['docid'], $dce_id);
+invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
+
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
   mysql_query($up_sql);

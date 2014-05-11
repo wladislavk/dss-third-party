@@ -4,6 +4,7 @@
 session_start();
 require_once('includes/constants.inc');
 require_once('admin/includes/main_include.php');
+require_once('admin/includes/invoice_functions.php');
 $field_path = "form1[0].#subform[0]";
 if(!empty($_SERVER['HTTPS'])){
 $path = 'https://'.$_SERVER['HTTP_HOST'].'/manage/';
@@ -871,6 +872,7 @@ if($_REQUEST['type']=="secondary"){
 }else{
   $fdf_field = "primary_fdf";
 }
+invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
 $sql = "UPDATE dental_insurance SET ".$fdf_field."='".mysql_real_escape_string($file)."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
 mysql_query($sql);
             // this is where you'd do any custom handling of the data

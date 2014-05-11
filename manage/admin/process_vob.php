@@ -5,6 +5,7 @@ require_once('includes/main_include.php');
 include("includes/sescheck.php");
 require_once('../includes/dental_patient_summary.php');
 require_once('../includes/general_functions.php');
+require_once('includes/invoice_functions.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
@@ -142,7 +143,8 @@ if (isset($_REQUEST['ed'])) {
         $ut_q = mysql_query($ut_sql);
         $ut_r = mysql_fetch_assoc($ut_q);
 	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-	  $sql .= ", invoice_amount = '45.00' ";
+	  //$sql .= ", invoice_amount = '45.00' ";
+	  invoice_add_vob('1', $_SESSION['docid'], $_POST['preauth_id']);
 	}
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } elseif($_POST['is_pre_auth_required']==1){ 

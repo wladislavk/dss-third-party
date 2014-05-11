@@ -108,7 +108,22 @@ $u = mysql_fetch_assoc($u_q);
 $userid = $u['edx_id'];
 shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "'.$_POST['email'].'" "ff&#x@fe@" "'.$_POST['first_name']. ' '.$_POST['last_name'].'"');
 
-
+		$lc_sql = "SELECT * FROM dental_locations WHERE  default_location=1 AND docid='".$_SESSION["docid"]."'";
+		$lc_q = mysql_query($lc_sql);
+		if(mysql_num_rows($lc_q) == 0){
+                        $loc_sql = "INSERT INTO dental_locations SET
+                                location = '".s_for($_POST['mailing_practice'])."', 
+                                name = '".s_for($_POST["mailing_name"])."', 
+                                address = '".s_for($_POST["mailing_address"])."', 
+                                city = '".s_for($_POST["mailing_city"])."', 
+                                state = '".s_for($_POST["mailing_state"])."', 
+                                zip = '".s_for($_POST["mailing_zip"])."', 
+                                email = '".s_for($_POST["mailing_email"])."',
+                                phone = '".s_for(num($_POST["mailing_phone"]))."',
+                                fax = '".s_for(num($_POST["mailing_fax"]))."',
+                                default_location=1, 
+				docid='".$_SESSION["docid"]."'";
+		}else{
                         $loc_sql = "UPDATE dental_locations SET
                                 location = '".s_for($_POST['mailing_practice'])."', 
                                 name = '".s_for($_POST["mailing_name"])."', 
@@ -120,6 +135,7 @@ shell_exec('sh edx_scripts/edxEditUser.sh '.$userid.' "'.$_POST['username'].'" "
                                 phone = '".s_for(num($_POST["mailing_phone"]))."',
                                 fax = '".s_for(num($_POST["mailing_fax"]))."'
                                 where default_location=1 AND docid='".$_SESSION["docid"]."'";
+		}
                         mysql_query($loc_sql);
 
 form_update_all($_SESSION['docid']);

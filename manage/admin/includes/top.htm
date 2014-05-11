@@ -580,7 +580,10 @@ $num_pending_claims = mysql_num_rows($pending_q);
 									</a>
 								</li>
 								<?php } ?>
-								
+                        <?php if (is_billing($_SESSION['admin_access'])) { ?>
+                            <li><a href="/manage/admin/manage_monthly_fo_invoice.php"><i class="fa fa-bell"></i>Monthly Frontoffice Invoicing</a></li>
+                        <?php } ?>
+	
 								<li>
 									<a href="/manage/admin/franchisee_monthly.php">
 										<i class="fa fa-bell"></i>Monthly Report

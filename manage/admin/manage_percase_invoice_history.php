@@ -89,7 +89,7 @@ $myarray = mysql_fetch_assoc($q);
 	{
 		while($myarray = mysql_fetch_array($my))
 		{
-$total_charge = $myarray['monthly_fee_amount'];
+$total_charge = $myarray['monthly_fee_amount'] + $myarray['producer_fee_amount'];
 $case_sql = "SELECT percase_name, percase_date as start_date, '' as end_date, percase_amount, ledgerid FROM dental_ledger dl                 JOIN dental_patients dp ON dl.patientid=dp.patientid
         WHERE 
                 dl.transaction_code='E0486' AND

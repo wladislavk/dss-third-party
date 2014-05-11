@@ -20,6 +20,9 @@ switch ($filetype) {
     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
     case 'application/vnd.ms-excel':
     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    case 'application/x-zip':
+    case 'application/x-zip-compressed':
+    case 'application/zip':
         header('Content-type: '.$filetype);
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         readfile($basepath . '/' . $filename);

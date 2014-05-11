@@ -162,7 +162,9 @@ $num_users=mysql_num_rows($my);
 					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_company.php?ed=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
-                    
+                                        <a href="percase_company_invoice.php?cid=<?=$myarray["id"];?>');" title="Edit" class="btn btn-primary btn-sm">
+                                                Invoice
+                                         <span class="glyphicon glyphicon-pencil"></span></a> 
 				</td>
 			</tr>
 	<? 	}

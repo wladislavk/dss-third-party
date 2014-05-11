@@ -12,5 +12,6 @@ $is_front_office = true;
 $manage_path = "";
 $admin_path = "admin/";
 $called_from = "manage_insurance.php";
+$v2_form = "insurance_v2.php?insid=".$_GET['insid']."&pid=".$_GET['pid'];
 include_once("includes/claim_form_eligible.inc");
 ?>

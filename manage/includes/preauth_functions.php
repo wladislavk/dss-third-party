@@ -183,7 +183,6 @@ return $e_text;
 
 
 function create_vob( $pid ){
-
   $sql = "SELECT tc.* FROM 
 		dental_patients p 
 		JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486'
@@ -276,6 +275,7 @@ function create_vob( $pid ){
        . "  '" . mysql_real_escape_string($_SESSION['userid']) . "', "
        . 1
        . ")";
+error_log($sql);
   return mysql_query($sql);
 }
 

@@ -337,6 +337,7 @@ if($_POST["plansub"] == 1)
                 <select name="office_type" class="form-control validate" />
 			<option <?= ($office_type==1)?'selected="selected"':''; ?> value="1">Front-office</option>
 			<option <?= ($office_type==2)?'selected="selected"':''; ?> value="2">Back-office</option>
+			<option <?= ($office_type==3)?'selected="selected"':''; ?> value="3">Billing</option>
 		</select>
             </td>
         </tr>

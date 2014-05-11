@@ -5,6 +5,7 @@ require_once('includes/main_include.php');
 include("includes/sescheck.php");
 require_once('../includes/dental_patient_summary.php');
 require_once('../includes/general_functions.php');
+require_once('includes/invoice_functions.php');
 ?>
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script language="javascript" type="text/javascript" src="script/preauth_form_logic.js"></script>
@@ -137,15 +138,19 @@ if (isset($_REQUEST['ed'])) {
         $sql .= ", date_completed = NOW() ";
 	$sql .= ", viewed = 0 ";
 
+
 	//IF USER TYPE = SOFTWARE BILL FOR VOB
-	$ut_sql = "SELECT u.user_type FROM dental_users u 
+	$ut_sql = "SELECT u.userid, u.user_type FROM dental_users u 
 		JOIN dental_insurance_preauth p
 			ON p.doc_id=u.userid
 		WHERE p.id='".mysql_real_escape_string($_POST['preauth_id'])."'";
         $ut_q = mysql_query($ut_sql);
         $ut_r = mysql_fetch_assoc($ut_q);
+
+	invoice_add_vob('1', $ut_r['userid'], $_POST['preauth_id']);
+
 	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-	  $sql .= ", invoice_amount = '45.00' ";
+	  //$sql .= ", invoice_amount = '45.00' ";
 	}
 				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
     } elseif($_POST['is_pre_auth_required']==1){ 
@@ -668,7 +673,7 @@ $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
                 Device amount
             </td>
             <td valign="top" class="frmdata">
-                $<input type="text" id="trxn_code_amount" name="trxn_code_amount" value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
+                $<input type="text" id="trxn_code_amount2 name="trxn_code_amount2 value="<?=$preauth['trxn_code_amount']?>" class="tbox readonly" readonly /> 
                 <span class="red">*</span>				
             </td>
         </tr>

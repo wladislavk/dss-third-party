@@ -781,6 +781,7 @@ $up_sql = "INSERT INTO dental_claim_electronic SET
 mysql_query($up_sql);
 $dce_id = mysql_insert_id();
 invoice_add_efile('1', $_SESSION['docid'], $dce_id);
+invoice_add_claim('1', $_SESSION['docid'], $_GET['insid']);
 
 if($success == "false"){
   $up_sql = "UPDATE dental_insurance SET status='".DSS_CLAIM_REJECTED."' WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";

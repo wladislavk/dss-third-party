@@ -2,7 +2,7 @@
 require_once '../admin/includes/main_include.php';
 require_once '../includes/constants.inc';
 require_once '../includes/preauth_functions.php';
-$pid = $_REQUEST['pid'];
+$pid = $_POST['pid'];
 $c = create_vob( $pid );
 if ($c===true){
   echo '{"success":true}';

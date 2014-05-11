@@ -107,6 +107,7 @@ if($_POST["usersub"] == 1)
 				$ed_sql .= "
 				billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
+                                billing_plan_id = '".$_POST['billing_plan_id']."',
 				access_code_id = '".$_POST['access_code_id']."'
 			where userid='".$_POST["ed"]."'";
 			mysql_query($ed_sql) or die($ed_sql." | ".mysql_error());
@@ -231,6 +232,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 				user_type = '".s_for($_POST["user_type"])."',
                                 billing_company_id = '".$_POST['billing_company_id']."',
                                 plan_id = '".$_POST['plan_id']."',
+                                billing_plan_id = '".$_POST['billing_plan_id']."',
 				access_code_id = '".$_POST['access_code_id']."',
         use_service_npi = '".mysql_real_escape_string($_POST['use_service_npi'])."',
         service_name = '".mysql_real_escape_string($_POST['service_name'])."',
@@ -431,6 +433,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$hst_company_id = $_POST['hst_company_id'];
 		$access_code_id = $_POST['access_code_id'];
 		$plan_id = $_POST['plan_id'];
+		$billing_plan_id = $_POST['billing_plan_id'];
 
 		$use_service_npi = $_POST['use_service_npi'];
 		$service_name = $_POST['service_name'];
@@ -497,6 +500,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$billing_company_id = $themyarray['billing_company_id'];
 		$hst_company_id = $themyarray['hst_company_id'];
 		$plan_id = $themyarray['plan_id'];
+		$billing_plan_id = $themyarray['billing_plan_id'];
 		$access_code_id = $themyarray['access_code_id'];
 
                 $use_service_npi = $themyarray['use_service_npi'];
@@ -998,6 +1002,21 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         
                         while ($p_r = mysql_fetch_assoc($p_q)) { ?>
                         <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="billing_plan_id" class="col-md-3 control-label">Billing Plan</label>
+                <div class="col-md-9">
+                    <select name="billing_plan_id" id="billing_plan_id" class="form-control">
+                        <?php
+
+                        $p_sql = "SELECT * FROM dental_plans WHERE office_type='3' ORDER BY name ASC";
+                        $p_q = mysql_query($p_sql);
+
+                        while ($p_r = mysql_fetch_assoc($p_q)) { ?>
+                        <option value="<?= $p_r['id']; ?>" <?= ($p_r['id'] == $billing_plan_id)?'selected="selected"':''; ?>><?= $p_r['name']; ?></option>
                         <?php } ?>
                     </select>
                 </div>

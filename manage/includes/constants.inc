@@ -298,6 +298,10 @@ define('DSS_INVOICE_PAYMENT_ERROR', 3);
 define('DSS_PERCASE_PENDING', 0);
 define('DSS_PERCASE_INVOICED', 1);
 
+define('DSS_INVOICE_TYPE_SU_FO', 1); //Super invoices front office
+define('DSS_INVOICE_TYPE_BC_FO', 2); //Billing company invoices front office
+define('DSS_INVOICE_TYPE_SU_BC', 3); //Super invoices billing company
+
 
 define('DSS_LETTER_PENDING', 0);
 define('DSS_LETTER_SENT', 1);

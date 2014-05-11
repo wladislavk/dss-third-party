@@ -4,6 +4,7 @@ ALTER TABLE dental_plans ADD COLUMN free_efile int(11) default 0;
 ALTER TABLE dental_plans ADD COLUMN duration int(11) default 0;
 ALTER TABLE dental_plans ADD COLUMN producer_fee decimal(11,2) default '0.00';
 ALTER TABLE dental_plans ADD COLUMN user_fee decimal(11,2) default '0.00';
+ALTER TABLE dental_users ADD COLUMN billing_plan_id int(11);
 ALTER TABLE companies ADD COLUMN plan_id int(11);
 ALTER TABLE dental_percase_invoice ADD COLUMN companyid int(11);
 ALTER TABLE dental_percase_invoice ADD COLUMN user_fee_date date;
@@ -12,3 +13,10 @@ ALTER TABLE dental_percase_invoice ADD COLUMN producer_fee_date date;
 ALTER TABLE dental_percase_invoice ADD COLUMN producer_fee_amount decimal(11,2);
 ALTER TABLE dental_percase_invoice ADD COLUMN user_fee_desc varchar(255);
 ALTER TABLE dental_percase_invoice ADD COLUMN producer_fee_desc varchar(255);
+ALTER TABLE dental_percase_invoice ADD COLUMN invoice_type tinyint(1) default 1;
+
+ALTER TABLE dental_insurance ADD COLUMN percase_date datetime;
+ALTER TABLE dental_insurance ADD COLUMN percase_name varchar(100);
+ALTER TABLE dental_insurance ADD COLUMN percase_amount decimal(11,2);
+ALTER TABLE dental_insurance ADD COLUMN percase_status tinyint(1) default 0;
+ALTER TABLE dental_insurance ADD COLUMN percase_invoice int(11);

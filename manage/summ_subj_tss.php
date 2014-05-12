@@ -13,7 +13,7 @@ $tot_score = $snore_1 + $snore_2 + $snore_3 + $snore_4 + $snore_5;
                         ?>
                           <script type="text/javascript">
                                 parent.update_tss('<?= $_REQUEST['id']; ?>', '<?= $snore_1; ?>', '<?= $snore_2; ?>', '<?= $snore_3; ?>', '<?= $snore_4; ?>', '<?= $snore_5; ?>', '<?= $tot_score; ?>');
-				parent.disablePopup();
+				//parent.disablePopup();
                           </script>
                         <?php
 }

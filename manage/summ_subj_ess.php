@@ -31,7 +31,7 @@ if($_POST['q_sleepsub'] == 1)
 
                        ?>
                           <script type="text/javascript">
-                                parent.update_ess('ep_eadd_<?= $_REQUEST['id']; ?>', '<?= $ess_score; ?>');
+                                parent.update_ess_total('<?= $_REQUEST['id']; ?>', '<?= $ess_score; ?>');
                           </script>
                         <?php
 
@@ -40,7 +40,7 @@ if($_POST['q_sleepsub'] == 1)
 		?>
 		<script type="text/javascript">
 			//alert("<?=$msg;?>");
-			parent.disablePopup();
+			//parent.disablePopup();
 		</script>
 		<?
 		die();

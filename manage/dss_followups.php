@@ -336,7 +336,7 @@ $device = mysql_result($device_result, 0);
 
  if($numrows){
   ?>
-<form style="float:left;" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
+<form style="float:left;" id="sleepstdyupdate_<?php echo $fuquery['followupid'];?>" class="sleepstudyupdate" method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']."&pid=".$_GET['pid']; ?>">
 <input type="hidden" name="id" value="<?php echo $fuquery['followupid'];?>" /> 
  <table id="sleepstudyscrolltable" style="padding:0;margin-top:-3px">
   <tr style="background: #444;height: 30px;">
@@ -520,7 +520,7 @@ $device = mysql_result($device_result, 0);
     <tr>
             <td style="background: #E4FFCF;">
           <input type="hidden" name="patientid" value="<?php echo $_GET['pid']; ?>">
-      <input type="submit" name="submitupdatefu" onclick="window.onbeforeunload=false;" value="Save Follow Up" id="submitupdatefu" style="width:120px;" />
+      <input type="submit" name="submitupdatefu" onclick="window.onbeforeunload=false;" value="Save Follow Up" id="submitupdatefu_<?php echo $fuquery['followupid'];?>" style="width:120px;" />
       <input type="submit" name="submitdeletefu" onclick="return confirm('Are you sure you want to delete this follow up?');" value="Delete" id="submitdeletefu" style="width:120px;" />
 
 
@@ -711,6 +711,10 @@ function gotoQuestionnaire(){
 function update_ess(f, v){
   $('#'+f).val(v);
 }
+function update_ess_total(f, v){
+  $('#ep_eadd_'+f).val(v);
+  $('#submitupdatefu_'+f).click();
+}
 
 function update_tss(f, one, two, three, four, five, total){
   $('#thornton_'+f+'_1').val(one);
@@ -719,6 +723,7 @@ function update_tss(f, one, two, three, four, five, total){
   $('#thornton_'+f+'_4').val(four);
   $('#thornton_'+f+'_5').val(five);
   $('#ep_tsadd_'+f).val(total);
+  $('#submitupdatefu_'+f).click();
 }
 
 $('#sleepstudybaseline input, #sleepstudybaseline select').not('.no_questionnaire, :input[type=button], :input[type=submit], :input[type=reset]').click(function(){

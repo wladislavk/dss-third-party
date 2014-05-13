@@ -55,7 +55,8 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
     while ($num <= ($_POST['ledgercount']-1)) {
         $placeofservicenum =  'placeofservice'.$num;
         $emgnum = 'emg'.$num;
-        $diagnosispointernum = 'diagnosispointer'.$num;
+	$diagnosispointernum = '[service_lines]['.$num.'][diagnosis_code_pointers][0]';
+        //$diagnosispointernum = 'diagnosispointer'.$num;
         $daysorunitsnum = 'daysorunits'.$num;
         $epsdtnum = 'epsdt'.$num;
         $idqualnum = 'idqual'.$num;
@@ -67,7 +68,7 @@ function update_ledger_trxns($primary_claim_id, $trxn_status) {
         
         $placeofservice = $_POST[$placeofservicenum];
         $emg = $_POST[$emgnum];             
-        $diagnosispointer = $_POST[$diagnosispointernum]; 
+        $diagnosispointer = $_POST['service_lines'][$num]['diagnosis_code_pointers'][0]; 
         $daysorunits = $_POST[$daysorunitsnum];
         $epsdt = $_POST[$epsdtnum];
         $idqual = $_POST[$idqualnum];
@@ -689,6 +690,33 @@ die();
 		patient_zip = '".s_for($patient_zip)."',
 		patient_phone_code = '".s_for($patient_phone_code)."',
 		patient_phone = '".s_for($patient_phone)."',
+
+                patient_relation_insured = '".s_for($patient_relation_insured)."',
+                insurance_type = '".s_for($insurance_type)."',
+                insured_id_number = '".s_for($insured_id_number)."',
+                insured_firstname = '".s_for($insured_firstname)."',
+                insured_lastname = '".s_for($insured_lastname)."',
+                insured_middle = '".s_for($insured_middle)."',
+                insured_address = '".s_for($insured_address)."',
+                insured_city = '".s_for($insured_city)."',
+                insured_state = '".s_for($insured_state)."',
+                insured_zip = '".s_for($insured_zip)."',
+                insured_phone_code = '".s_for($insured_phone_code)."',
+                insured_phone = '".s_for($insured_phone)."',
+                other_insured_firstname = '".s_for($other_insured_firstname)."',
+                other_insured_lastname = '".s_for($other_insured_lastname)."',
+                other_insured_middle = '".s_for($other_insured_middle)."',
+                insured_policy_group_feca = '".s_for($insured_policy_group_feca)."',
+                other_insured_policy_group_feca = '".s_for($other_insured_policy_group_feca)."',
+                insured_dob = '".s_for($insured_dob)."',
+                insured_sex = '".s_for($insured_sex)."',
+                other_insured_dob = '".s_for($other_insured_dob)."',
+                other_insured_sex = '".s_for($other_insured_sex)."',
+                insured_employer_school_name = '".s_for($insured_employer_school_name)."',
+                other_insured_employer_school_name = '".s_for($other_insured_employer_school_name)."',
+                insured_insurance_plan = '".s_for($insured_insurance_plan)."',
+                other_insured_insurance_plan = '".s_for($other_insured_insurance_plan)."',
+
 		employment = '".s_for($employment)."',
 		auto_accident = '".s_for($auto_accident)."',
 		auto_accident_place = '".s_for($auto_accident_place)."',
@@ -871,6 +899,7 @@ die();
 		
 /*
 	//TAKE OUT INSURANCE FIELDS SO THEY KEEP ORIGINAL VALUES
+	//PUT BACK IN ON WHIM DUE TO REQUEST OF ONE CLIENT
 		patient_relation_insured = '".s_for($patient_relation_insured)."',
                 insurance_type = '".s_for($insurance_type)."',
                 insured_id_number = '".s_for($insured_id_number)."',
@@ -2624,18 +2653,18 @@ if (!$query) {
         <td width="92">
 		<!--diagnosispointer<?=$li;?>-->
 <table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="1" <?= ($dp=="1")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">A</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="2" <?= ($dp=="2")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">B</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="3" <?= ($dp=="3")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">C</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="4" <?= ($dp=="4")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="5" <?= ($dp=="5")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">E</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="6" <?= ($dp=="6")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">F</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="7" <?= ($dp=="7")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">G</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="8" <?= ($dp=="8")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="9" <?= ($dp=="9")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">I</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="10" <?= ($dp=="10")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">J</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="11" <?= ($dp=="11")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">K</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="12" <?= ($dp=="12")?'checked="checked"':''; ?> name="service_lines[1][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">L</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="1" <?= ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">A</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="2" <?= ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">B</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="3" <?= ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">C</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="4" <?= ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="5" <?= ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">E</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="6" <?= ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">F</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="7" <?= ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">G</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="8" <?= ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="9" <?= ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">I</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="10" <?= ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">J</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="11" <?= ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">K</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="12" <?= ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?= $li; ?>][diagnosis_code_pointers][]" type="checkbox"></td><td class="input-side-hint">L</td>
 </tr></tbody></table>
 	</td>
         <td width="100" align="right" style="padding-right:15px;">$<?= number_format($array['amount'], 2); ?></td>

@@ -14,6 +14,10 @@ function claim_status_history_update($insuranceid, $new, $old, $userid){
 }
 
 
+function claim_file_secondary($id){
+  //copy all data from existing primary claim to new row for secondary
+
+}
 
 
 ?>

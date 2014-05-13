@@ -422,9 +422,9 @@ if($pat_myarray['p_m_ins_type']==1){
           $insured_employer_school_name = '';
         }
 $accept_assignmentnew =strtoupper($pat_myarray['p_m_ins_ass']);
-//if ($dent_rows <= 0) {
+if ($accept_assignment == '') {
     $accept_assignment = $accept_assignmentnew;
-//}
+}
 
 $sleepstudies = "SELECT ss.completed, ss.diagnosising_doc, ss.diagnosising_npi FROM dental_summ_sleeplab ss                                 
                         JOIN dental_patients p on ss.patiendid=p.patientid                        
@@ -830,8 +830,8 @@ $fdf .= "
   << /T(".$field_path.".fed_tax_id_SSN_chkbox[0]) /V(".(($ssn == "1")?1:'').") >>
   << /T(".$field_path.".fed_tax_id_EIN_chkbox[0]) /V(".(($ein == "1")?1:'').") >>
   << /T(".$field_path.".pt_account_number_fill[0]) /V(".$patient_account_no.") >>
-  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".(($accept_assignment == "Yes")?1:'').") >>
-  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".(($accept_assignment == "No")?1:'').") >>
+  << /T(".$field_path.".accept_assignment_yes_chkbox[0]) /V(".((strtolower($accept_assignment) == "yes")?1:'').") >>
+  << /T(".$field_path.".accept_assignment_no_chkbox[0]) /V(".((strtolower($accept_assignment) == "no")?1:'').") >>
   
   << /T(".$field_path.".total_charge_dollars_fill[0]) /V(".number_format($total_charge,0).") >>
   << /T(".$field_path.".total_charge_cents_fill[0]) /V(".fill_cents(floor(($total_charge-floor($total_charge))*100)).") >>

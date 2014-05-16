@@ -161,9 +161,9 @@ if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
   } elseif ($_REQUEST['sort'] == 'ledger') {
-        $sql .= " ORDER BY (ledger_amount + ledger2_amount - ledger_payment_amount - ledger2_payment_amount) ".$_REQUEST['sortdir'];
+        //$sql .= " ORDER BY (ledger_amount + ledger2_amount - ledger_payment_amount - ledger2_payment_amount) ".$_REQUEST['sortdir'];
   } else  {
-	  $sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
+	  //$sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
 	}
 }
 

@@ -99,6 +99,9 @@ SELECT percase_name, percase_date, '', percase_amount, id FROM dental_claim_elec
         WHERE 
                 e.percase_invoice='".$myarray['id']."'
         UNION
+SELECT percase_name, percase_date, '', percase_amount, insuranceid FROM dental_insurance i         WHERE 
+                i.percase_invoice='".$myarray['id']."'
+	UNION
 SELECT percase_name, percase_date, '', percase_amount, id FROM dental_percase_invoice_extra dl         WHERE 
                 dl.percase_invoice='".$myarray['id']."'
         UNION

@@ -19,7 +19,7 @@ if(isset($_REQUEST["delid"]))
 	die();
 }
 
-$rec_disp = 50;
+$rec_disp = 30;
 
 if(isset($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
@@ -35,7 +35,7 @@ if(!isset($_REQUEST['sort']) || $_REQUEST['sort'] == ''){
 
 $sql = '';
 
-$sql_sort = "SELECT p.patientid FROM dental_patients p "; 
+$sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck FROM dental_patients p "; 
 
 $sql_d = "SELECT "
 		 . "  p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, "
@@ -135,13 +135,13 @@ LEFT JOIN (SELECT count(*) num_studies, patiendid FROM dental_summ_sleeplab ss
 
 
 ";
-		 $sql .= "WHERE "
+		 $sql .= " WHERE "
 		 . " p.docid='".$_SESSION['docid']."'";
 if(isset($_GET['pid']))
 {
 	$sql .= " AND p.patientid = ".$_GET['pid'];
 }
-if(!isset($_GET['sh']))
+if(!isset($_GET['sh']) || $_GET['sh']=='')
 {
         $sql .= " AND p.status = 1";
 }elseif($_GET['sh'] == 1 )
@@ -157,7 +157,6 @@ if(!isset($_GET['sh']))
 if(isset($_GET['letter'])){
   $sql .= " AND p.lastname LIKE '".mysql_real_escape_string($_GET['letter'])."%' ";
 }
- $sql_sort .= $sql;
 if(isset($_REQUEST['sort'])){
   if ($_REQUEST['sort'] == 'lastname') {
   	$sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
@@ -168,12 +167,15 @@ if(isset($_REQUEST['sort'])){
 	}
 }
 
+
+ $sql_sort .= $sql;
+
 $my = mysql_query($sql_sort ) or die(mysql_error());
 $total_rec = mysql_num_rows($my);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ". $i_val.",".$rec_disp;
-$my=mysql_query($sql_d . $sql) or die(mysql_error());
+$sql_sort .= " limit ". $i_val.",".$rec_disp;
+$my=mysql_query($sql_sort ) or die(mysql_error());
 $num_users=mysql_num_rows($my);
 
 ?>
@@ -321,6 +323,17 @@ background-color: rgb(0, 39, 94);
 			{
 				$tr_class = "tr_inactive";
 			}
+
+
+
+			$summ_sql = "SELECT s.fspage1_complete, s.next_visit, s.last_visit, s.last_treatment, s.vob, s.ledger, s.patient_info
+					FROM dental_patient_summary s WHERE s.pid='".mysql_real_escape_string($myarray["patientid"])."' LIMIT 1";
+			$summ_q = mysql_query($summ_sql) or die(mysql_error());
+			$summ = mysql_fetch_assoc($summ_q);
+
+
+
+
 		?>
 			<tr class="<?=$tr_class;?> initial_list">
 				<td valign="top">
@@ -339,7 +352,69 @@ background-color: rgb(0, 39, 94);
                     }
                     ?> 
 				</td>
-          <?php if($myarray['patient_info'] == 1){ ?>
+          <?php if($summ['patient_info'] == 1){ ?>
+
+	  <?php 
+
+
+		$lc_sql = "SELECT pg2_info.date_completed, pg2_info.segmentid FROM dental_flow_pg2_info pg2_info WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '".mysql_real_escape_string($myarray['patientid'])."' ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC LIMIT 1";
+		$lc_q = mysql_query($lc_sql);
+		$lc = mysql_fetch_assoc($lc_q);
+		$last_completed = $lc['date_completed'];
+		$last_segmentid = $lc['segmentid']; 
+
+		$ns_sql = "SELECT date_scheduled FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid= '".mysql_real_escape_string($myarray['patientid'])."' LIMIT 1";
+		$ns_q = mysql_query($ns_sql) or die(mysql_error());
+		$ns = mysql_fetch_assoc($ns_q);
+		$next_scheduled = $ns['date_scheduled'];
+
+		$ex_sql = "SELECT dentaldevice, dentaldevice_date FROM dental_ex_page5 WHERE patientid= '".mysql_real_escape_string($myarray['patientid'])."' LIMIT 1";
+                $ex_q = mysql_query($ex_sql) or die(mysql_error());
+                $ex = mysql_fetch_assoc($ex_q);
+                $delivery_date = $ex['dentaldevice_date'];
+
+		$dd_sql = "SELECT device FROM dental_device WHERE deviceid='".$ex['dentaldevice']."' LIMIT 1"; 
+                $dd_q = mysql_query($dd_sql) or die(mysql_error());
+                $dd = mysql_fetch_assoc($dd_q);
+                $device = $dd['device'];
+
+		$fs_sql = "SELECT * FROM dental_flow_pg1 WHERE pid='".$myarray['patientid']."' LIMIT 1";
+		$fs_q = mysql_query($fs_sql) or die(mysql_error());
+		$fs = mysql_fetch_assoc($fs_q);
+
+		$l_sql = "select sum(dl.amount) as amount, patientid  from dental_ledger dl
+                        where dl.docid='".$_SESSION['docid']."' 
+                        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
+			and dl.patientid='".$myarray['patientid']."'";
+		$l_q = mysql_query($l_sql) or die(mysql_error());
+		$l = mysql_fetch_assoc($l_q);
+
+		$l2_sql = "select sum(dl.amount) amount from dental_ledger dl
+                	LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."'
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+			and dl.patientid='".$myarray['patientid']."'";
+                $l2_q = mysql_query($l2_sql) or die(mysql_error());
+                $l2 = mysql_fetch_assoc($l2_q);
+		
+		$l3_sql = "select sum(dlp.amount) amount, patientid        from dental_ledger dl
+                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
+                        where dl.docid='".$_SESSION['docid']."' 
+                        AND dlp.amount != 0
+                        and dl.patientid='".$myarray['patientid']."'";
+                $l3_q = mysql_query($l3_sql) or die(mysql_error());
+                $l3 = mysql_fetch_assoc($l3_q);
+		
+		$l4_sql = "select sum(dl.paid_amount)  amount, patientid       from dental_ledger dl
+                        where dl.docid='".$_SESSION['docid']."'
+                        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+                        and dl.patientid='".$myarray['patientid']."'";
+                $l4_q = mysql_query($l4_sql) or die(mysql_error());
+                $l4 = mysql_fetch_assoc($l4_q);
+
+
+   	?>
+
 				<td valign="top">
 		<?php
 		  $pat_sql = "SELECT * FROM dental_patients WHERE patientid='".$myarray['patientid']."'";
@@ -370,7 +445,7 @@ $sleepstudies = "SELECT ss.completed FROM dental_summ_sleeplab ss
         	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
         </td>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['next_scheduled']); ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($next_scheduled); ?></a>
         </td>
 <?php
 $segments = Array();
@@ -392,28 +467,28 @@ $segments[1] = "Initial Contact";
 
 ?>
         <td valign="top">
-        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['last_completed'], true); ?></a>
+        	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($last_completed, true); ?></a>
         </td>
         <td valign="top">
-          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['last_segmentid'] == null ? 'N/A' : $segments[$myarray['last_segmentid']]); ?></a>
+          <a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= ($last_segmentid == null ? 'N/A' : $segments[$last_segmentid]); ?></a>
         </td>
 				<td valign="top">
-	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $myarray['device']; ?></a>
+	       	<a href="dss_summ.php?pid=<?=$myarray["patientid"];?>"><?= $device; ?></a>
         </td>
         <td valign="top">
-	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($myarray['delivery_date'], true); ?></a>
+	       	<a href="manage_flowsheet3.php?pid=<?=$myarray["patientid"];?>"><?= format_date($delivery_date, true); ?></a>
 	      </td>
         <td valign="top">
-	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['vob'] == null ? 'No' : ($myarray['vob']==1 ? "Yes": $dss_preauth_status_labels[$myarray['vob']])); ?></a>
+	       	<a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>"><?= ($summ['vob'] == null ? 'No' : ($summ['vob']==1 ? "Yes": $dss_preauth_status_labels[$summ['vob']])); ?></a>
         </td>
         <td valign="top">
                 <a href="manage_insurance.php?pid=<?=$myarray["patientid"];?>">
 			<?php 
-			  if($myarray['rxlomnrec'] != null  || ($myarray['lomnrec'] != null && $myarray['rxrec'] != null)){
+			  if($fs['rxlomnrec'] != null  || ($fs['lomnrec'] != null && $fs['rxrec'] != null)){
 				?>Yes<?php
-			  }elseif($myarray['rxrec']!=null && $myarray['lomnrec'] == null){
+			  }elseif($fs['rxrec']!=null && $fs['lomnrec'] == null){
 				?>Yes/No<?php
-                          }elseif($myarray['lomnrec'] != null && $myarray['rxrec'] == null){
+                          }elseif($fs['lomnrec'] != null && $fs['rxrec'] == null){
                                 ?>No/Yes<?php
                           }else{ 
                                 ?>No<?php
@@ -423,10 +498,10 @@ $segments[1] = "Initial Contact";
         </td>
         <td valign="top">
 		<?php
-$total = $myarray['ledger_amount'] + $myarray['ledger2_amount'] - $myarray['ledger_payment_amount'] - $myarray['ledger2_payment_amount'];
+$total = $l['amount'] + $l2['amount'] - $l3['amount'] - $l4['amount'];
 ?>
 
-	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
+	       	<a href="manage_ledger.php?pid=<?=$myarray["patientid"];?>"><?= ($summ['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
 <?= $total1; ?>
         </td>
         <?php }else{ ?>

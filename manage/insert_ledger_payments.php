@@ -4,7 +4,8 @@ require_once('admin/includes/main_include.php');
 require_once('includes/constants.inc');
 include("includes/sescheck.php");
 require_once('includes/authorization_functions.php');
-include_once 'admin/includes/claim_functions.php';
+require_once 'admin/includes/claim_functions.php';
+require_once 'includes/claim_functions.php';
 ?>
 <html>
 <head>
@@ -148,7 +149,7 @@ $image_sql = "INSERT INTO dental_insurance_file (
     //SAVE WITHOUT CHANGING STATUS
   }elseif($claim['status']==DSS_CLAIM_SENT){
     if($_POST['close'] == 1){
-      if($pat['s_m_dss_file']==1 && $payr['payment']<$claim['amount_due']){ //secondary
+      if($pat['s_m_dss_file']==1 && $payer['payment']<$claim['amount_due']){ //secondary
 
         if($pat['p_m_ins_type']==1){ //medicare
 	  if($pat['s_m_ins_ass']=="Yes"){
@@ -249,7 +250,12 @@ $image_sql = "INSERT INTO dental_insurance_file (
 
 }
 if(isset($new_status)){
-  $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
+  if($new_status==DSS_CLAIM_SEC_PENDING){
+    //claim_create_sec($_POST['patientid'], $_POST['claimid'],'0');
+    $x = "UPDATE dental_insurance SET status='".DSS_CLAIM_PAID_INSURANCE."'  ";
+  }else{
+    $x = "UPDATE dental_insurance SET status='".$new_status."'  ";
+  }
   if($new_status == DSS_CLAIM_SENT || $new_status == DSS_CLAIM_SEC_SENT || $new_status == DSS_CLAIM_DISPUTE || $new_status == DSS_CLAIM_SEC_DISPUTE || $new_status == DSS_CLAIM_REJECTED || $new_status == DSS_CLAIM_SEC_REJECTED  || $new_status == DSS_CLAIM_PATIENT_DISPUTE || $new_status == DSS_CLAIM_SEC_PATIENT_DISPUTE){
     $x .= ", mailed_date = NULL ";
   }
@@ -315,7 +321,13 @@ claim_history_update($_POST['claimid'], $_SESSION['userid'], $_SESSION['adminuse
 ?>
 <script type="text/javascript">
 alert('<?= $msg; ?>');
-parent.window.location = parent.window.location;
+<?php
+if($new_status==DSS_CLAIM_SEC_PENDING){
+?>
+  window.location = 'includes/claim_check_secondary.php?pid=<?= $_POST['patientid']; ?>&cid=<?= $_POST['claimid']; ?>&prod=0';
+<?php }else{ ?>
+  parent.window.location = parent.window.location;
+<?php } ?>
 </script>
 <?php
 }

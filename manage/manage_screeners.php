@@ -94,10 +94,7 @@ if(isset($_REQUEST['sortdir']) && $_REQUEST['sortdir']!=''){
 }
 	
 $i_val = $index_val * $rec_disp;
-$sql = "SELECT s.*, u.name, h.id as hst_id, h.status as hst_status,
-	breathing + driving + gasping + sleepy + snore + weight_gain + blood_pressure + jerk + burning + headaches + falling_asleep + staying_asleep  AS survey_total,
-	(SELECT sum(se.response) FROM dental_screener_epworth se WHERE se.screener_id = s.id) ep_total,
-        rx_cpap + rx_blood_pressure + rx_hypertension + rx_heart_disease + rx_stroke + rx_apnea + rx_diabetes + rx_lung_disease + rx_insomnia + rx_depression + rx_narcolepsy + rx_medication + rx_restless_leg + rx_headaches + rx_heartburn AS sect3_total 
+$sql = "SELECT s.*, u.name, h.id as hst_id, h.status as hst_status
 	FROM dental_screener s 
 	INNER JOIN dental_users u ON s.userid = u.userid 
 	LEFT JOIN dental_hst h ON h.screener_id = s.id
@@ -239,6 +236,14 @@ $my=mysql_query($sql) or die(mysql_error());
 
 		while($myarray = mysql_fetch_array($my))
 		{
+
+        $ep_sql = "SELECT sum(se.response) FROM dental_screener_epworth se WHERE se.screener_id = s.id) ep_total";
+ 	$ep_q = mysql_query($ep_sql);
+	$ep = mysql_fetch_assoc($ep_q);
+        
+	$survey_total = $myarray['breathing'] + $myarray['driving'] + $myarray['gasping'] + $myarray['sleepy'] + $myarray['snore'] + $myarray['weight_gain'] + $myarray['blood_pressure'] + $myarray['jerk'] + $myarray['burning'] + $myarray['headaches'] + $myarray['falling_asleep'] + $myarray['staying_asleep'];
+        $sect3_total = $myarray['rx_cpap'] + $myarray['rx_blood_pressure'] + $myarray['rx_hypertension'] + $myarray['rx_heart_disease'] + $myarray['rx_stroke'] + $myarray['rx_apnea'] + $myarray['rx_diabetes'] + $myarray['rx_lung_disease'] + $myarray['rx_insomnia'] + $myarray['rx_depression'] + $myarray['rx_narcolepsy'] + $myarray['rx_medication'] + $myarray['rx_restless_leg'] + $myarray['rx_headaches'] + $myarray['rx_heartburn'];
+
 		?>
 			<tr>
 				<td valign="top">
@@ -255,11 +260,11 @@ $my=mysql_query($sql) or die(mysql_error());
                                         <?= st($myarray["phone"]); ?> 
                                 </td>
         <?php
-	if($myarray['survey_total'] > 15 || $myarray['ep_total'] > 18 || $myarray['sect3_total'] > 3){
+	if($survey_total > 15 || $ep['ep_total'] > 18 || $sect3_total > 3){
 		?><td valign="top" class="risk_severe"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Severe</a></td><?php
-        }else if($myarray['survey_total'] > 11 || $myarray['ep_total'] > 14 || $myarray['sect3_total'] > 2){
+        }else if($survey_total > 11 || $ep['ep_total'] > 14 || $sect3_total > 2){
 		?><td valign="top" class="risk_high"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">High</a></td><?php
-        }else if($myarray['survey_total'] > 7 || $myarray['ep_total'] > 9 || $myarray['sect3_total'] > 1){
+        }else if($survey_total > 7 || $ep['ep_total'] > 9 || $sect3_total > 1){
 		?><td valign="top" class="risk_moderate"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Moderate</a></td><?php
         }else{
 		?><td valign="top" class="risk_low"><a href="#" onclick="$('#details_<?= $myarray['id']; ?>').toggle(); return false;">Low</a></td><?php
@@ -269,7 +274,7 @@ $my=mysql_query($sql) or die(mysql_error());
 					<?= ($myarray['rx_cpap']>0)?'Yes':'No'; ?>
 				</td>
                                 <td valign="top">
-					<?= st($myarray['ep_total']); ?>
+					<?= st($ep['ep_total']); ?>
                                 </td>
 				<td valign="top">
 					<?php
@@ -377,7 +382,7 @@ $sign_sql = "SELECT sign_notes FROM dental_users where userid='".mysql_real_esca
 		?>
 		<?= $ep_r['response']; ?> - <strong><?= $ep_r['epworth']; ?></strong><br />
 		<?php } ?>
-		<?= $myarray['ep_total']; ?> - Total
+		<?= $ep['ep_total']; ?> - Total
 			</td><td valign="top" colspan="6">
 			<strong>Health Symptoms</strong><br />
 			<?= ($myarray['breathing']>0)?'Yes - <strong>Have you ever been told you stop breathing while asleep?</strong><br />':''; ?>

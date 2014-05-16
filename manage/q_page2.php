@@ -752,7 +752,7 @@ if($cpap == '')
 		    <div class="dd_options">
 			<span>
 				Describe your experience<br />
-				<textarea id="dd_experience" name="dd_experience"><?= $dd_experience; ?></textarea>
+				<textarea id="dd_experience" class="field text addr tbox" style="width:650px; height:100px;" name="dd_experience"><?= $dd_experience; ?></textarea>
                             <?php                                
                                 showPatientValue('dental_q_page2', $_GET['pid'], 'dd_experience', $pat_row['dd_experience'], $dd_experience, true, $showEdits);
                             ?>

@@ -14,18 +14,6 @@ if (!file_exists($basepath . '/' . $filename) && $_GET['type'] === 'image') {
 }
 
 switch ($filetype) {
-    case 'application/pdf':
-    case 'application/vnd.ms-office':
-    case 'application/msword':
-    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-    case 'application/vnd.ms-excel':
-    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-    case 'application/x-zip':
-    case 'application/x-zip-compressed':
-        header('Content-type: '.$filetype);
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        readfile($basepath . '/' . $filename);
-        break;
     case 'image/png':
     case 'image/jpg':
     case 'image/jpeg':
@@ -42,6 +30,8 @@ switch ($filetype) {
         }
         break;
     default:
-        header('Content-Type: ' . $filetype);
+        header('Content-type: '.$filetype);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         readfile($basepath . '/' . $filename);
+        break;
 }

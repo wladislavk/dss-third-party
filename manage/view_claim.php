@@ -7,7 +7,14 @@ if(!isset($_REQUEST['sort'])){
   $_REQUEST['sort'] = 'service_date';
   $_REQUEST['sortdir'] = 'desc';
 }
-
+if(isset($_REQUEST['file']) && $_REQUEST['file']==1){
+  $id = claim_create_sec($_GET['pid'], $_GET['claimid'], '0', false);
+  ?>
+  <script type="text/javascript">
+    window.location = "view_claim.php?claimid=<?= $id; ?>&pid=<?=$_GET['pid'];?>";
+  </script>
+  <?php
+}
 
 if(isset($_REQUEST['deleobid'])){
   $esql = "SELECT * FROM dental_insurance_file WHERE id=".mysql_real_escape_string($_GET['deleobid']);
@@ -145,6 +152,10 @@ $num_users=mysql_num_rows($my);
 $csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysql_real_escape_string($_GET['claimid']);
 $cq = mysql_query($csql);
 $claim = mysql_fetch_assoc($cq);
+
+$psql = "SELECT * FROM dental_patients WHERE patientid=".mysql_real_escape_string($_GET['pid']);
+$pq = mysql_query($psql);
+$pat = mysql_fetch_assoc($pq);
 ?>
 <span style="float:right; font-size: 26px; margin-right: 20px; font-weight: bold; color:#f00;">Claim <?= $_GET['claimid']." - ".$thename; ?></span>
 
@@ -211,15 +222,17 @@ return s;
 <div style="float:left; margin-left:20px;">
   <?php if( $claim['primary_claim_version'] == "1"){ ?>
         <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
-                View Primary 1500
+                View 1500
         </button>
   <?php }else{ ?>
         <button onclick="Javascript: window.location='insurance_v2.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
-                View Primary 1500
+                View 1500
         </button>
   <?php } ?>
 </div>
-<?php if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_SENT ||$claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED){ ?>
+<?php 
+/*
+if($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_SENT ||$claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED){ ?>
 <div style="float:left; margin-left:20px;">
   <?php if( $claim['secondary_claim_version'] == "1"){ ?>
         <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>&instype=2';" class="addButton">
@@ -232,7 +245,32 @@ return s;
 	<?php } ?>
 </div>
 <?php } ?>
+*/ ?>
 <div align="right" style="clear: right;">
+<?php
+  if(
+	($claim['status'] == DSS_CLAIM_PAID_INSURANCE || $claim['status']== DSS_CLAIM_PAID_PATIENT) &&
+	$pat['s_m_relation']!='' &&
+        $pat['s_m_partyfname'] != "" && 
+        $pat['s_m_partylname'] != "" &&
+        $pat['s_m_relation'] != "" &&
+        $pat['ins2_dob'] != "" &&
+        $pat['s_m_gender'] != "" &&
+        $pat['s_m_ins_co'] != "" &&
+        $pat['s_m_ins_grp'] != "" &&
+        $pat['s_m_ins_type'] != '')
+{
+
+	$s_sql = "SELECT * FROM dental_insurance WHERE primary_claim_id='".$claim['insuranceid']."'";
+	$s_q = mysql_query($s_sql);
+	if(mysql_num_rows($s_q)==0){
+?>
+        <button onclick="Javascript: window.location='view_claim.php?claimid=<?=$_GET["claimid"];?>&pid=<?=$_GET['pid'];?>&file=1';" class="addButton">
+               File Secondary
+        </button>
+        &nbsp;&nbsp;
+<?php } 
+	} ?>
 <?php
   $api_sql = "SELECT use_eligible_api FROM dental_users
                 WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";

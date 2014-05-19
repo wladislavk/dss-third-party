@@ -3,7 +3,7 @@
         var selectedrefUrl = '';
         var searchrefVal = ""; // global variable to hold the last valid search string
 	var local_data = "";
-	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment){
+	function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type){
 		$.getJSON(file).done(function(data){
 			local_data = new Array();
 			var cpl = data;
@@ -26,7 +26,7 @@
                                         $('#'+hint).css('display', 'none');
                                 } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
                                         $('#'+hint).css("display", "inline");
-                                        sendValueRef_local($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment);
+                                        sendValueRef_local($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type);
                                         if ($(this).val() > 2) {
                                                 window.searchVal = $(this).val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
                                         }
@@ -35,7 +35,7 @@
 	}
 
 
-        function sendValueRef_local(partial_name, in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment) {
+        function sendValueRef_local(partial_name, in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type) {
 //alert(local_data[0].payer_name);
 		data = [];
 		r = 0
@@ -98,7 +98,7 @@
 						.addClass('json_patient')
 						.data('rowid', data[i][0])
 						.data('rowsource', data[i][0])
-						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"')");
+						.attr("onclick", "update_referredby_local('"+in_field+"','"+(name.replace(/'/g, "\\'"))+"', '"+id_field+"', '"+data[i][0]+"', '"+source+"', '"+data[i][1]+"','"+hint+"','"+data[i][2]+"', '"+check_enrollment+"', '"+npi+"','"+office_type+"')");
 				    }
                                         template_list_ref_local(newLi, name)
                                               .appendTo('#'+hint+' ul')
@@ -113,11 +113,10 @@
                 li.html(val);
                 return li;
         }
-function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment){
+function update_referredby_local(in_field, name, id_field, id, source, t, hint, enrollment, check_enrollment, npi, office_type){
   if(enrollment=='true' && check_enrollment=='true'){
-	npi = '12321';
                                       $.ajax({
-                                        url: "includes/check_enrollment.php",
+                                        url: "/manage/includes/check_enrollment.php",
                                         type: "post",
                                         data: {payer: id, npi: npi},
                                         success: function(data){
@@ -125,8 +124,12 @@ function update_referredby_local(in_field, name, id_field, id, source, t, hint, 
                                                 if(r.enrolled=="yes"){
 							//Allow to be selected
                                                 }else{
-							alert('You must enroll for this payer.');
-							window.location='manage_enrollment.php';
+							alert(r.message);
+							if(office_type==1){
+							  window.location='manage_enrollment.php';
+							}else{
+							  window.location='manage_enrollments.php?ed='+r.userid;	
+							}
                                                 }
                                         },
                                         failure: function(data){

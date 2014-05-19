@@ -1554,9 +1554,39 @@ if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($
                         <li class="template" style="display:none"></li>
                 </ul>
         </div>
+<?php
+        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
+        $prod_q = mysql_query($prod_s);
+        $prod_r = mysql_fetch_assoc($prod_q);
+        $claim_producer = $prod_r['producer'];
+                      $getuserinfo = "SELECT * FROM `dental_users` WHERE producer_files=1 AND `userid` = '".$claim_producer."'";
+                      $userquery = mysql_query($getuserinfo);
+                      if($userinfo = mysql_fetch_array($userquery)){
+                        $phone = $userinfo['phone'];
+                        $practice = $userinfo['practice'];
+                        $address = $userinfo['address'];
+                        $city = $userinfo['city'];
+                        $state = $userinfo['state'];
+                        $zip = $userinfo['zip'];
+                        $npi = $userinfo['npi'];
+                        $medicare_npi = $userinfo['medicare_npi'];
+                      }
+                      $getdocinfo = "SELECT * FROM `dental_users` WHERE `userid` = '".$docid."'";
+                      $docquery = mysql_query($getdocinfo);
+                      $docinfo = mysql_fetch_array($docquery);
+                        if($phone == ""){ $phone = $docinfo['phone']; }
+                        if($practice == ""){ $practice = $docinfo['practice']; }
+                        if($address == ""){ $address = $docinfo['address']; }
+                        if($city == ""){ $city = $docinfo['city']; }
+                        if($state == ""){ $state = $docinfo['state']; }
+                        if($zip == ""){ $zip = $docinfo['zip']; }
+                        if($npi == ""){ $npi = $docinfo['npi']; }
+                        if($medicare_npi == ""){ $medicare_npi = $docinfo['medicare_npi']; }
+
+?>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', null, null, null, true);
+  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', null, null, null, true, '<?= $npi; ?>', '<?= ($is_front_office)?1:2; ?>');
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?=$p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

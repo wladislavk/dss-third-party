@@ -425,7 +425,6 @@ if (empty($prior_authorization_number)) {
 
 
 
-?>
 
 
 

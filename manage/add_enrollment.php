@@ -93,6 +93,7 @@ if(isset($json_response->{"error"})){
 	user_id = '".mysql_real_escape_string($_SESSION['docid'])."',
         payer_id = '".mysql_real_escape_string($payer_id)."',
         payer_name = '".mysql_real_escape_string($payer_name)."',
+	npi = '".mysql_real_escape_string($_POST['npi'])."',
         reference_id = '".mysql_real_escape_string($ref_id)."',
         response='".mysql_real_escape_string($result)."',
 	transaction_type_id='".mysql_real_escape_string($_POST['transaction_type'])."',
@@ -203,7 +204,22 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 </div>
 <div>
         <label>NPI</label>
-	<input type="text" name="npi" value="<?= $r['npi']; ?>" />
+	<?php
+	$npi_sql = "SELECT npi, service_npi, first_name, last_name, docid FROM dental_users WHERE (docid='".$_SESSION['docid']."' OR userid='".$_SESSION['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
+	$npi_q = mysql_query($npi_sql);
+	?>
+ 	<select name="npi">
+	<?php while($npi_r = mysql_fetch_assoc($npi_q)){ ?>
+	  <?php if($npi_r['docid']==0){
+		$snpi = $npi_r['service_npi'];
+		}
+	  ?>
+	  <option value="<?= $npi_r['npi']; ?>"><?= $npi_r['npi']; ?> - <?= $npi_r['first_name']." ".$npi_r['last_name']; ?></option>
+	<?php } ?>
+	  <?php if($snpi != ''){ ?>
+	    <option value="<?= $snpi; ?>"><?= $snpi; ?> - Service Facility</option>
+	  <?php } ?>
+	</select>
 </div>
 <div>
         <label>First Name</label>

@@ -51,6 +51,8 @@ include('includes/main_include.php');
 include_once('includes/password.php');
 
 	$id1=$_REQUEST['id'];
+	$address=$_REQUEST['addr'];
+	$address=$_REQUEST['addr'];
 	$check_sql = "SELECT * FROM admin WHERE adminid=".$id1;
 	$check_my = mysql_query($check_sql) or die(mysql_error().' | '.$check_sql);
 	$check = mysql_fetch_assoc($check_my);
@@ -61,7 +63,8 @@ if (isset($_POST['lock_submit'])) {
 	 $pass = gen_password($_POST['password'], $check['salt']);
 	 if($check['password']==$pass){ ?>
 		<script type="text/javascript">
-            window.location.replace('home.php');
+			var addrr="<?php echo $address; ?>";
+            window.location.replace(addrr);
         </script>
             <?php
             die();
@@ -82,7 +85,9 @@ if (isset($_POST['lock_submit'])) {
 
 
 ?>
- <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+ <a href="/manage/admin/home.php">
+            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+           </a>
 <div class="page-lock">
 	
 	<div class="page-logo">

@@ -39,6 +39,15 @@ License: You must have a valid license purchased only from themeforest(the above
 <link href="admin/template/assets/css/custom.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="favicon.ico"/>
+<style>
+.dental_logo{
+	
+	padding-left:263px;
+	padding-top:206px;
+}
+
+
+</style>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -85,9 +94,12 @@ if (isset($_POST['lock_submit'])) {
 
 
 ?>
- <a href="/manage/admin/home.php">
-            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
-           </a>
+ <div class="dental_logo">
+		<a href="/manage/admin/home.php">
+	 
+            <h1 class="pull-left" style="color:#ffffff;font-size:25px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+        </a>
+ </div>
 <div class="page-lock">
 	
 	<div class="page-logo">
@@ -98,8 +110,8 @@ if (isset($_POST['lock_submit'])) {
 		</a>
 	</div>
 	<div class="page-body">
-		<img class="page-lock-img" src="admin/template/assets/img/profile/profile.jpg" alt="">
-		<div class="page-lock-info">
+		<img class="page-lock-img" src="images/DSS_logo_notext_transparent_SQUARE_250x250.png" alt="">
+		<div class="page-lock-info" style="margin-top:20px;">
 			<h1><?php echo $check['first_name'];?> <?php echo $check['last_name']; ?></h1>
 			<span class="email"style="word-wrap:break-word;" >
 				<?php  echo $check['email'];  ?>
@@ -109,21 +121,21 @@ if (isset($_POST['lock_submit'])) {
 			</span>
 			<form class="form-inline" action="" method="post" name="lock_form">
 				<div class="input-group input-medium">
-					<input type="text" class="form-control" name="password" placeholder="Password">
+					<input type="password" class="form-control" name="password" placeholder="Password">
 					<span class="input-group-btn">
 						<button type="submit" name="lock_submit" class="btn blue icn-only"><i class="m-icon-swapright m-icon-white"></i></button>
 					</span>
 				</div>
 				<!-- /input-group -->
 				<div class="relogin">
-					<a href="index.php">
+					<a href="index.php" style="color:#FFFFFF;">
 						 Not <?php echo $check['first_name'];  echo $check['last_name']; ?> ?
 					</a>
 				</div>
 			</form>
 		</div>
 	</div>
-	<div class="page-footer">
+	<div class="page-footer" style="color: #FFFFFF;font-size: 14px;">
 		 	2014 &copy; dentalsleepsolutions.com
 	</div>
 </div>

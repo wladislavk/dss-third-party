@@ -75,6 +75,17 @@ if(isset($json_response->{"error"})){
         response='".mysql_real_escape_string($result)."',
         transaction_type_id='".mysql_real_escape_string($_POST['transaction_type'])."',
         status='0',
+        facility_name = '".mysql_real_escape_string($_POST['facility_name'])."',
+        provider_name = '".mysql_real_escape_string($_POST['provider_name'])."',
+        tax_id = '".mysql_real_escape_string($_POST['tax_id'])."',
+        address = '".mysql_real_escape_string($_POST['address'])."',
+        city = '".mysql_real_escape_string($_POST['city'])."',
+        state = '".mysql_real_escape_string($_POST['state'])."',
+        zip = '".mysql_real_escape_string($_POST['zip'])."',
+        first_name = '".mysql_real_escape_string($_POST['first_name'])."',
+        last_name = '".mysql_real_escape_string($_POST['last_name'])."',
+        contact_number = '".mysql_real_escape_string($_POST['contact_number'])."',
+        email = '".mysql_real_escape_string($_POST['email'])."',
         adddate=now(),
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
@@ -103,7 +114,7 @@ if(isset($json_response->{"error"})){
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" ><!--onsubmit="return check_add();">-->
+    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1&docid=<?=$_GET['docid'];?>" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -165,9 +176,9 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
             </td>
         </tr>
 <?php
-  $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_GET['docid'])."'";
+  $sql = "SELECT * FROM dental_users WHERE (docid='".$_GET['docid']."' OR userid='".$_GET['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
   $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
+  //$r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
@@ -176,10 +187,33 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 ?>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
+                Provider 
+            </td>
+            <td valign="top" class="frmdata">
+        <select id="provider_select" name="provider_select" class="form-control">
+        <?php while($r = mysql_fetch_assoc($q)){ ?>
+          <?php if($r['docid']==0){
+                $snpi = $r['service_npi'];
+                $sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+                }
+                $json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+          ?>
+          <option value='<?= $json; ?>'><?= $r['npi']; ?> - <?= $r['first_name']." ".$r['last_name']; ?></option>
+        <?php } ?>
+          <?php if($snpi != ''){ ?>
+            <option value='<?= $sjson; ?>'><?= $snpi; ?> - Service Facility</option>
+          <?php } ?>
+        </select>
+
+            </td>
+        </tr>
+
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
                 Facility Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="facility_name" value="<?=$r['practice'];?>" class="form-control validate" />          
+                <input type="text" id="facility_name" name="facility_name" value="<?=$r['practice'];?>" class="form-control validate" readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -187,7 +221,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
                 Provider Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="provider_name" value="<?=$r['first_name']." ".$r['last_name'];?>" class="form-control validate" />          
+                <input type="text" id="provider_name" name="provider_name" value="<?=$r['first_name']." ".$r['last_name'];?>" class="form-control validate" readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -195,7 +229,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Tax ID
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="tax_id" value="<?=$r['tax_id_or_ssn'];?>" class="form-control validate" />          
+                <input type="text" id="tax_id" name="tax_id" value="<?=$r['tax_id_or_ssn'];?>" class="form-control " readonly="readonly" />          
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -203,7 +237,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Address
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="address" value="<?=$r['address'];?>" class="form-control validate" />
+                <input type="text" id="address" name="address" value="<?=$r['address'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -211,7 +245,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		City
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="city" value="<?=$r['city'];?>" class="form-control validate" />
+                <input type="text" id="city" name="city" value="<?=$r['city'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -219,7 +253,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		State
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="state" value="<?=$r['state'];?>" class="form-control validate" />
+                <input type="text" id="state" name="state" value="<?=$r['state'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -227,7 +261,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Zip
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="zip" value="<?=$r['zip'];?>" class="form-control validate" />
+                <input type="text" id="zip" name="zip" value="<?=$r['zip'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
 	<!-- new -->
@@ -236,7 +270,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		NPI
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="npi" value="<?=$r['npi']?>" class="moneymask form-control validate" />
+                <input type="text" id="npi" name="npi" value="<?=$r['npi']?>" class="moneymask form-control validate" readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -244,7 +278,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		First Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="first_name" value="<?=$r['first_name'];?>" class="form-control validate" />
+                <input type="text" id="first_name" name="first_name" value="<?=$r['first_name'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
 
@@ -253,7 +287,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Last Name
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="last_name" value="<?=$r['last_name'];?>" class="form-control validate" />
+                <input type="text" id="last_name" name="last_name" value="<?=$r['last_name'];?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -261,7 +295,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Contact Number
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="contact_number" value="<?=$r['phone']?>" class="form-control validate" />
+                <input type="text" id="contact_number" name="contact_number" value="<?=$r['phone']?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
@@ -269,7 +303,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 		Email
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="email" value="<?=$email?>" class="form-control validate" />
+                <input type="text" id="email" name="email" value="<?=$email?>" class="form-control " readonly="readonly" />
             </td>
         </tr>
         <tr>
@@ -284,7 +318,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
 <script type="text/javascript">
 function check_add(){
         var isValid = true;
-        $('input[type="text"]').each(function() {
+        $('input.validate').each(function() {
             if ($.trim($(this).val()) == '') {
                 isValid = false;
             }
@@ -315,6 +349,25 @@ function update_list(){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
   }
 }
+
+$('#provider_select').change(function(){
+  var json = $(this).val();
+  var r = $.parseJSON(json);
+  $('#facility_name').val(r.facility_name);
+  $('#provider_name').val(r.provider_name);
+  $('#tax_id').val(r.tax_id);
+  $('#address').val(r.address);
+  $('#city').val(r.city);
+  $('#state').val(r.state);
+  $('#zip').val(r.zip);
+  $('#npi').val(r.npi);
+  $('#first_name').val(r.first_name);
+  $('#last_name').val(r.last_name);
+  $('#contact_number').val(r.contact_number);
+  $('#email').val(r.email);
+}).change();
+
+
 </script>
     
 </body>

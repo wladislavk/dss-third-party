@@ -24,10 +24,11 @@ else
 	$index_val = 0;
 	
 $i_val = $index_val * $rec_disp;
-$sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users from companies c
+$sql = "select c.*, count(a.adminid) as num_admin, count(b.adminid) as num_users, p.name as plan_name from companies c
 	 LEFT JOIN admin_company ac ON ac.companyid = c.id
 	 LEFT JOIN admin a ON a.adminid=ac.adminid AND (a.admin_access=".DSS_ADMIN_ACCESS_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_BILLING_ADMIN." OR a.admin_access=".DSS_ADMIN_ACCESS_HST_ADMIN.")
          LEFT JOIN admin b ON b.adminid=ac.adminid AND (b.admin_access=".DSS_ADMIN_ACCESS_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_BILLING_BASIC." OR b.admin_access=".DSS_ADMIN_ACCESS_HST_BASIC.")
+	 LEFT JOIN dental_plans p ON p.id = c.plan_id
 	 group by c.id
 	 order by name ASC";
 $my = mysql_query($sql);
@@ -86,6 +87,9 @@ $num_users=mysql_num_rows($my);
                 <td valign="top" class="col_head">
                         Number of Clients
                 </td>
+                <td valign="top" class="col_head">
+                        Billing Plan
+                </td>
 
 		<td valign="top" class="col_head">
 		  	Type
@@ -117,10 +121,10 @@ $num_users=mysql_num_rows($my);
 					<?=st($myarray["name"]);?>
 				</td>
 				<td valign="top">
-					<?= st($myarray["num_admin"]); ?>
+					<a href="manage_backoffice.php?cid=<?=$myarray['id'];?>"><?= st($myarray["num_admin"]); ?></a>
 				</td>	
 				<td valign="top">
-                                        <?= st($myarray["num_users"]); ?>
+                                        <a href="manage_backoffice.php?cid=<?=$myarray['id'];?>"><?= st($myarray["num_users"]); ?></a>
                                 </td>	
 				<td valign="top">
 				  <?php 
@@ -148,6 +152,9 @@ $num_users=mysql_num_rows($my);
 
 					}
 				  ?>
+				</td>
+				<td valign="top">
+					<?= $myarray["plan_name"];?>
 				</td>
 				<td valign="top">
 					<?= $dss_company_type_labels[$myarray["company_type"]];?>

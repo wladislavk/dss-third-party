@@ -336,11 +336,14 @@ $num_pending_claims = mysql_num_rows($pending_q);
                     <li class="dropdown-submenu">
                         <a href="#">Account Analysis</a>
                         <ul class="dropdown-menu">
-                        <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+                        <?php if (is_super($_SESSION['admin_access'])) { ?>
                             <li><a href="/manage/admin/manage_percase_invoice.php">Invoicing</a></li>
                             <li><a href="/manage/admin/manage_monthly_invoice.php">Monthly Invoicing</a></li>
                             <li><a href="/manage/admin/manage_monthly_bo_invoice.php">Monthly Backoffice Invoicing</a></li>
                             <li><a href="/manage/admin/manage_payment_errors.php">Invoicing Payment Errors</a></li>
+			<?php } ?>
+			
+                        <?php if (!is_billing($_SESSION['admin_access'])) { ?>
                             <li><a href="/manage/admin/franchisee_faxes.php">Fax Report</a></li>
                             <li><a href="/manage/admin/client_tracking.php">Client Tracking</a></li>
                         <?php } ?>

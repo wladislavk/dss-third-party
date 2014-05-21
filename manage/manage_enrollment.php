@@ -33,6 +33,7 @@ include "includes/top.htm";
 <table class="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
   <thead>
     <tr class="tr_bg_h">
+      <th class="col_head">Provider</th>
       <th class="col_head">NPI</th>
       <th class="col_head">Payer ID</th>
       <th class="col_head">Service Type</th>
@@ -46,6 +47,9 @@ include "includes/top.htm";
 		{
 		?>
 			<tr >
+				<td valign="top">
+					<?=$myarray['provider_name']?>
+				</td>
 				<td valign="top">
 					<?=$myarray['npi']?>
 				</td>

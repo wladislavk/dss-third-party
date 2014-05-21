@@ -395,6 +395,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 
 
 ?>
+<<<<<<< HEAD
 <div class="page-container">
 	
 	
@@ -560,7 +561,7 @@ $num_pending_claims = mysql_num_rows($pending_q);
 								</span>
 							</a>
 							<ul class="sub-menu">
-								<?php if (!is_billing($_SESSION['admin_access'])) { ?>
+								<?php if (is_super($_SESSION['admin_access'])) { ?>
 								<li>
 									<a href="/manage/admin/manage_percase_invoice.php">
 										<i class="fa fa-user"></i>Invoicing

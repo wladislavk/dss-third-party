@@ -98,6 +98,17 @@ if(isset($json_response->{"error"})){
         response='".mysql_real_escape_string($result)."',
 	transaction_type_id='".mysql_real_escape_string($_POST['transaction_type'])."',
 	status='0',
+	facility_name = '".mysql_real_escape_string($_POST['facility_name'])."',
+	provider_name = '".mysql_real_escape_string($_POST['provider_name'])."',
+	tax_id = '".mysql_real_escape_string($_POST['tax_id'])."',
+	address = '".mysql_real_escape_string($_POST['address'])."',
+	city = '".mysql_real_escape_string($_POST['city'])."',
+	state = '".mysql_real_escape_string($_POST['state'])."',
+	zip = '".mysql_real_escape_string($_POST['zip'])."',
+	first_name = '".mysql_real_escape_string($_POST['first_name'])."',
+	last_name = '".mysql_real_escape_string($_POST['last_name'])."',
+	contact_number = '".mysql_real_escape_string($_POST['contact_number'])."',
+	email = '".mysql_real_escape_string($_POST['email'])."',
         adddate=now(),
         ip_address='".mysql_real_escape_string($_SERVER['REMOTE_ADDR'])."'
         ";
@@ -165,77 +176,77 @@ setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'h
 </script>
 <br />
 <?php
-  $sql = "SELECT * FROM dental_users where userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $sql = "SELECT * FROM dental_users WHERE (docid='".$_SESSION['docid']."' OR userid='".$_SESSION['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
   $q = mysql_query($sql);
-  $r = mysql_fetch_assoc($q);
+  //$r = mysql_fetch_assoc($q);
 $payer_id = substr($_POST['payer_id'],0,strpos($_POST['payer_id'], '-'));
 $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         $t_sql = "SELECT * FROM dental_enrollment_transaction_type WHERE id='".mysql_real_escape_string($_POST['transaction_type'])."'";
         $t_q = mysql_query($t_sql);
         $t_r = mysql_fetch_assoc($t_q);
 ?>
+        <select id="provider_select" name="provider_select">
+        <?php while($r = mysql_fetch_assoc($q)){ ?>
+          <?php if($r['docid']==0){
+                $snpi = $r['service_npi'];
+		$sjson ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+                }
+		$json ='{"facility_name":"'.$r['practice'].'","provider_name":"'.$r['first_name'].' '.$r['last_name'].'", "tax_id":"'.$r['tax_id_or_ssn'].'", "address":"'.$r['address'].'","city":"'.$r['city'].'","state":"'.$r['state'].'","zip":"'.$r['zip'].'","npi":"'.$r['npi'].'","first_name":"'.$r['first_name'].'","last_name":"'.$r['last_name'].'","contact_number":"'.$r['phone'].'","email":"'.$r['email'].'"}';
+          ?>
+          <option value='<?= $json; ?>'><?= $r['npi']; ?> - <?= $r['first_name']." ".$r['last_name']; ?></option>
+        <?php } ?>
+          <?php if($snpi != ''){ ?>
+            <option value='<?= $sjson; ?>'><?= $snpi; ?> - Service Facility</option>
+          <?php } ?>
+        </select>
+
 <div>
 	<label>Facility Name</label>
-	<input type="text" name="facility_name" value="<?= $r['practice']; ?>" />
+	<input type="text" id="facility_name" name="facility_name" value="<?= $r['practice']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Provider Name</label> 
-	<input type="text" name="provider_name" value="<?=$r['first_name'].' '.$r['last_name']; ?>" />
+	<input type="text" id="provider_name" name="provider_name" value="<?=$r['first_name'].' '.$r['last_name']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Tax ID</label>
-	<input type="text" name="tax_id" value="<?= $r['tax_id_or_ssn']; ?>" />
+	<input type="text" id="tax_id" name="tax_id" value="<?= $r['tax_id_or_ssn']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Address</label>
-	<input type="text" name="address" value="<?= $r['address']; ?>" />
+	<input type="text" id="address" name="address" value="<?= $r['address']; ?>" readonly="readonly" />
 <div>
 <div>
         <label>City</label>
-	<input type="text" name="city" value="<?= $r['city']; ?>" />
+	<input type="text" id="city" name="city" value="<?= $r['city']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>State</label>
-	<input type="text" name="state" value="<?= $r['state']; ?>" />
+	<input type="text" id="state" name="state" value="<?= $r['state']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Zip</label>
-	<input type="text" name="zip" value="<?= $r['zip']; ?>" />
+	<input type="text" id="zip" name="zip" value="<?= $r['zip']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>NPI</label>
-	<?php
-	$npi_sql = "SELECT npi, service_npi, first_name, last_name, docid FROM dental_users WHERE (docid='".$_SESSION['docid']."' OR userid='".$_SESSION['docid']."') AND npi !='' AND (producer=1 OR docid=0) ORDER BY docid ASC";
-	$npi_q = mysql_query($npi_sql);
-	?>
- 	<select name="npi">
-	<?php while($npi_r = mysql_fetch_assoc($npi_q)){ ?>
-	  <?php if($npi_r['docid']==0){
-		$snpi = $npi_r['service_npi'];
-		}
-	  ?>
-	  <option value="<?= $npi_r['npi']; ?>"><?= $npi_r['npi']; ?> - <?= $npi_r['first_name']." ".$npi_r['last_name']; ?></option>
-	<?php } ?>
-	  <?php if($snpi != ''){ ?>
-	    <option value="<?= $snpi; ?>"><?= $snpi; ?> - Service Facility</option>
-	  <?php } ?>
-	</select>
+	<input type="text" id="npi" name="npi" value="<?= $r['npi']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>First Name</label>
-	<input type="text" name="first_name" value="<?= $r['first_name']; ?>" />
+	<input type="text" id="first_name" name="first_name" value="<?= $r['first_name']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Last Name</label>
-	<input type="text" name="last_name" value="<?= $r['last_name']; ?>" />
+	<input type="text" id="last_name" name="last_name" value="<?= $r['last_name']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Contact Number</label>
-	<input type="text" name="contact_number" value="<?= $r['phone']; ?>" />
+	<input type="text" id="contact_number" name="contact_number" value="<?= $r['phone']; ?>" readonly="readonly" />
 </div>
 <div>
         <label>Email</label>
-	<input type="text" name="email" value="<?= $r['email']; ?>" />
+	<input type="text" id="email" name="email" value="<?= $r['email']; ?>" readonly="readonly" />
 </div>
 
 
@@ -260,6 +271,24 @@ function update_list(){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
   }
 }
+
+
+$('#provider_select').change(function(){
+  var json = $(this).val();
+  var r = $.parseJSON(json);
+  $('#facility_name').val(r.facility_name);
+  $('#provider_name').val(r.provider_name);
+  $('#tax_id').val(r.tax_id);
+  $('#address').val(r.address);
+  $('#city').val(r.city);
+  $('#state').val(r.state);
+  $('#zip').val(r.zip);
+  $('#npi').val(r.npi);
+  $('#first_name').val(r.first_name);
+  $('#last_name').val(r.last_name);
+  $('#contact_number').val(r.contact_number);
+  $('#email').val(r.email);
+}).change();
 </script>
 
 </body>

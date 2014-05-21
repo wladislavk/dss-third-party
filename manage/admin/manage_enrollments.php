@@ -73,6 +73,12 @@ $num_users=mysql_num_rows($my);
 	<? }?>
 	<tr class="tr_bg_h">
 		<td valign="top" class="col_head" width="10%">
+			Provider	
+		</td>
+		<td valign="top" class="col_head" width="10%">
+			NPI	
+		</td>
+		<td valign="top" class="col_head" width="10%">
 			Payer ID	
 		</td>
 		<td valign="top" class="col_head" width="20%">
@@ -123,6 +129,12 @@ $num_users=mysql_num_rows($my);
 			}
 		?>
 			<tr class="<?=$tr_class;?>">
+				<td valign="top">
+					<?=st($myarray["provider_name"]);?>
+				</td>
+				<td valign="top">
+					<?=st($myarray["npi"]);?>
+				</td>
 				<td valign="top">
 					<?=st($myarray["payer_id"]);?>
 				</td>

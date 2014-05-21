@@ -5,5 +5,6 @@ $(document).ready(function(){
         $('.datealtfullmask').mask('99-99-9999');
 	$('.datealtoptfullmask').mask('99-99-99?99');
 	$('.singlenumber').mask('9');
+	$('.numbermask').mask('?9999999999');
 	$('.moneymask').mask('?%%%%%%%');
 });

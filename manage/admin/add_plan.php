@@ -153,7 +153,7 @@ if($_POST["plansub"] == 1)
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" ><!--onsubmit="return check_add();">-->
+    <form name="planfrm" action="<?=$_SERVER['PHP_SELF'];?>?add=1" method="post" onsubmit="return check_add();">
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -186,7 +186,7 @@ if($_POST["plansub"] == 1)
                 Trial Period (days)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="trial_period" value="<?=$trial_period?>" class="form-control validate" />          
+                <input type="text" name="trial_period" value="<?=$trial_period?>" class="numbermask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -204,7 +204,7 @@ if($_POST["plansub"] == 1)
                 Free Fax (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_fax" value="<?=$free_fax?>" class="form-control validate" />          
+                <input type="text" name="free_fax" value="<?=$free_fax?>" class="numbermask form-control validate" />          
                 <span class="red">*</span>
             </td>
         </tr>
@@ -222,7 +222,7 @@ if($_POST["plansub"] == 1)
                 Free Eligibility Checks (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_eligibility" value="<?=$free_eligibility?>" class="form-control validate" />
+                <input type="text" name="free_eligibility" value="<?=$free_eligibility?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -240,7 +240,7 @@ if($_POST["plansub"] == 1)
                 Free Enrollments (Monthly)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_enrollment" value="<?=$free_enrollment?>" class="form-control validate" />
+                <input type="text" name="free_enrollment" value="<?=$free_enrollment?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -279,7 +279,7 @@ if($_POST["plansub"] == 1)
                 Free Claims (Lifetime)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_claim" value="<?=$free_claim?>" class="form-control validate" />
+                <input type="text" name="free_claim" value="<?=$free_claim?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -297,16 +297,16 @@ if($_POST["plansub"] == 1)
                 Free VOBs (Lifetime)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="free_vob" value="<?=$free_vob?>" class="form-control validate" />
+                <input type="text" name="free_vob" value="<?=$free_vob?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Duration
+                Plan Length (months)
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="duration" value="<?=$duration?>" class="form-control validate" />
+                <input type="text" name="duration" value="<?=$duration?>" class="numbermask form-control validate" />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -335,9 +335,9 @@ if($_POST["plansub"] == 1)
             </td>
             <td valign="top" class="frmdata">
                 <select name="office_type" class="form-control validate" />
-			<option <?= ($office_type==1)?'selected="selected"':''; ?> value="1">Front-office</option>
-			<option <?= ($office_type==2)?'selected="selected"':''; ?> value="2">Back-office</option>
-			<option <?= ($office_type==3)?'selected="selected"':''; ?> value="3">Billing</option>
+			<option <?= ($office_type==1)?'selected="selected"':''; ?> value="1">Super->FO</option>
+			<option <?= ($office_type==2)?'selected="selected"':''; ?> value="2">Super->BO</option>
+			<option <?= ($office_type==3)?'selected="selected"':''; ?> value="3">BO Ins Co->FO</option>
 		</select>
             </td>
         </tr>
@@ -363,10 +363,23 @@ if($_POST["plansub"] == 1)
                 <input type="hidden" name="ed" value="<?=$themyarray["id"]?>" />
                 <input type="submit" value="<?=$but_text?> Plan" class="btn btn-primary">
 		<?php if($themyarray["id"] != '' && $_SESSION['admin_access']==1){ ?>
+		<?php $u_sql = "SELECT userid, first_name, last_name FROM dental_users where plan_id='".mysql_real_escape_string($themyarray["id"])."'";
+		      $u_q = mysql_query($u_sql);
+		      if(mysql_num_rows($u_q)>0){ 
+			$names == '';
+			while($u_r = mysql_fetch_assoc($u_q)){
+			  $names .= $u_r['first_name']." ".$u_r['last_name'].", ";
+			}
+			?>
+                    <a href="#" onclick="javascript: alert('This plan is associated with the following users and cannot be deleted: <?= $names; ?>'); return false;" class="editdel btn btn-danger pull-right" title="DELETE">
+						Delete
+					</a>
+		  <?php }else{ ?>
                     <a href="manage_plans.php?delid=<?=$themyarray["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" target="_parent" class="editdel btn btn-danger pull-right" title="DELETE">
                                                 Delete
                                         </a>
-		<?php } ?>
+		<?php }
+			} ?>
             </td>
         </tr>
     </table>
@@ -374,13 +387,24 @@ if($_POST["plansub"] == 1)
 <script type="text/javascript">
 function check_add(){
         var isValid = true;
+	var isNumber = true;
         $('input[type="text"]').each(function() {
             if ($.trim($(this).val()) == '') {
                 isValid = false;
             }
         });
+        $('input.moneymask, input.numbermask').each(function() {
+    var intRegex = /^[\.\d]+$/;
+    if(!intRegex.test($.trim($(this).val()))) {
+                isNumber = false;
+            }
+        });
+
         if (isValid == false){ 
 	    alert('All fields are required.');
+	    return false;
+	}else if(isNumber == false){
+	    alert('Fee and free amount fields must be numeric.');
 	    return false;
         }else{ 
 	    return true;

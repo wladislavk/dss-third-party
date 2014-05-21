@@ -27,3 +27,8 @@ ALTER TABLE dental_insurance_history ADD COLUMN percase_amount decimal(11,2);
 ALTER TABLE dental_insurance_history ADD COLUMN percase_status tinyint(1) default 0;
 ALTER TABLE dental_insurance_history ADD COLUMN percase_invoice int(11);
 ALTER TABLE dental_insurance_history ADD COLUMN primary_claim_id int(11);
+
+ALTER TABLE dental_patients ADD COLUMN new_fee_date date;
+ALTER TABLE dental_patients ADD COLUMN new_fee_amount decimal(11,2);
+ALTER TABLE dental_patients ADD COLUMN new_fee_desc varchar(255);
+ALTER TABLE dental_patients ADD COLUMN new_fee_invoice_id int(11);

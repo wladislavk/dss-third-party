@@ -220,15 +220,24 @@ return s;
 </script>
 <br />
 <div style="float:left; margin-left:20px;">
-  <?php if( $claim['primary_claim_version'] == "1"){ ?>
-        <button onclick="Javascript: window.location='insurance.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
-                View 1500
-        </button>
-  <?php }else{ ?>
         <button onclick="Javascript: window.location='insurance_v2.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
-                View 1500
+                Paper File
         </button>
-  <?php } ?>
+<?php if(
+(($claim['status'] == DSS_CLAIM_PENDING || $claim['status'] == DSS_CLAIM_REJECTED ||$claim['status'] == DSS_CLAIM_DISPUTED)
+&&
+$pat['p_m_dss_file']=='2'
+)
+||
+ (($claim['status'] == DSS_CLAIM_SEC_PENDING || $claim['status'] == DSS_CLAIM_SEC_REJECTED ||$claim['status'] == DSS_CLAIM_SEC_DISPUTED)
+&&
+$pat['s_m_dss_file']=='2'
+)
+){ ?>	
+        <button onclick="Javascript: window.location='insurance_eligible.php?insid=<?=$_GET["claimid"];?>&pid=<?=$_GET["pid"];?>';" class="addButton">
+                E-File
+        </button>
+	<?php } ?>
 </div>
 <?php 
 /*

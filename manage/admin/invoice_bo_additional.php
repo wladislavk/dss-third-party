@@ -3,6 +3,15 @@ include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
 
+  if(isset($_GET['show']) && $_GET['show']=='1'){
+  $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
+                plan.trial_period, 
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                FROM companies c
+                JOIN dental_plans plan ON plan.id = c.plan_id
+                WHERE c.status=1
+			AND c.id='".mysql_real_escape_string($_GET['coid'])."'";
+  }else{
   $sql = "SELECT c.*, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period, 
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.companyid=c.id ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
@@ -86,6 +95,7 @@ AND
                 ";
 		*/
   }
+}
 $count_q = mysql_query($sql);
 $num_docs = mysql_num_rows($count_q);
 
@@ -180,7 +190,10 @@ if(isset($_POST['submit'])){
         " percase_status = '".DSS_PERCASE_INVOICED."' " .
         " WHERE id = '".$id."'";
       mysql_query($up_sql);
+    }else{
+      invoice_add_efile('2',$user['userid'],$id, DSS_INVOICE_TYPE_SU_BO);
     }
+
   }
 
   if(isset($_POST['free_fax_desc'])){
@@ -222,6 +235,12 @@ if(isset($_POST['submit'])){
 		status = '1'
 		WHERE fax_invoice_id = '".$fax['fax_invoice_id']."' AND docid='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
+  }else{
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $up_sql = "UPDATE dental_fax_invoice SET
+                invoice_id = '".mysql_real_escape_string($i_id)."'
+                WHERE invoice_id = '".$invoice_id."'";
+    mysql_query($up_sql);
   }
 
   if(isset($_POST['ec_desc'])){
@@ -261,7 +280,15 @@ if(isset($_POST['submit'])){
                 eligibility_invoice_id = '".$ec_invoice_id."' 
                 WHERE eligibility_invoice_id IS NULL AND userid='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
+  }else{
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $up_sql = "UPDATE dental_eligibility_invoice SET
+                invoice_id = '".mysql_real_escape_string($i_id)."'
+                WHERE invoice_id = '".$invoice_id."'";
+    mysql_query($up_sql);
+
   }
+
 
 
 
@@ -303,6 +330,13 @@ if(isset($_POST['submit'])){
                 fax_invoice_id = '".$enrollment_invoice_id."' 
                 WHERE enrollment_invoice_id IS NULL AND user_id='".mysql_real_escape_string($_REQUEST['docid'])."'";
     mysql_query($up_sql);
+  }else{
+    $i_id = invoice_find('2',$user['userid'], DSS_INVOICE_TYPE_SU_BO);
+    $up_sql = "UPDATE dental_enrollment_invoice SET
+                invoice_id = '".mysql_real_escape_string($i_id)."'
+                WHERE invoice_id = '".$invoice_id."'";
+    mysql_query($up_sql);
+
   }
 
 }else{
@@ -378,13 +412,22 @@ if(isset($_POST['submit'])){
   $_GET['invoice_id'] = $invoice_id;
   $redirect = false;
   include 'percase_bo_invoice_pdf.php';
+ 
+  if(isset($_GET['show']) && $_GET['show']=='1'){
+  ?>
+  <script type="text/javascript">
+    window.location = 'manage_percase_bo_invoice_history.php?companyid=<?= $_GET['coid']; ?>';
+    //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
+  </script>
+  <?php
+  }else{
   ?>
   <script type="text/javascript">
     window.location = 'invoice_bo_additional.php?show=<?=$_GET['show'];?>&bill=<?= $_GET['bill']; ?>&cid=<?= $user['id']; ?>&cc=<?= ($count_current+1); ?>&ci=<?= $count_invoices; ?>';
     //window.location = 'percase_invoice_pdf.php?invoice_id=<?= $invoiceid; ?>';
   </script>
   <?php
-
+  }
 }
 
 ?>
@@ -446,7 +489,7 @@ if(mysql_num_rows($doc_q) == 0){
 <div class="panel panel-default">
     <div class="panel-body">
         <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
-        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&bill=<?=$_GET['bill'];?>&cid=<?=$_GET['cid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
+        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&coid=<?=$_GET['coid'];?>&bill=<?=$_GET['bill'];?>&cid=<?=$_GET['cid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
             <input type="hidden" name="companyid" value="<?=$user["id"];?>">
             <table id="invoice_table" class="table table-bordered table-hover">
                 <tr>
@@ -487,7 +530,7 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -512,7 +555,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($case = mysql_fetch_array($case_q)) { ?>
                 <tr id="case_row_<?= $case['ledgerid'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -540,7 +583,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($efile = mysql_fetch_array($efile_q)) { ?>
                 <tr id="efile_row_<?= $efile['id'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -567,7 +610,7 @@ if(mysql_num_rows($doc_q) == 0){
 		<?php $users_r = mysql_fetch_assoc($users_q); ?>
                 <tr id="user_row">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" class="btn btn-danger remove-single hidden">
                             <i class="glyphicon glyphicon-calendar"></i>
                         </a>
                     </td>
@@ -630,9 +673,9 @@ if(mysql_num_rows($doc_q) == 0){
                 }
                 
                 ?>
-                <tr id="free_fax_row">
+                <tr id="free_fax_row" class="fax">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-fax hidden">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
@@ -654,9 +697,9 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                 </tr>
                 <?php if ($bill_faxes > 0) { ?>
-                <tr id="fax_row">
+                <tr id="fax_row" class="fax" >
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" class="btn btn-danger remove-fax hidden">
                             <i class="glyphicon glyphicon-calendar"></i>
                         </a>
                     </td>
@@ -696,9 +739,9 @@ if(mysql_num_rows($doc_q) == 0){
                 }
 
                 ?>
-                <tr id="free_ec_row">
+                <tr id="free_ec_row" class="eligibility">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-eligibility hidden">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
@@ -720,10 +763,10 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                 </tr>
                 <?php if ($bill_ec > 0) { ?>
-                <tr id="ec_row">
+                <tr id="ec_row" class="eligibility">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
+                        <a href="#" class="btn btn-danger remove-eligibility hidden">
+                            <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
                     <td>
@@ -767,9 +810,9 @@ if(mysql_num_rows($doc_q) == 0){
                 }
 
                 ?>
-                <tr id="free_enrollment_row">
+                <tr id="free_enrollment_row" class="enrollment">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-enrollment hidden">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
@@ -791,10 +834,10 @@ if(mysql_num_rows($doc_q) == 0){
                     </td>
                 </tr>
                 <?php if ($bill_en > 0) { ?>
-                <tr id="fax_row">
+                <tr id="enrollment_row" class="enrollment">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
+                        <a href="#" class="btn btn-danger remove-enrollment hidden">
+                            <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
                     <td>
@@ -864,12 +907,40 @@ $(document).ready(function(){
 	//$(this).find('.btn.btn-danger').trigger('mouseleave');
     });
     
-    $('#invoice_table').on('click', '.btn.btn-danger', function(e) {
+    $('#invoice_table').on('click', '.btn.btn-danger.remove-single', function(e) {
         e.preventDefault();
         $(this).closest('tr').remove();
         calcTotal();
         return false;
     });
+
+    $('#invoice_table').on('click', '.btn.btn-danger.remove-fax', function(e) {
+        e.preventDefault();
+        if(confirm('This will remove all faxes from this invoice.')){
+          $('tr.fax').remove();
+           calcTotal();
+        }
+        return false;
+    });
+
+    $('#invoice_table').on('click', '.btn.btn-danger.remove-eligibility', function(e) {
+        e.preventDefault();
+        if(confirm('This will remove all eligibility checks from this invoice.')){
+          $('tr.eligibility').remove();
+           calcTotal();
+        }
+        return false;
+    });
+
+    $('#invoice_table').on('click', '.btn.btn-danger.remove-enrollment', function(e) {
+        e.preventDefault();
+        if(confirm('This will remove all enrollments from this invoice.')){
+          $('tr.enrollment').remove();
+           calcTotal();
+        }
+        return false;
+    });
+
     
     $('#invoice_table').on('change keyup', '.amount', function() {
         calcTotal();

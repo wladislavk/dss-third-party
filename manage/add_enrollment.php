@@ -137,7 +137,22 @@ if(isset($json_response->{"error"})){
 <script type="text/javascript" src="script/wufoo.js"></script>
 </head>
 <body width="98%"> */ ?>
+<style type="text/css">
 
+label{
+  font-weight:bold;
+  width:100px;
+  padding: 0px 10px 0 0;
+  margin-top:6px;
+  text-align:right;
+  color:#fff;
+  display:block;
+  float:left;
+}
+
+
+
+</style>
 
     <form name="contactfrm" action="<?=$_SERVER['PHP_SELF'];?>" method="post">
   <?php $t_sql = "SELECT * FROM dental_enrollment_transaction_type ORDER BY transaction_type ASC";
@@ -201,7 +216,7 @@ $payer_name = substr($_POST['payer_id'],strpos($_POST['payer_id'], '-')+1);
         </select>
 
 <div>
-	<label>Facility Name</label>
+	<label style="color:#fff;">Facility Name</label>
 	<input type="text" id="facility_name" name="facility_name" value="<?= $r['practice']; ?>" readonly="readonly" />
 </div>
 <div>
@@ -289,6 +304,11 @@ $('#provider_select').change(function(){
   $('#contact_number').val(r.contact_number);
   $('#email').val(r.email);
 }).change();
+
+$("input[type='text'][readonly]").click( function(){
+  alert('These fields can only be edited or updated via the user profile page.');
+});
+
 </script>
 
 </body>

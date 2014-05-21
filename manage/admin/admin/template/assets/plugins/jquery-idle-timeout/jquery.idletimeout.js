@@ -143,7 +143,7 @@
 	// options
 	$.idleTimeout.options = {
 		// number of seconds after user is idle to show the warning
-		warningLength: 30,
+		warningLength: 2100,
 		
 		// url to call to keep the session alive while the user is active
 		keepAliveURL: "",

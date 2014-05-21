@@ -308,12 +308,12 @@ $num_users=mysql_num_rows($my);
                                 </td>
 				<td valign="top">
 				<?php if(is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access'])) { ?>
-					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" title="Edit" class="btn btn-primary btn-sm">
+					<a href="Javascript:;"  onclick="Javascript: loadPopup('add_users.php?ed=<?=$myarray["userid"];?>');" title="Edit Profile" class="btn btn-primary btn-sm">
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a>
                     
 				<?php } ?>
-				<a href="manage_enrollments.php?ed=<?=$myarray["userid"];?>" title="Edit" class="btn btn-primary btn-sm">
+				<a href="manage_enrollments.php?ed=<?=$myarray["userid"];?>" title="Manage Enrollments" class="btn btn-primary btn-sm">
                                                 Enrollments 
                                          <span class="glyphicon glyphicon-pencil"></span></a>
 				</td>

@@ -39,7 +39,7 @@ $myarray = mysql_fetch_assoc($q);
 ?>
 <div class="pull-right">
                                   <?php if($myarray["status"]==1){ ?>
-                                        <a href="percase_invoice.php?docid=<?=$myarray["userid"];?>" class="btn btn-primary" title="Create Invoice" style="padding:3px 5px;">
+                                        <a href="invoice_bo_additional.php?show=1&coid=<?=$myarray["id"];?>" class="btn btn-primary" title="Create Invoice" style="padding:3px 5px;">
                                                 Create
                                         </a>
                                         <?php if($myarray['cc_id']!=''){ ?>

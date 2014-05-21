@@ -367,6 +367,9 @@ $('#provider_select').change(function(){
   $('#email').val(r.email);
 }).change();
 
+$("input[type='text'][readonly]").click( function(){
+  alert('These fields can only be edited or updated via the user profile page.');
+});
 
 </script>
     

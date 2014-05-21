@@ -2,7 +2,21 @@
 include "includes/top.htm";
   require_once '../3rdParty/stripe/lib/Stripe.php';
 include '../includes/calendarinc.php';
+include 'includes/invoice_functions.php';
 
+if(isset($_GET['show']) && $_GET['show']=='1'){
+  $sql = "SELECT du.*, c.name AS company_name, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
+                plan.trial_period, 
+                (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
+                FROM dental_users du 
+                JOIN dental_user_company uc ON uc.userid = du.userid
+                JOIN companies c ON c.id=uc.companyid
+                JOIN dental_plans plan ON plan.id = du.plan_id
+                WHERE 
+                du.billing_company_id='".$_SESSION['admincompanyid']."' AND
+                du.status=1 AND du.docid=0
+		AND du.userid='".mysql_real_escape_string($_GET['docid'])."'";
+}else{
   $sql = "SELECT du.*, c.name AS company_name, plan.free_fax, plan.free_eligibility, plan.free_enrollment,
 		plan.trial_period, 
                 (SELECT i2.monthly_fee_date FROM dental_percase_invoice i2 WHERE i2.docid=du.userid ORDER BY i2.monthly_fee_date DESC LIMIT 1) as last_monthly_fee_date
@@ -94,6 +108,7 @@ AND
                 ";
 		*/
   }
+}
 $count_q = mysql_query($sql);
 $num_docs = mysql_num_rows($count_q);
 
@@ -110,8 +125,8 @@ if($num_docs == 0){
 }
 $user = mysql_fetch_assoc($q);
 
-$s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."'";
-$q = mysql_query($s);
+$s = "SELECT id FROM dental_percase_invoice WHERE docid='".$user['userid']."' AND status='".DSS_INVOICE_PENDING."' AND invoice_type=".DSS_INVOICE_TYPE_BC_FO;
+$q = mysql_query($s) or die(mysql_error());
 if(mysql_num_rows($q) > 0){
 $r = mysql_fetch_assoc($q);
 $invoice_id = $r['id'];
@@ -124,7 +139,7 @@ $e0486_sql = "SELECT dp.firstname, dp.lastname, l.ledgerid id, l.adddate FROM
 ";
 $e0486_q = mysql_query($e0486_sql);
 
-$claim_sql = "SELECT dp.firstname, dp.lastname, i.insuranceid id, i.adddate FROM 
+$claim_sql = "SELECT dp.patientid, dp.firstname, dp.lastname, i.insuranceid id, i.adddate FROM 
                 dental_insurance i
                 JOIN dental_patients dp ON i.patientid=dp.patientid
         WHERE 
@@ -209,8 +224,25 @@ $total_amount = 0;
         " percase_status = '".DSS_PERCASE_INVOICED."' " .
         " WHERE ledgerid = '".$id."'";
       mysql_query($up_sql);
+    }else{
+      invoice_add_e0486('1',$user['userid'],$id, DSS_INVOICE_TYPE_BC_FO);
     }
   }
+
+  while($claim = mysql_fetch_assoc($claim_q)){
+    $id = $claim['patientid'];
+    if(isset($_POST['pat_new_adddate_'.$id])){
+      $up_sql = "UPDATE dental_patients SET " .
+        " new_fee_date = '".date('Y-m-d', strtotime($_POST['pat_new_adddate_'.$id]))."', " .
+        " new_fee_desc = '".mysql_real_escape_string($_POST['pat_new_name_'.$id])."', " .
+        " new_fee_amount = '".mysql_real_escape_string($_POST['pat_new_amount_'.$id])."', " .
+        " new_fee_invoice_id = '".mysql_real_escape_string($invoice_id)."' " .
+        " WHERE patientid = '".$id."'";
+      mysql_query($up_sql) or die(mysql_error());
+    }
+
+  }
+
 
   while($claim = mysql_fetch_assoc($claim_q)){
     $id = $claim['id'];
@@ -222,7 +254,10 @@ $total_amount = 0;
         " percase_status = '".DSS_PERCASE_INVOICED."' " .
         " WHERE insuranceid = '".$id."'";
       mysql_query($up_sql);
+    }else{
+      invoice_add_claim('1',$user['userid'],$id, DSS_INVOICE_TYPE_BC_FO);
     }
+
   }
 
   if(isset($_POST['free_fax_desc'])){
@@ -491,7 +526,7 @@ if(mysql_num_rows($doc_q) == 0){
 <div class="panel panel-default">
     <div class="panel-body">
         <h3><?= $count_current; ?> of <?= $count_invoices; ?></h3>
-        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
+        <form name="sortfrm" id="invoice" action="<?=$_SERVER['PHP_SELF']?>?show=<?=$_GET['show']; ?>&docid=<?=$_GET['docid'];?>&company=<?=$_GET['company'];?>&bill=<?=$_GET['bill'];?>&uid=<?=$_GET['uid'];?>&cc=<?= ($count_current); ?>&ci=<?= $count_invoices; ?>" method="post">
             <input type="hidden" name="docid" value="<?=$user["userid"];?>">
             <table id="invoice_table" class="table table-bordered table-hover">
                 <tr>
@@ -508,7 +543,7 @@ if(mysql_num_rows($doc_q) == 0){
             	</tr>
                 <tr id="model-row" class="hidden">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -532,7 +567,7 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                 <tr id="month_row">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -559,7 +594,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php $producer_r = mysql_fetch_assoc($producer_q); ?>
                 <tr id="user_row">
                     <td>
-                        <a href="#" class="btn btn-danger hidden">
+                        <a href="#" class="btn btn-danger remove-single hidden">
                             <i class="glyphicon glyphicon-calendar"></i>
                         </a>
                     </td>
@@ -585,7 +620,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($case = mysql_fetch_array($case_q)) { ?>
                 <tr id="case_row_<?= $case['ledgerid'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -613,7 +648,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($e0486 = mysql_fetch_array($e0486_q)) { ?>
                 <tr id="e0486_row_<?= $e0486['id'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -637,10 +672,50 @@ if(mysql_num_rows($doc_q) == 0){
                 </tr>
                    <? } ?>
 
+
+
                 <?php while ($claim = mysql_fetch_array($claim_q)) { ?>
+		<?php
+			$cpat_sql = "SELECT p.new_fee_invoice_id, vob.invoice_id
+					FROM dental_patients p
+					LEFT JOIN dental_insurance_preauth vob ON p.patientid= vob.patient_id AND vob.invoice_id IS NOT NULL
+					WHERE p.patientid='".$claim['patientid']."' LIMIT 1";
+			$cpat_q = mysql_query($cpat_sql) or die(mysql_error());
+			$cpat_r = mysql_fetch_assoc($cpat_q);
+			if($cpat_r['new_fee_invoice_id']=='' && $cpat_r['invoice_id']==''){ ?>
+
+                <tr id="pat_new_row_<?= $claim['patientid'] ?>">
+                    <td>
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <input type="text" name="pat_new_<?= $claim['patientid'] ?>" value="New Patient: <?=st($claim["firstname"]." ".$claim["lastname"]);?>" class="form-control">
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <input type="text" id="pat_new_adddate_<?= $claim['patientid'] ?>" class="form-control text-center" name="pat_new_adddate_<?= $claim['patientid'] ?>" value="<?=date('m/d/Y', strtotime(st($claim["adddate"])));?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="text" class="amount form-control" name="pat_new_amount_<?= $claim['patientid'] ?>" value="<?= $doc['claim_fee']; ?>">
+                        </div>
+                    </td>
+                </tr>
+
+
+
+			<?php } ?>
+
                 <tr id="claim_row_<?= $claim['id'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -669,7 +744,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <?php while ($vob = mysql_fetch_array($vob_q)) { ?>
                 <tr id="vob_row_<?= $vob['id'] ?>">
                     <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
+                        <a href="#" title="Remove from invoice" class="btn btn-danger remove-single hidden">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -694,213 +769,6 @@ if(mysql_num_rows($doc_q) == 0){
                 <? } ?>
             <?php } ?>
             
-            <?php if ($fax['total_faxes'] > 0) { ?>
-                <?php
-                
-                $bill_faxes = intval($fax['total_faxes']) - intval($doc['free_fax']);
-                
-                if ($doc['free_fax'] > $fax['total_faxes']) {
-                    $free_fax = $fax['total_faxes'];
-                }
-                else {
-                    $free_fax = $doc['free_fax'];
-                }
-                
-                ?>
-                <tr id="free_fax_row">
-                    <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="free_fax_desc" value="Free Faxes – <?= $free_fax." at $0.00 each "; ?>" style="width:100%;" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="free_fax_start_date" class="date form-control text-center" name="free_fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="free_fax_end_date" class="date form-control text-center" name="free_fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="free_fax_amount" value="0.00">
-                        </div>
-                    </td>
-                </tr>
-                <?php if ($bill_faxes > 0) { ?>
-                <tr id="fax_row">
-                    <td>
-                        <a href="#" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="fax_desc" value="Faxes – <?= $bill_faxes." at $".$doc['fax_fee']." each "; ?>" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="fax_start_date" class="date form-control text-center" name="fax_start_date" value="<?=date('m/d/Y', strtotime(st($fax["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="fax_end_date" class="date form-control text-center" name="fax_end_date" value="<?=date('m/d/Y', strtotime(st($fax["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="fax_amount" value="<?= $bill_faxes*$doc['fax_fee']; ?>">
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>
-            <?php } ?>
-
-
-
-
-            <?php if ($ec['total_ec'] > 0) { ?>
-                <?php
-
-                $bill_ec = intval($ec['total_ec']) - intval($doc['free_eligibility']);
-
-                if ($doc['free_eligibility'] > $ec['total_ec']) {
-                    $free_ec = $ec['total_ec'];
-                }
-                else {
-                    $free_ec = $doc['free_eligibility'];
-                }
-
-                ?>
-                <tr id="free_ec_row">
-                    <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="free_ec_desc" value="Free Eligibility Check – <?= $free_ec." at $0.00 each "; ?>" style="width:100%;" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="free_ec_start_date" class="date form-control text-center" name="free_ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="free_ec_end_date" class="date form-control text-center" name="free_ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="free_ec_amount" value="0.00">
-                        </div>
-                    </td>
-                </tr>
-                <?php if ($bill_ec > 0) { ?>
-                <tr id="ec_row">
-                    <td>
-                        <a href="#" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="ec_desc" value="Eligibility Checks – <?= $bill_ec." at $".$doc['eligibility_fee']." each "; ?>" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="ec_start_date" class="date form-control text-center" name="ec_start_date" value="<?=date('m/d/Y', strtotime(st($ec["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="ec_end_date" class="date form-control text-center" name="ec_end_date" value="<?=date('m/d/Y', strtotime(st($ec["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="ec_amount" value="<?= $bill_ec*$doc['eligibility_fee']; ?>">
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>
-            <?php } ?>
-
-
-
-
-
-
-
-
-
-            <?php if ($enroll['total_enrollments'] > 0) { ?>
-                <?php
-
-                $bill_en = intval($enroll['total_enrollments']) - intval($doc['free_enrollment']);
-
-                if ($doc['free_enrollment'] > $enroll['total_enrollments']) {
-                    $free_en = $enroll['total_enrollments'];
-                }
-                else {
-                    $free_en = $doc['free_enrollment'];
-                }
-
-                ?>
-                <tr id="free_enrollment_row">
-                    <td>
-                        <a href="#" title="Remove from invoice" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="free_enrollment_desc" value="Free Enrollments – <?= $free_en." at $0.00 each "; ?>" style="width:100%;" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="free_enrollment_start_date" class="date form-control text-center" name="free_enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="free_enrollment_end_date" class="date form-control text-center" name="free_enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="free_enrollment_amount" value="0.00">
-                        </div>
-                    </td>
-                </tr>
-                <?php if ($bill_en > 0) { ?>
-                <tr id="fax_row">
-                    <td>
-                        <a href="#" class="btn btn-danger hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <input type="text" name="enrollment_desc" value="Enrollments – <?= $bill_en." at $".$doc['enrollment_fee']." each "; ?>" class="form-control">
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="text" id="enrollment_start_date" class="date form-control text-center" name="enrollment_start_date" value="<?=date('m/d/Y', strtotime(st($enroll["start_date"])));?>">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" id="enrollment_end_date" class="date form-control text-center" name="enrollment_end_date" value="<?=date('m/d/Y', strtotime(st($enroll["end_date"])));?>">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="enrollment_amount" value="<?= $bill_en*$doc['enrollment_fee']; ?>">
-                        </div>
-                    </td>
-                </tr>
-                <?php } ?>
-            <?php } ?>
-
-
-
-
-
-
-
-
 
 
 
@@ -941,7 +809,7 @@ $(document).ready(function(){
 	//$(this).find('.btn.btn-danger').trigger('mouseleave');
     });
     
-    $('#invoice_table').on('click', '.btn.btn-danger', function(e) {
+    $('#invoice_table').on('click', '.btn.btn-danger.remove-single', function(e) {
         e.preventDefault();
         $(this).closest('tr').remove();
         calcTotal();

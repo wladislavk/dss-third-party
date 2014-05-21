@@ -1487,7 +1487,7 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
 		<?php } ?>
 		value="Print Claim" />
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
-          <input type="button" name="elec" onclick="return change_form();" value="Electronically File Claim" />
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
         <?php } ?>
 
@@ -1506,11 +1506,12 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
   if($is_pending){
 ?>
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
-          <input type="button" name="elec" onclick="return change_form();" value="Electronically File Claim" />
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
   <?php }elseif($is_rejected){
 ?>
-          <input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />-->
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
   <?php 
   } ?>
 <?php } ?>

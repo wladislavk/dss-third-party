@@ -168,14 +168,15 @@ $sql = "SELECT "
                 WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
                 WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
        END AS status_order, "
-     . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid) num_notes, "
+     . " COALESCE(notes.num_notes, 0) num_notes, "
      . " (SELECT count(*) FROM dental_claim_notes where claim_id=claim.insuranceid AND create_type='1') num_fo_notes "
      . "FROM "
      . "  dental_insurance claim "
      . "  JOIN dental_patients p ON p.patientid = claim.patientid "
      . "  JOIN dental_users users ON claim.docid = users.userid "
      . "  JOIN dental_users users2 ON claim.userid = users2.userid "
-     . "  LEFT JOIN companies c ON c.id = users.billing_company_id ";
+     . "  LEFT JOIN companies c ON c.id = users.billing_company_id "
+     . "  LEFT JOIN (SELECT claim_id, count(*) num_notes FROM dental_claim_notes group by claim_id) notes ON notes.claim_id=claim.insuranceid ";
 }elseif(is_billing($_SESSION['admin_access'])){
 $sql = "SELECT "
      . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
@@ -239,6 +240,12 @@ $sql = "SELECT "
     THEN p.p_m_dss_file
     ELSE p.s_m_dss_file
    END = '1' ";
+
+	if(isset($_GET['notes']) && $_GET['notes']==1){
+	  $sql .= " AND num_notes > 0 ";
+	}
+
+
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($_REQUEST['fid'])) {
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
@@ -345,6 +352,11 @@ if(isset($_GET['msg'])){
 ?>
 <a style="float:right;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
 <?php } ?>
+<?php if(isset($_GET['notes']) && $_GET['notes']==1){ ?>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?" class="btn btn-primary"> Show All </a>
+<?php }else{ ?>
+<a style="float:right;margin-right:3px;"  href="manage_claims.php?notes=1" class="btn btn-primary"> Show Claim Notes </a>
+<?php } ?>
 <div style="clear:both;"></div>
 </div>
 
@@ -355,7 +367,7 @@ if(isset($_GET['msg'])){
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
 			<?
-				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
+				 paging($no_pages,$index_val,"status=".$_GET['status']."&notes=".$_GET['notes']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir']);
 			?>
 		</TD>
 	</TR>
@@ -463,23 +475,23 @@ if(isset($_GET['msg'])){
 						Edit
 					 <span class="glyphicon glyphicon-pencil"></span></a> 
 				<?php }elseif($myarray["status"] == DSS_CLAIM_SEC_PENDING){ ?>
-                                    <a href="insurance_claim<?=($myarray['secondary_claim_version']!="1")?'_v2':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" title="Edit" class="btn btn-primary btn-sm">
+                                    <a href="insurance_claim<?=($myarray['secondary_claim_version']!="1")?'_v2':''; ?>.php?insid=<?=$myarray['insuranceid']?>&fid_filter=<?=$fid?>&pid_filter=<?=$pid?>&pid=<?=$myarray['patientid']?>&instype=2" title="Edit Secondary" class="btn btn-primary btn-sm">
                                                 Edit Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="<?= $primary_link; ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }elseif($myarray["status"] == DSS_CLAIM_SEC_SENT || $myarray["status"] == DSS_CLAIM_PAID_SEC_INSURANCE){ ?>
-                                    <a href="<?= $secondary_link; ?>" title="Edit" class="btn btn-primary btn-sm">
+                                    <a href="<?= $secondary_link; ?>" title="View Secondary" class="btn btn-primary btn-sm">
                                                 View Secondary
                                          <span class="glyphicon glyphicon-pencil"></span></a><br />
-                                        <a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="<?= $primary_link; ?>" title="View Primary" class="btn btn-primary btn-sm">View Primary <span class="glyphicon glyphicon-pencil"></span></a>
                                 <?php }else{ ?>
-					<a href="<?= $primary_link; ?>" title="Edit" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="<?= $primary_link; ?>" title="View" class="btn btn-primary btn-sm">View <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 				<?php 
 					$eobsql = "SELECT * FROM dental_insurance_file WHERE claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";
 					$eobq = mysql_query($eobsql);
 					while($eobr = mysql_fetch_assoc($eobq)){
-						?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" title="Edit" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
+						?><br /><a href="display_file.php?f=<?= $eobr['filename']; ?>" title="View <?= $eobr['claimtype']; ?> EOB" class="btn btn-primary btn-sm">View <?= $eobr['claimtype']; ?> EOB <span class="glyphicon glyphicon-pencil"></span></a>
 				<?php } ?>
 <?php if($myarray['status'] == DSS_CLAIM_DISPUTE || $myarray['status'] == DSS_CLAIM_PATIENT_DISPUTE){
             $s = "SELECT filename, description FROM dental_insurance_file f WHERE f.claimtype='primary' AND f.claimid='".mysql_real_escape_string($myarray['insuranceid'])."'";

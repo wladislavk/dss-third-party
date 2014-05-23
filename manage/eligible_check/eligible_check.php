@@ -528,7 +528,7 @@ setup_autocomplete_local('payer_name', 'ins_payer_hints', 'payer_id', '', 'https
       ?>
 	<tr>
 	  <td><?= $r['adddate']; ?></td>
-          <td><a href="#" onclick="parent.loadPopup('view_eligibility_response.php?id=<?=$r['id']; ?>');return false;">View</a></td>
+          <td><a href="#" onclick="parent.window.location = '../view_eligibility_response.php?id=<?=$r['id']; ?>';return false;">View</a></td>
         </tr>
 
 <?php

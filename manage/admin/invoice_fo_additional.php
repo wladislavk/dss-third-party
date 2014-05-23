@@ -469,11 +469,11 @@ $total_amount = 0;
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <script src="popup/popup.js" type="text/javascript"></script>
 <?php
-  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
+  $doc_sql = "SELECT p.monthly_fee, p.producer_fee, p.fax_fee, p.free_fax, p.patient_fee, p.claim_fee, p.free_claim, p.eligibility_fee, p.free_eligibility, p.enrollment_fee, p.free_enrollment, vob_fee, free_vob, CONCAT(u.first_name,' ',u.last_name) as name, u.user_type, c.name as company_name, p.name as plan_name
 		FROM dental_users u
 		JOIN dental_user_company uc ON uc.userid = u.userid
 		JOIN companies c ON uc.companyid = c.id
-		JOIN dental_plans p ON p.id=u.plan_id
+		JOIN dental_plans p ON p.id=u.billing_plan_id
 		WHERE u.userid='".mysql_real_escape_string($user['userid'])."'";
   $doc_q = mysql_query($doc_sql);
 if(mysql_num_rows($doc_q) == 0){
@@ -595,7 +595,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <tr id="user_row">
                     <td>
                         <a href="#" class="btn btn-danger remove-single hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
+                            <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
                     <td>
@@ -666,7 +666,7 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="amount_<?= $e0486['id'] ?>" value="<?= $doc['e0486_fee']; ?>">
+                            <input type="text" class="amount form-control" name="amount_<?= $e0486['id'] ?>" value="<?= $doc['claim_fee']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -691,7 +691,7 @@ if(mysql_num_rows($doc_q) == 0){
                         </a>
                     </td>
                     <td>
-                        <input type="text" name="pat_new_<?= $claim['patientid'] ?>" value="New Patient: <?=st($claim["firstname"]." ".$claim["lastname"]);?>" class="form-control">
+                        <input type="text" name="pat_new_name_<?= $claim['patientid'] ?>" value="New Patient: <?=st($claim["firstname"]." ".$claim["lastname"]);?>" class="form-control">
                     </td>
                     <td>
                         <div class="input-group date">
@@ -704,7 +704,7 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="amount form-control" name="pat_new_amount_<?= $claim['patientid'] ?>" value="<?= $doc['claim_fee']; ?>">
+                            <input type="text" class="amount form-control" name="pat_new_amount_<?= $claim['patientid'] ?>" value="<?= $doc['patient_fee']; ?>">
                         </div>
                     </td>
                 </tr>

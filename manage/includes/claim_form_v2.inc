@@ -1419,7 +1419,6 @@ if($r['reference_id']){
                                 Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
                                 </p>
 
-                                <p><?= $w_r['response']; ?></p>
                         <?php
     }
 }
@@ -1440,7 +1439,7 @@ if(!$r['reference_id'] || !$w_r['response']){
                                         }
                         }
                         ?>
-                <?= $r['response'];?></p>
+                </p>
 <?php } ?>
         </div>
 
@@ -1508,7 +1507,7 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_claim();" value="Electronically File Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
 	  <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
-  <?php }elseif($is_rejected){
+  <?php }elseif($is_rejected || $is_disputed){
 ?>
           <!--<input type="submit" name="ex_pagebtn_elec" onclick="return file_reject_claim();" value="Resubmit Claim" />-->
           <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
@@ -1547,14 +1546,6 @@ if ($is_back_office || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) && ($
                 }	
 ?>
 
- Insurance Co.
-                                        <input type="text" id="ins_payer_name" onclick="updateval_local(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />
-<br />
-        <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
-                <ul id="ins_payer_list" class="search_list">
-                        <li class="template" style="display:none"></li>
-                </ul>
-        </div>
 <?php
         $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".mysql_real_escape_string($_GET['insid'])."'";
         $prod_q = mysql_query($prod_s);
@@ -3053,11 +3044,62 @@ if ($is_pending) {
                     <a href="manage_insurance.php?delid=<?=$insuranceid;?>&pid=<?php echo $_GET['pid']; ?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" style="float:left; color:#f00; font-decoration:none;" class="editdel dellink" title="DELETE">
                                                 Delete
                                         </a>
-        <?php if (!$is_sent) { 
-		if($is_back_office){ ?>
-          <input style="float:right;" type="submit" name="ex_pagebtn" value="Submit Claim" />
-		<?php } ?>
+
+
+		<div style="float:right;">
+
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn"
+                <?php if($status == DSS_CLAIM_REJECTED || $status == DSS_CLAIM_SEC_REJECTED){ ?>
+onclick="return confirm('This claim has been rejected. By printing this claim the status will be changed to SENT, and the rejection notification will be removed. Click OK to proceed.');"
+                <?php } ?>
+                value="Print Claim" />
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
+          <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
+
+                <?php } elseif ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+               <?php if(($is_pending || $is_disputed || $is_rejected) && $p_m_dss_file == '2'){ ?>
+<?php
+  $api_sql = "SELECT use_eligible_api FROM dental_users
+                WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
+  $api_q = mysql_query($api_sql);
+  $api_r = mysql_fetch_assoc($api_q);
+  if($api_r['use_eligible_api']==1){
+  if($is_pending){
+?>
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
+          <input type="submit" name="elec_save" id="elec_save" style="display:none;" />
+  <?php }elseif($is_rejected || $is_disputed){
+?>
+          <input type="button" name="elec" onclick="return change_form();" value="Switch to E-File" />
+  <?php
+  } ?>
+<?php } ?>
+
         <?php } ?>
+
+               <?php }elseif(($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_REJECTED) && $s_m_dss_file == '2'){ ?>
+          Mark Sent <input type="checkbox" name="status_chk" disabled="disabled" value="<?=DSS_CLAIM_SEC_SENT?>" checked="checked" />
+                        <input type="hidden" name="status" value="<?=DSS_CLAIM_SEC_SENT?>" />
+        <?php if (!$is_sent) {  ?>
+          <input type="submit" name="ex_pagebtn" value="Print Claim" />
+          <!--<input type="submit" name="ex_pagebtn_elec" onclick="file_claim();return false;" value="Electronically File Claim" />-->
+
+        <?php } ?>
+
+               <?php } ?>
+		</div>
+        </div>
+
+
+
+
+
+
+
+
+
+
 
 			<?php } ?>
                                 <?php } ?>

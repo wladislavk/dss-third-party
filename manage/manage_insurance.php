@@ -13,16 +13,6 @@ if(isset($_GET['vobdel'])){
   include 'vob_checklist.php';
 ?>
 <div style="clear:both;"></div>
-<?php
-  $api_sql = "SELECT use_eligible_api FROM dental_users
-		WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
-  $api_q = mysql_query($api_sql);
-  $api_r = mysql_fetch_assoc($api_q);
-  if($api_r['use_eligible_api']==1){
-    include 'eligible_api.php';
-    ?><center><iframe width="98%" onLoad="autoResize('eligible');" id="eligible" class="eligible" src="eligible_check/eligible_check.php?docid=<?=$_SESSION['docid'];?>&pid=<?=$_GET['pid']; ?>">
-    </iframe></center><?php
-?>
 
 <script language="JavaScript">
 <!--
@@ -43,7 +33,6 @@ function autoResize(id){
 
 
 <?php
-  }
 include 'includes/bottom.htm';
 ?>
 

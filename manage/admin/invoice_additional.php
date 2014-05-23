@@ -355,7 +355,7 @@ if(isset($_POST['submit'])){
     
   }
 
-  }
+  
 }else{
       $in_sql = "insert into dental_percase_invoice SET
                         adminid = '".$_SESSION['adminuserid']."',
@@ -533,7 +533,7 @@ if(mysql_num_rows($doc_q) == 0){
                         <div class="input-group date">
                             <input type="text" id="extra_service_date_{row}" class="form-control text-center" name="extra_service_date_{row}" value="<?= date('m/d/Y') ?>">
                             <span class="input-group-addon">
-                                <i class="glyphicon glyphicon-calendar"></i>
+                                <i class="glyphicon glyphicon-remove"></i>
                             </span>
                         </div>
                     </td>
@@ -574,7 +574,7 @@ if(mysql_num_rows($doc_q) == 0){
                 <tr id="user_row">
                     <td>
                         <a href="#" class="btn btn-danger remove-single hidden">
-                            <i class="glyphicon glyphicon-calendar"></i>
+                            <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
                     <td>
@@ -583,6 +583,9 @@ if(mysql_num_rows($doc_q) == 0){
                     <td>
                         <div class="input-group">
                             <input type="text" id="producer_date" class="date form-control text-center" name="producer_date" value="<?=date('m/d/Y');?>">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
                         </div>
                     </td>
                     <td>

@@ -482,7 +482,6 @@ if($r['reference_id']){
                                 Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
                                 </p>
 
-                                <p><?= $w_r['response']; ?></p>
                         <?php
     }
 }
@@ -503,7 +502,7 @@ if(!$r['reference_id'] || !$w_r['response']){
                                         }
                         }
                         ?>
-                <?= $r['response'];?></p>
+                </p>
 <?php } ?>
         </div>
 

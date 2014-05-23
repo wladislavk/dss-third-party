@@ -4,6 +4,7 @@ ALTER TABLE dental_plans ADD COLUMN free_efile int(11) default 0;
 ALTER TABLE dental_plans ADD COLUMN duration int(11) default 0;
 ALTER TABLE dental_plans ADD COLUMN producer_fee decimal(11,2) default '0.00';
 ALTER TABLE dental_plans ADD COLUMN user_fee decimal(11,2) default '0.00';
+ALTER TABLE dental_plans ADD COLUMN patient_fee decimal(11,2) default '0.00';
 ALTER TABLE dental_users ADD COLUMN billing_plan_id int(11);
 ALTER TABLE companies ADD COLUMN plan_id int(11);
 ALTER TABLE dental_percase_invoice ADD COLUMN companyid int(11);

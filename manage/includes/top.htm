@@ -1445,6 +1445,21 @@ while($od_r = mysql_fetch_assoc($od_q)){
 <br />
 
 <?php
+  if(isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings']!=$_GET['pid'])){
+	?>
+	<script type="text/javascript">
+	$.cookie('hide_pat_warnings', '');
+	</script>
+	<?php
+  }
+
+if(isset($_GET['pid'])){
+?>
+
+<a href="#" style="float:right; margin-right:10px;<?= ($_COOKIE['hide_pat_warnings']==$_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();return false;">Show Warnings</a>
+<div id="patient_warnings" <?= ($_COOKIE['hide_pat_warnings']==$_GET['pid'])?'style="display:none;"':'';?>>
+<a href="#" style="float:right; margin-right:10px;" class="button" onclick="$.cookie('hide_pat_warnings', <?=$_GET['pid'];?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();return false;">Hide Warnings</a>
+<?php
   if(isset($_GET['pid']) && $_GET['pid']!='' && $_GET['pid']!='0'){
 	$s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysql_real_escape_string($_GET['pid'])."'";
                                 $q = mysql_query($s);
@@ -1543,6 +1558,14 @@ $total_insurance = mysql_num_rows($insurance_my);
 
 
   }
+
+
+  ?>
+</div>
+  <?php
+}
+
+
 
   $sql = "SELECT use_letters from dental_users WHERE userid='".mysql_real_escape_string($_SESSION['docid'])."'";
   $q = mysql_query($sql);

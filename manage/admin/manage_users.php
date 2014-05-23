@@ -295,7 +295,11 @@ $num_users=mysql_num_rows($my);
                         <?=st($pat_myarray['pat_count']);?>
                                 </td>
                                 <td valign="top" align="center">
+				<?php if(is_super($_SESSION['admin_access'])) { ?>
                         <a href="manage_percase_invoice_history.php?docid=<?= $myarray["userid"]; ?>"><?=st($inv_myarray['inv_count']);?></a>
+				<?php }else{ ?>
+                        <a href="manage_percase_fo_invoice_history.php?docid=<?= $myarray["userid"]; ?>"><?=st($inv_myarray['inv_count']);?></a>
+				<?php } ?>
                                 </td>
 
 				<?php if(is_super($_SESSION['admin_access'])){ ?>

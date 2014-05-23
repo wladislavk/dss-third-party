@@ -992,7 +992,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </div>
             </div>
             <div class="form-group">
-                <label for="plan_id" class="col-md-3 control-label">Plan</label>
+                <label for="plan_id" class="col-md-3 control-label">Software Plan</label>
                 <div class="col-md-9">
                     <select name="plan_id" id="plan_id" class="form-control">
                         <?php

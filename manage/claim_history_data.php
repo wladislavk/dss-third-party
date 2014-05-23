@@ -33,7 +33,6 @@ $claim = mysql_fetch_assoc($cq);
                                 Status: <?= $p->{"details"}->{"codes"}->{"status_code"}; ?> - <?= $p->{"details"}->{"codes"}->{"status_label"}; ?>
                                 </p>
 
-                                <p><?= $w_r['response']; ?></p>
                         <?php
                         }
 		  }
@@ -54,10 +53,45 @@ $claim = mysql_fetch_assoc($cq);
                                         }
 			}
 			?>
-		<?= $r['response'];?></p>
+		</p>
 	</div><?php
   }
 ?>
+
+
+
+
+<span class="admin_head">
+        Claim Version History
+</span>
+<?php
+  $sql = "SELECT * FROM dental_insurance_history WHERE insuranceid='".mysql_real_escape_string($_GET['cid'])."'";
+  $q = mysql_query($sql) or die(mysql_error());
+  while($r = mysql_fetch_assoc($q)){
+ ?><div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
+	<?= $r['updated_at']; ?> - Claim Status = <?= $dss_claim_status_labels[$r['status']];?> - 
+	<?php $u_sql = "SELECT first_name, last_name from dental_users where userid='".$r['updated_by_user']."'";
+		$u_q = mysql_query($u_sql);
+		$u_r = mysql_fetch_assoc($u_q);
+		echo $u_r['first_name']." ".$u_r['last_name'];
+		$u_sql = "SELECT first_name, last_name from admin where adminid='".$r['updated_by_admin']."'";
+                $u_q = mysql_query($u_sql);
+                $u_r = mysql_fetch_assoc($u_q);
+                echo $u_r['first_name']." ".$u_r['last_name']
+?>
+	<a href="#" onclick="$('#cvh_<?=$r['id']; ?>').toggle(); return false;">Expand</a>
+	<div id="cvh_<?=$r['id']; ?>" style="display:none;">
+		<br />
+                <?php
+    print_r($r);
+    ?>
+	</div>
+	</div><?php
+
+  }
+?>
+
+
 
 
 <div id="popupContact" style="width:750px;">

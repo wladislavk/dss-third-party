@@ -90,7 +90,7 @@ $m = "<html><body><center>
 <p>".$location_info['location']."<br />
 ".$location_info['address']."<br />
 ".$location_info['city']." ".$location_info['state']." ".$location_info['zip']."<br />
-".$location_info['phone']."</p>
+".format_phone($location_info['phone'])."</p>
 <h3>Need Assistance?</h3>
 <p><b>Contact us at ".format_phone($n)."</b></p>
 </td></tr>

@@ -33,7 +33,6 @@ function autoResize(id){
 
 
 <?php
-  }
 include 'includes/bottom.htm';
 ?>
 

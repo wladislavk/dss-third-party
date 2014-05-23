@@ -1,0 +1,1193 @@
+<? 
+//session_start();
+include_once($_SERVER['DOCUMENT_ROOT'] . "/manage/includes/constants.inc"); 
+require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/main_include.php');
+include($_SERVER['DOCUMENT_ROOT'] . "/manage/admin/includes/sescheck.php"); 
+require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/admin/includes/access.php'); 
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Admin </title>
+
+
+   <!-- BEGIN GLOBAL MANDATORY STYLES -->          
+   <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+  
+   <link href="admin/template/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+   <!-- END GLOBAL MANDATORY STYLES -->
+   <link href="admin/template/assets/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css" rel="stylesheet"/>
+	<link href="admin/template/assets/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet"/>
+	<link href="admin/template/assets/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet"/>
+
+   <!-- BEGIN PAGE LEVEL PLUGIN STYLES --> 
+   <!--<link href="admin/template/assets/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>-->
+   <link href="admin/template/assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+   <link href="admin/template/assets/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>
+   <!-- END PAGE LEVEL PLUGIN STYLES -->
+	
+
+   <!-- BEGIN THEME STYLES --> 
+   <link href="admin/template/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/css/style.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
+   <link href="admin/template/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+   <link href="admin/template/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+   <!-- END THEME STYLES -->
+    <link type="text/css" rel="stylesheet" href="/manage/admin/css/bootstrap-datepicker.css">
+    <link type="text/css" rel="stylesheet" href="/manage/admin/css/admin.css">
+    
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/bootstrap-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/manage/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="/manage/admin/script/bootstrap-filestyle.min.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/jquery.tablesorter.min.js"></script>
+   <!--- <script type="text/javascript" src="/manage/admin/script/logout_timer.js"></script>--->
+    <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/reskin.js"></script>
+    <script type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+    
+    <!-- <script src="admin/template/assets/plugins/bootstrap-sessiontimeout/jquery.sessionTimeout.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/manage/admin/script/jquery.inputmask.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/masks.js"></script>-->
+ <?php //include "includes/bottom_ext.php";  ?>
+	<script type="text/javascript">/*
+    $(document).ready(function(){
+		
+	modal_change = false;
+    $('#popup-window').on('shown.bs.modal', function (e) {
+      modal_change = false;
+    });
+    $('#popup-window').on('hide.bs.modal', function (e) {
+      if(modal_change){
+        return confirm('Are you sure you want to close this popup?');
+      }
+    });
+    
+	
+	
+    });*/
+  </script>
+  	
+
+
+    <script>
+    function calendar2(){}
+    </script>
+   
+</head>
+<body class="lpage-header-fixed">
+
+        <div class="header navbar navbar-fixed-top"><a href="/manage/admin/home.php">
+            <h1 class="pull-left" style="color:#ffffff;font-size:17px; margin:12px;">Dental Sleep <span style="color:#ff0000;">Solutions</span></h1>
+           </a>
+           <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+		<div class="sidebar-toggler hidden-phone">
+		</div>
+		<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<img src="admin/template/assets/img/menu-toggler.png" alt=""/>
+		</a>
+		<!-- END RESPONSIVE MENU TOGGLER -->
+		<!-- BEGIN TOP NAVIGATION MENU -->
+		<ul class="nav navbar-nav pull-right">
+		
+			<!-- BEGIN USER LOGIN DROPDOWN -->
+			<li class="dropdown user">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+					<!--<img alt="" src="admin/template/assets/img/avatar1_small.jpg"/>--->
+					<i class="fa fa-user"></i>
+					<span class="username">
+						 Nathan Drake
+					</span>
+					<i class="fa fa-angle-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="extra_profile.html">
+							<i class="fa fa-user"></i> My Profile
+						</a>
+					</li>
+					
+					<li>
+						<a href="#">
+							<i class="fa fa-tasks"></i> My Tasks
+							<span class="badge badge-success">
+								 7
+							</span>
+						</a>
+					</li>
+					<li class="divider">
+					</li>
+					<li>
+						<a href="javascript:;" id="trigger_fullscreen">
+							<i class="fa fa-arrows"></i> Full Screen
+						</a>
+					</li>
+					<li>
+						<a href="extra_lock.php">
+							<i class="fa fa-lock"></i> Lock Screen
+						</a>
+					</li>
+					<li>
+						<a href="logout.php">
+							<i class="fa fa-key"></i> Log Out
+						</a>
+					</li>
+				</ul>
+			</li>
+			<!-- END USER LOGIN DROPDOWN -->
+		</ul>
+		<!-- END TOP NAVIGATION MENU -->
+	</div>
+	<!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
+	        <div class="clearfix"></div>
+        </div>
+<?php
+// Count letters
+// Select Letters into Array
+  if(is_super($_SESSION['admin_access'])){
+  $letters_query = "SELECT dental_letters.letterid, 
+                        dental_letters.templateid, 
+                        dental_letters.patientid, 
+                        UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                        UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                        UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                        dental_letters.topatient, 
+                        dental_letters.md_list, 
+                        dental_letters.md_referral_list, 
+                        dental_letters.docid, 
+                        dental_letters.userid, 
+                        dental_letters.send_method, 
+                        dental_patients.firstname, 
+                        dental_patients.lastname, 
+                        dental_patients.middlename,
+                        dental_letters.status
+                         FROM dental_letters 
+                JOIN dental_users u ON u.userid = dental_letters.docid
+                LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                        WHERE ((dental_letters.status = '1' AND dental_letters.delivered=0) 
+                                        OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
+                                ) AND 
+                                dental_letters.deleted = '0' AND 
+                                u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
+                        ORDER BY dental_letters.letterid ASC;";
+  }else{
+  $letters_query = "SELECT dental_letters.letterid, 
+                        dental_letters.templateid, 
+                        dental_letters.patientid, 
+                        UNIX_TIMESTAMP(dental_letters.date_sent) as date_sent, 
+                        UNIX_TIMESTAMP(dental_letters.generated_date) as generated_date, 
+                        UNIX_TIMESTAMP(dental_letters.delivery_date) as delivery_date,
+                        dental_letters.topatient, 
+                        dental_letters.md_list, 
+                        dental_letters.md_referral_list, 
+                        dental_letters.docid, 
+                        dental_letters.userid, 
+                        dental_letters.send_method, 
+                        dental_patients.firstname, 
+                        dental_patients.lastname, 
+                        dental_patients.middlename, 
+                        dental_letters.status
+                                FROM dental_letters 
+        JOIN dental_user_company uc ON uc.userid = dental_letters.docid
+        JOIN dental_users u ON u.userid = dental_letters.docid
+        LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid 
+                WHERE uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."' AND
+                        ((dental_letters.status = '1' AND dental_letters.delivered=0) 
+                                        OR (dental_letters.delivered = '1' AND dental_letters.mailed_date IS NULL)
+                                ) AND
+                        dental_letters.deleted = '0' AND 
+                        u.user_type = '".DSS_USER_TYPE_FRANCHISEE."'
+                ORDER BY dental_letters.letterid ASC;";
+
+  }
+  $letters_res = mysql_query($letters_query);
+  $pending_letters = mysql_num_rows($letters_res);
+if(is_super($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.")";
+}elseif(is_billing($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.") "
+     . "   AND users.billing_company_id='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}else{
+$sql = "SELECT "
+     . "  preauth.id, preauth.patient_firstname, preauth.patient_lastname, "
+     . "  preauth.front_office_request_date, users.name as doc_name, preauth.status, "
+     . "  DATEDIFF(NOW(), preauth.front_office_request_date) as days_pending, "
+     . "  users2.name as user_name "
+     . "FROM "
+     . "  dental_insurance_preauth preauth "
+     . "  JOIN dental_patients p ON preauth.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
+     . "  JOIN dental_users users ON preauth.doc_id = users.userid "
+     . "  JOIN dental_user_company uc ON uc.userid=users.userid "
+     . "  JOIN dental_users users2 ON preauth.userid = users2.userid "
+     . " WHERE preauth.status IN (" . DSS_PREAUTH_PENDING.",".DSS_PREAUTH_PREAUTH_PENDING.") "
+     . "   AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}
+$my = mysql_query($sql);
+$num_pending_preauth = mysql_num_rows($my);
+
+if(is_super($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING;
+}elseif(is_hst($_SESSION['admin_access'])){
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  LEFT JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . "  JOIN dental_user_hst_company uhc ON uhc.userid = users.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING
+     . "   AND uhc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}else{
+  $sql = "SELECT "
+     . "  hst.id "
+     . "FROM "
+     . "  dental_hst hst "
+     . "  JOIN dental_patients p ON hst.patient_id = p.patientid "
+     . "  JOIN dental_contact i ON hst.ins_co_id = i.contactid "
+     . "  JOIN dental_users users ON hst.doc_id = users.userid "
+     . "  JOIN dental_users users2 ON hst.user_id = users2.userid "
+     . " WHERE hst.status = " . DSS_HST_PENDING
+     . "   AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'";
+}
+$my = mysql_query($sql);
+$num_pending_hst = mysql_num_rows($my);
+
+
+
+
+
+ $sql = "SELECT "
+     . "  claim.insuranceid, claim.patientid, claim.patient_firstname, claim.patient_lastname, "
+     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending "
+     . "FROM "
+     . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
+     . "  JOIN dental_users users ON claim.docid = users.userid "
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid "
+     . " WHERE (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE."))";
+$sql .= " AND 
+  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+    THEN p.p_m_dss_file
+    ELSE p.s_m_dss_file
+   END = '1'";
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $sql .= " AND users.billing_company_id='".$c['companyid']."'"; 
+}
+$my = mysql_query($sql);
+$num_pending_claims = mysql_num_rows($my);
+
+
+if(is_super($_SESSION['admin_access'])){
+$sql = "SELECT "
+     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "
+     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.primary_fdf, claim.secondary_fdf, "
+     . "  claim.mailed_date, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     //. "  dif.filename as eob, " 
+     . "  CASE claim.status 
+                WHEN ".DSS_CLAIM_PENDING." THEN 1
+                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
+                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
+                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
+                WHEN ".DSS_CLAIM_SENT." THEN 5
+                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
+                WHEN ".DSS_CLAIM_REJECTED." THEN 7
+                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
+                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
+                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
+       END AS status_order "
+     . "FROM "
+     . "  dental_insurance claim "     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
+     . "  JOIN dental_users users ON claim.docid = users.userid "
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+}else{
+$sql = "SELECT "
+     . "  claim.insuranceid, claim.patientid, p.firstname, p.lastname, "     . "  claim.adddate, claim.status, users.name as doc_name, users2.name as user_name, "
+     . "  claim.primary_fdf, claim.secondary_fdf, "
+     . "  claim.mailed_date, "
+     . "  DATEDIFF(NOW(), claim.adddate) as days_pending, "
+     //. "  dif.filename as eob, " 
+     . "  CASE claim.status 
+                WHEN ".DSS_CLAIM_PENDING." THEN 1
+                WHEN ".DSS_CLAIM_SEC_PENDING." THEN 2
+                WHEN ".DSS_CLAIM_DISPUTE." THEN 3
+                WHEN ".DSS_CLAIM_SEC_DISPUTE." THEN 4
+                WHEN ".DSS_CLAIM_SENT." THEN 5
+                WHEN ".DSS_CLAIM_SEC_SENT." THEN 6
+                WHEN ".DSS_CLAIM_REJECTED." THEN 7
+                WHEN ".DSS_CLAIM_PAID_INSURANCE." THEN 8
+                WHEN ".DSS_CLAIM_PAID_SEC_INSURANCE." THEN 9
+                WHEN ".DSS_CLAIM_PAID_PATIENT." THEN 10
+       END AS status_order "
+     . "FROM "
+     . "  dental_insurance claim "
+     . "  JOIN dental_patients p ON p.patientid = claim.patientid "
+     . "  JOIN dental_users users ON claim.docid = users.userid "
+     . ((!is_billing($_SESSION['admin_access']))?"  JOIN dental_user_company uc ON uc.userid = claim.docid AND uc.companyid='".mysql_real_escape_string($_SESSION['admincompanyid'])."'":'')
+     . "  JOIN dental_users users2 ON claim.userid = users2.userid ";
+}
+// . "  LEFT JOIN dental_insurance_file dif ON dif.claimid = claim.insuranceid ";
+
+// filter based on select lists above table
+    $sql .= "WHERE ";
+                $sql .= " (claim.mailed_date IS NULL OR claim.status IN (".DSS_CLAIM_PENDING.",".DSS_CLAIM_SEC_PENDING.",".DSS_CLAIM_REJECTED.",".DSS_CLAIM_SEC_REJECTED.",".DSS_CLAIM_DISPUTE.",".DSS_CLAIM_SEC_DISPUTE.",".DSS_CLAIM_PATIENT_DISPUTE.",".DSS_CLAIM_SEC_PATIENT_DISPUTE.")) ";
+
+$sql .= " AND 
+  CASE WHEN claim.status IN (".DSS_CLAIM_PENDING.", ".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_PATIENT_DISPUTE.", ".DSS_CLAIM_SENT.", ".DSS_CLAIM_PAID_INSURANCE.",".DSS_CLAIM_PAID_PATIENT.")
+    THEN p.p_m_dss_file
+    ELSE p.s_m_dss_file
+   END = '1'";
+//echo $sql;
+if(is_billing($_SESSION['admin_access'])){
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $sql .= " AND users.billing_company_id='".$c['companyid']."'";
+}
+$pending_q = mysql_query($sql);
+$num_pending_claims = mysql_num_rows($pending_q);
+
+
+?>
+<div class="page-container">
+	
+	
+	<div class="page-sidebar-wrapper">
+		<div class="page-sidebar navbar-collapse collapse">
+			<!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
+			<!-- BEGIN SIDEBAR MENU -->
+			<ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
+				<li class="sidebar-search-wrapper">
+					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+					<form method="POST" action="extra_search.html" class="sidebar-search">
+						<div class="form-container">
+							<div class="input-box">
+								<a class="remove" href="javascript:;">
+								</a>
+								<input type="text" placeholder="Search...">
+								<input type="button" value=" " class="submit">
+							</div>
+						</div>
+					</form>
+					<!-- END RESPONSIVE QUICK SEARCH FORM -->
+				</li>
+				<?php if (!is_hst($_SESSION['admin_access'])) { ?>
+				<li class="start" >
+					<a href="/manage/admin/manage_letters.php" >
+						<i class="fa fa-envelope"></i>
+						<span class="title" >
+							LETTERS 
+							</span>
+							<span class="badge badge-danger"><?= $pending_letters; ?></span>
+						
+						<span class="selected">
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="/manage/admin/manage_vobs.php?status=0">
+						<i class="fa fa-hospital-o"></i>
+						<span class="title">
+							VOBs 
+							</span>
+						<span class="badge badge-danger"><?= $num_pending_preauth; ?></span>
+						
+						<span class="selected">
+						</span>
+					</a>
+				</li>
+				
+								
+				<? } ?>
+				<li  >
+					<a href="/manage/admin/manage_hsts.php?status=<?= DSS_HST_PENDING; ?>" >
+						<i class="fa fa-user-md"></i>
+						<span class="title" >
+							HSTs 
+							</span>
+							<span class="badge badge-danger"><?= $num_pending_hst; ?></span>
+						
+						<span class="selected">
+						</span>
+					</a>
+				</li>
+				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
+				
+				<li id="nn" >
+					<a href="/manage/admin/manage_claims.php?status=0">
+						<i class="fa fa-medkit"></i>
+						<span class="title">
+							CLAIMS </span>
+							<span class="badge badge-danger"><?= $num_pending_claims; ?></span>
+						
+						<span class="selected">
+						</span>
+					</a>
+				</li>
+				<li >
+					<a href="/manage/admin/manage_new_patient_calls.php">
+						<i class="fa fa-male"></i>
+						<span class="title">
+							NEW PATIENT CALLS
+						</span>
+						<span class="selected">
+						</span>
+					</a>
+				</li>
+				
+				<li>
+					<a href="javascript:;">
+						<i class="fa fa-user"></i>
+						<span class="title">
+							Users
+						</span>
+						<span class="arrow ">
+						</span>
+					</a>
+					<ul class="sub-menu">
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Accounts
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								 <?php if (is_super($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_companies.php" id="click_users_a">
+										<i class="fa fa-user"></i>Companies
+									</a>
+								</li>
+								<?php } ?>
+								 <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_backoffice.php">
+										<i class="fa fa-user"></i> Backoffice Accounts
+									</a>
+								</li>
+								<?php } ?>
+								<li>
+									<a href="/manage/admin/manage_users.php">
+										<i class="fa fa-external-link"></i> User Accounts
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/export_users.php">
+										<i class="fa fa-bell"></i> Export Users
+									</a>
+								</li>
+								
+								<li>
+									<a href="/manage/admin/export_users_emails.php">
+										<i class="fa fa-bell"></i>Export Active User Emails
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/insurance_officeally_select.php">
+										<i class="fa fa-bell"></i>Export Pending Office Ally Claims
+									</a>
+								</li>
+								<?php if(!is_billing($_SESSION['admin_access'])){ ?>
+								<li>
+									<a href="/manage/admin/manage_access_codes.php">
+										<i class="fa fa-bell"></i>Access Codes
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_plans.php">
+										<i class="fa fa-bell"></i>Plans
+									</a>
+								</li>
+								<?php } ?>
+							</ul>
+						</li>
+						<li>
+							<a href="/manage/admin/manage_patient.php">
+								<i class="fa fa-folder-open"></i>
+								Patient List (All)
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Account Analysis
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<?php if (!is_billing($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_percase_invoice.php">
+										<i class="fa fa-user"></i>Invoicing
+									</a>
+								</li>
+								
+								
+								<li>
+									<a href="/manage/admin/manage_monthly_invoice.php">
+										<i class="fa fa-external-link"></i> Monthly Invoicing
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_payment_errors.php">
+										<i class="fa fa-bell"></i> Invoicing Payment Errors
+									</a>
+								</li>
+								
+								<li>
+									<a href="/manage/admin/franchisee_faxes.php">
+										<i class="fa fa-bell"></i>Fax Report
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/client_tracking.php">
+										<i class="fa fa-bell"></i>Client Tracking
+									</a>
+								</li>
+								<?php } ?>
+								
+								<li>
+									<a href="/manage/admin/franchisee_monthly.php">
+										<i class="fa fa-bell"></i>Monthly Report
+									</a>
+								</li>
+																
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Insurance Codes
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<?php if (!is_billing($_SESSION['admin_access'])) { ?>
+								<li>
+									<a href="/manage/admin/manage_transaction_code.php">
+										<i class="fa fa-user"></i>Default Codes (Global)
+									</a>
+								</li>
+								<?php } ?>
+								<li>
+									<a href="/manage/admin/manage_doctor_transaction_code_list.php">
+										<i class="fa fa-bell"></i>User Codes (Individual)
+									</a>
+								</li>
+														
+							</ul>
+						</li>
+						  <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Note Text
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_custom_text.php">
+										<i class="fa fa-user"></i>Progress Default Text (Global)
+									</a>
+								</li>
+								
+								<li>
+									<a href="/manage/admin/manage_doctor_custom_text_list.php">
+										<i class="fa fa-bell"></i>Progress User Text (Individual)
+									</a>
+								</li>
+
+								<li>
+									<a href="/manage/admin/manage_claim_text.php">
+										<i class="fa fa-bell"></i>Claim Text
+									</a>
+								</li>
+							</ul>
+						</li>
+						<?php } ?>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Password
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/changepassword.php">
+										<i class="fa fa-user"></i>Change My Password
+									</a>
+								</li>
+							</ul>
+						</li>
+						 <?php if (!is_billing($_SESSION['admin_access'])) { ?>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Security
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_log.php">
+										<i class="fa fa-user"></i>Login Data
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_pages.php">
+										<i class="fa fa-user"></i>Custom Pages
+									</a>
+								</li>
+								
+							</ul>
+						</li>
+						<li>
+							<a href="/manage/admin/email_bounce.php">
+								<i class="fa fa-cogs"></i> Email Bounces
+								<span class="arrow">
+								</span>
+							</a>
+						</li>
+						<?php } ?>
+							
+					</ul>
+				</li>
+					
+				<li>
+					<a href="javascript:;">
+						<i class="fa  fa-desktop"></i>
+						<span class="title">
+							SOFTWARE
+						</span>
+						<span class="arrow ">
+						</span>
+					</a>
+					<ul class="sub-menu">
+					<?php if (!is_billing($_SESSION['admin_access'])) { ?>	
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Questionnaire Edits
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Bmi/Symptoms
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_complaint.php">
+												<i class="fa fa-remove"></i> Chief Complaint
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Sleepiness test
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_epworth.php">
+												<i class="fa fa-remove"></i> Epworth
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Sleep Study / Cpap
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_intolerance.php">
+												<i class="fa fa-remove"></i> Cpap Intolerance
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Medical Hx
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_allergens.php">
+												<i class="fa fa-remove"></i> Allergens
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_medications.php">
+												<i class="fa fa-remove"></i> Medications
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_history.php">
+												<i class="fa fa-remove"></i> Medical Hx
+											</a>
+										</li>
+									</ul>
+								</li>
+								
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-cogs"></i> Clinical Exam Edits
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Dental Exam
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_exam_teeth.php">
+												<i class="fa fa-remove"></i> Teeth Examination
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Vital Data / Tongue
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_tongue.php">
+												<i class="fa fa-remove"></i> Tongue Evaluation
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										Airway Evaluation
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_maxilla.php">
+												<i class="fa fa-remove"></i> Maxilla
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_mandible.php">
+												<i class="fa fa-remove"></i> Mandible 
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_soft_palate.php">
+												<i class="fa fa-remove"></i> Soft Palate
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_uvula.php">
+												<i class="fa fa-remove"></i> Uvula
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_gag_reflex.php">
+												<i class="fa fa-remove"></i> Gag Reflex
+											</a>
+										</li>
+										<li>
+										<li><a href="/manage/admin/manage_nasal_passages.php">
+												<i class="fa fa-remove"></i> Nasal Passages
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="javascript:;">
+										<i class="fa fa-user"></i>
+										TMJ / ROM
+										<span class="arrow">
+										</span>
+									</a>
+									<ul class="sub-menu">
+										<li>
+										<a href="/manage/admin/manage_palpation.php">
+												<i class="fa fa-remove"></i> Muscles & Palpation
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_joint_exam.php">
+												<i class="fa fa-remove"></i> Joint Exam Type
+											</a>
+										</li>
+										<li>
+										<a href="/manage/admin/manage_joint.php">
+												<i class="fa fa-remove"></i> Joint Exam
+											</a>
+										</li>
+									</ul>
+								</li>
+								
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Contacts (Global List And Type)
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_contacttype.php">
+										<i class="fa fa-user"></i> Contact Types
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_fcontact.php">
+										<i class="fa fa-external-link"></i> Corporate Contacts (Global List)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_lab.php">
+										<i class="fa fa-bell"></i> Dental Appliance Labs (Global List)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_insurance.php">
+										<i class="fa fa-bell"></i> Insurance Info (Global List)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Images
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_imagetype.php">
+										<i class="fa fa-user"></i> Image Type (Global List)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Letters
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_default_letters.php">
+										<i class="fa fa-user"></i> Default Letters
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Home Page
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_change_list.php">
+										<i class="fa fa-user"></i> Change List
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_doc_welcome.php">
+										<i class="fa fa-external-link"></i> Welcome Screen Message (Global)
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_memos.php">
+										<i class="fa fa-bell"></i> Memos
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Insurance Claim
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_ins_diagnosis.php">
+										<i class="fa fa-user"></i> Insurance Diagnosis
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_place_service.php">
+										<i class="fa fa-external-link"></i> Place Of Service
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_type_service.php">
+										<i class="fa fa-bell"></i> Type Of Service
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_cpt_code.php">
+										<i class="fa fa-bell"></i> Cpt Code
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_modifier_code.php">
+										<i class="fa fa-bell"></i> Modifier Code
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Files
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_doc_categories.php">
+										<i class="fa fa-user"></i> Dss Files For Franchisees (Global)
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Additional Items
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_ins_type.php">
+										<i class="fa fa-user"></i> Insurance Type
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_diagnostic.php">
+										<i class="fa fa-external-link"></i> Diagnostic Test
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_assessment.php">
+										<i class="fa fa-bell"></i> Assessment
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_assess_addition.php">
+										<i class="fa fa-bell"></i> Assessment Addition
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_consultation.php">
+										<i class="fa fa-bell"></i> Consultation
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_evaluation_new.php">
+										<i class="fa fa-bell"></i> Evaluation New
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_evaluation_est.php">
+										<i class="fa fa-bell"></i> Evaluation Established
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_plan_text.php">
+										<i class="fa fa-bell"></i> Plan / Progress Text
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Flowsheet
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_flowsheet_steps.php">
+										<i class="fa fa-user"></i> Steps
+									</a>
+								</li>
+							</ul>
+						</li>
+						
+						<li>
+							<a href="javascript:;">
+								<i class="fa fa-globe"></i> Dental Devices
+								<span class="arrow">
+								</span>
+							</a>
+							<ul class="sub-menu">
+								<li>
+									<a href="/manage/admin/manage_device.php">
+										<i class="fa fa-user"></i> Dental Device List
+									</a>
+								</li>
+								<li>
+									<a href="/manage/admin/manage_device_guide_settings.php">
+										<i class="fa fa-user"></i> Settings
+									</a>
+								</li>
+							</ul>
+						</li>
+					<?php } ?>
+						
+					
+						<li>
+						<a href="/manage/admin/manage_claim_settings.php">
+								<i class="fa fa-folder-open"></i>Claim Settings
+							</a>
+						</li>
+						<li>
+						<a href="/manage/admin/manage_claim_history.php">
+								<i class="fa fa-folder-open"></i>Electronic Claim History
+							</a>
+						</li>
+					</ul>
+				</li>
+				
+				 <?php if (is_billing($_SESSION['admin_access'])) { ?>
+                <?php
+    $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
+    $c_q = mysql_query($c_sql);
+    $c = mysql_fetch_assoc($c_q);
+    $t_sql = "SELECT t.* FROM dental_support_tickets t
+        JOIN dental_users u ON u.userid=t.userid
+                WHERE (t.status=0 OR t.status=1)
+            AND u.billing_company_id='".mysql_real_escape_string($c['companyid'])."' AND u.billing_company_id!=''";
+  } else {
+    $t_sql = "SELECT * FROM dental_support_tickets
+        WHERE status=0 OR status=1;";
+  }
+  $t_q = mysql_query($t_sql);
+  $num_open_tickets = mysql_num_rows($t_q);
+                ?>
+				
+				
+			<li id="active_container">
+				<a href="javascript:;">
+					<i class="fa  fa-question"></i> 
+					<span class="title">
+							TICKETS 
+					</span>
+					<span class="badge badge-danger"><?= $num_open_tickets; ?></span>
+					<span class="arrow">
+					</span>
+				</a>
+				<ul class="sub-menu">
+					<li>
+						<a href="/manage/admin/manage_support_tickets.php">
+							<i class="fa fa-user"></i> Tickets
+						</a>
+					</li>
+					<li>
+						<a href="/manage/admin/manage_support_categories.php">
+							<i class="fa fa-user"></i> Categories
+						</a>
+					</li>
+				</ul>
+			</li>
+				
+			 <? } ?>	
+			</ul>
+			<!-- END SIDEBAR MENU -->
+		</div>
+	</div>
+	
+
+   <div class="page-content-wrapper">
+       <div class="page-content">  
+     	
+<?php $office_type = DSS_OFFICE_TYPE_BACK; 
+
+?> 
+<div class="row1">  </div>
